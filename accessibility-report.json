@@ -1,0 +1,34 @@
+{
+  "timestamp": "2025-07-03T11:21:02.642Z",
+  "summary": {
+    "grade": "C-",
+    "successRate": 64.51612903225806,
+    "totalTests": 31,
+    "passed": 20,
+    "failed": 4,
+    "warnings": 7
+  },
+  "details": {
+    "issues": [
+      "Accessibility Implementation: 0/0 components (0.0%) have accessibility features",
+      "TouchableOpacity Accessibility: 29/92 touchables (31.5%) have accessibility roles",
+      "Accessibility Labels: Found in 9 files (target: 70% of interactive components)",
+      "Reduced Motion Support: 1/5 animation files support reduced motion"
+    ],
+    "recommendations": [
+      "Essential Accessibility Roles: Missing roles: listitem, slider",
+      "Accessibility Hints: Found in 8 files (target: 50% of interactive components)",
+      "Settings - font size control: Feature missing",
+      "Settings - font scale control: Feature missing",
+      "Settings - haptic feedback toggle: Feature missing",
+      "Settings - screen reader support: Feature missing",
+      "Settings - high contrast mode: Feature missing"
+    ]
+  },
+  "nextSteps": [
+    "Implement missing accessibility features",
+    "Test with screen readers",
+    "Conduct user testing with disabled users",
+    "Regular accessibility audits"
+  ]
+}
