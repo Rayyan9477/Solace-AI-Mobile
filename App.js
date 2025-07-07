@@ -3,31 +3,77 @@
  * Your Empathetic Digital Confidant
  */
 
-import React from 'react';
-import { StatusBar } from 'react-native';
+import React, { useEffect, useCallback } from 'react';
+import { StatusBar } from 'expo-status-bar';
+import { View } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import * as SplashScreen from 'expo-splash-screen';
+import * as Font from 'expo-font';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { store, persistor } from './src/store/store';
 import AppNavigator from './src/navigation/AppNavigator';
 import LoadingScreen from './src/components/LoadingScreen';
 import { ThemeProvider, useTheme } from './src/contexts/ThemeContext';
 
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
+
 const ThemedApp = () => {
   const { theme, isDarkMode } = useTheme();
+  const [appIsReady, setAppIsReady] = React.useState(false);
+
+  useEffect(() => {
+    async function prepare() {
+      try {
+        // Pre-load fonts
+        await Font.loadAsync({
+          ...MaterialCommunityIcons.font,
+          'System': require('expo-font/build/FontLoader').loadAsync({
+            'System': {
+              regular: { uri: null },
+              medium: { uri: null },
+              light: { uri: null },
+              bold: { uri: null },
+            },
+          }),
+        });
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  }
   
   return (
-    <>
+    <View 
+      style={{ flex: 1 }}
+      onLayout={onLayoutRootView}
+    >
       <StatusBar
-        barStyle={isDarkMode ? "light-content" : "dark-content"}
+        style={isDarkMode ? "light" : "dark"}
         backgroundColor={theme.colors.background.primary}
         translucent={true}
       />
       <AppNavigator />
-    </>
+    </View>
   );
 };
 
