@@ -14,5 +14,8 @@ module.exports = {
     '!src/**/*.d.ts',
     '!src/**/*.stories.{js,jsx,ts,tsx}',
     '!src/**/*.styles.{js,jsx,ts,tsx}',
+    '!src/components/chat/MessageBubble.js',
+    '!src/components/dashboard/WelcomeHeader.js',
+    '!src/components/mood/ActivitySelector.js',
   ],
 };

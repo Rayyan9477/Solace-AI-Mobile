@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, Animated } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useTheme } from '../../contexts/ThemeContext';
 
@@ -11,13 +11,35 @@ const Button = ({
   disabled = false,
   fullWidth = false,
   withHaptics = true,
+  loading = false,
+  icon,
+  iconPosition = 'left',
+  animationDuration = 150,
   accessibilityLabel,
   accessibilityHint,
+  testID,
 }) => {
   const { theme } = useTheme();
+  const [scaleValue] = React.useState(new Animated.Value(1));
+
+  const handlePressIn = () => {
+    Animated.timing(scaleValue, {
+      toValue: 0.95,
+      duration: animationDuration,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.timing(scaleValue, {
+      toValue: 1,
+      duration: animationDuration,
+      useNativeDriver: true,
+    }).start();
+  };
 
   const handlePress = () => {
-    if (!disabled) {
+    if (!disabled && !loading) {
       if (withHaptics) {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       }
@@ -78,7 +100,7 @@ const Button = ({
   return (
     <TouchableOpacity
       onPress={handlePress}
-      disabled={disabled}
+      disabled={disabled || loading}
       style={[
         styles.button,
         getVariantStyles(),
@@ -88,26 +110,36 @@ const Button = ({
       ]}
       accessible={true}
       accessibilityRole="button"
-      testID={`button-${title}`}
+      testID={testID || `button-${title}`}
       accessibilityLabel={accessibilityLabel || `${title} button`}
       accessibilityHint={accessibilityHint}
       accessibilityState={{ 
         disabled,
         selected: false,
         checked: false,
-        busy: false,
+        busy: loading,
         expanded: false,
       }}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
     >
-      <Text
-        style={[
-          styles.text,
-          { color: variant === 'text' ? theme.colors.primary.main : theme.colors.text.onPrimary },
-          disabled && styles.textDisabled,
-        ]}
-      >
-        {title}
-      </Text>
+      <Animated.View style={{ transform: [{ scale: scaleValue }] }}>
+        {loading ? (
+          <ActivityIndicator size="small" color={theme.colors.text.onPrimary} />
+        ) : (
+          icon && iconPosition === 'left' && icon
+        )}
+        <Text
+          style={[
+            styles.text,
+            { color: variant === 'text' ? theme.colors.primary.main : theme.colors.text.onPrimary },
+            disabled && styles.textDisabled,
+          ]}
+        >
+          {loading ? 'Loading...' : title}
+        </Text>
+        {loading ? null : icon && iconPosition === 'right' && icon}
+      </Animated.View>
     </TouchableOpacity>
   );
 };
