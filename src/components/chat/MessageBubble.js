@@ -119,11 +119,6 @@ const MessageBubble = ({ message, isLast, onPress, onLongPress }) => {
       announceForAccessibility(`${action} action selected for AI message`);
     }
   };
-  
-  const formatTime = (timestamp) => {
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
 
   const getEmotionColor = (emotion) => {
     const emotionColors = {
