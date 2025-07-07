@@ -110,13 +110,6 @@ const ActivitySelector = ({ selectedActivities, onActivityToggle }) => {
       </View>
     </View>
   );
-            ]}>
-              {activity.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-      
       {selectedActivities.length > 0 && (
         <View style={styles.selectedContainer}>
           <Text style={[styles.selectedTitle, { color: theme.colors.text.primary }]}>
