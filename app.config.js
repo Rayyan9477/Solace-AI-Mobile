@@ -14,6 +14,9 @@ export default {
     assetBundlePatterns: [
       "**/*"
     ],
+    plugins: [
+      "expo-font"
+    ],
     ios: {
       supportsTablet: true,
       bundleIdentifier: "com.solace.ai.mobile"

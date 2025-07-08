@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, TextInput, Text, StyleSheet, Pressable } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, TextInput, Text, StyleSheet, Pressable, Animated } from 'react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 
 const Input = ({
@@ -18,10 +18,93 @@ const Input = ({
   style,
   accessibilityLabel,
   accessibilityHint,
+  leftIcon,
+  rightIcon,
+  onLeftIconPress,
+  onRightIconPress,
+  variant = 'outlined',
+  size = 'medium',
+  loading = false,
+  disabled = false,
+  helperText,
+  characterCount = false,
+  focused = false,
+  onFocus,
+  onBlur,
+  animated = true,
 }) => {
   const { theme } = useTheme();
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(focused);
   const [isSecureVisible, setIsSecureVisible] = useState(!secureTextEntry);
+  const inputRef = useRef(null);
+  const animatedFocus = useRef(new Animated.Value(isFocused ? 1 : 0)).current;
+
+  useEffect(() => {
+    if (animated) {
+      Animated.timing(animatedFocus, {
+        toValue: isFocused ? 1 : 0,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [isFocused, animated]);
+
+  const getSizeStyles = () => {
+    switch (size) {
+      case 'small':
+        return {
+          paddingHorizontal: 12,
+          paddingVertical: 8,
+          fontSize: 14,
+          minHeight: 36,
+        };
+      case 'large':
+        return {
+          paddingHorizontal: 20,
+          paddingVertical: 16,
+          fontSize: 18,
+          minHeight: 56,
+        };
+      default:
+        return {
+          paddingHorizontal: 16,
+          paddingVertical: 12,
+          fontSize: 16,
+          minHeight: 48,
+        };
+    }
+  };
+
+  const getVariantStyles = () => {
+    const baseStyle = {
+      borderRadius: 8,
+      ...getSizeStyles(),
+    };
+
+    switch (variant) {
+      case 'filled':
+        return {
+          ...baseStyle,
+          backgroundColor: theme.colors.background.secondary,
+          borderWidth: 0,
+        };
+      case 'underlined':
+        return {
+          ...baseStyle,
+          backgroundColor: 'transparent',
+          borderWidth: 0,
+          borderBottomWidth: 2,
+          borderRadius: 0,
+          paddingHorizontal: 0,
+        };
+      default:
+        return {
+          ...baseStyle,
+          backgroundColor: theme.colors.background.surface,
+          borderWidth: 1,
+        };
+    }
+  };
 
   const borderColor = error
     ? theme.colors.error
@@ -31,31 +114,65 @@ const Input = ({
 
   const inputAccessibilityLabel = accessibilityLabel || `${label} input field${error ? `. Error: ${error}` : ''}`;
 
+  const handleFocus = (e) => {
+    setIsFocused(true);
+    onFocus?.(e);
+  };
+
+  const handleBlur = (e) => {
+    setIsFocused(false);
+    onBlur?.(e);
+  };
+
+  const variantStyles = getVariantStyles();
+  const animatedBorderColor = animated ? animatedFocus.interpolate({
+    inputRange: [0, 1],
+    outputRange: [theme.colors.border.main, theme.colors.primary.main],
+  }) : borderColor;
+
   return (
     <View style={[styles.container, style]}>
       {label && (
-        <Text
+        <Animated.Text
           style={[
             styles.label,
             {
               color: error
                 ? theme.colors.error
+                : animated ? animatedFocus.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [theme.colors.text.secondary, theme.colors.primary.main],
+                  })
                 : theme.colors.text.primary,
             },
           ]}
         >
           {label}
-        </Text>
+        </Animated.Text>
       )}
       
-      <View style={[
+      <Animated.View style={[
         styles.inputContainer,
+        variantStyles,
         {
-          borderColor,
-          backgroundColor: theme.colors.background.surface,
+          borderColor: error ? theme.colors.error : (animated ? animatedBorderColor : borderColor),
+          opacity: disabled ? 0.6 : 1,
         },
       ]}>
+        {leftIcon && (
+          <Pressable
+            onPress={onLeftIconPress}
+            style={styles.iconContainer}
+            accessibilityLabel="Left icon"
+            accessibilityRole="button"
+            disabled={!onLeftIconPress}
+          >
+            {leftIcon}
+          </Pressable>
+        )}
+
         <TextInput
+          ref={inputRef}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
@@ -67,42 +184,71 @@ const Input = ({
           maxLength={maxLength}
           autoCapitalize={autoCapitalize}
           autoCorrect={autoCorrect}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          editable={!disabled && !loading}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           style={[
             styles.input,
             {
               color: theme.colors.text.primary,
-              height: multiline ? undefined : 48,
+              height: multiline ? undefined : variantStyles.minHeight - 24,
+              fontSize: variantStyles.fontSize,
             },
           ]}
           accessibilityLabel={inputAccessibilityLabel}
           accessibilityHint={accessibilityHint}
+          accessibilityState={{
+            disabled: disabled || loading,
+          }}
         />
         
-        {secureTextEntry && (
+        {(secureTextEntry || rightIcon) && (
           <Pressable
-            onPress={() => setIsSecureVisible(!isSecureVisible)}
-            style={styles.visibilityToggle}
-            accessibilityLabel={`${isSecureVisible ? 'Hide' : 'Show'} password`}
+            onPress={secureTextEntry ? () => setIsSecureVisible(!isSecureVisible) : onRightIconPress}
+            style={styles.iconContainer}
+            accessibilityLabel={secureTextEntry ? `${isSecureVisible ? 'Hide' : 'Show'} password` : 'Right icon'}
             accessibilityRole="button"
           >
-            <Text style={{ color: theme.colors.primary.main }}>
-              {isSecureVisible ? '👁️' : '👁️‍🗨️'}
-            </Text>
+            {secureTextEntry ? (
+              <Text style={{ color: theme.colors.primary.main, fontSize: 18 }}>
+                {isSecureVisible ? '👁️' : '👁️‍🗨️'}
+              </Text>
+            ) : rightIcon}
           </Pressable>
         )}
-      </View>
+      </Animated.View>
 
-      {error && (
-        <Text
-          style={[styles.error, { color: theme.colors.error }]}
-          accessibilityLabel={`Error: ${error}`}
-          accessibilityRole="alert"
-        >
-          {error}
-        </Text>
-      )}
+      {/* Helper text, character count, or error */}
+      <View style={styles.bottomContainer}>
+        {(error || helperText) && (
+          <Text
+            style={[
+              styles.helperText,
+              { color: error ? theme.colors.error : theme.colors.text.secondary }
+            ]}
+            accessibilityLabel={error ? `Error: ${error}` : helperText}
+            accessibilityRole={error ? 'alert' : 'text'}
+          >
+            {error || helperText}
+          </Text>
+        )}
+        
+        {characterCount && maxLength && (
+          <Text
+            style={[
+              styles.characterCount,
+              {
+                color: (value?.length || 0) > maxLength * 0.9
+                  ? theme.colors.warning.main
+                  : theme.colors.text.secondary
+              }
+            ]}
+            accessibilityLabel={`${value?.length || 0} of ${maxLength} characters`}
+          >
+            {value?.length || 0}/{maxLength}
+          </Text>
+        )}
+      </View>
     </View>
   );
 };
@@ -119,22 +265,30 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 8,
-    overflow: 'hidden',
   },
   input: {
     flex: 1,
-    paddingHorizontal: 16,
-    fontSize: 16,
   },
-  visibilityToggle: {
-    padding: 12,
+  iconContainer: {
+    padding: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  error: {
+  bottomContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginTop: 4,
+  },
+  helperText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: '400',
+    flex: 1,
+  },
+  characterCount: {
+    fontSize: 12,
+    fontWeight: '400',
+    marginLeft: 8,
   },
 });
 
