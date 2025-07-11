@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: theme.colors.button.text,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,

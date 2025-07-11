@@ -39,7 +39,7 @@ const AppSubtitle = styled(Animated.Text)`
 const LoadingIndicator = styled(Animated.View)`
   width: 60px;
   height: 4px;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: ${props => props.theme.colors.overlay.light};
   border-radius: 2px;
   overflow: hidden;
   margin-top: 30px;
@@ -101,7 +101,7 @@ const SplashScreen = () => {
             width: 80,
             height: 80,
             borderRadius: 40,
-            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+            backgroundColor: theme.colors.overlay.light,
             justifyContent: 'center',
             alignItems: 'center',
             marginBottom: 20,

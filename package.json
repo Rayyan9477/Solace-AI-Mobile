@@ -49,6 +49,7 @@
     "expo-splash-screen": "~0.30.10",
     "expo-status-bar": "~2.2.3",
     "expo-updates": "~0.28.16",
+    "hermes-parser": "^0.29.1",
     "lottie-react-native": "7.2.2",
     "metro": "^0.82.0",
     "metro-config": "^0.82.5",
@@ -71,6 +72,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
+    "@playwright/test": "^1.53.2",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^12.4.3",
     "@types/jest": "^29.5.12",
