@@ -23,7 +23,7 @@ const MessageBubbleStyled = styled(View)`
   border-radius: 20px;
   border-bottom-left-radius: ${props => props.isUser ? '20px' : '8px'};
   border-bottom-right-radius: ${props => props.isUser ? '8px' : '20px'};
-  shadow-color: #000;
+  shadow-color: ${props => props.shadowColor};
   shadow-offset: 0px 1px;
   shadow-opacity: 0.1;
   shadow-radius: 2px;
@@ -177,6 +177,7 @@ const MessageBubble = ({ message, isLast, onPress, onLongPress }) => {
               isUser ? theme.colors.primary[500] : theme.colors.background.primary
             }
             isUser={isUser}
+            shadowColor={theme.colors.text.primary}
           >
             <MessageText
               textColor={isUser ? theme.colors.text.inverse : theme.colors.text.primary}
@@ -186,7 +187,7 @@ const MessageBubble = ({ message, isLast, onPress, onLongPress }) => {
             </MessageText>
             
             <MessageTime
-              color={isUser ? 'rgba(255,255,255,0.8)' : theme.colors.text.tertiary}
+              color={isUser ? theme.colors.text.inverse : theme.colors.text.tertiary}
               accessibilityRole="text"
               accessibilityLabel={`Message sent at ${formatTime(message.timestamp)}`}
             >
