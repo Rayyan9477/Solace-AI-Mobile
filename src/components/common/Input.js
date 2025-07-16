@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, TextInput, Text, StyleSheet, Pressable, Animated } from 'react-native';
+import { Animated, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 
 const Input = ({
@@ -131,7 +131,12 @@ const Input = ({
   }) : borderColor;
 
   return (
-    <View style={[styles.container, style]}>
+<KeyboardAvoidingView
+  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  style={{ flex: 1 }}
+  keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+>
+<View style={[styles.container, style]}>
       {label && (
         <Animated.Text
           style={[
@@ -149,7 +154,8 @@ const Input = ({
         >
           {label}
         </Animated.Text>
-      )}
+</KeyboardAvoidingView>
+)}
       
       <Animated.View style={[
         styles.inputContainer,
@@ -204,7 +210,12 @@ const Input = ({
         
         {(secureTextEntry || rightIcon) && (
           <Pressable
-            onPress={secureTextEntry ? () => setIsSecureVisible(!isSecureVisible) : onRightIconPress}
+            onPress={secureTextEntry ? () =
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="{isSecureVisible ? '👁️' : '👁️‍🗨️'}"
+        accessibilityHint="Double tap to activate"
+      > setIsSecureVisible(!isSecureVisible) : onRightIconPress}
             style={styles.iconContainer}
             accessibilityLabel={secureTextEntry ? `${isSecureVisible ? 'Hide' : 'Show'} password` : 'Right icon'}
             accessibilityRole="button"

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, Animated, Dimensions } from 'react-native';
+import React, { useEffect, useRef, useMemo } from 'react';
+import { View, Text, Animated, Dimensions, StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useTheme } from '../contexts/ThemeContext';
@@ -57,6 +57,23 @@ const SplashScreen = () => {
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
   const progressAnim = useRef(new Animated.Value(0)).current;
 
+  // Memoize animated styles to prevent recreation on each render
+  const logoContainerStyle = useMemo(() => ({
+    opacity: fadeAnim,
+    transform: [{ scale: scaleAnim }],
+  }), [fadeAnim, scaleAnim]);
+
+  const fadeStyle = useMemo(() => ({
+    opacity: fadeAnim,
+  }), [fadeAnim]);
+
+  const progressBarStyle = useMemo(() => ({
+    width: progressAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0%', '100%'],
+    }),
+  }), [progressAnim]);
+
   useEffect(() => {
     // Start animations
     Animated.sequence([
@@ -90,39 +107,27 @@ const SplashScreen = () => {
       end={{ x: 1, y: 1 }}
     >
       <LogoContainer
-        style={{
-          opacity: fadeAnim,
-          transform: [{ scale: scaleAnim }],
-        }}
+        style={logoContainerStyle}
       >
         {/* Logo Icon Placeholder */}
         <View
-          style={{
-            width: 80,
-            height: 80,
-            borderRadius: 40,
-            backgroundColor: theme.colors.overlay.light,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: 20,
-          }}
+          style={[
+            styles.logoIcon,
+            { backgroundColor: theme.colors.overlay.light }
+          ]}
         >
-          <Text style={{ fontSize: 32, color: theme.colors.text.inverse }}>🧠</Text>
+          <Text style={[styles.logoIconText, { color: theme.colors.text.inverse }]}>🧠</Text>
         </View>
         
         <AppTitle
-          style={{
-            opacity: fadeAnim,
-          }}
+          style={fadeStyle}
           theme={theme}
         >
           Solace AI
         </AppTitle>
         
         <AppSubtitle
-          style={{
-            opacity: fadeAnim,
-          }}
+          style={fadeStyle}
           theme={theme}
         >
           Your Empathetic Digital Confidant
@@ -130,22 +135,29 @@ const SplashScreen = () => {
       </LogoContainer>
 
       <LoadingIndicator
-        style={{
-          opacity: fadeAnim,
-        }}
+        style={fadeStyle}
       >
         <LoadingBar
-          style={{
-            width: progressAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: ['0%', '100%'],
-            }),
-          }}
+          style={progressBarStyle}
           theme={theme}
         />
       </LoadingIndicator>
     </SplashContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  logoIcon: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  logoIconText: {
+    fontSize: 32,
+  },
+});
 
 export default SplashScreen;

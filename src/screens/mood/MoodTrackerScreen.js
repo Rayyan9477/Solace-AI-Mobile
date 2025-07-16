@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  Alert,
-} from 'react-native';
+import * as Haptics from 'expo-haptics';
+import { , Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -27,12 +20,52 @@ const MoodTrackerScreen = () => {
   const [intensity, setIntensity] = useState(3);
   const [notes, setNotes] = useState('');
   const [selectedActivities, setSelectedActivities] = useState([]);
+  const [validationErrors, setValidationErrors] = useState({});
 
-  
+  // Validation rules
+  const validateForm = () => {
+    const errors = {};
+
+    // Mood validation
+    if (!selectedMood) {
+      errors.mood = 'Please select your mood';
+    }
+
+    // Intensity validation
+    if (intensity < 1 || intensity > 5) {
+      errors.intensity = 'Intensity must be between 1 and 5';
+    }
+
+    // Notes validation
+    if (notes.length > 500) {
+      errors.notes = 'Notes must be less than 500 characters';
+    }
+
+    // Check for meaningful content if notes are provided
+    if (notes && notes.trim().length < 3 && notes.trim().length > 0) {
+      errors.notes = 'Please provide meaningful notes or leave empty';
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Real-time validation for notes
+  const handleNotesChange = (text) => {
+    setNotes(text);
+    
+    // Clear previous notes error if user is typing
+    if (validationErrors.notes) {
+      const newErrors = { ...validationErrors };
+      delete newErrors.notes;
+      setValidationErrors(newErrors);
+    }
+  };
 
   const handleSubmit = async () => {
-    if (!selectedMood) {
-      Alert.alert('Missing Information', 'Please select your mood first.');
+    if (!validateForm()) {
+      const errorMessage = Object.values(validationErrors).join('\n');
+      Alert.alert('Please fix the following errors:', errorMessage);
       return;
     }
 
@@ -68,7 +101,12 @@ const MoodTrackerScreen = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
+<KeyboardAvoidingView
+  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  style={{ flex: 1 }}
+  keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+>
+<View style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <Text style={[styles.title, { color: theme.colors.text.primary }]}>
@@ -128,9 +166,14 @@ const MoodTrackerScreen = () => {
             multiline
             numberOfLines={4}
             value={notes}
-            onChangeText={setNotes}
+            onChangeText={handleNotesChange}
             textAlignVertical="top"
           />
+          {validationErrors.notes && (
+            <Text style={[styles.errorText, { color: theme.colors.error[500] }]}>
+              {validationErrors.notes}
+            </Text>
+          )}
         </View>
       </ScrollView>
 
@@ -139,11 +182,22 @@ const MoodTrackerScreen = () => {
         <TouchableOpacity
           style={[
             styles.submitButton,
-            { backgroundColor: selectedMood ? theme.colors.primary[500] : theme.colors.gray[400] }
+            { 
+              backgroundColor: selectedMood ? theme.colors.primary[500] : theme.colors.gray[400],
+              minWidth: 44, 
+              minHeight: 44 
+            }
           ]}
-          onPress={handleSubmit}
+          onPress={() => {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            handleSubmit();
+          }}
           disabled={!selectedMood || loading}
           activeOpacity={0.8}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel={loading ? 'Submitting mood entry' : 'Submit mood entry'}
+          accessibilityHint="Save your current mood and notes"
         >
           <Text style={styles.submitButtonText}>
             {loading ? 'Logging...' : 'Log Mood'}
@@ -151,7 +205,8 @@ const MoodTrackerScreen = () => {
         </TouchableOpacity>
       </View>
     </View>
-  );
+</KeyboardAvoidingView>
+);
 };
 
 const styles = StyleSheet.create({
@@ -216,6 +271,11 @@ const styles = StyleSheet.create({
     color: theme.colors.text.inverse,
     fontSize: theme.typography.sizes.base,
     fontWeight: '600',
+  },
+  errorText: {
+    fontSize: 14,
+    marginTop: 8,
+    marginLeft: 4,
   },
 });
 

@@ -28,12 +28,16 @@ const WelcomeHeader = ({ greeting, userName, onProfilePress, onEmergencyPress })
       
       <View style={styles.headerActions}>
         <TouchableOpacity
-          style={[
+          style={[[
             styles.avatarButton, 
-            { backgroundColor: theme.colors.primary[100] }
+            { backgroundColor: theme.colors.primary[100] , { minWidth: 44, minHeight: 44 }]}
           ]}
           onPress={onProfilePress}
           activeOpacity={0.8}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Profile"
+          accessibilityHint="Double tap to view your profile"
         >
           <Text style={[styles.avatarText, { color: theme.colors.primary[700] }]}>
             {userName.charAt(0).toUpperCase()}
@@ -41,12 +45,16 @@ const WelcomeHeader = ({ greeting, userName, onProfilePress, onEmergencyPress })
         </TouchableOpacity>
         
         <TouchableOpacity
-          style={[
+          style={[[
             styles.emergencyButton, 
-            { backgroundColor: theme.colors.error[500] }
+            { backgroundColor: theme.colors.error[500] , { minWidth: 44, minHeight: 44 }]}
           ]}
           onPress={onEmergencyPress}
           activeOpacity={0.8}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Emergency Help"
+          accessibilityHint="Double tap to access emergency support"
         >
           <Text style={styles.emergencyText}>⚠️</Text>
         </TouchableOpacity>
@@ -96,7 +104,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: theme.colors.text.primary,
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
@@ -106,13 +114,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   emergencyButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 44, height: 44,
+    borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: theme.colors.text.primary,
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,

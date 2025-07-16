@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   progressBar: {
-    height: 4,
+    height: 44,
     backgroundColor: theme.colors.gray[200],
     borderRadius: theme.borderRadius.sm,
     overflow: 'hidden',

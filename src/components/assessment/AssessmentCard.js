@@ -54,7 +54,7 @@ const AssessmentCard = ({ title, description, duration, icon, onStart, onLearnMo
         accessibilityLabel="Assessment actions"
       >
         <TouchableOpacity
-          style={[styles.learnMoreButton, { backgroundColor: theme.colors.gray[200] }]}
+          style={[[styles.learnMoreButton, { backgroundColor: theme.colors.gray[200] , { minWidth: 44, minHeight: 44 }]}]}
           onPress={onLearnMore}
           activeOpacity={0.7}
           accessibilityRole="button"
@@ -67,7 +67,7 @@ const AssessmentCard = ({ title, description, duration, icon, onStart, onLearnMo
         </TouchableOpacity>
         
         <TouchableOpacity
-          style={[styles.startButton, { backgroundColor: theme.colors.primary[500] }]}
+          style={[[styles.startButton, { backgroundColor: theme.colors.primary[500] , { minWidth: 44, minHeight: 44 }]}]}
           onPress={onStart}
           disabled={loading}
           activeOpacity={0.8}

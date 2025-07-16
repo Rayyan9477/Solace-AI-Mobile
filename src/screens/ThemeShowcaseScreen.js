@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,48 +6,56 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  BackHandler,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../contexts/ThemeContext';
 
 const ThemeShowcaseScreen = () => {
   const { theme, isDarkMode, toggleTheme } = useTheme();
+  const navigation = useNavigation();
 
-  const ColorPalette = ({ title, colors, isObjectColors = false }) => (
-    <View style={[styles.section, { backgroundColor: theme.colors.background.card }]}>
-      <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
-        {title}
-      </Text>
-      <View style={styles.colorGrid}>
-        {isObjectColors ? (
-          Object.entries(colors).map(([key, value]) => (
-            <View key={key} style={styles.colorItem}>
-              <View 
-                style={[
-                  styles.colorSwatch, 
-                  { backgroundColor: value }
-                ]} 
-              />
-              <Text style={[styles.colorLabel, { color: theme.colors.text.secondary }]}>
-                {key}
-              </Text>
-            </View>
-          ))
-        ) : (
-          Object.entries(colors).map(([key, value]) => (
-            <View key={key} style={styles.colorItem}>
-              <View 
-                style={[
-                  styles.colorSwatch, 
-                  { backgroundColor: value }
-                ]} 
-              />
-              <Text style={[styles.colorLabel, { color: theme.colors.text.secondary }]}>
-                {key}
-              </Text>
-            </View>
-          ))
-        )}
-      </View>
+  // Handle hardware back button on Android
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+          return true;
+        }
+        return false;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
+
+  const ColorPalette = ({ title, colors, isObjectColors = false }) => {
+    const colorItems = useMemo(() => {
+      return Object.entries(colors).map(([key, value]) => (
+        <View key={key} style={styles.colorItem}>
+          <View 
+            style={[
+              styles.colorSwatch, 
+              { backgroundColor: value }
+            ]} 
+          />
+          <Text style={[styles.colorLabel, { color: theme.colors.text.secondary }]}>
+            {key}
+          </Text>
+        </View>
+      ));
+    }, [colors, theme.colors.text.secondary]);
+
+    return (
+      <View style={[styles.section, { backgroundColor: theme.colors.background.card }]}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+          {title}
+        </Text>
+        <View style={styles.colorGrid}>
+          {colorItems}
+        </View>
     </View>
   );
 
@@ -110,43 +118,58 @@ const ThemeShowcaseScreen = () => {
       {/* Buttons */}
       <View style={styles.buttonGrid}>
         <TouchableOpacity 
-          style={[
+          style={[[
             styles.button, 
             styles.primaryButton,
-            { backgroundColor: theme.colors.primary[500] }
+            { backgroundColor: theme.colors.primary[500] , { minWidth: 44, minHeight: 44 }]}
           ]}
-        >
+        
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Primary"
+        accessibilityHint="Double tap to activate"
+      >
           <Text style={[styles.buttonText, { color: theme.colors.text.inverse }]}>
             Primary
           </Text>
         </TouchableOpacity>
         
         <TouchableOpacity 
-          style={[
+          style={[[
             styles.button, 
             styles.secondaryButton,
             { 
               backgroundColor: theme.colors.secondary[500],
               borderColor: theme.colors.secondary[500] 
-            }
+            , { minWidth: 44, minHeight: 44 }]}
           ]}
-        >
+        
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Secondary"
+        accessibilityHint="Double tap to activate"
+      >
           <Text style={[styles.buttonText, { color: theme.colors.text.inverse }]}>
             Secondary
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
-          style={[
+          style={[[
             styles.button, 
             styles.outlineButton,
             { 
               backgroundColor: 'transparent',
               borderColor: theme.colors.border.primary,
               borderWidth: 1 
-            }
+            , { minWidth: 44, minHeight: 44 }]}
           ]}
-        >
+        
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Outline"
+        accessibilityHint="Double tap to activate"
+      >
           <Text style={[styles.buttonText, { color: theme.colors.text.primary }]}>
             Outline
           </Text>
@@ -169,11 +192,16 @@ const ThemeShowcaseScreen = () => {
           This card demonstrates the new light mode design inspired by the Freud UI Kit with proper contrast ratios and therapeutic colors.
         </Text>
         <TouchableOpacity 
-          style={[
+          style={[[
             styles.cardButton,
-            { backgroundColor: theme.colors.therapeutic.calming[500] }
+            { backgroundColor: theme.colors.therapeutic.calming[500] , { minWidth: 44, minHeight: 44 }]}
           ]}
-        >
+        
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Learn More"
+        accessibilityHint="Double tap to activate"
+      >
           <Text style={[styles.cardButtonText, { color: theme.colors.text.inverse }]}>
             Learn More
           </Text>
@@ -200,56 +228,77 @@ const ThemeShowcaseScreen = () => {
     </View>
   );
 
-  const MoodShowcase = () => (
-    <View style={[styles.section, { backgroundColor: theme.colors.background.card }]}>
-      <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
-        Mood Palette
-      </Text>
-      <View style={styles.moodGrid}>
-        {Object.entries(theme.colors.mood).map(([mood, color]) => (
-          <TouchableOpacity 
-            key={mood} 
-            style={[
-              styles.moodButton,
-              { backgroundColor: color, borderColor: theme.colors.border.muted }
-            ]}
-          >
-            <Text style={[styles.moodText, { color: theme.colors.text.primary }]}>
-              {mood}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </View>
-  );
+  const MoodShowcase = () => {
+    const moodButtons = useMemo(() => {
+      return Object.entries(theme.colors.mood).map(([mood, color]) => (
+        <TouchableOpacity 
+          key={mood} 
+          style={[
+            styles.moodButton,
+            { 
+              backgroundColor: color, 
+              borderColor: theme.colors.border.muted,
+              minWidth: 44, 
+              minHeight: 44 
+            }
+          ]}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel={mood}
+          accessibilityHint="Tap to select this mood"
+        >
+          <Text style={[styles.moodText, { color: theme.colors.text.primary }]}>
+            {mood}
+          </Text>
+        </TouchableOpacity>
+      ));
+    }, [theme.colors.mood, theme.colors.border.muted, theme.colors.text.primary]);
 
-  const TherapeuticShowcase = () => (
-    <View style={[styles.section, { backgroundColor: theme.colors.background.card }]}>
-      <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
-        Therapeutic Colors
-      </Text>
-      <View style={styles.therapeuticGrid}>
-        {Object.entries(theme.colors.therapeutic).map(([type, colors]) => (
-          <View key={type} style={styles.therapeuticItem}>
-            <Text style={[styles.therapeuticLabel, { color: theme.colors.text.primary }]}>
-              {type}
-            </Text>
-            <View style={styles.therapeuticSwatches}>
-              {Object.entries(colors).map(([shade, color]) => (
-                <View 
-                  key={shade}
-                  style={[
-                    styles.therapeuticSwatch,
-                    { backgroundColor: color }
-                  ]}
-                />
-              ))}
-            </View>
-          </View>
-        ))}
+    return (
+      <View style={[styles.section, { backgroundColor: theme.colors.background.card }]}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+          Mood Palette
+        </Text>
+        <View style={styles.moodGrid}>
+          {moodButtons}
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
+
+  const TherapeuticShowcase = () => {
+    const therapeuticItems = useMemo(() => {
+      return Object.entries(theme.colors.therapeutic).map(([type, colors]) => (
+        <View key={type} style={styles.therapeuticItem}>
+          <Text style={[styles.therapeuticLabel, { color: theme.colors.text.primary }]}>
+            {type}
+          </Text>
+          <View style={styles.therapeuticSwatches}>
+            {Object.entries(colors).map(([shade, color]) => (
+              <View 
+                key={shade}
+                style={[
+                  styles.therapeuticSwatch,
+                  { backgroundColor: color }
+                ]}
+              />
+            ))}
+          </View>
+        </View>
+      ));
+    }, [theme.colors.therapeutic, theme.colors.text.primary]);
+
+    return (
+      <View style={[styles.section, { backgroundColor: theme.colors.background.card }]}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+          Therapeutic Colors
+        </Text>
+        <View style={styles.therapeuticGrid}>
+          {therapeuticItems}
+        </View>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
@@ -258,12 +307,17 @@ const ThemeShowcaseScreen = () => {
           Freud UI Kit Light Mode
         </Text>
         <TouchableOpacity 
-          style={[
+          style={[[
             styles.themeToggle,
-            { backgroundColor: theme.colors.primary[500] }
+            { backgroundColor: theme.colors.primary[500] , { minWidth: 44, minHeight: 44 }]}
           ]}
           onPress={toggleTheme}
-        >
+        
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="{isDarkMode ? '☀️ Light' : '🌙 Dark'}"
+        accessibilityHint="Double tap to activate"
+      >
           <Text style={[styles.toggleText, { color: theme.colors.text.inverse }]}>
             {isDarkMode ? '☀️ Light' : '🌙 Dark'}
           </Text>
@@ -316,7 +370,7 @@ const styles = StyleSheet.create({
   themeToggle: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 22,
   },
   toggleText: {
     fontSize: 14,
@@ -332,9 +386,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 20,
     padding: 20,
-    borderRadius: 16,
+    borderRadius: 22,
     shadowColor: theme.colors.text.primary,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
@@ -359,7 +413,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     marginBottom: 6,
     shadowColor: theme.colors.text.primary,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
     elevation: 3,
@@ -387,14 +441,14 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     shadowColor: theme.colors.text.primary,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
     elevation: 3,
   },
   secondaryButton: {
     shadowColor: theme.colors.text.primary,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
     elevation: 3,
@@ -408,7 +462,7 @@ const styles = StyleSheet.create({
   },
   card: {
     padding: 20,
-    borderRadius: 16,
+    borderRadius: 22,
     borderWidth: 1,
     marginBottom: 20,
   },
@@ -459,7 +513,7 @@ const styles = StyleSheet.create({
   moodButton: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 22,
     borderWidth: 1,
     marginBottom: 8,
   },
@@ -485,11 +539,10 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   therapeuticSwatch: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 44, height: 44,
+    borderRadius: 22,
     shadowColor: theme.colors.text.primary,
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,

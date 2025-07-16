@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-07-10T10:10:12.713Z",
+  "timestamp": "2025-07-14T11:27:51.564Z",
   "summary": {
     "grade": "C-",
     "successRate": 64.51612903225806,
@@ -13,7 +13,7 @@
       "Accessibility Implementation: 0/0 components (0.0%) have accessibility features",
       "TouchableOpacity Accessibility: 40/103 touchables (38.8%) have accessibility roles",
       "Accessibility Labels: Found in 27 files (target: 70% of interactive components)",
-      "Reduced Motion Support: 1/12 animation files support reduced motion"
+      "Reduced Motion Support: 3/12 animation files support reduced motion"
     ],
     "recommendations": [
       "Essential Accessibility Roles: Missing roles: listitem, slider",

@@ -60,7 +60,7 @@ const ActivitySelector = ({ selectedActivities, onActivityToggle }) => {
           return (
             <TouchableOpacity
               key={activity.id}
-              style={[
+              style={[[
                 styles.activityItem,
                 {
                   backgroundColor: isSelected 
@@ -69,9 +69,14 @@ const ActivitySelector = ({ selectedActivities, onActivityToggle }) => {
                   borderColor: isSelected 
                     ? theme.colors.primary[500] 
                     : theme.colors.gray[300],
-                }
+                , { minWidth: 44, minHeight: 44 }]}
               ]}
-              onPress={() => handleActivityToggle(activity.id)}
+              onPress={() =
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="{activity.emoji}"
+        accessibilityHint="Double tap to activate"
+      > handleActivityToggle(activity.id)}
               activeOpacity={0.7}
               accessibilityRole="checkbox"
               accessibilityLabel={`${activity.label} activity`}

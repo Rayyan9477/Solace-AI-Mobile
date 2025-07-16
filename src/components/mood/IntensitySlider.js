@@ -136,16 +136,15 @@ const styles = StyleSheet.create({
   },
   slider: {
     width: '100%',
-    height: 40,
+    height: 44,
     marginVertical: theme.spacing[3],
   },
   thumb: {
-    width: 24,
-    height: 24,
+    width: 44, height: 44,
     borderRadius: 12,
   },
   track: {
-    height: 6,
+    height: 44,
     borderRadius: 3,
   },
   labelsContainer: {

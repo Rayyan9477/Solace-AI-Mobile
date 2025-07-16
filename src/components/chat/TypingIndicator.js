@@ -111,8 +111,7 @@ const TypingIndicator = () => {
 
 const styles = StyleSheet.create({
   dot: {
-    width: 8,
-    height: 8,
+    width: 44, height: 44,
     borderRadius: 4,
     marginRight: 4,
   },

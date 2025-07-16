@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import * as Speech from 'expo-speech';
 import { useTheme } from '../../contexts/ThemeContext';
 import Icon from '../common/Icon';
 
 const ChatBubble = ({
+  const [isLoading, setIsLoading] = React.useState(false);
+
   message,
   isUser,
   timestamp,
@@ -14,6 +16,13 @@ const ChatBubble = ({
   const { theme } = useTheme();
 
   const handleSpeak = async () => {
+    setIsLoading(true);
+    try {
+    } catch (error) {
+      console.error('Error in handleSpeak:', error);
+    } finally {
+      setIsLoading(false);
+    }
     const isSpeaking = await Speech.isSpeakingAsync();
     if (isSpeaking) {
       await Speech.stop();
@@ -32,7 +41,23 @@ const ChatBubble = ({
   });
 
   return (
-    <View
+    <>
+      {isLoading && (
+        <View style={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          right: 0, 
+          bottom: 0, 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          zIndex: 1000 
+        }}>
+          <ActivityIndicator size="large" color="#007AFF" />
+        </View>
+      )}
+      <View
       style={[
         styles.container,
         isUser ? styles.userContainer : styles.botContainer,
@@ -99,6 +124,7 @@ const ChatBubble = ({
         </View>
       </Pressable>
     </View>
+    </>
   );
 };
 
@@ -115,7 +141,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   bubble: {
-    borderRadius: 20,
+    borderRadius: 22,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderWidth: 1,

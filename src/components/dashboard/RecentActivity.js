@@ -83,7 +83,12 @@ const RecentActivity = ({ moodHistory, chatHistory }) => {
         <Text style={[styles.title, { color: theme.colors.text.primary }]}>
           Recent Activity
         </Text>
-        <TouchableOpacity style={styles.viewAllButton}>
+        <TouchableOpacity style={[styles.viewAllButton, { minWidth: 44, minHeight: 44 }]}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="View All"
+        accessibilityHint="Double tap to activate"
+      >
           <Text style={[styles.viewAllText, { color: theme.colors.primary[500] }]}>
             View All
           </Text>
@@ -161,8 +166,7 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing[2],
   },
   activityIcon: {
-    width: 40,
-    height: 40,
+    width: 44, height: 44,
     borderRadius: theme.borderRadius.full,
     backgroundColor: theme.colors.gray[100],
     justifyContent: 'center',

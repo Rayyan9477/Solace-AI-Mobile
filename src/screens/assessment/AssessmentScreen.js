@@ -17,6 +17,24 @@ import AssessmentHistory from '../../components/assessment/AssessmentHistory';
 
 const AssessmentScreen = () => {
   const navigation = useNavigation();
+
+  // Handle hardware back button on Android
+  React.useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+          return true;
+        }
+        return false;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
+
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const { theme } = useTheme();
   
@@ -102,8 +120,13 @@ const AssessmentScreen = () => {
               <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
                 Recent Results
               </Text>
-              <TouchableOpacity onPress={handleViewHistory}>
-                <Text style={[styles.viewAllText, { color: theme.colors.primary[500] }]}>
+              <TouchableOpacity onPress={handleViewHistory}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="View All"
+        accessibilityHint="Double tap to activate"
+      >
+                <Text style={[[styles.viewAllText, { color: theme.colors.primary[500] , { minWidth: 44, minHeight: 44 }]}]}>
                   View All
                 </Text>
               </TouchableOpacity>

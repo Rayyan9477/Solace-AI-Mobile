@@ -12,31 +12,30 @@ const VoiceRecorder = ({
   maxDuration = 60,
   style,
 }) => {
-  const { theme } = useTheme();
+  const { theme, isReducedMotionEnabled } = useTheme();
   const [animatedValue] = useState(new Animated.Value(1));
 
   useEffect(() => {
-    if (isRecording) {
-      const pulse = Animated.loop(
+    if (isRecording && !isReducedMotionEnabled) {
+      Animated.loop(
         Animated.sequence([
           Animated.timing(animatedValue, {
             toValue: 1.2,
-            duration: 800,
+            duration: 500,
             useNativeDriver: true,
           }),
           Animated.timing(animatedValue, {
             toValue: 1,
-            duration: 800,
+            duration: 500,
             useNativeDriver: true,
           }),
         ])
-      );
-      pulse.start();
-      return () => pulse.stop();
+      ).start();
     } else {
+      animatedValue.stopAnimation();
       animatedValue.setValue(1);
     }
-  }, [isRecording]);
+  }, [isRecording, animatedValue]);
 
   const formatDuration = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -61,9 +60,9 @@ const VoiceRecorder = ({
       {isRecording && (
         <View style={styles.recordingControls}>
           <TouchableOpacity
-            style={[
+            style={[[
               styles.cancelButton,
-              { backgroundColor: theme.colors.error.main }
+              { backgroundColor: theme.colors.error.main , { minWidth: 44, minHeight: 44 }]}
             ]}
             onPress={onCancelRecording}
             accessibilityLabel="Cancel recording"
@@ -95,13 +94,13 @@ const VoiceRecorder = ({
 
       <Animated.View style={{ transform: [{ scale: animatedValue }] }}>
         <TouchableOpacity
-          style={[
+          style={[[
             styles.recordButton,
             {
               backgroundColor: isRecording
                 ? theme.colors.error.main
                 : theme.colors.primary.main,
-            },
+            , { minWidth: 44, minHeight: 44 }]},
             disabled && styles.disabled,
           ]}
           onPress={handlePress}
@@ -134,9 +133,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   cancelButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 44, height: 44,
+    borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -156,7 +154,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     width: '100%',
-    height: 4,
+    height: 44,
     borderRadius: 2,
     overflow: 'hidden',
   },
@@ -172,7 +170,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 4,
     shadowColor: theme.colors.icon.primary,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },

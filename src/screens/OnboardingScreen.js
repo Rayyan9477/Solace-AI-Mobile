@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import * as Haptics from 'expo-haptics';
 import {
   View,
   Text,
@@ -77,9 +78,9 @@ const PaginationContainer = styled(View)`
 `;
 
 const PaginationDot = styled(View)`
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
   background-color: ${props => props.active ? props.activeColor : props.inactiveColor};
   margin: 0 4px;
 `;
@@ -218,11 +219,22 @@ const OnboardingScreen = () => {
             <NavigationButton
               backgroundColor={theme.colors.gray[200]}
               onPress={handlePrevious}
+              accessibilityLabel="Go to previous step"
+              accessibilityHint="Navigate to the previous onboarding screen"
+              accessibilityRole="button"
             >
               <ButtonText color={theme.colors.text.primary}>Previous</ButtonText>
             </NavigationButton>
           ) : (
-            <SkipButton onPress={handleComplete}>
+            <SkipButton 
+              onPress={() => {
+                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                handleComplete();
+              }}
+              accessibilityLabel="Skip onboarding"
+              accessibilityHint="Skip the introduction and go to main app"
+              accessibilityRole="button"
+            >
               <SkipText color={theme.colors.text.secondary}>Skip</SkipText>
             </SkipButton>
           )}
@@ -241,6 +253,9 @@ const OnboardingScreen = () => {
           <NavigationButton
             backgroundColor={theme.colors.primary[500]}
             onPress={handleNext}
+            accessibilityLabel={currentIndex === onboardingData.length - 1 ? 'Get started with Solace' : 'Continue to next step'}
+            accessibilityHint={currentIndex === onboardingData.length - 1 ? 'Complete onboarding and enter the app' : 'Proceed to the next onboarding screen'}
+            accessibilityRole="button"
           >
             <ButtonText color={theme.colors.text.inverse}>
               {currentIndex === onboardingData.length - 1 ? 'Get Started' : 'Next'}

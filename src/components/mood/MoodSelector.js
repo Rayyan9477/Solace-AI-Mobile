@@ -32,14 +32,19 @@ const MoodSelector = ({ selectedMood, onMoodSelect }) => {
         {moods.map((mood) => (
           <TouchableOpacity
             key={mood.id}
-            style={[
+            style={[[
               styles.moodItem,
               {
                 backgroundColor: selectedMood === mood.id ? mood.color : theme.colors.background.primary,
                 borderColor: selectedMood === mood.id ? mood.color : theme.colors.gray[300],
-              }
+              , { minWidth: 44, minHeight: 44 }]}
             ]}
-            onPress={() => handleMoodSelect(mood.id)}
+            onPress={() =
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="{mood.emoji}"
+        accessibilityHint="Double tap to activate"
+      > handleMoodSelect(mood.id)}
             activeOpacity={0.7}
             accessibilityRole="button"
             accessibilityLabel={`Select ${mood.label} mood`}

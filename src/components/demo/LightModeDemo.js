@@ -14,15 +14,20 @@ const LightModeDemo = () => {
 
   const MoodCard = ({ mood, color, emoji, description }) => (
     <TouchableOpacity 
-      style={[
+      style={[[
         styles.moodCard,
         { 
           backgroundColor: color,
           borderColor: theme.colors.border.muted,
-        }
+        , { minWidth: 44, minHeight: 44 }]}
       ]}
       activeOpacity={0.8}
-    >
+    
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="{emoji}"
+        accessibilityHint="Double tap to activate"
+      >
       <Text style={styles.moodEmoji}>{emoji}</Text>
       <Text style={[styles.moodTitle, { color: theme.colors.text.primary }]}>
         {mood}
@@ -69,9 +74,14 @@ const LightModeDemo = () => {
 
     return (
       <TouchableOpacity 
-        style={[styles.actionButton, getButtonStyle()]}
+        style={[[styles.actionButton, getButtonStyle()], { minWidth: 44, minHeight: 44 }]}
         onPress={onPress}
         activeOpacity={0.8}
+      
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="{title}"
+        accessibilityHint="Double tap to activate"
       >
         <Text style={[styles.actionButtonText, { color: getTextColor() }]}>
           {title}
@@ -258,10 +268,10 @@ const styles = StyleSheet.create({
   },
   checkInCard: {
     padding: 20,
-    borderRadius: 16,
+    borderRadius: 22,
     marginBottom: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
@@ -302,10 +312,10 @@ const styles = StyleSheet.create({
   },
   section: {
     padding: 20,
-    borderRadius: 16,
+    borderRadius: 22,
     marginBottom: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
@@ -345,10 +355,10 @@ const styles = StyleSheet.create({
   },
   progressCard: {
     padding: 20,
-    borderRadius: 16,
+    borderRadius: 22,
     marginBottom: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
@@ -382,7 +392,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,

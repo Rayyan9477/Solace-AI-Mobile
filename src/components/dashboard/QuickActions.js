@@ -43,7 +43,7 @@ const QuickActions = ({ onStartChat, onTakeAssessment, onMoodTracker }) => {
         {actions.map((action) => (
           <TouchableOpacity
             key={action.id}
-            style={[styles.actionCard, { backgroundColor: action.backgroundColor }]}
+            style={[[styles.actionCard, { backgroundColor: action.backgroundColor , { minWidth: 44, minHeight: 44 }]}]}
             onPress={action.onPress}
             activeOpacity={0.8}
             accessibilityRole="button"

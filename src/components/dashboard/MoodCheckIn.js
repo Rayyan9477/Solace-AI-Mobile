@@ -59,9 +59,13 @@ const MoodCheckIn = ({ currentMood, onCheckIn }) => {
       )}
 
       <TouchableOpacity
-        style={[styles.checkInButton, { backgroundColor: theme.colors.primary[500] }]}
+        style={[[styles.checkInButton, { backgroundColor: theme.colors.primary[500] , { minWidth: 44, minHeight: 44 }]}]}
         onPress={onCheckIn}
         activeOpacity={0.8}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel={moodDisplay ? 'Update Mood' : 'Check In Now'}
+        accessibilityHint="Double tap to open mood check-in"
       >
         <Text style={[styles.checkInButtonText, { color: theme.colors.text.inverse }]}>
           {moodDisplay ? 'Update Mood' : 'Check In Now'}
@@ -79,7 +83,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     shadowColor: theme.colors.text.primary,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
@@ -107,9 +111,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   currentMoodIndicator: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 44, height: 44,
+    borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -129,7 +132,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 12,
     shadowColor: theme.colors.text.primary,
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,

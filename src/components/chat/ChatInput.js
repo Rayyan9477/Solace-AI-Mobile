@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Keyboard, Pressable } from 'react-native';
+import { View, TextInput, StyleSheet, Keyboard, Pressable, KeyboardAvoidingView, Platform } from 'react-native';
 import * as Speech from 'expo-speech';
 import * as Haptics from 'expo-haptics';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -36,21 +36,25 @@ const ChatInput = ({
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: theme.colors.background.surface },
-      ]}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
     >
       <View
         style={[
-          styles.inputContainer,
-          {
-            backgroundColor: theme.colors.background.input,
-            borderColor: theme.colors.border.main,
-          },
+          styles.container,
+          { backgroundColor: theme.colors.background.surface },
         ]}
       >
+        <View
+          style={[
+            styles.inputContainer,
+            {
+              backgroundColor: theme.colors.background.input,
+              borderColor: theme.colors.border.main,
+            },
+          ]}
+        >
         <TextInput
           value={message}
           onChangeText={setMessage}
@@ -111,6 +115,7 @@ const ChatInput = ({
         </View>
       </View>
     </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -140,9 +145,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 44, height: 44,
+    borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,

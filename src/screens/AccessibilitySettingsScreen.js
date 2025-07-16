@@ -12,7 +12,24 @@ import {
 import { useTheme } from '../../contexts/ThemeContext';
 import { createFormInputAccessibility, createCardAccessibility } from '../../utils/accessibility';
 
-const AccessibilitySettingsScreen = ({ navigation }) => {
+const AccessibilitySettingsScreen = ({
+
+  // Handle hardware back button on Android
+  React.useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+          return true;
+        }
+        return false;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
+ navigation }) => {
   const { 
     theme, 
     isReducedMotionEnabled,
@@ -44,13 +61,10 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
     updateAccessibilitySettings({ [setting]: value });
   };
 
-  const handleFontSizeChange = (size) => {
-    setFontSize(size);
-    Alert.alert(
-      'Font Size Changed',
-      `Font size set to ${size}. Changes will be applied throughout the app.`,
-      [{ text: 'OK' }]
-    );
+  const handleFontSizeChange = (newSize) => {
+    setFontSize(newSize);
+    // TODO: Implement actual font scaling
+    Alert.alert('Font Size Changed', `Font size set to ${newSize}`);
   };
 
   const handleFontScaleChange = (scale) => {
@@ -183,23 +197,26 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
           description="Adjust font size and text display settings"
         >
           <View style={styles.settingRow}>
-            <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>
-              Font Size Control
-            </Text>
+            <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>Font Size Control</Text>
             <View style={styles.fontSizeButtons}>
               {['small', 'normal', 'large', 'extraLarge'].map((size) => (
                 <TouchableOpacity
                   key={size}
-                  style={[
+                  style={[[
                     styles.fontSizeButton,
                     {
                       backgroundColor: fontSize === size 
                         ? theme.colors.primary[500] 
                         : theme.colors.background.primary,
                       borderColor: theme.colors.primary[500],
-                    }
+                    , { minWidth: 44, minHeight: 44 }]}
                   ]}
-                  onPress={() => handleFontSizeChange(size)}
+                  onPress={() =
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="{getFontSizeLabel(size)}"
+        accessibilityHint="Double tap to activate"
+      > handleFontSizeChange(size)}
                   accessibilityRole="radio"
                   accessibilityLabel={`Font size ${getFontSizeLabel(size)}`}
                   accessibilityState={{ checked: fontSize === size }}
@@ -352,11 +369,16 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
           description="Accessibility features specific to mental health support"
         >
           <TouchableOpacity
-            style={[styles.actionButton, { 
+            style={[[styles.actionButton, { 
               backgroundColor: theme.colors.therapeutic.calming,
               borderColor: theme.colors.therapeutic.calming,
-            }]}
-            onPress={() => navigation.navigate('CrisisResources')}
+            , { minWidth: 44, minHeight: 44 }]}]}
+            onPress={() =
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Emergency Resources"
+        accessibilityHint="Double tap to get help"
+      > navigation.navigate('CrisisResources')}
             accessibilityRole="button"
             accessibilityLabel="Crisis resources"
             accessibilityHint="Double tap to view emergency mental health resources"
@@ -367,11 +389,16 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.actionButton, { 
+            style={[[styles.actionButton, { 
               backgroundColor: theme.colors.background.primary,
               borderColor: theme.colors.primary[500],
-            }]}
-            onPress={() => navigation.navigate('AccessibilityGuide')}
+            , { minWidth: 44, minHeight: 44 }]}]}
+            onPress={() =
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Accessibility Guide"
+        accessibilityHint="Double tap to activate"
+      > navigation.navigate('AccessibilityGuide')}
             accessibilityRole="button"
             accessibilityLabel="Accessibility guide"
             accessibilityHint="Double tap to view app accessibility features guide"
@@ -384,10 +411,10 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
 
         {/* Reset Settings */}
         <TouchableOpacity
-          style={[styles.resetButton, { 
+          style={[[styles.resetButton, { 
             backgroundColor: theme.colors.error[500],
             borderColor: theme.colors.error[500],
-          }]}
+          , { minWidth: 44, minHeight: 44 }]}]}
           onPress={resetToDefaults}
           accessibilityRole="button"
           accessibilityLabel="Reset accessibility settings"
@@ -475,7 +502,7 @@ const styles = StyleSheet.create({
   fontSizeButton: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 22,
     borderWidth: 1,
   },
   fontSizeButtonText: {
@@ -483,7 +510,7 @@ const styles = StyleSheet.create({
   },
   slider: {
     width: '100%',
-    height: 40,
+    height: 44,
     marginTop: 8,
   },
   actionButton: {
