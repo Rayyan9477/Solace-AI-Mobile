@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import * as Haptics from 'expo-haptics';
 import {
   View,
   Text,
@@ -19,6 +20,24 @@ import SettingsSection from '../../components/profile/SettingsSection';
 import StatsCard from '../../components/profile/StatsCard';
 
 const ProfileScreen = () => {
+  const navigation = useNavigation();
+
+  // Handle hardware back button on Android
+  React.useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+          return true;
+        }
+        return false;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
+
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { isDarkMode, toggleTheme } = useTheme();
@@ -240,9 +259,14 @@ const ProfileScreen = () => {
 
         <SettingsSection title="Account">
           <TouchableOpacity
-            style={styles.settingButton}
+            style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}
             onPress={handleEmergencyContacts}
-          >
+          
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Emergency Contacts"
+        accessibilityHint="Double tap to get help"
+      >
             <Text style={[styles.settingButtonText, { color: theme.colors.text.primary }]}>
               Emergency Contacts
             </Text>
@@ -250,9 +274,14 @@ const ProfileScreen = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.settingButton}
+            style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}
             onPress={handleDataExport}
-          >
+          
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Export My Data"
+        accessibilityHint="Double tap to activate"
+      >
             <Text style={[styles.settingButtonText, { color: theme.colors.text.primary }]}>
               Export My Data
             </Text>
@@ -260,8 +289,15 @@ const ProfileScreen = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.settingButton}
-            onPress={handleDeleteAccount}
+            style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}
+            onPress={() => {
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+              handleDeleteAccount();
+            }}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Delete account"
+            accessibilityHint="Permanently delete your account and all data"
           >
             <Text style={[styles.settingButtonText, { color: theme.colors.error[500] }]}>
               Delete Account
@@ -272,9 +308,14 @@ const ProfileScreen = () => {
 
         <View style={styles.logoutContainer}>
           <TouchableOpacity
-            style={[styles.logoutButton, { backgroundColor: theme.colors.error[500] }]}
+            style={[[styles.logoutButton, { backgroundColor: theme.colors.error[500] , { minWidth: 44, minHeight: 44 }]}]}
             onPress={handleLogout}
-          >
+          
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Logout"
+        accessibilityHint="Double tap to activate"
+      >
             <Text style={styles.logoutButtonText}>Logout</Text>
           </TouchableOpacity>
         </View>

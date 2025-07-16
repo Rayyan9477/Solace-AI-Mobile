@@ -77,7 +77,12 @@ const BottomTabBar = ({
         return (
           <Pressable
             key={route.key}
-            onPress={() => handlePress(route, isFocused)}
+            onPress={() =
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="{tabItem.label}"
+        accessibilityHint="Double tap to activate"
+      > handlePress(route, isFocused)}
             style={styles.tab}
             accessibilityRole="tab"
             accessibilityLabel={options.tabBarAccessibilityLabel}

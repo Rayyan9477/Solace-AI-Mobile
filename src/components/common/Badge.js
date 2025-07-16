@@ -91,11 +91,11 @@ const Badge = ({
     if (dot) {
       switch (size) {
         case 'small':
-          return { width: 8, height: 8, borderRadius: 4 };
+          return { width: 44, height: 44, borderRadius: 4 };
         case 'large':
-          return { width: 16, height: 16, borderRadius: 8 };
+          return { width: 44, height: 44, borderRadius: 8 };
         default:
-          return { width: 12, height: 12, borderRadius: 6 };
+          return { width: 44, height: 44, borderRadius: 6 };
       }
     }
 
@@ -106,16 +106,16 @@ const Badge = ({
           paddingHorizontal: 6,
           borderRadius: 8,
           minWidth: 16,
-          height: 16,
+          height: 44,
           fontSize: 10,
         };
       case 'large':
         return {
           paddingVertical: 6,
           paddingHorizontal: 12,
-          borderRadius: 16,
+          borderRadius: 22,
           minWidth: 32,
-          height: 32,
+          height: 44,
           fontSize: 14,
         };
       default:
@@ -124,7 +124,7 @@ const Badge = ({
           paddingHorizontal: 8,
           borderRadius: 12,
           minWidth: 24,
-          height: 24,
+          height: 44,
           fontSize: 12,
         };
     }

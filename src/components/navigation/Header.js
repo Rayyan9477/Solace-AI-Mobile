@@ -29,7 +29,12 @@ const Header = ({
       <View style={styles.leftAction}>
         {showBack && (
           <Pressable
-            onPress={() => navigation.goBack()}
+            onPress={() =
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Button"
+        accessibilityHint="Double tap to activate"
+      > navigation.goBack()}
             style={styles.backButton}
             accessibilityLabel="Go back"
             accessibilityRole="button"
@@ -57,7 +62,12 @@ const Header = ({
         {rightAction}
         {showProfile && (
           <Pressable
-            onPress={() => navigation.navigate('Profile')}
+            onPress={() =
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Button"
+        accessibilityHint="Double tap to activate"
+      > navigation.navigate('Profile')}
             accessibilityLabel="Go to profile"
             accessibilityRole="button"
           >

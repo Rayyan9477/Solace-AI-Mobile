@@ -9,9 +9,12 @@ import {
   Platform,
   Animated,
   Vibration,
+  ActivityIndicator,
+  BackHandler,
 } from 'react-native';
 import styled from 'styled-components/native';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -55,9 +58,9 @@ const AIStatus = styled(Text)`
 `;
 
 const HeaderButton = styled(TouchableOpacity)`
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
   background-color: ${props => props.backgroundColor};
   justify-content: center;
   align-items: center;
@@ -105,18 +108,18 @@ const SendButton = styled(Animated.View)`
 `;
 
 const ActionButton = styled(TouchableOpacity)`
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
   background-color: ${props => props.backgroundColor};
   justify-content: center;
   align-items: center;
 `;
 
 const VoiceButton = styled(TouchableOpacity)`
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
   background-color: ${props => props.backgroundColor};
   justify-content: center;
   align-items: center;
@@ -132,16 +135,34 @@ const EmotionContainer = styled(View)`
 
 const ChatScreen = () => {
   const { theme } = useTheme();
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const { messages, isTyping, voiceEnabled } = useSelector(state => state.chat);
   
   const [inputText, setInputText] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [currentEmotion, setCurrentEmotion] = useState(null);
+  const [sendingMessage, setSendingMessage] = useState(false);
   
   const flatListRef = useRef(null);
   const sendButtonScale = useRef(new Animated.Value(0)).current;
   const inputHeight = useRef(new Animated.Value(40)).current;
+
+  // Handle hardware back button on Android
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+          return true;
+        }
+        return false;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   useEffect(() => {
     // Animate send button when text is entered
@@ -154,38 +175,47 @@ const ChatScreen = () => {
   }, [inputText]);
 
   const handleSendMessage = async () => {
-    if (!inputText.trim()) return;
+    if (!inputText.trim() || sendingMessage) return;
 
-    const userMessage = {
-      id: Date.now().toString(),
-      text: inputText.trim(),
-      type: 'user',
-      timestamp: new Date().toISOString(),
-      emotion: currentEmotion,
-    };
+    try {
+      setSendingMessage(true);
 
-    dispatch(addMessage(userMessage));
-    setInputText('');
-    setCurrentEmotion(null);
+      const userMessage = {
+        id: Date.now().toString(),
+        text: inputText.trim(),
+        type: 'user',
+        timestamp: new Date().toISOString(),
+        emotion: currentEmotion,
+      };
 
-    // Scroll to bottom
-    setTimeout(() => {
-      flatListRef.current?.scrollToEnd({ animated: true });
-    }, 100);
+      dispatch(addMessage(userMessage));
+      setInputText('');
+      setCurrentEmotion(null);
 
-    // Simulate AI typing
-    dispatch(setTyping(true));
-    
-    // Simulate AI response delay
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(userMessage.text);
-      dispatch(addMessage(aiResponse));
-      dispatch(setTyping(false));
-      
+      // Scroll to bottom
       setTimeout(() => {
         flatListRef.current?.scrollToEnd({ animated: true });
       }, 100);
-    }, 1500 + Math.random() * 2000);
+
+      // Simulate AI typing
+      dispatch(setTyping(true));
+      
+      // Simulate AI response delay
+      setTimeout(() => {
+        const aiResponse = generateAIResponse(userMessage.text);
+        dispatch(addMessage(aiResponse));
+        dispatch(setTyping(false));
+        setSendingMessage(false);
+        
+        setTimeout(() => {
+          flatListRef.current?.scrollToEnd({ animated: true });
+        }, 100);
+      }, 1500 + Math.random() * 2000);
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      setSendingMessage(false);
+      dispatch(setTyping(false));
+    }
   };
 
   const generateAIResponse = (userText) => {
@@ -348,9 +378,13 @@ const ChatScreen = () => {
             <ActionButton
               backgroundColor={theme.colors.primary[500]}
               onPress={handleSendMessage}
-              disabled={!inputText.trim()}
+              disabled={!inputText.trim() || sendingMessage}
             >
-              <Icon name="send" size={20} color={theme.colors.text.inverse} />
+              {sendingMessage ? (
+                <ActivityIndicator size="small" color={theme.colors.text.inverse} />
+              ) : (
+                <Icon name="send" size={20} color={theme.colors.text.inverse} />
+              )}
             </ActionButton>
           </SendButton>
         </InputWrapper>

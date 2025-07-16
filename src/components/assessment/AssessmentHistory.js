@@ -55,8 +55,13 @@ const AssessmentHistory = ({ history, onViewDetails }) => {
       {history.map((result) => (
         <TouchableOpacity
           key={result.id}
-          style={[styles.historyItem, { backgroundColor: theme.colors.background.secondary }]}
-          onPress={() => onViewDetails(result)}
+          style={[[styles.historyItem, { backgroundColor: theme.colors.background.secondary , { minWidth: 44, minHeight: 44 }]}]}
+          onPress={() =
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="{getAssessmentTitle(result.assessmentId)}"
+        accessibilityHint="Double tap to activate"
+      > onViewDetails(result)}
           activeOpacity={0.7}
         >
           <View style={styles.historyHeader}>

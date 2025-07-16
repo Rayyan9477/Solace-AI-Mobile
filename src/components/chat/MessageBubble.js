@@ -44,9 +44,9 @@ const MessageTime = styled(Text)`
 `;
 
 const Avatar = styled(View)`
-  width: 36px;
-  height: 36px;
-  border-radius: 18px;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
   background-color: ${props => props.backgroundColor};
   justify-content: center;
   align-items: center;
@@ -63,9 +63,9 @@ const EmotionBadge = styled(View)`
   top: -8px;
   right: ${props => props.isUser ? 'auto' : '-8px'};
   left: ${props => props.isUser ? '-8px' : 'auto'};
-  width: 20px;
-  height: 20px;
-  border-radius: 10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
   background-color: ${props => props.backgroundColor};
   justify-content: center;
   align-items: center;
@@ -164,7 +164,7 @@ const MessageBubble = ({ message, isLast, onPress, onLongPress }) => {
         )}
         
         <TouchableOpacity 
-          style={{ flex: 1 }}
+          style={[{ flex: 1 , { minWidth: 44, minHeight: 44 }]}}
           onPress={handleMessagePress}
           onLongPress={onLongPress}
           activeOpacity={0.8}

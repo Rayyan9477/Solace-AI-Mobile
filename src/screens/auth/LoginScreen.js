@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import * as Haptics from 'expo-haptics';
 import {
   View,
   Text,
@@ -126,7 +127,24 @@ const ForgotPasswordText = styled(Text)`
   font-size: 14px;
 `;
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({
+
+  // Handle hardware back button on Android
+  React.useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+          return true;
+        }
+        return false;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
+ navigation }) => {
   const { theme } = useTheme();
   const dispatch = useDispatch();
   const { isLoading } = useSelector(state => state.auth);
@@ -278,13 +296,27 @@ const LoginScreen = ({ navigation }) => {
 
             <LoginButton
               backgroundColor={theme.colors.primary[500]}
-              onPress={handleLogin}
+              onPress={() => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      handleLogin();
+    }}
               disabled={isLoading}
+              accessibilityLabel="Sign in to your account"
+              accessibilityHint="Tap to log in with your email and password"
+              accessibilityRole="button"
             >
               <ButtonText theme={theme}>Sign In</ButtonText>
             </LoginButton>
 
-            <SecondaryButton onPress={handleRegister}>
+            <SecondaryButton 
+              onPress={() => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      handleRegister();
+    }}
+              accessibilityLabel="Go to registration"
+              accessibilityHint="Navigate to create a new account"
+              accessibilityRole="button"
+            >
               <SecondaryButtonText color={theme.colors.text.secondary}>
                 Don't have an account? Sign Up
               </SecondaryButtonText>

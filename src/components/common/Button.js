@@ -19,23 +19,27 @@ const Button = ({
   accessibilityHint,
   testID,
 }) => {
-  const { theme } = useTheme();
+  const { theme, isReducedMotionEnabled } = useTheme();
   const [scaleValue] = React.useState(new Animated.Value(1));
 
   const handlePressIn = () => {
-    Animated.timing(scaleValue, {
-      toValue: 0.95,
-      duration: animationDuration,
-      useNativeDriver: true,
-    }).start();
+    if (!isReducedMotionEnabled) {
+      Animated.timing(scaleValue, {
+        toValue: 0.95,
+        duration: animationDuration,
+        useNativeDriver: true,
+      }).start();
+    }
   };
 
   const handlePressOut = () => {
-    Animated.timing(scaleValue, {
-      toValue: 1,
-      duration: animationDuration,
-      useNativeDriver: true,
-    }).start();
+    if (!isReducedMotionEnabled) {
+      Animated.timing(scaleValue, {
+        toValue: 1,
+        duration: animationDuration,
+        useNativeDriver: true,
+      }).start();
+    }
   };
 
   const handlePress = () => {
@@ -101,24 +105,21 @@ const Button = ({
     <TouchableOpacity
       onPress={handlePress}
       disabled={disabled || loading}
-      style={[
+      style={[[
         styles.button,
         getVariantStyles(),
         getSizeStyles(),
         fullWidth && styles.fullWidth,
         disabled && styles.disabled,
-      ]}
+      ], { minWidth: 44, minHeight: 44 }]}
       accessible={true}
       accessibilityRole="button"
       testID={testID || `button-${title}`}
       accessibilityLabel={accessibilityLabel || `${title} button`}
-      accessibilityHint={accessibilityHint}
+      accessibilityHint={accessibilityHint || 'Double tap to activate'}
       accessibilityState={{ 
         disabled,
-        selected: false,
-        checked: false,
         busy: loading,
-        expanded: false,
       }}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     elevation: 2,
     shadowColor: theme.colors.button.text,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },

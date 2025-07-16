@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import * as Haptics from 'expo-haptics';
 import {
   View,
   Text,
@@ -89,6 +90,24 @@ const LinkText = styled(Text)`
 `;
 
 const RegisterScreen = () => {
+  const navigation = useNavigation();
+
+  // Handle hardware back button on Android
+  React.useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+          return true;
+        }
+        return false;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
+
   const navigation = useNavigation();
   const { theme } = useTheme();
   
@@ -247,11 +266,15 @@ const RegisterScreen = () => {
 
             <Button
               title={isLoading ? "Creating Account..." : "Create Account"}
-              onPress={handleRegister}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                handleRegister();
+              }}
               disabled={isLoading}
               fullWidth
-              accessibilityLabel="Create account button"
-              accessibilityHint="Creates your Solace account"
+              accessibilityLabel={isLoading ? "Creating your account" : "Create new account"}
+              accessibilityHint="Tap to register with the provided information"
+              accessibilityRole="button"
             />
 
             <FooterContainer>
@@ -261,9 +284,13 @@ const RegisterScreen = () => {
               <Button
                 title="Sign In"
                 variant="text"
-                onPress={() => navigation.navigate('Login')}
-                accessibilityLabel="Sign in button"
-                accessibilityHint="Navigate to login screen"
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                  navigation.navigate('Login');
+                }}
+                accessibilityLabel="Go to sign in"
+                accessibilityHint="Navigate to the login screen"
+                accessibilityRole="button"
               />
             </FooterContainer>
           </ContentContainer>

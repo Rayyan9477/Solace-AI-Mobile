@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 
@@ -59,8 +59,7 @@ const Avatar = ({
     switch (size) {
       case 'small':
         return {
-          width: 32,
-          height: 32,
+          width: 44, height: 44,
           fontSize: 14,
         };
       case 'large':
@@ -132,7 +131,7 @@ const Avatar = ({
               { borderRadius },
             ]}
             accessibilityRole="none"
-          />
+          / resizeMode="cover">
         ) : (
           <Text
             style={[

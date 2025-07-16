@@ -1,0 +1,139 @@
+{
+  "timestamp": "2025-07-14T12:58:03.844Z",
+  "summary": {
+    "total": 16,
+    "high": 7,
+    "medium": 7,
+    "low": 2
+  },
+  "issues": [
+    {
+      "type": "FORMS",
+      "severity": "MEDIUM",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\components\\chat\\ChatInput.js",
+      "issue": "Form inputs without validation",
+      "recommendation": "Add input validation to provide immediate feedback to users",
+      "snippet": "Input fields found without validation logic"
+    },
+    {
+      "type": "PERFORMANCE",
+      "severity": "LOW",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\components\\common\\Avatar.js",
+      "issue": "Image without resizeMode specified",
+      "recommendation": "Add resizeMode prop to optimize image rendering",
+      "snippet": "<Image\r\n            source={source..."
+    },
+    {
+      "type": "NAVIGATION",
+      "severity": "MEDIUM",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\components\\LoadingScreen.js",
+      "issue": "Screen component without back navigation",
+      "recommendation": "Ensure proper back navigation is implemented",
+      "snippet": "Screen component without back button handling"
+    },
+    {
+      "type": "PERFORMANCE",
+      "severity": "LOW",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\components\\profile\\ProfileHeader.js",
+      "issue": "Image without resizeMode specified",
+      "recommendation": "Add resizeMode prop to optimize image rendering",
+      "snippet": "<Image source..."
+    },
+    {
+      "type": "ACCESSIBILITY",
+      "severity": "HIGH",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\screens\\auth\\LoginScreen.js",
+      "issue": "Missing accessibility label on touchable element",
+      "recommendation": "Add accessibilityLabel prop to make the element accessible to screen readers",
+      "snippet": "<ButtonText theme={theme}>..."
+    },
+    {
+      "type": "ACCESSIBILITY",
+      "severity": "HIGH",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\screens\\auth\\RegisterScreen.js",
+      "issue": "Missing accessibility label on touchable element",
+      "recommendation": "Add accessibilityLabel prop to make the element accessible to screen readers",
+      "snippet": "<Button\r\n              title={isLoading ? \"Creating Account...\" : \"Create Account\"}\r\n              o..."
+    },
+    {
+      "type": "ACCESSIBILITY",
+      "severity": "HIGH",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\screens\\auth\\RegisterScreen.js",
+      "issue": "Missing accessibility label on touchable element",
+      "recommendation": "Add accessibilityLabel prop to make the element accessible to screen readers",
+      "snippet": "<Button\r\n                title=\"Sign In\"\r\n                variant=\"text\"\r\n                onPress={(..."
+    },
+    {
+      "type": "NAVIGATION",
+      "severity": "MEDIUM",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\screens\\chat\\ChatScreen.js",
+      "issue": "Screen component without back navigation",
+      "recommendation": "Ensure proper back navigation is implemented",
+      "snippet": "Screen component without back button handling"
+    },
+    {
+      "type": "ACCESSIBILITY",
+      "severity": "HIGH",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\screens\\mood\\MoodTrackerScreen.js",
+      "issue": "Missing accessibility label on touchable element",
+      "recommendation": "Add accessibilityLabel prop to make the element accessible to screen readers",
+      "snippet": "<TouchableOpacity\r\n          style={[\r\n            styles.submitButton,\r\n            { backgroundCol..."
+    },
+    {
+      "type": "ACCESSIBILITY",
+      "severity": "HIGH",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\screens\\OnboardingScreen.js",
+      "issue": "Missing accessibility label on touchable element",
+      "recommendation": "Add accessibilityLabel prop to make the element accessible to screen readers",
+      "snippet": "<ButtonText color={theme.colors.text.primary}>..."
+    },
+    {
+      "type": "ACCESSIBILITY",
+      "severity": "HIGH",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\screens\\OnboardingScreen.js",
+      "issue": "Missing accessibility label on touchable element",
+      "recommendation": "Add accessibilityLabel prop to make the element accessible to screen readers",
+      "snippet": "<ButtonText color={theme.colors.text.inverse}>..."
+    },
+    {
+      "type": "NAVIGATION",
+      "severity": "MEDIUM",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\screens\\OnboardingScreen.js",
+      "issue": "Screen component without back navigation",
+      "recommendation": "Ensure proper back navigation is implemented",
+      "snippet": "Screen component without back button handling"
+    },
+    {
+      "type": "ACCESSIBILITY",
+      "severity": "HIGH",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\screens\\profile\\ProfileScreen.js",
+      "issue": "Missing accessibility label on touchable element",
+      "recommendation": "Add accessibilityLabel prop to make the element accessible to screen readers",
+      "snippet": "<TouchableOpacity\r\n            style={styles.settingButton}\r\n            onPress={() =>..."
+    },
+    {
+      "type": "NAVIGATION",
+      "severity": "MEDIUM",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\screens\\SplashScreen.js",
+      "issue": "Screen component without back navigation",
+      "recommendation": "Ensure proper back navigation is implemented",
+      "snippet": "Screen component without back button handling"
+    },
+    {
+      "type": "PERFORMANCE",
+      "severity": "MEDIUM",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\screens\\ThemeShowcaseScreen.js",
+      "issue": "Multiple map operations without memoization",
+      "recommendation": "Consider using React.memo, useMemo, or useCallback for performance optimization",
+      "snippet": "Found 5 map operations without memoization"
+    },
+    {
+      "type": "NAVIGATION",
+      "severity": "MEDIUM",
+      "file": "D:\\Repo\\Solace-AI-Mobile\\src\\screens\\ThemeShowcaseScreen.js",
+      "issue": "Screen component without back navigation",
+      "recommendation": "Ensure proper back navigation is implemented",
+      "snippet": "Screen component without back button handling"
+    }
+  ]
+}

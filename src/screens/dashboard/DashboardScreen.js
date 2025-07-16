@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   Alert,
+  BackHandler,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -28,6 +29,24 @@ const DashboardScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { theme } = useTheme();
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Handle hardware back button on Android
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+          return true;
+        }
+        return false;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
   
   const { user, mood, chat, loading } = useSelector(state => ({
     user: state.user,
@@ -36,15 +55,41 @@ const DashboardScreen = () => {
     loading: state.mood.loading || state.user.loading,
   }));
 
+  const fetchData = async () => {
+    try {
+      setError(null);
+      await Promise.all([
+        dispatch(fetchMoodHistory()).unwrap(),
+        dispatch(fetchUserStats()).unwrap()
+      ]);
+    } catch (error) {
+      console.error('Failed to fetch dashboard data:', error);
+      setError('Unable to load dashboard data. Please check your connection and try again.');
+      Alert.alert(
+        'Data Load Error',
+        'We couldn\'t load your dashboard data. Please check your internet connection and try again.',
+        [
+          { text: 'Retry', onPress: () => fetchData() },
+          { text: 'OK', style: 'cancel' }
+        ]
+      );
+    }
+  };
+
   useEffect(() => {
-    // Fetch initial data
-    dispatch(fetchMoodHistory());
-    dispatch(fetchUserStats());
+    fetchData();
   }, [dispatch]);
 
-  const handleRefresh = () => {
-    dispatch(fetchMoodHistory());
-    dispatch(fetchUserStats());
+  const handleRefresh = async () => {
+    try {
+      setRefreshing(true);
+      setError(null);
+      await fetchData();
+    } catch (error) {
+      // Error already handled in fetchData
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   const handleMoodCheckIn = () => {
