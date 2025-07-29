@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Animated, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 
@@ -131,12 +132,7 @@ const Input = ({
   }) : borderColor;
 
   return (
-<KeyboardAvoidingView
-  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-  style={{ flex: 1 }}
-  keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
->
-<View style={[styles.container, style]}>
+    <View style={[styles.container, style]}>
       {label && (
         <Animated.Text
           style={[
@@ -154,8 +150,7 @@ const Input = ({
         >
           {label}
         </Animated.Text>
-</KeyboardAvoidingView>
-)}
+      )}
       
       <Animated.View style={[
         styles.inputContainer,
@@ -210,15 +205,12 @@ const Input = ({
         
         {(secureTextEntry || rightIcon) && (
           <Pressable
-            onPress={secureTextEntry ? () =
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="{isSecureVisible ? '👁️' : '👁️‍🗨️'}"
-        accessibilityHint="Double tap to activate"
-      > setIsSecureVisible(!isSecureVisible) : onRightIconPress}
+            onPress={secureTextEntry ? () => setIsSecureVisible(!isSecureVisible) : onRightIconPress}
             style={styles.iconContainer}
-            accessibilityLabel={secureTextEntry ? `${isSecureVisible ? 'Hide' : 'Show'} password` : 'Right icon'}
+            accessible={true}
             accessibilityRole="button"
+            accessibilityLabel={secureTextEntry ? `${isSecureVisible ? 'Hide' : 'Show'} password` : 'Right icon'}
+            accessibilityHint="Double tap to toggle password visibility"
           >
             {secureTextEntry ? (
               <Text style={{ color: theme.colors.primary.main, fontSize: 18 }}>
@@ -302,5 +294,49 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
 });
+
+Input.propTypes = {
+  label: PropTypes.string,
+  value: PropTypes.string,
+  onChangeText: PropTypes.func,
+  placeholder: PropTypes.string,
+  error: PropTypes.string,
+  secureTextEntry: PropTypes.bool,
+  keyboardType: PropTypes.string,
+  multiline: PropTypes.bool,
+  numberOfLines: PropTypes.number,
+  maxLength: PropTypes.number,
+  autoCapitalize: PropTypes.string,
+  autoCorrect: PropTypes.bool,
+  style: PropTypes.object,
+  accessibilityLabel: PropTypes.string,
+  accessibilityHint: PropTypes.string,
+  leftIcon: PropTypes.node,
+  rightIcon: PropTypes.node,
+  onLeftIconPress: PropTypes.func,
+  onRightIconPress: PropTypes.func,
+  variant: PropTypes.oneOf(['outlined', 'filled', 'underlined']),
+  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  loading: PropTypes.bool,
+  disabled: PropTypes.bool,
+  helperText: PropTypes.string,
+  characterCount: PropTypes.bool,
+  focused: PropTypes.bool,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
+  animated: PropTypes.bool,
+};
+
+Input.defaultProps = {
+  autoCapitalize: 'none',
+  autoCorrect: false,
+  variant: 'outlined',
+  size: 'medium',
+  loading: false,
+  disabled: false,
+  characterCount: false,
+  focused: false,
+  animated: true,
+};
 
 export default Input;

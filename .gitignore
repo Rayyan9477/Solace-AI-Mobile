@@ -68,3 +68,7 @@ jspm_packages/
 .eslintcache
 
 coverage
+
+.claude
+mcp.json
+.cursor

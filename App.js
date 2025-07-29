@@ -33,14 +33,6 @@ const ThemedApp = () => {
         // Pre-load fonts
         await Font.loadAsync({
           ...MaterialCommunityIcons.font,
-          'System': require('expo-font/build/FontLoader').loadAsync({
-            'System': {
-              regular: { uri: null },
-              medium: { uri: null },
-              light: { uri: null },
-              bold: { uri: null },
-            },
-          }),
         });
       } catch (e) {
         console.warn(e);

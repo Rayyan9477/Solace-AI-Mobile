@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -55,7 +55,7 @@ const DashboardScreen = () => {
     loading: state.mood.loading || state.user.loading,
   }));
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setError(null);
       await Promise.all([
@@ -74,13 +74,13 @@ const DashboardScreen = () => {
         ]
       );
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     fetchData();
-  }, [dispatch]);
+  }, [fetchData]);
 
-  const handleRefresh = async () => {
+  const handleRefresh = useCallback(async () => {
     try {
       setRefreshing(true);
       setError(null);
@@ -90,25 +90,25 @@ const DashboardScreen = () => {
     } finally {
       setRefreshing(false);
     }
-  };
+  }, [fetchData]);
 
-  const handleMoodCheckIn = () => {
+  const handleMoodCheckIn = useCallback(() => {
     navigation.navigate('MoodTracker');
-  };
+  }, [navigation]);
 
-  const handleStartChat = () => {
+  const handleStartChat = useCallback(() => {
     navigation.navigate('Chat');
-  };
+  }, [navigation]);
 
-  const handleTakeAssessment = () => {
+  const handleTakeAssessment = useCallback(() => {
     navigation.navigate('Assessment');
-  };
+  }, [navigation]);
 
-  const handleViewProfile = () => {
+  const handleViewProfile = useCallback(() => {
     navigation.navigate('Profile');
-  };
+  }, [navigation]);
 
-  const showEmergencyAlert = () => {
+  const showEmergencyAlert = useCallback(() => {
     Alert.alert(
       'Emergency Resources',
       'If you are experiencing a mental health crisis, please contact:\n\n• National Suicide Prevention Lifeline: 988\n• Crisis Text Line: Text HOME to 741741\n• Or call 911 for immediate assistance',
@@ -117,14 +117,17 @@ const DashboardScreen = () => {
         { text: 'Call 988', onPress: () => {/* TODO: Implement phone call */} },
       ]
     );
-  };
+  }, []);
 
-  const getGreeting = () => {
+  const greeting = useMemo(() => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
     if (hour < 17) return 'Good afternoon';
     return 'Good evening';
-  };
+  }, []);
+
+  const moodHistorySlice = useMemo(() => mood.moodHistory.slice(0, 3), [mood.moodHistory]);
+  const chatHistorySlice = useMemo(() => chat.conversations.slice(0, 2), [chat.conversations]);
 
   return (
     <View 
@@ -150,7 +153,7 @@ const DashboardScreen = () => {
       >
         {/* Welcome Header */}
         <WelcomeHeader
-          greeting={getGreeting()}
+          greeting={greeting}
           userName={user.profile.name || 'Friend'}
           onProfilePress={handleViewProfile}
           onEmergencyPress={showEmergencyAlert}
@@ -181,8 +184,8 @@ const DashboardScreen = () => {
 
         {/* Recent Activity */}
         <RecentActivity
-          moodHistory={mood.moodHistory.slice(0, 3)}
-          chatHistory={chat.conversations.slice(0, 2)}
+          moodHistory={moodHistorySlice}
+          chatHistory={chatHistorySlice}
         />
       </ScrollView>
     </View>

@@ -6,6 +6,10 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
+    "primaryColor": "#6366f1",
+    "description": "Your empathetic digital confidant for mental health and wellness support",
+    "privacy": "public",
+    "platforms": ["ios", "android", "web"],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -17,19 +21,46 @@
     "plugins": [
       "expo-font"
     ],
+    "experiments": {
+      "typedRoutes": false
+    },
+    "extra": {
+      "eas": {
+        "projectId": "solace-ai-mobile"
+      }
+    },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.solace.ai.mobile"
+      "bundleIdentifier": "com.solace.ai.mobile",
+      "buildNumber": "1.0.0",
+      "requireFullScreen": false,
+      "userInterfaceStyle": "automatic",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "This app needs access to microphone for voice interactions with the AI assistant.",
+        "NSSpeechRecognitionUsageDescription": "This app uses speech recognition to understand your voice commands.",
+        "NSCameraUsageDescription": "This app may use camera for profile pictures and document scanning."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#6366f1"
       },
-      "package": "com.solace.ai.mobile"
+      "package": "com.solace.ai.mobile",
+      "versionCode": 1,
+      "userInterfaceStyle": "automatic",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.VIBRATE"
+      ]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "single",
+      "lang": "en"
     }
   }
 }

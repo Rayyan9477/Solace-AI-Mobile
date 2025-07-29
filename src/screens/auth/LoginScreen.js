@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Haptics from 'expo-haptics';
 import {
   View,
@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
   Alert,
+  BackHandler,
 } from 'react-native';
 import styled from 'styled-components/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -127,10 +128,18 @@ const ForgotPasswordText = styled(Text)`
   font-size: 14px;
 `;
 
-const LoginScreen = ({
+const LoginScreen = ({ navigation }) => {
+  const { theme } = useTheme();
+  const dispatch = useDispatch();
+  const { isLoading } = useSelector(state => state.auth);
+  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   // Handle hardware back button on Android
-  React.useEffect(() => {
+  useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
@@ -144,15 +153,6 @@ const LoginScreen = ({
 
     return () => backHandler.remove();
   }, [navigation]);
- navigation }) => {
-  const { theme } = useTheme();
-  const dispatch = useDispatch();
-  const { isLoading } = useSelector(state => state.auth);
-  
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -297,9 +297,9 @@ const LoginScreen = ({
             <LoginButton
               backgroundColor={theme.colors.primary[500]}
               onPress={() => {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      handleLogin();
-    }}
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                handleLogin();
+              }}
               disabled={isLoading}
               accessibilityLabel="Sign in to your account"
               accessibilityHint="Tap to log in with your email and password"
@@ -310,9 +310,9 @@ const LoginScreen = ({
 
             <SecondaryButton 
               onPress={() => {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      handleRegister();
-    }}
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                handleRegister();
+              }}
               accessibilityLabel="Go to registration"
               accessibilityHint="Navigate to create a new account"
               accessibilityRole="button"

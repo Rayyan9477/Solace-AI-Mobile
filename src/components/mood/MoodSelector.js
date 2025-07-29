@@ -82,24 +82,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: theme.spacing[3],
+    gap: theme.theme.spacing[3],
   },
   moodItem: {
     width: 90,
     height: 90,
-    borderRadius: theme.borderRadius.md,
+    borderRadius: theme.theme.borderRadius.md,
     borderWidth: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    ...theme.shadows.sm,
+    ...theme.theme.shadows.sm,
   },
   moodEmoji: {
-    fontSize: theme.typography.sizes['2xl'],
-    marginBottom: theme.spacing[1],
+    fontSize: theme.theme.typography.sizes['2xl'],
+    marginBottom: theme.theme.spacing[1],
   },
   moodLabel: {
-    fontSize: theme.typography.sizes.sm,
-    lineHeight: theme.typography.lineHeights.sm,
+    fontSize: theme.theme.typography.sizes.sm,
+    lineHeight: theme.theme.typography.lineHeights.sm,
   },
 });
 

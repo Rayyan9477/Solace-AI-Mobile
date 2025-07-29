@@ -290,7 +290,12 @@ const ProfileScreen = () => {
 
           <TouchableOpacity
             style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}
-            onPress={() => {
+            onPress={() =
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Delete Account"
+        accessibilityHint="Double tap to delete"
+      > {
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
               handleDeleteAccount();
             }}
@@ -334,55 +339,55 @@ const styles = StyleSheet.create({
   statsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: theme.spacing[4],
-    gap: theme.spacing[3],
-    marginBottom: theme.spacing[4],
+    paddingHorizontal: theme.theme.spacing[4],
+    gap: theme.theme.spacing[3],
+    marginBottom: theme.theme.spacing[4],
   },
   settingItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: theme.spacing[3],
-    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.theme.spacing[3],
+    paddingHorizontal: theme.theme.spacing[4],
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.gray[200],
   },
   settingLabel: {
-    fontSize: theme.typography.sizes.base,
+    fontSize: theme.theme.typography.sizes.base,
     fontWeight: '400',
-    lineHeight: theme.typography.lineHeights.base,
+    lineHeight: theme.theme.typography.lineHeights.base,
   },
   settingButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: theme.spacing[4],
-    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.theme.spacing[4],
+    paddingHorizontal: theme.theme.spacing[4],
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.gray[200],
   },
   settingButtonText: {
-    fontSize: theme.typography.sizes.base,
+    fontSize: theme.theme.typography.sizes.base,
     fontWeight: '400',
-    lineHeight: theme.typography.lineHeights.base,
+    lineHeight: theme.theme.typography.lineHeights.base,
   },
   settingButtonIcon: {
-    fontSize: theme.typography.sizes.sm,
+    fontSize: theme.theme.typography.sizes.sm,
   },
   logoutContainer: {
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[6],
+    paddingHorizontal: theme.theme.spacing[4],
+    paddingVertical: theme.theme.spacing[6],
   },
   logoutButton: {
-    paddingVertical: theme.spacing[4],
-    paddingHorizontal: theme.spacing[6],
-    borderRadius: theme.borderRadius.md,
+    paddingVertical: theme.theme.spacing[4],
+    paddingHorizontal: theme.theme.spacing[6],
+    borderRadius: theme.theme.borderRadius.md,
     alignItems: 'center',
-    ...theme.shadows.base,
+    ...theme.theme.shadows.base,
   },
   logoutButtonText: {
     color: theme.colors.text.inverse,
-    fontSize: theme.typography.sizes.base,
+    fontSize: theme.theme.typography.sizes.base,
     fontWeight: '600',
   },
 });

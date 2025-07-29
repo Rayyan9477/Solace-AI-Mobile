@@ -121,23 +121,23 @@ const styles = StyleSheet.create({
   },
   valueContainer: {
     alignItems: 'center',
-    marginBottom: theme.spacing[4],
+    marginBottom: theme.theme.spacing[4],
   },
   valueText: {
-    fontSize: theme.typography.sizes.xl,
+    fontSize: theme.theme.typography.sizes.xl,
     fontWeight: '600',
-    lineHeight: theme.typography.lineHeights.xl,
-    marginBottom: theme.spacing[1],
+    lineHeight: theme.theme.typography.lineHeights.xl,
+    marginBottom: theme.theme.spacing[1],
   },
   valueNumber: {
-    fontSize: theme.typography.sizes.lg,
+    fontSize: theme.theme.typography.sizes.lg,
     fontWeight: '500',
-    lineHeight: theme.typography.lineHeights.lg,
+    lineHeight: theme.theme.typography.lineHeights.lg,
   },
   slider: {
     width: '100%',
     height: 44,
-    marginVertical: theme.spacing[3],
+    marginVertical: theme.theme.spacing[3],
   },
   thumb: {
     width: 44, height: 44,
@@ -151,12 +151,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    marginTop: theme.spacing[2],
+    marginTop: theme.theme.spacing[2],
   },
   label: {
-    fontSize: theme.typography.sizes.sm,
+    fontSize: theme.theme.typography.sizes.sm,
     fontWeight: '400',
-    lineHeight: theme.typography.lineHeights.sm,
+    lineHeight: theme.theme.typography.lineHeights.sm,
   },
 });
 

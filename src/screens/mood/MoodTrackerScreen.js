@@ -188,7 +188,12 @@ const MoodTrackerScreen = () => {
               minHeight: 44 
             }
           ]}
-          onPress={() => {
+          onPress={() =
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="{loading ? 'Logging...' : 'Log Mood'}"
+        accessibilityHint="Double tap to activate"
+      > {
             Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             handleSubmit();
           }}
@@ -215,61 +220,61 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: theme.spacing[4],
+    paddingHorizontal: theme.theme.spacing[4],
   },
   header: {
-    paddingVertical: theme.spacing[6],
+    paddingVertical: theme.theme.spacing[6],
     alignItems: 'center',
   },
   title: {
-    fontSize: theme.typography.sizes['3xl'],
+    fontSize: theme.theme.typography.sizes['3xl'],
     fontWeight: '700',
-    lineHeight: theme.typography.lineHeights['3xl'],
-    marginBottom: theme.spacing[2],
+    lineHeight: theme.theme.typography.lineHeights['3xl'],
+    marginBottom: theme.theme.spacing[2],
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: theme.typography.sizes.base,
+    fontSize: theme.theme.typography.sizes.base,
     fontWeight: '400',
-    lineHeight: theme.typography.lineHeights.base,
+    lineHeight: theme.theme.typography.lineHeights.base,
     textAlign: 'center',
   },
   section: {
-    marginBottom: theme.spacing[4],
-    padding: theme.spacing[4],
-    borderRadius: theme.borderRadius.md,
-    ...theme.shadows.base,
+    marginBottom: theme.theme.spacing[4],
+    padding: theme.theme.spacing[4],
+    borderRadius: theme.theme.borderRadius.md,
+    ...theme.theme.shadows.base,
   },
   sectionTitle: {
-    fontSize: theme.typography.sizes.lg,
+    fontSize: theme.theme.typography.sizes.lg,
     fontWeight: '600',
-    lineHeight: theme.typography.lineHeights.lg,
-    marginBottom: theme.spacing[4],
+    lineHeight: theme.theme.typography.lineHeights.lg,
+    marginBottom: theme.theme.spacing[4],
   },
   notesInput: {
     minHeight: 100,
-    padding: theme.spacing[3],
-    borderRadius: theme.borderRadius.md,
+    padding: theme.theme.spacing[3],
+    borderRadius: theme.theme.borderRadius.md,
     borderWidth: 1,
-    fontSize: theme.typography.sizes.base,
-    lineHeight: theme.typography.lineHeights.base,
+    fontSize: theme.theme.typography.sizes.base,
+    lineHeight: theme.theme.typography.lineHeights.base,
   },
   footer: {
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[4],
+    paddingHorizontal: theme.theme.spacing[4],
+    paddingVertical: theme.theme.spacing[4],
     borderTopWidth: 1,
     borderTopColor: theme.colors.gray[200],
   },
   submitButton: {
-    paddingVertical: theme.spacing[4],
-    paddingHorizontal: theme.spacing[6],
-    borderRadius: theme.borderRadius.md,
+    paddingVertical: theme.theme.spacing[4],
+    paddingHorizontal: theme.theme.spacing[6],
+    borderRadius: theme.theme.borderRadius.md,
     alignItems: 'center',
-    ...theme.shadows.base,
+    ...theme.theme.shadows.base,
   },
   submitButtonText: {
     color: theme.colors.text.inverse,
-    fontSize: theme.typography.sizes.base,
+    fontSize: theme.theme.typography.sizes.base,
     fontWeight: '600',
   },
   errorText: {

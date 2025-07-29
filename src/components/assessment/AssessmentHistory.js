@@ -106,78 +106,78 @@ const AssessmentHistory = ({ history, onViewDetails }) => {
 
 const styles = StyleSheet.create({
   container: {
-    gap: theme.spacing[3],
+    gap: theme.theme.spacing[3],
   },
   emptyState: {
     alignItems: 'center',
-    paddingVertical: theme.spacing[8],
+    paddingVertical: theme.theme.spacing[8],
   },
   emptyIcon: {
-    fontSize: theme.typography.sizes['3xl'],
-    marginBottom: theme.spacing[2],
+    fontSize: theme.theme.typography.sizes['3xl'],
+    marginBottom: theme.theme.spacing[2],
   },
   emptyText: {
-    fontSize: theme.typography.sizes.base,
+    fontSize: theme.theme.typography.sizes.base,
     fontWeight: '400',
-    lineHeight: theme.typography.lineHeights.base,
+    lineHeight: theme.theme.typography.lineHeights.base,
   },
   historyItem: {
-    padding: theme.spacing[4],
-    borderRadius: theme.borderRadius.md,
-    ...theme.shadows.base,
+    padding: theme.theme.spacing[4],
+    borderRadius: theme.theme.borderRadius.md,
+    ...theme.theme.shadows.base,
   },
   historyHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing[3],
+    marginBottom: theme.theme.spacing[3],
   },
   historyTitle: {
-    fontSize: theme.typography.sizes.base,
+    fontSize: theme.theme.typography.sizes.base,
     fontWeight: '600',
-    lineHeight: theme.typography.lineHeights.base,
+    lineHeight: theme.theme.typography.lineHeights.base,
   },
   historyDate: {
-    fontSize: theme.typography.sizes.sm,
+    fontSize: theme.theme.typography.sizes.sm,
     fontWeight: '400',
-    lineHeight: theme.typography.lineHeights.sm,
+    lineHeight: theme.theme.typography.lineHeights.sm,
   },
   historyContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing[3],
+    marginBottom: theme.theme.spacing[3],
   },
   scoreContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: theme.spacing[2],
+    gap: theme.theme.spacing[2],
   },
   scoreLabel: {
-    fontSize: theme.typography.sizes.sm,
+    fontSize: theme.theme.typography.sizes.sm,
     fontWeight: '400',
-    lineHeight: theme.typography.lineHeights.sm,
+    lineHeight: theme.theme.typography.lineHeights.sm,
   },
   scoreValue: {
-    fontSize: theme.typography.sizes.lg,
+    fontSize: theme.theme.typography.sizes.lg,
     fontWeight: '700',
-    lineHeight: theme.typography.lineHeights.lg,
+    lineHeight: theme.theme.typography.lineHeights.lg,
   },
   severityBadge: {
-    paddingHorizontal: theme.spacing[3],
-    paddingVertical: theme.spacing[1],
-    borderRadius: theme.borderRadius.full,
+    paddingHorizontal: theme.theme.spacing[3],
+    paddingVertical: theme.theme.spacing[1],
+    borderRadius: theme.theme.borderRadius.full,
   },
   severityText: {
     color: theme.colors.text.inverse,
-    fontSize: theme.typography.sizes.sm,
+    fontSize: theme.theme.typography.sizes.sm,
     fontWeight: '600',
   },
   viewDetailsContainer: {
     alignItems: 'flex-end',
   },
   viewDetailsText: {
-    fontSize: theme.typography.sizes.sm,
+    fontSize: theme.theme.typography.sizes.sm,
     fontWeight: '500',
   },
 });

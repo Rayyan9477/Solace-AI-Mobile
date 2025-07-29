@@ -8,6 +8,116 @@
       ],
       "disabled": false,
       "alwaysAllow": []
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "context7-mcp"
+      ],
+      "disabled": false,
+      "alwaysAllow": []
+    },
+    "react-native": {
+      "command": "npx",
+      "args": [
+        "react-native-mcp"
+      ],
+      "disabled": false,
+      "alwaysAllow": []
+    },
+    "mobile-automation": {
+      "command": "npx",
+      "args": [
+        "mobile-mcp"
+      ],
+      "disabled": false,
+      "alwaysAllow": []
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/server-github"
+      ],
+      "disabled": false,
+      "alwaysAllow": []
+    },
+    "node": {
+      "command": "node",
+      "args": ["server.js"],
+      "disabled": false,
+      "alwaysAllow": []
+    },
+    "python": {
+      "command": "python",
+      "args": ["-m", "http.server", "8000"],
+      "disabled": false,
+      "alwaysAllow": []
+    },
+    "jest": {
+      "command": "npx",
+      "args": ["jest"],
+      "disabled": false,
+      "alwaysAllow": []
+    },
+    "eslint": {
+      "command": "npx",
+      "args": ["eslint", "."],
+      "disabled": false,
+      "alwaysAllow": []
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/server-filesystem",
+        "R:\\Solace-AI-Mobile"
+      ],
+      "disabled": false,
+      "alwaysAllow": []
+    },
+    "git": {
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/server-git",
+        "--repository",
+        "R:\\Solace-AI-Mobile"
+      ],
+      "disabled": false,
+      "alwaysAllow": []
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/server-brave-search"
+      ],
+      "disabled": false,
+      "alwaysAllow": [],
+      "env": {
+        "BRAVE_API_KEY": ""
+      }
+    },
+    "google-maps": {
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/server-google-maps"
+      ],
+      "disabled": false,
+      "alwaysAllow": [],
+      "env": {
+        "GOOGLE_MAPS_API_KEY": ""
+      }
+    },
+    "figma": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "figma-developer-mcp",
+        "--stdio"
+      ],
+      "disabled": false,
+      "alwaysAllow": [],
+      "env": {
+        "FIGMA_API_KEY": ""
+      }
     }
   }
 } 

@@ -5,33 +5,32 @@ import { useTheme } from '../../contexts/ThemeContext';
 import Icon from '../common/Icon';
 
 const ChatBubble = ({
-  const [isLoading, setIsLoading] = React.useState(false);
-
   message,
   isUser,
   timestamp,
   onLongPress,
   accessibilityLabel,
 }) => {
+  const [isLoading, setIsLoading] = React.useState(false);
   const { theme } = useTheme();
 
   const handleSpeak = async () => {
     setIsLoading(true);
     try {
+      const isSpeaking = await Speech.isSpeakingAsync();
+      if (isSpeaking) {
+        await Speech.stop();
+      } else {
+        await Speech.speak(message, {
+          language: 'en',
+          pitch: 1.0,
+          rate: 0.9,
+        });
+      }
     } catch (error) {
       console.error('Error in handleSpeak:', error);
     } finally {
       setIsLoading(false);
-    }
-    const isSpeaking = await Speech.isSpeakingAsync();
-    if (isSpeaking) {
-      await Speech.stop();
-    } else {
-      await Speech.speak(message, {
-        language: 'en',
-        pitch: 1.0,
-        rate: 0.9,
-      });
     }
   };
 
@@ -43,18 +42,8 @@ const ChatBubble = ({
   return (
     <>
       {isLoading && (
-        <View style={{ 
-          position: 'absolute', 
-          top: 0, 
-          left: 0, 
-          right: 0, 
-          bottom: 0, 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          backgroundColor: 'rgba(255, 255, 255, 0.8)',
-          zIndex: 1000 
-        }}>
-          <ActivityIndicator size="large" color="#007AFF" />
+        <View style={[styles.loadingOverlay, { backgroundColor: theme.colors.background.overlay }]}>
+          <ActivityIndicator size="large" color={theme.colors.primary.main} />
         </View>
       )}
       <View
@@ -162,6 +151,16 @@ const styles = StyleSheet.create({
   },
   speakButton: {
     padding: 4,
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
   },
 });
 

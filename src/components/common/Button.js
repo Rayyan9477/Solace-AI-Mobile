@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, Animated } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -84,19 +85,19 @@ const Button = ({
         return {
           paddingVertical: 8,
           paddingHorizontal: 16,
-          borderRadius: theme.borderRadius.small,
+          borderRadius: theme.colors.borderRadius?.small || 8,
         };
       case 'large':
         return {
           paddingVertical: 16,
           paddingHorizontal: 32,
-          borderRadius: theme.borderRadius.large,
+          borderRadius: theme.colors.borderRadius?.large || 16,
         };
       default:
         return {
           paddingVertical: 12,
           paddingHorizontal: 24,
-          borderRadius: theme.borderRadius.medium,
+          borderRadius: theme.colors.borderRadius?.medium || 12,
         };
     }
   };
@@ -105,13 +106,14 @@ const Button = ({
     <TouchableOpacity
       onPress={handlePress}
       disabled={disabled || loading}
-      style={[[
+      style={[
         styles.button,
         getVariantStyles(),
         getSizeStyles(),
         fullWidth && styles.fullWidth,
         disabled && styles.disabled,
-      ], { minWidth: 44, minHeight: 44 }]}
+        { minWidth: 44, minHeight: 44 }
+      ]}
       accessible={true}
       accessibilityRole="button"
       testID={testID || `button-${title}`}
@@ -152,8 +154,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     elevation: 2,
-    shadowColor: theme.colors.button.text,
-    shadowOffset: { width: 44, height: 44 },
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
@@ -172,5 +174,37 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
 });
+
+Button.propTypes = {
+  onPress: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  variant: PropTypes.oneOf(['primary', 'secondary', 'outline', 'text']),
+  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  disabled: PropTypes.bool,
+  fullWidth: PropTypes.bool,
+  withHaptics: PropTypes.bool,
+  loading: PropTypes.bool,
+  icon: PropTypes.node,
+  iconPosition: PropTypes.oneOf(['left', 'right']),
+  animationDuration: PropTypes.number,
+  accessibilityLabel: PropTypes.string,
+  accessibilityHint: PropTypes.string,
+  testID: PropTypes.string,
+};
+
+Button.defaultProps = {
+  variant: 'primary',
+  size: 'medium',
+  disabled: false,
+  fullWidth: false,
+  withHaptics: true,
+  loading: false,
+  icon: null,
+  iconPosition: 'left',
+  animationDuration: 150,
+  accessibilityLabel: null,
+  accessibilityHint: null,
+  testID: null,
+};
 
 export default Button;

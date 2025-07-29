@@ -21,18 +21,18 @@ const SettingsSection = ({ title, children }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: theme.spacing[4],
-    marginBottom: theme.spacing[4],
-    borderRadius: theme.borderRadius.md,
-    ...theme.shadows.base,
+    marginHorizontal: theme.theme.spacing[4],
+    marginBottom: theme.theme.spacing[4],
+    borderRadius: theme.theme.borderRadius.md,
+    ...theme.theme.shadows.base,
     overflow: 'hidden',
   },
   title: {
-    fontSize: theme.typography.sizes.lg,
+    fontSize: theme.theme.typography.sizes.lg,
     fontWeight: '600',
-    lineHeight: theme.typography.lineHeights.lg,
-    paddingVertical: theme.spacing[4],
-    paddingHorizontal: theme.spacing[4],
+    lineHeight: theme.theme.typography.lineHeights.lg,
+    paddingVertical: theme.theme.spacing[4],
+    paddingHorizontal: theme.theme.spacing[4],
     backgroundColor: theme.colors.gray[50],
   },
   content: {
