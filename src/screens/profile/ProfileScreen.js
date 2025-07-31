@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Switch,
   Alert,
+  BackHandler,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -37,8 +38,6 @@ const ProfileScreen = () => {
 
     return () => backHandler.remove();
   }, [navigation]);
-
-  const navigation = useNavigation();
   const dispatch = useDispatch();
   const { isDarkMode, toggleTheme } = useTheme();
   
@@ -124,6 +123,10 @@ const ProfileScreen = () => {
         },
       ]
     );
+  };
+
+  const handleDesignSystem = () => {
+    navigation.navigate('DesignSystem');
   };
 
   return (
@@ -229,6 +232,20 @@ const ProfileScreen = () => {
               thumbColor={theme.colors.text.inverse}
             />
           </View>
+
+          <TouchableOpacity
+            style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}
+            onPress={handleDesignSystem}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Design System"
+            accessibilityHint="Customize colors and components"
+          >
+            <Text style={[styles.settingButtonText, { color: theme.colors.text.primary }]}>
+              Design System
+            </Text>
+            <Text style={styles.settingButtonIcon}>🎨</Text>
+          </TouchableOpacity>
         </SettingsSection>
 
         <SettingsSection title="Privacy">
@@ -261,12 +278,11 @@ const ProfileScreen = () => {
           <TouchableOpacity
             style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}
             onPress={handleEmergencyContacts}
-          
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="Emergency Contacts"
-        accessibilityHint="Double tap to get help"
-      >
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Emergency Contacts"
+            accessibilityHint="Double tap to get help"
+          >
             <Text style={[styles.settingButtonText, { color: theme.colors.text.primary }]}>
               Emergency Contacts
             </Text>
@@ -276,12 +292,11 @@ const ProfileScreen = () => {
           <TouchableOpacity
             style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}
             onPress={handleDataExport}
-          
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="Export My Data"
-        accessibilityHint="Double tap to activate"
-      >
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Export My Data"
+            accessibilityHint="Double tap to activate"
+          >
             <Text style={[styles.settingButtonText, { color: theme.colors.text.primary }]}>
               Export My Data
             </Text>
@@ -290,12 +305,7 @@ const ProfileScreen = () => {
 
           <TouchableOpacity
             style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}
-            onPress={() =
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="Delete Account"
-        accessibilityHint="Double tap to delete"
-      > {
+            onPress={() => {
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
               handleDeleteAccount();
             }}
@@ -313,14 +323,13 @@ const ProfileScreen = () => {
 
         <View style={styles.logoutContainer}>
           <TouchableOpacity
-            style={[[styles.logoutButton, { backgroundColor: theme.colors.error[500] , { minWidth: 44, minHeight: 44 }]}]}
+            style={[styles.logoutButton, { backgroundColor: theme.colors.error[500], minWidth: 44, minHeight: 44 }]}
             onPress={handleLogout}
-          
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="Logout"
-        accessibilityHint="Double tap to activate"
-      >
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Logout"
+            accessibilityHint="Double tap to activate"
+          >
             <Text style={styles.logoutButtonText}>Logout</Text>
           </TouchableOpacity>
         </View>
@@ -339,55 +348,55 @@ const styles = StyleSheet.create({
   statsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: theme.theme.spacing[4],
-    gap: theme.theme.spacing[3],
-    marginBottom: theme.theme.spacing[4],
+    paddingHorizontal: spacing[4],
+    gap: spacing[3],
+    marginBottom: spacing[4],
   },
   settingItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: theme.theme.spacing[3],
-    paddingHorizontal: theme.theme.spacing[4],
+    paddingVertical: spacing[3],
+    paddingHorizontal: spacing[4],
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.gray[200],
+    borderBottomColor: colors.gray[200],
   },
   settingLabel: {
-    fontSize: theme.theme.typography.sizes.base,
+    fontSize: typography.sizes.base,
     fontWeight: '400',
-    lineHeight: theme.theme.typography.lineHeights.base,
+    lineHeight: typography.lineHeights.base,
   },
   settingButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: theme.theme.spacing[4],
-    paddingHorizontal: theme.theme.spacing[4],
+    paddingVertical: spacing[4],
+    paddingHorizontal: spacing[4],
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.gray[200],
+    borderBottomColor: colors.gray[200],
   },
   settingButtonText: {
-    fontSize: theme.theme.typography.sizes.base,
+    fontSize: typography.sizes.base,
     fontWeight: '400',
-    lineHeight: theme.theme.typography.lineHeights.base,
+    lineHeight: typography.lineHeights.base,
   },
   settingButtonIcon: {
-    fontSize: theme.theme.typography.sizes.sm,
+    fontSize: typography.sizes.sm,
   },
   logoutContainer: {
-    paddingHorizontal: theme.theme.spacing[4],
-    paddingVertical: theme.theme.spacing[6],
+    paddingHorizontal: spacing[4],
+    paddingVertical: spacing[6],
   },
   logoutButton: {
-    paddingVertical: theme.theme.spacing[4],
-    paddingHorizontal: theme.theme.spacing[6],
-    borderRadius: theme.theme.borderRadius.md,
+    paddingVertical: spacing[4],
+    paddingHorizontal: spacing[6],
+    borderRadius: borderRadius.md,
     alignItems: 'center',
-    ...theme.theme.shadows.base,
+    ...shadows.base,
   },
   logoutButtonText: {
-    color: theme.colors.text.inverse,
-    fontSize: theme.theme.typography.sizes.base,
+    color: colors.text.inverse,
+    fontSize: typography.sizes.base,
     fontWeight: '600',
   },
 });

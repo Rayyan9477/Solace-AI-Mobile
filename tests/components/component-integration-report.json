@@ -1,0 +1,961 @@
+{
+  "timestamp": "2025-07-31T01:24:56.554Z",
+  "summary": {
+    "passed": 152,
+    "failed": 2,
+    "warnings": 4,
+    "successRate": 96,
+    "componentsCount": 41,
+    "screensCount": 14
+  },
+  "tests": [
+    {
+      "name": "Import in AccessibilitySettingsScreen.js",
+      "status": "failed",
+      "message": "Invalid import: import { useTheme } from '../../contexts/ThemeContext';",
+      "details": null
+    },
+    {
+      "name": "Import in AccessibilitySettingsScreen.js",
+      "status": "failed",
+      "message": "Invalid import: import { createFormInputAccessibility, createCardAccessibility } from '../../utils/accessibility';",
+      "details": null
+    },
+    {
+      "name": "Import Validation",
+      "status": "passed",
+      "message": "99% of imports are valid",
+      "details": null
+    },
+    {
+      "name": "AccessibleTouchable Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "AssessmentCard Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "AssessmentHistory Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "ChatBubble Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "ChatInput Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "EmotionIndicator Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "MessageBubble Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "TherapeuticChatBubble Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "TypingIndicator Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "VoiceRecorder Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "ActivityIndicator Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "Avatar Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "Badge Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "Button Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "Card Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "Icon Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "index Export",
+      "status": "warnings",
+      "message": "No default export found",
+      "details": null
+    },
+    {
+      "name": "Input Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "DailyInsights Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "MoodCheckIn Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "ProgressOverview Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "QuickActions Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "RecentActivity Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "WelcomeHeader Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "LightModeDemo Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "TherapeuticForm Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "AppIcons Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "IconSystem Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "index Export",
+      "status": "warnings",
+      "message": "No default export found",
+      "details": null
+    },
+    {
+      "name": "PlatformIcon Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "LoadingScreen Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "ActivitySelector Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "IntensitySlider Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "MoodSelector Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "BottomTabBar Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "Header Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "SafeNavigationHeader Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "PlatformButton Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "ProfileHeader Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "SettingsSection Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "StatsCard Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "AccessibleTouchable.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "AssessmentCard.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "AssessmentHistory.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "ChatBubble.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "ChatInput.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "EmotionIndicator.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "MessageBubble.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "TherapeuticChatBubble.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "TypingIndicator.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "VoiceRecorder.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "ActivityIndicator.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "Avatar.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "Badge.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "Button.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "Card.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "Icon.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "Input.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "DailyInsights.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "MoodCheckIn.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "ProgressOverview.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "QuickActions.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "RecentActivity.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "WelcomeHeader.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "LightModeDemo.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "TherapeuticForm.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "AppIcons.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "IconSystem.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "PlatformIcon.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "LoadingScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "ActivitySelector.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "IntensitySlider.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "MoodSelector.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "BottomTabBar.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "Header.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "SafeNavigationHeader.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "PlatformButton.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "ProfileHeader.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "SettingsSection.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "StatsCard.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "AccessibilitySettingsScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "AssessmentScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "LoginScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "RegisterScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "ChatScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "CoverPageScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "DashboardScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "DesignSystemScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "IconTestScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "MoodTrackerScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "OnboardingScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "ProfileScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "SplashScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "ThemeShowcaseScreen.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "Theme Coverage",
+      "status": "passed",
+      "message": "96% of files use theme system",
+      "details": null
+    },
+    {
+      "name": "MessageBubble.js Icons",
+      "status": "warnings",
+      "message": "Uses legacy icon system",
+      "details": null
+    },
+    {
+      "name": "MoodCheckIn.js Icons",
+      "status": "passed",
+      "message": "Uses modern icon system",
+      "details": null
+    },
+    {
+      "name": "QuickActions.js Icons",
+      "status": "passed",
+      "message": "Uses modern icon system",
+      "details": null
+    },
+    {
+      "name": "AppIcons.js Icons",
+      "status": "passed",
+      "message": "Uses modern icon system",
+      "details": null
+    },
+    {
+      "name": "IconSystem.js Icons",
+      "status": "passed",
+      "message": "Uses modern icon system",
+      "details": null
+    },
+    {
+      "name": "index.js Icons",
+      "status": "passed",
+      "message": "Uses modern icon system",
+      "details": null
+    },
+    {
+      "name": "ChatScreen.js Icons",
+      "status": "warnings",
+      "message": "Uses legacy icon system",
+      "details": null
+    },
+    {
+      "name": "DesignSystemScreen.js Icons",
+      "status": "passed",
+      "message": "Uses modern icon system",
+      "details": null
+    },
+    {
+      "name": "IconTestScreen.js Icons",
+      "status": "passed",
+      "message": "Uses modern icon system",
+      "details": null
+    },
+    {
+      "name": "Icon System",
+      "status": "passed",
+      "message": "7 files use modern icon system",
+      "details": null
+    },
+    {
+      "name": "AccessibleTouchable.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "AssessmentCard.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "AssessmentHistory.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "ChatBubble.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "ChatInput.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "EmotionIndicator.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (2/4)",
+      "details": null
+    },
+    {
+      "name": "MessageBubble.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "TherapeuticChatBubble.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "TypingIndicator.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "VoiceRecorder.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (2/4)",
+      "details": null
+    },
+    {
+      "name": "ActivityIndicator.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (2/4)",
+      "details": null
+    },
+    {
+      "name": "Avatar.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "Badge.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "Button.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "Card.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "Icon.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (2/4)",
+      "details": null
+    },
+    {
+      "name": "Input.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "MoodCheckIn.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "QuickActions.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "RecentActivity.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "WelcomeHeader.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "LightModeDemo.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "TherapeuticForm.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (2/4)",
+      "details": null
+    },
+    {
+      "name": "PlatformIcon.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "ActivitySelector.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "IntensitySlider.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "MoodSelector.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "BottomTabBar.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "Header.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "SafeNavigationHeader.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "PlatformButton.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "ProfileHeader.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "AccessibilitySettingsScreen.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "AssessmentScreen.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "LoginScreen.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "RegisterScreen.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "CoverPageScreen.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "DashboardScreen.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (2/4)",
+      "details": null
+    },
+    {
+      "name": "DesignSystemScreen.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (2/4)",
+      "details": null
+    },
+    {
+      "name": "MoodTrackerScreen.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "OnboardingScreen.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "ProfileScreen.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "ThemeShowcaseScreen.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (4/4)",
+      "details": null
+    },
+    {
+      "name": "Accessibility Coverage",
+      "status": "passed",
+      "message": "78% of files have good accessibility",
+      "details": null
+    },
+    {
+      "name": "DesignTokens.js",
+      "status": "passed",
+      "message": "Design system file exists",
+      "details": null
+    },
+    {
+      "name": "DesignSystemContext.js",
+      "status": "passed",
+      "message": "Design system file exists",
+      "details": null
+    },
+    {
+      "name": "ColorCustomizer.js",
+      "status": "passed",
+      "message": "Design system file exists",
+      "details": null
+    },
+    {
+      "name": "ComponentCustomizer.js",
+      "status": "passed",
+      "message": "Design system file exists",
+      "details": null
+    },
+    {
+      "name": "DesignSystemScreen.js",
+      "status": "passed",
+      "message": "Design system file exists",
+      "details": null
+    },
+    {
+      "name": "App Integration",
+      "status": "passed",
+      "message": "DesignSystemProvider integrated in App.js",
+      "details": null
+    }
+  ]
+}

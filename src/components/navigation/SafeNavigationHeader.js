@@ -64,7 +64,7 @@ const SafeNavigationHeader = ({
   };
 
   return (
-    <View style={[styles.container, getHeaderStyle(), style]}>
+    <View style={[styles.container, { borderBottomColor: theme.colors.border.primary }, getHeaderStyle(), style]}>
       <View style={styles.headerContent}>
         {/* Back Button */}
         {showBack && (
@@ -228,7 +228,6 @@ const AssessmentHeader = ({ currentQuestion, totalQuestions, ...props }) => (
 const styles = StyleSheet.create({
   container: {
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
   },
   headerContent: {
     flexDirection: 'row',

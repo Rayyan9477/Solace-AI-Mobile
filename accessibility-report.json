@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-07-29T22:52:14.544Z",
+  "timestamp": "2025-07-31T01:17:54.623Z",
   "summary": {
     "grade": "C",
     "successRate": 67.74193548387096,
@@ -11,12 +11,12 @@
   "details": {
     "issues": [
       "Accessibility Implementation: 0/0 components (0.0%) have accessibility features",
-      "Accessibility Labels: Found in 39 files (target: 70% of interactive components)",
-      "Reduced Motion Support: 3/12 animation files support reduced motion"
+      "Accessibility Labels: Found in 48 files (target: 70% of interactive components)",
+      "Reduced Motion Support: 3/22 animation files support reduced motion"
     ],
     "recommendations": [
       "Essential Accessibility Roles: Missing roles: listitem, slider",
-      "Accessibility Hints: Found in 32 files (target: 50% of interactive components)",
+      "Accessibility Hints: Found in 39 files (target: 50% of interactive components)",
       "Settings - font size control: Feature missing",
       "Settings - font scale control: Feature missing",
       "Settings - haptic feedback toggle: Feature missing",

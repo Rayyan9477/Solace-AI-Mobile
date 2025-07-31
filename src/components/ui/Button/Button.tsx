@@ -1,10 +1,26 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, Animated } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../../shared/contexts/ThemeContext';
 
-const Button = ({
+interface ButtonProps {
+  onPress: () => void;
+  title: string;
+  variant?: 'primary' | 'secondary' | 'outline' | 'text';
+  size?: 'small' | 'medium' | 'large';
+  disabled?: boolean;
+  fullWidth?: boolean;
+  withHaptics?: boolean;
+  loading?: boolean;
+  icon?: React.ReactNode;
+  iconPosition?: 'left' | 'right';
+  animationDuration?: number;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
+  testID?: string;
+}
+
+const Button: React.FC<ButtonProps> = ({
   onPress,
   title,
   variant = 'primary',
@@ -174,37 +190,5 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
 });
-
-Button.propTypes = {
-  onPress: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  variant: PropTypes.oneOf(['primary', 'secondary', 'outline', 'text']),
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
-  disabled: PropTypes.bool,
-  fullWidth: PropTypes.bool,
-  withHaptics: PropTypes.bool,
-  loading: PropTypes.bool,
-  icon: PropTypes.node,
-  iconPosition: PropTypes.oneOf(['left', 'right']),
-  animationDuration: PropTypes.number,
-  accessibilityLabel: PropTypes.string,
-  accessibilityHint: PropTypes.string,
-  testID: PropTypes.string,
-};
-
-Button.defaultProps = {
-  variant: 'primary',
-  size: 'medium',
-  disabled: false,
-  fullWidth: false,
-  withHaptics: true,
-  loading: false,
-  icon: null,
-  iconPosition: 'left',
-  animationDuration: 150,
-  accessibilityLabel: null,
-  accessibilityHint: null,
-  testID: null,
-};
 
 export default Button;

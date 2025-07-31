@@ -265,7 +265,7 @@ const TherapeuticChatBubble = ({
     if (isUser || confidence >= 0.9) return null;
     
     return (
-      <View style={styles.confidenceIndicator}>
+      <View style={[styles.confidenceIndicator, { borderTopColor: theme.colors.border.primary }]}>
         <Text style={[styles.confidenceText, { color: theme.colors.text.tertiary }]}>
           Let me know if this helps, or if you'd like me to explain differently
         </Text>
@@ -413,7 +413,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingTop: 8,
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(0, 0, 0, 0.1)',
   },
   confidenceText: {
     fontSize: 12,

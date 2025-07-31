@@ -19,6 +19,7 @@ import { store, persistor } from './src/store/store';
 import AppNavigator from './src/navigation/AppNavigator';
 import LoadingScreen from './src/components/LoadingScreen';
 import { ThemeProvider, useTheme } from './src/contexts/ThemeContext';
+import { DesignSystemProvider } from './src/design-system/DesignSystemContext';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -76,9 +77,11 @@ const App = () => {
         <Provider store={store}>
           <PersistGate loading={<LoadingScreen />} persistor={persistor}>
             <ThemeProvider>
-              <NavigationContainer>
-                <ThemedApp />
-              </NavigationContainer>
+              <DesignSystemProvider>
+                <NavigationContainer>
+                  <ThemedApp />
+                </NavigationContainer>
+              </DesignSystemProvider>
             </ThemeProvider>
           </PersistGate>
         </Provider>

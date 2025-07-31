@@ -2,13 +2,14 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSelector } from 'react-redux';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { NavigationIcon, IconPresets } from '../components/icons';
 
 import { useTheme } from '../contexts/ThemeContext';
 
 // Screens
 import SplashScreen from '../screens/SplashScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
+import CoverPageScreen from '../screens/CoverPageScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import DashboardScreen from '../screens/dashboard/DashboardScreen';
@@ -16,6 +17,8 @@ import ChatScreen from '../screens/chat/ChatScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import AssessmentScreen from '../screens/assessment/AssessmentScreen';
 import MoodTrackerScreen from '../screens/mood/MoodTrackerScreen';
+import IconTestScreen from '../screens/IconTestScreen';
+import DesignSystemScreen from '../screens/DesignSystemScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -49,6 +52,35 @@ const AuthStack = () => {
   );
 };
 
+const ProfileStack = () => {
+  const { theme } = useTheme();
+  
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.colors.background.primary,
+        },
+        headerTintColor: theme.colors.text.primary,
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
+      <Stack.Screen 
+        name="ProfileMain" 
+        component={ProfileScreen}
+        options={{ title: 'Profile' }}
+      />
+      <Stack.Screen 
+        name="DesignSystem" 
+        component={DesignSystemScreen}
+        options={{ title: 'Design System', headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 const MainTabs = () => {
   const { theme } = useTheme();
   
@@ -58,19 +90,31 @@ const MainTabs = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'Home') {
-            iconName = 'home';
+          if (route.name === 'Cover') {
+            iconName = 'Welcome';
+          } else if (route.name === 'Home') {
+            iconName = 'Home';
           } else if (route.name === 'Chat') {
-            iconName = 'chat';
+            iconName = 'Chat';
           } else if (route.name === 'Mood') {
-            iconName = 'favorite';
+            iconName = 'Mood';
           } else if (route.name === 'Assessment') {
-            iconName = 'assignment';
+            iconName = 'Assessment';
           } else if (route.name === 'Profile') {
-            iconName = 'person';
+            iconName = 'Profile';
+          } else if (route.name === 'IconTest') {
+            iconName = 'Settings';
           }
 
-          return <Icon name={iconName} size={size} color={color} />;
+          return (
+            <NavigationIcon
+              name={iconName}
+              size={size}
+              color={color}
+              variant={focused ? 'filled' : 'outline'}
+              {...IconPresets.tabBar}
+            />
+          );
         },
         tabBarActiveTintColor: theme.colors.primary[500],
         tabBarInactiveTintColor: theme.colors.gray[500],
@@ -92,9 +136,14 @@ const MainTabs = () => {
       })}
     >
       <Tab.Screen 
+        name="Cover" 
+        component={CoverPageScreen}
+        options={{ title: 'Welcome', headerShown: false }}
+      />
+      <Tab.Screen 
         name="Home" 
         component={DashboardScreen}
-        options={{ title: 'Dashboard' }}
+        options={{ title: 'Dashboard', headerShown: false }}
       />
       <Tab.Screen 
         name="Chat" 
@@ -113,8 +162,13 @@ const MainTabs = () => {
       />
       <Tab.Screen 
         name="Profile" 
-        component={ProfileScreen}
-        options={{ title: 'Profile' }}
+        component={ProfileStack}
+        options={{ title: 'Profile', headerShown: false }}
+      />
+      <Tab.Screen 
+        name="IconTest" 
+        component={IconTestScreen}
+        options={{ title: 'Icons', headerShown: false }}
       />
     </Tab.Navigator>
   );
