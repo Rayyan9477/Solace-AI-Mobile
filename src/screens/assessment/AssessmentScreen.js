@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  BackHandler,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -17,9 +18,32 @@ import AssessmentHistory from '../../components/assessment/AssessmentHistory';
 
 const AssessmentScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const { theme } = useTheme();
+  
+  const { availableAssessments, assessmentHistory, loading } = useSelector(state => ({
+    availableAssessments: state.assessment?.availableAssessments || [
+      {
+        id: 'phq9',
+        title: 'PHQ-9 Depression Screen',
+        description: 'Assess depression symptoms over the past 2 weeks',
+        duration: '5-10 minutes',
+        icon: '🧠'
+      },
+      {
+        id: 'gad7',
+        title: 'GAD-7 Anxiety Screen',
+        description: 'Evaluate anxiety symptoms and their impact',
+        duration: '3-5 minutes',
+        icon: '💙'
+      }
+    ],
+    assessmentHistory: state.assessment?.assessmentHistory || [],
+    loading: state.assessment?.loading || false
+  }));
 
   // Handle hardware back button on Android
-  React.useEffect(() => {
+  useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
@@ -33,12 +57,6 @@ const AssessmentScreen = () => {
 
     return () => backHandler.remove();
   }, [navigation]);
-
-  const navigation = useNavigation();
-  const dispatch = useDispatch();
-  const { theme } = useTheme();
-  
-  const { availableAssessments, assessmentHistory, loading } = useSelector(state => state.assessment);
   
   
 
@@ -120,13 +138,15 @@ const AssessmentScreen = () => {
               <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
                 Recent Results
               </Text>
-              <TouchableOpacity onPress={handleViewHistory}
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="View All"
-        accessibilityHint="Double tap to activate"
-      >
-                <Text style={[[styles.viewAllText, { color: theme.colors.primary[500] , { minWidth: 44, minHeight: 44 }]}]}>
+              <TouchableOpacity 
+                style={styles.viewAllButton}
+                onPress={handleViewHistory}
+                accessible={true}
+                accessibilityRole="button"
+                accessibilityLabel="View All Assessment History"
+                accessibilityHint="Double tap to view all assessment results"
+              >
+                <Text style={[styles.viewAllText, { color: theme.colors.primary[500] }]}>
                   View All
                 </Text>
               </TouchableOpacity>
@@ -166,72 +186,79 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    paddingHorizontal: theme.theme.spacing[4],
+    paddingHorizontal: spacing[4],
   },
   header: {
-    paddingVertical: theme.theme.spacing[6],
+    paddingVertical: spacing[6],
     alignItems: 'center',
   },
   title: {
-    fontSize: theme.theme.typography.sizes['3xl'],
-    fontWeight: '700',
-    lineHeight: theme.theme.typography.lineHeights['3xl'],
-    marginBottom: theme.theme.spacing[2],
+    fontSize: typography.sizes['3xl'],
+    fontWeight: typography.weights.bold,
+    lineHeight: typography.lineHeights['3xl'],
+    marginBottom: spacing[2],
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: theme.theme.typography.sizes.base,
-    fontWeight: '400',
-    lineHeight: theme.theme.typography.lineHeights.base,
+    fontSize: typography.sizes.base,
+    fontWeight: typography.weights.normal,
+    lineHeight: typography.lineHeights.base,
     textAlign: 'center',
-    paddingHorizontal: theme.theme.spacing[4],
+    paddingHorizontal: spacing[4],
   },
   assessmentsContainer: {
-    marginBottom: theme.theme.spacing[6],
+    marginBottom: spacing[6],
   },
   sectionTitle: {
-    fontSize: theme.theme.typography.sizes.xl,
-    fontWeight: '600',
-    lineHeight: theme.theme.typography.lineHeights.xl,
-    marginBottom: theme.theme.spacing[4],
+    fontSize: typography.sizes.xl,
+    fontWeight: typography.weights.semiBold,
+    lineHeight: typography.lineHeights.xl,
+    marginBottom: spacing[4],
   },
   historyContainer: {
-    marginBottom: theme.theme.spacing[6],
+    marginBottom: spacing[6],
   },
   historyHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.theme.spacing[4],
+    marginBottom: spacing[4],
+  },
+  viewAllButton: {
+    minWidth: 44,
+    minHeight: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: spacing[2],
   },
   viewAllText: {
-    fontSize: theme.theme.typography.sizes.sm,
-    fontWeight: '500',
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.medium,
   },
   infoContainer: {
-    marginBottom: theme.theme.spacing[8],
+    marginBottom: spacing[8],
   },
   infoCard: {
-    padding: theme.theme.spacing[4],
-    borderRadius: theme.theme.borderRadius.md,
-    ...theme.theme.shadows.base,
+    padding: spacing[4],
+    borderRadius: borderRadius.md,
+    ...shadows.sm,
   },
   infoIcon: {
-    fontSize: theme.theme.typography.sizes['2xl'],
+    fontSize: typography.sizes['2xl'],
     textAlign: 'center',
-    marginBottom: theme.theme.spacing[2],
+    marginBottom: spacing[2],
   },
   infoTitle: {
-    fontSize: theme.theme.typography.sizes.lg,
-    fontWeight: '600',
-    lineHeight: theme.theme.typography.lineHeights.lg,
-    marginBottom: theme.theme.spacing[2],
+    fontSize: typography.sizes.lg,
+    fontWeight: typography.weights.semiBold,
+    lineHeight: typography.lineHeights.lg,
+    marginBottom: spacing[2],
     textAlign: 'center',
   },
   infoText: {
-    fontSize: theme.theme.typography.sizes.sm,
-    fontWeight: '400',
-    lineHeight: theme.theme.typography.lineHeights.base,
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.normal,
+    lineHeight: typography.lineHeights.base,
   },
 });
 

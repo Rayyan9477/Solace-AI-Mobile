@@ -13,10 +13,11 @@ import CoverPageScreen from '../screens/CoverPageScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import DashboardScreen from '../screens/dashboard/DashboardScreen';
+import MainAppScreen from '../screens/MainAppScreen';
 import ChatScreen from '../screens/chat/ChatScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import AssessmentScreen from '../screens/assessment/AssessmentScreen';
-import MoodTrackerScreen from '../screens/mood/MoodTrackerScreen';
+import EnhancedMoodTrackerScreen from '../screens/mood/EnhancedMoodTrackerScreen';
 import IconTestScreen from '../screens/IconTestScreen';
 import DesignSystemScreen from '../screens/DesignSystemScreen';
 
@@ -142,7 +143,7 @@ const MainTabs = () => {
       />
       <Tab.Screen 
         name="Home" 
-        component={DashboardScreen}
+        component={MainAppScreen}
         options={{ title: 'Dashboard', headerShown: false }}
       />
       <Tab.Screen 
@@ -152,8 +153,8 @@ const MainTabs = () => {
       />
       <Tab.Screen 
         name="Mood" 
-        component={MoodTrackerScreen}
-        options={{ title: 'Mood' }}
+        component={EnhancedMoodTrackerScreen}
+        options={{ title: 'Mood', headerShown: false }}
       />
       <Tab.Screen 
         name="Assessment" 

@@ -13,7 +13,7 @@ import moodSlice from './slices/moodSlice';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['auth', 'user', 'mood'], // Only persist these reducers
+  whitelist: ['auth', 'user', 'mood', 'assessment'], // Only persist these reducers
 };
 
 const rootReducer = combineReducers({

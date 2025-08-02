@@ -7,7 +7,7 @@ import { colors, typography, spacing, borderRadius, shadows } from '../../styles
 
 const AssessmentCard = ({ title, description, duration, icon, onStart, onLearnMore, loading }) => {
   const { theme, isScreenReaderEnabled } = useTheme();
-  const componentStyles = styles(theme.theme);
+  const componentStyles = styles;
 
   return (
     <View 
@@ -88,70 +88,70 @@ const AssessmentCard = ({ title, description, duration, icon, onStart, onLearnMo
   );
 };
 
-const styles = (theme) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-    padding: theme.spacing[4],
-    borderRadius: theme.borderRadius.md,
-    marginBottom: theme.spacing[4],
-    ...theme.shadows.base,
+    padding: spacing[4],
+    borderRadius: borderRadius.md,
+    marginBottom: spacing[4],
+    ...shadows.sm,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: theme.spacing[3],
+    marginBottom: spacing[3],
   },
   icon: {
-    fontSize: theme.typography.sizes['2xl'],
-    marginRight: theme.spacing[3],
+    fontSize: typography.sizes['2xl'],
+    marginRight: spacing[3],
   },
   titleContainer: {
     flex: 1,
   },
   title: {
-    fontSize: theme.typography.sizes.lg,
-    fontWeight: '600',
-    lineHeight: theme.typography.lineHeights.lg,
-    marginBottom: theme.spacing[1],
+    fontSize: typography.sizes.lg,
+    fontWeight: typography.weights.semiBold,
+    lineHeight: typography.lineHeights.lg,
+    marginBottom: spacing[1],
   },
   duration: {
-    fontSize: theme.typography.sizes.sm,
-    fontWeight: '400',
-    lineHeight: theme.typography.lineHeights.sm,
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.normal,
+    lineHeight: typography.lineHeights.sm,
   },
   description: {
-    fontSize: theme.typography.sizes.base,
-    fontWeight: '400',
-    lineHeight: theme.typography.lineHeights.base,
-    marginBottom: theme.spacing[4],
+    fontSize: typography.sizes.base,
+    fontWeight: typography.weights.normal,
+    lineHeight: typography.lineHeights.base,
+    marginBottom: spacing[4],
   },
   actions: {
     flexDirection: 'row',
-    gap: theme.spacing[3],
+    gap: spacing[3],
   },
   learnMoreButton: {
     flex: 1,
-    paddingVertical: theme.spacing[3],
-    paddingHorizontal: theme.spacing[4],
-    borderRadius: theme.borderRadius.md,
+    paddingVertical: spacing[3],
+    paddingHorizontal: spacing[4],
+    borderRadius: borderRadius.md,
     alignItems: 'center',
-    ...theme.shadows.sm,
+    ...shadows.sm,
   },
   learnMoreText: {
-    fontSize: theme.typography.sizes.sm,
-    fontWeight: '600',
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.semiBold,
   },
   startButton: {
     flex: 2,
-    paddingVertical: theme.spacing[3],
-    paddingHorizontal: theme.spacing[4],
-    borderRadius: theme.borderRadius.md,
+    paddingVertical: spacing[3],
+    paddingHorizontal: spacing[4],
+    borderRadius: borderRadius.md,
     alignItems: 'center',
-    ...theme.shadows.sm,
+    ...shadows.sm,
   },
   startButtonText: {
-    color: theme.colors.text.inverse,
-    fontSize: theme.typography.sizes.sm,
-    fontWeight: '600',
+    color: colors.text.inverse,
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.semiBold,
   },
 });
 

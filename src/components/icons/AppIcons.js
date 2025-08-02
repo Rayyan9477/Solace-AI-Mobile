@@ -60,6 +60,9 @@ const AppIcons = {
     Next: (props) => (
       <Icon name="chevronRight" {...props} />
     ),
+    Back: (props) => (
+      <Icon name="chevronLeft" {...props} />
+    ),
     Expand: (props) => (
       <Icon name="chevronDown" {...props} />
     ),

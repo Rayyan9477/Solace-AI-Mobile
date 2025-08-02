@@ -499,6 +499,42 @@ const MentalHealthIcons = {
       />
     </Svg>
   ),
+
+  // Navigation arrows
+  chevronLeft: (props) => (
+    <Svg viewBox="0 0 24 24" {...props}>
+      <Polyline
+        points="15,18 9,12 15,6"
+        fill="none"
+        stroke={props.color}
+        strokeWidth={props.strokeWidth || 2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  ),
+
+  arrowLeft: (props) => (
+    <Svg viewBox="0 0 24 24" {...props}>
+      <Line
+        x1="19"
+        y1="12"
+        x2="5"
+        y2="12"
+        stroke={props.color}
+        strokeWidth={props.strokeWidth || 2}
+        strokeLinecap="round"
+      />
+      <Polyline
+        points="12,19 5,12 12,5"
+        fill="none"
+        stroke={props.color}
+        strokeWidth={props.strokeWidth || 2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  ),
 };
 
 // Main Icon component

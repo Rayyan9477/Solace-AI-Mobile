@@ -30,7 +30,7 @@ jest.mock('@react-navigation/native', () => ({
 global.window = {};
 global.window = global;
 
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
+jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper', () => ({}));
 
 jest.mock('react-native-reanimated', () => {
   const Reanimated = require('react-native-reanimated/mock');

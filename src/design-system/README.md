@@ -14,23 +14,27 @@ src/design-system/
 ├── README.md                # This documentation
 └── index.js                 # Main exports
 
-src/components/ui/
-├── Button/
-│   └── EnhancedButton.js    # Advanced button component with therapeutic themes
-├── Card/
-│   └── EnhancedCard.js      # Flexible card component with animations
-├── Input/
-│   └── EnhancedInput.js     # Form input with therapeutic styling
-├── Layout/
-│   └── LayoutUtilities.js   # Spacing, containers, and layout helpers
-├── Logo/
-│   └── BrandingComponents.js # Brand logos and visual identity
-├── Tabs/
-│   └── TabComponent.js      # Tab navigation with mental health focus
-├── Table/
-│   └── SimpleTable.js       # Data tables with therapeutic styling
-└── Typography/
-    └── TypographySystem.js  # Text components with therapeutic variants
+src/components/
+├── common/
+│   ├── Button.js            # Advanced button component with therapeutic themes
+│   ├── Card.js              # Flexible card component with animations
+│   ├── Input.js             # Form input with therapeutic styling
+│   ├── Avatar.js            # User avatar component
+│   ├── Badge.js             # Status badges and indicators
+│   └── ActivityIndicator.js # Loading indicators
+├── dashboard/
+│   ├── WelcomeHeader.js     # Dashboard welcome component
+│   ├── MoodCheckIn.js       # Mood tracking interface
+│   ├── DailyInsights.js     # AI-powered daily insights
+│   ├── QuickActions.js      # Therapeutic action shortcuts
+│   ├── ProgressOverview.js  # Mental health progress visualization
+│   └── RecentActivity.js    # Activity timeline
+├── icons/
+│   ├── IconSystem.js        # Complete SVG icon system
+│   ├── AppIcons.js          # Application-specific icons
+│   └── MentalHealthIcons.js # Mental health themed icons
+└── crisis/
+    └── CrisisRiskAssessment.js # Crisis intervention system
 ```
 
 ## 🎯 Design Principles
@@ -104,13 +108,13 @@ spacing[16] = 64px  // 3xl
 
 ## 🧩 Component Usage
 
-### Enhanced Button
+### Button Component
 
 ```jsx
-import { EnhancedButton } from '../components/ui/Button/EnhancedButton';
+import Button from '../components/common/Button';
 
 // Basic usage
-<EnhancedButton
+<Button
   title="Continue"
   onPress={handlePress}
   variant="primary"
@@ -118,83 +122,72 @@ import { EnhancedButton } from '../components/ui/Button/EnhancedButton';
 />
 
 // Therapeutic themed button
-<EnhancedButton
+<Button
   title="Start Meditation"
   onPress={startMeditation}
   variant="therapeutic"
-  therapeuticTheme="calming"
-  withGradient={true}
-  animationType="scale"
+  style={{ backgroundColor: '#0EA5E9' }}
 />
 
-// Button with custom styling
-<EnhancedButton
+// Emergency button
+<Button
   title="Emergency Support"
   onPress={callSupport}
-  variant="error"
+  variant="danger"
   size="large"
-  fullWidth={true}
-  withHaptics={true}
-  shadowLevel="lg"
 />
 ```
 
-### Enhanced Card
+### Card Component
 
 ```jsx
-import { EnhancedCard } from '../components/ui/Card/EnhancedCard';
+import Card from '../components/common/Card';
 
 // Basic card
-<EnhancedCard
+<Card
   title="Daily Check-in"
   subtitle="How are you feeling today?"
   onPress={openCheckIn}
   variant="elevated"
 />
 
-// Therapeutic card with gradient
-<EnhancedCard
+// Therapeutic card
+<Card
   title="Mindfulness Exercise"
   description="5-minute breathing meditation"
-  therapeuticTheme="peaceful"
-  withGradient={true}
-  animationType="scale"
-  badge="NEW"
-  icon={<MindfulnessIcon />}
+  variant="therapeutic"
+  onPress={startMeditation}
 />
 ```
 
-### Enhanced Input
+### Input Component
 
 ```jsx
-import { EnhancedInput } from '../components/ui/Input/EnhancedInput';
+import Input from '../components/common/Input';
 
 // Basic input
-<EnhancedInput
+<Input
   label="How are you feeling?"
   value={feeling}
   onChangeText={setFeeling}
   placeholder="Describe your emotions..."
-  variant="floating"
-  therapeuticTheme="nurturing"
+  variant="therapeutic"
 />
 
 // Secure input
-<EnhancedInput
+<Input
   label="Password"
   value={password}
   onChangeText={setPassword}
   secureTextEntry={true}
-  variant="outline"
-  clearable={true}
-  required={true}
+  variant="secure"
 />
 ```
 
 ### Typography
 
 ```jsx
-import { Typography, Heading, TherapeuticText } from '../components/ui/Typography/TypographySystem';
+// Typography components available through design tokens
 
 // Headers
 <Heading level={1} therapeuticTheme="calming">
@@ -220,7 +213,7 @@ import { Typography, Heading, TherapeuticText } from '../components/ui/Typograph
 ### Layout Components
 
 ```jsx
-import { Container, Stack, Grid, Spacing } from '../components/ui/Layout/LayoutUtilities';
+// Layout utilities available through design tokens
 
 // Container with therapeutic theme
 <Container
@@ -245,7 +238,7 @@ import { Container, Stack, Grid, Spacing } from '../components/ui/Layout/LayoutU
 ### Tab Component
 
 ```jsx
-import { TabComponent } from '../components/ui/Tabs/TabComponent';
+// Tab components available through navigation system
 
 const tabs = [
   { key: 'mood', label: 'Mood', icon: <MoodIcon /> },
@@ -390,7 +383,8 @@ All components support extensive customization through props:
 
 1. **Import Components**
 ```javascript
-import { EnhancedButton, EnhancedCard } from '../components/ui';
+import Button from '../components/common/Button';
+import Card from '../components/common/Card';
 import { BaseDesignTokens } from '../design-system/DesignTokens';
 ```
 
