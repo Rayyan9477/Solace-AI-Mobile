@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import * as Haptics from 'expo-haptics';
 import {
   View,
   Text,
@@ -9,150 +8,46 @@ import {
   Platform,
   ScrollView,
   Alert,
-  BackHandler,
+  StatusBar,
+  StyleSheet,
+  Animated,
 } from 'react-native';
-import styled from 'styled-components/native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginStart, loginSuccess, loginFailure } from '../../store/slices/authSlice';
 import { useTheme } from '../../contexts/ThemeContext';
-import LoadingScreen from '../../components/LoadingScreen';
-
-const LoginContainer = styled(KeyboardAvoidingView)`
-  flex: 1;
-  background-color: ${props => props.backgroundColor};
-`;
-
-const ScrollContainer = styled(ScrollView)`
-  flex: 1;
-`;
-
-const ContentContainer = styled(View)`
-  flex: 1;
-  justify-content: center;
-  padding: 40px 20px;
-  min-height: 600px;
-`;
-
-const HeaderContainer = styled(View)`
-  align-items: center;
-  margin-bottom: 40px;
-`;
-
-const LogoContainer = styled(View)`
-  width: 80px;
-  height: 80px;
-  border-radius: 40px;
-  background-color: ${props => props.color};
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const LogoText = styled(Text)`
-  font-size: 32px;
-  color: ${props => props.theme.colors.text.inverse};
-`;
-
-const WelcomeTitle = styled(Text)`
-  font-size: 28px;
-  font-weight: bold;
-  color: ${props => props.color};
-  text-align: center;
-  margin-bottom: 8px;
-`;
-
-const WelcomeSubtitle = styled(Text)`
-  font-size: 16px;
-  color: ${props => props.color};
-  text-align: center;
-  line-height: 22px;
-`;
-
-const FormContainer = styled(View)`
-  margin-bottom: 30px;
-`;
-
-const InputContainer = styled(View)`
-  margin-bottom: 20px;
-`;
-
-const InputLabel = styled(Text)`
-  font-size: 14px;
-  font-weight: 600;
-  color: ${props => props.color};
-  margin-bottom: 8px;
-`;
-
-const StyledTextInput = styled(TextInput)`
-  background-color: ${props => props.backgroundColor};
-  border: 1px solid ${props => props.borderColor};
-  border-radius: 12px;
-  padding: 16px;
-  font-size: 16px;
-  color: ${props => props.textColor};
-`;
-
-const LoginButton = styled(TouchableOpacity)`
-  background-color: ${props => props.backgroundColor};
-  padding: 18px;
-  border-radius: 12px;
-  align-items: center;
-  margin-bottom: 20px;
-  opacity: ${props => props.disabled ? 0.6 : 1};
-`;
-
-const ButtonText = styled(Text)`
-  color: ${props => props.theme.colors.text.inverse};
-  font-size: 16px;
-  font-weight: 600;
-`;
-
-const SecondaryButton = styled(TouchableOpacity)`
-  padding: 16px;
-  align-items: center;
-`;
-
-const SecondaryButtonText = styled(Text)`
-  color: ${props => props.color};
-  font-size: 16px;
-  font-weight: 500;
-`;
-
-const ForgotPasswordButton = styled(TouchableOpacity)`
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const ForgotPasswordText = styled(Text)`
-  color: ${props => props.color};
-  font-size: 14px;
-`;
+import { MentalHealthIcon } from '../../components/icons';
 
 const LoginScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const dispatch = useDispatch();
   const { isLoading } = useSelector(state => state.auth);
   
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('princesskaguya@gmail.com');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  
+  // Animation refs
+  const fadeAnim = useState(new Animated.Value(0))[0];
+  const slideAnim = useState(new Animated.Value(50))[0];
 
-  // Handle hardware back button on Android
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => {
-        if (navigation.canGoBack()) {
-          navigation.goBack();
-          return true;
-        }
-        return false;
-      }
-    );
-
-    return () => backHandler.remove();
-  }, [navigation]);
+    // Start entrance animations
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -189,13 +84,13 @@ const LoginScreen = ({ navigation }) => {
       dispatch(loginStart());
       
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Mock successful login
       const mockUser = {
         id: '1',
         email: email,
-        name: 'John Doe',
+        name: 'Princess Kaguya',
         avatar: null,
       };
       
@@ -203,129 +98,356 @@ const LoginScreen = ({ navigation }) => {
       
       dispatch(loginSuccess({ user: mockUser, token: mockToken }));
       
+      navigation.navigate('MainApp');
+      
     } catch (error) {
       dispatch(loginFailure('Login failed. Please try again.'));
       Alert.alert('Login Failed', 'Please check your credentials and try again.');
     }
   };
 
-  const handleRegister = () => {
-    navigation.navigate('Register');
-  };
-
-  const handleForgotPassword = () => {
+  const handleSocialLogin = (provider) => {
     Alert.alert(
-      'Reset Password',
-      'Password reset functionality will be implemented soon.',
+      'Social Login',
+      `${provider} login will be implemented soon.`,
       [{ text: 'OK' }]
     );
   };
 
-  if (isLoading) {
-    return <LoadingScreen text="Signing you in..." />;
-  }
+  const handleForgotPassword = () => {
+    navigation.navigate('ForgotPassword');
+  };
+
+  const handleSignUp = () => {
+    navigation.navigate('Register');
+  };
 
   return (
-    <LoginContainer
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      backgroundColor={theme.colors.background.primary}
-    >
-      <ScrollContainer contentContainerStyle={{ flexGrow: 1 }}>
-        <ContentContainer>
-          <HeaderContainer>
-            <LogoContainer color={theme.colors.primary[500]}>
-              <LogoText theme={theme}>🧠</LogoText>
-            </LogoContainer>
-            
-            <WelcomeTitle color={theme.colors.text.primary}>
-              Welcome Back
-            </WelcomeTitle>
-            
-            <WelcomeSubtitle color={theme.colors.text.secondary}>
-              Sign in to continue your mental wellness journey
-            </WelcomeSubtitle>
-          </HeaderContainer>
+    <View style={styles.container}>
+      <StatusBar 
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
+      
+      {/* Header with gradient */}
+      <LinearGradient
+        colors={theme.isDark ? ['#4A5D4A', '#90CDB0'] : ['#90CDB0', '#7FCDCD']}
+        style={styles.header}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <View style={styles.headerContent}>
+          {/* freud.ai Logo */}
+          <View style={styles.logoContainer}>
+            <View style={styles.logoGrid}>
+              <View style={[styles.logoCircle, { backgroundColor: '#FFFFFF' }]} />
+              <View style={[styles.logoCircle, { backgroundColor: '#FFFFFF' }]} />
+              <View style={[styles.logoCircle, { backgroundColor: '#FFFFFF' }]} />
+              <View style={[styles.logoCircle, { backgroundColor: '#FFFFFF' }]} />
+            </View>
+          </View>
+        </View>
+      </LinearGradient>
 
-          <FormContainer>
-            <InputContainer>
-              <InputLabel color={theme.colors.text.primary}>Email</InputLabel>
-              <StyledTextInput
-                placeholder="Enter your email"
-                placeholderTextColor={theme.colors.text.tertiary}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoComplete="email"
-                backgroundColor={theme.colors.background.secondary}
-                borderColor={emailError ? theme.colors.error[500] : theme.colors.gray[300]}
-                textColor={theme.colors.text.primary}
-              />
-              {emailError ? (
-                <Text style={{ color: theme.colors.error[500], fontSize: 12, marginTop: 4 }}>
-                  {emailError}
-                </Text>
-              ) : null}
-            </InputContainer>
-
-            <InputContainer>
-              <InputLabel color={theme.colors.text.primary}>Password</InputLabel>
-              <StyledTextInput
-                placeholder="Enter your password"
-                placeholderTextColor={theme.colors.text.tertiary}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                autoComplete="password"
-                backgroundColor={theme.colors.background.secondary}
-                borderColor={passwordError ? theme.colors.error[500] : theme.colors.gray[300]}
-                textColor={theme.colors.text.primary}
-              />
-              {passwordError ? (
-                <Text style={{ color: theme.colors.error[500], fontSize: 12, marginTop: 4 }}>
-                  {passwordError}
-                </Text>
-              ) : null}
-            </InputContainer>
-
-            <ForgotPasswordButton onPress={handleForgotPassword}>
-              <ForgotPasswordText color={theme.colors.primary[500]}>
-                Forgot Password?
-              </ForgotPasswordText>
-            </ForgotPasswordButton>
-
-            <LoginButton
-              backgroundColor={theme.colors.primary[500]}
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                handleLogin();
-              }}
-              disabled={isLoading}
-              accessibilityLabel="Sign in to your account"
-              accessibilityHint="Tap to log in with your email and password"
-              accessibilityRole="button"
+      {/* Main Content */}
+      <View style={[styles.content, { backgroundColor: theme.isDark ? '#2D3748' : '#FFFFFF' }]}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardView}
+        >
+          <ScrollView 
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            <Animated.View 
+              style={[
+                styles.formContainer,
+                {
+                  opacity: fadeAnim,
+                  transform: [{ translateY: slideAnim }],
+                }
+              ]}
             >
-              <ButtonText theme={theme}>Sign In</ButtonText>
-            </LoginButton>
+              {/* Title */}
+              <Text style={[styles.title, { color: theme.isDark ? '#FFFFFF' : '#2D3748' }]}>
+                Sign In To freud.ai
+              </Text>
 
-            <SecondaryButton 
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                handleRegister();
-              }}
-              accessibilityLabel="Go to registration"
-              accessibilityHint="Navigate to create a new account"
-              accessibilityRole="button"
-            >
-              <SecondaryButtonText color={theme.colors.text.secondary}>
-                Don't have an account? Sign Up
-              </SecondaryButtonText>
-            </SecondaryButton>
-          </FormContainer>
-        </ContentContainer>
-      </ScrollContainer>
-    </LoginContainer>
+              {/* Email Input */}
+              <View style={styles.inputContainer}>
+                <Text style={[styles.inputLabel, { color: theme.isDark ? '#E2E8F0' : '#4A5568' }]}>
+                  Email Address
+                </Text>
+                <View style={styles.inputWrapper}>
+                  <View style={styles.inputIcon}>
+                    <MentalHealthIcon name="brain" size={20} color="#90CDB0" />
+                  </View>
+                  <TextInput
+                    style={[
+                      styles.textInput,
+                      {
+                        backgroundColor: theme.isDark ? '#4A5568' : '#F7FAFC',
+                        color: theme.isDark ? '#FFFFFF' : '#2D3748',
+                        borderColor: emailError ? '#E53E3E' : 'transparent',
+                      }
+                    ]}
+                    placeholder="Enter your email..."
+                    placeholderTextColor={theme.isDark ? '#A0AEC0' : '#718096'}
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoComplete="email"
+                  />
+                </View>
+                {emailError ? (
+                  <Text style={styles.errorText}>{emailError}</Text>
+                ) : null}
+              </View>
+
+              {/* Password Input */}
+              <View style={styles.inputContainer}>
+                <Text style={[styles.inputLabel, { color: theme.isDark ? '#E2E8F0' : '#4A5568' }]}>
+                  Password
+                </Text>
+                <View style={styles.inputWrapper}>
+                  <View style={styles.inputIcon}>
+                    <MentalHealthIcon name="heart" size={20} color="#90CDB0" />
+                  </View>
+                  <TextInput
+                    style={[
+                      styles.textInput,
+                      {
+                        backgroundColor: theme.isDark ? '#4A5568' : '#F7FAFC',
+                        color: theme.isDark ? '#FFFFFF' : '#2D3748',
+                        borderColor: passwordError ? '#E53E3E' : 'transparent',
+                      }
+                    ]}
+                    placeholder="Enter your password..."
+                    placeholderTextColor={theme.isDark ? '#A0AEC0' : '#718096'}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                    autoComplete="password"
+                  />
+                  <TouchableOpacity
+                    style={styles.passwordToggle}
+                    onPress={() => setShowPassword(!showPassword)}
+                  >
+                    <Text style={[styles.passwordToggleText, { color: '#90CDB0' }]}>
+                      {showPassword ? '👁️' : '👁️‍🗨️'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {passwordError ? (
+                  <Text style={styles.errorText}>{passwordError}</Text>
+                ) : null}
+              </View>
+
+              {/* Sign In Button */}
+              <TouchableOpacity
+                style={[
+                  styles.signInButton,
+                  { 
+                    backgroundColor: theme.isDark ? '#8B4513' : '#8B4513',
+                    opacity: isLoading ? 0.6 : 1 
+                  }
+                ]}
+                onPress={handleLogin}
+                disabled={isLoading}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.signInButtonText}>
+                  {isLoading ? 'Signing In...' : 'Sign In'} →
+                </Text>
+              </TouchableOpacity>
+
+              {/* Social Login */}
+              <View style={styles.socialContainer}>
+                <TouchableOpacity
+                  style={[styles.socialButton, { backgroundColor: theme.isDark ? '#4A5568' : '#F7FAFC' }]}
+                  onPress={() => handleSocialLogin('Facebook')}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.socialIcon}>f</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.socialButton, { backgroundColor: theme.isDark ? '#4A5568' : '#F7FAFC' }]}
+                  onPress={() => handleSocialLogin('Google')}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.socialIcon}>G</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.socialButton, { backgroundColor: theme.isDark ? '#4A5568' : '#F7FAFC' }]}
+                  onPress={() => handleSocialLogin('Instagram')}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.socialIcon}>📷</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Footer Links */}
+              <TouchableOpacity
+                style={styles.linkButton}
+                onPress={handleSignUp}
+                activeOpacity={0.8}
+              >
+                <Text style={[styles.linkText, { color: theme.isDark ? '#FF8C00' : '#FF8C00' }]}>
+                  Don't have an account? Sign Up
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.linkButton}
+                onPress={handleForgotPassword}
+                activeOpacity={0.8}
+              >
+                <Text style={[styles.linkText, { color: theme.isDark ? '#FF8C00' : '#FF8C00' }]}>
+                  Forgot Password
+                </Text>
+              </TouchableOpacity>
+            </Animated.View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  headerContent: {
+    alignItems: 'center',
+    paddingTop: 60,
+  },
+  logoContainer: {
+    marginBottom: 10,
+  },
+  logoGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: 44,
+    height: 44,
+    justifyContent: 'space-between',
+  },
+  logoCircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    marginBottom: 4,
+  },
+  content: {
+    flex: 1,
+    marginTop: -30,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+  },
+  keyboardView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingTop: 40,
+  },
+  formContainer: {
+    paddingHorizontal: 24,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 32,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  inputIcon: {
+    position: 'absolute',
+    left: 16,
+    zIndex: 1,
+  },
+  textInput: {
+    flex: 1,
+    height: 56,
+    borderRadius: 12,
+    paddingHorizontal: 48,
+    fontSize: 16,
+    borderWidth: 1,
+  },
+  passwordToggle: {
+    position: 'absolute',
+    right: 16,
+    padding: 4,
+  },
+  passwordToggleText: {
+    fontSize: 16,
+  },
+  errorText: {
+    color: '#E53E3E',
+    fontSize: 12,
+    marginTop: 4,
+  },
+  signInButton: {
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
+    marginBottom: 24,
+  },
+  signInButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  socialContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 16,
+    marginBottom: 32,
+  },
+  socialButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  socialIcon: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  linkButton: {
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  linkText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+});
 
 export default LoginScreen;

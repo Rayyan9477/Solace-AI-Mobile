@@ -1,303 +1,503 @@
-import React, { useState } from 'react';
-import * as Haptics from 'expo-haptics';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  ScrollView,
+  TextInput,
+  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
+  ScrollView,
   Alert,
+  StatusBar,
+  StyleSheet,
+  Animated,
 } from 'react-native';
-import styled from 'styled-components/native';
-import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerStart, registerSuccess, registerFailure } from '../../store/slices/authSlice';
 import { useTheme } from '../../contexts/ThemeContext';
-import { Button, Input } from '../../components/common';
+import { MentalHealthIcon } from '../../components/icons';
 
-const RegisterContainer = styled(KeyboardAvoidingView)`
-  flex: 1;
-  background-color: ${props => props.backgroundColor};
-`;
-
-const ScrollContainer = styled(ScrollView)`
-  flex: 1;
-`;
-
-const ContentContainer = styled(View)`
-  flex: 1;
-  justify-content: center;
-  padding: 40px 20px;
-  min-height: 600px;
-`;
-
-const HeaderContainer = styled(View)`
-  align-items: center;
-  margin-bottom: 40px;
-`;
-
-const LogoContainer = styled(View)`
-  width: 80px;
-  height: 80px;
-  border-radius: 40px;
-  background-color: ${props => props.color};
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const LogoText = styled(Text)`
-  font-size: 32px;
-  color: ${props => props.theme.colors.text.inverse};
-`;
-
-const Title = styled(Text)`
-  font-size: 28px;
-  font-weight: bold;
-  color: ${props => props.color};
-  text-align: center;
-  margin-bottom: 8px;
-`;
-
-const Subtitle = styled(Text)`
-  font-size: 16px;
-  color: ${props => props.color};
-  text-align: center;
-  line-height: 22px;
-  max-width: 300px;
-`;
-
-const FormContainer = styled(View)`
-  width: 100%;
-  margin-bottom: 30px;
-`;
-
-const FooterContainer = styled(View)`
-  align-items: center;
-  margin-top: 20px;
-`;
-
-const FooterText = styled(Text)`
-  font-size: 14px;
-  color: ${props => props.color};
-  text-align: center;
-  margin-bottom: 10px;
-`;
-
-const LinkText = styled(Text)`
-  font-size: 14px;
-  color: ${props => props.color};
-  font-weight: 600;
-`;
-
-const RegisterScreen = () => {
-  const navigation = useNavigation();
-
-  // Handle hardware back button on Android
-  React.useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => {
-        if (navigation.canGoBack()) {
-          navigation.goBack();
-          return true;
-        }
-        return false;
-      }
-    );
-
-    return () => backHandler.remove();
-  }, [navigation]);
-
-  const navigation = useNavigation();
+const RegisterScreen = ({ navigation }) => {
   const { theme } = useTheme();
+  const dispatch = useDispatch();
+  const { isLoading } = useSelector(state => state.auth);
   
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [isEmailValid, setIsEmailValid] = useState(false);
   
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  // Animation refs
+  const fadeAnim = useState(new Animated.Value(0))[0];
+  const slideAnim = useState(new Animated.Value(50))[0];
+
+  useEffect(() => {
+    // Start entrance animations
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  useEffect(() => {
+    // Real-time email validation
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      setIsEmailValid(emailRegex.test(email));
+      if (!emailRegex.test(email)) {
+        setEmailError('Invalid Email Address!!!');
+      } else {
+        setEmailError('');
+      }
+    } else {
+      setIsEmailValid(false);
+      setEmailError('');
+    }
+  }, [email]);
 
   const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = 'First name is required';
+    let hasErrors = false;
+
+    // Email validation
+    if (!email) {
+      setEmailError('Email is required');
+      hasErrors = true;
+    } else if (!isEmailValid) {
+      setEmailError('Invalid Email Address!!!');
+      hasErrors = true;
     }
-    
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Last name is required';
+
+    // Password validation
+    if (!password) {
+      setPasswordError('Password is required');
+      hasErrors = true;
+    } else if (password.length < 6) {
+      setPasswordError('Password must be at least 6 characters');
+      hasErrors = true;
     }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+
+    // Confirm password validation
+    if (!confirmPassword) {
+      setConfirmPasswordError('Please confirm your password');
+      hasErrors = true;
+    } else if (password !== confirmPassword) {
+      setConfirmPasswordError('Passwords do not match');
+      hasErrors = true;
     }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+
+    return !hasErrors;
   };
 
   const handleRegister = async () => {
+    // Reset errors
+    setEmailError('');
+    setPasswordError('');
+    setConfirmPasswordError('');
+
     if (!validateForm()) return;
-    
-    setIsLoading(true);
-    
+
     try {
+      dispatch(registerStart());
+      
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Mock successful registration
+      const mockUser = {
+        id: '1',
+        email: email,
+        name: email.split('@')[0],
+        avatar: null,
+      };
+      
+      const mockToken = 'mock_jwt_token_' + Date.now();
+      
+      dispatch(registerSuccess({ user: mockUser, token: mockToken }));
       
       Alert.alert(
-        'Success',
-        'Account created successfully! Please check your email to verify your account.',
+        'Success!',
+        'Account created successfully!',
         [
           {
             text: 'OK',
-            onPress: () => navigation.navigate('Login'),
+            onPress: () => navigation.navigate('MainApp'),
           },
         ]
       );
+      
     } catch (error) {
-      Alert.alert('Error', 'Failed to create account. Please try again.');
-    } finally {
-      setIsLoading(false);
+      dispatch(registerFailure('Registration failed. Please try again.'));
+      Alert.alert('Registration Failed', 'Please try again.');
     }
   };
 
-  const updateFormData = (key, value) => {
-    setFormData(prev => ({ ...prev, [key]: value }));
-    if (errors[key]) {
-      setErrors(prev => ({ ...prev, [key]: null }));
-    }
+  const handleSocialRegister = (provider) => {
+    Alert.alert(
+      'Social Registration',
+      `${provider} registration will be implemented soon.`,
+      [{ text: 'OK' }]
+    );
+  };
+
+  const handleSignIn = () => {
+    navigation.navigate('Login');
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
-      <RegisterContainer
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        backgroundColor={theme.colors.background.primary}
+    <View style={styles.container}>
+      <StatusBar 
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
+      
+      {/* Header with gradient */}
+      <LinearGradient
+        colors={theme.isDark ? ['#4A5D4A', '#90CDB0'] : ['#90CDB0', '#7FCDCD']}
+        style={styles.header}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
       >
-        <ScrollContainer
-          contentContainerStyle={{ flexGrow: 1 }}
-          keyboardShouldPersistTaps="handled"
+        <View style={styles.headerContent}>
+          {/* freud.ai Logo */}
+          <View style={styles.logoContainer}>
+            <View style={styles.logoGrid}>
+              <View style={[styles.logoCircle, { backgroundColor: '#FFFFFF' }]} />
+              <View style={[styles.logoCircle, { backgroundColor: '#FFFFFF' }]} />
+              <View style={[styles.logoCircle, { backgroundColor: '#FFFFFF' }]} />
+              <View style={[styles.logoCircle, { backgroundColor: '#FFFFFF' }]} />
+            </View>
+          </View>
+        </View>
+      </LinearGradient>
+
+      {/* Main Content */}
+      <View style={[styles.content, { backgroundColor: theme.isDark ? '#2D3748' : '#FFFFFF' }]}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardView}
         >
-          <ContentContainer>
-            <HeaderContainer>
-              <LogoContainer color={theme.colors.primary.main}>
-                <LogoText theme={theme}>S</LogoText>
-              </LogoContainer>
-              <Title color={theme.colors.text.primary}>
-                Join Solace
-              </Title>
-              <Subtitle color={theme.colors.text.secondary}>
-                Create your account and start your journey to better mental health
-              </Subtitle>
-            </HeaderContainer>
+          <ScrollView 
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            <Animated.View 
+              style={[
+                styles.formContainer,
+                {
+                  opacity: fadeAnim,
+                  transform: [{ translateY: slideAnim }],
+                }
+              ]}
+            >
+              {/* Title */}
+              <Text style={[styles.title, { color: theme.isDark ? '#FFFFFF' : '#2D3748' }]}>
+                Sign Up For Free
+              </Text>
 
-            <FormContainer>
-              <Input
-                label="First Name"
-                value={formData.firstName}
-                onChangeText={(value) => updateFormData('firstName', value)}
-                placeholder="Enter your first name"
-                error={errors.firstName}
-                autoCapitalize="words"
-                accessibilityLabel="First name input"
-              />
-              
-              <Input
-                label="Last Name"
-                value={formData.lastName}
-                onChangeText={(value) => updateFormData('lastName', value)}
-                placeholder="Enter your last name"
-                error={errors.lastName}
-                autoCapitalize="words"
-                accessibilityLabel="Last name input"
-              />
-              
-              <Input
-                label="Email"
-                value={formData.email}
-                onChangeText={(value) => updateFormData('email', value)}
-                placeholder="Enter your email"
-                error={errors.email}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                accessibilityLabel="Email input"
-              />
-              
-              <Input
-                label="Password"
-                value={formData.password}
-                onChangeText={(value) => updateFormData('password', value)}
-                placeholder="Create a password"
-                error={errors.password}
-                secureTextEntry
-                accessibilityLabel="Password input"
-              />
-              
-              <Input
-                label="Confirm Password"
-                value={formData.confirmPassword}
-                onChangeText={(value) => updateFormData('confirmPassword', value)}
-                placeholder="Confirm your password"
-                error={errors.confirmPassword}
-                secureTextEntry
-                accessibilityLabel="Confirm password input"
-              />
-            </FormContainer>
+              {/* Email Input */}
+              <View style={styles.inputContainer}>
+                <Text style={[styles.inputLabel, { color: theme.isDark ? '#E2E8F0' : '#4A5568' }]}>
+                  Email Address
+                </Text>
+                <View style={styles.inputWrapper}>
+                  <View style={styles.inputIcon}>
+                    <MentalHealthIcon name="brain" size={20} color="#90CDB0" />
+                  </View>
+                  <TextInput
+                    style={[
+                      styles.textInput,
+                      {
+                        backgroundColor: theme.isDark ? '#4A5568' : '#F7FAFC',
+                        color: theme.isDark ? '#FFFFFF' : '#2D3748',
+                        borderColor: emailError ? '#E53E3E' : 'transparent',
+                      }
+                    ]}
+                    placeholder="Enter your email..."
+                    placeholderTextColor={theme.isDark ? '#A0AEC0' : '#718096'}
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoComplete="email"
+                  />
+                </View>
+                {emailError ? (
+                  <View style={styles.errorContainer}>
+                    <View style={styles.errorIcon}>
+                      <Text style={styles.errorIconText}>⚠️</Text>
+                    </View>
+                    <Text style={styles.errorText}>{emailError}</Text>
+                  </View>
+                ) : null}
+              </View>
 
-            <Button
-              title={isLoading ? "Creating Account..." : "Create Account"}
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                handleRegister();
-              }}
-              disabled={isLoading}
-              fullWidth
-              accessibilityLabel={isLoading ? "Creating your account" : "Create new account"}
-              accessibilityHint="Tap to register with the provided information"
-              accessibilityRole="button"
-            />
+              {/* Password Input */}
+              <View style={styles.inputContainer}>
+                <Text style={[styles.inputLabel, { color: theme.isDark ? '#E2E8F0' : '#4A5568' }]}>
+                  Password
+                </Text>
+                <View style={styles.inputWrapper}>
+                  <View style={styles.inputIcon}>
+                    <MentalHealthIcon name="heart" size={20} color="#90CDB0" />
+                  </View>
+                  <TextInput
+                    style={[
+                      styles.textInput,
+                      {
+                        backgroundColor: theme.isDark ? '#4A5568' : '#F7FAFC',
+                        color: theme.isDark ? '#FFFFFF' : '#2D3748',
+                        borderColor: passwordError ? '#E53E3E' : 'transparent',
+                      }
+                    ]}
+                    placeholder="Enter your password..."
+                    placeholderTextColor={theme.isDark ? '#A0AEC0' : '#718096'}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                    autoComplete="password"
+                  />
+                  <TouchableOpacity
+                    style={styles.passwordToggle}
+                    onPress={() => setShowPassword(!showPassword)}
+                  >
+                    <Text style={[styles.passwordToggleText, { color: '#90CDB0' }]}>
+                      {showPassword ? '👁️' : '👁️‍🗨️'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {passwordError ? (
+                  <View style={styles.errorContainer}>
+                    <View style={styles.errorIcon}>
+                      <Text style={styles.errorIconText}>⚠️</Text>
+                    </View>
+                    <Text style={styles.errorText}>{passwordError}</Text>
+                  </View>
+                ) : null}
+              </View>
 
-            <FooterContainer>
-              <FooterText color={theme.colors.text.secondary}>
-                Already have an account?
-              </FooterText>
-              <Button
-                title="Sign In"
-                variant="text"
-                onPress={() => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                  navigation.navigate('Login');
-                }}
-                accessibilityLabel="Go to sign in"
-                accessibilityHint="Navigate to the login screen"
-                accessibilityRole="button"
-              />
-            </FooterContainer>
-          </ContentContainer>
-        </ScrollContainer>
-      </RegisterContainer>
-    </SafeAreaView>
+              {/* Confirm Password Input */}
+              <View style={styles.inputContainer}>
+                <Text style={[styles.inputLabel, { color: theme.isDark ? '#E2E8F0' : '#4A5568' }]}>
+                  Password Confirmation
+                </Text>
+                <View style={styles.inputWrapper}>
+                  <View style={styles.inputIcon}>
+                    <MentalHealthIcon name="heart" size={20} color="#90CDB0" />
+                  </View>
+                  <TextInput
+                    style={[
+                      styles.textInput,
+                      {
+                        backgroundColor: theme.isDark ? '#4A5568' : '#F7FAFC',
+                        color: theme.isDark ? '#FFFFFF' : '#2D3748',
+                        borderColor: confirmPasswordError ? '#E53E3E' : 'transparent',
+                      }
+                    ]}
+                    placeholder="Confirm your password..."
+                    placeholderTextColor={theme.isDark ? '#A0AEC0' : '#718096'}
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    secureTextEntry={!showConfirmPassword}
+                    autoComplete="password"
+                  />
+                  <TouchableOpacity
+                    style={styles.passwordToggle}
+                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    <Text style={[styles.passwordToggleText, { color: '#90CDB0' }]}>
+                      {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {confirmPasswordError ? (
+                  <View style={styles.errorContainer}>
+                    <View style={styles.errorIcon}>
+                      <Text style={styles.errorIconText}>⚠️</Text>
+                    </View>
+                    <Text style={styles.errorText}>{confirmPasswordError}</Text>
+                  </View>
+                ) : null}
+              </View>
+
+              {/* Sign Up Button */}
+              <TouchableOpacity
+                style={[
+                  styles.signUpButton,
+                  { 
+                    backgroundColor: theme.isDark ? '#8B4513' : '#8B4513',
+                    opacity: isLoading ? 0.6 : 1 
+                  }
+                ]}
+                onPress={handleRegister}
+                disabled={isLoading}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.signUpButtonText}>
+                  {isLoading ? 'Creating Account...' : 'Sign Up'} →
+                </Text>
+              </TouchableOpacity>
+
+              {/* Footer Links */}
+              <TouchableOpacity
+                style={styles.linkButton}
+                onPress={handleSignIn}
+                activeOpacity={0.8}
+              >
+                <Text style={[styles.linkText, { color: theme.isDark ? '#FF8C00' : '#FF8C00' }]}>
+                  Already have an account? Sign In
+                </Text>
+              </TouchableOpacity>
+            </Animated.View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  headerContent: {
+    alignItems: 'center',
+    paddingTop: 60,
+  },
+  logoContainer: {
+    marginBottom: 10,
+  },
+  logoGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: 44,
+    height: 44,
+    justifyContent: 'space-between',
+  },
+  logoCircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    marginBottom: 4,
+  },
+  content: {
+    flex: 1,
+    marginTop: -30,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+  },
+  keyboardView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingTop: 40,
+  },
+  formContainer: {
+    paddingHorizontal: 24,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 32,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  inputIcon: {
+    position: 'absolute',
+    left: 16,
+    zIndex: 1,
+  },
+  textInput: {
+    flex: 1,
+    height: 56,
+    borderRadius: 12,
+    paddingHorizontal: 48,
+    fontSize: 16,
+    borderWidth: 1,
+  },
+  passwordToggle: {
+    position: 'absolute',
+    right: 16,
+    padding: 4,
+  },
+  passwordToggleText: {
+    fontSize: 16,
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    backgroundColor: '#FED7D7',
+    borderRadius: 8,
+  },
+  errorIcon: {
+    marginRight: 8,
+  },
+  errorIconText: {
+    fontSize: 16,
+  },
+  errorText: {
+    color: '#E53E3E',
+    fontSize: 12,
+    flex: 1,
+  },
+  signUpButton: {
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
+    marginBottom: 24,
+  },
+  signUpButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  linkButton: {
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  linkText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+});
 
 export default RegisterScreen;
