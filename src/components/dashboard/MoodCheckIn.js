@@ -17,11 +17,30 @@ import {
   shadows,
 } from "../../styles/theme";
 import { MentalHealthIcon } from "../icons";
+import {
+  TouchTargetHelpers,
+  WCAG_CONSTANTS,
+  FocusManagement,
+  MentalHealthAccessibility,
+} from "../../utils/accessibility";
 
-const MoodCheckIn = ({ currentMood, onCheckIn }) => {
-  const { theme } = useTheme();
+const MoodCheckIn = ({ 
+  currentMood, 
+  onCheckIn,
+  accessibilityLabel,
+  accessibilityHint,
+  disabled = false,
+  testID = 'mood-check-in',
+}) => {
+  const { theme, isReducedMotionEnabled } = useTheme();
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  
+  // Enhanced touch target sizing
+  const { style: touchTargetStyle, hitSlop } = TouchTargetHelpers.ensureMinimumTouchTarget({
+    minWidth: WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
+    minHeight: WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
+  });
 
   const moodEmojis = {
     happy: "😊",

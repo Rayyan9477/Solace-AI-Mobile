@@ -16,8 +16,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
 import LoadingScreen from "./src/components/LoadingScreen";
-import { ThemeProvider, useTheme } from "./src/contexts/ThemeContext";
-import { DesignSystemProvider } from "./src/design-system/DesignSystemContext";
+import { UnifiedThemeProvider, useUnifiedTheme } from "./src/theme/UnifiedThemeProvider";
 import AppNavigator from "./src/navigation/AppNavigator";
 import { store, persistor } from "./src/store/store";
 
@@ -25,7 +24,7 @@ import { store, persistor } from "./src/store/store";
 SplashScreen.preventAutoHideAsync();
 
 const ThemedApp = () => {
-  const { theme, isDarkMode } = useTheme();
+  const { theme, isDarkMode } = useUnifiedTheme();
   const [appIsReady, setAppIsReady] = React.useState(false);
 
   useEffect(() => {
@@ -73,13 +72,11 @@ const App = () => {
       <SafeAreaProvider>
         <Provider store={store}>
           <PersistGate loading={<LoadingScreen />} persistor={persistor}>
-            <ThemeProvider>
-              <DesignSystemProvider>
-                <NavigationContainer>
-                  <ThemedApp />
-                </NavigationContainer>
-              </DesignSystemProvider>
-            </ThemeProvider>
+            <UnifiedThemeProvider>
+              <NavigationContainer>
+                <ThemedApp />
+              </NavigationContainer>
+            </UnifiedThemeProvider>
           </PersistGate>
         </Provider>
       </SafeAreaProvider>

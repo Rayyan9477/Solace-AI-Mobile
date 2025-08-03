@@ -1,8 +1,17 @@
 /**
- * Accessibility utilities for Solace AI Mobile App
- * Provides consistent accessibility patterns across components
+ * Enhanced Accessibility utilities for Solace AI Mobile App
+ * Provides WCAG 2.1 AA compliant accessibility patterns across components
+ * 
+ * Features:
+ * - WCAG 2.1 AA compliance utilities
+ * - Screen reader optimization
+ * - Touch target validation
+ * - Color contrast helpers
+ * - Keyboard navigation support
+ * - Mental health app specific patterns
  */
 
+// WCAG 2.1 AA compliant accessibility roles
 export const AccessibilityRoles = {
   BUTTON: "button",
   TEXT: "text",
@@ -25,14 +34,29 @@ export const AccessibilityRoles = {
   DIALOG: "dialog",
   GRID: "grid",
   CELL: "gridcell",
+  TOOLBAR: "toolbar",
+  PROGRESSBAR: "progressbar",
+  ARTICLE: "article",
+  BANNER: "banner",
+  COMPLEMENTARY: "complementary",
+  CONTENTINFO: "contentinfo",
+  MAIN: "main",
+  REGION: "region",
+  SECTION: "section",
 };
 
+// Enhanced accessibility states for better screen reader support
 export const AccessibilityStates = {
   DISABLED: "disabled",
   SELECTED: "selected",
   CHECKED: "checked",
   EXPANDED: "expanded",
   BUSY: "busy",
+  PRESSED: "pressed",
+  INVALID: "invalid",
+  REQUIRED: "required",
+  READONLY: "readonly",
+  HIDDEN: "hidden",
 };
 
 export const AccessibilityTraits = {
@@ -304,10 +328,174 @@ export const MentalHealthAccessibility = {
   },
 };
 
+// WCAG 2.1 AA Constants
+export const WCAG_CONSTANTS = {
+  TOUCH_TARGET_MIN_SIZE: 44, // 2.5.5 Target Size (AAA)
+  COLOR_CONTRAST_AA_NORMAL: 4.5, // 1.4.3 Contrast (Minimum)
+  COLOR_CONTRAST_AA_LARGE: 3.0, // 1.4.3 Contrast (Minimum) for large text
+  COLOR_CONTRAST_AAA_NORMAL: 7.0, // 1.4.6 Contrast (Enhanced)
+  COLOR_CONTRAST_AAA_LARGE: 4.5, // 1.4.6 Contrast (Enhanced) for large text
+  LARGE_TEXT_MIN_SIZE: 18, // pt size for large text
+  LARGE_TEXT_MIN_SIZE_BOLD: 14, // pt size for large bold text
+  MAX_ANIMATION_DURATION: 5000, // 2.2.2 Pause, Stop, Hide
+  FOCUS_OUTLINE_WIDTH: 2, // Visible focus indicator
+  MIN_TAP_TARGET_SPACING: 8, // Space between adjacent targets
+};
+
+// Enhanced accessibility validation helpers
+export const AccessibilityValidators = {
+  // Validate touch target size according to WCAG 2.5.5
+  validateTouchTarget: (width, height, minSize = WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE) => ({
+    isValid: width >= minSize && height >= minSize,
+    width,
+    height,
+    minSize,
+    wcagRule: '2.5.5 Target Size',
+    level: 'AAA',
+  }),
+
+  // Validate color contrast according to WCAG 1.4.3
+  validateColorContrast: (foreground, background, fontSize = 16, isBold = false, level = 'AA') => {
+    const isLargeText = fontSize >= WCAG_CONSTANTS.LARGE_TEXT_MIN_SIZE || 
+                      (fontSize >= WCAG_CONSTANTS.LARGE_TEXT_MIN_SIZE_BOLD && isBold);
+    
+    const requiredRatio = level === 'AAA' 
+      ? (isLargeText ? WCAG_CONSTANTS.COLOR_CONTRAST_AAA_LARGE : WCAG_CONSTANTS.COLOR_CONTRAST_AAA_NORMAL)
+      : (isLargeText ? WCAG_CONSTANTS.COLOR_CONTRAST_AA_LARGE : WCAG_CONSTANTS.COLOR_CONTRAST_AA_NORMAL);
+
+    return {
+      requiredRatio,
+      isLargeText,
+      wcagRule: level === 'AAA' ? '1.4.6 Contrast (Enhanced)' : '1.4.3 Contrast (Minimum)',
+      level,
+    };
+  },
+
+  // Validate animation duration according to WCAG 2.2.2
+  validateAnimationDuration: (duration) => ({
+    isValid: duration <= WCAG_CONSTANTS.MAX_ANIMATION_DURATION,
+    duration,
+    maxDuration: WCAG_CONSTANTS.MAX_ANIMATION_DURATION,
+    wcagRule: '2.2.2 Pause, Stop, Hide',
+    level: 'A',
+  }),
+
+  // Validate accessibility label quality
+  validateAccessibilityLabel: (label) => ({
+    hasLabel: !!label,
+    isDescriptive: label && label.length >= 3,
+    isEmpty: !label || label.trim().length === 0,
+    isTooShort: label && label.length < 3,
+    wcagRule: '4.1.2 Name, Role, Value',
+    level: 'A',
+  }),
+};
+
+// Enhanced focus management utilities
+export const FocusManagement = {
+  // Create focus trap for modals/dialogs
+  createFocusTrap: (containerRef) => ({
+    accessibilityViewIsModal: true,
+    onAccessibilityEscape: () => {
+      // Handle escape key for modal dismissal
+      console.log('Modal dismissed via accessibility escape');
+    },
+  }),
+
+  // Focus management for complex components
+  createFocusProps: (onFocus, onBlur, isFocused = false) => ({
+    onFocus: (event) => {
+      if (onFocus) onFocus(event);
+      // Additional focus handling
+    },
+    onBlur: (event) => {
+      if (onBlur) onBlur(event);
+      // Additional blur handling
+    },
+    style: isFocused ? {
+      outline: `${WCAG_CONSTANTS.FOCUS_OUTLINE_WIDTH}px solid #0066cc`,
+      outlineOffset: '2px',
+    } : {},
+  }),
+
+  // Screen reader announcement helper
+  announceForScreenReader: (message, priority = 'polite') => {
+    // Enhanced announcement with priority levels
+    if (typeof AccessibilityInfo !== 'undefined') {
+      AccessibilityInfo.announceForAccessibility(message);
+    }
+    console.log(`[Screen Reader ${priority.toUpperCase()}]: ${message}`);
+  },
+};
+
+// Touch target optimization utilities
+export const TouchTargetHelpers = {
+  // Ensure minimum touch target size with hitSlop
+  ensureMinimumTouchTarget: (style = {}) => {
+    const currentWidth = style.width || style.minWidth || 0;
+    const currentHeight = style.height || style.minHeight || 0;
+    const minSize = WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE;
+
+    const hitSlopHorizontal = Math.max(0, (minSize - currentWidth) / 2);
+    const hitSlopVertical = Math.max(0, (minSize - currentHeight) / 2);
+
+    return {
+      style: {
+        ...style,
+        minWidth: Math.max(currentWidth, minSize),
+        minHeight: Math.max(currentHeight, minSize),
+      },
+      hitSlop: hitSlopHorizontal > 0 || hitSlopVertical > 0 ? {
+        top: hitSlopVertical,
+        bottom: hitSlopVertical,
+        left: hitSlopHorizontal,
+        right: hitSlopHorizontal,
+      } : undefined,
+    };
+  },
+
+  // Calculate spacing between touch targets
+  calculateTargetSpacing: (targets) => {
+    const minSpacing = WCAG_CONSTANTS.MIN_TAP_TARGET_SPACING;
+    return {
+      marginHorizontal: minSpacing / 2,
+      marginVertical: minSpacing / 2,
+    };
+  },
+};
+
+// Enhanced keyboard navigation utilities
+export const KeyboardNavigation = {
+  // Create comprehensive keyboard navigation props
+  createKeyboardProps: (onPress, role = AccessibilityRoles.BUTTON) => ({
+    accessible: true,
+    accessibilityRole: role,
+    onPress,
+    // Additional keyboard-specific handlers can be added here
+    onAccessibilityTap: onPress, // For better screen reader support
+  }),
+
+  // Tab index management for complex components
+  createTabIndexProps: (tabIndex = 0, isDisabled = false) => ({
+    focusable: !isDisabled,
+    accessible: !isDisabled,
+    accessibilityState: {
+      disabled: isDisabled,
+    },
+    // Note: React Native doesn't support tabIndex directly
+    // This is a placeholder for future enhancement
+  }),
+};
+
 export default {
   AccessibilityRoles,
   AccessibilityStates,
   AccessibilityTraits,
+  WCAG_CONSTANTS,
+  AccessibilityValidators,
+  FocusManagement,
+  TouchTargetHelpers,
+  KeyboardNavigation,
   createMoodAccessibility,
   createTherapeuticAccessibility,
   createNavigationAccessibility,

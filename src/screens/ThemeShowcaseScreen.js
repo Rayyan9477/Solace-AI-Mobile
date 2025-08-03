@@ -118,10 +118,10 @@ const ThemeShowcaseScreen = () => {
       {/* Buttons */}
       <View style={styles.buttonGrid}>
         <TouchableOpacity 
-          style={[[
+          style={[
             styles.button, 
             styles.primaryButton,
-            { backgroundColor: theme.colors.primary[500] , { minWidth: 44, minHeight: 44 }]}
+            { backgroundColor: theme.colors.primary[500], minWidth: 44, minHeight: 44 }
           ]}
         
         accessible={true}

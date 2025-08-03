@@ -10,6 +10,7 @@ import {
 } from "react-native";
 
 import { useTheme } from "../../contexts/ThemeContext";
+import { TouchTargetHelpers, WCAG_CONSTANTS, FocusManagement } from "../../utils/accessibility";
 
 const Button = ({
   onPress,
@@ -26,9 +27,19 @@ const Button = ({
   accessibilityLabel,
   accessibilityHint,
   testID,
+  onFocus,
+  onBlur,
+  autoFocus = false,
 }) => {
   const { theme, isReducedMotionEnabled } = useTheme();
   const [scaleValue] = React.useState(new Animated.Value(1));
+  const [isFocused, setIsFocused] = React.useState(false);
+  
+  // Ensure minimum touch target size with enhanced WCAG compliance
+  const { style: touchTargetStyle, hitSlop } = TouchTargetHelpers.ensureMinimumTouchTarget({
+    minWidth: WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
+    minHeight: WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
+  });
 
   const handlePressIn = () => {
     if (!isReducedMotionEnabled) {
@@ -56,7 +67,29 @@ const Button = ({
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       }
       onPress?.();
+      
+      // Announce action for screen readers
+      FocusManagement.announceForScreenReader(
+        `${title} button activated`,
+        'polite'
+      );
     }
+  };
+  
+  const handleFocus = (event) => {
+    setIsFocused(true);
+    onFocus?.(event);
+    
+    // Announce focus for screen readers
+    FocusManagement.announceForScreenReader(
+      `Focused on ${title} button`,
+      'polite'
+    );
+  };
+  
+  const handleBlur = (event) => {
+    setIsFocused(false);
+    onBlur?.(event);
   };
 
   const getVariantStyles = () => {
@@ -120,7 +153,8 @@ const Button = ({
         getSizeStyles(),
         fullWidth && styles.fullWidth,
         disabled && styles.disabled,
-        { minWidth: 44, minHeight: 44 },
+        touchTargetStyle,
+        isFocused && styles.focused,
       ]}
       accessible
       accessibilityRole="button"
@@ -133,6 +167,12 @@ const Button = ({
       }}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      autoFocus={autoFocus}
+      hitSlop={hitSlop}
+      focusable={!disabled}
+      onAccessibilityTap={handlePress}
     >
       <Animated.View style={{ transform: [{ scale: scaleValue }] }}>
         {loading ? (
@@ -177,6 +217,16 @@ const styles = StyleSheet.create({
   disabled: {
     opacity: 0.5,
   },
+  focused: {
+    borderWidth: WCAG_CONSTANTS.FOCUS_OUTLINE_WIDTH,
+    borderColor: '#0066cc',
+    // Enhanced focus indicator for better visibility
+    shadowColor: '#0066cc',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
+  },
   text: {
     fontSize: 16,
     fontWeight: "600",
@@ -202,6 +252,9 @@ Button.propTypes = {
   accessibilityLabel: PropTypes.string,
   accessibilityHint: PropTypes.string,
   testID: PropTypes.string,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
+  autoFocus: PropTypes.bool,
 };
 
 Button.defaultProps = {

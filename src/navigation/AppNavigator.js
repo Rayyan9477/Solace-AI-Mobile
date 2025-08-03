@@ -20,6 +20,8 @@ import ChatScreen from "../screens/chat/ChatScreen";
 import DashboardScreen from "../screens/dashboard/DashboardScreen";
 import EnhancedMoodTrackerScreen from "../screens/mood/EnhancedMoodTrackerScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
+import TherapyScreen from "../screens/therapy/TherapyScreen";
+import TherapyTestScreen from "../screens/therapy/TherapyTestScreen";
 
 // Wellness Screens
 import SearchScreen from "../screens/search/SearchScreen";
@@ -132,6 +134,16 @@ const WellnessStack = () => {
         name="StressManagement"
         component={StressManagementScreen}
         options={{ title: "Stress Management", headerShown: false }}
+      />
+      <Stack.Screen
+        name="Therapy"
+        component={TherapyScreen}
+        options={{ title: "Therapy Session", headerShown: false }}
+      />
+      <Stack.Screen
+        name="TherapyTest"
+        component={TherapyTestScreen}
+        options={{ title: "Therapy System Test", headerShown: false }}
       />
     </Stack.Navigator>
   );
