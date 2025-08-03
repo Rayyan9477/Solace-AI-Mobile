@@ -1,54 +1,62 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Svg, { 
-  Path, 
-  Circle, 
-  Rect, 
-  Line, 
-  Polyline, 
+import PropTypes from "prop-types";
+import React from "react";
+import Svg, {
+  Path,
+  Circle,
+  Rect,
+  Line,
+  Polyline,
   Polygon,
   G,
   Defs,
   LinearGradient,
   Stop,
-} from 'react-native-svg';
-import { BaseDesignTokens } from '../../design-system/DesignTokens';
+} from "react-native-svg";
+
+import { BaseDesignTokens } from "../../design-system/DesignTokens";
 
 // Base Accessibility Communication Icon Component
-const AccessibilityCommunicationIcon = ({ 
-  name, 
-  size = 24, 
-  color, 
-  therapeuticTheme = 'nurturing',
-  variant = 'outline',
+const AccessibilityCommunicationIcon = ({
+  name,
+  size = 24,
+  color,
+  therapeuticTheme = "nurturing",
+  variant = "outline",
   strokeWidth = 2,
   style,
-  testID 
+  testID,
 }) => {
   const tokens = BaseDesignTokens;
-  
+
   const getColor = () => {
     if (color) return color;
-    
+
     if (therapeuticTheme) {
       const therapeuticColors = tokens.colors.therapeutic[therapeuticTheme];
       return therapeuticColors?.[600] || tokens.colors.primary[600];
     }
-    
+
     return tokens.colors.primary[600];
   };
 
   const iconColor = getColor();
-  const fillColor = variant === 'filled' ? iconColor : 'none';
-  const strokeColor = variant === 'filled' ? 'none' : iconColor;
+  const fillColor = variant === "filled" ? iconColor : "none";
+  const strokeColor = variant === "filled" ? "none" : iconColor;
 
   const renderIcon = () => {
     switch (name) {
       // Accessibility Icons
-      case 'accessibility':
+      case "accessibility":
         return (
           <G>
-            <Circle cx="12" cy="4" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="4"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M15.5 8.5L19 7l-1-2-3.5 1.5L12 8L9.5 6.5L6 5l-1 2 3.5 1.5"
               fill={fillColor}
@@ -78,10 +86,17 @@ const AccessibilityCommunicationIcon = ({
           </G>
         );
 
-      case 'wheelchair':
+      case "wheelchair":
         return (
           <G>
-            <Circle cx="12" cy="4" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="4"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M12 6v6"
               stroke={strokeColor}
@@ -94,8 +109,20 @@ const AccessibilityCommunicationIcon = ({
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
-            <Circle cx="12" cy="18" r="4" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
-            <Circle cx="12" cy="18" r="1.5" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="12"
+              cy="18"
+              r="4"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Circle
+              cx="12"
+              cy="18"
+              r="1.5"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
             <Path
               d="M8 12h4l2-4"
               stroke={strokeColor}
@@ -106,7 +133,7 @@ const AccessibilityCommunicationIcon = ({
           </G>
         );
 
-      case 'hearing-aid':
+      case "hearing-aid":
         return (
           <G>
             <Path
@@ -128,11 +155,18 @@ const AccessibilityCommunicationIcon = ({
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
-            <Circle cx="19" cy="16" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="19"
+              cy="16"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
           </G>
         );
 
-      case 'sign-language':
+      case "sign-language":
         return (
           <G>
             <Path
@@ -167,7 +201,14 @@ const AccessibilityCommunicationIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="10" cy="6" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="10"
+              cy="6"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M8 8c0 1 1 2 2 2s2-1 2-2"
               stroke={strokeColor}
@@ -177,25 +218,46 @@ const AccessibilityCommunicationIcon = ({
           </G>
         );
 
-      case 'braille':
+      case "braille":
         return (
           <G>
             <Circle cx="6" cy="6" r="1.5" fill={strokeColor} />
             <Circle cx="6" cy="10" r="1.5" fill={strokeColor} />
             <Circle cx="6" cy="14" r="1.5" fill={strokeColor} />
             <Circle cx="10" cy="6" r="1.5" fill={strokeColor} />
-            <Circle cx="10" cy="10" r="1.5" fill="none" stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="10"
+              cy="10"
+              r="1.5"
+              fill="none"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Circle cx="10" cy="14" r="1.5" fill={strokeColor} />
             <Circle cx="14" cy="6" r="1.5" fill={strokeColor} />
             <Circle cx="14" cy="10" r="1.5" fill={strokeColor} />
-            <Circle cx="14" cy="14" r="1.5" fill="none" stroke={strokeColor} strokeWidth={strokeWidth} />
-            <Circle cx="18" cy="6" r="1.5" fill="none" stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="14"
+              cy="14"
+              r="1.5"
+              fill="none"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Circle
+              cx="18"
+              cy="6"
+              r="1.5"
+              fill="none"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Circle cx="18" cy="10" r="1.5" fill={strokeColor} />
             <Circle cx="18" cy="14" r="1.5" fill={strokeColor} />
           </G>
         );
 
-      case 'voice-recognition':
+      case "voice-recognition":
         return (
           <G>
             <Path
@@ -213,61 +275,133 @@ const AccessibilityCommunicationIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Line x1="12" y1="19" x2="12" y2="23" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Line x1="8" y1="23" x2="16" y2="23" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Path d="M7 10h2" stroke={strokeColor} strokeWidth={strokeWidth * 0.5} strokeLinecap="round" />
-            <Path d="M15 10h2" stroke={strokeColor} strokeWidth={strokeWidth * 0.5} strokeLinecap="round" />
+            <Line
+              x1="12"
+              y1="19"
+              x2="12"
+              y2="23"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Line
+              x1="8"
+              y1="23"
+              x2="16"
+              y2="23"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Path
+              d="M7 10h2"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth * 0.5}
+              strokeLinecap="round"
+            />
+            <Path
+              d="M15 10h2"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth * 0.5}
+              strokeLinecap="round"
+            />
           </G>
         );
 
-      case 'screen-reader':
+      case "screen-reader":
         return (
           <G>
-            <Rect x="2" y="3" width="20" height="14" rx="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
-            <Circle cx="8" cy="10" r="2" fill={variant === 'filled' ? '#FFFFFF' : fillColor} stroke={variant === 'filled' ? '#FFFFFF' : strokeColor} strokeWidth={strokeWidth} />
-            <Circle cx="16" cy="10" r="2" fill={variant === 'filled' ? '#FFFFFF' : fillColor} stroke={variant === 'filled' ? '#FFFFFF' : strokeColor} strokeWidth={strokeWidth} />
+            <Rect
+              x="2"
+              y="3"
+              width="20"
+              height="14"
+              rx="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Circle
+              cx="8"
+              cy="10"
+              r="2"
+              fill={variant === "filled" ? "#FFFFFF" : fillColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Circle
+              cx="16"
+              cy="10"
+              r="2"
+              fill={variant === "filled" ? "#FFFFFF" : fillColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M6 13c1 1 3 1 4 0"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
             <Path
               d="M14 13c1 1 3 1 4 0"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
-            <Line x1="8" y1="21" x2="16" y2="21" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Line x1="12" y1="17" x2="12" y2="21" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
+            <Line
+              x1="8"
+              y1="21"
+              x2="16"
+              y2="21"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Line
+              x1="12"
+              y1="17"
+              x2="12"
+              y2="21"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
           </G>
         );
 
-      case 'high-contrast':
+      case "high-contrast":
         return (
           <G>
-            <Circle cx="12" cy="12" r="9" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="12"
+              r="9"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M12 3v18"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
             <Path
               d="M21 12H3"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
             <Path
               d="M12 3A9 9 0 0 1 21 12"
-              fill={variant === 'filled' ? '#FFFFFF' : '#000000'}
+              fill={variant === "filled" ? "#FFFFFF" : "#000000"}
             />
           </G>
         );
 
       // Communication Icons
-      case 'chat-bubble':
+      case "chat-bubble":
         return (
           <G>
             <Path
@@ -278,13 +412,28 @@ const AccessibilityCommunicationIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="9" cy="10" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="12" cy="10" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="15" cy="10" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="9"
+              cy="10"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="12"
+              cy="10"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="15"
+              cy="10"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
           </G>
         );
 
-      case 'speech-bubble':
+      case "speech-bubble":
         return (
           <G>
             <Path
@@ -318,10 +467,19 @@ const AccessibilityCommunicationIcon = ({
           </G>
         );
 
-      case 'video-call':
+      case "video-call":
         return (
           <G>
-            <Rect x="2" y="6" width="16" height="12" rx="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Rect
+              x="2"
+              y="6"
+              width="16"
+              height="12"
+              rx="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Polygon
               points="22,8 18,12 22,16 22,8"
               fill={fillColor}
@@ -330,18 +488,28 @@ const AccessibilityCommunicationIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="7" cy="10" r="1.5" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="13" cy="10" r="1.5" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="7"
+              cy="10"
+              r="1.5"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="13"
+              cy="10"
+              r="1.5"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
             <Path
               d="M6 14c1 1 2 1 3 1s2 0 3-1"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
           </G>
         );
 
-      case 'voice-call':
+      case "voice-call":
         return (
           <G>
             <Path
@@ -369,7 +537,7 @@ const AccessibilityCommunicationIcon = ({
           </G>
         );
 
-      case 'text-to-speech':
+      case "text-to-speech":
         return (
           <G>
             <Path
@@ -388,17 +556,56 @@ const AccessibilityCommunicationIcon = ({
               strokeLinejoin="round"
             />
             <Rect x="16" y="2" width="6" height="2" rx="1" fill={strokeColor} />
-            <Rect x="18" y="20" width="4" height="2" rx="1" fill={strokeColor} />
+            <Rect
+              x="18"
+              y="20"
+              width="4"
+              height="2"
+              rx="1"
+              fill={strokeColor}
+            />
           </G>
         );
 
-      case 'live-caption':
+      case "live-caption":
         return (
           <G>
-            <Rect x="2" y="8" width="20" height="10" rx="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
-            <Line x1="6" y1="12" x2="18" y2="12" stroke={variant === 'filled' ? '#FFFFFF' : strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Line x1="6" y1="15" x2="14" y2="15" stroke={variant === 'filled' ? '#FFFFFF' : strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Circle cx="12" cy="4" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Rect
+              x="2"
+              y="8"
+              width="20"
+              height="10"
+              rx="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Line
+              x1="6"
+              y1="12"
+              x2="18"
+              y2="12"
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Line
+              x1="6"
+              y1="15"
+              x2="14"
+              y2="15"
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Circle
+              cx="12"
+              cy="4"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M8 4c0 1 1 2 2 2"
               stroke={strokeColor}
@@ -414,7 +621,7 @@ const AccessibilityCommunicationIcon = ({
           </G>
         );
 
-      case 'translation':
+      case "translation":
         return (
           <G>
             <Path
@@ -463,25 +670,44 @@ const AccessibilityCommunicationIcon = ({
         );
 
       // Support and Help Icons
-      case 'help-circle':
+      case "help-circle":
         return (
           <G>
-            <Circle cx="12" cy="12" r="10" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="12"
+              r="10"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="12" cy="17" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="12"
+              cy="17"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
           </G>
         );
 
-      case 'support':
+      case "support":
         return (
           <G>
-            <Circle cx="12" cy="8" r="5" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="8"
+              r="5"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M20 21a8 8 0 1 0-16 0"
               stroke={strokeColor}
@@ -490,29 +716,46 @@ const AccessibilityCommunicationIcon = ({
             />
             <Path
               d="M12 13v3"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
-            <Circle cx="10" cy="6" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="14" cy="6" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="10"
+              cy="6"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="14"
+              cy="6"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
             <Path
               d="M10 9s1 1 2 1 2-1 2-1"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
-            <Circle cx="18" cy="18" r="3" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="18"
+              cy="18"
+              r="3"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M17 17h2v2"
-              stroke={variant === 'filled' ? strokeColor : '#FFFFFF'}
+              stroke={variant === "filled" ? strokeColor : "#FFFFFF"}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
           </G>
         );
 
-      case 'feedback':
+      case "feedback":
         return (
           <G>
             <Path
@@ -525,27 +768,34 @@ const AccessibilityCommunicationIcon = ({
             />
             <Path
               d="M13 8H7"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
             <Path
               d="M17 12H7"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
-            <Circle cx="17" cy="8" r="2" fill={variant === 'filled' ? '#FFFFFF' : fillColor} stroke={variant === 'filled' ? '#FFFFFF' : strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="17"
+              cy="8"
+              r="2"
+              fill={variant === "filled" ? "#FFFFFF" : fillColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M16 7h2v2"
-              stroke={variant === 'filled' ? strokeColor : '#FFFFFF'}
+              stroke={variant === "filled" ? strokeColor : "#FFFFFF"}
               strokeWidth={strokeWidth * 0.8}
               strokeLinecap="round"
             />
           </G>
         );
 
-      case 'contact-support':
+      case "contact-support":
         return (
           <G>
             <Path
@@ -556,10 +806,17 @@ const AccessibilityCommunicationIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="18" cy="6" r="3" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="18"
+              cy="6"
+              r="3"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M17 5h2v2"
-              stroke={variant === 'filled' ? strokeColor : '#FFFFFF'}
+              stroke={variant === "filled" ? strokeColor : "#FFFFFF"}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
@@ -567,39 +824,63 @@ const AccessibilityCommunicationIcon = ({
         );
 
       // Language and Localization
-      case 'language':
+      case "language":
         return (
           <G>
-            <Circle cx="12" cy="12" r="10" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="12"
+              r="10"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M2 12h20"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
             <Path
               d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
           </G>
         );
 
-      case 'localization':
+      case "localization":
         return (
           <G>
-            <Circle cx="12" cy="12" r="10" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="12"
+              r="10"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Polygon
               points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88 16.24,7.76"
-              fill={variant === 'filled' ? '#FFFFFF' : fillColor}
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              fill={variant === "filled" ? "#FFFFFF" : fillColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="8" cy="8" r="1" fill={variant === 'filled' ? strokeColor : '#FFFFFF'} />
-            <Circle cx="16" cy="16" r="1" fill={variant === 'filled' ? strokeColor : '#FFFFFF'} />
+            <Circle
+              cx="8"
+              cy="8"
+              r="1"
+              fill={variant === "filled" ? strokeColor : "#FFFFFF"}
+            />
+            <Circle
+              cx="16"
+              cy="16"
+              r="1"
+              fill={variant === "filled" ? strokeColor : "#FFFFFF"}
+            />
           </G>
         );
 
@@ -607,7 +888,14 @@ const AccessibilityCommunicationIcon = ({
       default:
         return (
           <G>
-            <Circle cx="12" cy="4" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="4"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M15.5 8.5L19 7l-1-2-3.5 1.5L12 8L9.5 6.5L6 5l-1 2 3.5 1.5"
               fill={fillColor}
@@ -653,27 +941,69 @@ const AccessibilityCommunicationIcon = ({
 };
 
 // Specialized Accessibility Communication Icon Components
-export const AccessibilityIcon = (props) => <AccessibilityCommunicationIcon name="accessibility" {...props} />;
-export const WheelchairIcon = (props) => <AccessibilityCommunicationIcon name="wheelchair" {...props} />;
-export const HearingAidIcon = (props) => <AccessibilityCommunicationIcon name="hearing-aid" {...props} />;
-export const SignLanguageIcon = (props) => <AccessibilityCommunicationIcon name="sign-language" {...props} />;
-export const BrailleIcon = (props) => <AccessibilityCommunicationIcon name="braille" {...props} />;
-export const VoiceRecognitionIcon = (props) => <AccessibilityCommunicationIcon name="voice-recognition" {...props} />;
-export const ScreenReaderIcon = (props) => <AccessibilityCommunicationIcon name="screen-reader" {...props} />;
-export const HighContrastIcon = (props) => <AccessibilityCommunicationIcon name="high-contrast" {...props} />;
-export const ChatBubbleIcon = (props) => <AccessibilityCommunicationIcon name="chat-bubble" {...props} />;
-export const SpeechBubbleIcon = (props) => <AccessibilityCommunicationIcon name="speech-bubble" {...props} />;
-export const VideoCallIcon = (props) => <AccessibilityCommunicationIcon name="video-call" {...props} />;
-export const VoiceCallIcon = (props) => <AccessibilityCommunicationIcon name="voice-call" {...props} />;
-export const TextToSpeechIcon = (props) => <AccessibilityCommunicationIcon name="text-to-speech" {...props} />;
-export const LiveCaptionIcon = (props) => <AccessibilityCommunicationIcon name="live-caption" {...props} />;
-export const TranslationIcon = (props) => <AccessibilityCommunicationIcon name="translation" {...props} />;
-export const HelpCircleIcon = (props) => <AccessibilityCommunicationIcon name="help-circle" {...props} />;
-export const SupportIcon = (props) => <AccessibilityCommunicationIcon name="support" {...props} />;
-export const FeedbackIcon = (props) => <AccessibilityCommunicationIcon name="feedback" {...props} />;
-export const ContactSupportIcon = (props) => <AccessibilityCommunicationIcon name="contact-support" {...props} />;
-export const LanguageIcon = (props) => <AccessibilityCommunicationIcon name="language" {...props} />;
-export const LocalizationIcon = (props) => <AccessibilityCommunicationIcon name="localization" {...props} />;
+export const AccessibilityIcon = (props) => (
+  <AccessibilityCommunicationIcon name="accessibility" {...props} />
+);
+export const WheelchairIcon = (props) => (
+  <AccessibilityCommunicationIcon name="wheelchair" {...props} />
+);
+export const HearingAidIcon = (props) => (
+  <AccessibilityCommunicationIcon name="hearing-aid" {...props} />
+);
+export const SignLanguageIcon = (props) => (
+  <AccessibilityCommunicationIcon name="sign-language" {...props} />
+);
+export const BrailleIcon = (props) => (
+  <AccessibilityCommunicationIcon name="braille" {...props} />
+);
+export const VoiceRecognitionIcon = (props) => (
+  <AccessibilityCommunicationIcon name="voice-recognition" {...props} />
+);
+export const ScreenReaderIcon = (props) => (
+  <AccessibilityCommunicationIcon name="screen-reader" {...props} />
+);
+export const HighContrastIcon = (props) => (
+  <AccessibilityCommunicationIcon name="high-contrast" {...props} />
+);
+export const ChatBubbleIcon = (props) => (
+  <AccessibilityCommunicationIcon name="chat-bubble" {...props} />
+);
+export const SpeechBubbleIcon = (props) => (
+  <AccessibilityCommunicationIcon name="speech-bubble" {...props} />
+);
+export const VideoCallIcon = (props) => (
+  <AccessibilityCommunicationIcon name="video-call" {...props} />
+);
+export const VoiceCallIcon = (props) => (
+  <AccessibilityCommunicationIcon name="voice-call" {...props} />
+);
+export const TextToSpeechIcon = (props) => (
+  <AccessibilityCommunicationIcon name="text-to-speech" {...props} />
+);
+export const LiveCaptionIcon = (props) => (
+  <AccessibilityCommunicationIcon name="live-caption" {...props} />
+);
+export const TranslationIcon = (props) => (
+  <AccessibilityCommunicationIcon name="translation" {...props} />
+);
+export const HelpCircleIcon = (props) => (
+  <AccessibilityCommunicationIcon name="help-circle" {...props} />
+);
+export const SupportIcon = (props) => (
+  <AccessibilityCommunicationIcon name="support" {...props} />
+);
+export const FeedbackIcon = (props) => (
+  <AccessibilityCommunicationIcon name="feedback" {...props} />
+);
+export const ContactSupportIcon = (props) => (
+  <AccessibilityCommunicationIcon name="contact-support" {...props} />
+);
+export const LanguageIcon = (props) => (
+  <AccessibilityCommunicationIcon name="language" {...props} />
+);
+export const LocalizationIcon = (props) => (
+  <AccessibilityCommunicationIcon name="localization" {...props} />
+);
 
 // Accessibility Communication Icon Collection
 export const AccessibilityCommunicationIconCollection = {
@@ -686,7 +1016,7 @@ export const AccessibilityCommunicationIconCollection = {
   voiceRecognition: VoiceRecognitionIcon,
   screenReader: ScreenReaderIcon,
   highContrast: HighContrastIcon,
-  
+
   // Communication
   chatBubble: ChatBubbleIcon,
   speechBubble: SpeechBubbleIcon,
@@ -695,13 +1025,13 @@ export const AccessibilityCommunicationIconCollection = {
   textToSpeech: TextToSpeechIcon,
   liveCaption: LiveCaptionIcon,
   translation: TranslationIcon,
-  
+
   // Support
   helpCircle: HelpCircleIcon,
   support: SupportIcon,
   feedback: FeedbackIcon,
   contactSupport: ContactSupportIcon,
-  
+
   // Language
   language: LanguageIcon,
   localization: LocalizationIcon,
@@ -713,10 +1043,16 @@ AccessibilityCommunicationIcon.propTypes = {
   size: PropTypes.number,
   color: PropTypes.string,
   therapeuticTheme: PropTypes.oneOf([
-    'calming', 'nurturing', 'peaceful', 'grounding', 
-    'energizing', 'focus', 'mindful', 'balance'
+    "calming",
+    "nurturing",
+    "peaceful",
+    "grounding",
+    "energizing",
+    "focus",
+    "mindful",
+    "balance",
   ]),
-  variant: PropTypes.oneOf(['outline', 'filled']),
+  variant: PropTypes.oneOf(["outline", "filled"]),
   strokeWidth: PropTypes.number,
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   testID: PropTypes.string,

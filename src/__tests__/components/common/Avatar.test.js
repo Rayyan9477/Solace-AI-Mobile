@@ -1,33 +1,34 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import Avatar from '../../../components/common/Avatar';
+import { render, fireEvent } from "@testing-library/react-native";
+import React from "react";
+
+import Avatar from "../../../components/common/Avatar";
 
 // Mock theme context
 const mockTheme = {
   colors: {
     primary: {
-      main: '#007AFF',
-      light: '#E3F2FD',
-      dark: '#1976D2',
+      main: "#007AFF",
+      light: "#E3F2FD",
+      dark: "#1976D2",
     },
     background: {
-      primary: '#FFFFFF',
-      surface: '#F5F5F5',
+      primary: "#FFFFFF",
+      surface: "#F5F5F5",
     },
     text: {
-      onPrimary: '#FFFFFF',
+      onPrimary: "#FFFFFF",
     },
     success: {
-      main: '#4CAF50',
+      main: "#4CAF50",
     },
     warning: {
-      main: '#FF9800',
+      main: "#FF9800",
     },
     error: {
-      main: '#F44336',
+      main: "#F44336",
     },
     gray: {
-      400: '#BDBDBD',
+      400: "#BDBDBD",
     },
   },
   borderRadius: {
@@ -40,138 +41,138 @@ const MockThemeProvider = ({ children }) => {
 };
 
 // Mock useTheme hook
-jest.mock('../../../contexts/ThemeContext', () => ({
+jest.mock("../../../contexts/ThemeContext", () => ({
   useTheme: () => ({ theme: mockTheme }),
 }));
 
-describe('Avatar Component', () => {
+describe("Avatar Component", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders correctly with default props', () => {
+  it("renders correctly with default props", () => {
     const { getByLabelText } = render(
       <MockThemeProvider>
         <Avatar name="John Doe" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
     const avatar = getByLabelText("John Doe's avatar");
     expect(avatar).toBeTruthy();
   });
 
-  it('displays initials correctly', () => {
+  it("displays initials correctly", () => {
     const { getByText } = render(
       <MockThemeProvider>
         <Avatar name="John Doe" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByText('JD')).toBeTruthy();
+    expect(getByText("JD")).toBeTruthy();
   });
 
-  it('handles single name correctly', () => {
+  it("handles single name correctly", () => {
     const { getByText } = render(
       <MockThemeProvider>
         <Avatar name="John" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByText('J')).toBeTruthy();
+    expect(getByText("J")).toBeTruthy();
   });
 
-  it('shows fallback icon when no name provided', () => {
+  it("shows fallback icon when no name provided", () => {
     const { getByText } = render(
       <MockThemeProvider>
         <Avatar name="" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByText('👤')).toBeTruthy();
+    expect(getByText("👤")).toBeTruthy();
   });
 
-  it('renders with custom fallback icon', () => {
+  it("renders with custom fallback icon", () => {
     const { getByText } = render(
       <MockThemeProvider>
         <Avatar name="" fallbackIcon="🤖" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByText('🤖')).toBeTruthy();
+    expect(getByText("🤖")).toBeTruthy();
   });
 
-  it('renders status indicator when status prop is provided', () => {
+  it("renders status indicator when status prop is provided", () => {
     const { getByLabelText } = render(
       <MockThemeProvider>
         <Avatar name="John Doe" status="online" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    const statusIndicator = getByLabelText('Status: online');
+    const statusIndicator = getByLabelText("Status: online");
     expect(statusIndicator).toBeTruthy();
   });
 
-  it('renders badge when badge prop is provided', () => {
+  it("renders badge when badge prop is provided", () => {
     const { getByLabelText } = render(
       <MockThemeProvider>
         <Avatar name="John Doe" badge={{ count: 5 }} />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    const badge = getByLabelText('Badge: 5');
+    const badge = getByLabelText("Badge: 5");
     expect(badge).toBeTruthy();
   });
 
-  it('handles press events when onPress is provided', () => {
+  it("handles press events when onPress is provided", () => {
     const mockOnPress = jest.fn();
     const { getByRole } = render(
       <MockThemeProvider>
         <Avatar name="John Doe" onPress={mockOnPress} />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    const avatar = getByRole('button');
+    const avatar = getByRole("button");
     fireEvent.press(avatar);
     expect(mockOnPress).toHaveBeenCalledTimes(1);
   });
 
-  it('renders as image role when no onPress is provided', () => {
+  it("renders as image role when no onPress is provided", () => {
     const { getByLabelText } = render(
       <MockThemeProvider>
         <Avatar name="John Doe" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
     const avatar = getByLabelText("John Doe's avatar");
     expect(avatar).toBeTruthy();
   });
 
-  it('renders as button role when onPress is provided', () => {
+  it("renders as button role when onPress is provided", () => {
     const mockOnPress = jest.fn();
     const { getByRole } = render(
       <MockThemeProvider>
         <Avatar name="John Doe" onPress={mockOnPress} />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByRole('button')).toBeTruthy();
+    expect(getByRole("button")).toBeTruthy();
   });
 
-  it('applies correct accessibility label', () => {
+  it("applies correct accessibility label", () => {
     const { getByLabelText } = render(
       <MockThemeProvider>
         <Avatar name="John Doe" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
     expect(getByLabelText("John Doe's avatar")).toBeTruthy();
   });
 
-  it('applies correct accessibility label with status', () => {
+  it("applies correct accessibility label with status", () => {
     const { getByLabelText } = render(
       <MockThemeProvider>
         <Avatar name="John Doe" status="online" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
     expect(getByLabelText("John Doe's avatar, status: online")).toBeTruthy();

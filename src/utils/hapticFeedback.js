@@ -3,80 +3,80 @@
  * Provides consistent haptic feedback patterns for mental health interactions
  */
 
-import { Vibration, Platform } from 'react-native';
+import { Vibration, Platform } from "react-native";
 
 // Haptic feedback patterns for different interactions
 export const HapticPatterns = {
   // Light feedback for subtle interactions
   LIGHT: {
-    ios: 'impactLight',
+    ios: "impactLight",
     android: [10],
   },
-  
+
   // Medium feedback for standard interactions
   MEDIUM: {
-    ios: 'impactMedium',
+    ios: "impactMedium",
     android: [50],
   },
-  
+
   // Heavy feedback for important interactions
   HEAVY: {
-    ios: 'impactHeavy',
+    ios: "impactHeavy",
     android: [100],
   },
-  
+
   // Success feedback for positive outcomes
   SUCCESS: {
-    ios: 'notificationSuccess',
+    ios: "notificationSuccess",
     android: [50, 50, 100],
   },
-  
+
   // Warning feedback for caution
   WARNING: {
-    ios: 'notificationWarning',
+    ios: "notificationWarning",
     android: [100, 50, 100],
   },
-  
+
   // Error feedback for mistakes
   ERROR: {
-    ios: 'notificationError',
+    ios: "notificationError",
     android: [200, 100, 200],
   },
-  
+
   // Selection feedback for choices
   SELECTION: {
-    ios: 'selection',
+    ios: "selection",
     android: [30],
   },
-  
+
   // Mental health specific patterns
   MOOD_SELECTION: {
-    ios: 'impactLight',
+    ios: "impactLight",
     android: [40, 20, 40],
   },
-  
+
   INTENSITY_CHANGE: {
-    ios: 'selection',
+    ios: "selection",
     android: [20],
   },
-  
+
   ASSESSMENT_COMPLETE: {
-    ios: 'notificationSuccess',
+    ios: "notificationSuccess",
     android: [100, 50, 100, 50, 150],
   },
-  
+
   THERAPEUTIC_ACTION: {
-    ios: 'impactMedium',
+    ios: "impactMedium",
     android: [60, 30, 60],
   },
-  
+
   CHAT_MESSAGE_SENT: {
-    ios: 'impactLight',
+    ios: "impactLight",
     android: [25],
   },
-  
+
   EMERGENCY_ALERT: {
-    ios: 'notificationError',
+    ios: "notificationError",
     android: [300, 100, 300, 100, 300],
   },
 };
@@ -84,7 +84,7 @@ export const HapticPatterns = {
 class HapticFeedbackManager {
   constructor() {
     this.isEnabled = true;
-    this.isSupported = Platform.OS === 'ios' || Platform.OS === 'android';
+    this.isSupported = Platform.OS === "ios" || Platform.OS === "android";
   }
 
   /**
@@ -109,9 +109,9 @@ class HapticFeedbackManager {
       return;
     }
 
-    const { 
-      force = false,  // Force haptic even if disabled
-      delay = 0,      // Delay before triggering
+    const {
+      force = false, // Force haptic even if disabled
+      delay = 0, // Delay before triggering
     } = options;
 
     if (!force && !this.isEnabled) {
@@ -119,9 +119,9 @@ class HapticFeedbackManager {
     }
 
     const executeHaptic = () => {
-      if (Platform.OS === 'ios') {
+      if (Platform.OS === "ios") {
         this.triggerIOS(pattern);
-      } else if (Platform.OS === 'android') {
+      } else if (Platform.OS === "android") {
         this.triggerAndroid(pattern);
       }
     };
@@ -140,17 +140,17 @@ class HapticFeedbackManager {
     try {
       // This would use react-native-haptic-feedback in a real implementation
       // For now, we'll use Vibration as a fallback
-      if (pattern.ios === 'impactLight' || pattern.ios === 'selection') {
+      if (pattern.ios === "impactLight" || pattern.ios === "selection") {
         Vibration.vibrate(10);
-      } else if (pattern.ios === 'impactMedium') {
+      } else if (pattern.ios === "impactMedium") {
         Vibration.vibrate(30);
-      } else if (pattern.ios === 'impactHeavy') {
+      } else if (pattern.ios === "impactHeavy") {
         Vibration.vibrate(50);
-      } else if (pattern.ios.includes('notification')) {
+      } else if (pattern.ios.includes("notification")) {
         Vibration.vibrate([50, 20, 50]);
       }
     } catch (error) {
-      console.warn('Haptic feedback error:', error);
+      console.warn("Haptic feedback error:", error);
     }
   }
 
@@ -165,14 +165,14 @@ class HapticFeedbackManager {
         Vibration.vibrate(pattern.android);
       }
     } catch (error) {
-      console.warn('Haptic feedback error:', error);
+      console.warn("Haptic feedback error:", error);
     }
   }
 
   /**
    * Mental health specific haptic methods
    */
-  
+
   // Mood tracking haptics
   moodSelected(mood) {
     this.trigger(HapticPatterns.MOOD_SELECTION);
@@ -260,12 +260,14 @@ class HapticFeedbackManager {
     }
 
     const pattern = {
-      ios: 'impactMedium', // Fallback for iOS
+      ios: "impactMedium", // Fallback for iOS
       android: durations,
     };
 
     for (let i = 0; i < repeat; i++) {
-      this.trigger(pattern, { delay: i * (durations.reduce((a, b) => a + b, 0) + 100) });
+      this.trigger(pattern, {
+        delay: i * (durations.reduce((a, b) => a + b, 0) + 100),
+      });
     }
   }
 
@@ -276,7 +278,7 @@ class HapticFeedbackManager {
     try {
       Vibration.cancel();
     } catch (error) {
-      console.warn('Could not cancel vibration:', error);
+      console.warn("Could not cancel vibration:", error);
     }
   }
 }
@@ -312,4 +314,5 @@ export const {
 export const enableHaptics = (enabled) => hapticFeedback.setEnabled(enabled);
 export const isHapticsEnabled = () => hapticFeedback.getEnabled();
 export const stopHaptics = () => hapticFeedback.stop();
-export const customHaptic = (durations, repeat) => hapticFeedback.createCustomPattern(durations, repeat);
+export const customHaptic = (durations, repeat) =>
+  hapticFeedback.createCustomPattern(durations, repeat);

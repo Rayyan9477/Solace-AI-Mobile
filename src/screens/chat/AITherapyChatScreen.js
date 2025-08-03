@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -10,47 +11,47 @@ import {
   Platform,
   Animated,
   SafeAreaView,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MentalHealthIcon, NavigationIcon } from '../../components/icons';
+} from "react-native";
+
+import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const AITherapyChatScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const [messages, setMessages] = useState([]);
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [sessionMode, setSessionMode] = useState('general'); // general, crisis, guided
+  const [sessionMode, setSessionMode] = useState("general"); // general, crisis, guided
   const scrollViewRef = useRef(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const therapyModes = [
     {
-      id: 'general',
-      title: 'General Support',
-      description: 'Open conversation for any concerns',
-      icon: 'Heart',
+      id: "general",
+      title: "General Support",
+      description: "Open conversation for any concerns",
+      icon: "Heart",
       color: theme.colors.therapeutic.nurturing[500],
     },
     {
-      id: 'anxiety',
-      title: 'Anxiety Support',
-      description: 'Focused help for anxiety management',
-      icon: 'Mindfulness',
+      id: "anxiety",
+      title: "Anxiety Support",
+      description: "Focused help for anxiety management",
+      icon: "Mindfulness",
       color: theme.colors.therapeutic.calming[500],
     },
     {
-      id: 'depression',
-      title: 'Mood Support',
-      description: 'Support for low mood and depression',
-      icon: 'Brain',
+      id: "depression",
+      title: "Mood Support",
+      description: "Support for low mood and depression",
+      icon: "Brain",
       color: theme.colors.therapeutic.peaceful[500],
     },
     {
-      id: 'crisis',
-      title: 'Crisis Support',
-      description: 'Immediate support for difficult times',
-      icon: 'Therapy',
+      id: "crisis",
+      title: "Crisis Support",
+      description: "Immediate support for difficult times",
+      icon: "Therapy",
       color: theme.colors.error[400],
     },
   ];
@@ -66,24 +67,24 @@ const AITherapyChatScreen = ({ navigation }) => {
 
   const initialMessages = [
     {
-      id: '1',
+      id: "1",
       text: "Hello! I'm Solace, your AI therapy companion. I'm here to provide support, listen without judgment, and help you work through whatever you're experiencing.",
-      sender: 'ai',
+      sender: "ai",
       timestamp: new Date(),
-      type: 'welcome',
+      type: "welcome",
     },
     {
-      id: '2',
+      id: "2",
       text: "How are you feeling today? You can share anything that's on your mind, or select one of the quick responses below to get started.",
-      sender: 'ai',
+      sender: "ai",
       timestamp: new Date(),
-      type: 'prompt',
+      type: "prompt",
     },
   ];
 
   useEffect(() => {
     setMessages(initialMessages);
-    
+
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
@@ -103,53 +104,79 @@ const AITherapyChatScreen = ({ navigation }) => {
   const generateAIResponse = (userMessage) => {
     // Simulated AI responses based on keywords and context
     const lowerMessage = userMessage.toLowerCase();
-    
-    if (lowerMessage.includes('anxious') || lowerMessage.includes('anxiety')) {
+
+    if (lowerMessage.includes("anxious") || lowerMessage.includes("anxiety")) {
       return {
         text: "I understand you're feeling anxious. That's a very common experience, and you're not alone. Let's try a grounding technique together. Can you name 5 things you can see around you right now?",
-        suggestions: ['Yes, let\'s try that', 'I need something else', 'Tell me more about anxiety'],
+        suggestions: [
+          "Yes, let's try that",
+          "I need something else",
+          "Tell me more about anxiety",
+        ],
       };
     }
-    
-    if (lowerMessage.includes('sad') || lowerMessage.includes('depressed') || lowerMessage.includes('down')) {
+
+    if (
+      lowerMessage.includes("sad") ||
+      lowerMessage.includes("depressed") ||
+      lowerMessage.includes("down")
+    ) {
       return {
         text: "I hear that you're going through a difficult time. It takes courage to reach out when you're feeling down. Your feelings are valid, and it's okay to not be okay sometimes. What's been weighing on your mind lately?",
-        suggestions: ['Work stress', 'Relationship issues', 'I don\'t know'],
+        suggestions: ["Work stress", "Relationship issues", "I don't know"],
       };
     }
-    
-    if (lowerMessage.includes('overwhelmed')) {
+
+    if (lowerMessage.includes("overwhelmed")) {
       return {
         text: "Feeling overwhelmed can be really challenging. It sounds like you have a lot on your plate right now. Sometimes breaking things down into smaller, manageable pieces can help. What feels most overwhelming to you at the moment?",
-        suggestions: ['Too many tasks', 'Emotional stress', 'Everything feels too much'],
+        suggestions: [
+          "Too many tasks",
+          "Emotional stress",
+          "Everything feels too much",
+        ],
       };
     }
-    
-    if (lowerMessage.includes('sleep') || lowerMessage.includes('tired')) {
+
+    if (lowerMessage.includes("sleep") || lowerMessage.includes("tired")) {
       return {
         text: "Sleep difficulties can really impact how we feel during the day. Good sleep hygiene is so important for mental health. Have you noticed any patterns in what might be affecting your sleep?",
-        suggestions: ['Racing thoughts', 'Stress', 'No specific reason'],
+        suggestions: ["Racing thoughts", "Stress", "No specific reason"],
       };
     }
-    
-    if (lowerMessage.includes('crisis') || lowerMessage.includes('harm') || lowerMessage.includes('hurt')) {
+
+    if (
+      lowerMessage.includes("crisis") ||
+      lowerMessage.includes("harm") ||
+      lowerMessage.includes("hurt")
+    ) {
       return {
         text: "I'm concerned about what you're going through. If you're having thoughts of harming yourself, please reach out to a crisis helpline or emergency services immediately. You matter, and there are people who want to help. Would you like me to provide some crisis resources?",
-        suggestions: ['Yes, provide resources', 'I\'m safe for now', 'I need immediate help'],
+        suggestions: [
+          "Yes, provide resources",
+          "I'm safe for now",
+          "I need immediate help",
+        ],
         urgent: true,
       };
     }
-    
+
     // Default supportive response
     const defaultResponses = [
       "Thank you for sharing that with me. It sounds like you're dealing with something important. Can you tell me more about how this is affecting you?",
       "I appreciate you opening up. It's not always easy to put our feelings into words. What would be most helpful for you right now?",
       "I'm here to listen and support you. What you're experiencing matters. How long have you been feeling this way?",
     ];
-    
+
     return {
-      text: defaultResponses[Math.floor(Math.random() * defaultResponses.length)],
-      suggestions: ['Tell me more', 'I need coping strategies', 'I want to change topics'],
+      text: defaultResponses[
+        Math.floor(Math.random() * defaultResponses.length)
+      ],
+      suggestions: [
+        "Tell me more",
+        "I need coping strategies",
+        "I want to change topics",
+      ],
     };
   };
 
@@ -159,30 +186,33 @@ const AITherapyChatScreen = ({ navigation }) => {
     const userMessage = {
       id: Date.now().toString(),
       text: messageText.trim(),
-      sender: 'user',
+      sender: "user",
       timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputText('');
+    setMessages((prev) => [...prev, userMessage]);
+    setInputText("");
     setIsTyping(true);
 
     // Simulate AI thinking time
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(messageText);
-      
-      const aiMessage = {
-        id: (Date.now() + 1).toString(),
-        text: aiResponse.text,
-        sender: 'ai',
-        timestamp: new Date(),
-        suggestions: aiResponse.suggestions,
-        urgent: aiResponse.urgent,
-      };
+    setTimeout(
+      () => {
+        const aiResponse = generateAIResponse(messageText);
 
-      setMessages(prev => [...prev, aiMessage]);
-      setIsTyping(false);
-    }, 1500 + Math.random() * 1000); // Variable response time
+        const aiMessage = {
+          id: (Date.now() + 1).toString(),
+          text: aiResponse.text,
+          sender: "ai",
+          timestamp: new Date(),
+          suggestions: aiResponse.suggestions,
+          urgent: aiResponse.urgent,
+        };
+
+        setMessages((prev) => [...prev, aiMessage]);
+        setIsTyping(false);
+      },
+      1500 + Math.random() * 1000,
+    ); // Variable response time
   };
 
   const handleQuickResponse = (response) => {
@@ -195,20 +225,20 @@ const AITherapyChatScreen = ({ navigation }) => {
 
   const handleModeChange = (mode) => {
     setSessionMode(mode);
-    
+
     const modeMessage = {
       id: Date.now().toString(),
       text: `I've switched to ${mode} mode. I'm here to provide focused support for your ${mode} concerns. How can I help you today?`,
-      sender: 'ai',
+      sender: "ai",
       timestamp: new Date(),
-      type: 'mode_change',
+      type: "mode_change",
     };
-    
-    setMessages(prev => [...prev, modeMessage]);
+
+    setMessages((prev) => [...prev, modeMessage]);
   };
 
   const renderMessage = (message) => {
-    const isUser = message.sender === 'user';
+    const isUser = message.sender === "user";
     const isUrgent = message.urgent;
 
     return (
@@ -220,7 +250,12 @@ const AITherapyChatScreen = ({ navigation }) => {
         ]}
       >
         {!isUser && (
-          <View style={[styles.aiAvatar, { backgroundColor: theme.colors.therapeutic.calming[500] }]}>
+          <View
+            style={[
+              styles.aiAvatar,
+              { backgroundColor: theme.colors.therapeutic.calming[500] },
+            ]}
+          >
             <MentalHealthIcon
               name="Brain"
               size={16}
@@ -229,25 +264,35 @@ const AITherapyChatScreen = ({ navigation }) => {
             />
           </View>
         )}
-        
+
         <View
           style={[
             styles.messageBubble,
-            isUser ? 
-              [styles.userMessage, { backgroundColor: theme.colors.therapeutic.calming[500] }] :
-              [styles.aiMessage, { 
-                backgroundColor: isUrgent ? theme.colors.error[50] : theme.colors.background.primary,
-                borderColor: isUrgent ? theme.colors.error[200] : theme.colors.gray[200],
-              }],
+            isUser
+              ? [
+                  styles.userMessage,
+                  { backgroundColor: theme.colors.therapeutic.calming[500] },
+                ]
+              : [
+                  styles.aiMessage,
+                  {
+                    backgroundColor: isUrgent
+                      ? theme.colors.error[50]
+                      : theme.colors.background.primary,
+                    borderColor: isUrgent
+                      ? theme.colors.error[200]
+                      : theme.colors.gray[200],
+                  },
+                ],
           ]}
         >
           <Text
             style={[
               styles.messageText,
               {
-                color: isUser 
-                  ? theme.colors.text.inverse 
-                  : isUrgent 
+                color: isUser
+                  ? theme.colors.text.inverse
+                  : isUrgent
                     ? theme.colors.error[700]
                     : theme.colors.text.primary,
               },
@@ -255,7 +300,7 @@ const AITherapyChatScreen = ({ navigation }) => {
           >
             {message.text}
           </Text>
-          
+
           {message.suggestions && (
             <View style={styles.suggestionsContainer}>
               {message.suggestions.map((suggestion, index) => (
@@ -263,8 +308,8 @@ const AITherapyChatScreen = ({ navigation }) => {
                   key={index}
                   style={[
                     styles.suggestionButton,
-                    { 
-                      backgroundColor: isUrgent 
+                    {
+                      backgroundColor: isUrgent
                         ? theme.colors.error[100]
                         : theme.colors.therapeutic.calming[100],
                       borderColor: isUrgent
@@ -291,9 +336,12 @@ const AITherapyChatScreen = ({ navigation }) => {
             </View>
           )}
         </View>
-        
+
         <Text style={[styles.timestamp, { color: theme.colors.text.tertiary }]}>
-          {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          {message.timestamp.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
         </Text>
       </View>
     );
@@ -301,7 +349,12 @@ const AITherapyChatScreen = ({ navigation }) => {
 
   const renderTypingIndicator = () => (
     <View style={[styles.messageContainer, styles.aiMessageContainer]}>
-      <View style={[styles.aiAvatar, { backgroundColor: theme.colors.therapeutic.calming[500] }]}>
+      <View
+        style={[
+          styles.aiAvatar,
+          { backgroundColor: theme.colors.therapeutic.calming[500] },
+        ]}
+      >
         <MentalHealthIcon
           name="Brain"
           size={16}
@@ -309,8 +362,14 @@ const AITherapyChatScreen = ({ navigation }) => {
           variant="filled"
         />
       </View>
-      
-      <View style={[styles.messageBubble, styles.aiMessage, { backgroundColor: theme.colors.background.primary }]}>
+
+      <View
+        style={[
+          styles.messageBubble,
+          styles.aiMessage,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
+      >
         <View style={styles.typingContainer}>
           <TypingDots theme={theme} />
         </View>
@@ -343,19 +402,28 @@ const AITherapyChatScreen = ({ navigation }) => {
               variant="outline"
             />
           </TouchableOpacity>
-          
+
           <View style={styles.headerInfo}>
-            <Text style={[styles.headerTitle, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[styles.headerTitle, { color: theme.colors.text.primary }]}
+            >
               Solace AI Therapist
             </Text>
-            <Text style={[styles.headerSubtitle, { color: theme.colors.text.secondary }]}>
-              {therapyModes.find(m => m.id === sessionMode)?.title}
+            <Text
+              style={[
+                styles.headerSubtitle,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
+              {therapyModes.find((m) => m.id === sessionMode)?.title}
             </Text>
           </View>
-          
+
           <TouchableOpacity
             style={styles.modeButton}
-            onPress={() => {/* Show mode selector */}}
+            onPress={() => {
+              /* Show mode selector */
+            }}
           >
             <MentalHealthIcon
               name="Heart"
@@ -367,7 +435,9 @@ const AITherapyChatScreen = ({ navigation }) => {
         </View>
 
         {/* Messages */}
-        <Animated.View style={[styles.messagesContainer, { opacity: fadeAnim }]}>
+        <Animated.View
+          style={[styles.messagesContainer, { opacity: fadeAnim }]}
+        >
           <ScrollView
             ref={scrollViewRef}
             style={styles.messagesScroll}
@@ -382,17 +452,34 @@ const AITherapyChatScreen = ({ navigation }) => {
         {/* Quick Responses */}
         {messages.length <= 2 && (
           <View style={styles.quickResponsesContainer}>
-            <Text style={[styles.quickResponsesTitle, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[
+                styles.quickResponsesTitle,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
               Quick responses:
             </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.quickResponsesScroll}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.quickResponsesScroll}
+            >
               {quickResponses.map((response, index) => (
                 <TouchableOpacity
                   key={index}
-                  style={[styles.quickResponseButton, { backgroundColor: theme.colors.background.primary }]}
+                  style={[
+                    styles.quickResponseButton,
+                    { backgroundColor: theme.colors.background.primary },
+                  ]}
                   onPress={() => handleQuickResponse(response)}
                 >
-                  <Text style={[styles.quickResponseText, { color: theme.colors.text.primary }]}>
+                  <Text
+                    style={[
+                      styles.quickResponseText,
+                      { color: theme.colors.text.primary },
+                    ]}
+                  >
                     {response}
                   </Text>
                 </TouchableOpacity>
@@ -403,13 +490,18 @@ const AITherapyChatScreen = ({ navigation }) => {
 
         {/* Input Area */}
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.inputContainer}
         >
           <View style={styles.inputRow}>
             <TouchableOpacity
-              style={[styles.attachButton, { backgroundColor: theme.colors.background.secondary }]}
-              onPress={() => {/* Show options like mood, voice note, etc. */}}
+              style={[
+                styles.attachButton,
+                { backgroundColor: theme.colors.background.secondary },
+              ]}
+              onPress={() => {
+                /* Show options like mood, voice note, etc. */
+              }}
             >
               <MentalHealthIcon
                 name="Heart"
@@ -418,7 +510,7 @@ const AITherapyChatScreen = ({ navigation }) => {
                 variant="outline"
               />
             </TouchableOpacity>
-            
+
             <TextInput
               style={[
                 styles.textInput,
@@ -435,7 +527,7 @@ const AITherapyChatScreen = ({ navigation }) => {
               multiline
               maxLength={500}
             />
-            
+
             <TouchableOpacity
               style={[
                 styles.sendButton,
@@ -470,21 +562,45 @@ const TypingDots = ({ theme }) => {
   useEffect(() => {
     const animateDots = () => {
       Animated.sequence([
-        Animated.timing(dot1, { toValue: 1, duration: 300, useNativeDriver: true }),
-        Animated.timing(dot1, { toValue: 0.3, duration: 300, useNativeDriver: true }),
+        Animated.timing(dot1, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(dot1, {
+          toValue: 0.3,
+          duration: 300,
+          useNativeDriver: true,
+        }),
       ]).start();
 
       setTimeout(() => {
         Animated.sequence([
-          Animated.timing(dot2, { toValue: 1, duration: 300, useNativeDriver: true }),
-          Animated.timing(dot2, { toValue: 0.3, duration: 300, useNativeDriver: true }),
+          Animated.timing(dot2, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+          Animated.timing(dot2, {
+            toValue: 0.3,
+            duration: 300,
+            useNativeDriver: true,
+          }),
         ]).start();
       }, 100);
 
       setTimeout(() => {
         Animated.sequence([
-          Animated.timing(dot3, { toValue: 1, duration: 300, useNativeDriver: true }),
-          Animated.timing(dot3, { toValue: 0.3, duration: 300, useNativeDriver: true }),
+          Animated.timing(dot3, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+          Animated.timing(dot3, {
+            toValue: 0.3,
+            duration: 300,
+            useNativeDriver: true,
+          }),
         ]).start();
       }, 200);
     };
@@ -495,9 +611,24 @@ const TypingDots = ({ theme }) => {
 
   return (
     <View style={styles.typingDots}>
-      <Animated.View style={[styles.typingDot, { opacity: dot1, backgroundColor: theme.colors.text.secondary }]} />
-      <Animated.View style={[styles.typingDot, { opacity: dot2, backgroundColor: theme.colors.text.secondary }]} />
-      <Animated.View style={[styles.typingDot, { opacity: dot3, backgroundColor: theme.colors.text.secondary }]} />
+      <Animated.View
+        style={[
+          styles.typingDot,
+          { opacity: dot1, backgroundColor: theme.colors.text.secondary },
+        ]}
+      />
+      <Animated.View
+        style={[
+          styles.typingDot,
+          { opacity: dot2, backgroundColor: theme.colors.text.secondary },
+        ]}
+      />
+      <Animated.View
+        style={[
+          styles.typingDot,
+          { opacity: dot3, backgroundColor: theme.colors.text.secondary },
+        ]}
+      />
     </View>
   );
 };
@@ -510,27 +641,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
+    borderBottomColor: "rgba(0,0,0,0.1)",
   },
   backButton: {
     width: 44,
     height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerInfo: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   headerSubtitle: {
     fontSize: 12,
@@ -539,8 +670,8 @@ const styles = StyleSheet.create({
   modeButton: {
     width: 44,
     height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   messagesContainer: {
     flex: 1,
@@ -554,26 +685,26 @@ const styles = StyleSheet.create({
   },
   messageContainer: {
     marginBottom: 16,
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   userMessageContainer: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   aiMessageContainer: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
+    alignItems: "flex-start",
+    flexDirection: "row",
   },
   aiAvatar: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 8,
     marginTop: 4,
   },
   messageBubble: {
-    maxWidth: '80%',
+    maxWidth: "80%",
     borderRadius: 16,
     padding: 12,
   },
@@ -598,11 +729,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 16,
     borderWidth: 1,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   suggestionText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   timestamp: {
     fontSize: 11,
@@ -613,8 +744,8 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   typingDots: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   typingDot: {
@@ -626,11 +757,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.1)',
+    borderTopColor: "rgba(0,0,0,0.1)",
   },
   quickResponsesTitle: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 8,
   },
   quickResponsesScroll: {
@@ -642,29 +773,29 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginHorizontal: 4,
     borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.1)',
+    borderColor: "rgba(0,0,0,0.1)",
   },
   quickResponseText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   inputContainer: {
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.1)',
+    borderTopColor: "rgba(0,0,0,0.1)",
   },
   inputRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
+    flexDirection: "row",
+    alignItems: "flex-end",
     gap: 8,
   },
   attachButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   textInput: {
     flex: 1,
@@ -680,8 +811,8 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

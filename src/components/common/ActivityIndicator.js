@@ -1,12 +1,17 @@
-import React from 'react';
-import { View, ActivityIndicator as RNActivityIndicator, StyleSheet } from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
+import React from "react";
+import {
+  View,
+  ActivityIndicator as RNActivityIndicator,
+  StyleSheet,
+} from "react-native";
+
+import { useTheme } from "../../contexts/ThemeContext";
 
 const ActivityIndicator = ({
-  size = 'large',
+  size = "large",
   color,
   style,
-  accessibilityLabel = 'Loading',
+  accessibilityLabel = "Loading",
 }) => {
   const { theme } = useTheme();
 
@@ -27,8 +32,8 @@ const ActivityIndicator = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

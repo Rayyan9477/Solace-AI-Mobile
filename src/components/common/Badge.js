@@ -1,18 +1,25 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
+
+import { useTheme } from "../../contexts/ThemeContext";
 
 const Badge = ({
   label,
-  variant = 'primary',
-  size = 'medium',
+  variant = "primary",
+  size = "medium",
   standalone = false,
   style,
   accessibilityLabel,
   onPress,
   animated = false,
   icon,
-  iconPosition = 'left',
+  iconPosition = "left",
   dot = false,
   pulse = false,
   outline = false,
@@ -36,7 +43,7 @@ const Badge = ({
             duration: 800,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       );
       pulseAnimation.start();
       return () => pulseAnimation.stop();
@@ -63,18 +70,27 @@ const Badge = ({
 
   const getVariantStyles = () => {
     const baseColors = {
-      success: { bg: theme.colors.success.light, text: theme.colors.success.dark },
-      warning: { bg: theme.colors.warning.light, text: theme.colors.warning.dark },
+      success: {
+        bg: theme.colors.success.light,
+        text: theme.colors.success.dark,
+      },
+      warning: {
+        bg: theme.colors.warning.light,
+        text: theme.colors.warning.dark,
+      },
       error: { bg: theme.colors.error.light, text: theme.colors.error.dark },
       info: { bg: theme.colors.info.light, text: theme.colors.info.dark },
-      primary: { bg: theme.colors.primary.light, text: theme.colors.primary.dark },
+      primary: {
+        bg: theme.colors.primary.light,
+        text: theme.colors.primary.dark,
+      },
     };
 
     const colors = baseColors[variant] || baseColors.primary;
-    
+
     if (outline) {
       return {
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
         borderWidth: 1,
         borderColor: colors.bg,
         color: colors.bg,
@@ -90,9 +106,9 @@ const Badge = ({
   const getSizeStyles = () => {
     if (dot) {
       switch (size) {
-        case 'small':
+        case "small":
           return { width: 44, height: 44, borderRadius: 4 };
-        case 'large':
+        case "large":
           return { width: 44, height: 44, borderRadius: 8 };
         default:
           return { width: 44, height: 44, borderRadius: 6 };
@@ -100,7 +116,7 @@ const Badge = ({
     }
 
     switch (size) {
-      case 'small':
+      case "small":
         return {
           paddingVertical: 2,
           paddingHorizontal: 6,
@@ -109,7 +125,7 @@ const Badge = ({
           height: 44,
           fontSize: 10,
         };
-      case 'large':
+      case "large":
         return {
           paddingVertical: 6,
           paddingHorizontal: 12,
@@ -135,10 +151,10 @@ const Badge = ({
 
   // Format label for numeric badges
   const formatLabel = (label) => {
-    if (typeof label === 'number' && label > max) {
+    if (typeof label === "number" && label > max) {
       return `${max}+`;
     }
-    return label?.toString() || '';
+    return label?.toString() || "";
   };
 
   const Container = onPress ? TouchableOpacity : View;
@@ -155,7 +171,7 @@ const Badge = ({
           { transform: [{ scale: pulse ? pulseValue : 1 }] },
           style,
         ]}
-        accessibilityLabel={accessibilityLabel || 'Status indicator'}
+        accessibilityLabel={accessibilityLabel || "Status indicator"}
         accessibilityRole="text"
       />
     );
@@ -186,15 +202,15 @@ const Badge = ({
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         accessibilityLabel={accessibilityLabel || `${displayLabel} badge`}
-        accessibilityRole={onPress ? 'button' : 'text'}
-        accessibilityHint={onPress ? 'Double tap to interact' : undefined}
+        accessibilityRole={onPress ? "button" : "text"}
+        accessibilityHint={onPress ? "Double tap to interact" : undefined}
       >
-        {icon && iconPosition === 'left' && (
+        {icon && iconPosition === "left" && (
           <Text style={[styles.icon, { color: variantStyles.color }]}>
             {icon}
           </Text>
         )}
-        
+
         {!dot && (
           <Text
             style={[
@@ -209,8 +225,8 @@ const Badge = ({
             {displayLabel}
           </Text>
         )}
-        
-        {icon && iconPosition === 'right' && (
+
+        {icon && iconPosition === "right" && (
           <Text style={[styles.icon, { color: variantStyles.color }]}>
             {icon}
           </Text>
@@ -222,16 +238,16 @@ const Badge = ({
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
   standalone: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   text: {
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
   },
   icon: {
     marginHorizontal: 2,

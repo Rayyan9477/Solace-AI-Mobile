@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -8,12 +9,12 @@ import {
   Animated,
   Dimensions,
   SafeAreaView,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MentalHealthIcon, NavigationIcon } from '../../components/icons';
+} from "react-native";
 
-const { width } = Dimensions.get('window');
+import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
+import { useTheme } from "../../contexts/ThemeContext";
+
+const { width } = Dimensions.get("window");
 
 const StressManagementScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -25,83 +26,92 @@ const StressManagementScreen = ({ navigation }) => {
 
   const stressTechniques = [
     {
-      id: 'breathing',
-      title: '4-7-8 Breathing',
-      description: 'Calm your nervous system with this powerful breathing technique',
-      duration: '5 minutes',
-      icon: 'Mindfulness',
-      difficulty: 'Beginner',
+      id: "breathing",
+      title: "4-7-8 Breathing",
+      description:
+        "Calm your nervous system with this powerful breathing technique",
+      duration: "5 minutes",
+      icon: "Mindfulness",
+      difficulty: "Beginner",
       color: theme.colors.therapeutic.calming[500],
       instructions: [
-        'Sit comfortably with your back straight',
-        'Exhale completely through your mouth',
-        'Inhale through your nose for 4 counts',
-        'Hold your breath for 7 counts',
-        'Exhale through your mouth for 8 counts',
-        'Repeat 3-4 times'
-      ]
+        "Sit comfortably with your back straight",
+        "Exhale completely through your mouth",
+        "Inhale through your nose for 4 counts",
+        "Hold your breath for 7 counts",
+        "Exhale through your mouth for 8 counts",
+        "Repeat 3-4 times",
+      ],
     },
     {
-      id: 'progressive_muscle',
-      title: 'Progressive Muscle Relaxation',
-      description: 'Release tension by systematically relaxing muscle groups',
-      duration: '10 minutes',
-      icon: 'Therapy',
-      difficulty: 'Intermediate',
+      id: "progressive_muscle",
+      title: "Progressive Muscle Relaxation",
+      description: "Release tension by systematically relaxing muscle groups",
+      duration: "10 minutes",
+      icon: "Therapy",
+      difficulty: "Intermediate",
       color: theme.colors.therapeutic.nurturing[500],
       instructions: [
-        'Find a quiet, comfortable space',
-        'Start with your feet and toes',
-        'Tense muscles for 5 seconds',
-        'Release and relax for 10 seconds',
-        'Notice the contrast between tension and relaxation',
-        'Move up through each muscle group'
-      ]
+        "Find a quiet, comfortable space",
+        "Start with your feet and toes",
+        "Tense muscles for 5 seconds",
+        "Release and relax for 10 seconds",
+        "Notice the contrast between tension and relaxation",
+        "Move up through each muscle group",
+      ],
     },
     {
-      id: 'mindfulness',
-      title: '5-4-3-2-1 Grounding',
-      description: 'Use your senses to anchor yourself in the present moment',
-      duration: '3 minutes',
-      icon: 'Brain',
-      difficulty: 'Beginner',
+      id: "mindfulness",
+      title: "5-4-3-2-1 Grounding",
+      description: "Use your senses to anchor yourself in the present moment",
+      duration: "3 minutes",
+      icon: "Brain",
+      difficulty: "Beginner",
       color: theme.colors.therapeutic.peaceful[500],
       instructions: [
-        'Notice 5 things you can see',
-        'Notice 4 things you can touch',
-        'Notice 3 things you can hear',
-        'Notice 2 things you can smell',
-        'Notice 1 thing you can taste',
-        'Take deep breaths throughout'
-      ]
+        "Notice 5 things you can see",
+        "Notice 4 things you can touch",
+        "Notice 3 things you can hear",
+        "Notice 2 things you can smell",
+        "Notice 1 thing you can taste",
+        "Take deep breaths throughout",
+      ],
     },
     {
-      id: 'visualization',
-      title: 'Safe Place Visualization',
-      description: 'Create a mental sanctuary to find peace and calm',
-      duration: '8 minutes',
-      icon: 'Heart',
-      difficulty: 'Intermediate',
+      id: "visualization",
+      title: "Safe Place Visualization",
+      description: "Create a mental sanctuary to find peace and calm",
+      duration: "8 minutes",
+      icon: "Heart",
+      difficulty: "Intermediate",
       color: theme.colors.therapeutic.grounding[500],
       instructions: [
-        'Close your eyes and breathe deeply',
-        'Imagine a place where you feel completely safe',
-        'Notice the colors, sounds, and textures',
-        'Feel the peace and security of this space',
-        'Breathe in the calm energy',
-        'Know you can return here anytime'
-      ]
-    }
+        "Close your eyes and breathe deeply",
+        "Imagine a place where you feel completely safe",
+        "Notice the colors, sounds, and textures",
+        "Feel the peace and security of this space",
+        "Breathe in the calm energy",
+        "Know you can return here anytime",
+      ],
+    },
   ];
 
   const stressLevels = [
-    { level: 1, label: 'Very Low', color: theme.colors.therapeutic.nurturing[300] },
-    { level: 2, label: 'Low', color: theme.colors.therapeutic.nurturing[400] },
-    { level: 3, label: 'Mild', color: theme.colors.therapeutic.calming[400] },
-    { level: 4, label: 'Moderate', color: theme.colors.therapeutic.calming[500] },
-    { level: 5, label: 'High', color: theme.colors.warning[400] },
-    { level: 6, label: 'Very High', color: theme.colors.warning[500] },
-    { level: 7, label: 'Severe', color: theme.colors.error[400] },
+    {
+      level: 1,
+      label: "Very Low",
+      color: theme.colors.therapeutic.nurturing[300],
+    },
+    { level: 2, label: "Low", color: theme.colors.therapeutic.nurturing[400] },
+    { level: 3, label: "Mild", color: theme.colors.therapeutic.calming[400] },
+    {
+      level: 4,
+      label: "Moderate",
+      color: theme.colors.therapeutic.calming[500],
+    },
+    { level: 5, label: "High", color: theme.colors.warning[400] },
+    { level: 6, label: "Very High", color: theme.colors.warning[500] },
+    { level: 7, label: "Severe", color: theme.colors.error[400] },
   ];
 
   useEffect(() => {
@@ -123,20 +133,25 @@ const StressManagementScreen = ({ navigation }) => {
   const startTechnique = (technique) => {
     setSelectedTechnique(technique);
     setIsActive(true);
-    navigation.navigate('StressTechniqueSession', { technique });
+    navigation.navigate("StressTechniqueSession", { technique });
   };
 
   const getCurrentStressData = () => {
-    return stressLevels.find(s => s.level === currentStressLevel) || stressLevels[4];
+    return (
+      stressLevels.find((s) => s.level === currentStressLevel) ||
+      stressLevels[4]
+    );
   };
 
   const getRecommendedTechniques = () => {
     if (currentStressLevel <= 2) {
-      return stressTechniques.filter(t => t.difficulty === 'Beginner');
+      return stressTechniques.filter((t) => t.difficulty === "Beginner");
     } else if (currentStressLevel <= 4) {
       return stressTechniques;
     } else {
-      return stressTechniques.filter(t => ['breathing', 'mindfulness'].includes(t.id));
+      return stressTechniques.filter((t) =>
+        ["breathing", "mindfulness"].includes(t.id),
+      );
     }
   };
 
@@ -168,14 +183,18 @@ const StressManagementScreen = ({ navigation }) => {
               variant="outline"
             />
           </TouchableOpacity>
-          
-          <Text style={[styles.headerTitle, { color: theme.colors.text.primary }]}>
+
+          <Text
+            style={[styles.headerTitle, { color: theme.colors.text.primary }]}
+          >
             Stress Management
           </Text>
-          
+
           <TouchableOpacity
             style={styles.helpButton}
-            onPress={() => {/* Open stress management guide */}}
+            onPress={() => {
+              /* Open stress management guide */
+            }}
           >
             <NavigationIcon
               name="Home"
@@ -197,11 +216,18 @@ const StressManagementScreen = ({ navigation }) => {
             ]}
           >
             {/* Current Stress Level */}
-            <View style={[styles.stressLevelCard, { backgroundColor: theme.colors.background.primary }]}>
-              <Text style={[styles.cardTitle, { color: theme.colors.text.primary }]}>
+            <View
+              style={[
+                styles.stressLevelCard,
+                { backgroundColor: theme.colors.background.primary },
+              ]}
+            >
+              <Text
+                style={[styles.cardTitle, { color: theme.colors.text.primary }]}
+              >
                 How are you feeling right now?
               </Text>
-              
+
               <View style={styles.stressLevelContainer}>
                 <View style={styles.stressLevelRow}>
                   {stressLevels.map((stress) => (
@@ -210,9 +236,10 @@ const StressManagementScreen = ({ navigation }) => {
                       style={[
                         styles.stressLevelButton,
                         {
-                          backgroundColor: currentStressLevel === stress.level
-                            ? stress.color
-                            : theme.colors.gray[200],
+                          backgroundColor:
+                            currentStressLevel === stress.level
+                              ? stress.color
+                              : theme.colors.gray[200],
                         },
                       ]}
                       onPress={() => setCurrentStressLevel(stress.level)}
@@ -221,9 +248,10 @@ const StressManagementScreen = ({ navigation }) => {
                         style={[
                           styles.stressLevelNumber,
                           {
-                            color: currentStressLevel === stress.level
-                              ? theme.colors.text.inverse
-                              : theme.colors.text.secondary,
+                            color:
+                              currentStressLevel === stress.level
+                                ? theme.colors.text.inverse
+                                : theme.colors.text.secondary,
                           },
                         ]}
                       >
@@ -232,27 +260,47 @@ const StressManagementScreen = ({ navigation }) => {
                     </TouchableOpacity>
                   ))}
                 </View>
-                
-                <Text style={[styles.stressLevelLabel, { color: currentStressData.color }]}>
+
+                <Text
+                  style={[
+                    styles.stressLevelLabel,
+                    { color: currentStressData.color },
+                  ]}
+                >
                   {currentStressData.label} Stress
                 </Text>
               </View>
 
-              <Text style={[styles.stressLevelDescription, { color: theme.colors.text.secondary }]}>
-                {currentStressLevel <= 2 
+              <Text
+                style={[
+                  styles.stressLevelDescription,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
+                {currentStressLevel <= 2
                   ? "You're feeling relatively calm. Great time for maintenance techniques!"
                   : currentStressLevel <= 4
-                  ? "You're experiencing some stress. Let's work on bringing it down."
-                  : "You're feeling quite stressed. Let's focus on immediate relief techniques."}
+                    ? "You're experiencing some stress. Let's work on bringing it down."
+                    : "You're feeling quite stressed. Let's focus on immediate relief techniques."}
               </Text>
             </View>
 
             {/* Quick Relief Section */}
-            <View style={[styles.section, { backgroundColor: theme.colors.background.primary }]}>
-              <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+            <View
+              style={[
+                styles.section,
+                { backgroundColor: theme.colors.background.primary },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 Quick Relief Techniques
               </Text>
-              
+
               <View style={styles.quickTechniques}>
                 {recommendedTechniques.slice(0, 2).map((technique, index) => (
                   <QuickTechniqueCard
@@ -267,11 +315,21 @@ const StressManagementScreen = ({ navigation }) => {
             </View>
 
             {/* All Techniques */}
-            <View style={[styles.section, { backgroundColor: theme.colors.background.primary }]}>
-              <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+            <View
+              style={[
+                styles.section,
+                { backgroundColor: theme.colors.background.primary },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 All Stress Management Techniques
               </Text>
-              
+
               {stressTechniques.map((technique, index) => (
                 <TechniqueCard
                   key={technique.id}
@@ -284,38 +342,81 @@ const StressManagementScreen = ({ navigation }) => {
             </View>
 
             {/* Stress Insights */}
-            <View style={[styles.section, { backgroundColor: theme.colors.background.primary }]}>
-              <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+            <View
+              style={[
+                styles.section,
+                { backgroundColor: theme.colors.background.primary },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 Understanding Your Stress
               </Text>
-              
-              <View style={[styles.insightCard, { backgroundColor: theme.colors.therapeutic.calming[50] }]}>
+
+              <View
+                style={[
+                  styles.insightCard,
+                  { backgroundColor: theme.colors.therapeutic.calming[50] },
+                ]}
+              >
                 <MentalHealthIcon
                   name="Brain"
                   size={24}
                   color={theme.colors.therapeutic.calming[600]}
                   variant="filled"
                 />
-                <Text style={[styles.insightTitle, { color: theme.colors.therapeutic.calming[700] }]}>
+                <Text
+                  style={[
+                    styles.insightTitle,
+                    { color: theme.colors.therapeutic.calming[700] },
+                  ]}
+                >
                   Stress is Normal
                 </Text>
-                <Text style={[styles.insightText, { color: theme.colors.therapeutic.calming[600] }]}>
-                  Stress is a natural response to challenges. The key is learning healthy ways to manage it so it doesn't overwhelm you.
+                <Text
+                  style={[
+                    styles.insightText,
+                    { color: theme.colors.therapeutic.calming[600] },
+                  ]}
+                >
+                  Stress is a natural response to challenges. The key is
+                  learning healthy ways to manage it so it doesn't overwhelm
+                  you.
                 </Text>
               </View>
 
-              <View style={[styles.insightCard, { backgroundColor: theme.colors.therapeutic.nurturing[50] }]}>
+              <View
+                style={[
+                  styles.insightCard,
+                  { backgroundColor: theme.colors.therapeutic.nurturing[50] },
+                ]}
+              >
                 <MentalHealthIcon
                   name="Heart"
                   size={24}
                   color={theme.colors.therapeutic.nurturing[600]}
                   variant="filled"
                 />
-                <Text style={[styles.insightTitle, { color: theme.colors.therapeutic.nurturing[700] }]}>
+                <Text
+                  style={[
+                    styles.insightTitle,
+                    { color: theme.colors.therapeutic.nurturing[700] },
+                  ]}
+                >
                   Practice Regularly
                 </Text>
-                <Text style={[styles.insightText, { color: theme.colors.therapeutic.nurturing[600] }]}>
-                  Regular practice of stress management techniques makes them more effective when you really need them.
+                <Text
+                  style={[
+                    styles.insightText,
+                    { color: theme.colors.therapeutic.nurturing[600] },
+                  ]}
+                >
+                  Regular practice of stress management techniques makes them
+                  more effective when you really need them.
                 </Text>
               </View>
             </View>
@@ -341,7 +442,10 @@ const QuickTechniqueCard = ({ technique, onPress, theme, delay }) => {
   return (
     <Animated.View style={{ opacity: fadeAnim }}>
       <TouchableOpacity
-        style={[styles.quickTechniqueCard, { backgroundColor: technique.color }]}
+        style={[
+          styles.quickTechniqueCard,
+          { backgroundColor: technique.color },
+        ]}
         onPress={onPress}
         activeOpacity={0.8}
       >
@@ -351,10 +455,20 @@ const QuickTechniqueCard = ({ technique, onPress, theme, delay }) => {
           color={theme.colors.text.inverse}
           variant="filled"
         />
-        <Text style={[styles.quickTechniqueTitle, { color: theme.colors.text.inverse }]}>
+        <Text
+          style={[
+            styles.quickTechniqueTitle,
+            { color: theme.colors.text.inverse },
+          ]}
+        >
           {technique.title}
         </Text>
-        <Text style={[styles.quickTechniqueDuration, { color: theme.colors.text.inverse }]}>
+        <Text
+          style={[
+            styles.quickTechniqueDuration,
+            { color: theme.colors.text.inverse },
+          ]}
+        >
           {technique.duration}
         </Text>
       </TouchableOpacity>
@@ -377,12 +491,17 @@ const TechniqueCard = ({ technique, onPress, theme, delay }) => {
   return (
     <Animated.View style={{ opacity: fadeAnim }}>
       <TouchableOpacity
-        style={[styles.techniqueCard, { backgroundColor: theme.colors.background.secondary }]}
+        style={[
+          styles.techniqueCard,
+          { backgroundColor: theme.colors.background.secondary },
+        ]}
         onPress={onPress}
         activeOpacity={0.8}
       >
         <View style={styles.techniqueCardHeader}>
-          <View style={[styles.techniqueIcon, { backgroundColor: technique.color }]}>
+          <View
+            style={[styles.techniqueIcon, { backgroundColor: technique.color }]}
+          >
             <MentalHealthIcon
               name={technique.icon}
               size={24}
@@ -391,18 +510,38 @@ const TechniqueCard = ({ technique, onPress, theme, delay }) => {
             />
           </View>
           <View style={styles.techniqueInfo}>
-            <Text style={[styles.techniqueTitle, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.techniqueTitle,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               {technique.title}
             </Text>
-            <Text style={[styles.techniqueDescription, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[
+                styles.techniqueDescription,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
               {technique.description}
             </Text>
           </View>
         </View>
-        
+
         <View style={styles.techniqueFooter}>
-          <View style={[styles.difficultyBadge, { backgroundColor: theme.colors.gray[100] }]}>
-            <Text style={[styles.difficultyText, { color: theme.colors.text.secondary }]}>
+          <View
+            style={[
+              styles.difficultyBadge,
+              { backgroundColor: theme.colors.gray[100] },
+            ]}
+          >
+            <Text
+              style={[
+                styles.difficultyText,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
               {technique.difficulty}
             </Text>
           </View>
@@ -423,27 +562,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
   backButton: {
     width: 44,
     height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   helpButton: {
     width: 44,
     height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   content: {
     flex: 1,
@@ -456,7 +595,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -464,15 +603,15 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
     marginBottom: 20,
   },
   stressLevelContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   stressLevelRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
     marginBottom: 12,
   },
@@ -480,28 +619,28 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   stressLevelNumber: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   stressLevelLabel: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
   },
   stressLevelDescription: {
     fontSize: 14,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 20,
   },
   section: {
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -509,25 +648,25 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
   },
   quickTechniques: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
   },
   quickTechniqueCard: {
     flex: 1,
     borderRadius: 12,
     padding: 16,
-    alignItems: 'center',
+    alignItems: "center",
     minHeight: 120,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   quickTechniqueTitle: {
     fontSize: 14,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
     marginTop: 8,
     marginBottom: 4,
   },
@@ -541,15 +680,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   techniqueCardHeader: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 12,
   },
   techniqueIcon: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 12,
   },
   techniqueInfo: {
@@ -557,7 +696,7 @@ const styles = StyleSheet.create({
   },
   techniqueTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 4,
   },
   techniqueDescription: {
@@ -565,9 +704,9 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   techniqueFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   difficultyBadge: {
     paddingHorizontal: 8,
@@ -576,22 +715,22 @@ const styles = StyleSheet.create({
   },
   difficultyText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   techniqueDuration: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   insightCard: {
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
   },
   insightTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     marginLeft: 12,
     marginBottom: 4,
     flex: 1,

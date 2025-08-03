@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -9,16 +10,16 @@ import {
   Dimensions,
   SafeAreaView,
   Alert,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MentalHealthIcon, NavigationIcon } from '../../components/icons';
+} from "react-native";
 
-const { width } = Dimensions.get('window');
+import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
+import { useTheme } from "../../contexts/ThemeContext";
+
+const { width } = Dimensions.get("window");
 
 const MindfulHoursScreen = ({ navigation }) => {
   const { theme } = useTheme();
-  const [selectedTab, setSelectedTab] = useState('sessions');
+  const [selectedTab, setSelectedTab] = useState("sessions");
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [sessionTime, setSessionTime] = useState(0);
   const [selectedDuration, setSelectedDuration] = useState(5);
@@ -29,67 +30,67 @@ const MindfulHoursScreen = ({ navigation }) => {
 
   const mindfulnessSessions = [
     {
-      id: 'breathing',
-      title: 'Mindful Breathing',
-      description: 'Focus on your breath to center yourself',
-      duration: '5-20 min',
-      difficulty: 'Beginner',
-      icon: 'Mindfulness',
+      id: "breathing",
+      title: "Mindful Breathing",
+      description: "Focus on your breath to center yourself",
+      duration: "5-20 min",
+      difficulty: "Beginner",
+      icon: "Mindfulness",
       color: theme.colors.therapeutic.calming[500],
       instructions: [
-        'Find a comfortable seated position',
-        'Close your eyes or soften your gaze',
-        'Notice your natural breathing rhythm',
-        'Focus on the sensation of breath',
-        'When your mind wanders, gently return to your breath',
+        "Find a comfortable seated position",
+        "Close your eyes or soften your gaze",
+        "Notice your natural breathing rhythm",
+        "Focus on the sensation of breath",
+        "When your mind wanders, gently return to your breath",
       ],
     },
     {
-      id: 'body-scan',
-      title: 'Body Scan Meditation',
-      description: 'Systematic relaxation of your entire body',
-      duration: '10-30 min',
-      difficulty: 'Intermediate',
-      icon: 'Therapy',
+      id: "body-scan",
+      title: "Body Scan Meditation",
+      description: "Systematic relaxation of your entire body",
+      duration: "10-30 min",
+      difficulty: "Intermediate",
+      icon: "Therapy",
       color: theme.colors.therapeutic.nurturing[500],
       instructions: [
-        'Lie down in a comfortable position',
-        'Start by noticing your toes',
-        'Slowly move attention up through your body',
-        'Notice any tension or sensation',
-        'Breathe into each part of your body',
+        "Lie down in a comfortable position",
+        "Start by noticing your toes",
+        "Slowly move attention up through your body",
+        "Notice any tension or sensation",
+        "Breathe into each part of your body",
       ],
     },
     {
-      id: 'loving-kindness',
-      title: 'Loving-Kindness Meditation',
-      description: 'Cultivate compassion for yourself and others',
-      duration: '10-15 min',
-      difficulty: 'Intermediate',
-      icon: 'Heart',
+      id: "loving-kindness",
+      title: "Loving-Kindness Meditation",
+      description: "Cultivate compassion for yourself and others",
+      duration: "10-15 min",
+      difficulty: "Intermediate",
+      icon: "Heart",
       color: theme.colors.therapeutic.peaceful[500],
       instructions: [
-        'Sit comfortably with eyes closed',
-        'Start by sending love to yourself',
-        'Extend loving thoughts to loved ones',
-        'Include neutral people in your thoughts',
-        'Finally, include difficult people',
+        "Sit comfortably with eyes closed",
+        "Start by sending love to yourself",
+        "Extend loving thoughts to loved ones",
+        "Include neutral people in your thoughts",
+        "Finally, include difficult people",
       ],
     },
     {
-      id: 'walking',
-      title: 'Walking Meditation',
-      description: 'Mindful movement and awareness',
-      duration: '10-20 min',
-      difficulty: 'Beginner',
-      icon: 'Brain',
+      id: "walking",
+      title: "Walking Meditation",
+      description: "Mindful movement and awareness",
+      duration: "10-20 min",
+      difficulty: "Beginner",
+      icon: "Brain",
       color: theme.colors.therapeutic.grounding[500],
       instructions: [
-        'Find a quiet path or space',
-        'Walk slowly and deliberately',
-        'Focus on the sensation of your feet',
-        'Notice your surroundings mindfully',
-        'Return to the present when distracted',
+        "Find a quiet path or space",
+        "Walk slowly and deliberately",
+        "Focus on the sensation of your feet",
+        "Notice your surroundings mindfully",
+        "Return to the present when distracted",
       ],
     },
   ];
@@ -98,31 +99,31 @@ const MindfulHoursScreen = ({ navigation }) => {
 
   const mockCompletedSessions = [
     {
-      id: '1',
-      type: 'Mindful Breathing',
+      id: "1",
+      type: "Mindful Breathing",
       duration: 10,
       date: new Date(Date.now() - 86400000),
-      mood: 'peaceful',
+      mood: "peaceful",
     },
     {
-      id: '2',
-      type: 'Body Scan',
+      id: "2",
+      type: "Body Scan",
       duration: 15,
       date: new Date(Date.now() - 172800000),
-      mood: 'relaxed',
+      mood: "relaxed",
     },
     {
-      id: '3',
-      type: 'Loving-Kindness',
+      id: "3",
+      type: "Loving-Kindness",
       duration: 12,
       date: new Date(Date.now() - 259200000),
-      mood: 'grateful',
+      mood: "grateful",
     },
   ];
 
   useEffect(() => {
     setCompletedSessions(mockCompletedSessions);
-    
+
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
@@ -143,7 +144,7 @@ const MindfulHoursScreen = ({ navigation }) => {
             duration: 4000,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       ).start();
     };
 
@@ -158,18 +159,18 @@ const MindfulHoursScreen = ({ navigation }) => {
     };
   }, [isSessionActive]);
 
-  const startSession = (sessionType = 'Mindful Breathing') => {
+  const startSession = (sessionType = "Mindful Breathing") => {
     setIsSessionActive(true);
     setSessionTime(0);
-    
+
     sessionInterval.current = setInterval(() => {
-      setSessionTime(prev => prev + 1);
+      setSessionTime((prev) => prev + 1);
     }, 1000);
 
     Alert.alert(
-      'Session Started',
+      "Session Started",
       `Starting ${sessionType} for ${selectedDuration} minutes. Find a comfortable position and follow the guidance.`,
-      [{ text: 'Begin' }]
+      [{ text: "Begin" }],
     );
   };
 
@@ -177,24 +178,24 @@ const MindfulHoursScreen = ({ navigation }) => {
     if (sessionInterval.current) {
       clearInterval(sessionInterval.current);
     }
-    
+
     setIsSessionActive(false);
-    
+
     const completedSession = {
       id: Date.now().toString(),
-      type: 'Mindful Breathing',
+      type: "Mindful Breathing",
       duration: Math.round(sessionTime / 60),
       date: new Date(),
-      mood: 'peaceful',
+      mood: "peaceful",
     };
 
-    setCompletedSessions(prev => [completedSession, ...prev]);
+    setCompletedSessions((prev) => [completedSession, ...prev]);
     setSessionTime(0);
 
     Alert.alert(
-      'Session Complete',
+      "Session Complete",
       `Great job! You completed ${Math.round(sessionTime / 60)} minutes of mindfulness practice.`,
-      [{ text: 'Finish' }]
+      [{ text: "Finish" }],
     );
   };
 
@@ -207,26 +208,29 @@ const MindfulHoursScreen = ({ navigation }) => {
 
   const resumeSession = () => {
     sessionInterval.current = setInterval(() => {
-      setSessionTime(prev => prev + 1);
+      setSessionTime((prev) => prev + 1);
     }, 1000);
   };
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
   const formatDate = (date) => {
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const getTotalMinutes = () => {
-    return completedSessions.reduce((total, session) => total + session.duration, 0);
+    return completedSessions.reduce(
+      (total, session) => total + session.duration,
+      0,
+    );
   };
 
   const getWeeklyStreak = () => {
@@ -235,14 +239,27 @@ const MindfulHoursScreen = ({ navigation }) => {
   };
 
   const renderSessionsTab = () => (
-    <ScrollView style={styles.sessionsContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.sessionsContainer}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Active Session */}
       {isSessionActive ? (
-        <View style={[styles.activeSessionCard, { backgroundColor: theme.colors.background.primary }]}>
-          <Text style={[styles.activeSessionTitle, { color: theme.colors.text.primary }]}>
+        <View
+          style={[
+            styles.activeSessionCard,
+            { backgroundColor: theme.colors.background.primary },
+          ]}
+        >
+          <Text
+            style={[
+              styles.activeSessionTitle,
+              { color: theme.colors.text.primary },
+            ]}
+          >
             Mindful Breathing Session
           </Text>
-          
+
           <Animated.View
             style={[
               styles.breathingCircle,
@@ -252,7 +269,12 @@ const MindfulHoursScreen = ({ navigation }) => {
               },
             ]}
           >
-            <View style={[styles.breathingInner, { backgroundColor: theme.colors.therapeutic.calming[500] }]}>
+            <View
+              style={[
+                styles.breathingInner,
+                { backgroundColor: theme.colors.therapeutic.calming[500] },
+              ]}
+            >
               <MentalHealthIcon
                 name="Mindfulness"
                 size={32}
@@ -261,30 +283,53 @@ const MindfulHoursScreen = ({ navigation }) => {
               />
             </View>
           </Animated.View>
-          
-          <Text style={[styles.sessionTimer, { color: theme.colors.text.primary }]}>
+
+          <Text
+            style={[styles.sessionTimer, { color: theme.colors.text.primary }]}
+          >
             {formatTime(sessionTime)}
           </Text>
-          
-          <Text style={[styles.breathingGuide, { color: theme.colors.text.secondary }]}>
+
+          <Text
+            style={[
+              styles.breathingGuide,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
             Breathe in slowly... hold... breathe out slowly
           </Text>
-          
+
           <View style={styles.sessionControls}>
             <TouchableOpacity
-              style={[styles.controlButton, { backgroundColor: theme.colors.warning[500] }]}
+              style={[
+                styles.controlButton,
+                { backgroundColor: theme.colors.warning[500] },
+              ]}
               onPress={sessionInterval.current ? pauseSession : resumeSession}
             >
-              <Text style={[styles.controlButtonText, { color: theme.colors.text.inverse }]}>
-                {sessionInterval.current ? 'Pause' : 'Resume'}
+              <Text
+                style={[
+                  styles.controlButtonText,
+                  { color: theme.colors.text.inverse },
+                ]}
+              >
+                {sessionInterval.current ? "Pause" : "Resume"}
               </Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
-              style={[styles.controlButton, { backgroundColor: theme.colors.error[500] }]}
+              style={[
+                styles.controlButton,
+                { backgroundColor: theme.colors.error[500] },
+              ]}
               onPress={endSession}
             >
-              <Text style={[styles.controlButtonText, { color: theme.colors.text.inverse }]}>
+              <Text
+                style={[
+                  styles.controlButtonText,
+                  { color: theme.colors.text.inverse },
+                ]}
+              >
                 End Session
               </Text>
             </TouchableOpacity>
@@ -293,11 +338,21 @@ const MindfulHoursScreen = ({ navigation }) => {
       ) : (
         <>
           {/* Duration Selection */}
-          <View style={[styles.durationCard, { backgroundColor: theme.colors.background.primary }]}>
-            <Text style={[styles.durationTitle, { color: theme.colors.text.primary }]}>
+          <View
+            style={[
+              styles.durationCard,
+              { backgroundColor: theme.colors.background.primary },
+            ]}
+          >
+            <Text
+              style={[
+                styles.durationTitle,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Choose Session Duration
             </Text>
-            
+
             <View style={styles.durationOptions}>
               {durationOptions.map((duration) => (
                 <TouchableOpacity
@@ -305,9 +360,10 @@ const MindfulHoursScreen = ({ navigation }) => {
                   style={[
                     styles.durationButton,
                     {
-                      backgroundColor: selectedDuration === duration
-                        ? theme.colors.therapeutic.calming[500]
-                        : theme.colors.background.secondary,
+                      backgroundColor:
+                        selectedDuration === duration
+                          ? theme.colors.therapeutic.calming[500]
+                          : theme.colors.background.secondary,
                     },
                   ]}
                   onPress={() => setSelectedDuration(duration)}
@@ -316,9 +372,10 @@ const MindfulHoursScreen = ({ navigation }) => {
                     style={[
                       styles.durationText,
                       {
-                        color: selectedDuration === duration
-                          ? theme.colors.text.inverse
-                          : theme.colors.text.primary,
+                        color:
+                          selectedDuration === duration
+                            ? theme.colors.text.inverse
+                            : theme.colors.text.primary,
                       },
                     ]}
                   >
@@ -330,11 +387,21 @@ const MindfulHoursScreen = ({ navigation }) => {
           </View>
 
           {/* Session Types */}
-          <View style={[styles.sessionTypesCard, { backgroundColor: theme.colors.background.primary }]}>
-            <Text style={[styles.sessionTypesTitle, { color: theme.colors.text.primary }]}>
+          <View
+            style={[
+              styles.sessionTypesCard,
+              { backgroundColor: theme.colors.background.primary },
+            ]}
+          >
+            <Text
+              style={[
+                styles.sessionTypesTitle,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Mindfulness Sessions
             </Text>
-            
+
             {mindfulnessSessions.map((session, index) => (
               <SessionTypeCard
                 key={session.id}
@@ -348,7 +415,10 @@ const MindfulHoursScreen = ({ navigation }) => {
 
           {/* Quick Start */}
           <TouchableOpacity
-            style={[styles.quickStartButton, { backgroundColor: theme.colors.therapeutic.calming[500] }]}
+            style={[
+              styles.quickStartButton,
+              { backgroundColor: theme.colors.therapeutic.calming[500] },
+            ]}
             onPress={() => startSession()}
           >
             <MentalHealthIcon
@@ -357,7 +427,12 @@ const MindfulHoursScreen = ({ navigation }) => {
               color={theme.colors.text.inverse}
               variant="filled"
             />
-            <Text style={[styles.quickStartText, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[
+                styles.quickStartText,
+                { color: theme.colors.text.inverse },
+              ]}
+            >
               Start {selectedDuration} Min Session
             </Text>
           </TouchableOpacity>
@@ -367,37 +442,66 @@ const MindfulHoursScreen = ({ navigation }) => {
   );
 
   const renderHistoryTab = () => (
-    <ScrollView style={styles.historyContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.historyContainer}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Stats */}
-      <View style={[styles.statsCard, { backgroundColor: theme.colors.background.primary }]}>
+      <View
+        style={[
+          styles.statsCard,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
+      >
         <Text style={[styles.statsTitle, { color: theme.colors.text.primary }]}>
           Your Mindfulness Journey
         </Text>
-        
+
         <View style={styles.statsRow}>
           <View style={styles.statItem}>
-            <Text style={[styles.statValue, { color: theme.colors.therapeutic.calming[500] }]}>
+            <Text
+              style={[
+                styles.statValue,
+                { color: theme.colors.therapeutic.calming[500] },
+              ]}
+            >
               {getTotalMinutes()}
             </Text>
-            <Text style={[styles.statLabel, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[styles.statLabel, { color: theme.colors.text.secondary }]}
+            >
               Total Minutes
             </Text>
           </View>
-          
+
           <View style={styles.statItem}>
-            <Text style={[styles.statValue, { color: theme.colors.therapeutic.nurturing[500] }]}>
+            <Text
+              style={[
+                styles.statValue,
+                { color: theme.colors.therapeutic.nurturing[500] },
+              ]}
+            >
               {completedSessions.length}
             </Text>
-            <Text style={[styles.statLabel, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[styles.statLabel, { color: theme.colors.text.secondary }]}
+            >
               Sessions
             </Text>
           </View>
-          
+
           <View style={styles.statItem}>
-            <Text style={[styles.statValue, { color: theme.colors.therapeutic.peaceful[500] }]}>
+            <Text
+              style={[
+                styles.statValue,
+                { color: theme.colors.therapeutic.peaceful[500] },
+              ]}
+            >
               {getWeeklyStreak()}
             </Text>
-            <Text style={[styles.statLabel, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[styles.statLabel, { color: theme.colors.text.secondary }]}
+            >
               Day Streak
             </Text>
           </View>
@@ -405,11 +509,21 @@ const MindfulHoursScreen = ({ navigation }) => {
       </View>
 
       {/* Recent Sessions */}
-      <View style={[styles.recentSessionsCard, { backgroundColor: theme.colors.background.primary }]}>
-        <Text style={[styles.recentSessionsTitle, { color: theme.colors.text.primary }]}>
+      <View
+        style={[
+          styles.recentSessionsCard,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
+      >
+        <Text
+          style={[
+            styles.recentSessionsTitle,
+            { color: theme.colors.text.primary },
+          ]}
+        >
           Recent Sessions
         </Text>
-        
+
         {completedSessions.length === 0 ? (
           <View style={styles.emptyState}>
             <MentalHealthIcon
@@ -418,7 +532,12 @@ const MindfulHoursScreen = ({ navigation }) => {
               color={theme.colors.gray[400]}
               variant="outline"
             />
-            <Text style={[styles.emptyStateText, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[
+                styles.emptyStateText,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
               No sessions yet. Start your mindfulness journey today!
             </Text>
           </View>
@@ -438,17 +557,21 @@ const MindfulHoursScreen = ({ navigation }) => {
   );
 
   const renderGuidedTab = () => (
-    <ScrollView style={styles.guidedContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.guidedContainer}
+      showsVerticalScrollIndicator={false}
+    >
       <Text style={[styles.guidedIntro, { color: theme.colors.text.primary }]}>
-        Guided mindfulness sessions to help you develop a consistent practice and deepen your awareness.
+        Guided mindfulness sessions to help you develop a consistent practice
+        and deepen your awareness.
       </Text>
-      
+
       {mindfulnessSessions.map((session, index) => (
         <GuidedSessionCard
           key={session.id}
           session={session}
           theme={theme}
-          onPress={() => navigation.navigate('GuidedSession', { session })}
+          onPress={() => navigation.navigate("GuidedSession", { session })}
           delay={index * 100}
         />
       ))}
@@ -480,29 +603,32 @@ const MindfulHoursScreen = ({ navigation }) => {
               variant="outline"
             />
           </TouchableOpacity>
-          
-          <Text style={[styles.headerTitle, { color: theme.colors.text.primary }]}>
+
+          <Text
+            style={[styles.headerTitle, { color: theme.colors.text.primary }]}
+          >
             Mindful Hours
           </Text>
-          
+
           <View style={styles.placeholder} />
         </View>
 
         {/* Tab Selector */}
         <View style={styles.tabSelector}>
           {[
-            { id: 'sessions', label: 'Sessions' },
-            { id: 'history', label: 'History' },
-            { id: 'guided', label: 'Guided' },
+            { id: "sessions", label: "Sessions" },
+            { id: "history", label: "History" },
+            { id: "guided", label: "Guided" },
           ].map((tab) => (
             <TouchableOpacity
               key={tab.id}
               style={[
                 styles.tabButton,
                 {
-                  backgroundColor: selectedTab === tab.id
-                    ? theme.colors.therapeutic.peaceful[500]
-                    : theme.colors.background.secondary,
+                  backgroundColor:
+                    selectedTab === tab.id
+                      ? theme.colors.therapeutic.peaceful[500]
+                      : theme.colors.background.secondary,
                 },
               ]}
               onPress={() => setSelectedTab(tab.id)}
@@ -511,9 +637,10 @@ const MindfulHoursScreen = ({ navigation }) => {
                 style={[
                   styles.tabButtonText,
                   {
-                    color: selectedTab === tab.id
-                      ? theme.colors.text.inverse
-                      : theme.colors.text.primary,
+                    color:
+                      selectedTab === tab.id
+                        ? theme.colors.text.inverse
+                        : theme.colors.text.primary,
                   },
                 ]}
               >
@@ -524,15 +651,10 @@ const MindfulHoursScreen = ({ navigation }) => {
         </View>
 
         {/* Content */}
-        <Animated.View
-          style={[
-            styles.content,
-            { opacity: fadeAnim },
-          ]}
-        >
-          {selectedTab === 'sessions' && renderSessionsTab()}
-          {selectedTab === 'history' && renderHistoryTab()}
-          {selectedTab === 'guided' && renderGuidedTab()}
+        <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
+          {selectedTab === "sessions" && renderSessionsTab()}
+          {selectedTab === "history" && renderHistoryTab()}
+          {selectedTab === "guided" && renderGuidedTab()}
         </Animated.View>
       </LinearGradient>
     </SafeAreaView>
@@ -554,7 +676,10 @@ const SessionTypeCard = ({ session, theme, onPress, delay }) => {
   return (
     <Animated.View style={{ opacity: fadeAnim }}>
       <TouchableOpacity
-        style={[styles.sessionTypeCard, { backgroundColor: theme.colors.background.secondary }]}
+        style={[
+          styles.sessionTypeCard,
+          { backgroundColor: theme.colors.background.secondary },
+        ]}
         onPress={onPress}
       >
         <View style={[styles.sessionIcon, { backgroundColor: session.color }]}>
@@ -565,20 +690,37 @@ const SessionTypeCard = ({ session, theme, onPress, delay }) => {
             variant="filled"
           />
         </View>
-        
+
         <View style={styles.sessionInfo}>
-          <Text style={[styles.sessionTitle, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[styles.sessionTitle, { color: theme.colors.text.primary }]}
+          >
             {session.title}
           </Text>
-          <Text style={[styles.sessionDescription, { color: theme.colors.text.secondary }]}>
+          <Text
+            style={[
+              styles.sessionDescription,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
             {session.description}
           </Text>
           <View style={styles.sessionMeta}>
             <Text style={[styles.sessionDuration, { color: session.color }]}>
               {session.duration}
             </Text>
-            <View style={[styles.difficultyBadge, { backgroundColor: theme.colors.gray[100] }]}>
-              <Text style={[styles.difficultyText, { color: theme.colors.text.secondary }]}>
+            <View
+              style={[
+                styles.difficultyBadge,
+                { backgroundColor: theme.colors.gray[100] },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.difficultyText,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
                 {session.difficulty}
               </Text>
             </View>
@@ -590,22 +732,42 @@ const SessionTypeCard = ({ session, theme, onPress, delay }) => {
 };
 
 const SessionHistoryCard = ({ session, theme }) => (
-  <View style={[styles.historyCard, { backgroundColor: theme.colors.background.secondary }]}>
+  <View
+    style={[
+      styles.historyCard,
+      { backgroundColor: theme.colors.background.secondary },
+    ]}
+  >
     <View style={styles.historyCardHeader}>
       <Text style={[styles.historyDate, { color: theme.colors.text.primary }]}>
         {formatDate(session.date)}
       </Text>
-      <Text style={[styles.historyDuration, { color: theme.colors.therapeutic.calming[500] }]}>
+      <Text
+        style={[
+          styles.historyDuration,
+          { color: theme.colors.therapeutic.calming[500] },
+        ]}
+      >
         {session.duration} min
       </Text>
     </View>
-    
+
     <Text style={[styles.historyType, { color: theme.colors.text.secondary }]}>
       {session.type}
     </Text>
-    
-    <View style={[styles.moodBadge, { backgroundColor: theme.colors.therapeutic.nurturing[100] }]}>
-      <Text style={[styles.moodText, { color: theme.colors.therapeutic.nurturing[700] }]}>
+
+    <View
+      style={[
+        styles.moodBadge,
+        { backgroundColor: theme.colors.therapeutic.nurturing[100] },
+      ]}
+    >
+      <Text
+        style={[
+          styles.moodText,
+          { color: theme.colors.therapeutic.nurturing[700] },
+        ]}
+      >
         Felt {session.mood}
       </Text>
     </View>
@@ -627,7 +789,10 @@ const GuidedSessionCard = ({ session, theme, onPress, delay }) => {
   return (
     <Animated.View style={{ opacity: fadeAnim }}>
       <TouchableOpacity
-        style={[styles.guidedCard, { backgroundColor: theme.colors.background.primary }]}
+        style={[
+          styles.guidedCard,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
         onPress={onPress}
       >
         <View style={[styles.guidedIcon, { backgroundColor: session.color }]}>
@@ -638,20 +803,30 @@ const GuidedSessionCard = ({ session, theme, onPress, delay }) => {
             variant="filled"
           />
         </View>
-        
+
         <View style={styles.guidedContent}>
-          <Text style={[styles.guidedTitle, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[styles.guidedTitle, { color: theme.colors.text.primary }]}
+          >
             {session.title}
           </Text>
-          <Text style={[styles.guidedDescription, { color: theme.colors.text.secondary }]}>
+          <Text
+            style={[
+              styles.guidedDescription,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
             {session.description}
           </Text>
-          
+
           <View style={styles.guidedInstructions}>
             {session.instructions.slice(0, 3).map((instruction, index) => (
               <Text
                 key={index}
-                style={[styles.instructionText, { color: theme.colors.text.tertiary }]}
+                style={[
+                  styles.instructionText,
+                  { color: theme.colors.text.tertiary },
+                ]}
               >
                 • {instruction}
               </Text>
@@ -664,10 +839,10 @@ const GuidedSessionCard = ({ session, theme, onPress, delay }) => {
 };
 
 const formatDate = (date) => {
-  return date.toLocaleDateString('en-US', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
+  return date.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
   });
 };
 
@@ -679,27 +854,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
   backButton: {
     width: 44,
     height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   placeholder: {
     width: 44,
   },
   tabSelector: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 20,
     marginBottom: 20,
     gap: 8,
@@ -708,11 +883,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   tabButtonText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   content: {
     flex: 1,
@@ -724,9 +899,9 @@ const styles = StyleSheet.create({
   activeSessionCard: {
     borderRadius: 16,
     padding: 32,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -734,38 +909,38 @@ const styles = StyleSheet.create({
   },
   activeSessionTitle: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   breathingCircle: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 20,
   },
   breathingInner: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   sessionTimer: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   breathingGuide: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 24,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
   sessionControls: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
   },
   controlButton: {
@@ -775,13 +950,13 @@ const styles = StyleSheet.create({
   },
   controlButtonText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   durationCard: {
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -789,32 +964,32 @@ const styles = StyleSheet.create({
   },
   durationTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   durationOptions: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   durationButton: {
     width: 60,
     height: 60,
     borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   durationText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   sessionTypesCard: {
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -822,12 +997,12 @@ const styles = StyleSheet.create({
   },
   sessionTypesTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
   },
   sessionTypeCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
@@ -836,8 +1011,8 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 16,
   },
   sessionInfo: {
@@ -845,7 +1020,7 @@ const styles = StyleSheet.create({
   },
   sessionTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 4,
   },
   sessionDescription: {
@@ -854,13 +1029,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   sessionMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   sessionDuration: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   difficultyBadge: {
     paddingHorizontal: 8,
@@ -869,12 +1044,12 @@ const styles = StyleSheet.create({
   },
   difficultyText: {
     fontSize: 10,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   quickStartButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 16,
     borderRadius: 12,
     marginBottom: 20,
@@ -882,7 +1057,7 @@ const styles = StyleSheet.create({
   },
   quickStartText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   historyContainer: {
     flex: 1,
@@ -892,7 +1067,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -900,30 +1075,30 @@ const styles = StyleSheet.create({
   },
   statsTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   statsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
   statItem: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   statValue: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 4,
   },
   statLabel: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   recentSessionsCard: {
     borderRadius: 16,
     padding: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -931,16 +1106,16 @@ const styles = StyleSheet.create({
   },
   recentSessionsTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
   },
   emptyState: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 40,
   },
   emptyStateText: {
     fontSize: 14,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 12,
   },
   sessionsList: {
@@ -951,18 +1126,18 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   historyCardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   historyDate: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   historyDuration: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   historyType: {
     fontSize: 12,
@@ -972,11 +1147,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   moodText: {
     fontSize: 10,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   guidedContainer: {
     flex: 1,
@@ -986,14 +1161,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   guidedCard: {
     borderRadius: 16,
     padding: 20,
     marginBottom: 16,
-    flexDirection: 'row',
-    shadowColor: '#000',
+    flexDirection: "row",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -1003,8 +1178,8 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 16,
   },
   guidedContent: {
@@ -1012,7 +1187,7 @@ const styles = StyleSheet.create({
   },
   guidedTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 4,
   },
   guidedDescription: {

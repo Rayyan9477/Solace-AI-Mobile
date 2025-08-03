@@ -1,9 +1,16 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../contexts/ThemeContext';  
-import { MentalHealthIcon } from '../icons';
-import { colors, typography, spacing, borderRadius, shadows } from '../../styles/theme';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useRef, useEffect } from "react";
+import { View, Text, StyleSheet, Animated } from "react-native";
+
+import { useTheme } from "../../contexts/ThemeContext";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../../styles/theme";
+import { MentalHealthIcon } from "../icons";
 
 const ProgressOverview = ({ weeklyStats, userStats }) => {
   const { theme } = useTheme();
@@ -31,12 +38,12 @@ const ProgressOverview = ({ weeklyStats, userStats }) => {
   const defaultWeeklyStats = weeklyStats || {
     totalEntries: 3,
     averageIntensity: 3.5,
-    mostCommonMood: 'calm'
+    mostCommonMood: "calm",
   };
 
   const defaultUserStats = userStats || {
     streakDays: 7,
-    totalSessions: 12
+    totalSessions: 12,
   };
 
   const getProgressColor = (value, max) => {
@@ -47,27 +54,31 @@ const ProgressOverview = ({ weeklyStats, userStats }) => {
   };
 
   const StatItem = ({ label, value, unit, color, progress, icon }) => (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.statItem,
         {
           opacity: fadeAnim,
           transform: [{ translateY: slideAnim }],
-        }
+        },
       ]}
     >
       <LinearGradient
-        colors={[color + '20', color + '10']}
+        colors={[color + "20", color + "10"]}
         style={styles.statCard}
       >
         <View style={styles.statHeader}>
           <View style={styles.statLabelContainer}>
             {icon && (
-              <View style={[styles.statIconContainer, { backgroundColor: color }]}>
+              <View
+                style={[styles.statIconContainer, { backgroundColor: color }]}
+              >
                 <Text style={styles.statIcon}>{icon}</Text>
               </View>
             )}
-            <Text style={[styles.statLabel, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[styles.statLabel, { color: theme.colors.text.secondary }]}
+            >
               {label}
             </Text>
           </View>
@@ -77,7 +88,12 @@ const ProgressOverview = ({ weeklyStats, userStats }) => {
           </View>
         </View>
         {progress !== undefined && (
-          <View style={[styles.progressBar, { backgroundColor: theme.colors.gray[200] }]}>
+          <View
+            style={[
+              styles.progressBar,
+              { backgroundColor: theme.colors.gray[200] },
+            ]}
+          >
             <Animated.View
               style={[
                 styles.progressFill,
@@ -90,21 +106,30 @@ const ProgressOverview = ({ weeklyStats, userStats }) => {
     </Animated.View>
   );
 
-  const streakProgress = Math.min((defaultUserStats.streakDays / 30) * 100, 100);
-  const moodProgress = Math.min((defaultWeeklyStats.totalEntries / 7) * 100, 100);
+  const streakProgress = Math.min(
+    (defaultUserStats.streakDays / 30) * 100,
+    100,
+  );
+  const moodProgress = Math.min(
+    (defaultWeeklyStats.totalEntries / 7) * 100,
+    100,
+  );
 
   return (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.container,
         {
           opacity: fadeAnim,
           transform: [{ translateY: slideAnim }],
-        }
+        },
       ]}
     >
       <LinearGradient
-        colors={[theme.colors.background.primary, theme.colors.background.secondary]}
+        colors={[
+          theme.colors.background.primary,
+          theme.colors.background.secondary,
+        ]}
         style={[styles.cardBackground, shadows.lg]}
       >
         <View style={styles.titleContainer}>
@@ -118,7 +143,7 @@ const ProgressOverview = ({ weeklyStats, userStats }) => {
             Weekly Progress
           </Text>
         </View>
-      
+
         <View style={styles.statsGrid}>
           <StatItem
             label="Current Streak"
@@ -128,7 +153,7 @@ const ProgressOverview = ({ weeklyStats, userStats }) => {
             progress={streakProgress}
             icon="🔥"
           />
-          
+
           <StatItem
             label="Mood Entries"
             value={defaultWeeklyStats.totalEntries}
@@ -137,7 +162,7 @@ const ProgressOverview = ({ weeklyStats, userStats }) => {
             progress={moodProgress}
             icon="📝"
           />
-          
+
           <StatItem
             label="Avg. Mood"
             value={defaultWeeklyStats.averageIntensity.toFixed(1)}
@@ -145,7 +170,7 @@ const ProgressOverview = ({ weeklyStats, userStats }) => {
             color={getProgressColor(defaultWeeklyStats.averageIntensity, 5)}
             icon="📊"
           />
-          
+
           <StatItem
             label="Sessions"
             value={defaultUserStats.totalSessions}
@@ -156,25 +181,37 @@ const ProgressOverview = ({ weeklyStats, userStats }) => {
         </View>
 
         {defaultWeeklyStats.mostCommonMood && (
-          <Animated.View 
+          <Animated.View
             style={[
               styles.moodSummary,
               {
                 opacity: fadeAnim,
                 transform: [{ translateY: slideAnim }],
                 borderTopColor: theme.colors.gray[200],
-              }
+              },
             ]}
           >
-            <Text style={[styles.moodSummaryTitle, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.moodSummaryTitle,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Most Common Mood This Week
             </Text>
             <LinearGradient
-              colors={[theme.colors.therapeutic.peaceful[400], theme.colors.therapeutic.peaceful[600]]}
+              colors={[
+                theme.colors.therapeutic.peaceful[400],
+                theme.colors.therapeutic.peaceful[600],
+              ]}
               style={styles.moodSummaryBadge}
             >
-              <Text style={[styles.moodSummaryText, { color: colors.text.inverse }]}>
-                {defaultWeeklyStats.mostCommonMood.charAt(0).toUpperCase() + defaultWeeklyStats.mostCommonMood.slice(1)} 😌
+              <Text
+                style={[styles.moodSummaryText, { color: colors.text.inverse }]}
+              >
+                {defaultWeeklyStats.mostCommonMood.charAt(0).toUpperCase() +
+                  defaultWeeklyStats.mostCommonMood.slice(1)}{" "}
+                😌
               </Text>
             </LinearGradient>
           </Animated.View>
@@ -194,8 +231,8 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.xl,
   },
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: spacing[4],
   },
   titleIcon: {
@@ -207,13 +244,13 @@ const styles = StyleSheet.create({
     lineHeight: typography.lineHeights.lg,
   },
   statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: spacing[3],
   },
   statItem: {
     flex: 1,
-    minWidth: '45%',
+    minWidth: "45%",
   },
   statCard: {
     padding: spacing[4],
@@ -224,16 +261,16 @@ const styles = StyleSheet.create({
     marginBottom: spacing[3],
   },
   statLabelContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: spacing[2],
   },
   statIconContainer: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: spacing[2],
   },
   statIcon: {
@@ -246,12 +283,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   statValue: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: spacing[3],
     paddingVertical: spacing[2],
     borderRadius: borderRadius.md,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   statValueText: {
     color: colors.text.inverse,
@@ -268,17 +305,17 @@ const styles = StyleSheet.create({
   progressBar: {
     height: 6,
     borderRadius: borderRadius.sm,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   progressFill: {
-    height: '100%',
+    height: "100%",
     borderRadius: borderRadius.sm,
   },
   moodSummary: {
     marginTop: spacing[5],
     paddingTop: spacing[5],
     borderTopWidth: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   moodSummaryTitle: {
     fontSize: typography.sizes.sm,

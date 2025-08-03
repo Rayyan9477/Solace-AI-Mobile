@@ -1,7 +1,8 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import styled from 'styled-components/native';
-import { useTheme } from '../../contexts/ThemeContext';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import styled from "styled-components/native";
+
+import { useTheme } from "../../contexts/ThemeContext";
 
 const Container = styled(View)`
   flex-direction: row;
@@ -15,13 +16,13 @@ const EmotionBadge = styled(View)`
   align-items: center;
   padding: 8px 12px;
   border-radius: 20px;
-  background-color: ${props => props.backgroundColor};
+  background-color: ${(props) => props.backgroundColor};
 `;
 
 const EmotionText = styled(Text)`
   font-size: 14px;
   font-weight: 500;
-  color: ${props => props.textColor};
+  color: ${(props) => props.textColor};
   margin-left: 6px;
 `;
 
@@ -43,27 +44,27 @@ const EmotionIndicator = ({ emotion }) => {
 
   const getEmotionIcon = (emotion) => {
     const emotionIcons = {
-      happy: '😊',
-      sad: '😔',
-      anxious: '😰',
-      angry: '😠',
-      calm: '😌',
-      supportive: '🤗',
-      neutral: '😐',
+      happy: "😊",
+      sad: "😔",
+      anxious: "😰",
+      angry: "😠",
+      calm: "😌",
+      supportive: "🤗",
+      neutral: "😐",
     };
-    return emotionIcons[emotion] || '😐';
+    return emotionIcons[emotion] || "😐";
   };
 
   const getEmotionText = (emotion) => {
     return emotion.charAt(0).toUpperCase() + emotion.slice(1);
   };
-  
+
   // Get appropriate text color (light or dark) based on background color
   const getTextColor = (backgroundColor) => {
     // For lighter colors use dark text, for darker colors use light text
-    const lightColorEmotions = ['happy', 'calm', 'neutral'];
-    return lightColorEmotions.includes(emotion) 
-      ? theme.colors.text.primary 
+    const lightColorEmotions = ["happy", "calm", "neutral"];
+    return lightColorEmotions.includes(emotion)
+      ? theme.colors.text.primary
       : theme.colors.text.inverse;
   };
 

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -9,16 +10,16 @@ import {
   Dimensions,
   SafeAreaView,
   Alert,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MentalHealthIcon, NavigationIcon } from '../../components/icons';
+} from "react-native";
 
-const { width } = Dimensions.get('window');
+import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
+import { useTheme } from "../../contexts/ThemeContext";
+
+const { width } = Dimensions.get("window");
 
 const SleepQualityScreen = ({ navigation }) => {
   const { theme } = useTheme();
-  const [selectedTab, setSelectedTab] = useState('log');
+  const [selectedTab, setSelectedTab] = useState("log");
   const [sleepData, setSleepData] = useState({
     bedtime: null,
     wakeTime: null,
@@ -30,25 +31,65 @@ const SleepQualityScreen = ({ navigation }) => {
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
 
   const sleepQualityOptions = [
-    { value: 1, label: 'Very Poor', emoji: '😴', color: theme.colors.error[400] },
-    { value: 2, label: 'Poor', emoji: '😪', color: theme.colors.error[300] },
-    { value: 3, label: 'Fair', emoji: '😐', color: theme.colors.warning[400] },
-    { value: 4, label: 'Good', emoji: '🙂', color: theme.colors.therapeutic.calming[400] },
-    { value: 5, label: 'Excellent', emoji: '😊', color: theme.colors.therapeutic.nurturing[400] },
+    {
+      value: 1,
+      label: "Very Poor",
+      emoji: "😴",
+      color: theme.colors.error[400],
+    },
+    { value: 2, label: "Poor", emoji: "😪", color: theme.colors.error[300] },
+    { value: 3, label: "Fair", emoji: "😐", color: theme.colors.warning[400] },
+    {
+      value: 4,
+      label: "Good",
+      emoji: "🙂",
+      color: theme.colors.therapeutic.calming[400],
+    },
+    {
+      value: 5,
+      label: "Excellent",
+      emoji: "😊",
+      color: theme.colors.therapeutic.nurturing[400],
+    },
   ];
 
   const morningMoodOptions = [
-    { value: 'energized', label: 'Energized', emoji: '⚡', color: theme.colors.therapeutic.energizing[400] },
-    { value: 'refreshed', label: 'Refreshed', emoji: '🌅', color: theme.colors.therapeutic.nurturing[400] },
-    { value: 'neutral', label: 'Neutral', emoji: '😐', color: theme.colors.gray[400] },
-    { value: 'tired', label: 'Tired', emoji: '😴', color: theme.colors.warning[400] },
-    { value: 'groggy', label: 'Groggy', emoji: '🥱', color: theme.colors.error[400] },
+    {
+      value: "energized",
+      label: "Energized",
+      emoji: "⚡",
+      color: theme.colors.therapeutic.energizing[400],
+    },
+    {
+      value: "refreshed",
+      label: "Refreshed",
+      emoji: "🌅",
+      color: theme.colors.therapeutic.nurturing[400],
+    },
+    {
+      value: "neutral",
+      label: "Neutral",
+      emoji: "😐",
+      color: theme.colors.gray[400],
+    },
+    {
+      value: "tired",
+      label: "Tired",
+      emoji: "😴",
+      color: theme.colors.warning[400],
+    },
+    {
+      value: "groggy",
+      label: "Groggy",
+      emoji: "🥱",
+      color: theme.colors.error[400],
+    },
   ];
 
   const timeSlots = Array.from({ length: 24 }, (_, i) => {
     const hour = i;
     const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-    const period = hour < 12 ? 'AM' : 'PM';
+    const period = hour < 12 ? "AM" : "PM";
     return {
       value: hour,
       label: `${displayHour}:00 ${period}`,
@@ -57,27 +98,31 @@ const SleepQualityScreen = ({ navigation }) => {
 
   const sleepTips = [
     {
-      title: 'Consistent Schedule',
-      description: 'Go to bed and wake up at the same time every day, even on weekends.',
-      icon: 'Brain',
+      title: "Consistent Schedule",
+      description:
+        "Go to bed and wake up at the same time every day, even on weekends.",
+      icon: "Brain",
       color: theme.colors.therapeutic.calming[500],
     },
     {
-      title: 'Wind Down Routine',
-      description: 'Create a relaxing pre-sleep routine 30-60 minutes before bed.',
-      icon: 'Mindfulness',
+      title: "Wind Down Routine",
+      description:
+        "Create a relaxing pre-sleep routine 30-60 minutes before bed.",
+      icon: "Mindfulness",
       color: theme.colors.therapeutic.peaceful[500],
     },
     {
-      title: 'Optimize Environment',
-      description: 'Keep your bedroom cool, dark, and quiet for better sleep quality.',
-      icon: 'Heart',
+      title: "Optimize Environment",
+      description:
+        "Keep your bedroom cool, dark, and quiet for better sleep quality.",
+      icon: "Heart",
       color: theme.colors.therapeutic.nurturing[500],
     },
     {
-      title: 'Limit Screen Time',
-      description: 'Avoid screens 1 hour before bed to improve melatonin production.',
-      icon: 'Therapy',
+      title: "Limit Screen Time",
+      description:
+        "Avoid screens 1 hour before bed to improve melatonin production.",
+      icon: "Therapy",
       color: theme.colors.therapeutic.grounding[500],
     },
   ];
@@ -88,7 +133,7 @@ const SleepQualityScreen = ({ navigation }) => {
       bedtime: 23,
       wakeTime: 7,
       quality: 4,
-      mood: 'refreshed',
+      mood: "refreshed",
       duration: 8,
     },
     {
@@ -96,7 +141,7 @@ const SleepQualityScreen = ({ navigation }) => {
       bedtime: 24,
       wakeTime: 6,
       quality: 3,
-      mood: 'tired',
+      mood: "tired",
       duration: 6,
     },
     {
@@ -104,14 +149,14 @@ const SleepQualityScreen = ({ navigation }) => {
       bedtime: 22,
       wakeTime: 7,
       quality: 5,
-      mood: 'energized',
+      mood: "energized",
       duration: 9,
     },
   ];
 
   useEffect(() => {
     setSleepHistory(mockSleepHistory);
-    
+
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -128,23 +173,34 @@ const SleepQualityScreen = ({ navigation }) => {
   }, []);
 
   const handleSaveSleepData = () => {
-    if (!sleepData.bedtime || !sleepData.wakeTime || !sleepData.quality || !sleepData.mood) {
-      Alert.alert('Incomplete Data', 'Please fill in all sleep information before saving.');
+    if (
+      !sleepData.bedtime ||
+      !sleepData.wakeTime ||
+      !sleepData.quality ||
+      !sleepData.mood
+    ) {
+      Alert.alert(
+        "Incomplete Data",
+        "Please fill in all sleep information before saving.",
+      );
       return;
     }
 
-    const duration = calculateSleepDuration(sleepData.bedtime, sleepData.wakeTime);
-    
+    const duration = calculateSleepDuration(
+      sleepData.bedtime,
+      sleepData.wakeTime,
+    );
+
     const newEntry = {
       date: new Date(),
       bedtime: sleepData.bedtime,
       wakeTime: sleepData.wakeTime,
       quality: sleepData.quality,
       mood: sleepData.mood,
-      duration: duration,
+      duration,
     };
 
-    setSleepHistory(prev => [newEntry, ...prev]);
+    setSleepHistory((prev) => [newEntry, ...prev]);
     setSleepData({
       bedtime: null,
       wakeTime: null,
@@ -153,9 +209,9 @@ const SleepQualityScreen = ({ navigation }) => {
     });
 
     Alert.alert(
-      'Sleep Data Saved!',
-      'Your sleep information has been recorded successfully.',
-      [{ text: 'OK' }]
+      "Sleep Data Saved!",
+      "Your sleep information has been recorded successfully.",
+      [{ text: "OK" }],
     );
   };
 
@@ -181,95 +237,139 @@ const SleepQualityScreen = ({ navigation }) => {
 
   const formatTime = (hour) => {
     const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-    const period = hour < 12 ? 'AM' : 'PM';
+    const period = hour < 12 ? "AM" : "PM";
     return `${displayHour}:00 ${period}`;
   };
 
   const formatDate = (date) => {
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const renderLogTab = () => (
-    <ScrollView style={styles.logContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.logContainer}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Bedtime Selection */}
-      <View style={[styles.section, { backgroundColor: theme.colors.background.primary }]}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+      <View
+        style={[
+          styles.section,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
+      >
+        <Text
+          style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+        >
           What time did you go to bed?
         </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.timeSelector}>
-          {timeSlots.filter(slot => slot.value >= 20 || slot.value <= 2).map((slot) => (
-            <TouchableOpacity
-              key={`bedtime-${slot.value}`}
-              style={[
-                styles.timeSlot,
-                {
-                  backgroundColor: sleepData.bedtime === slot.value
-                    ? theme.colors.therapeutic.peaceful[500]
-                    : theme.colors.background.secondary,
-                },
-              ]}
-              onPress={() => setSleepData(prev => ({ ...prev, bedtime: slot.value }))}
-            >
-              <Text
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.timeSelector}
+        >
+          {timeSlots
+            .filter((slot) => slot.value >= 20 || slot.value <= 2)
+            .map((slot) => (
+              <TouchableOpacity
+                key={`bedtime-${slot.value}`}
                 style={[
-                  styles.timeSlotText,
+                  styles.timeSlot,
                   {
-                    color: sleepData.bedtime === slot.value
-                      ? theme.colors.text.inverse
-                      : theme.colors.text.primary,
+                    backgroundColor:
+                      sleepData.bedtime === slot.value
+                        ? theme.colors.therapeutic.peaceful[500]
+                        : theme.colors.background.secondary,
                   },
                 ]}
+                onPress={() =>
+                  setSleepData((prev) => ({ ...prev, bedtime: slot.value }))
+                }
               >
-                {slot.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Text
+                  style={[
+                    styles.timeSlotText,
+                    {
+                      color:
+                        sleepData.bedtime === slot.value
+                          ? theme.colors.text.inverse
+                          : theme.colors.text.primary,
+                    },
+                  ]}
+                >
+                  {slot.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
         </ScrollView>
       </View>
 
       {/* Wake Time Selection */}
-      <View style={[styles.section, { backgroundColor: theme.colors.background.primary }]}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+      <View
+        style={[
+          styles.section,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
+      >
+        <Text
+          style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+        >
           What time did you wake up?
         </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.timeSelector}>
-          {timeSlots.filter(slot => slot.value >= 5 && slot.value <= 11).map((slot) => (
-            <TouchableOpacity
-              key={`wake-${slot.value}`}
-              style={[
-                styles.timeSlot,
-                {
-                  backgroundColor: sleepData.wakeTime === slot.value
-                    ? theme.colors.therapeutic.energizing[500]
-                    : theme.colors.background.secondary,
-                },
-              ]}
-              onPress={() => setSleepData(prev => ({ ...prev, wakeTime: slot.value }))}
-            >
-              <Text
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.timeSelector}
+        >
+          {timeSlots
+            .filter((slot) => slot.value >= 5 && slot.value <= 11)
+            .map((slot) => (
+              <TouchableOpacity
+                key={`wake-${slot.value}`}
                 style={[
-                  styles.timeSlotText,
+                  styles.timeSlot,
                   {
-                    color: sleepData.wakeTime === slot.value
-                      ? theme.colors.text.inverse
-                      : theme.colors.text.primary,
+                    backgroundColor:
+                      sleepData.wakeTime === slot.value
+                        ? theme.colors.therapeutic.energizing[500]
+                        : theme.colors.background.secondary,
                   },
                 ]}
+                onPress={() =>
+                  setSleepData((prev) => ({ ...prev, wakeTime: slot.value }))
+                }
               >
-                {slot.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Text
+                  style={[
+                    styles.timeSlotText,
+                    {
+                      color:
+                        sleepData.wakeTime === slot.value
+                          ? theme.colors.text.inverse
+                          : theme.colors.text.primary,
+                    },
+                  ]}
+                >
+                  {slot.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
         </ScrollView>
       </View>
 
       {/* Sleep Quality */}
-      <View style={[styles.section, { backgroundColor: theme.colors.background.primary }]}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+      <View
+        style={[
+          styles.section,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
+      >
+        <Text
+          style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+        >
           How was your sleep quality?
         </Text>
         <View style={styles.qualityOptions}>
@@ -279,21 +379,25 @@ const SleepQualityScreen = ({ navigation }) => {
               style={[
                 styles.qualityOption,
                 {
-                  backgroundColor: sleepData.quality === option.value
-                    ? option.color
-                    : theme.colors.background.secondary,
+                  backgroundColor:
+                    sleepData.quality === option.value
+                      ? option.color
+                      : theme.colors.background.secondary,
                 },
               ]}
-              onPress={() => setSleepData(prev => ({ ...prev, quality: option.value }))}
+              onPress={() =>
+                setSleepData((prev) => ({ ...prev, quality: option.value }))
+              }
             >
               <Text style={styles.qualityEmoji}>{option.emoji}</Text>
               <Text
                 style={[
                   styles.qualityLabel,
                   {
-                    color: sleepData.quality === option.value
-                      ? theme.colors.text.inverse
-                      : theme.colors.text.primary,
+                    color:
+                      sleepData.quality === option.value
+                        ? theme.colors.text.inverse
+                        : theme.colors.text.primary,
                   },
                 ]}
               >
@@ -305,8 +409,15 @@ const SleepQualityScreen = ({ navigation }) => {
       </View>
 
       {/* Morning Mood */}
-      <View style={[styles.section, { backgroundColor: theme.colors.background.primary }]}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+      <View
+        style={[
+          styles.section,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
+      >
+        <Text
+          style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+        >
           How do you feel this morning?
         </Text>
         <View style={styles.moodOptions}>
@@ -316,21 +427,25 @@ const SleepQualityScreen = ({ navigation }) => {
               style={[
                 styles.moodOption,
                 {
-                  backgroundColor: sleepData.mood === option.value
-                    ? option.color
-                    : theme.colors.background.secondary,
+                  backgroundColor:
+                    sleepData.mood === option.value
+                      ? option.color
+                      : theme.colors.background.secondary,
                 },
               ]}
-              onPress={() => setSleepData(prev => ({ ...prev, mood: option.value }))}
+              onPress={() =>
+                setSleepData((prev) => ({ ...prev, mood: option.value }))
+              }
             >
               <Text style={styles.moodEmoji}>{option.emoji}</Text>
               <Text
                 style={[
                   styles.moodLabel,
                   {
-                    color: sleepData.mood === option.value
-                      ? theme.colors.text.inverse
-                      : theme.colors.text.primary,
+                    color:
+                      sleepData.mood === option.value
+                        ? theme.colors.text.inverse
+                        : theme.colors.text.primary,
                   },
                 ]}
               >
@@ -346,13 +461,15 @@ const SleepQualityScreen = ({ navigation }) => {
         style={[
           styles.saveButton,
           {
-            backgroundColor: Object.values(sleepData).every(val => val !== null)
+            backgroundColor: Object.values(sleepData).every(
+              (val) => val !== null,
+            )
               ? theme.colors.therapeutic.calming[500]
               : theme.colors.gray[300],
           },
         ]}
         onPress={handleSaveSleepData}
-        disabled={!Object.values(sleepData).every(val => val !== null)}
+        disabled={!Object.values(sleepData).every((val) => val !== null)}
       >
         <MentalHealthIcon
           name="Brain"
@@ -360,7 +477,9 @@ const SleepQualityScreen = ({ navigation }) => {
           color={theme.colors.text.inverse}
           variant="filled"
         />
-        <Text style={[styles.saveButtonText, { color: theme.colors.text.inverse }]}>
+        <Text
+          style={[styles.saveButtonText, { color: theme.colors.text.inverse }]}
+        >
           Save Sleep Data
         </Text>
       </TouchableOpacity>
@@ -368,37 +487,68 @@ const SleepQualityScreen = ({ navigation }) => {
   );
 
   const renderHistoryTab = () => (
-    <ScrollView style={styles.historyContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.historyContainer}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Sleep Stats */}
-      <View style={[styles.statsContainer, { backgroundColor: theme.colors.background.primary }]}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+      <View
+        style={[
+          styles.statsContainer,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
+      >
+        <Text
+          style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+        >
           Sleep Statistics
         </Text>
-        
+
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
-            <Text style={[styles.statValue, { color: theme.colors.therapeutic.calming[500] }]}>
+            <Text
+              style={[
+                styles.statValue,
+                { color: theme.colors.therapeutic.calming[500] },
+              ]}
+            >
               {getAverageSleepQuality()}
             </Text>
-            <Text style={[styles.statLabel, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[styles.statLabel, { color: theme.colors.text.secondary }]}
+            >
               Avg Quality
             </Text>
           </View>
-          
+
           <View style={styles.statCard}>
-            <Text style={[styles.statValue, { color: theme.colors.therapeutic.nurturing[500] }]}>
+            <Text
+              style={[
+                styles.statValue,
+                { color: theme.colors.therapeutic.nurturing[500] },
+              ]}
+            >
               {getAverageSleepDuration()}h
             </Text>
-            <Text style={[styles.statLabel, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[styles.statLabel, { color: theme.colors.text.secondary }]}
+            >
               Avg Duration
             </Text>
           </View>
-          
+
           <View style={styles.statCard}>
-            <Text style={[styles.statValue, { color: theme.colors.therapeutic.peaceful[500] }]}>
+            <Text
+              style={[
+                styles.statValue,
+                { color: theme.colors.therapeutic.peaceful[500] },
+              ]}
+            >
               {sleepHistory.length}
             </Text>
-            <Text style={[styles.statLabel, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[styles.statLabel, { color: theme.colors.text.secondary }]}
+            >
               Entries
             </Text>
           </View>
@@ -406,11 +556,18 @@ const SleepQualityScreen = ({ navigation }) => {
       </View>
 
       {/* Sleep History */}
-      <View style={[styles.section, { backgroundColor: theme.colors.background.primary }]}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+      <View
+        style={[
+          styles.section,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
+      >
+        <Text
+          style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+        >
           Recent Sleep History
         </Text>
-        
+
         {sleepHistory.length === 0 ? (
           <View style={styles.emptyState}>
             <MentalHealthIcon
@@ -419,18 +576,19 @@ const SleepQualityScreen = ({ navigation }) => {
               color={theme.colors.gray[400]}
               variant="outline"
             />
-            <Text style={[styles.emptyStateText, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[
+                styles.emptyStateText,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
               No sleep data yet. Start logging your sleep to see patterns!
             </Text>
           </View>
         ) : (
           <View style={styles.historyList}>
             {sleepHistory.map((entry, index) => (
-              <SleepHistoryCard
-                key={index}
-                entry={entry}
-                theme={theme}
-              />
+              <SleepHistoryCard key={index} entry={entry} theme={theme} />
             ))}
           </View>
         )}
@@ -439,18 +597,17 @@ const SleepQualityScreen = ({ navigation }) => {
   );
 
   const renderTipsTab = () => (
-    <ScrollView style={styles.tipsContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.tipsContainer}
+      showsVerticalScrollIndicator={false}
+    >
       <Text style={[styles.tipsIntro, { color: theme.colors.text.primary }]}>
-        Better sleep leads to better mental health. Here are some tips to improve your sleep quality:
+        Better sleep leads to better mental health. Here are some tips to
+        improve your sleep quality:
       </Text>
-      
+
       {sleepTips.map((tip, index) => (
-        <TipCard
-          key={index}
-          tip={tip}
-          theme={theme}
-          delay={index * 100}
-        />
+        <TipCard key={index} tip={tip} theme={theme} delay={index * 100} />
       ))}
     </ScrollView>
   );
@@ -480,29 +637,32 @@ const SleepQualityScreen = ({ navigation }) => {
               variant="outline"
             />
           </TouchableOpacity>
-          
-          <Text style={[styles.headerTitle, { color: theme.colors.text.primary }]}>
+
+          <Text
+            style={[styles.headerTitle, { color: theme.colors.text.primary }]}
+          >
             Sleep Quality
           </Text>
-          
+
           <View style={styles.placeholder} />
         </View>
 
         {/* Tab Selector */}
         <View style={styles.tabSelector}>
           {[
-            { id: 'log', label: 'Log Sleep' },
-            { id: 'history', label: 'History' },
-            { id: 'tips', label: 'Tips' },
+            { id: "log", label: "Log Sleep" },
+            { id: "history", label: "History" },
+            { id: "tips", label: "Tips" },
           ].map((tab) => (
             <TouchableOpacity
               key={tab.id}
               style={[
                 styles.tabButton,
                 {
-                  backgroundColor: selectedTab === tab.id
-                    ? theme.colors.therapeutic.peaceful[500]
-                    : theme.colors.background.secondary,
+                  backgroundColor:
+                    selectedTab === tab.id
+                      ? theme.colors.therapeutic.peaceful[500]
+                      : theme.colors.background.secondary,
                 },
               ]}
               onPress={() => setSelectedTab(tab.id)}
@@ -511,9 +671,10 @@ const SleepQualityScreen = ({ navigation }) => {
                 style={[
                   styles.tabButtonText,
                   {
-                    color: selectedTab === tab.id
-                      ? theme.colors.text.inverse
-                      : theme.colors.text.primary,
+                    color:
+                      selectedTab === tab.id
+                        ? theme.colors.text.inverse
+                        : theme.colors.text.primary,
                   },
                 ]}
               >
@@ -533,9 +694,9 @@ const SleepQualityScreen = ({ navigation }) => {
             },
           ]}
         >
-          {selectedTab === 'log' && renderLogTab()}
-          {selectedTab === 'history' && renderHistoryTab()}
-          {selectedTab === 'tips' && renderTipsTab()}
+          {selectedTab === "log" && renderLogTab()}
+          {selectedTab === "history" && renderHistoryTab()}
+          {selectedTab === "tips" && renderTipsTab()}
         </Animated.View>
       </LinearGradient>
     </SafeAreaView>
@@ -543,52 +704,100 @@ const SleepQualityScreen = ({ navigation }) => {
 };
 
 const SleepHistoryCard = ({ entry, theme }) => (
-  <View style={[styles.historyCard, { backgroundColor: theme.colors.background.secondary }]}>
+  <View
+    style={[
+      styles.historyCard,
+      { backgroundColor: theme.colors.background.secondary },
+    ]}
+  >
     <View style={styles.historyCardHeader}>
       <Text style={[styles.historyDate, { color: theme.colors.text.primary }]}>
         {formatDate(entry.date)}
       </Text>
       <View style={styles.historyMood}>
         <Text style={styles.historyMoodEmoji}>
-          {morningMoodOptions.find(m => m.value === entry.mood)?.emoji || '😐'}
+          {morningMoodOptions.find((m) => m.value === entry.mood)?.emoji ||
+            "😐"}
         </Text>
       </View>
     </View>
-    
+
     <View style={styles.historyDetails}>
       <View style={styles.historyDetail}>
-        <Text style={[styles.historyDetailLabel, { color: theme.colors.text.secondary }]}>
+        <Text
+          style={[
+            styles.historyDetailLabel,
+            { color: theme.colors.text.secondary },
+          ]}
+        >
           Bedtime
         </Text>
-        <Text style={[styles.historyDetailValue, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[
+            styles.historyDetailValue,
+            { color: theme.colors.text.primary },
+          ]}
+        >
           {formatTime(entry.bedtime)}
         </Text>
       </View>
-      
+
       <View style={styles.historyDetail}>
-        <Text style={[styles.historyDetailLabel, { color: theme.colors.text.secondary }]}>
+        <Text
+          style={[
+            styles.historyDetailLabel,
+            { color: theme.colors.text.secondary },
+          ]}
+        >
           Wake Time
         </Text>
-        <Text style={[styles.historyDetailValue, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[
+            styles.historyDetailValue,
+            { color: theme.colors.text.primary },
+          ]}
+        >
           {formatTime(entry.wakeTime)}
         </Text>
       </View>
-      
+
       <View style={styles.historyDetail}>
-        <Text style={[styles.historyDetailLabel, { color: theme.colors.text.secondary }]}>
+        <Text
+          style={[
+            styles.historyDetailLabel,
+            { color: theme.colors.text.secondary },
+          ]}
+        >
           Duration
         </Text>
-        <Text style={[styles.historyDetailValue, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[
+            styles.historyDetailValue,
+            { color: theme.colors.text.primary },
+          ]}
+        >
           {entry.duration}h
         </Text>
       </View>
-      
+
       <View style={styles.historyDetail}>
-        <Text style={[styles.historyDetailLabel, { color: theme.colors.text.secondary }]}>
+        <Text
+          style={[
+            styles.historyDetailLabel,
+            { color: theme.colors.text.secondary },
+          ]}
+        >
           Quality
         </Text>
-        <Text style={[styles.historyDetailValue, { color: theme.colors.text.primary }]}>
-          {sleepQualityOptions.find(q => q.value === entry.quality)?.emoji || '😐'} {entry.quality}/5
+        <Text
+          style={[
+            styles.historyDetailValue,
+            { color: theme.colors.text.primary },
+          ]}
+        >
+          {sleepQualityOptions.find((q) => q.value === entry.quality)?.emoji ||
+            "😐"}{" "}
+          {entry.quality}/5
         </Text>
       </View>
     </View>
@@ -625,12 +834,17 @@ const TipCard = ({ tip, theme, delay }) => {
           variant="filled"
         />
       </View>
-      
+
       <View style={styles.tipContent}>
         <Text style={[styles.tipTitle, { color: theme.colors.text.primary }]}>
           {tip.title}
         </Text>
-        <Text style={[styles.tipDescription, { color: theme.colors.text.secondary }]}>
+        <Text
+          style={[
+            styles.tipDescription,
+            { color: theme.colors.text.secondary },
+          ]}
+        >
           {tip.description}
         </Text>
       </View>
@@ -640,32 +854,32 @@ const TipCard = ({ tip, theme, delay }) => {
 
 const formatTime = (hour) => {
   const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-  const period = hour < 12 ? 'AM' : 'PM';
+  const period = hour < 12 ? "AM" : "PM";
   return `${displayHour}:00 ${period}`;
 };
 
 const formatDate = (date) => {
-  return date.toLocaleDateString('en-US', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
+  return date.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
   });
 };
 
 const sleepQualityOptions = [
-  { value: 1, label: 'Very Poor', emoji: '😴' },
-  { value: 2, label: 'Poor', emoji: '😪' },
-  { value: 3, label: 'Fair', emoji: '😐' },
-  { value: 4, label: 'Good', emoji: '🙂' },
-  { value: 5, label: 'Excellent', emoji: '😊' },
+  { value: 1, label: "Very Poor", emoji: "😴" },
+  { value: 2, label: "Poor", emoji: "😪" },
+  { value: 3, label: "Fair", emoji: "😐" },
+  { value: 4, label: "Good", emoji: "🙂" },
+  { value: 5, label: "Excellent", emoji: "😊" },
 ];
 
 const morningMoodOptions = [
-  { value: 'energized', label: 'Energized', emoji: '⚡' },
-  { value: 'refreshed', label: 'Refreshed', emoji: '🌅' },
-  { value: 'neutral', label: 'Neutral', emoji: '😐' },
-  { value: 'tired', label: 'Tired', emoji: '😴' },
-  { value: 'groggy', label: 'Groggy', emoji: '🥱' },
+  { value: "energized", label: "Energized", emoji: "⚡" },
+  { value: "refreshed", label: "Refreshed", emoji: "🌅" },
+  { value: "neutral", label: "Neutral", emoji: "😐" },
+  { value: "tired", label: "Tired", emoji: "😴" },
+  { value: "groggy", label: "Groggy", emoji: "🥱" },
 ];
 
 const styles = StyleSheet.create({
@@ -676,27 +890,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
   backButton: {
     width: 44,
     height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   placeholder: {
     width: 44,
   },
   tabSelector: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 20,
     marginBottom: 20,
     gap: 8,
@@ -705,11 +919,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   tabButtonText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   content: {
     flex: 1,
@@ -722,7 +936,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -730,7 +944,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
   },
   timeSelector: {
@@ -742,22 +956,22 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 8,
     minWidth: 80,
-    alignItems: 'center',
+    alignItems: "center",
   },
   timeSlotText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   qualityOptions: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
   },
   qualityOption: {
     width: (width - 80) / 3,
     padding: 12,
     borderRadius: 12,
-    alignItems: 'center',
+    alignItems: "center",
   },
   qualityEmoji: {
     fontSize: 24,
@@ -765,12 +979,12 @@ const styles = StyleSheet.create({
   },
   qualityLabel: {
     fontSize: 12,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
   },
   moodOptions: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
   },
   moodOption: {
@@ -778,7 +992,7 @@ const styles = StyleSheet.create({
     minWidth: (width - 80) / 3,
     padding: 12,
     borderRadius: 12,
-    alignItems: 'center',
+    alignItems: "center",
   },
   moodEmoji: {
     fontSize: 24,
@@ -786,13 +1000,13 @@ const styles = StyleSheet.create({
   },
   moodLabel: {
     fontSize: 12,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
   },
   saveButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 16,
     borderRadius: 12,
     marginBottom: 20,
@@ -800,7 +1014,7 @@ const styles = StyleSheet.create({
   },
   saveButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   historyContainer: {
     flex: 1,
@@ -810,28 +1024,28 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
   statsRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
   },
   statCard: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   statValue: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 4,
   },
   statLabel: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   historyList: {
     gap: 12,
@@ -841,14 +1055,14 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   historyCardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 12,
   },
   historyDate: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   historyMood: {
     padding: 4,
@@ -857,28 +1071,28 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   historyDetails: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   historyDetail: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   historyDetailLabel: {
     fontSize: 10,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 2,
   },
   historyDetailValue: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   emptyState: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 40,
   },
   emptyStateText: {
     fontSize: 14,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 12,
   },
   tipsContainer: {
@@ -889,15 +1103,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   tipCard: {
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    shadowColor: '#000',
+    flexDirection: "row",
+    alignItems: "flex-start",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -907,8 +1121,8 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 16,
   },
   tipContent: {
@@ -916,7 +1130,7 @@ const styles = StyleSheet.create({
   },
   tipTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 4,
   },
   tipDescription: {

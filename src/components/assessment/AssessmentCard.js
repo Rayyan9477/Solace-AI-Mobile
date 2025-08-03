@@ -1,40 +1,64 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import AccessibleTouchable from '../accessibility/AccessibleTouchable';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MentalHealthAccessibility, createCardAccessibility } from '../../utils/accessibility';
-import { colors, typography, spacing, borderRadius, shadows } from '../../styles/theme';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 
-const AssessmentCard = ({ title, description, duration, icon, onStart, onLearnMore, loading }) => {
+import { useTheme } from "../../contexts/ThemeContext";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../../styles/theme";
+import {
+  MentalHealthAccessibility,
+  createCardAccessibility,
+} from "../../utils/accessibility";
+import AccessibleTouchable from "../accessibility/AccessibleTouchable";
+
+const AssessmentCard = ({
+  title,
+  description,
+  duration,
+  icon,
+  onStart,
+  onLearnMore,
+  loading,
+}) => {
   const { theme, isScreenReaderEnabled } = useTheme();
   const componentStyles = styles;
 
   return (
-    <View 
-      style={[componentStyles.container, { backgroundColor: theme.colors.background.secondary }]}
+    <View
+      style={[
+        componentStyles.container,
+        { backgroundColor: theme.colors.background.secondary },
+      ]}
       {...createCardAccessibility(
         title,
         `${description}. Duration: ${duration}`,
-        'Double tap to view assessment options'
+        "Double tap to view assessment options",
       )}
     >
       <View style={componentStyles.header}>
-        <Text 
-          style={componentStyles.icon}
-          accessibilityElementsHidden={true}
-        >
+        <Text style={componentStyles.icon} accessibilityElementsHidden>
           {icon}
         </Text>
         <View style={componentStyles.titleContainer}>
-          <Text 
-            style={[componentStyles.title, { color: theme.colors.text.primary }]}
+          <Text
+            style={[
+              componentStyles.title,
+              { color: theme.colors.text.primary },
+            ]}
             accessibilityRole="header"
             accessibilityLevel={3}
           >
             {title}
           </Text>
-          <Text 
-            style={[componentStyles.duration, { color: theme.colors.text.secondary }]}
+          <Text
+            style={[
+              componentStyles.duration,
+              { color: theme.colors.text.secondary },
+            ]}
             accessibilityRole="text"
             accessibilityLabel={`Assessment duration: ${duration}`}
           >
@@ -42,45 +66,71 @@ const AssessmentCard = ({ title, description, duration, icon, onStart, onLearnMo
           </Text>
         </View>
       </View>
-      
-      <Text 
-        style={[componentStyles.description, { color: theme.colors.text.secondary }]}
+
+      <Text
+        style={[
+          componentStyles.description,
+          { color: theme.colors.text.secondary },
+        ]}
         accessibilityRole="text"
       >
         {description}
       </Text>
-      
-      <View 
+
+      <View
         style={componentStyles.actions}
         accessibilityRole="group"
         accessibilityLabel="Assessment actions"
       >
         <AccessibleTouchable
-          style={[componentStyles.learnMoreButton, { backgroundColor: theme.colors.gray[200], minWidth: 44, minHeight: 44 }]}
+          style={[
+            componentStyles.learnMoreButton,
+            {
+              backgroundColor: theme.colors.gray[200],
+              minWidth: 44,
+              minHeight: 44,
+            },
+          ]}
           onPress={onLearnMore}
           accessibilityLabel={`Learn more about ${title}`}
           accessibilityHint="Double tap to view detailed information about this assessment"
         >
-          <Text style={[componentStyles.learnMoreText, { color: theme.colors.gray[700] }]}>
+          <Text
+            style={[
+              componentStyles.learnMoreText,
+              { color: theme.colors.gray[700] },
+            ]}
+          >
             Learn More
           </Text>
         </AccessibleTouchable>
-        
+
         <AccessibleTouchable
-          style={[componentStyles.startButton, { backgroundColor: theme.colors.primary[500], minWidth: 44, minHeight: 44 }]}
+          style={[
+            componentStyles.startButton,
+            {
+              backgroundColor: theme.colors.primary[500],
+              minWidth: 44,
+              minHeight: 44,
+            },
+          ]}
           onPress={onStart}
           disabled={loading}
-          accessibilityLabel={loading ? 'Assessment loading' : `Start ${title} assessment`}
-          accessibilityHint={loading 
-            ? 'Please wait while the assessment loads' 
-            : `Double tap to begin the ${title} assessment, estimated duration ${duration}`}
+          accessibilityLabel={
+            loading ? "Assessment loading" : `Start ${title} assessment`
+          }
+          accessibilityHint={
+            loading
+              ? "Please wait while the assessment loads"
+              : `Double tap to begin the ${title} assessment, estimated duration ${duration}`
+          }
           accessibilityState={{
             disabled: loading,
             busy: loading,
           }}
         >
           <Text style={componentStyles.startButtonText}>
-            {loading ? 'Loading...' : 'Start Assessment'}
+            {loading ? "Loading..." : "Start Assessment"}
           </Text>
         </AccessibleTouchable>
       </View>
@@ -96,12 +146,12 @@ const styles = StyleSheet.create({
     ...shadows.sm,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: spacing[3],
   },
   icon: {
-    fontSize: typography.sizes['2xl'],
+    fontSize: typography.sizes["2xl"],
     marginRight: spacing[3],
   },
   titleContainer: {
@@ -125,7 +175,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing[4],
   },
   actions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: spacing[3],
   },
   learnMoreButton: {
@@ -133,7 +183,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[3],
     paddingHorizontal: spacing[4],
     borderRadius: borderRadius.md,
-    alignItems: 'center',
+    alignItems: "center",
     ...shadows.sm,
   },
   learnMoreText: {
@@ -145,7 +195,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[3],
     paddingHorizontal: spacing[4],
     borderRadius: borderRadius.md,
-    alignItems: 'center',
+    alignItems: "center",
     ...shadows.sm,
   },
   startButtonText: {

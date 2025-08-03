@@ -1,14 +1,15 @@
-import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import * as Haptics from 'expo-haptics';
-import Button from '../../../components/common/Button';
+import { render, fireEvent, waitFor } from "@testing-library/react-native";
+import * as Haptics from "expo-haptics";
+import React from "react";
 
-jest.mock('expo-haptics');
+import Button from "../../../components/common/Button";
+
+jest.mock("expo-haptics");
 
 // Mock the useTheme hook
-jest.mock('../../../contexts/ThemeContext', () => {
-  const { lightTheme } = require('../../../styles/theme');
-  
+jest.mock("../../../contexts/ThemeContext", () => {
+  const { lightTheme } = require("../../../styles/theme");
+
   return {
     useTheme: () => ({
       theme: lightTheme,
@@ -19,46 +20,46 @@ jest.mock('../../../contexts/ThemeContext', () => {
   };
 });
 
-describe('Button Component', () => {
+describe("Button Component", () => {
   const mockOnPress = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders correctly with default props', async () => {
+  it("renders correctly with default props", async () => {
     const { getByText, getByTestId } = render(
-      <Button title="Test Button" onPress={mockOnPress} />
+      <Button title="Test Button" onPress={mockOnPress} />,
     );
 
-    const buttonText = getByText('Test Button');
+    const buttonText = getByText("Test Button");
     expect(buttonText).toBeTruthy();
-    
-    const button = getByTestId('button-Test Button');
+
+    const button = getByTestId("button-Test Button");
     expect(button).toBeTruthy();
     expect(button.props.accessibilityState.disabled).toBe(false);
   });
 
-  it('calls onPress and triggers haptics when pressed', async () => {
+  it("calls onPress and triggers haptics when pressed", async () => {
     const { getByTestId } = render(
-      <Button title="Test Button" onPress={mockOnPress} />
+      <Button title="Test Button" onPress={mockOnPress} />,
     );
 
-    const button = getByTestId('button-Test Button');
+    const button = getByTestId("button-Test Button");
     fireEvent.press(button);
 
     expect(mockOnPress).toHaveBeenCalledTimes(1);
     expect(Haptics.impactAsync).toHaveBeenCalledWith(
-      Haptics.ImpactFeedbackStyle.Medium
+      Haptics.ImpactFeedbackStyle.Medium,
     );
   });
 
-  it('disables the button when disabled prop is true', async () => {
+  it("disables the button when disabled prop is true", async () => {
     const { getByTestId } = render(
-      <Button title="Test Button" onPress={mockOnPress} disabled />
+      <Button title="Test Button" onPress={mockOnPress} disabled />,
     );
 
-    const button = getByTestId('button-Test Button');
+    const button = getByTestId("button-Test Button");
     expect(button.props.accessibilityState.disabled).toBe(true);
     fireEvent.press(button);
 
@@ -66,22 +67,24 @@ describe('Button Component', () => {
     expect(Haptics.impactAsync).not.toHaveBeenCalled();
   });
 
-  it('applies fullWidth style when fullWidth prop is true', async () => {
+  it("applies fullWidth style when fullWidth prop is true", async () => {
     const { getByTestId } = render(
-      <Button title="Test Button" onPress={mockOnPress} fullWidth />
+      <Button title="Test Button" onPress={mockOnPress} fullWidth />,
     );
 
-    const button = getByTestId('button-Test Button');
+    const button = getByTestId("button-Test Button");
     // Convert style prop to array if it's not already
-    const styles = Array.isArray(button.props.style) 
-      ? button.props.style.filter(style => style !== false)
-      : [button.props.style].filter(style => style !== false);
-    const hasFullWidth = styles.some(style => style && style.width === '100%');
+    const styles = Array.isArray(button.props.style)
+      ? button.props.style.filter((style) => style !== false)
+      : [button.props.style].filter((style) => style !== false);
+    const hasFullWidth = styles.some(
+      (style) => style && style.width === "100%",
+    );
     expect(hasFullWidth).toBe(true);
   });
 
-  it('renders different variants correctly', async () => {
-    const variants = ['primary', 'secondary', 'outline', 'text'];
+  it("renders different variants correctly", async () => {
+    const variants = ["primary", "secondary", "outline", "text"];
 
     for (const variant of variants) {
       const { getByTestId } = render(
@@ -89,7 +92,7 @@ describe('Button Component', () => {
           title={`${variant} Button`}
           onPress={mockOnPress}
           variant={variant}
-        />
+        />,
       );
 
       const button = getByTestId(`button-${variant} Button`);
@@ -97,16 +100,12 @@ describe('Button Component', () => {
     }
   });
 
-  it('renders different sizes correctly', async () => {
-    const sizes = ['small', 'medium', 'large'];
+  it("renders different sizes correctly", async () => {
+    const sizes = ["small", "medium", "large"];
 
     for (const size of sizes) {
       const { getByTestId } = render(
-        <Button
-          title={`${size} Button`}
-          onPress={mockOnPress}
-          size={size}
-        />
+        <Button title={`${size} Button`} onPress={mockOnPress} size={size} />,
       );
 
       const button = getByTestId(`button-${size} Button`);
@@ -114,18 +113,18 @@ describe('Button Component', () => {
     }
   });
 
-  it('sets correct accessibility props', async () => {
+  it("sets correct accessibility props", async () => {
     const { getByTestId } = render(
       <Button
         title="Accessible Button"
         onPress={mockOnPress}
         accessibilityLabel="Custom Label"
         accessibilityHint="Custom Hint"
-      />
+      />,
     );
 
-    const button = getByTestId('button-Accessible Button');
-    expect(button.props.accessibilityLabel).toBe('Custom Label');
-    expect(button.props.accessibilityHint).toBe('Custom Hint');
+    const button = getByTestId("button-Accessible Button");
+    expect(button.props.accessibilityLabel).toBe("Custom Label");
+    expect(button.props.accessibilityHint).toBe("Custom Hint");
   });
 });

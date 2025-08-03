@@ -1,9 +1,22 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MentalHealthIcon, ActionIcon } from '../icons';
-import { colors, typography, spacing, borderRadius, shadows } from '../../styles/theme';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useRef, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
+
+import { useTheme } from "../../contexts/ThemeContext";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../../styles/theme";
+import { MentalHealthIcon, ActionIcon } from "../icons";
 
 const RecentActivity = ({ moodHistory, chatHistory }) => {
   const { theme } = useTheme();
@@ -28,29 +41,36 @@ const RecentActivity = ({ moodHistory, chatHistory }) => {
   }, [fadeAnim, slideAnim]);
 
   // Sample data if none provided
-  const sampleMoodHistory = moodHistory && moodHistory.length > 0 ? moodHistory : [
-    {
-      id: 1,
-      mood: 'calm',
-      notes: 'Had a good meditation session this morning.',
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      id: 2,
-      mood: 'happy',
-      notes: 'Completed my daily walk and felt energized.',
-      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-    }
-  ];
+  const sampleMoodHistory =
+    moodHistory && moodHistory.length > 0
+      ? moodHistory
+      : [
+          {
+            id: 1,
+            mood: "calm",
+            notes: "Had a good meditation session this morning.",
+            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          },
+          {
+            id: 2,
+            mood: "happy",
+            notes: "Completed my daily walk and felt energized.",
+            timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          },
+        ];
 
-  const sampleChatHistory = chatHistory && chatHistory.length > 0 ? chatHistory : [
-    {
-      id: 1,
-      title: 'Anxiety Management',
-      lastMessage: 'Thank you for the breathing exercises. They really helped.',
-      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString()
-    }
-  ];
+  const sampleChatHistory =
+    chatHistory && chatHistory.length > 0
+      ? chatHistory
+      : [
+          {
+            id: 1,
+            title: "Anxiety Management",
+            lastMessage:
+              "Thank you for the breathing exercises. They really helped.",
+            timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+          },
+        ];
 
   const formatTimeAgo = (timestamp) => {
     const now = new Date();
@@ -60,56 +80,77 @@ const RecentActivity = ({ moodHistory, chatHistory }) => {
     const diffDays = Math.floor(diffHours / 24);
 
     if (diffDays > 0) {
-      return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+      return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
     } else if (diffHours > 0) {
-      return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+      return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
     } else {
-      return 'Just now';
+      return "Just now";
     }
   };
 
   const getMoodEmoji = (mood) => {
     const emojis = {
-      happy: '😊',
-      calm: '😌',
-      anxious: '😰',
-      sad: '😢',
-      angry: '😠',
-      neutral: '😐',
+      happy: "😊",
+      calm: "😌",
+      anxious: "😰",
+      sad: "😢",
+      angry: "😠",
+      neutral: "😐",
     };
-    return emojis[mood] || '😐';
+    return emojis[mood] || "😐";
   };
 
   const MoodActivityItem = ({ mood, notes, timestamp, index }) => (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.activityItem,
         {
           opacity: fadeAnim,
-          transform: [{
-            translateY: slideAnim.interpolate({
-              inputRange: [0, 30],
-              outputRange: [0, 30 + (index * 10)],
-            })
-          }],
-        }
+          transform: [
+            {
+              translateY: slideAnim.interpolate({
+                inputRange: [0, 30],
+                outputRange: [0, 30 + index * 10],
+              }),
+            },
+          ],
+        },
       ]}
     >
       <LinearGradient
-        colors={[theme.colors.therapeutic.calming[100], theme.colors.therapeutic.calming[50]]}
+        colors={[
+          theme.colors.therapeutic.calming[100],
+          theme.colors.therapeutic.calming[50],
+        ]}
         style={styles.activityCard}
       >
-        <View style={[styles.activityIcon, { backgroundColor: theme.colors.therapeutic.nurturing[400] }]}>
+        <View
+          style={[
+            styles.activityIcon,
+            { backgroundColor: theme.colors.therapeutic.nurturing[400] },
+          ]}
+        >
           <Text style={styles.activityEmoji}>{getMoodEmoji(mood)}</Text>
         </View>
         <View style={styles.activityContent}>
-          <Text style={[styles.activityTitle, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[styles.activityTitle, { color: theme.colors.text.primary }]}
+          >
             Mood: {mood.charAt(0).toUpperCase() + mood.slice(1)}
           </Text>
-          <Text style={[styles.activitySubtitle, { color: theme.colors.text.secondary }]}>
-            {notes && notes.length > 50 ? `${notes.substring(0, 50)}...` : notes || 'No notes'}
+          <Text
+            style={[
+              styles.activitySubtitle,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
+            {notes && notes.length > 50
+              ? `${notes.substring(0, 50)}...`
+              : notes || "No notes"}
           </Text>
-          <Text style={[styles.activityTime, { color: theme.colors.text.tertiary }]}>
+          <Text
+            style={[styles.activityTime, { color: theme.colors.text.tertiary }]}
+          >
             {formatTimeAgo(timestamp)}
           </Text>
         </View>
@@ -118,25 +159,35 @@ const RecentActivity = ({ moodHistory, chatHistory }) => {
   );
 
   const ChatActivityItem = ({ title, lastMessage, timestamp, index }) => (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.activityItem,
         {
           opacity: fadeAnim,
-          transform: [{
-            translateY: slideAnim.interpolate({
-              inputRange: [0, 30],
-              outputRange: [0, 30 + (index * 10)],
-            })
-          }],
-        }
+          transform: [
+            {
+              translateY: slideAnim.interpolate({
+                inputRange: [0, 30],
+                outputRange: [0, 30 + index * 10],
+              }),
+            },
+          ],
+        },
       ]}
     >
       <LinearGradient
-        colors={[theme.colors.therapeutic.peaceful[100], theme.colors.therapeutic.peaceful[50]]}
+        colors={[
+          theme.colors.therapeutic.peaceful[100],
+          theme.colors.therapeutic.peaceful[50],
+        ]}
         style={styles.activityCard}
       >
-        <View style={[styles.activityIcon, { backgroundColor: theme.colors.therapeutic.calming[400] }]}>
+        <View
+          style={[
+            styles.activityIcon,
+            { backgroundColor: theme.colors.therapeutic.calming[400] },
+          ]}
+        >
           <MentalHealthIcon
             name="Therapy"
             size="sm"
@@ -144,15 +195,24 @@ const RecentActivity = ({ moodHistory, chatHistory }) => {
           />
         </View>
         <View style={styles.activityContent}>
-          <Text style={[styles.activityTitle, { color: theme.colors.text.primary }]}>
-            {title || 'Chat Session'}
+          <Text
+            style={[styles.activityTitle, { color: theme.colors.text.primary }]}
+          >
+            {title || "Chat Session"}
           </Text>
-          <Text style={[styles.activitySubtitle, { color: theme.colors.text.secondary }]}>
-            {lastMessage && lastMessage.length > 50 
-              ? `${lastMessage.substring(0, 50)}...` 
-              : lastMessage || 'Started a conversation'}
+          <Text
+            style={[
+              styles.activitySubtitle,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
+            {lastMessage && lastMessage.length > 50
+              ? `${lastMessage.substring(0, 50)}...`
+              : lastMessage || "Started a conversation"}
           </Text>
-          <Text style={[styles.activityTime, { color: theme.colors.text.tertiary }]}>
+          <Text
+            style={[styles.activityTime, { color: theme.colors.text.tertiary }]}
+          >
             {formatTimeAgo(timestamp)}
           </Text>
         </View>
@@ -160,20 +220,24 @@ const RecentActivity = ({ moodHistory, chatHistory }) => {
     </Animated.View>
   );
 
-  const hasActivity = sampleMoodHistory.length > 0 || sampleChatHistory.length > 0;
+  const hasActivity =
+    sampleMoodHistory.length > 0 || sampleChatHistory.length > 0;
 
   return (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.container,
         {
           opacity: fadeAnim,
           transform: [{ translateY: slideAnim }],
-        }
+        },
       ]}
     >
       <LinearGradient
-        colors={[theme.colors.background.primary, theme.colors.background.secondary]}
+        colors={[
+          theme.colors.background.primary,
+          theme.colors.background.secondary,
+        ]}
         style={[styles.cardBackground, shadows.lg]}
       >
         <View style={styles.header}>
@@ -188,19 +252,17 @@ const RecentActivity = ({ moodHistory, chatHistory }) => {
               Recent Activity
             </Text>
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.viewAllButton, { minWidth: 44, minHeight: 44 }]}
-            accessible={true}
+            accessible
             accessibilityRole="button"
             accessibilityLabel="View All Activity"
             accessibilityHint="Double tap to view all recent activity"
           >
-            <ActionIcon
-              name="Next"
-              size="xs"
-              colorScheme="primary"
-            />
-            <Text style={[styles.viewAllText, { color: theme.colors.primary[500] }]}>
+            <ActionIcon name="Next" size="xs" colorScheme="primary" />
+            <Text
+              style={[styles.viewAllText, { color: theme.colors.primary[500] }]}
+            >
               View All
             </Text>
           </TouchableOpacity>
@@ -217,7 +279,7 @@ const RecentActivity = ({ moodHistory, chatHistory }) => {
                 index={index}
               />
             ))}
-            
+
             {sampleChatHistory.map((chat, index) => (
               <ChatActivityItem
                 key={`chat-${chat.id || index}`}
@@ -229,22 +291,32 @@ const RecentActivity = ({ moodHistory, chatHistory }) => {
             ))}
           </View>
         ) : (
-          <Animated.View 
+          <Animated.View
             style={[
               styles.noActivity,
               {
                 opacity: fadeAnim,
                 transform: [{ translateY: slideAnim }],
-              }
+              },
             ]}
           >
             <View style={styles.noActivityIconContainer}>
               <Text style={styles.noActivityEmoji}>📱</Text>
             </View>
-            <Text style={[styles.noActivityTitle, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.noActivityTitle,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               No Recent Activity
             </Text>
-            <Text style={[styles.noActivitySubtitle, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[
+                styles.noActivitySubtitle,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
               Start by checking in with your mood or having a chat
             </Text>
           </Animated.View>
@@ -264,14 +336,14 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.xl,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: spacing[4],
   },
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   titleIcon: {
@@ -283,8 +355,8 @@ const styles = StyleSheet.create({
     lineHeight: typography.lineHeights.lg,
   },
   viewAllButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: spacing[3],
     paddingVertical: spacing[2],
     borderRadius: borderRadius.md,
@@ -301,8 +373,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing[2],
   },
   activityCard: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     padding: spacing[4],
     borderRadius: borderRadius.lg,
     ...shadows.sm,
@@ -311,8 +383,8 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: borderRadius.full,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: spacing[3],
     ...shadows.sm,
   },
@@ -342,19 +414,19 @@ const styles = StyleSheet.create({
     lineHeight: typography.lineHeights.xs,
   },
   noActivity: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: spacing[8],
   },
   noActivityIconContainer: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: spacing[4],
   },
   noActivityEmoji: {
-    fontSize: typography.sizes['4xl'],
+    fontSize: typography.sizes["4xl"],
   },
   noActivityTitle: {
     fontSize: typography.sizes.base,
@@ -366,7 +438,7 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.sm,
     fontWeight: typography.weights.normal,
     lineHeight: typography.lineHeights.sm,
-    textAlign: 'center',
+    textAlign: "center",
     paddingHorizontal: spacing[4],
     opacity: 0.8,
   },

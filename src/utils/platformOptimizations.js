@@ -1,28 +1,30 @@
-import { Platform, Dimensions, StatusBar } from 'react-native';
-import * as Haptics from 'expo-haptics';
-import { PLATFORM_CONFIG, FEATURE_FLAGS, logger } from '../config/environment';
+import * as Haptics from "expo-haptics";
+import { Platform, Dimensions, StatusBar } from "react-native";
+
+import { PLATFORM_CONFIG, FEATURE_FLAGS, logger } from "../config/environment";
 
 // Screen dimensions utilities
 export const screenUtils = {
   getScreenDimensions() {
-    const { width, height } = Dimensions.get('window');
-    const screenData = Dimensions.get('screen');
-    
+    const { width, height } = Dimensions.get("window");
+    const screenData = Dimensions.get("screen");
+
     return {
       window: { width, height },
       screen: screenData,
-      isTablet: Platform.OS === 'ios' ? 
-        Math.min(width, height) >= 768 : 
-        Math.min(width, height) >= 600,
-      orientation: width > height ? 'landscape' : 'portrait',
+      isTablet:
+        Platform.OS === "ios"
+          ? Math.min(width, height) >= 768
+          : Math.min(width, height) >= 600,
+      orientation: width > height ? "landscape" : "portrait",
     };
   },
 
   getSafeAreaInsets() {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === "web") {
       return { top: 0, bottom: 0, left: 0, right: 0 };
     }
-    
+
     // For React Native, you would typically use react-native-safe-area-context
     // This is a fallback implementation
     return {
@@ -44,45 +46,47 @@ export const screenUtils = {
 
 // Haptic feedback utilities
 export const hapticUtils = {
-  impact(style = 'medium') {
+  impact(style = "medium") {
     if (!FEATURE_FLAGS.ENABLE_HAPTIC_FEEDBACK) return;
-    
+
     try {
-      const hapticStyle = {
-        light: Haptics.ImpactFeedbackStyle.Light,
-        medium: Haptics.ImpactFeedbackStyle.Medium,
-        heavy: Haptics.ImpactFeedbackStyle.Heavy,
-      }[style] || Haptics.ImpactFeedbackStyle.Medium;
-      
+      const hapticStyle =
+        {
+          light: Haptics.ImpactFeedbackStyle.Light,
+          medium: Haptics.ImpactFeedbackStyle.Medium,
+          heavy: Haptics.ImpactFeedbackStyle.Heavy,
+        }[style] || Haptics.ImpactFeedbackStyle.Medium;
+
       Haptics.impactAsync(hapticStyle);
     } catch (error) {
-      logger.warn('Haptic feedback failed:', error);
+      logger.warn("Haptic feedback failed:", error);
     }
   },
 
-  notification(type = 'success') {
+  notification(type = "success") {
     if (!FEATURE_FLAGS.ENABLE_HAPTIC_FEEDBACK) return;
-    
+
     try {
-      const notificationType = {
-        success: Haptics.NotificationFeedbackType.Success,
-        warning: Haptics.NotificationFeedbackType.Warning,
-        error: Haptics.NotificationFeedbackType.Error,
-      }[type] || Haptics.NotificationFeedbackType.Success;
-      
+      const notificationType =
+        {
+          success: Haptics.NotificationFeedbackType.Success,
+          warning: Haptics.NotificationFeedbackType.Warning,
+          error: Haptics.NotificationFeedbackType.Error,
+        }[type] || Haptics.NotificationFeedbackType.Success;
+
       Haptics.notificationAsync(notificationType);
     } catch (error) {
-      logger.warn('Haptic notification failed:', error);
+      logger.warn("Haptic notification failed:", error);
     }
   },
 
   selection() {
     if (!FEATURE_FLAGS.ENABLE_HAPTIC_FEEDBACK) return;
-    
+
     try {
       Haptics.selectionAsync();
     } catch (error) {
-      logger.warn('Haptic selection failed:', error);
+      logger.warn("Haptic selection failed:", error);
     }
   },
 };
@@ -91,48 +95,48 @@ export const hapticUtils = {
 export const styleUtils = {
   // Create platform-specific shadows
   createShadow(elevation = 2) {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === "web") {
       return {
         boxShadow: `0px ${elevation}px ${elevation * 2}px rgba(0, 0, 0, 0.1)`,
       };
     }
-    
-    if (Platform.OS === 'android') {
+
+    if (Platform.OS === "android") {
       return {
         elevation,
       };
     }
-    
+
     // iOS shadow
     return {
-      shadowColor: '#000',
+      shadowColor: "#000",
       shadowOffset: {
         width: 0,
         height: elevation,
       },
-      shadowOpacity: 0.1 + (elevation * 0.05),
+      shadowOpacity: 0.1 + elevation * 0.05,
       shadowRadius: elevation * 2,
     };
   },
 
   // Create platform-specific border radius
-  createBorderRadius(size = 'medium') {
+  createBorderRadius(size = "medium") {
     const radiusMap = {
       small: Platform.select({ ios: 8, android: 8, web: 6 }),
       medium: Platform.select({ ios: 12, android: 12, web: 8 }),
       large: Platform.select({ ios: 16, android: 16, web: 12 }),
       extraLarge: Platform.select({ ios: 24, android: 24, web: 16 }),
     };
-    
+
     return radiusMap[size] || radiusMap.medium;
   },
 
   // Create platform-specific text styles
-  createTextStyle(variant = 'body') {
+  createTextStyle(variant = "body") {
     const baseStyles = {
       fontFamily: Platform.select({
-        ios: 'System',
-        android: 'Roboto',
+        ios: "System",
+        android: "Roboto",
         web: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
       }),
     };
@@ -140,22 +144,22 @@ export const styleUtils = {
     const variantStyles = {
       heading: {
         fontSize: Platform.select({ ios: 28, android: 28, web: 32 }),
-        fontWeight: Platform.select({ ios: '700', android: '700', web: '600' }),
+        fontWeight: Platform.select({ ios: "700", android: "700", web: "600" }),
         lineHeight: Platform.select({ ios: 34, android: 34, web: 40 }),
       },
       subheading: {
         fontSize: Platform.select({ ios: 20, android: 20, web: 24 }),
-        fontWeight: Platform.select({ ios: '600', android: '600', web: '500' }),
+        fontWeight: Platform.select({ ios: "600", android: "600", web: "500" }),
         lineHeight: Platform.select({ ios: 26, android: 26, web: 32 }),
       },
       body: {
         fontSize: Platform.select({ ios: 16, android: 16, web: 16 }),
-        fontWeight: Platform.select({ ios: '400', android: '400', web: '400' }),
+        fontWeight: Platform.select({ ios: "400", android: "400", web: "400" }),
         lineHeight: Platform.select({ ios: 24, android: 24, web: 24 }),
       },
       caption: {
         fontSize: Platform.select({ ios: 12, android: 12, web: 14 }),
-        fontWeight: Platform.select({ ios: '400', android: '400', web: '400' }),
+        fontWeight: Platform.select({ ios: "400", android: "400", web: "400" }),
         lineHeight: Platform.select({ ios: 18, android: 18, web: 20 }),
       },
     };
@@ -167,9 +171,9 @@ export const styleUtils = {
   },
 
   // Create responsive spacing
-  createSpacing(size = 'medium') {
+  createSpacing(size = "medium") {
     const { isTablet } = screenUtils.getScreenDimensions();
-    
+
     const spacingMap = {
       xs: isTablet ? 6 : 4,
       small: isTablet ? 12 : 8,
@@ -200,48 +204,48 @@ export const performanceUtils = {
   // Throttle utility for scroll events
   throttle(func, limit) {
     let inThrottle;
-    return function() {
+    return function () {
       const args = arguments;
       const context = this;
       if (!inThrottle) {
         func.apply(context, args);
         inThrottle = true;
-        setTimeout(() => inThrottle = false, limit);
+        setTimeout(() => (inThrottle = false), limit);
       }
     };
   },
 
   // Image optimization for different platforms
-  optimizeImageSource(source, size = 'medium') {
-    if (typeof source === 'string') {
+  optimizeImageSource(source, size = "medium") {
+    if (typeof source === "string") {
       // For web, add size parameters
-      if (Platform.OS === 'web') {
+      if (Platform.OS === "web") {
         const sizeMap = {
-          small: 'w_300,h_300',
-          medium: 'w_600,h_600',
-          large: 'w_1200,h_1200',
+          small: "w_300,h_300",
+          medium: "w_600,h_600",
+          large: "w_1200,h_1200",
         };
-        
-        if (source.includes('cloudinary') || source.includes('imgix')) {
+
+        if (source.includes("cloudinary") || source.includes("imgix")) {
           return `${source}?${sizeMap[size]}&c_fill&q_auto&f_auto`;
         }
       }
-      
+
       return source;
     }
-    
+
     return source;
   },
 
   // Memory optimization for large lists
   getListOptimization() {
     const { isTablet } = screenUtils.getScreenDimensions();
-    
+
     return {
       initialNumToRender: isTablet ? 15 : 10,
       maxToRenderPerBatch: isTablet ? 10 : 5,
       windowSize: isTablet ? 15 : 10,
-      removeClippedSubviews: Platform.OS === 'android',
+      removeClippedSubviews: Platform.OS === "android",
       getItemLayout: (data, index) => ({
         length: 80, // Adjust based on your item height
         offset: 80 * index,
@@ -257,43 +261,45 @@ export const accessibilityUtils = {
   createMentalHealthAccessibility(type, content) {
     const baseProps = {
       accessible: true,
-      accessibilityRole: 'button',
+      accessibilityRole: "button",
     };
 
     switch (type) {
-      case 'mood-selector':
+      case "mood-selector":
         return {
           ...baseProps,
           accessibilityLabel: `Select ${content} mood`,
-          accessibilityHint: 'Double tap to record your current mood',
+          accessibilityHint: "Double tap to record your current mood",
           accessibilityState: { selected: false },
         };
-      
-      case 'crisis-button':
+
+      case "crisis-button":
         return {
           ...baseProps,
-          accessibilityRole: 'button',
-          accessibilityLabel: 'Emergency support',
-          accessibilityHint: 'Double tap for immediate crisis support resources',
-          importantForAccessibility: 'yes',
+          accessibilityRole: "button",
+          accessibilityLabel: "Emergency support",
+          accessibilityHint:
+            "Double tap for immediate crisis support resources",
+          importantForAccessibility: "yes",
         };
-      
-      case 'assessment-question':
+
+      case "assessment-question":
         return {
           ...baseProps,
-          accessibilityRole: 'radiogroup',
+          accessibilityRole: "radiogroup",
           accessibilityLabel: content,
-          accessibilityHint: 'Select an option that best describes your experience',
+          accessibilityHint:
+            "Select an option that best describes your experience",
         };
-      
-      case 'chat-message':
+
+      case "chat-message":
         return {
           accessible: true,
-          accessibilityRole: 'text',
+          accessibilityRole: "text",
           accessibilityLabel: `AI therapist says: ${content}`,
-          accessibilityLiveRegion: 'polite',
+          accessibilityLiveRegion: "polite",
         };
-      
+
       default:
         return baseProps;
     }
@@ -308,9 +314,9 @@ export const accessibilityUtils = {
 
   // Announce important messages to screen readers
   announceForAccessibility(message) {
-    if (Platform.OS !== 'web') {
+    if (Platform.OS !== "web") {
       // Use AccessibilityInfo.announceForAccessibility in real implementation
-      logger.log('Accessibility announcement:', message);
+      logger.log("Accessibility announcement:", message);
     }
   },
 };
@@ -319,15 +325,15 @@ export const accessibilityUtils = {
 export const networkUtils = {
   // Check network connectivity
   async checkConnectivity() {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === "web") {
       return navigator.onLine;
     }
-    
+
     // For React Native, you would use @react-native-netinfo/netinfo
     // This is a fallback implementation
     try {
-      const response = await fetch('https://httpbin.org/status/200', {
-        method: 'HEAD',
+      const response = await fetch("https://httpbin.org/status/200", {
+        method: "HEAD",
         timeout: 5000,
       });
       return response.ok;
@@ -337,28 +343,28 @@ export const networkUtils = {
   },
 
   // Create optimized request configuration
-  createRequestConfig(priority = 'normal') {
+  createRequestConfig(priority = "normal") {
     const baseConfig = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     };
 
     switch (priority) {
-      case 'high':
+      case "high":
         return {
           ...baseConfig,
           timeout: 30000,
           retries: 3,
         };
-      
-      case 'low':
+
+      case "low":
         return {
           ...baseConfig,
           timeout: 10000,
           retries: 1,
         };
-      
+
       default:
         return {
           ...baseConfig,
@@ -373,19 +379,21 @@ export const networkUtils = {
 export const storageUtils = {
   // Calculate storage usage
   async getStorageInfo() {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === "web") {
       try {
         const estimate = await navigator.storage.estimate();
         return {
           used: estimate.usage || 0,
           available: estimate.quota || 0,
-          percentage: estimate.usage ? (estimate.usage / estimate.quota) * 100 : 0,
+          percentage: estimate.usage
+            ? (estimate.usage / estimate.quota) * 100
+            : 0,
         };
       } catch {
         return { used: 0, available: 0, percentage: 0 };
       }
     }
-    
+
     // For React Native, you would implement platform-specific storage checks
     return { used: 0, available: 0, percentage: 0 };
   },
@@ -393,16 +401,20 @@ export const storageUtils = {
   // Clear cache when needed
   async clearCache() {
     try {
-      if (Platform.OS === 'web') {
-        const cacheNames = await caches.keys();
+      if (
+        Platform.OS === "web" &&
+        typeof window !== "undefined" &&
+        "caches" in window
+      ) {
+        const cacheNames = await window.caches.keys();
         await Promise.all(
-          cacheNames.map(cacheName => caches.delete(cacheName))
+          cacheNames.map((cacheName) => window.caches.delete(cacheName)),
         );
       }
-      
-      logger.log('Cache cleared successfully');
+
+      logger.log("Cache cleared successfully");
     } catch (error) {
-      logger.error('Failed to clear cache:', error);
+      logger.error("Failed to clear cache:", error);
     }
   },
 };

@@ -1,12 +1,8 @@
 // Icon System - Main exports for Solace AI Mobile
-export { default as Icon } from './IconSystem';
-export { 
-  IconVariants, 
-  IconSizes, 
-  MentalHealthIcons 
-} from './IconSystem';
+export { default as Icon } from "./IconSystem";
+export { IconVariants, IconSizes, MentalHealthIcons } from "./IconSystem";
 
-export { 
+export {
   default as ThemedIcon,
   AppIcons,
   NavigationIcon,
@@ -14,69 +10,69 @@ export {
   ActionIcon,
   StatusIcon,
   BadgedIcon,
-  AnimatedIcon
-} from './AppIcons';
+  AnimatedIcon,
+} from "./AppIcons";
 
 // Export all icon collections
-export * from './AllIcons';
-export * from './HealthTechIcons';
-export * from './GeneralUIIcons';
-export * from './ArrowsDirectionsIcons';
-export * from './MentalHealthIcons';
-export * from './NavigationInterfaceIcons';
-export * from './DataVisualizationIcons';
-export * from './AccessibilityCommunicationIcons';
-export * from './NotificationStatusIcons';
+export * from "./AllIcons";
+export * from "./HealthTechIcons";
+export * from "./GeneralUIIcons";
+export * from "./ArrowsDirectionsIcons";
+export * from "./MentalHealthIcons";
+export * from "./NavigationInterfaceIcons";
+export * from "./DataVisualizationIcons";
+export * from "./AccessibilityCommunicationIcons";
+export * from "./NotificationStatusIcons";
 
 // Icon presets for common use cases
 export const IconPresets = {
   // Tab bar icons (24px, themed)
   tabBar: {
-    size: 'md',
-    variant: 'outline',
+    size: "md",
+    variant: "outline",
     strokeWidth: 2,
   },
-  
+
   // Header icons (20px, muted)
   header: {
-    size: 'sm',
-    variant: 'outline',
-    colorScheme: 'muted',
+    size: "sm",
+    variant: "outline",
+    colorScheme: "muted",
     strokeWidth: 2,
   },
-  
+
   // Button icons (20px, inherit color)
   button: {
-    size: 'sm',
-    variant: 'outline',
+    size: "sm",
+    variant: "outline",
     strokeWidth: 2,
   },
-  
+
   // Card icons (32px, themed)
   card: {
-    size: 'lg',
-    variant: 'filled',
+    size: "lg",
+    variant: "filled",
     strokeWidth: 1.5,
   },
-  
+
   // Feature icons (48px, therapeutic colors)
   feature: {
-    size: '2xl',
-    variant: 'outline',
-    colorScheme: 'calming',
+    size: "2xl",
+    variant: "outline",
+    colorScheme: "calming",
     strokeWidth: 1.5,
   },
-  
+
   // Status icons (16px, semantic colors)
   status: {
-    size: 'xs',
-    variant: 'filled',
+    size: "xs",
+    variant: "filled",
     strokeWidth: 2,
   },
 };
 
 // Utility functions for icon management
-export const getIconColor = (theme, colorScheme = 'default') => {
+export const getIconColor = (theme, colorScheme = "default") => {
   const colorMap = {
     default: theme.colors.text.primary,
     primary: theme.colors.primary[500],
@@ -92,7 +88,7 @@ export const getIconColor = (theme, colorScheme = 'default') => {
     grounding: theme.colors.therapeutic.grounding[500],
     energizing: theme.colors.therapeutic.energizing[500],
   };
-  
+
   return colorMap[colorScheme] || colorMap.default;
 };
 
@@ -103,10 +99,10 @@ export const getIconSize = (size) => {
     md: 24,
     lg: 32,
     xl: 40,
-    '2xl': 48,
-    '3xl': 56,
-    '4xl': 64,
+    "2xl": 48,
+    "3xl": 56,
+    "4xl": 64,
   };
-  
-  return typeof size === 'number' ? size : sizeMap[size] || sizeMap.md;
+
+  return typeof size === "number" ? size : sizeMap[size] || sizeMap.md;
 };

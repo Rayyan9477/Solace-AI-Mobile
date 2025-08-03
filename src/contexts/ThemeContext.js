@@ -1,12 +1,13 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useColorScheme, AccessibilityInfo } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { 
-  lightTheme, 
-  darkTheme, 
-  highContrastLightTheme, 
-  highContrastDarkTheme 
-} from '../styles/theme';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useColorScheme, AccessibilityInfo } from "react-native";
+
+import {
+  lightTheme,
+  darkTheme,
+  highContrastLightTheme,
+  highContrastDarkTheme,
+} from "../styles/theme";
 
 const ThemeContext = createContext({
   theme: lightTheme,
@@ -15,7 +16,7 @@ const ThemeContext = createContext({
   setTheme: () => {},
   isReducedMotionEnabled: false,
   isHighContrastEnabled: false,
-  fontSize: 'normal',
+  fontSize: "normal",
   setFontSize: () => {},
   fontScale: 1,
   setFontScale: () => {},
@@ -27,18 +28,18 @@ const ThemeContext = createContext({
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
 };
 
 export const ThemeProvider = ({ children }) => {
   const systemColorScheme = useColorScheme();
-  const [isDarkMode, setIsDarkMode] = useState(systemColorScheme === 'dark');
+  const [isDarkMode, setIsDarkMode] = useState(systemColorScheme === "dark");
   const [themeLoaded, setThemeLoaded] = useState(false);
   const [isReducedMotionEnabled, setIsReducedMotionEnabled] = useState(false);
   const [isHighContrastEnabled, setIsHighContrastEnabled] = useState(false);
-  const [fontSize, setFontSize] = useState('normal');
+  const [fontSize, setFontSize] = useState("normal");
   const [fontScale, setFontScale] = useState(1);
   const [isScreenReaderEnabled, setIsScreenReaderEnabled] = useState(false);
   const [accessibilitySettings, setAccessibilitySettings] = useState({});
@@ -47,16 +48,16 @@ export const ThemeProvider = ({ children }) => {
     loadThemePreference();
     checkAccessibilitySettings();
     loadAccessibilityPreferences();
-    
+
     // Listen for accessibility changes
     const reducedMotionSubscription = AccessibilityInfo.addEventListener(
-      'reduceMotionChanged',
-      setIsReducedMotionEnabled
+      "reduceMotionChanged",
+      setIsReducedMotionEnabled,
     );
-    
+
     const screenReaderSubscription = AccessibilityInfo.addEventListener(
-      'screenReaderChanged',
-      setIsScreenReaderEnabled
+      "screenReaderChanged",
+      setIsScreenReaderEnabled,
     );
 
     return () => {
@@ -74,84 +75,92 @@ export const ThemeProvider = ({ children }) => {
       ] = await Promise.all([
         AccessibilityInfo.isReduceMotionEnabled(),
         AccessibilityInfo.isScreenReaderEnabled(),
-        AccessibilityInfo.isInvertColorsEnabled ? AccessibilityInfo.isInvertColorsEnabled() : Promise.resolve(false),
+        AccessibilityInfo.isInvertColorsEnabled
+          ? AccessibilityInfo.isInvertColorsEnabled()
+          : Promise.resolve(false),
       ]);
 
       setIsReducedMotionEnabled(isReduceMotionEnabled);
       setIsScreenReaderEnabled(isScreenReaderEnabled);
       setIsHighContrastEnabled(isHighContrastEnabled);
-      
+
       setAccessibilitySettings({
         isReduceMotionEnabled,
         isScreenReaderEnabled,
         isHighContrastEnabled,
       });
     } catch (error) {
-      console.log('Could not check accessibility settings:', error);
+      console.log("Could not check accessibility settings:", error);
     }
   };
 
   const loadAccessibilityPreferences = async () => {
     try {
       const [savedFontSize, savedFontScale] = await Promise.all([
-        AsyncStorage.getItem('accessibility_font_size'),
-        AsyncStorage.getItem('accessibility_font_scale'),
+        AsyncStorage.getItem("accessibility_font_size"),
+        AsyncStorage.getItem("accessibility_font_scale"),
       ]);
-      
+
       if (savedFontSize) {
         setFontSize(savedFontSize);
       }
-      
+
       if (savedFontScale) {
         setFontScale(parseFloat(savedFontScale));
       }
     } catch (error) {
-      console.error('Error loading accessibility preferences:', error);
+      console.error("Error loading accessibility preferences:", error);
     }
   };
 
   const updateFontSize = async (newFontSize) => {
     setFontSize(newFontSize);
     try {
-      await AsyncStorage.setItem('accessibility_font_size', newFontSize);
+      await AsyncStorage.setItem("accessibility_font_size", newFontSize);
     } catch (error) {
-      console.error('Error saving font size preference:', error);
+      console.error("Error saving font size preference:", error);
     }
   };
 
   const updateFontScale = async (newFontScale) => {
     setFontScale(newFontScale);
     try {
-      await AsyncStorage.setItem('accessibility_font_scale', newFontScale.toString());
+      await AsyncStorage.setItem(
+        "accessibility_font_scale",
+        newFontScale.toString(),
+      );
     } catch (error) {
-      console.error('Error saving font scale preference:', error);
+      console.error("Error saving font scale preference:", error);
     }
   };
 
   const updateAccessibilitySettings = async (newSettings) => {
     setAccessibilitySettings({ ...accessibilitySettings, ...newSettings });
     try {
-      await AsyncStorage.setItem('accessibility_settings', JSON.stringify({
-        ...accessibilitySettings,
-        ...newSettings,
-      }));
+      await AsyncStorage.setItem(
+        "accessibility_settings",
+        JSON.stringify({
+          ...accessibilitySettings,
+          ...newSettings,
+        }),
+      );
     } catch (error) {
-      console.error('Error saving accessibility settings:', error);
+      console.error("Error saving accessibility settings:", error);
     }
   };
 
   const loadThemePreference = async () => {
     try {
-      const savedTheme = await AsyncStorage.getItem('theme_preference');
+      const savedTheme = await AsyncStorage.getItem("theme_preference");
       if (savedTheme !== null) {
-        setIsDarkMode(savedTheme === 'dark');
+        setIsDarkMode(savedTheme === "dark");
       } else {
         // Default to system preference if no saved preference
-        setIsDarkMode(systemColorScheme === 'dark');
+        setIsDarkMode(systemColorScheme === "dark");
       }
       setThemeLoaded(true);
     } catch (error) {
-      console.error('Error loading theme preference:', error);
+      console.error("Error loading theme preference:", error);
       setThemeLoaded(true);
     }
   };
@@ -160,19 +169,22 @@ export const ThemeProvider = ({ children }) => {
     const newTheme = !isDarkMode;
     setIsDarkMode(newTheme);
     try {
-      await AsyncStorage.setItem('theme_preference', newTheme ? 'dark' : 'light');
+      await AsyncStorage.setItem(
+        "theme_preference",
+        newTheme ? "dark" : "light",
+      );
     } catch (error) {
-      console.error('Error saving theme preference:', error);
+      console.error("Error saving theme preference:", error);
     }
   };
 
   const setTheme = async (themeType) => {
-    const newTheme = themeType === 'dark';
+    const newTheme = themeType === "dark";
     setIsDarkMode(newTheme);
     try {
-      await AsyncStorage.setItem('theme_preference', themeType);
+      await AsyncStorage.setItem("theme_preference", themeType);
     } catch (error) {
-      console.error('Error saving theme preference:', error);
+      console.error("Error saving theme preference:", error);
     }
   };
 
@@ -198,10 +210,9 @@ export const ThemeProvider = ({ children }) => {
         typography: {
           ...adjustedTheme.typography,
           sizes: Object.fromEntries(
-            Object.entries(adjustedTheme.typography.sizes).map(([key, value]) => [
-              key,
-              Math.round(value * fontScale),
-            ])
+            Object.entries(adjustedTheme.typography.sizes).map(
+              ([key, value]) => [key, Math.round(value * fontScale)],
+            ),
           ),
         },
       };

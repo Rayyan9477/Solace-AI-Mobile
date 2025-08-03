@@ -1,10 +1,29 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Animated } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../contexts/ThemeContext';
-import { colors, typography, spacing, borderRadius, shadows } from '../../styles/theme';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useRef, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Animated,
+} from "react-native";
 
-const WelcomeHeader = ({ greeting, userName, onProfilePress, onEmergencyPress }) => {
+import { useTheme } from "../../contexts/ThemeContext";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../../styles/theme";
+
+const WelcomeHeader = ({
+  greeting,
+  userName,
+  onProfilePress,
+  onEmergencyPress,
+}) => {
   const { theme } = useTheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(-20)).current;
@@ -26,16 +45,27 @@ const WelcomeHeader = ({ greeting, userName, onProfilePress, onEmergencyPress })
 
   const getTimeBasedEmoji = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return '🌅';
-    if (hour < 17) return '☀️';
-    return '🌙';
+    if (hour < 12) return "🌅";
+    if (hour < 17) return "☀️";
+    return "🌙";
   };
 
   const getTimeBasedGradient = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return [theme.colors.therapeutic.energizing[100], theme.colors.therapeutic.calming[100]];
-    if (hour < 17) return [theme.colors.therapeutic.calming[100], theme.colors.therapeutic.peaceful[100]];
-    return [theme.colors.therapeutic.peaceful[200], theme.colors.therapeutic.grounding[100]];
+    if (hour < 12)
+      return [
+        theme.colors.therapeutic.energizing[100],
+        theme.colors.therapeutic.calming[100],
+      ];
+    if (hour < 17)
+      return [
+        theme.colors.therapeutic.calming[100],
+        theme.colors.therapeutic.peaceful[100],
+      ];
+    return [
+      theme.colors.therapeutic.peaceful[200],
+      theme.colors.therapeutic.grounding[100],
+    ];
   };
 
   return (
@@ -45,13 +75,13 @@ const WelcomeHeader = ({ greeting, userName, onProfilePress, onEmergencyPress })
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      <Animated.View 
+      <Animated.View
         style={[
           styles.mainContent,
           {
             opacity: fadeAnim,
             transform: [{ translateY: slideAnim }],
-          }
+          },
         ]}
       >
         <View style={styles.greetingContainer}>
@@ -67,21 +97,21 @@ const WelcomeHeader = ({ greeting, userName, onProfilePress, onEmergencyPress })
           How are you feeling today?
         </Text>
       </Animated.View>
-      
-      <Animated.View 
+
+      <Animated.View
         style={[
           styles.headerActions,
           {
             opacity: fadeAnim,
             transform: [{ translateY: slideAnim }],
-          }
+          },
         ]}
       >
         <TouchableOpacity
           style={[styles.avatarButton, shadows.sm]}
           onPress={onProfilePress}
           activeOpacity={0.8}
-          accessible={true}
+          accessible
           accessibilityRole="button"
           accessibilityLabel="Profile"
           accessibilityHint="Double tap to view your profile"
@@ -90,17 +120,19 @@ const WelcomeHeader = ({ greeting, userName, onProfilePress, onEmergencyPress })
             colors={[theme.colors.primary[400], theme.colors.primary[600]]}
             style={styles.avatarGradient}
           >
-            <Text style={[styles.avatarText, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[styles.avatarText, { color: theme.colors.text.inverse }]}
+            >
               {userName.charAt(0).toUpperCase()}
             </Text>
           </LinearGradient>
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={[styles.emergencyButton, shadows.sm]}
           onPress={onEmergencyPress}
           activeOpacity={0.8}
-          accessible={true}
+          accessible
           accessibilityRole="button"
           accessibilityLabel="Emergency Help"
           accessibilityHint="Double tap to access emergency support"
@@ -119,8 +151,8 @@ const WelcomeHeader = ({ greeting, userName, onProfilePress, onEmergencyPress })
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     paddingHorizontal: spacing[5],
     paddingTop: spacing[12],
     paddingBottom: spacing[6],
@@ -130,8 +162,8 @@ const styles = StyleSheet.create({
     paddingRight: spacing[4],
   },
   greetingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: spacing[1],
   },
   timeEmoji: {
@@ -144,9 +176,9 @@ const styles = StyleSheet.create({
     lineHeight: typography.lineHeights.base,
   },
   userName: {
-    fontSize: typography.sizes['3xl'],
+    fontSize: typography.sizes["3xl"],
     fontWeight: typography.weights.bold,
-    lineHeight: typography.lineHeights['3xl'],
+    lineHeight: typography.lineHeights["3xl"],
     marginBottom: spacing[2],
   },
   subtitle: {
@@ -156,20 +188,20 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   headerActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacing[2],
   },
   avatarButton: {
     borderRadius: borderRadius.full,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   avatarGradient: {
     width: 52,
     height: 52,
     borderRadius: 26,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   avatarText: {
     fontSize: typography.sizes.lg,
@@ -177,14 +209,14 @@ const styles = StyleSheet.create({
   },
   emergencyButton: {
     borderRadius: borderRadius.full,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   emergencyGradient: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   emergencyText: {
     fontSize: typography.sizes.sm,

@@ -1,9 +1,22 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MentalHealthIcon } from '../icons';
-import { colors, typography, spacing, borderRadius, shadows } from '../../styles/theme';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useRef, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+} from "react-native";
+
+import { useTheme } from "../../contexts/ThemeContext";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../../styles/theme";
+import { MentalHealthIcon } from "../icons";
 
 const MoodCheckIn = ({ currentMood, onCheckIn }) => {
   const { theme } = useTheme();
@@ -11,16 +24,16 @@ const MoodCheckIn = ({ currentMood, onCheckIn }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const moodEmojis = {
-    happy: '😊',
-    calm: '😌',
-    anxious: '😰',
-    sad: '😢',
-    angry: '😠',
-    neutral: '😐',
-    excited: '🤩',
-    tired: '😴',
-    stressed: '😤',
-    content: '😊',
+    happy: "😊",
+    calm: "😌",
+    anxious: "😰",
+    sad: "😢",
+    angry: "😠",
+    neutral: "😐",
+    excited: "🤩",
+    tired: "😴",
+    stressed: "😤",
+    content: "😊",
   };
 
   const moodColors = {
@@ -57,9 +70,9 @@ const MoodCheckIn = ({ currentMood, onCheckIn }) => {
           duration: 2000,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     );
-    
+
     if (!currentMood) {
       pulseAnimation.start();
     }
@@ -101,24 +114,43 @@ const MoodCheckIn = ({ currentMood, onCheckIn }) => {
               Daily Mood Check-in
             </Text>
           </View>
-          <Text style={[styles.subtitle, { color: theme.colors.text.secondary }]}>
-            {moodDisplay ? 'Update your mood' : 'How are you feeling right now?'}
+          <Text
+            style={[styles.subtitle, { color: theme.colors.text.secondary }]}
+          >
+            {moodDisplay
+              ? "Update your mood"
+              : "How are you feeling right now?"}
           </Text>
         </View>
 
         {moodDisplay && (
-          <Animated.View style={[styles.currentMoodContainer, { backgroundColor: theme.colors.background.surface }]}>
+          <Animated.View
+            style={[
+              styles.currentMoodContainer,
+              { backgroundColor: theme.colors.background.surface },
+            ]}
+          >
             <LinearGradient
-              colors={[moodDisplay.color, moodDisplay.color + '80']}
+              colors={[moodDisplay.color, moodDisplay.color + "80"]}
               style={styles.currentMoodIndicator}
             >
               <Text style={styles.currentMoodEmoji}>{moodDisplay.emoji}</Text>
             </LinearGradient>
             <View style={styles.currentMoodTextContainer}>
-              <Text style={[styles.currentMoodLabel, { color: theme.colors.text.tertiary }]}>
+              <Text
+                style={[
+                  styles.currentMoodLabel,
+                  { color: theme.colors.text.tertiary },
+                ]}
+              >
                 Currently feeling
               </Text>
-              <Text style={[styles.currentMoodText, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.currentMoodText,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 {moodDisplay.text}
               </Text>
             </View>
@@ -130,19 +162,27 @@ const MoodCheckIn = ({ currentMood, onCheckIn }) => {
             style={styles.checkInButton}
             onPress={onCheckIn}
             activeOpacity={0.8}
-            accessible={true}
+            accessible
             accessibilityRole="button"
-            accessibilityLabel={moodDisplay ? 'Update Mood' : 'Check In Now'}
+            accessibilityLabel={moodDisplay ? "Update Mood" : "Check In Now"}
             accessibilityHint="Double tap to open mood check-in"
           >
             <LinearGradient
-              colors={[theme.colors.therapeutic.calming[500], theme.colors.therapeutic.peaceful[500]]}
+              colors={[
+                theme.colors.therapeutic.calming[500],
+                theme.colors.therapeutic.peaceful[500],
+              ]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               style={styles.buttonGradient}
             >
-              <Text style={[styles.checkInButtonText, { color: theme.colors.text.inverse }]}>
-                {moodDisplay ? 'Update Mood' : 'Check In Now'}
+              <Text
+                style={[
+                  styles.checkInButtonText,
+                  { color: theme.colors.text.inverse },
+                ]}
+              >
+                {moodDisplay ? "Update Mood" : "Check In Now"}
               </Text>
               <Text style={styles.checkInButtonIcon}>✨</Text>
             </LinearGradient>
@@ -166,8 +206,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing[5],
   },
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: spacing[2],
   },
   titleIcon: {
@@ -184,8 +224,8 @@ const styles = StyleSheet.create({
     lineHeight: typography.lineHeights.sm,
   },
   currentMoodContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: spacing[5],
     paddingVertical: spacing[3],
     paddingHorizontal: spacing[4],
@@ -195,8 +235,8 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: spacing[4],
     ...shadows.sm,
   },
@@ -210,7 +250,7 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.xs,
     fontWeight: typography.weights.medium,
     marginBottom: spacing[0.5],
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
     letterSpacing: 0.5,
   },
   currentMoodText: {
@@ -219,13 +259,13 @@ const styles = StyleSheet.create({
   },
   checkInButton: {
     borderRadius: borderRadius.lg,
-    overflow: 'hidden',
+    overflow: "hidden",
     ...shadows.md,
   },
   buttonGradient: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: spacing[4],
     paddingHorizontal: spacing[6],
   },

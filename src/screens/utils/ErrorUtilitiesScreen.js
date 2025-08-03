@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -9,133 +10,135 @@ import {
   Animated,
   SafeAreaView,
   Share,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MentalHealthIcon, NavigationIcon } from '../../components/icons';
+} from "react-native";
+
+import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const ErrorUtilitiesScreen = ({ navigation }) => {
   const { theme } = useTheme();
-  const [selectedTab, setSelectedTab] = useState('help');
+  const [selectedTab, setSelectedTab] = useState("help");
   const [appInfo, setAppInfo] = useState({
-    version: '1.0.0',
-    buildNumber: '1001',
-    lastUpdate: new Date('2024-01-15'),
+    version: "1.0.0",
+    buildNumber: "1001",
+    lastUpdate: new Date("2024-01-15"),
   });
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const helpCategories = [
     {
-      id: 'getting-started',
-      title: 'Getting Started',
-      description: 'Learn the basics of using Solace AI',
-      icon: 'Brain',
+      id: "getting-started",
+      title: "Getting Started",
+      description: "Learn the basics of using Solace AI",
+      icon: "Brain",
       color: theme.colors.therapeutic.calming[500],
       articles: [
-        'How to set up your profile',
-        'Understanding your mental health score',
-        'Using the mood tracker effectively',
-        'Connecting with AI therapy',
+        "How to set up your profile",
+        "Understanding your mental health score",
+        "Using the mood tracker effectively",
+        "Connecting with AI therapy",
       ],
     },
     {
-      id: 'features',
-      title: 'App Features',
-      description: 'Detailed guides for all features',
-      icon: 'Heart',
+      id: "features",
+      title: "App Features",
+      description: "Detailed guides for all features",
+      icon: "Heart",
       color: theme.colors.therapeutic.nurturing[500],
       articles: [
-        'Journaling for mental health',
-        'Mindfulness sessions guide',
-        'Community support features',
-        'Sleep tracking and tips',
+        "Journaling for mental health",
+        "Mindfulness sessions guide",
+        "Community support features",
+        "Sleep tracking and tips",
       ],
     },
     {
-      id: 'privacy',
-      title: 'Privacy & Security',
-      description: 'Your data protection and privacy',
-      icon: 'Therapy',
+      id: "privacy",
+      title: "Privacy & Security",
+      description: "Your data protection and privacy",
+      icon: "Therapy",
       color: theme.colors.therapeutic.grounding[500],
       articles: [
-        'How we protect your data',
-        'Privacy settings explained',
-        'Data sharing policies',
-        'Account security tips',
+        "How we protect your data",
+        "Privacy settings explained",
+        "Data sharing policies",
+        "Account security tips",
       ],
     },
     {
-      id: 'troubleshooting',
-      title: 'Troubleshooting',
-      description: 'Fix common issues and problems',
-      icon: 'Mindfulness',
+      id: "troubleshooting",
+      title: "Troubleshooting",
+      description: "Fix common issues and problems",
+      icon: "Mindfulness",
       color: theme.colors.therapeutic.peaceful[500],
       articles: [
-        'App crashes or freezes',
-        'Login and account issues',
-        'Notification problems',
-        'Sync and backup issues',
+        "App crashes or freezes",
+        "Login and account issues",
+        "Notification problems",
+        "Sync and backup issues",
       ],
     },
   ];
 
   const crisisResources = [
     {
-      name: 'National Suicide Prevention Lifeline',
-      number: '988',
-      description: '24/7 crisis support',
-      type: 'Crisis',
+      name: "National Suicide Prevention Lifeline",
+      number: "988",
+      description: "24/7 crisis support",
+      type: "Crisis",
     },
     {
-      name: 'Crisis Text Line',
-      number: 'Text HOME to 741741',
-      description: 'Text-based crisis support',
-      type: 'Crisis',
+      name: "Crisis Text Line",
+      number: "Text HOME to 741741",
+      description: "Text-based crisis support",
+      type: "Crisis",
     },
     {
-      name: 'NAMI HelpLine',
-      number: '1-800-950-NAMI',
-      description: 'Mental health information and support',
-      type: 'Support',
+      name: "NAMI HelpLine",
+      number: "1-800-950-NAMI",
+      description: "Mental health information and support",
+      type: "Support",
     },
     {
-      name: 'Emergency Services',
-      number: '911',
-      description: 'For immediate medical emergencies',
-      type: 'Emergency',
+      name: "Emergency Services",
+      number: "911",
+      description: "For immediate medical emergencies",
+      type: "Emergency",
     },
   ];
 
   const commonErrors = [
     {
-      id: 'sync-failed',
-      title: 'Data Sync Failed',
-      description: 'Your data couldn\'t sync with the cloud',
-      solution: 'Check your internet connection and try again. If the problem persists, restart the app.',
-      severity: 'warning',
+      id: "sync-failed",
+      title: "Data Sync Failed",
+      description: "Your data couldn't sync with the cloud",
+      solution:
+        "Check your internet connection and try again. If the problem persists, restart the app.",
+      severity: "warning",
     },
     {
-      id: 'login-error',
-      title: 'Login Failed',
-      description: 'Unable to sign in to your account',
-      solution: 'Verify your credentials and internet connection. Reset your password if needed.',
-      severity: 'error',
+      id: "login-error",
+      title: "Login Failed",
+      description: "Unable to sign in to your account",
+      solution:
+        "Verify your credentials and internet connection. Reset your password if needed.",
+      severity: "error",
     },
     {
-      id: 'feature-unavailable',
-      title: 'Feature Temporarily Unavailable',
-      description: 'This feature is under maintenance',
-      solution: 'This feature will be restored shortly. Try again later.',
-      severity: 'info',
+      id: "feature-unavailable",
+      title: "Feature Temporarily Unavailable",
+      description: "This feature is under maintenance",
+      solution: "This feature will be restored shortly. Try again later.",
+      severity: "info",
     },
   ];
 
   const diagnosticInfo = {
-    deviceInfo: 'iPhone 14 Pro, iOS 17.2',
-    appVersion: '1.0.0 (1001)',
+    deviceInfo: "iPhone 14 Pro, iOS 17.2",
+    appVersion: "1.0.0 (1001)",
     lastSync: new Date(Date.now() - 3600000), // 1 hour ago
-    storageUsed: '45.2 MB',
-    activeFeatures: ['Mood Tracking', 'AI Therapy', 'Community'],
+    storageUsed: "45.2 MB",
+    activeFeatures: ["Mood Tracking", "AI Therapy", "Community"],
   };
 
   useEffect(() => {
@@ -148,22 +151,28 @@ const ErrorUtilitiesScreen = ({ navigation }) => {
 
   const handleContactSupport = () => {
     Alert.alert(
-      'Contact Support',
-      'Choose how you\'d like to contact our support team:',
+      "Contact Support",
+      "Choose how you'd like to contact our support team:",
       [
-        { text: 'Email', onPress: () => Alert.alert('Email', 'Opening email client...') },
-        { text: 'In-App Chat', onPress: () => navigation.navigate('SupportChat') },
-        { text: 'Cancel', style: 'cancel' },
-      ]
+        {
+          text: "Email",
+          onPress: () => Alert.alert("Email", "Opening email client..."),
+        },
+        {
+          text: "In-App Chat",
+          onPress: () => navigation.navigate("SupportChat"),
+        },
+        { text: "Cancel", style: "cancel" },
+      ],
     );
   };
 
   const handleSendFeedback = () => {
-    navigation.navigate('FeedbackForm');
+    navigation.navigate("FeedbackForm");
   };
 
   const handleReportBug = () => {
-    navigation.navigate('BugReport');
+    navigation.navigate("BugReport");
   };
 
   const handleShareDiagnostics = async () => {
@@ -175,32 +184,40 @@ Device: ${diagnosticInfo.deviceInfo}
 App Version: ${diagnosticInfo.appVersion}
 Last Sync: ${diagnosticInfo.lastSync.toLocaleString()}
 Storage Used: ${diagnosticInfo.storageUsed}
-Active Features: ${diagnosticInfo.activeFeatures.join(', ')}
+Active Features: ${diagnosticInfo.activeFeatures.join(", ")}
     `;
 
     try {
       await Share.share({
         message: diagnostics,
-        title: 'Solace AI Diagnostics',
+        title: "Solace AI Diagnostics",
       });
     } catch (error) {
-      Alert.alert('Error', 'Failed to share diagnostics');
+      Alert.alert("Error", "Failed to share diagnostics");
     }
   };
 
   const getSeverityColor = (severity) => {
     switch (severity) {
-      case 'error': return theme.colors.error[500];
-      case 'warning': return theme.colors.warning[500];
-      case 'info': return theme.colors.therapeutic.calming[500];
-      default: return theme.colors.gray[500];
+      case "error":
+        return theme.colors.error[500];
+      case "warning":
+        return theme.colors.warning[500];
+      case "info":
+        return theme.colors.therapeutic.calming[500];
+      default:
+        return theme.colors.gray[500];
     }
   };
 
   const renderHelpTab = () => (
-    <ScrollView style={styles.helpContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.helpContainer}
+      showsVerticalScrollIndicator={false}
+    >
       <Text style={[styles.helpIntro, { color: theme.colors.text.primary }]}>
-        Find answers to common questions and learn how to make the most of Solace AI.
+        Find answers to common questions and learn how to make the most of
+        Solace AI.
       </Text>
 
       {helpCategories.map((category, index) => (
@@ -208,18 +225,31 @@ Active Features: ${diagnosticInfo.activeFeatures.join(', ')}
           key={category.id}
           category={category}
           theme={theme}
-          onPress={() => navigation.navigate('HelpCategory', { category })}
+          onPress={() => navigation.navigate("HelpCategory", { category })}
           delay={index * 100}
         />
       ))}
 
-      <View style={[styles.quickActions, { backgroundColor: theme.colors.background.primary }]}>
-        <Text style={[styles.quickActionsTitle, { color: theme.colors.text.primary }]}>
+      <View
+        style={[
+          styles.quickActions,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
+      >
+        <Text
+          style={[
+            styles.quickActionsTitle,
+            { color: theme.colors.text.primary },
+          ]}
+        >
           Need More Help?
         </Text>
-        
+
         <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: theme.colors.therapeutic.calming[500] }]}
+          style={[
+            styles.actionButton,
+            { backgroundColor: theme.colors.therapeutic.calming[500] },
+          ]}
           onPress={handleContactSupport}
         >
           <MentalHealthIcon
@@ -228,13 +258,21 @@ Active Features: ${diagnosticInfo.activeFeatures.join(', ')}
             color={theme.colors.text.inverse}
             variant="filled"
           />
-          <Text style={[styles.actionButtonText, { color: theme.colors.text.inverse }]}>
+          <Text
+            style={[
+              styles.actionButtonText,
+              { color: theme.colors.text.inverse },
+            ]}
+          >
             Contact Support
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: theme.colors.therapeutic.nurturing[500] }]}
+          style={[
+            styles.actionButton,
+            { backgroundColor: theme.colors.therapeutic.nurturing[500] },
+          ]}
           onPress={handleSendFeedback}
         >
           <MentalHealthIcon
@@ -243,7 +281,12 @@ Active Features: ${diagnosticInfo.activeFeatures.join(', ')}
             color={theme.colors.text.inverse}
             variant="filled"
           />
-          <Text style={[styles.actionButtonText, { color: theme.colors.text.inverse }]}>
+          <Text
+            style={[
+              styles.actionButtonText,
+              { color: theme.colors.text.inverse },
+            ]}
+          >
             Send Feedback
           </Text>
         </TouchableOpacity>
@@ -252,9 +295,13 @@ Active Features: ${diagnosticInfo.activeFeatures.join(', ')}
   );
 
   const renderErrorsTab = () => (
-    <ScrollView style={styles.errorsContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.errorsContainer}
+      showsVerticalScrollIndicator={false}
+    >
       <Text style={[styles.errorsIntro, { color: theme.colors.text.primary }]}>
-        Common errors and their solutions. If you're experiencing an issue not listed here, please contact support.
+        Common errors and their solutions. If you're experiencing an issue not
+        listed here, please contact support.
       </Text>
 
       {commonErrors.map((error, index) => (
@@ -266,13 +313,26 @@ Active Features: ${diagnosticInfo.activeFeatures.join(', ')}
         />
       ))}
 
-      <View style={[styles.errorActions, { backgroundColor: theme.colors.background.primary }]}>
-        <Text style={[styles.errorActionsTitle, { color: theme.colors.text.primary }]}>
+      <View
+        style={[
+          styles.errorActions,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
+      >
+        <Text
+          style={[
+            styles.errorActionsTitle,
+            { color: theme.colors.text.primary },
+          ]}
+        >
           Still Having Issues?
         </Text>
-        
+
         <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: theme.colors.error[500] }]}
+          style={[
+            styles.actionButton,
+            { backgroundColor: theme.colors.error[500] },
+          ]}
           onPress={handleReportBug}
         >
           <MentalHealthIcon
@@ -281,13 +341,21 @@ Active Features: ${diagnosticInfo.activeFeatures.join(', ')}
             color={theme.colors.text.inverse}
             variant="filled"
           />
-          <Text style={[styles.actionButtonText, { color: theme.colors.text.inverse }]}>
+          <Text
+            style={[
+              styles.actionButtonText,
+              { color: theme.colors.text.inverse },
+            ]}
+          >
             Report a Bug
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: theme.colors.therapeutic.peaceful[500] }]}
+          style={[
+            styles.actionButton,
+            { backgroundColor: theme.colors.therapeutic.peaceful[500] },
+          ]}
           onPress={handleShareDiagnostics}
         >
           <MentalHealthIcon
@@ -296,7 +364,12 @@ Active Features: ${diagnosticInfo.activeFeatures.join(', ')}
             color={theme.colors.text.inverse}
             variant="filled"
           />
-          <Text style={[styles.actionButtonText, { color: theme.colors.text.inverse }]}>
+          <Text
+            style={[
+              styles.actionButtonText,
+              { color: theme.colors.text.inverse },
+            ]}
+          >
             Share Diagnostics
           </Text>
         </TouchableOpacity>
@@ -305,21 +378,33 @@ Active Features: ${diagnosticInfo.activeFeatures.join(', ')}
   );
 
   const renderCrisisTab = () => (
-    <ScrollView style={styles.crisisContainer} showsVerticalScrollIndicator={false}>
-      <View style={[styles.crisisWarning, { backgroundColor: theme.colors.error[50] }]}>
+    <ScrollView
+      style={styles.crisisContainer}
+      showsVerticalScrollIndicator={false}
+    >
+      <View
+        style={[
+          styles.crisisWarning,
+          { backgroundColor: theme.colors.error[50] },
+        ]}
+      >
         <MentalHealthIcon
           name="Heart"
           size={24}
           color={theme.colors.error[600]}
           variant="filled"
         />
-        <Text style={[styles.crisisWarningText, { color: theme.colors.error[700] }]}>
-          If you're having thoughts of harming yourself or others, please reach out for immediate help.
+        <Text
+          style={[styles.crisisWarningText, { color: theme.colors.error[700] }]}
+        >
+          If you're having thoughts of harming yourself or others, please reach
+          out for immediate help.
         </Text>
       </View>
 
       <Text style={[styles.crisisIntro, { color: theme.colors.text.primary }]}>
-        Crisis resources are available 24/7. Don't hesitate to reach out - you're not alone.
+        Crisis resources are available 24/7. Don't hesitate to reach out -
+        you're not alone.
       </Text>
 
       {crisisResources.map((resource, index) => (
@@ -331,16 +416,29 @@ Active Features: ${diagnosticInfo.activeFeatures.join(', ')}
         />
       ))}
 
-      <View style={[styles.crisisInfo, { backgroundColor: theme.colors.therapeutic.calming[50] }]}>
-        <Text style={[styles.crisisInfoTitle, { color: theme.colors.therapeutic.calming[700] }]}>
+      <View
+        style={[
+          styles.crisisInfo,
+          { backgroundColor: theme.colors.therapeutic.calming[50] },
+        ]}
+      >
+        <Text
+          style={[
+            styles.crisisInfoTitle,
+            { color: theme.colors.therapeutic.calming[700] },
+          ]}
+        >
           Remember
         </Text>
-        <Text style={[styles.crisisInfoText, { color: theme.colors.therapeutic.calming[600] }]}>
-          • You matter and your life has value{'\n'}
-          • Crisis feelings are temporary{'\n'}
-          • Professional help is available{'\n'}
-          • You don't have to face this alone{'\n'}
-          • Recovery and healing are possible
+        <Text
+          style={[
+            styles.crisisInfoText,
+            { color: theme.colors.therapeutic.calming[600] },
+          ]}
+        >
+          • You matter and your life has value{"\n"}• Crisis feelings are
+          temporary{"\n"}• Professional help is available{"\n"}• You don't have
+          to face this alone{"\n"}• Recovery and healing are possible
         </Text>
       </View>
     </ScrollView>
@@ -371,29 +469,32 @@ Active Features: ${diagnosticInfo.activeFeatures.join(', ')}
               variant="outline"
             />
           </TouchableOpacity>
-          
-          <Text style={[styles.headerTitle, { color: theme.colors.text.primary }]}>
+
+          <Text
+            style={[styles.headerTitle, { color: theme.colors.text.primary }]}
+          >
             Help & Support
           </Text>
-          
+
           <View style={styles.placeholder} />
         </View>
 
         {/* Tab Selector */}
         <View style={styles.tabSelector}>
           {[
-            { id: 'help', label: 'Help Center', icon: 'Brain' },
-            { id: 'errors', label: 'Troubleshoot', icon: 'Therapy' },
-            { id: 'crisis', label: 'Crisis Resources', icon: 'Heart' },
+            { id: "help", label: "Help Center", icon: "Brain" },
+            { id: "errors", label: "Troubleshoot", icon: "Therapy" },
+            { id: "crisis", label: "Crisis Resources", icon: "Heart" },
           ].map((tab) => (
             <TouchableOpacity
               key={tab.id}
               style={[
                 styles.tabButton,
                 {
-                  backgroundColor: selectedTab === tab.id
-                    ? theme.colors.therapeutic.calming[500]
-                    : theme.colors.background.secondary,
+                  backgroundColor:
+                    selectedTab === tab.id
+                      ? theme.colors.therapeutic.calming[500]
+                      : theme.colors.background.secondary,
                 },
               ]}
               onPress={() => setSelectedTab(tab.id)}
@@ -401,18 +502,21 @@ Active Features: ${diagnosticInfo.activeFeatures.join(', ')}
               <MentalHealthIcon
                 name={tab.icon}
                 size={16}
-                color={selectedTab === tab.id
-                  ? theme.colors.text.inverse
-                  : theme.colors.text.secondary}
-                variant={selectedTab === tab.id ? 'filled' : 'outline'}
+                color={
+                  selectedTab === tab.id
+                    ? theme.colors.text.inverse
+                    : theme.colors.text.secondary
+                }
+                variant={selectedTab === tab.id ? "filled" : "outline"}
               />
               <Text
                 style={[
                   styles.tabButtonText,
                   {
-                    color: selectedTab === tab.id
-                      ? theme.colors.text.inverse
-                      : theme.colors.text.primary,
+                    color:
+                      selectedTab === tab.id
+                        ? theme.colors.text.inverse
+                        : theme.colors.text.primary,
                   },
                 ]}
               >
@@ -424,9 +528,9 @@ Active Features: ${diagnosticInfo.activeFeatures.join(', ')}
 
         {/* Content */}
         <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
-          {selectedTab === 'help' && renderHelpTab()}
-          {selectedTab === 'errors' && renderErrorsTab()}
-          {selectedTab === 'crisis' && renderCrisisTab()}
+          {selectedTab === "help" && renderHelpTab()}
+          {selectedTab === "errors" && renderErrorsTab()}
+          {selectedTab === "crisis" && renderCrisisTab()}
         </Animated.View>
       </LinearGradient>
     </SafeAreaView>
@@ -448,10 +552,15 @@ const HelpCategoryCard = ({ category, theme, onPress, delay }) => {
   return (
     <Animated.View style={{ opacity: fadeAnim }}>
       <TouchableOpacity
-        style={[styles.helpCard, { backgroundColor: theme.colors.background.primary }]}
+        style={[
+          styles.helpCard,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
         onPress={onPress}
       >
-        <View style={[styles.helpCardIcon, { backgroundColor: category.color }]}>
+        <View
+          style={[styles.helpCardIcon, { backgroundColor: category.color }]}
+        >
           <MentalHealthIcon
             name={category.icon}
             size={24}
@@ -459,19 +568,31 @@ const HelpCategoryCard = ({ category, theme, onPress, delay }) => {
             variant="filled"
           />
         </View>
-        
+
         <View style={styles.helpCardContent}>
-          <Text style={[styles.helpCardTitle, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[styles.helpCardTitle, { color: theme.colors.text.primary }]}
+          >
             {category.title}
           </Text>
-          <Text style={[styles.helpCardDescription, { color: theme.colors.text.secondary }]}>
+          <Text
+            style={[
+              styles.helpCardDescription,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
             {category.description}
           </Text>
-          <Text style={[styles.helpCardArticles, { color: theme.colors.text.tertiary }]}>
+          <Text
+            style={[
+              styles.helpCardArticles,
+              { color: theme.colors.text.tertiary },
+            ]}
+          >
             {category.articles.length} articles
           </Text>
         </View>
-        
+
         <NavigationIcon
           name="Home"
           size={20}
@@ -497,27 +618,64 @@ const ErrorCard = ({ error, theme, delay }) => {
 
   return (
     <Animated.View style={{ opacity: fadeAnim }}>
-      <View style={[styles.errorCard, { backgroundColor: theme.colors.background.primary }]}>
+      <View
+        style={[
+          styles.errorCard,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
+      >
         <View style={styles.errorHeader}>
-          <View style={[styles.errorSeverity, { backgroundColor: getSeverityColor(error.severity) }]}>
-            <Text style={[styles.errorSeverityText, { color: theme.colors.text.inverse }]}>
+          <View
+            style={[
+              styles.errorSeverity,
+              { backgroundColor: getSeverityColor(error.severity) },
+            ]}
+          >
+            <Text
+              style={[
+                styles.errorSeverityText,
+                { color: theme.colors.text.inverse },
+              ]}
+            >
               {error.severity.toUpperCase()}
             </Text>
           </View>
-          <Text style={[styles.errorTitle, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[styles.errorTitle, { color: theme.colors.text.primary }]}
+          >
             {error.title}
           </Text>
         </View>
-        
-        <Text style={[styles.errorDescription, { color: theme.colors.text.secondary }]}>
+
+        <Text
+          style={[
+            styles.errorDescription,
+            { color: theme.colors.text.secondary },
+          ]}
+        >
           {error.description}
         </Text>
-        
-        <View style={[styles.errorSolution, { backgroundColor: theme.colors.therapeutic.calming[50] }]}>
-          <Text style={[styles.errorSolutionTitle, { color: theme.colors.therapeutic.calming[700] }]}>
+
+        <View
+          style={[
+            styles.errorSolution,
+            { backgroundColor: theme.colors.therapeutic.calming[50] },
+          ]}
+        >
+          <Text
+            style={[
+              styles.errorSolutionTitle,
+              { color: theme.colors.therapeutic.calming[700] },
+            ]}
+          >
             Solution:
           </Text>
-          <Text style={[styles.errorSolutionText, { color: theme.colors.therapeutic.calming[600] }]}>
+          <Text
+            style={[
+              styles.errorSolutionText,
+              { color: theme.colors.therapeutic.calming[600] },
+            ]}
+          >
             {error.solution}
           </Text>
         </View>
@@ -540,38 +698,72 @@ const CrisisResourceCard = ({ resource, theme, delay }) => {
 
   const getTypeColor = (type) => {
     switch (type) {
-      case 'Crisis': return theme.colors.error[500];
-      case 'Emergency': return theme.colors.error[600];
-      case 'Support': return theme.colors.therapeutic.nurturing[500];
-      default: return theme.colors.gray[500];
+      case "Crisis":
+        return theme.colors.error[500];
+      case "Emergency":
+        return theme.colors.error[600];
+      case "Support":
+        return theme.colors.therapeutic.nurturing[500];
+      default:
+        return theme.colors.gray[500];
     }
   };
 
   return (
     <Animated.View style={{ opacity: fadeAnim }}>
       <TouchableOpacity
-        style={[styles.crisisCard, { backgroundColor: theme.colors.background.primary }]}
-        onPress={() => Alert.alert('Call', `Call ${resource.number}?`, [
-          { text: 'Cancel', style: 'cancel' },
-          { text: 'Call', onPress: () => Alert.alert('Calling...') },
-        ])}
+        style={[
+          styles.crisisCard,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
+        onPress={() =>
+          Alert.alert("Call", `Call ${resource.number}?`, [
+            { text: "Cancel", style: "cancel" },
+            { text: "Call", onPress: () => Alert.alert("Calling...") },
+          ])
+        }
       >
         <View style={styles.crisisCardHeader}>
-          <Text style={[styles.crisisCardTitle, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[
+              styles.crisisCardTitle,
+              { color: theme.colors.text.primary },
+            ]}
+          >
             {resource.name}
           </Text>
-          <View style={[styles.crisisCardType, { backgroundColor: getTypeColor(resource.type) }]}>
-            <Text style={[styles.crisisCardTypeText, { color: theme.colors.text.inverse }]}>
+          <View
+            style={[
+              styles.crisisCardType,
+              { backgroundColor: getTypeColor(resource.type) },
+            ]}
+          >
+            <Text
+              style={[
+                styles.crisisCardTypeText,
+                { color: theme.colors.text.inverse },
+              ]}
+            >
               {resource.type}
             </Text>
           </View>
         </View>
-        
-        <Text style={[styles.crisisCardNumber, { color: getTypeColor(resource.type) }]}>
+
+        <Text
+          style={[
+            styles.crisisCardNumber,
+            { color: getTypeColor(resource.type) },
+          ]}
+        >
           {resource.number}
         </Text>
-        
-        <Text style={[styles.crisisCardDescription, { color: theme.colors.text.secondary }]}>
+
+        <Text
+          style={[
+            styles.crisisCardDescription,
+            { color: theme.colors.text.secondary },
+          ]}
+        >
           {resource.description}
         </Text>
       </TouchableOpacity>
@@ -582,11 +774,11 @@ const CrisisResourceCard = ({ resource, theme, delay }) => {
 const getSeverityColor = (severity) => {
   // Function would normally use theme, but defining here for simplicity
   const colors = {
-    error: '#EF4444',
-    warning: '#F59E0B',
-    info: '#0EA5E9',
+    error: "#EF4444",
+    warning: "#F59E0B",
+    info: "#0EA5E9",
   };
-  return colors[severity] || '#6B7280';
+  return colors[severity] || "#6B7280";
 };
 
 const styles = StyleSheet.create({
@@ -597,43 +789,43 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
   backButton: {
     width: 44,
     height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   placeholder: {
     width: 44,
   },
   tabSelector: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 20,
     marginBottom: 20,
     gap: 4,
   },
   tabButton: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 10,
     borderRadius: 8,
     gap: 4,
   },
   tabButtonText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   content: {
     flex: 1,
@@ -646,15 +838,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   helpCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -664,8 +856,8 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 16,
   },
   helpCardContent: {
@@ -673,7 +865,7 @@ const styles = StyleSheet.create({
   },
   helpCardTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 4,
   },
   helpCardDescription: {
@@ -688,7 +880,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     marginTop: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -696,14 +888,14 @@ const styles = StyleSheet.create({
   },
   quickActionsTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 12,
     borderRadius: 8,
     marginBottom: 12,
@@ -711,7 +903,7 @@ const styles = StyleSheet.create({
   },
   actionButtonText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   errorsContainer: {
     flex: 1,
@@ -721,21 +913,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   errorCard: {
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
   errorHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 8,
     gap: 12,
   },
@@ -746,11 +938,11 @@ const styles = StyleSheet.create({
   },
   errorSeverityText: {
     fontSize: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   errorTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     flex: 1,
   },
   errorDescription: {
@@ -764,7 +956,7 @@ const styles = StyleSheet.create({
   },
   errorSolutionTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 4,
   },
   errorSolutionText: {
@@ -775,7 +967,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     marginTop: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -783,17 +975,17 @@ const styles = StyleSheet.create({
   },
   errorActionsTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   crisisContainer: {
     flex: 1,
     paddingHorizontal: 20,
   },
   crisisWarning: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderRadius: 12,
     padding: 16,
     marginBottom: 20,
@@ -801,7 +993,7 @@ const styles = StyleSheet.create({
   },
   crisisWarningText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     flex: 1,
     lineHeight: 20,
   },
@@ -809,27 +1001,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   crisisCard: {
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
   crisisCardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   crisisCardTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     flex: 1,
   },
   crisisCardType: {
@@ -839,11 +1031,11 @@ const styles = StyleSheet.create({
   },
   crisisCardTypeText: {
     fontSize: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   crisisCardNumber: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 4,
   },
   crisisCardDescription: {
@@ -857,7 +1049,7 @@ const styles = StyleSheet.create({
   },
   crisisInfoTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
   },
   crisisInfoText: {

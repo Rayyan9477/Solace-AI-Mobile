@@ -1,4 +1,12 @@
-import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import {
   View,
   Text,
@@ -12,24 +20,33 @@ import {
   Dimensions,
   Animated,
   Linking,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { useTheme } from '../contexts/ThemeContext';
-import { MentalHealthIcon, NavigationIcon, ActionIcon } from '../components/icons';
-import { colors, typography, spacing, borderRadius, shadows } from '../styles/theme';
-import { MentalHealthAccessibility } from '../utils/accessibility';
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+
+import DailyInsights from "../components/dashboard/DailyInsights";
+import MoodCheckIn from "../components/dashboard/MoodCheckIn";
+import ProgressOverview from "../components/dashboard/ProgressOverview";
+import QuickActions from "../components/dashboard/QuickActions";
+import RecentActivity from "../components/dashboard/RecentActivity";
+import WelcomeHeader from "../components/dashboard/WelcomeHeader";
+import {
+  MentalHealthIcon,
+  NavigationIcon,
+  ActionIcon,
+} from "../components/icons";
+import { useTheme } from "../contexts/ThemeContext";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../styles/theme";
+import { MentalHealthAccessibility } from "../utils/accessibility";
 
 // Enhanced Components
-import WelcomeHeader from '../components/dashboard/WelcomeHeader';
-import MoodCheckIn from '../components/dashboard/MoodCheckIn';
-import DailyInsights from '../components/dashboard/DailyInsights';
-import QuickActions from '../components/dashboard/QuickActions';
-import ProgressOverview from '../components/dashboard/ProgressOverview';
-import RecentActivity from '../components/dashboard/RecentActivity';
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const MainAppScreen = () => {
   const navigation = useNavigation();
@@ -37,7 +54,7 @@ const MainAppScreen = () => {
   const { theme } = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
-  const [currentSection, setCurrentSection] = useState('dashboard');
+  const [currentSection, setCurrentSection] = useState("dashboard");
 
   // Animation refs
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -66,28 +83,33 @@ const MainAppScreen = () => {
         fadeAnim.setValue(0);
         slideAnim.setValue(20);
       };
-    }, [fadeAnim, slideAnim])
+    }, [fadeAnim, slideAnim]),
   );
 
   // Handle hardware back button on Android
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
+      "hardwareBackPress",
       () => {
         if (navigation.canGoBack()) {
           navigation.goBack();
           return true;
         }
         return false;
-      }
+      },
     );
 
     return () => backHandler.remove();
   }, [navigation]);
-  
-  const { user, mood, chat, loading } = useSelector(state => ({
-    user: state.user || { profile: { name: 'Friend' }, stats: {} },
-    mood: state.mood || { currentMood: null, insights: [], weeklyStats: {}, moodHistory: [] },
+
+  const { user, mood, chat, loading } = useSelector((state) => ({
+    user: state.user || { profile: { name: "Friend" }, stats: {} },
+    mood: state.mood || {
+      currentMood: null,
+      insights: [],
+      weeklyStats: {},
+      moodHistory: [],
+    },
     chat: state.chat || { conversations: [] },
     loading: state.mood?.loading || state.user?.loading || false,
   }));
@@ -96,17 +118,19 @@ const MainAppScreen = () => {
     try {
       setError(null);
       // Simulate data fetching
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     } catch (error) {
-      console.error('Failed to fetch app data:', error);
-      setError('Unable to load app data. Please check your connection and try again.');
+      console.error("Failed to fetch app data:", error);
+      setError(
+        "Unable to load app data. Please check your connection and try again.",
+      );
       Alert.alert(
-        'Data Load Error',
-        'We couldn\'t load your app data. Please check your internet connection and try again.',
+        "Data Load Error",
+        "We couldn't load your app data. Please check your internet connection and try again.",
         [
-          { text: 'Retry', onPress: () => fetchData() },
-          { text: 'OK', style: 'cancel' }
-        ]
+          { text: "Retry", onPress: () => fetchData() },
+          { text: "OK", style: "cancel" },
+        ],
       );
     }
   }, []);
@@ -128,91 +152,102 @@ const MainAppScreen = () => {
   }, [fetchData]);
 
   const handleMoodCheckIn = useCallback(() => {
-    navigation.navigate('Mood');
+    navigation.navigate("Mood");
   }, [navigation]);
 
   const handleStartChat = useCallback(() => {
-    navigation.navigate('Chat');
+    navigation.navigate("Chat");
   }, [navigation]);
 
   const handleTakeAssessment = useCallback(() => {
-    navigation.navigate('Assessment');
+    navigation.navigate("Assessment");
   }, [navigation]);
 
   const handleViewProfile = useCallback(() => {
-    navigation.navigate('Profile');
+    navigation.navigate("Profile");
   }, [navigation]);
 
   const showEmergencyAlert = useCallback(() => {
     Alert.alert(
-      'Emergency Resources',
-      'If you are experiencing a mental health crisis, please contact:\n\n• National Suicide Prevention Lifeline: 988\n• Crisis Text Line: Text HOME to 741741\n• Or call 911 for immediate assistance',
+      "Emergency Resources",
+      "If you are experiencing a mental health crisis, please contact:\n\n• National Suicide Prevention Lifeline: 988\n• Crisis Text Line: Text HOME to 741741\n• Or call 911 for immediate assistance",
       [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Call 988', 
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Call 988",
           onPress: async () => {
             try {
-              const supported = await Linking.canOpenURL('tel:988');
+              const supported = await Linking.canOpenURL("tel:988");
               if (supported) {
-                await Linking.openURL('tel:988');
+                await Linking.openURL("tel:988");
               } else {
                 Alert.alert(
-                  'Unable to Call',
-                  'Your device cannot make phone calls. Please dial 988 manually or contact emergency services.',
-                  [{ text: 'OK' }]
+                  "Unable to Call",
+                  "Your device cannot make phone calls. Please dial 988 manually or contact emergency services.",
+                  [{ text: "OK" }],
                 );
               }
             } catch (error) {
-              console.error('Error making emergency call:', error);
+              console.error("Error making emergency call:", error);
               Alert.alert(
-                'Call Error',
-                'Unable to place call. Please dial 988 manually for immediate assistance.',
-                [{ text: 'OK' }]
+                "Call Error",
+                "Unable to place call. Please dial 988 manually for immediate assistance.",
+                [{ text: "OK" }],
               );
             }
-          }
+          },
         },
-        { 
-          text: 'Text Crisis Line', 
+        {
+          text: "Text Crisis Line",
           onPress: async () => {
             try {
-              const supported = await Linking.canOpenURL('sms:741741');
+              const supported = await Linking.canOpenURL("sms:741741");
               if (supported) {
-                await Linking.openURL('sms:741741?body=HOME');
+                await Linking.openURL("sms:741741?body=HOME");
               } else {
                 Alert.alert(
-                  'Unable to Text',
-                  'Your device cannot send text messages. Please text HOME to 741741 manually.',
-                  [{ text: 'OK' }]
+                  "Unable to Text",
+                  "Your device cannot send text messages. Please text HOME to 741741 manually.",
+                  [{ text: "OK" }],
                 );
               }
             } catch (error) {
-              console.error('Error opening text messaging:', error);
+              console.error("Error opening text messaging:", error);
               Alert.alert(
-                'Text Error',
-                'Unable to open messaging. Please text HOME to 741741 manually.',
-                [{ text: 'OK' }]
+                "Text Error",
+                "Unable to open messaging. Please text HOME to 741741 manually.",
+                [{ text: "OK" }],
               );
             }
-          }
+          },
         },
-      ]
+      ],
     );
   }, []);
 
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
   }, []);
 
   const getTimeBasedGradient = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return [theme.colors.therapeutic.energizing[200], theme.colors.therapeutic.calming[200]];
-    if (hour < 17) return [theme.colors.therapeutic.calming[200], theme.colors.therapeutic.peaceful[200]];
-    return [theme.colors.therapeutic.peaceful[300], theme.colors.therapeutic.grounding[200]];
+    if (hour < 12)
+      return [
+        theme.colors.therapeutic.energizing[200],
+        theme.colors.therapeutic.calming[200],
+      ];
+    if (hour < 17)
+      return [
+        theme.colors.therapeutic.calming[200],
+        theme.colors.therapeutic.peaceful[200],
+      ];
+    return [
+      theme.colors.therapeutic.peaceful[300],
+      theme.colors.therapeutic.grounding[200],
+    ];
   };
 
   // Enhanced floating action button
@@ -223,20 +258,23 @@ const MainAppScreen = () => {
         {
           opacity: fadeAnim,
           transform: [{ scale: fadeAnim }],
-        }
+        },
       ]}
     >
       <TouchableOpacity
         style={styles.fabButton}
         onPress={handleStartChat}
         activeOpacity={0.8}
-        accessible={true}
+        accessible
         accessibilityRole="button"
         accessibilityLabel="Start Chat"
         accessibilityHint="Double tap to start a new therapy session"
       >
         <LinearGradient
-          colors={[theme.colors.therapeutic.calming[500], theme.colors.therapeutic.peaceful[500]]}
+          colors={[
+            theme.colors.therapeutic.calming[500],
+            theme.colors.therapeutic.peaceful[500],
+          ]}
           style={styles.fabGradient}
         >
           <MentalHealthIcon
@@ -254,36 +292,67 @@ const MainAppScreen = () => {
   // Enhanced wellness tips component
   const WellnessTips = () => {
     const tips = [
-      { icon: '🌱', title: 'Mindful Moment', tip: 'Take 3 deep breaths and notice your surroundings' },
-      { icon: '💧', title: 'Stay Hydrated', tip: 'Drink a glass of water to refresh your mind' },
-      { icon: '🚶', title: 'Move Gently', tip: 'Take a short walk or do light stretching' },
-      { icon: '📖', title: 'Gratitude', tip: 'Think of one thing you\'re grateful for today' },
+      {
+        icon: "🌱",
+        title: "Mindful Moment",
+        tip: "Take 3 deep breaths and notice your surroundings",
+      },
+      {
+        icon: "💧",
+        title: "Stay Hydrated",
+        tip: "Drink a glass of water to refresh your mind",
+      },
+      {
+        icon: "🚶",
+        title: "Move Gently",
+        tip: "Take a short walk or do light stretching",
+      },
+      {
+        icon: "📖",
+        title: "Gratitude",
+        tip: "Think of one thing you're grateful for today",
+      },
     ];
 
-    const [currentTip] = useState(tips[Math.floor(Math.random() * tips.length)]);
+    const [currentTip] = useState(
+      tips[Math.floor(Math.random() * tips.length)],
+    );
 
     return (
-      <Animated.View 
+      <Animated.View
         style={[
           styles.wellnessTipContainer,
           {
             opacity: fadeAnim,
             transform: [{ translateY: slideAnim }],
-          }
+          },
         ]}
       >
         <LinearGradient
-          colors={[theme.colors.therapeutic.nurturing[100], theme.colors.therapeutic.nurturing[50]]}
+          colors={[
+            theme.colors.therapeutic.nurturing[100],
+            theme.colors.therapeutic.nurturing[50],
+          ]}
           style={[styles.wellnessTipCard, shadows.md]}
         >
           <View style={styles.wellnessTipIcon}>
             <Text style={styles.wellnessTipEmoji}>{currentTip.icon}</Text>
           </View>
           <View style={styles.wellnessTipContent}>
-            <Text style={[styles.wellnessTipTitle, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.wellnessTipTitle,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               {currentTip.title}
             </Text>
-            <Text style={[styles.wellnessTipText, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[
+                styles.wellnessTipText,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
               {currentTip.tip}
             </Text>
           </View>
@@ -292,17 +361,23 @@ const MainAppScreen = () => {
     );
   };
 
-  const moodHistorySlice = useMemo(() => mood?.moodHistory?.slice(0, 3) || [], [mood.moodHistory]);
-  const chatHistorySlice = useMemo(() => chat?.conversations?.slice(0, 2) || [], [chat.conversations]);
+  const moodHistorySlice = useMemo(
+    () => mood?.moodHistory?.slice(0, 3) || [],
+    [mood.moodHistory],
+  );
+  const chatHistorySlice = useMemo(
+    () => chat?.conversations?.slice(0, 2) || [],
+    [chat.conversations],
+  );
 
   return (
     <View style={styles.container}>
       <StatusBar
         backgroundColor="transparent"
-        translucent={true}
+        translucent
         barStyle={theme.isDark ? "light-content" : "dark-content"}
       />
-      
+
       {/* Background Gradient */}
       <LinearGradient
         colors={getTimeBasedGradient()}
@@ -315,7 +390,7 @@ const MainAppScreen = () => {
           {
             opacity: fadeAnim,
             transform: [{ translateY: slideAnim }],
-          }
+          },
         ]}
       >
         <ScrollView
@@ -338,10 +413,12 @@ const MainAppScreen = () => {
           {/* Enhanced Welcome Header */}
           <WelcomeHeader
             greeting={greeting}
-            userName={user?.profile?.name || 'Friend'}
+            userName={user?.profile?.name || "Friend"}
             onProfilePress={handleViewProfile}
             onEmergencyPress={showEmergencyAlert}
-            {...MentalHealthAccessibility.dashboard.welcomeMessage(user?.profile?.name || 'Friend')}
+            {...MentalHealthAccessibility.dashboard.welcomeMessage(
+              user?.profile?.name || "Friend",
+            )}
           />
 
           {/* Wellness Tip of the Day */}
@@ -391,7 +468,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backgroundGradient: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -411,8 +488,8 @@ const styles = StyleSheet.create({
     marginVertical: spacing[2],
   },
   wellnessTipCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: spacing[4],
     borderRadius: borderRadius.lg,
   },
@@ -420,12 +497,12 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: spacing[3],
   },
   wellnessTipEmoji: {
-    fontSize: typography.sizes['2xl'],
+    fontSize: typography.sizes["2xl"],
   },
   wellnessTipContent: {
     flex: 1,
@@ -443,7 +520,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   fab: {
-    position: 'absolute',
+    position: "absolute",
     right: spacing[5],
     bottom: spacing[8],
   },
@@ -452,17 +529,17 @@ const styles = StyleSheet.create({
     height: 64,
     borderRadius: 32,
     elevation: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
   },
   fabGradient: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     borderRadius: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   bottomSpacing: {
     height: spacing[20],

@@ -1,5 +1,5 @@
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require("fs").promises;
+const path = require("path");
 
 class FigmaComponentAnalyzer {
   constructor() {
@@ -14,15 +14,15 @@ class FigmaComponentAnalyzer {
 
   async analyzeFigmaData() {
     try {
-      console.log('🔍 Analyzing Figma component data...');
-      
-      const figmaDataPath = path.join(__dirname, '..', 'figma-data.json');
-      const rawData = await fs.readFile(figmaDataPath, 'utf8');
+      console.log("🔍 Analyzing Figma component data...");
+
+      const figmaDataPath = path.join(__dirname, "..", "figma-data.json");
+      const rawData = await fs.readFile(figmaDataPath, "utf8");
       const figmaData = JSON.parse(rawData);
-      
+
       // Recursively analyze the document
       await this.analyzeNode(figmaData.document);
-      
+
       // Convert Maps to Objects for JSON serialization
       const tokens = {
         colors: Object.fromEntries(this.designTokens.colors),
@@ -31,29 +31,29 @@ class FigmaComponentAnalyzer {
         borderRadius: Object.fromEntries(this.designTokens.borderRadius),
         shadows: Object.fromEntries(this.designTokens.shadows),
       };
-      
-      console.log('✅ Analysis complete!');
-      console.log('📊 Found tokens:', {
+
+      console.log("✅ Analysis complete!");
+      console.log("📊 Found tokens:", {
         colors: this.designTokens.colors.size,
         typography: this.designTokens.typography.size,
         spacing: this.designTokens.spacing.size,
         borderRadius: this.designTokens.borderRadius.size,
         shadows: this.designTokens.shadows.size,
       });
-      
+
       return tokens;
     } catch (error) {
-      console.error('❌ Error analyzing Figma data:', error);
+      console.error("❌ Error analyzing Figma data:", error);
       throw error;
     }
   }
 
   async analyzeNode(node, depth = 0) {
     if (!node) return;
-    
+
     // Analyze current node
     this.extractDesignTokens(node, depth);
-    
+
     // Recursively analyze children
     if (node.children && Array.isArray(node.children)) {
       for (const child of node.children) {
@@ -63,73 +63,78 @@ class FigmaComponentAnalyzer {
   }
 
   extractDesignTokens(node, depth) {
-    const nodeName = node.name ? node.name.toLowerCase() : '';
-    
+    const nodeName = node.name ? node.name.toLowerCase() : "";
+
     // Extract colors from fills
     if (node.fills && Array.isArray(node.fills)) {
       for (const fill of node.fills) {
-        if (fill.type === 'SOLID' && fill.color) {
+        if (fill.type === "SOLID" && fill.color) {
           const hexColor = this.rgbToHex(fill.color);
           const colorKey = this.generateColorKey(nodeName, hexColor);
           this.designTokens.colors.set(colorKey, hexColor);
         }
       }
     }
-    
+
     // Extract colors from strokes
     if (node.strokes && Array.isArray(node.strokes)) {
       for (const stroke of node.strokes) {
-        if (stroke.type === 'SOLID' && stroke.color) {
+        if (stroke.type === "SOLID" && stroke.color) {
           const hexColor = this.rgbToHex(stroke.color);
-          const colorKey = this.generateColorKey(`${nodeName}_stroke`, hexColor);
+          const colorKey = this.generateColorKey(
+            `${nodeName}_stroke`,
+            hexColor,
+          );
           this.designTokens.colors.set(colorKey, hexColor);
         }
       }
     }
-    
+
     // Extract typography from text nodes
-    if (node.type === 'TEXT' && node.style) {
+    if (node.type === "TEXT" && node.style) {
       const style = node.style;
-      const typographyKey = this.sanitizeTokenName(nodeName || 'text');
-      
+      const typographyKey = this.sanitizeTokenName(nodeName || "text");
+
       this.designTokens.typography.set(typographyKey, {
-        fontFamily: style.fontFamily || 'System',
+        fontFamily: style.fontFamily || "System",
         fontSize: style.fontSize || 16,
         fontWeight: this.convertFontWeight(style.fontWeight),
-        lineHeight: style.lineHeightPx || (style.fontSize * 1.2),
+        lineHeight: style.lineHeightPx || style.fontSize * 1.2,
         letterSpacing: style.letterSpacing || 0,
       });
     }
-    
+
     // Extract border radius
     if (node.cornerRadius && node.cornerRadius > 0) {
       const radiusKey = this.sanitizeTokenName(`${nodeName}_radius`);
       this.designTokens.borderRadius.set(radiusKey, node.cornerRadius);
     }
-    
+
     // Extract spacing from layout properties
     if (node.absoluteBoundingBox) {
       const box = node.absoluteBoundingBox;
-      if (box.width && box.width > 0 && box.width < 200) { // Likely spacing value
+      if (box.width && box.width > 0 && box.width < 200) {
+        // Likely spacing value
         const spacingKey = this.sanitizeTokenName(`${nodeName}_width`);
         this.designTokens.spacing.set(spacingKey, Math.round(box.width));
       }
-      if (box.height && box.height > 0 && box.height < 200) { // Likely spacing value
+      if (box.height && box.height > 0 && box.height < 200) {
+        // Likely spacing value
         const spacingKey = this.sanitizeTokenName(`${nodeName}_height`);
         this.designTokens.spacing.set(spacingKey, Math.round(box.height));
       }
     }
-    
+
     // Extract shadows
     if (node.effects && Array.isArray(node.effects)) {
       for (const effect of node.effects) {
-        if (effect.type === 'DROP_SHADOW') {
+        if (effect.type === "DROP_SHADOW") {
           const shadowKey = this.sanitizeTokenName(`${nodeName}_shadow`);
           this.designTokens.shadows.set(shadowKey, {
             offsetX: effect.offset?.x || 0,
             offsetY: effect.offset?.y || 0,
             blurRadius: effect.radius || 0,
-            color: effect.color ? this.rgbToHex(effect.color) : '#000000',
+            color: effect.color ? this.rgbToHex(effect.color) : "#000000",
             opacity: effect.color?.a || 1,
           });
         }
@@ -140,30 +145,30 @@ class FigmaComponentAnalyzer {
   generateColorKey(nodeName, hexColor) {
     // Try to categorize colors by their usage context
     const lowerName = nodeName.toLowerCase();
-    
-    if (lowerName.includes('primary') || lowerName.includes('main')) {
+
+    if (lowerName.includes("primary") || lowerName.includes("main")) {
       return `primary_${hexColor.slice(1)}`;
-    } else if (lowerName.includes('secondary')) {
+    } else if (lowerName.includes("secondary")) {
       return `secondary_${hexColor.slice(1)}`;
-    } else if (lowerName.includes('background') || lowerName.includes('bg')) {
+    } else if (lowerName.includes("background") || lowerName.includes("bg")) {
       return `background_${hexColor.slice(1)}`;
-    } else if (lowerName.includes('text') || lowerName.includes('title')) {
+    } else if (lowerName.includes("text") || lowerName.includes("title")) {
       return `text_${hexColor.slice(1)}`;
-    } else if (lowerName.includes('border')) {
+    } else if (lowerName.includes("border")) {
       return `border_${hexColor.slice(1)}`;
-    } else if (lowerName.includes('blue')) {
+    } else if (lowerName.includes("blue")) {
       return `blue_${hexColor.slice(1)}`;
-    } else if (lowerName.includes('teal') || lowerName.includes('cyan')) {
+    } else if (lowerName.includes("teal") || lowerName.includes("cyan")) {
       return `teal_${hexColor.slice(1)}`;
-    } else if (lowerName.includes('gray') || lowerName.includes('grey')) {
+    } else if (lowerName.includes("gray") || lowerName.includes("grey")) {
       return `gray_${hexColor.slice(1)}`;
-    } else if (lowerName.includes('red')) {
+    } else if (lowerName.includes("red")) {
       return `red_${hexColor.slice(1)}`;
-    } else if (lowerName.includes('green')) {
+    } else if (lowerName.includes("green")) {
       return `green_${hexColor.slice(1)}`;
-    } else if (lowerName.includes('orange')) {
+    } else if (lowerName.includes("orange")) {
       return `orange_${hexColor.slice(1)}`;
-    } else if (lowerName.includes('purple')) {
+    } else if (lowerName.includes("purple")) {
       return `purple_${hexColor.slice(1)}`;
     } else {
       return `color_${hexColor.slice(1)}`;
@@ -173,46 +178,46 @@ class FigmaComponentAnalyzer {
   sanitizeTokenName(name) {
     return name
       .toLowerCase()
-      .replace(/[^a-z0-9]/g, '_')
-      .replace(/_+/g, '_')
-      .replace(/^_|_$/g, '');
+      .replace(/[^a-z0-9]/g, "_")
+      .replace(/_+/g, "_")
+      .replace(/^_|_$/g, "");
   }
 
   rgbToHex(rgb) {
     const r = Math.round(rgb.r * 255);
     const g = Math.round(rgb.g * 255);
     const b = Math.round(rgb.b * 255);
-    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`.toUpperCase();
+    return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`.toUpperCase();
   }
 
   convertFontWeight(figmaWeight) {
     const weightMap = {
-      100: '100',
-      200: '200', 
-      300: '300',
-      400: '400',
-      500: '500',
-      600: '600',
-      700: '700',
-      800: '800',
-      900: '900',
-      'Thin': '100',
-      'Extra Light': '200',
-      'Light': '300',
-      'Regular': '400',
-      'Medium': '500',
-      'Semi Bold': '600',
-      'Bold': '700',
-      'Extra Bold': '800',
-      'Black': '900',
+      100: "100",
+      200: "200",
+      300: "300",
+      400: "400",
+      500: "500",
+      600: "600",
+      700: "700",
+      800: "800",
+      900: "900",
+      Thin: "100",
+      "Extra Light": "200",
+      Light: "300",
+      Regular: "400",
+      Medium: "500",
+      "Semi Bold": "600",
+      Bold: "700",
+      "Extra Bold": "800",
+      Black: "900",
     };
-    
-    return weightMap[figmaWeight] || '400';
+
+    return weightMap[figmaWeight] || "400";
   }
 
   async generateFinalTheme(tokens) {
-    console.log('📝 Generating final integrated theme...');
-    
+    console.log("📝 Generating final integrated theme...");
+
     // Create a comprehensive theme that merges Figma tokens with our existing theme
     const themeContent = `// Final Figma Integration for Solace AI Mobile
 // Generated: ${new Date().toISOString()}
@@ -396,36 +401,36 @@ export default integratedTheme;
 `;
 
     await fs.writeFile(
-      path.join(__dirname, '..', 'src', 'styles', 'figmaIntegratedTheme.js'),
+      path.join(__dirname, "..", "src", "styles", "figmaIntegratedTheme.js"),
       themeContent,
-      'utf8'
+      "utf8",
     );
 
-    console.log('✅ Final integrated theme generated successfully');
+    console.log("✅ Final integrated theme generated successfully");
   }
 
   async integrate() {
     try {
-      console.log('🚀 Starting comprehensive Figma component analysis...');
-      
+      console.log("🚀 Starting comprehensive Figma component analysis...");
+
       // 1. Analyze all components and extract tokens
       const tokens = await this.analyzeFigmaData();
-      
+
       // 2. Generate final integrated theme
       await this.generateFinalTheme(tokens);
-      
+
       // 3. Save analysis results
       await fs.writeFile(
-        path.join(__dirname, '..', 'figma-analysis.json'),
+        path.join(__dirname, "..", "figma-analysis.json"),
         JSON.stringify(tokens, null, 2),
-        'utf8'
+        "utf8",
       );
-      
-      console.log('🎉 Figma component analysis completed successfully!');
-      
+
+      console.log("🎉 Figma component analysis completed successfully!");
+
       return tokens;
     } catch (error) {
-      console.error('💥 Figma component analysis failed:', error);
+      console.error("💥 Figma component analysis failed:", error);
       throw error;
     }
   }

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -11,15 +12,15 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MentalHealthIcon, NavigationIcon } from '../../components/icons';
+} from "react-native";
+
+import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const JournalScreen = ({ navigation }) => {
   const { theme } = useTheme();
-  const [selectedTab, setSelectedTab] = useState('write');
-  const [journalText, setJournalText] = useState('');
+  const [selectedTab, setSelectedTab] = useState("write");
+  const [journalText, setJournalText] = useState("");
   const [mood, setMood] = useState(null);
   const [selectedPrompt, setSelectedPrompt] = useState(null);
   const [entries, setEntries] = useState([]);
@@ -27,73 +28,107 @@ const JournalScreen = ({ navigation }) => {
 
   const journalPrompts = [
     {
-      id: 'gratitude',
-      title: 'Gratitude Practice',
-      prompt: 'What are three things you\'re grateful for today?',
-      icon: 'Heart',
+      id: "gratitude",
+      title: "Gratitude Practice",
+      prompt: "What are three things you're grateful for today?",
+      icon: "Heart",
       color: theme.colors.therapeutic.nurturing[500],
     },
     {
-      id: 'reflection',
-      title: 'Daily Reflection',
-      prompt: 'How did today make you feel, and what did you learn about yourself?',
-      icon: 'Brain',
+      id: "reflection",
+      title: "Daily Reflection",
+      prompt:
+        "How did today make you feel, and what did you learn about yourself?",
+      icon: "Brain",
       color: theme.colors.therapeutic.calming[500],
     },
     {
-      id: 'challenges',
-      title: 'Overcoming Challenges',
-      prompt: 'What challenge did you face today, and how did you handle it?',
-      icon: 'Therapy',
+      id: "challenges",
+      title: "Overcoming Challenges",
+      prompt: "What challenge did you face today, and how did you handle it?",
+      icon: "Therapy",
       color: theme.colors.therapeutic.peaceful[500],
     },
     {
-      id: 'future',
-      title: 'Future Focus',
-      prompt: 'What are you looking forward to, and what steps will you take to get there?',
-      icon: 'Mindfulness',
+      id: "future",
+      title: "Future Focus",
+      prompt:
+        "What are you looking forward to, and what steps will you take to get there?",
+      icon: "Mindfulness",
       color: theme.colors.therapeutic.grounding[500],
     },
     {
-      id: 'emotions',
-      title: 'Emotional Check-in',
-      prompt: 'What emotions did you experience today? What triggered them?',
-      icon: 'Journal',
+      id: "emotions",
+      title: "Emotional Check-in",
+      prompt: "What emotions did you experience today? What triggered them?",
+      icon: "Journal",
       color: theme.colors.therapeutic.energizing[500],
     },
   ];
 
   const moods = [
-    { emoji: '😊', label: 'Happy', value: 'happy', color: theme.colors.therapeutic.nurturing[400] },
-    { emoji: '😌', label: 'Calm', value: 'calm', color: theme.colors.therapeutic.peaceful[400] },
-    { emoji: '😐', label: 'Neutral', value: 'neutral', color: theme.colors.gray[400] },
-    { emoji: '😔', label: 'Sad', value: 'sad', color: theme.colors.therapeutic.calming[400] },
-    { emoji: '😰', label: 'Anxious', value: 'anxious', color: theme.colors.warning[400] },
-    { emoji: '😤', label: 'Frustrated', value: 'frustrated', color: theme.colors.error[400] },
+    {
+      emoji: "😊",
+      label: "Happy",
+      value: "happy",
+      color: theme.colors.therapeutic.nurturing[400],
+    },
+    {
+      emoji: "😌",
+      label: "Calm",
+      value: "calm",
+      color: theme.colors.therapeutic.peaceful[400],
+    },
+    {
+      emoji: "😐",
+      label: "Neutral",
+      value: "neutral",
+      color: theme.colors.gray[400],
+    },
+    {
+      emoji: "😔",
+      label: "Sad",
+      value: "sad",
+      color: theme.colors.therapeutic.calming[400],
+    },
+    {
+      emoji: "😰",
+      label: "Anxious",
+      value: "anxious",
+      color: theme.colors.warning[400],
+    },
+    {
+      emoji: "😤",
+      label: "Frustrated",
+      value: "frustrated",
+      color: theme.colors.error[400],
+    },
   ];
 
   const mockEntries = [
     {
-      id: '1',
+      id: "1",
       date: new Date(Date.now() - 86400000),
-      mood: 'happy',
-      prompt: 'Daily Reflection',
-      content: 'Today was a good day. I managed to complete all my tasks and felt productive. The morning walk really helped set a positive tone.',
-      tags: ['productive', 'exercise', 'positive'],
+      mood: "happy",
+      prompt: "Daily Reflection",
+      content:
+        "Today was a good day. I managed to complete all my tasks and felt productive. The morning walk really helped set a positive tone.",
+      tags: ["productive", "exercise", "positive"],
     },
     {
-      id: '2',
+      id: "2",
       date: new Date(Date.now() - 172800000),
-      mood: 'calm',
-      prompt: 'Gratitude Practice',
-      content: 'I\'m grateful for my family\'s support, the beautiful weather, and having a job I enjoy. Sometimes it\'s the simple things that matter most.',
-      tags: ['gratitude', 'family', 'nature'],
+      mood: "calm",
+      prompt: "Gratitude Practice",
+      content:
+        "I'm grateful for my family's support, the beautiful weather, and having a job I enjoy. Sometimes it's the simple things that matter most.",
+      tags: ["gratitude", "family", "nature"],
     },
   ];
 
   useEffect(() => {
     setEntries(mockEntries);
-    
+
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
@@ -103,65 +138,78 @@ const JournalScreen = ({ navigation }) => {
 
   const handleSaveEntry = () => {
     if (!journalText.trim()) {
-      Alert.alert('Entry Required', 'Please write something before saving your journal entry.');
+      Alert.alert(
+        "Entry Required",
+        "Please write something before saving your journal entry.",
+      );
       return;
     }
 
     const newEntry = {
       id: Date.now().toString(),
       date: new Date(),
-      mood: mood,
-      prompt: selectedPrompt?.title || 'Free Writing',
+      mood,
+      prompt: selectedPrompt?.title || "Free Writing",
       content: journalText,
       tags: [],
     };
 
-    setEntries(prev => [newEntry, ...prev]);
-    setJournalText('');
+    setEntries((prev) => [newEntry, ...prev]);
+    setJournalText("");
     setMood(null);
     setSelectedPrompt(null);
 
     Alert.alert(
-      'Entry Saved!',
-      'Your journal entry has been saved successfully.',
-      [{ text: 'OK' }]
+      "Entry Saved!",
+      "Your journal entry has been saved successfully.",
+      [{ text: "OK" }],
     );
   };
 
   const formatDate = (date) => {
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const getMoodEmoji = (moodValue) => {
-    const moodObj = moods.find(m => m.value === moodValue);
-    return moodObj ? moodObj.emoji : '😐';
+    const moodObj = moods.find((m) => m.value === moodValue);
+    return moodObj ? moodObj.emoji : "😐";
   };
 
   const renderWriteTab = () => (
     <KeyboardAvoidingView
       style={styles.writeContainer}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <ScrollView style={styles.writeContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.writeContent}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Prompt Selection */}
         <View style={styles.promptSection}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+          >
             Choose a prompt (optional)
           </Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.promptsScroll}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.promptsScroll}
+          >
             {journalPrompts.map((prompt) => (
               <TouchableOpacity
                 key={prompt.id}
                 style={[
                   styles.promptCard,
                   {
-                    backgroundColor: selectedPrompt?.id === prompt.id
-                      ? prompt.color
-                      : theme.colors.background.secondary,
+                    backgroundColor:
+                      selectedPrompt?.id === prompt.id
+                        ? prompt.color
+                        : theme.colors.background.secondary,
                   },
                 ]}
                 onPress={() => setSelectedPrompt(prompt)}
@@ -169,18 +217,21 @@ const JournalScreen = ({ navigation }) => {
                 <MentalHealthIcon
                   name={prompt.icon}
                   size={20}
-                  color={selectedPrompt?.id === prompt.id
-                    ? theme.colors.text.inverse
-                    : prompt.color}
+                  color={
+                    selectedPrompt?.id === prompt.id
+                      ? theme.colors.text.inverse
+                      : prompt.color
+                  }
                   variant="filled"
                 />
                 <Text
                   style={[
                     styles.promptTitle,
                     {
-                      color: selectedPrompt?.id === prompt.id
-                        ? theme.colors.text.inverse
-                        : theme.colors.text.primary,
+                      color:
+                        selectedPrompt?.id === prompt.id
+                          ? theme.colors.text.inverse
+                          : theme.colors.text.primary,
                     },
                   ]}
                 >
@@ -189,10 +240,17 @@ const JournalScreen = ({ navigation }) => {
               </TouchableOpacity>
             ))}
           </ScrollView>
-          
+
           {selectedPrompt && (
-            <View style={[styles.selectedPrompt, { backgroundColor: `${selectedPrompt.color}20` }]}>
-              <Text style={[styles.promptQuestion, { color: selectedPrompt.color }]}>
+            <View
+              style={[
+                styles.selectedPrompt,
+                { backgroundColor: `${selectedPrompt.color}20` },
+              ]}
+            >
+              <Text
+                style={[styles.promptQuestion, { color: selectedPrompt.color }]}
+              >
                 {selectedPrompt.prompt}
               </Text>
             </View>
@@ -201,7 +259,9 @@ const JournalScreen = ({ navigation }) => {
 
         {/* Mood Selection */}
         <View style={styles.moodSection}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+          >
             How are you feeling?
           </Text>
           <View style={styles.moodsContainer}>
@@ -211,9 +271,10 @@ const JournalScreen = ({ navigation }) => {
                 style={[
                   styles.moodButton,
                   {
-                    backgroundColor: mood === moodOption.value
-                      ? moodOption.color
-                      : theme.colors.background.secondary,
+                    backgroundColor:
+                      mood === moodOption.value
+                        ? moodOption.color
+                        : theme.colors.background.secondary,
                   },
                 ]}
                 onPress={() => setMood(moodOption.value)}
@@ -223,9 +284,10 @@ const JournalScreen = ({ navigation }) => {
                   style={[
                     styles.moodLabel,
                     {
-                      color: mood === moodOption.value
-                        ? theme.colors.text.inverse
-                        : theme.colors.text.secondary,
+                      color:
+                        mood === moodOption.value
+                          ? theme.colors.text.inverse
+                          : theme.colors.text.secondary,
                     },
                   ]}
                 >
@@ -238,7 +300,9 @@ const JournalScreen = ({ navigation }) => {
 
         {/* Journal Text Input */}
         <View style={styles.textInputSection}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+          >
             Your thoughts
           </Text>
           <TextInput
@@ -280,7 +344,12 @@ const JournalScreen = ({ navigation }) => {
             color={theme.colors.text.inverse}
             variant="filled"
           />
-          <Text style={[styles.saveButtonText, { color: theme.colors.text.inverse }]}>
+          <Text
+            style={[
+              styles.saveButtonText,
+              { color: theme.colors.text.inverse },
+            ]}
+          >
             Save Entry
           </Text>
         </TouchableOpacity>
@@ -289,7 +358,10 @@ const JournalScreen = ({ navigation }) => {
   );
 
   const renderEntriesTab = () => (
-    <ScrollView style={styles.entriesContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.entriesContainer}
+      showsVerticalScrollIndicator={false}
+    >
       {entries.length === 0 ? (
         <View style={styles.emptyState}>
           <MentalHealthIcon
@@ -298,17 +370,36 @@ const JournalScreen = ({ navigation }) => {
             color={theme.colors.gray[400]}
             variant="outline"
           />
-          <Text style={[styles.emptyStateTitle, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[
+              styles.emptyStateTitle,
+              { color: theme.colors.text.primary },
+            ]}
+          >
             No entries yet
           </Text>
-          <Text style={[styles.emptyStateText, { color: theme.colors.text.secondary }]}>
-            Start writing your first journal entry to track your mental health journey.
+          <Text
+            style={[
+              styles.emptyStateText,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
+            Start writing your first journal entry to track your mental health
+            journey.
           </Text>
           <TouchableOpacity
-            style={[styles.startWritingButton, { backgroundColor: theme.colors.therapeutic.calming[500] }]}
-            onPress={() => setSelectedTab('write')}
+            style={[
+              styles.startWritingButton,
+              { backgroundColor: theme.colors.therapeutic.calming[500] },
+            ]}
+            onPress={() => setSelectedTab("write")}
           >
-            <Text style={[styles.startWritingText, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[
+                styles.startWritingText,
+                { color: theme.colors.text.inverse },
+              ]}
+            >
               Start Writing
             </Text>
           </TouchableOpacity>
@@ -320,7 +411,7 @@ const JournalScreen = ({ navigation }) => {
               key={entry.id}
               entry={entry}
               theme={theme}
-              onPress={() => navigation.navigate('JournalEntry', { entry })}
+              onPress={() => navigation.navigate("JournalEntry", { entry })}
             />
           ))}
         </View>
@@ -353,14 +444,18 @@ const JournalScreen = ({ navigation }) => {
               variant="outline"
             />
           </TouchableOpacity>
-          
-          <Text style={[styles.headerTitle, { color: theme.colors.text.primary }]}>
+
+          <Text
+            style={[styles.headerTitle, { color: theme.colors.text.primary }]}
+          >
             Mental Health Journal
           </Text>
-          
+
           <TouchableOpacity
             style={styles.helpButton}
-            onPress={() => {/* Show journal tips */}}
+            onPress={() => {
+              /* Show journal tips */
+            }}
           >
             <NavigationIcon
               name="Home"
@@ -377,45 +472,49 @@ const JournalScreen = ({ navigation }) => {
             style={[
               styles.tabButton,
               {
-                backgroundColor: selectedTab === 'write'
-                  ? theme.colors.therapeutic.calming[500]
-                  : theme.colors.background.secondary,
+                backgroundColor:
+                  selectedTab === "write"
+                    ? theme.colors.therapeutic.calming[500]
+                    : theme.colors.background.secondary,
               },
             ]}
-            onPress={() => setSelectedTab('write')}
+            onPress={() => setSelectedTab("write")}
           >
             <Text
               style={[
                 styles.tabButtonText,
                 {
-                  color: selectedTab === 'write'
-                    ? theme.colors.text.inverse
-                    : theme.colors.text.primary,
+                  color:
+                    selectedTab === "write"
+                      ? theme.colors.text.inverse
+                      : theme.colors.text.primary,
                 },
               ]}
             >
               Write
             </Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={[
               styles.tabButton,
               {
-                backgroundColor: selectedTab === 'entries'
-                  ? theme.colors.therapeutic.calming[500]
-                  : theme.colors.background.secondary,
+                backgroundColor:
+                  selectedTab === "entries"
+                    ? theme.colors.therapeutic.calming[500]
+                    : theme.colors.background.secondary,
               },
             ]}
-            onPress={() => setSelectedTab('entries')}
+            onPress={() => setSelectedTab("entries")}
           >
             <Text
               style={[
                 styles.tabButtonText,
                 {
-                  color: selectedTab === 'entries'
-                    ? theme.colors.text.inverse
-                    : theme.colors.text.primary,
+                  color:
+                    selectedTab === "entries"
+                      ? theme.colors.text.inverse
+                      : theme.colors.text.primary,
                 },
               ]}
             >
@@ -426,7 +525,7 @@ const JournalScreen = ({ navigation }) => {
 
         {/* Content */}
         <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
-          {selectedTab === 'write' ? renderWriteTab() : renderEntriesTab()}
+          {selectedTab === "write" ? renderWriteTab() : renderEntriesTab()}
         </Animated.View>
       </LinearGradient>
     </SafeAreaView>
@@ -435,7 +534,10 @@ const JournalScreen = ({ navigation }) => {
 
 const JournalEntryCard = ({ entry, theme, onPress }) => (
   <TouchableOpacity
-    style={[styles.entryCard, { backgroundColor: theme.colors.background.primary }]}
+    style={[
+      styles.entryCard,
+      { backgroundColor: theme.colors.background.primary },
+    ]}
     onPress={onPress}
   >
     <View style={styles.entryHeader}>
@@ -445,26 +547,36 @@ const JournalEntryCard = ({ entry, theme, onPress }) => (
         </Text>
         <Text style={styles.entryMood}>{getMoodEmoji(entry.mood)}</Text>
       </View>
-      <Text style={[styles.entryPrompt, { color: theme.colors.text.secondary }]}>
+      <Text
+        style={[styles.entryPrompt, { color: theme.colors.text.secondary }]}
+      >
         {entry.prompt}
       </Text>
     </View>
-    
+
     <Text
       style={[styles.entryPreview, { color: theme.colors.text.secondary }]}
       numberOfLines={3}
     >
       {entry.content}
     </Text>
-    
+
     {entry.tags && entry.tags.length > 0 && (
       <View style={styles.entryTags}>
         {entry.tags.slice(0, 3).map((tag, index) => (
           <View
             key={index}
-            style={[styles.entryTag, { backgroundColor: theme.colors.therapeutic.calming[100] }]}
+            style={[
+              styles.entryTag,
+              { backgroundColor: theme.colors.therapeutic.calming[100] },
+            ]}
           >
-            <Text style={[styles.entryTagText, { color: theme.colors.therapeutic.calming[700] }]}>
+            <Text
+              style={[
+                styles.entryTagText,
+                { color: theme.colors.therapeutic.calming[700] },
+              ]}
+            >
               {tag}
             </Text>
           </View>
@@ -475,24 +587,24 @@ const JournalEntryCard = ({ entry, theme, onPress }) => (
 );
 
 const formatDate = (date) => {
-  return date.toLocaleDateString('en-US', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
+  return date.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
   });
 };
 
 const getMoodEmoji = (moodValue) => {
   const moods = [
-    { value: 'happy', emoji: '😊' },
-    { value: 'calm', emoji: '😌' },
-    { value: 'neutral', emoji: '😐' },
-    { value: 'sad', emoji: '😔' },
-    { value: 'anxious', emoji: '😰' },
-    { value: 'frustrated', emoji: '😤' },
+    { value: "happy", emoji: "😊" },
+    { value: "calm", emoji: "😌" },
+    { value: "neutral", emoji: "😐" },
+    { value: "sad", emoji: "😔" },
+    { value: "anxious", emoji: "😰" },
+    { value: "frustrated", emoji: "😤" },
   ];
-  const moodObj = moods.find(m => m.value === moodValue);
-  return moodObj ? moodObj.emoji : '😐';
+  const moodObj = moods.find((m) => m.value === moodValue);
+  return moodObj ? moodObj.emoji : "😐";
 };
 
 const styles = StyleSheet.create({
@@ -503,30 +615,30 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
   backButton: {
     width: 44,
     height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   helpButton: {
     width: 44,
     height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   tabSelector: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 20,
     marginBottom: 20,
     gap: 8,
@@ -535,11 +647,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   tabButtonText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   content: {
     flex: 1,
@@ -556,7 +668,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 12,
   },
   promptsScroll: {
@@ -566,13 +678,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginRight: 12,
-    alignItems: 'center',
+    alignItems: "center",
     minWidth: 120,
   },
   promptTitle: {
     fontSize: 12,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
     marginTop: 8,
   },
   selectedPrompt: {
@@ -581,22 +693,22 @@ const styles = StyleSheet.create({
   },
   promptQuestion: {
     fontSize: 14,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
   },
   moodSection: {
     marginBottom: 24,
   },
   moodsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
   },
   moodButton: {
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   moodEmoji: {
     fontSize: 20,
@@ -604,7 +716,7 @@ const styles = StyleSheet.create({
   },
   moodLabel: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   textInputSection: {
     marginBottom: 20,
@@ -622,35 +734,35 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   saveButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 16,
     borderRadius: 12,
     gap: 8,
   },
   saveButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   entriesContainer: {
     flex: 1,
     paddingHorizontal: 20,
   },
   emptyState: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 60,
   },
   emptyStateTitle: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
     marginTop: 16,
     marginBottom: 8,
   },
   emptyStateText: {
     fontSize: 14,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 20,
     marginBottom: 24,
   },
@@ -661,7 +773,7 @@ const styles = StyleSheet.create({
   },
   startWritingText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   entriesList: {
     paddingBottom: 20,
@@ -670,33 +782,33 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
   entryHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   entryDateMood: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   entryDate: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   entryMood: {
     fontSize: 16,
   },
   entryPrompt: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   entryPreview: {
     fontSize: 14,
@@ -704,7 +816,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   entryTags: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 6,
   },
   entryTag: {
@@ -714,7 +826,7 @@ const styles = StyleSheet.create({
   },
   entryTagText: {
     fontSize: 10,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 });
 

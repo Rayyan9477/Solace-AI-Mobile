@@ -60,9 +60,9 @@ const VoiceRecorder = ({
       {isRecording && (
         <View style={styles.recordingControls}>
           <TouchableOpacity
-            style={[[
+            style={[
               styles.cancelButton,
-              { backgroundColor: theme.colors.error.main , { minWidth: 44, minHeight: 44 }]}
+              { backgroundColor: theme.colors.error.main, minWidth: 44, minHeight: 44 }
             ]}
             onPress={onCancelRecording}
             accessibilityLabel="Cancel recording"
@@ -94,13 +94,15 @@ const VoiceRecorder = ({
 
       <Animated.View style={{ transform: [{ scale: animatedValue }] }}>
         <TouchableOpacity
-          style={[[
+          style={[
             styles.recordButton,
             {
               backgroundColor: isRecording
                 ? theme.colors.error.main
                 : theme.colors.primary.main,
-            , { minWidth: 44, minHeight: 44 }]},
+              minWidth: 44,
+              minHeight: 44,
+            },
             disabled && styles.disabled,
           ]}
           onPress={handlePress}

@@ -1,8 +1,19 @@
-import React from 'react';
-import { TouchableOpacity, Pressable, StyleSheet, View, Text, Platform } from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
-import { hapticUtils, accessibilityUtils } from '../../utils/platformOptimizations';
-import { PLATFORM_CONFIG } from '../../config/environment';
+import React from "react";
+import {
+  TouchableOpacity,
+  Pressable,
+  StyleSheet,
+  View,
+  Text,
+  Platform,
+} from "react-native";
+
+import { PLATFORM_CONFIG } from "../../config/environment";
+import { useTheme } from "../../contexts/ThemeContext";
+import {
+  hapticUtils,
+  accessibilityUtils,
+} from "../../utils/platformOptimizations";
 
 // Enhanced touchable component with mental health accessibility considerations
 const AccessibleTouchable = ({
@@ -11,33 +22,33 @@ const AccessibleTouchable = ({
   onLongPress,
   disabled = false,
   hapticFeedback = true,
-  hapticType = 'impact',
-  hapticStyle = 'medium',
-  
+  hapticType = "impact",
+  hapticStyle = "medium",
+
   // Accessibility props
   accessibilityLabel,
   accessibilityHint,
-  accessibilityRole = 'button',
+  accessibilityRole = "button",
   accessibilityState,
-  accessibilityContext = 'general', // 'general', 'mood', 'crisis', 'assessment', 'chat'
-  
+  accessibilityContext = "general", // 'general', 'mood', 'crisis', 'assessment', 'chat'
+
   // Mental health specific props
-  crisisLevel = 'normal', // 'normal', 'elevated', 'high', 'crisis'
+  crisisLevel = "normal", // 'normal', 'elevated', 'high', 'crisis'
   supportiveMode = false, // Use gentler feedback and interactions
-  
+
   // Touch target props
   minTouchTarget = true,
   customTouchSize,
-  
+
   // Visual props
   style,
   pressedStyle,
   disabledStyle,
-  
+
   // Advanced interaction props
   delayLongPress = 500,
   pressRetentionOffset = { top: 10, left: 10, right: 10, bottom: 10 },
-  
+
   ...otherProps
 }) => {
   const { theme } = useTheme();
@@ -57,7 +68,7 @@ const AccessibleTouchable = ({
 
     return accessibilityUtils.createMentalHealthAccessibility(
       accessibilityContext,
-      accessibilityLabel || 'Interactive element'
+      accessibilityLabel || "Interactive element",
     );
   };
 
@@ -67,10 +78,10 @@ const AccessibleTouchable = ({
 
     // Provide haptic feedback based on crisis level
     if (hapticFeedback && PLATFORM_CONFIG.features.hapticFeedback) {
-      if (crisisLevel === 'crisis') {
-        hapticUtils.notification('warning');
+      if (crisisLevel === "crisis") {
+        hapticUtils.notification("warning");
       } else if (supportiveMode) {
-        hapticUtils.impact('light'); // Gentler feedback
+        hapticUtils.impact("light"); // Gentler feedback
       } else {
         hapticUtils[hapticType](hapticStyle);
       }
@@ -84,9 +95,9 @@ const AccessibleTouchable = ({
 
     if (hapticFeedback && PLATFORM_CONFIG.features.hapticFeedback) {
       if (supportiveMode) {
-        hapticUtils.impact('medium');
+        hapticUtils.impact("medium");
       } else {
-        hapticUtils.notification('success');
+        hapticUtils.notification("success");
       }
     }
 
@@ -109,19 +120,19 @@ const AccessibleTouchable = ({
   // Get style based on crisis level
   const getCrisisLevelStyle = () => {
     switch (crisisLevel) {
-      case 'elevated':
+      case "elevated":
         return {
           backgroundColor: theme.colors.therapeutic.calming[50],
           borderColor: theme.colors.therapeutic.calming[200],
           borderWidth: 1,
         };
-      case 'high':
+      case "high":
         return {
           backgroundColor: theme.colors.therapeutic.grounding[50],
           borderColor: theme.colors.therapeutic.grounding[300],
           borderWidth: 2,
         };
-      case 'crisis':
+      case "crisis":
         return {
           backgroundColor: theme.colors.error[50],
           borderColor: theme.colors.error[300],
@@ -171,7 +182,7 @@ const AccessibleTouchable = ({
     default: TouchableOpacity,
   });
 
-  if (Platform.OS === 'web') {
+  if (Platform.OS === "web") {
     // Web-specific implementation with Pressable
     return (
       <Pressable
@@ -211,26 +222,34 @@ const AccessibleTouchable = ({
 };
 
 // Specialized touchable components for different mental health contexts
-const MoodSelectorTouchable = ({ mood, selected, onPress, children, ...props }) => (
+const MoodSelectorTouchable = ({
+  mood,
+  selected,
+  onPress,
+  children,
+  ...props
+}) => (
   <AccessibleTouchable
     onPress={onPress}
     accessibilityContext="mood-selector"
     accessibilityLabel={`${mood} mood`}
     accessibilityHint={`Double tap to select ${mood} as your current mood`}
     accessibilityState={{ selected }}
-    supportiveMode={true}
+    supportiveMode
     hapticType="selection"
-    style={[
-      styles.moodSelector,
-      selected && styles.moodSelectorSelected,
-    ]}
+    style={[styles.moodSelector, selected && styles.moodSelectorSelected]}
     {...props}
   >
     {children}
   </AccessibleTouchable>
 );
 
-const CrisisButtonTouchable = ({ onPress, children, level = 'high', ...props }) => (
+const CrisisButtonTouchable = ({
+  onPress,
+  children,
+  level = "high",
+  ...props
+}) => (
   <AccessibleTouchable
     onPress={onPress}
     accessibilityContext="crisis-button"
@@ -239,7 +258,7 @@ const CrisisButtonTouchable = ({ onPress, children, level = 'high', ...props }) 
     crisisLevel={level}
     hapticType="notification"
     hapticStyle="warning"
-    minTouchTarget={true}
+    minTouchTarget
     customTouchSize={56} // Larger for crisis situations
     style={styles.crisisButton}
     {...props}
@@ -248,14 +267,20 @@ const CrisisButtonTouchable = ({ onPress, children, level = 'high', ...props }) 
   </AccessibleTouchable>
 );
 
-const AssessmentOptionTouchable = ({ option, selected, onPress, children, ...props }) => (
+const AssessmentOptionTouchable = ({
+  option,
+  selected,
+  onPress,
+  children,
+  ...props
+}) => (
   <AccessibleTouchable
     onPress={onPress}
     accessibilityContext="assessment-question"
     accessibilityLabel={option}
     accessibilityHint="Double tap to select this response option"
     accessibilityState={{ selected }}
-    supportiveMode={true}
+    supportiveMode
     hapticType="impact"
     hapticStyle="light"
     style={[
@@ -268,15 +293,22 @@ const AssessmentOptionTouchable = ({ option, selected, onPress, children, ...pro
   </AccessibleTouchable>
 );
 
-const ChatMessageTouchable = ({ message, isUser, onPress, onLongPress, children, ...props }) => (
+const ChatMessageTouchable = ({
+  message,
+  isUser,
+  onPress,
+  onLongPress,
+  children,
+  ...props
+}) => (
   <AccessibleTouchable
     onPress={onPress}
     onLongPress={onLongPress}
     accessibilityContext="chat-message"
     accessibilityRole="text"
-    accessibilityLabel={`${isUser ? 'Your' : 'AI therapist'} message: ${message}`}
+    accessibilityLabel={`${isUser ? "Your" : "AI therapist"} message: ${message}`}
     accessibilityHint="Double tap to hear message, long press for options"
-    supportiveMode={true}
+    supportiveMode
     hapticType="impact"
     hapticStyle="light"
     delayLongPress={800} // Longer delay for accidental long presses
@@ -288,20 +320,20 @@ const ChatMessageTouchable = ({ message, isUser, onPress, onLongPress, children,
 );
 
 // Wrapper component for form elements with enhanced accessibility
-const FormFieldTouchable = ({ 
-  label, 
-  required = false, 
-  error, 
-  children, 
-  ...props 
+const FormFieldTouchable = ({
+  label,
+  required = false,
+  error,
+  children,
+  ...props
 }) => {
   const { theme } = useTheme();
-  
+
   return (
     <AccessibleTouchable
-      accessibilityLabel={`${label}${required ? ', required' : ''}${error ? `, error: ${error}` : ''}`}
+      accessibilityLabel={`${label}${required ? ", required" : ""}${error ? `, error: ${error}` : ""}`}
       accessibilityHint="Double tap to interact with this form field"
-      supportiveMode={true}
+      supportiveMode
       hapticType="impact"
       hapticStyle="light"
       style={[
@@ -317,14 +349,14 @@ const FormFieldTouchable = ({
 
 const styles = StyleSheet.create({
   touchable: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   moodSelector: {
     padding: 12,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: "transparent",
     minWidth: 48,
     minHeight: 48,
   },
@@ -334,8 +366,8 @@ const styles = StyleSheet.create({
   crisisButton: {
     padding: 16,
     borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     minWidth: 56,
     minHeight: 56,
   },
@@ -343,7 +375,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'transparent',
+    borderColor: "transparent",
     minWidth: 48,
     minHeight: 48,
   },
@@ -360,17 +392,17 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: 'transparent',
+    borderColor: "transparent",
     minWidth: 48,
     minHeight: 48,
   },
 });
 
 export default AccessibleTouchable;
-export { 
-  MoodSelectorTouchable, 
-  CrisisButtonTouchable, 
-  AssessmentOptionTouchable, 
+export {
+  MoodSelectorTouchable,
+  CrisisButtonTouchable,
+  AssessmentOptionTouchable,
   ChatMessageTouchable,
-  FormFieldTouchable
+  FormFieldTouchable,
 };

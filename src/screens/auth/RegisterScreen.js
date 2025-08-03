@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,28 +12,32 @@ import {
   StatusBar,
   StyleSheet,
   Animated,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useDispatch, useSelector } from 'react-redux';
-import { registerStart, registerSuccess, registerFailure } from '../../store/slices/authSlice';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MentalHealthIcon } from '../../components/icons';
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+
+import { MentalHealthIcon } from "../../components/icons";
+import { useTheme } from "../../contexts/ThemeContext";
+import {
+  registerStart,
+  registerSuccess,
+  registerFailure,
+} from "../../store/slices/authSlice";
 
 const RegisterScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const dispatch = useDispatch();
-  const { isLoading } = useSelector(state => state.auth);
-  
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const { isLoading } = useSelector((state) => state.auth);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
-  
+
   // Animation refs
   const fadeAnim = useState(new Animated.Value(0))[0];
   const slideAnim = useState(new Animated.Value(50))[0];
@@ -59,13 +64,13 @@ const RegisterScreen = ({ navigation }) => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       setIsEmailValid(emailRegex.test(email));
       if (!emailRegex.test(email)) {
-        setEmailError('Invalid Email Address!!!');
+        setEmailError("Invalid Email Address!!!");
       } else {
-        setEmailError('');
+        setEmailError("");
       }
     } else {
       setIsEmailValid(false);
-      setEmailError('');
+      setEmailError("");
     }
   }, [email]);
 
@@ -74,28 +79,28 @@ const RegisterScreen = ({ navigation }) => {
 
     // Email validation
     if (!email) {
-      setEmailError('Email is required');
+      setEmailError("Email is required");
       hasErrors = true;
     } else if (!isEmailValid) {
-      setEmailError('Invalid Email Address!!!');
+      setEmailError("Invalid Email Address!!!");
       hasErrors = true;
     }
 
     // Password validation
     if (!password) {
-      setPasswordError('Password is required');
+      setPasswordError("Password is required");
       hasErrors = true;
     } else if (password.length < 6) {
-      setPasswordError('Password must be at least 6 characters');
+      setPasswordError("Password must be at least 6 characters");
       hasErrors = true;
     }
 
     // Confirm password validation
     if (!confirmPassword) {
-      setConfirmPasswordError('Please confirm your password');
+      setConfirmPasswordError("Please confirm your password");
       hasErrors = true;
     } else if (password !== confirmPassword) {
-      setConfirmPasswordError('Passwords do not match');
+      setConfirmPasswordError("Passwords do not match");
       hasErrors = true;
     }
 
@@ -104,70 +109,65 @@ const RegisterScreen = ({ navigation }) => {
 
   const handleRegister = async () => {
     // Reset errors
-    setEmailError('');
-    setPasswordError('');
-    setConfirmPasswordError('');
+    setEmailError("");
+    setPasswordError("");
+    setConfirmPasswordError("");
 
     if (!validateForm()) return;
 
     try {
       dispatch(registerStart());
-      
+
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       // Mock successful registration
       const mockUser = {
-        id: '1',
-        email: email,
-        name: email.split('@')[0],
+        id: "1",
+        email,
+        name: email.split("@")[0],
         avatar: null,
       };
-      
-      const mockToken = 'mock_jwt_token_' + Date.now();
-      
+
+      const mockToken = "mock_jwt_token_" + Date.now();
+
       dispatch(registerSuccess({ user: mockUser, token: mockToken }));
-      
-      Alert.alert(
-        'Success!',
-        'Account created successfully!',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('MainApp'),
-          },
-        ]
-      );
-      
+
+      Alert.alert("Success!", "Account created successfully!", [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("MainApp"),
+        },
+      ]);
     } catch (error) {
-      dispatch(registerFailure('Registration failed. Please try again.'));
-      Alert.alert('Registration Failed', 'Please try again.');
+      dispatch(registerFailure("Registration failed. Please try again."));
+      Alert.alert("Registration Failed", "Please try again.");
     }
   };
 
   const handleSocialRegister = (provider) => {
     Alert.alert(
-      'Social Registration',
+      "Social Registration",
       `${provider} registration will be implemented soon.`,
-      [{ text: 'OK' }]
+      [{ text: "OK" }],
     );
   };
 
   const handleSignIn = () => {
-    navigation.navigate('Login');
+    navigation.navigate("Login");
   };
 
   return (
     <View style={styles.container}>
-      <StatusBar 
+      <StatusBar
         barStyle="light-content"
         backgroundColor="transparent"
         translucent
       />
-      
+
       {/* Header with gradient */}
       <LinearGradient
-        colors={theme.isDark ? ['#4A5D4A', '#90CDB0'] : ['#90CDB0', '#7FCDCD']}
+        colors={theme.isDark ? ["#4A5D4A", "#90CDB0"] : ["#90CDB0", "#7FCDCD"]}
         style={styles.header}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
@@ -176,42 +176,65 @@ const RegisterScreen = ({ navigation }) => {
           {/* freud.ai Logo */}
           <View style={styles.logoContainer}>
             <View style={styles.logoGrid}>
-              <View style={[styles.logoCircle, { backgroundColor: '#FFFFFF' }]} />
-              <View style={[styles.logoCircle, { backgroundColor: '#FFFFFF' }]} />
-              <View style={[styles.logoCircle, { backgroundColor: '#FFFFFF' }]} />
-              <View style={[styles.logoCircle, { backgroundColor: '#FFFFFF' }]} />
+              <View
+                style={[styles.logoCircle, { backgroundColor: "#FFFFFF" }]}
+              />
+              <View
+                style={[styles.logoCircle, { backgroundColor: "#FFFFFF" }]}
+              />
+              <View
+                style={[styles.logoCircle, { backgroundColor: "#FFFFFF" }]}
+              />
+              <View
+                style={[styles.logoCircle, { backgroundColor: "#FFFFFF" }]}
+              />
             </View>
           </View>
         </View>
       </LinearGradient>
 
       {/* Main Content */}
-      <View style={[styles.content, { backgroundColor: theme.isDark ? '#2D3748' : '#FFFFFF' }]}>
+      <View
+        style={[
+          styles.content,
+          { backgroundColor: theme.isDark ? "#2D3748" : "#FFFFFF" },
+        ]}
+      >
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.keyboardView}
         >
-          <ScrollView 
+          <ScrollView
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
           >
-            <Animated.View 
+            <Animated.View
               style={[
                 styles.formContainer,
                 {
                   opacity: fadeAnim,
                   transform: [{ translateY: slideAnim }],
-                }
+                },
               ]}
             >
               {/* Title */}
-              <Text style={[styles.title, { color: theme.isDark ? '#FFFFFF' : '#2D3748' }]}>
+              <Text
+                style={[
+                  styles.title,
+                  { color: theme.isDark ? "#FFFFFF" : "#2D3748" },
+                ]}
+              >
                 Sign Up For Free
               </Text>
 
               {/* Email Input */}
               <View style={styles.inputContainer}>
-                <Text style={[styles.inputLabel, { color: theme.isDark ? '#E2E8F0' : '#4A5568' }]}>
+                <Text
+                  style={[
+                    styles.inputLabel,
+                    { color: theme.isDark ? "#E2E8F0" : "#4A5568" },
+                  ]}
+                >
                   Email Address
                 </Text>
                 <View style={styles.inputWrapper}>
@@ -222,13 +245,13 @@ const RegisterScreen = ({ navigation }) => {
                     style={[
                       styles.textInput,
                       {
-                        backgroundColor: theme.isDark ? '#4A5568' : '#F7FAFC',
-                        color: theme.isDark ? '#FFFFFF' : '#2D3748',
-                        borderColor: emailError ? '#E53E3E' : 'transparent',
-                      }
+                        backgroundColor: theme.isDark ? "#4A5568" : "#F7FAFC",
+                        color: theme.isDark ? "#FFFFFF" : "#2D3748",
+                        borderColor: emailError ? "#E53E3E" : "transparent",
+                      },
                     ]}
                     placeholder="Enter your email..."
-                    placeholderTextColor={theme.isDark ? '#A0AEC0' : '#718096'}
+                    placeholderTextColor={theme.isDark ? "#A0AEC0" : "#718096"}
                     value={email}
                     onChangeText={setEmail}
                     keyboardType="email-address"
@@ -248,7 +271,12 @@ const RegisterScreen = ({ navigation }) => {
 
               {/* Password Input */}
               <View style={styles.inputContainer}>
-                <Text style={[styles.inputLabel, { color: theme.isDark ? '#E2E8F0' : '#4A5568' }]}>
+                <Text
+                  style={[
+                    styles.inputLabel,
+                    { color: theme.isDark ? "#E2E8F0" : "#4A5568" },
+                  ]}
+                >
                   Password
                 </Text>
                 <View style={styles.inputWrapper}>
@@ -259,13 +287,13 @@ const RegisterScreen = ({ navigation }) => {
                     style={[
                       styles.textInput,
                       {
-                        backgroundColor: theme.isDark ? '#4A5568' : '#F7FAFC',
-                        color: theme.isDark ? '#FFFFFF' : '#2D3748',
-                        borderColor: passwordError ? '#E53E3E' : 'transparent',
-                      }
+                        backgroundColor: theme.isDark ? "#4A5568" : "#F7FAFC",
+                        color: theme.isDark ? "#FFFFFF" : "#2D3748",
+                        borderColor: passwordError ? "#E53E3E" : "transparent",
+                      },
                     ]}
                     placeholder="Enter your password..."
-                    placeholderTextColor={theme.isDark ? '#A0AEC0' : '#718096'}
+                    placeholderTextColor={theme.isDark ? "#A0AEC0" : "#718096"}
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry={!showPassword}
@@ -275,8 +303,10 @@ const RegisterScreen = ({ navigation }) => {
                     style={styles.passwordToggle}
                     onPress={() => setShowPassword(!showPassword)}
                   >
-                    <Text style={[styles.passwordToggleText, { color: '#90CDB0' }]}>
-                      {showPassword ? '👁️' : '👁️‍🗨️'}
+                    <Text
+                      style={[styles.passwordToggleText, { color: "#90CDB0" }]}
+                    >
+                      {showPassword ? "👁️" : "👁️‍🗨️"}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -292,7 +322,12 @@ const RegisterScreen = ({ navigation }) => {
 
               {/* Confirm Password Input */}
               <View style={styles.inputContainer}>
-                <Text style={[styles.inputLabel, { color: theme.isDark ? '#E2E8F0' : '#4A5568' }]}>
+                <Text
+                  style={[
+                    styles.inputLabel,
+                    { color: theme.isDark ? "#E2E8F0" : "#4A5568" },
+                  ]}
+                >
                   Password Confirmation
                 </Text>
                 <View style={styles.inputWrapper}>
@@ -303,13 +338,15 @@ const RegisterScreen = ({ navigation }) => {
                     style={[
                       styles.textInput,
                       {
-                        backgroundColor: theme.isDark ? '#4A5568' : '#F7FAFC',
-                        color: theme.isDark ? '#FFFFFF' : '#2D3748',
-                        borderColor: confirmPasswordError ? '#E53E3E' : 'transparent',
-                      }
+                        backgroundColor: theme.isDark ? "#4A5568" : "#F7FAFC",
+                        color: theme.isDark ? "#FFFFFF" : "#2D3748",
+                        borderColor: confirmPasswordError
+                          ? "#E53E3E"
+                          : "transparent",
+                      },
                     ]}
                     placeholder="Confirm your password..."
-                    placeholderTextColor={theme.isDark ? '#A0AEC0' : '#718096'}
+                    placeholderTextColor={theme.isDark ? "#A0AEC0" : "#718096"}
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}
                     secureTextEntry={!showConfirmPassword}
@@ -319,8 +356,10 @@ const RegisterScreen = ({ navigation }) => {
                     style={styles.passwordToggle}
                     onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
-                    <Text style={[styles.passwordToggleText, { color: '#90CDB0' }]}>
-                      {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                    <Text
+                      style={[styles.passwordToggleText, { color: "#90CDB0" }]}
+                    >
+                      {showConfirmPassword ? "👁️" : "👁️‍🗨️"}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -338,17 +377,17 @@ const RegisterScreen = ({ navigation }) => {
               <TouchableOpacity
                 style={[
                   styles.signUpButton,
-                  { 
-                    backgroundColor: theme.isDark ? '#8B4513' : '#8B4513',
-                    opacity: isLoading ? 0.6 : 1 
-                  }
+                  {
+                    backgroundColor: theme.isDark ? "#8B4513" : "#8B4513",
+                    opacity: isLoading ? 0.6 : 1,
+                  },
                 ]}
                 onPress={handleRegister}
                 disabled={isLoading}
                 activeOpacity={0.8}
               >
                 <Text style={styles.signUpButtonText}>
-                  {isLoading ? 'Creating Account...' : 'Sign Up'} →
+                  {isLoading ? "Creating Account..." : "Sign Up"} →
                 </Text>
               </TouchableOpacity>
 
@@ -358,7 +397,12 @@ const RegisterScreen = ({ navigation }) => {
                 onPress={handleSignIn}
                 activeOpacity={0.8}
               >
-                <Text style={[styles.linkText, { color: theme.isDark ? '#FF8C00' : '#FF8C00' }]}>
+                <Text
+                  style={[
+                    styles.linkText,
+                    { color: theme.isDark ? "#FF8C00" : "#FF8C00" },
+                  ]}
+                >
                   Already have an account? Sign In
                 </Text>
               </TouchableOpacity>
@@ -376,24 +420,24 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
   },
   headerContent: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: 60,
   },
   logoContainer: {
     marginBottom: 10,
   },
   logoGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     width: 44,
     height: 44,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   logoCircle: {
     width: 20,
@@ -419,8 +463,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 32,
   },
   inputContainer: {
@@ -428,16 +472,16 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
   },
   inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'relative',
+    flexDirection: "row",
+    alignItems: "center",
+    position: "relative",
   },
   inputIcon: {
-    position: 'absolute',
+    position: "absolute",
     left: 16,
     zIndex: 1,
   },
@@ -450,7 +494,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   passwordToggle: {
-    position: 'absolute',
+    position: "absolute",
     right: 16,
     padding: 4,
   },
@@ -458,12 +502,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   errorContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 4,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    backgroundColor: '#FED7D7',
+    backgroundColor: "#FED7D7",
     borderRadius: 8,
   },
   errorIcon: {
@@ -473,30 +517,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   errorText: {
-    color: '#E53E3E',
+    color: "#E53E3E",
     fontSize: 12,
     flex: 1,
   },
   signUpButton: {
     height: 56,
     borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 8,
     marginBottom: 24,
   },
   signUpButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   linkButton: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 8,
   },
   linkText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 });
 

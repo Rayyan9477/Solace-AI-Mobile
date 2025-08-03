@@ -596,4 +596,4 @@ const Icon = ({
 };
 
 export default Icon;
-export { MentalHealthIcons, IconVariants, IconSizes };
+export { MentalHealthIcons };

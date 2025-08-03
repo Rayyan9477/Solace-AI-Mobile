@@ -1,7 +1,17 @@
-import React, { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { Animated, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
+import PropTypes from "prop-types";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Animated,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+
+import { useTheme } from "../../contexts/ThemeContext";
 
 const Input = ({
   label,
@@ -14,7 +24,7 @@ const Input = ({
   multiline,
   numberOfLines,
   maxLength,
-  autoCapitalize = 'none',
+  autoCapitalize = "none",
   autoCorrect = false,
   style,
   accessibilityLabel,
@@ -23,8 +33,8 @@ const Input = ({
   rightIcon,
   onLeftIconPress,
   onRightIconPress,
-  variant = 'outlined',
-  size = 'medium',
+  variant = "outlined",
+  size = "medium",
   loading = false,
   disabled = false,
   helperText,
@@ -52,14 +62,14 @@ const Input = ({
 
   const getSizeStyles = () => {
     switch (size) {
-      case 'small':
+      case "small":
         return {
           paddingHorizontal: 12,
           paddingVertical: 8,
           fontSize: 14,
           minHeight: 36,
         };
-      case 'large':
+      case "large":
         return {
           paddingHorizontal: 20,
           paddingVertical: 16,
@@ -83,16 +93,16 @@ const Input = ({
     };
 
     switch (variant) {
-      case 'filled':
+      case "filled":
         return {
           ...baseStyle,
           backgroundColor: theme.colors.background.secondary,
           borderWidth: 0,
         };
-      case 'underlined':
+      case "underlined":
         return {
           ...baseStyle,
-          backgroundColor: 'transparent',
+          backgroundColor: "transparent",
           borderWidth: 0,
           borderBottomWidth: 2,
           borderRadius: 0,
@@ -110,10 +120,12 @@ const Input = ({
   const borderColor = error
     ? theme.colors.error[500]
     : isFocused
-    ? theme.colors.primary[500]
-    : theme.colors.border.primary;
+      ? theme.colors.primary[500]
+      : theme.colors.border.primary;
 
-  const inputAccessibilityLabel = accessibilityLabel || `${label} input field${error ? `. Error: ${error}` : ''}`;
+  const inputAccessibilityLabel =
+    accessibilityLabel ||
+    `${label} input field${error ? `. Error: ${error}` : ""}`;
 
   const handleFocus = (e) => {
     setIsFocused(true);
@@ -126,10 +138,12 @@ const Input = ({
   };
 
   const variantStyles = getVariantStyles();
-  const animatedBorderColor = animated ? animatedFocus.interpolate({
-    inputRange: [0, 1],
-    outputRange: [theme.colors.border.primary, theme.colors.primary[500]],
-  }) : borderColor;
+  const animatedBorderColor = animated
+    ? animatedFocus.interpolate({
+        inputRange: [0, 1],
+        outputRange: [theme.colors.border.primary, theme.colors.primary[500]],
+      })
+    : borderColor;
 
   return (
     <View style={[styles.container, style]}>
@@ -140,26 +154,36 @@ const Input = ({
             {
               color: error
                 ? theme.colors.error[500]
-                : animated ? animatedFocus.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [theme.colors.text.secondary, theme.colors.primary[500]],
-                  })
-                : theme.colors.text.primary,
+                : animated
+                  ? animatedFocus.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [
+                        theme.colors.text.secondary,
+                        theme.colors.primary[500],
+                      ],
+                    })
+                  : theme.colors.text.primary,
             },
           ]}
         >
           {label}
         </Animated.Text>
       )}
-      
-      <Animated.View style={[
-        styles.inputContainer,
-        variantStyles,
-        {
-          borderColor: error ? theme.colors.error[500] : (animated ? animatedBorderColor : borderColor),
-          opacity: disabled ? 0.6 : 1,
-        },
-      ]}>
+
+      <Animated.View
+        style={[
+          styles.inputContainer,
+          variantStyles,
+          {
+            borderColor: error
+              ? theme.colors.error[500]
+              : animated
+                ? animatedBorderColor
+                : borderColor,
+            opacity: disabled ? 0.6 : 1,
+          },
+        ]}
+      >
         {leftIcon && (
           <Pressable
             onPress={onLeftIconPress}
@@ -202,21 +226,31 @@ const Input = ({
             disabled: disabled || loading,
           }}
         />
-        
+
         {(secureTextEntry || rightIcon) && (
           <Pressable
-            onPress={secureTextEntry ? () => setIsSecureVisible(!isSecureVisible) : onRightIconPress}
+            onPress={
+              secureTextEntry
+                ? () => setIsSecureVisible(!isSecureVisible)
+                : onRightIconPress
+            }
             style={styles.iconContainer}
-            accessible={true}
+            accessible
             accessibilityRole="button"
-            accessibilityLabel={secureTextEntry ? `${isSecureVisible ? 'Hide' : 'Show'} password` : 'Right icon'}
+            accessibilityLabel={
+              secureTextEntry
+                ? `${isSecureVisible ? "Hide" : "Show"} password`
+                : "Right icon"
+            }
             accessibilityHint="Double tap to toggle password visibility"
           >
             {secureTextEntry ? (
               <Text style={{ color: theme.colors.primary[500], fontSize: 18 }}>
-                {isSecureVisible ? '👁️' : '👁️‍🗨️'}
+                {isSecureVisible ? "👁️" : "👁️‍🗨️"}
               </Text>
-            ) : rightIcon}
+            ) : (
+              rightIcon
+            )}
           </Pressable>
         )}
       </Animated.View>
@@ -227,24 +261,29 @@ const Input = ({
           <Text
             style={[
               styles.helperText,
-              { color: error ? theme.colors.error[500] : theme.colors.text.secondary }
+              {
+                color: error
+                  ? theme.colors.error[500]
+                  : theme.colors.text.secondary,
+              },
             ]}
             accessibilityLabel={error ? `Error: ${error}` : helperText}
-            accessibilityRole={error ? 'alert' : 'text'}
+            accessibilityRole={error ? "alert" : "text"}
           >
             {error || helperText}
           </Text>
         )}
-        
+
         {characterCount && maxLength && (
           <Text
             style={[
               styles.characterCount,
               {
-                color: (value?.length || 0) > maxLength * 0.9
-                  ? theme.colors.warning[500]
-                  : theme.colors.text.secondary
-              }
+                color:
+                  (value?.length || 0) > maxLength * 0.9
+                    ? theme.colors.warning[500]
+                    : theme.colors.text.secondary,
+              },
             ]}
             accessibilityLabel={`${value?.length || 0} of ${maxLength} characters`}
           >
@@ -263,34 +302,34 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 8,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   input: {
     flex: 1,
   },
   iconContainer: {
     padding: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   bottomContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 4,
   },
   helperText: {
     fontSize: 12,
-    fontWeight: '400',
+    fontWeight: "400",
     flex: 1,
   },
   characterCount: {
     fontSize: 12,
-    fontWeight: '400',
+    fontWeight: "400",
     marginLeft: 8,
   },
 });
@@ -315,8 +354,8 @@ Input.propTypes = {
   rightIcon: PropTypes.node,
   onLeftIconPress: PropTypes.func,
   onRightIconPress: PropTypes.func,
-  variant: PropTypes.oneOf(['outlined', 'filled', 'underlined']),
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  variant: PropTypes.oneOf(["outlined", "filled", "underlined"]),
+  size: PropTypes.oneOf(["small", "medium", "large"]),
   loading: PropTypes.bool,
   disabled: PropTypes.bool,
   helperText: PropTypes.string,
@@ -328,10 +367,10 @@ Input.propTypes = {
 };
 
 Input.defaultProps = {
-  autoCapitalize: 'none',
+  autoCapitalize: "none",
   autoCorrect: false,
-  variant: 'outlined',
-  size: 'medium',
+  variant: "outlined",
+  size: "medium",
   loading: false,
   disabled: false,
   characterCount: false,

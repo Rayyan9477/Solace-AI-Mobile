@@ -1,9 +1,10 @@
-import React, { useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
-import { hapticUtils, styleUtils } from '../../utils/platformOptimizations';
-import Input from '../common/Input';
-import Button from '../common/Button';
+import React, { useState, useCallback } from "react";
+import { View, Text, StyleSheet, Animated } from "react-native";
+
+import { useTheme } from "../../contexts/ThemeContext";
+import { hapticUtils, styleUtils } from "../../utils/platformOptimizations";
+import Button from "../common/Button";
+import Input from "../common/Input";
 
 // Supportive validation messages for mental health context
 const THERAPEUTIC_MESSAGES = {
@@ -12,13 +13,15 @@ const THERAPEUTIC_MESSAGES = {
     selected: "Thank you for sharing how you're feeling today",
   },
   intensity: {
-    empty: "How strongly are you experiencing this feeling? There's no wrong answer",
+    empty:
+      "How strongly are you experiencing this feeling? There's no wrong answer",
     selected: "Your experience is valid, no matter the intensity",
   },
   notes: {
     empty: "Feel free to share as much or as little as you'd like",
     filled: "Thank you for opening up - your thoughts matter",
-    maxLength: "You've shared a lot - that takes courage. You can continue if you'd like",
+    maxLength:
+      "You've shared a lot - that takes courage. You can continue if you'd like",
   },
   activity: {
     empty: "What activities have you been doing? Everything counts, even rest",
@@ -32,18 +35,25 @@ const ProgressIndicator = ({ current, total, label }) => {
 
   return (
     <View style={styles.progressContainer}>
-      <Text style={[styles.progressLabel, { color: theme.colors.text.secondary }]}>
+      <Text
+        style={[styles.progressLabel, { color: theme.colors.text.secondary }]}
+      >
         Step {current} of {total}: {label}
       </Text>
-      <View style={[styles.progressBar, { backgroundColor: theme.colors.gray[200] }]}>
-        <Animated.View 
+      <View
+        style={[
+          styles.progressBar,
+          { backgroundColor: theme.colors.gray[200] },
+        ]}
+      >
+        <Animated.View
           style={[
-            styles.progressFill, 
-            { 
+            styles.progressFill,
+            {
               backgroundColor: theme.colors.therapeutic.calming[500],
-              width: `${progress}%`
-            }
-          ]} 
+              width: `${progress}%`,
+            },
+          ]}
         />
       </View>
     </View>
@@ -64,16 +74,16 @@ const SupportiveMessage = ({ type, value, error }) => {
 
   const getMessage = () => {
     if (error) return error;
-    
+
     const messages = THERAPEUTIC_MESSAGES[type];
-    if (!messages) return '';
-    
-    if (type === 'notes') {
+    if (!messages) return "";
+
+    if (type === "notes") {
       if (!value || value.length === 0) return messages.empty;
       if (value.length > 200) return messages.maxLength;
       return messages.filled;
     }
-    
+
     return value ? messages.selected : messages.empty;
   };
 
@@ -84,7 +94,7 @@ const SupportiveMessage = ({ type, value, error }) => {
         backgroundColor: theme.colors.therapeutic.nurturing[50],
       };
     }
-    
+
     return {
       color: theme.colors.therapeutic.calming[600],
       backgroundColor: theme.colors.therapeutic.calming[50],
@@ -95,11 +105,11 @@ const SupportiveMessage = ({ type, value, error }) => {
   if (!message) return null;
 
   return (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.supportiveMessage,
         getMessageStyle(),
-        { opacity: fadeAnim }
+        { opacity: fadeAnim },
       ]}
     >
       <Text style={[styles.messageText, { color: getMessageStyle().color }]}>
@@ -109,17 +119,17 @@ const SupportiveMessage = ({ type, value, error }) => {
   );
 };
 
-const TherapeuticFormField = ({ 
-  type, 
-  label, 
-  value, 
-  onChangeText, 
+const TherapeuticFormField = ({
+  type,
+  label,
+  value,
+  onChangeText,
   error,
   required = false,
   multiline = false,
   placeholder,
   maxLength,
-  children
+  children,
 }) => {
   const { theme } = useTheme();
 
@@ -127,9 +137,14 @@ const TherapeuticFormField = ({
     <View style={styles.fieldContainer}>
       <Text style={[styles.fieldLabel, { color: theme.colors.text.primary }]}>
         {label}
-        {required && <Text style={{ color: theme.colors.therapeutic.calming[500] }}> *</Text>}
+        {required && (
+          <Text style={{ color: theme.colors.therapeutic.calming[500] }}>
+            {" "}
+            *
+          </Text>
+        )}
       </Text>
-      
+
       {children || (
         <Input
           value={value}
@@ -139,22 +154,18 @@ const TherapeuticFormField = ({
           maxLength={maxLength}
           error={error}
           style={styles.therapeuticInput}
-          animated={true}
+          animated
         />
       )}
-      
-      <SupportiveMessage 
-        type={type}
-        value={value}
-        error={error}
-      />
+
+      <SupportiveMessage type={type} value={value} error={error} />
     </View>
   );
 };
 
 const EmergencyEscapeHatch = ({ onPress, visible = true }) => {
   const { theme } = useTheme();
-  
+
   if (!visible) return null;
 
   return (
@@ -165,13 +176,13 @@ const EmergencyEscapeHatch = ({ onPress, visible = true }) => {
         size="small"
         onPress={onPress}
         icon="🆘"
-        hapticFeedback={true}
+        hapticFeedback
         style={[
           styles.emergencyButton,
-          { 
+          {
             borderColor: theme.colors.therapeutic.nurturing[500],
-            backgroundColor: theme.colors.therapeutic.nurturing[50]
-          }
+            backgroundColor: theme.colors.therapeutic.nurturing[50],
+          },
         ]}
         accessibilityLabel="Get immediate help and support"
         accessibilityHint="Double tap to access emergency resources and crisis support"
@@ -180,7 +191,7 @@ const EmergencyEscapeHatch = ({ onPress, visible = true }) => {
   );
 };
 
-const TherapeuticForm = ({ 
+const TherapeuticForm = ({
   title,
   currentStep = 1,
   totalSteps = 1,
@@ -190,40 +201,43 @@ const TherapeuticForm = ({
   submitLabel = "Continue",
   showEmergencyEscape = true,
   onEmergencyPress,
-  loading = false
+  loading = false,
 }) => {
   const { theme } = useTheme();
 
   const handleSubmit = useCallback(() => {
-    hapticUtils.impact('light');
+    hapticUtils.impact("light");
     onSubmit?.();
   }, [onSubmit]);
 
   const handleEmergencyPress = useCallback(() => {
-    hapticUtils.notification('warning');
+    hapticUtils.notification("warning");
     onEmergencyPress?.();
   }, [onEmergencyPress]);
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background.primary },
+      ]}
+    >
       {totalSteps > 1 && (
-        <ProgressIndicator 
+        <ProgressIndicator
           current={currentStep}
           total={totalSteps}
           label={stepLabel}
         />
       )}
-      
+
       {title && (
         <Text style={[styles.formTitle, { color: theme.colors.text.primary }]}>
           {title}
         </Text>
       )}
-      
-      <View style={styles.fieldsContainer}>
-        {children}
-      </View>
-      
+
+      <View style={styles.fieldsContainer}>{children}</View>
+
       <View style={styles.actionsContainer}>
         <Button
           title={submitLabel}
@@ -232,11 +246,11 @@ const TherapeuticForm = ({
           size="large"
           loading={loading}
           style={styles.submitButton}
-          hapticFeedback={true}
+          hapticFeedback
         />
-        
+
         {showEmergencyEscape && (
-          <EmergencyEscapeHatch 
+          <EmergencyEscapeHatch
             onPress={handleEmergencyPress}
             visible={showEmergencyEscape}
           />
@@ -257,21 +271,21 @@ const styles = StyleSheet.create({
   progressLabel: {
     fontSize: 14,
     marginBottom: 8,
-    textAlign: 'center',
+    textAlign: "center",
   },
   progressBar: {
     height: 4,
     borderRadius: 2,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   progressFill: {
-    height: '100%',
+    height: "100%",
     borderRadius: 2,
   },
   formTitle: {
     fontSize: 24,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
     marginBottom: 32,
     lineHeight: 32,
   },
@@ -283,7 +297,7 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 8,
     lineHeight: 24,
   },
@@ -298,7 +312,7 @@ const styles = StyleSheet.create({
   messageText: {
     fontSize: 14,
     lineHeight: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   actionsContainer: {
     paddingTop: 20,
@@ -307,7 +321,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   emergencyContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   emergencyButton: {
     minWidth: 160,
@@ -316,4 +330,9 @@ const styles = StyleSheet.create({
 
 // Export components for use
 export default TherapeuticForm;
-export { TherapeuticFormField, ProgressIndicator, SupportiveMessage, EmergencyEscapeHatch };
+export {
+  TherapeuticFormField,
+  ProgressIndicator,
+  SupportiveMessage,
+  EmergencyEscapeHatch,
+};

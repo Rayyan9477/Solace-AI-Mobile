@@ -1,27 +1,28 @@
-import React from 'react';
-import { Platform, View, TouchableOpacity } from 'react-native';
-import Icon, { IconVariants, IconSizes } from './IconSystem';
-import { useTheme } from '../../contexts/ThemeContext';
+import React from "react";
+import { Platform, View, TouchableOpacity } from "react-native";
+
+import Icon, { IconVariants, IconSizes } from "./IconSystem";
+import { useTheme } from "../../contexts/ThemeContext";
 
 // Platform-specific icon configurations
 const PlatformConfig = {
   ios: {
     defaultStrokeWidth: 1.5,
-    cornerRadius: 'rounded',
+    cornerRadius: "rounded",
     defaultVariant: IconVariants.OUTLINE,
     tabBarIconSize: 28,
     headerIconSize: 22,
   },
   android: {
     defaultStrokeWidth: 2,
-    cornerRadius: 'sharp',
+    cornerRadius: "sharp",
     defaultVariant: IconVariants.FILLED,
     tabBarIconSize: 24,
     headerIconSize: 20,
   },
   web: {
     defaultStrokeWidth: 1.5,
-    cornerRadius: 'rounded',
+    cornerRadius: "rounded",
     defaultVariant: IconVariants.OUTLINE,
     tabBarIconSize: 24,
     headerIconSize: 20,
@@ -34,13 +35,13 @@ const getPlatformConfig = () => {
 };
 
 // Platform-optimized icon component
-const PlatformIcon = ({ 
+const PlatformIcon = ({
   name,
   size,
   variant,
   strokeWidth,
   adaptToPlatform = true,
-  ...props 
+  ...props
 }) => {
   const { theme } = useTheme();
   const config = getPlatformConfig();
@@ -48,9 +49,11 @@ const PlatformIcon = ({
   // Apply platform-specific defaults if adaptation is enabled
   const finalProps = {
     name,
-    size: size || 'md',
-    variant: adaptToPlatform ? (variant || config.defaultVariant) : variant,
-    strokeWidth: adaptToPlatform ? (strokeWidth || config.defaultStrokeWidth) : strokeWidth,
+    size: size || "md",
+    variant: adaptToPlatform ? variant || config.defaultVariant : variant,
+    strokeWidth: adaptToPlatform
+      ? strokeWidth || config.defaultStrokeWidth
+      : strokeWidth,
     ...props,
   };
 
@@ -77,24 +80,20 @@ export const HeaderIcon = (props) => {
   const config = getPlatformConfig();
 
   return (
-    <PlatformIcon
-      size={config.headerIconSize}
-      colorScheme="muted"
-      {...props}
-    />
+    <PlatformIcon size={config.headerIconSize} colorScheme="muted" {...props} />
   );
 };
 
 // Accessibility-enhanced icon
-export const AccessibleIcon = ({ 
+export const AccessibleIcon = ({
   accessibilityLabel,
   accessibilityHint,
   children,
-  ...props 
+  ...props
 }) => {
   return (
     <View
-      accessible={true}
+      accessible
       accessibilityRole="image"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
@@ -105,12 +104,12 @@ export const AccessibleIcon = ({
 };
 
 // Touchable icon for interactive elements
-export const TouchableIcon = ({ 
+export const TouchableIcon = ({
   onPress,
   accessibilityLabel,
   accessibilityHint,
   style,
-  ...props 
+  ...props
 }) => {
   const { theme } = useTheme();
 
@@ -121,14 +120,14 @@ export const TouchableIcon = ({
         {
           padding: 8,
           borderRadius: 8,
-          justifyContent: 'center',
-          alignItems: 'center',
+          justifyContent: "center",
+          alignItems: "center",
           minWidth: 44,
           minHeight: 44,
         },
         style,
       ]}
-      accessible={true}
+      accessible
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}

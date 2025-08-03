@@ -1,11 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Svg, { 
-  Path, 
-  Circle, 
-  Rect, 
-  Line, 
-  Polyline, 
+import PropTypes from "prop-types";
+import React from "react";
+import Svg, {
+  Path,
+  Circle,
+  Rect,
+  Line,
+  Polyline,
   Polygon,
   Ellipse,
   G,
@@ -13,41 +13,42 @@ import Svg, {
   LinearGradient,
   Stop,
   ClipPath,
-} from 'react-native-svg';
-import { BaseDesignTokens } from '../../design-system/DesignTokens';
+} from "react-native-svg";
+
+import { BaseDesignTokens } from "../../design-system/DesignTokens";
 
 // Base Health Tech Icon Component
-const HealthTechIcon = ({ 
-  name, 
-  size = 24, 
-  color, 
-  therapeuticTheme = 'calming',
-  variant = 'outline',
+const HealthTechIcon = ({
+  name,
+  size = 24,
+  color,
+  therapeuticTheme = "calming",
+  variant = "outline",
   strokeWidth = 2,
   style,
-  testID 
+  testID,
 }) => {
   const tokens = BaseDesignTokens;
-  
+
   const getColor = () => {
     if (color) return color;
-    
+
     if (therapeuticTheme) {
       const therapeuticColors = tokens.colors.therapeutic[therapeuticTheme];
       return therapeuticColors?.[600] || tokens.colors.primary[600];
     }
-    
+
     return tokens.colors.primary[600];
   };
 
   const iconColor = getColor();
-  const fillColor = variant === 'filled' ? iconColor : 'none';
-  const strokeColor = variant === 'filled' ? 'none' : iconColor;
+  const fillColor = variant === "filled" ? iconColor : "none";
+  const strokeColor = variant === "filled" ? "none" : iconColor;
 
   const renderIcon = () => {
     switch (name) {
       // Brain and Mental Health Icons
-      case 'brain':
+      case "brain":
         return (
           <G>
             <Path
@@ -74,7 +75,7 @@ const HealthTechIcon = ({
           </G>
         );
 
-      case 'mind':
+      case "mind":
         return (
           <G>
             <Circle
@@ -103,14 +104,53 @@ const HealthTechIcon = ({
           </G>
         );
 
-      case 'neuron':
+      case "neuron":
         return (
           <G>
-            <Circle cx="12" cy="12" r="3" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
-            <Line x1="12" y1="3" x2="12" y2="9" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Line x1="21" y1="12" x2="15" y2="12" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Line x1="12" y1="21" x2="12" y2="15" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Line x1="3" y1="12" x2="9" y2="12" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
+            <Circle
+              cx="12"
+              cy="12"
+              r="3"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Line
+              x1="12"
+              y1="3"
+              x2="12"
+              y2="9"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Line
+              x1="21"
+              y1="12"
+              x2="15"
+              y2="12"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Line
+              x1="12"
+              y1="21"
+              x2="12"
+              y2="15"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Line
+              x1="3"
+              y1="12"
+              x2="9"
+              y2="12"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
             <Circle cx="12" cy="4" r="1" fill={strokeColor} />
             <Circle cx="20" cy="12" r="1" fill={strokeColor} />
             <Circle cx="12" cy="20" r="1" fill={strokeColor} />
@@ -119,7 +159,7 @@ const HealthTechIcon = ({
         );
 
       // Heart and Wellness Icons
-      case 'heart-pulse':
+      case "heart-pulse":
         return (
           <G>
             <Path
@@ -133,7 +173,7 @@ const HealthTechIcon = ({
             <Polyline
               points="7,10 9,12 11,8 13,14 15,10"
               fill="none"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -141,10 +181,17 @@ const HealthTechIcon = ({
           </G>
         );
 
-      case 'wellness':
+      case "wellness":
         return (
           <G>
-            <Circle cx="12" cy="8" r="5" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="8"
+              r="5"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M20 21a8 8 0 1 0-16 0"
               fill={fillColor}
@@ -154,23 +201,30 @@ const HealthTechIcon = ({
             />
             <Path
               d="M12 13v3"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
             <Path
               d="M10.5 14.5l3-3"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
           </G>
         );
 
-      case 'meditation':
+      case "meditation":
         return (
           <G>
-            <Circle cx="12" cy="8" r="3" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="8"
+              r="3"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M12 11c-2 0-4 1-4 3v4c0 1 1 2 2 2h4c1 0 2-1 2-2v-4c0-2-2-3-4-3z"
               fill={fillColor}
@@ -198,7 +252,7 @@ const HealthTechIcon = ({
         );
 
       // Medical and Health Monitoring Icons
-      case 'stethoscope':
+      case "stethoscope":
         return (
           <G>
             <Path
@@ -222,7 +276,14 @@ const HealthTechIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="19" cy="19" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="19"
+              cy="19"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M19 16v-3"
               stroke={strokeColor}
@@ -232,23 +293,37 @@ const HealthTechIcon = ({
           </G>
         );
 
-      case 'health-monitor':
+      case "health-monitor":
         return (
           <G>
-            <Rect x="2" y="4" width="20" height="14" rx="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Rect
+              x="2"
+              y="4"
+              width="20"
+              height="14"
+              rx="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Polyline
               points="6,12 8,8 10,16 12,10 14,14 16,12 18,12"
               fill="none"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="19" cy="7" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="19"
+              cy="7"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
           </G>
         );
 
-      case 'thermometer':
+      case "thermometer":
         return (
           <G>
             <Path
@@ -259,20 +334,40 @@ const HealthTechIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="12" cy="17" r="1.5" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Line x1="12" y1="9" x2="12" y2="15" stroke={variant === 'filled' ? '#FFFFFF' : strokeColor} strokeWidth={strokeWidth * 1.5} strokeLinecap="round" />
+            <Circle
+              cx="12"
+              cy="17"
+              r="1.5"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Line
+              x1="12"
+              y1="9"
+              x2="12"
+              y2="15"
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth * 1.5}
+              strokeLinecap="round"
+            />
           </G>
         );
 
       // Therapy and Treatment Icons
-      case 'therapy':
+      case "therapy":
         return (
           <G>
-            <Circle cx="12" cy="12" r="9" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="12"
+              r="9"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M8 12h4l2-4 2 8 2-4h2"
               fill="none"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -280,7 +375,7 @@ const HealthTechIcon = ({
           </G>
         );
 
-      case 'counseling':
+      case "counseling":
         return (
           <G>
             <Path
@@ -291,28 +386,57 @@ const HealthTechIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="9" cy="11" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="15" cy="11" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="9"
+              cy="11"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="15"
+              cy="11"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
             <Path
               d="M9.5 14.5c.5.5 1.5.5 2.5.5s2-.5 2.5-.5"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
           </G>
         );
 
-      case 'treatment':
+      case "treatment":
         return (
           <G>
-            <Rect x="3" y="3" width="18" height="18" rx="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
-            <Path d="M12 8v8" stroke={variant === 'filled' ? '#FFFFFF' : strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Path d="M8 12h8" stroke={variant === 'filled' ? '#FFFFFF' : strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
+            <Rect
+              x="3"
+              y="3"
+              width="18"
+              height="18"
+              rx="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Path
+              d="M12 8v8"
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Path
+              d="M8 12h8"
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
           </G>
         );
 
       // Sleep and Recovery Icons
-      case 'sleep':
+      case "sleep":
         return (
           <G>
             <Path
@@ -325,7 +449,7 @@ const HealthTechIcon = ({
             />
             <Path
               d="M15 8h2l-3 4h2l-3 4"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -333,19 +457,26 @@ const HealthTechIcon = ({
           </G>
         );
 
-      case 'recovery':
+      case "recovery":
         return (
           <G>
-            <Circle cx="12" cy="12" r="9" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="12"
+              r="9"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M7 12c0-2.76 2.24-5 5-5s5 2.24 5 5-2.24 5-5 5"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
             <Polyline
               points="14,9 17,12 14,15"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -354,10 +485,17 @@ const HealthTechIcon = ({
         );
 
       // Exercise and Activity Icons
-      case 'exercise':
+      case "exercise":
         return (
           <G>
-            <Circle cx="12" cy="5" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="5"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M10 8h4l-1 7h-2l-1-7z"
               fill={fillColor}
@@ -393,7 +531,7 @@ const HealthTechIcon = ({
           </G>
         );
 
-      case 'activity':
+      case "activity":
         return (
           <G>
             <Polyline
@@ -408,7 +546,7 @@ const HealthTechIcon = ({
         );
 
       // Nutrition and Lifestyle Icons
-      case 'nutrition':
+      case "nutrition":
         return (
           <G>
             <Path
@@ -421,20 +559,20 @@ const HealthTechIcon = ({
             />
             <Path
               d="M8 12h8"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
             <Path
               d="M8 16h8"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
           </G>
         );
 
-      case 'water':
+      case "water":
         return (
           <G>
             <Path
@@ -447,7 +585,7 @@ const HealthTechIcon = ({
             />
             <Path
               d="M8 14c0 2 2 2 4 2s4 0 4-2"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
@@ -468,7 +606,7 @@ const HealthTechIcon = ({
             />
             <Path
               d="M12 7v6"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
@@ -476,7 +614,7 @@ const HealthTechIcon = ({
               cx="12"
               cy="16"
               r="1"
-              fill={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
             />
           </G>
         );
@@ -499,21 +637,49 @@ const HealthTechIcon = ({
 // Specialized Health Tech Icon Components
 export const BrainIcon = (props) => <HealthTechIcon name="brain" {...props} />;
 export const MindIcon = (props) => <HealthTechIcon name="mind" {...props} />;
-export const NeuronIcon = (props) => <HealthTechIcon name="neuron" {...props} />;
-export const HeartPulseIcon = (props) => <HealthTechIcon name="heart-pulse" {...props} />;
-export const WellnessIcon = (props) => <HealthTechIcon name="wellness" {...props} />;
-export const MeditationIcon = (props) => <HealthTechIcon name="meditation" {...props} />;
-export const StethoscopeIcon = (props) => <HealthTechIcon name="stethoscope" {...props} />;
-export const HealthMonitorIcon = (props) => <HealthTechIcon name="health-monitor" {...props} />;
-export const ThermometerIcon = (props) => <HealthTechIcon name="thermometer" {...props} />;
-export const TherapyIcon = (props) => <HealthTechIcon name="therapy" {...props} />;
-export const CounselingIcon = (props) => <HealthTechIcon name="counseling" {...props} />;
-export const TreatmentIcon = (props) => <HealthTechIcon name="treatment" {...props} />;
+export const NeuronIcon = (props) => (
+  <HealthTechIcon name="neuron" {...props} />
+);
+export const HeartPulseIcon = (props) => (
+  <HealthTechIcon name="heart-pulse" {...props} />
+);
+export const WellnessIcon = (props) => (
+  <HealthTechIcon name="wellness" {...props} />
+);
+export const MeditationIcon = (props) => (
+  <HealthTechIcon name="meditation" {...props} />
+);
+export const StethoscopeIcon = (props) => (
+  <HealthTechIcon name="stethoscope" {...props} />
+);
+export const HealthMonitorIcon = (props) => (
+  <HealthTechIcon name="health-monitor" {...props} />
+);
+export const ThermometerIcon = (props) => (
+  <HealthTechIcon name="thermometer" {...props} />
+);
+export const TherapyIcon = (props) => (
+  <HealthTechIcon name="therapy" {...props} />
+);
+export const CounselingIcon = (props) => (
+  <HealthTechIcon name="counseling" {...props} />
+);
+export const TreatmentIcon = (props) => (
+  <HealthTechIcon name="treatment" {...props} />
+);
 export const SleepIcon = (props) => <HealthTechIcon name="sleep" {...props} />;
-export const RecoveryIcon = (props) => <HealthTechIcon name="recovery" {...props} />;
-export const ExerciseIcon = (props) => <HealthTechIcon name="exercise" {...props} />;
-export const ActivityIcon = (props) => <HealthTechIcon name="activity" {...props} />;
-export const NutritionIcon = (props) => <HealthTechIcon name="nutrition" {...props} />;
+export const RecoveryIcon = (props) => (
+  <HealthTechIcon name="recovery" {...props} />
+);
+export const ExerciseIcon = (props) => (
+  <HealthTechIcon name="exercise" {...props} />
+);
+export const ActivityIcon = (props) => (
+  <HealthTechIcon name="activity" {...props} />
+);
+export const NutritionIcon = (props) => (
+  <HealthTechIcon name="nutrition" {...props} />
+);
 export const WaterIcon = (props) => <HealthTechIcon name="water" {...props} />;
 
 // Health Tech Icon Collection
@@ -526,14 +692,14 @@ export const HealthTechIconCollection = {
   therapy: TherapyIcon,
   counseling: CounselingIcon,
   treatment: TreatmentIcon,
-  
+
   // Physical Health & Wellness
   heartPulse: HeartPulseIcon,
   wellness: WellnessIcon,
   stethoscope: StethoscopeIcon,
   healthMonitor: HealthMonitorIcon,
   thermometer: ThermometerIcon,
-  
+
   // Lifestyle & Recovery
   sleep: SleepIcon,
   recovery: RecoveryIcon,
@@ -549,10 +715,16 @@ HealthTechIcon.propTypes = {
   size: PropTypes.number,
   color: PropTypes.string,
   therapeuticTheme: PropTypes.oneOf([
-    'calming', 'nurturing', 'peaceful', 'grounding', 
-    'energizing', 'focus', 'mindful', 'balance'
+    "calming",
+    "nurturing",
+    "peaceful",
+    "grounding",
+    "energizing",
+    "focus",
+    "mindful",
+    "balance",
   ]),
-  variant: PropTypes.oneOf(['outline', 'filled']),
+  variant: PropTypes.oneOf(["outline", "filled"]),
   strokeWidth: PropTypes.number,
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   testID: PropTypes.string,

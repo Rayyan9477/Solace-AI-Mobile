@@ -1,101 +1,58 @@
-import React from 'react';
-import { View, Text, Platform } from 'react-native';
-import Icon, { IconVariants, IconSizes } from './IconSystem';
-import { useTheme } from '../../contexts/ThemeContext';
+import React from "react";
+import { View, Text, Platform } from "react-native";
+
+import Icon, { IconVariants, IconSizes } from "./IconSystem";
+import { useTheme } from "../../contexts/ThemeContext";
 
 // App-specific icon presets with therapeutic colors
 const AppIcons = {
   // Navigation icons with semantic meanings
   Navigation: {
-    Home: (props) => (
-      <Icon name="home" {...props} />
-    ),
-    Chat: (props) => (
-      <Icon name="chat" {...props} />
-    ),
-    Mood: (props) => (
-      <Icon name="mood" {...props} />
-    ),
-    Assessment: (props) => (
-      <Icon name="assessment" {...props} />
-    ),
-    Profile: (props) => (
-      <Icon name="profile" {...props} />
-    ),
-    Welcome: (props) => (
-      <Icon name="brain" {...props} />
-    ),
+    Home: (props) => <Icon name="home" {...props} />,
+    Chat: (props) => <Icon name="chat" {...props} />,
+    Mood: (props) => <Icon name="mood" {...props} />,
+    Assessment: (props) => <Icon name="assessment" {...props} />,
+    Profile: (props) => <Icon name="profile" {...props} />,
+    Welcome: (props) => <Icon name="brain" {...props} />,
   },
 
   // Mental Health specific icons with therapeutic intent
   MentalHealth: {
-    Brain: (props) => (
-      <Icon name="brain" {...props} />
-    ),
-    Heart: (props) => (
-      <Icon name="heart" {...props} />
-    ),
-    Mindfulness: (props) => (
-      <Icon name="mindfulness" {...props} />
-    ),
-    Therapy: (props) => (
-      <Icon name="therapy" {...props} />
-    ),
-    Meditation: (props) => (
-      <Icon name="meditation" {...props} />
-    ),
-    Journal: (props) => (
-      <Icon name="journal" {...props} />
-    ),
-    Insights: (props) => (
-      <Icon name="insights" {...props} />
-    ),
+    Brain: (props) => <Icon name="brain" {...props} />,
+    Heart: (props) => <Icon name="heart" {...props} />,
+    Mindfulness: (props) => <Icon name="mindfulness" {...props} />,
+    Therapy: (props) => <Icon name="therapy" {...props} />,
+    Meditation: (props) => <Icon name="meditation" {...props} />,
+    Journal: (props) => <Icon name="journal" {...props} />,
+    Insights: (props) => <Icon name="insights" {...props} />,
   },
 
   // Action icons for user interactions
   Actions: {
-    Add: (props) => (
-      <Icon name="plus" {...props} />
-    ),
-    Next: (props) => (
-      <Icon name="chevronRight" {...props} />
-    ),
-    Back: (props) => (
-      <Icon name="chevronLeft" {...props} />
-    ),
-    Expand: (props) => (
-      <Icon name="chevronDown" {...props} />
-    ),
-    Close: (props) => (
-      <Icon name="close" {...props} />
-    ),
-    Settings: (props) => (
-      <Icon name="settings" {...props} />
-    ),
+    Add: (props) => <Icon name="plus" {...props} />,
+    Next: (props) => <Icon name="chevronRight" {...props} />,
+    Back: (props) => <Icon name="chevronLeft" {...props} />,
+    Expand: (props) => <Icon name="chevronDown" {...props} />,
+    Close: (props) => <Icon name="close" {...props} />,
+    Settings: (props) => <Icon name="settings" {...props} />,
   },
 
   // Status and feedback icons
   Status: {
-    Success: (props) => (
-      <Icon name="check" {...props} />
-    ),
-    Warning: (props) => (
-      <Icon name="alert" {...props} />
-    ),
-    Info: (props) => (
-      <Icon name="info" {...props} />
-    ),
+    Success: (props) => <Icon name="check" {...props} />,
+    Warning: (props) => <Icon name="alert" {...props} />,
+    Info: (props) => <Icon name="info" {...props} />,
   },
 };
 
 // Themed icon component with automatic color assignment
-const ThemedIcon = ({ 
-  category, 
-  name, 
+const ThemedIcon = ({
+  category,
+  name,
   variant = IconVariants.OUTLINE,
-  size = 'md',
-  colorScheme = 'default',
-  ...props 
+  size = "md",
+  colorScheme = "default",
+  ...props
 }) => {
   const { theme } = useTheme();
 
@@ -121,16 +78,19 @@ const ThemedIcon = ({
   const IconComponent = AppIcons[category]?.[name];
 
   if (!IconComponent) {
-    return <Icon name="info" size={size} color={color} variant={variant} {...props} />;
+    return (
+      <Icon
+        name="info"
+        size={size}
+        color={color}
+        variant={variant}
+        {...props}
+      />
+    );
   }
 
   return (
-    <IconComponent
-      size={size}
-      color={color}
-      variant={variant}
-      {...props}
-    />
+    <IconComponent size={size} color={color} variant={variant} {...props} />
   );
 };
 
@@ -152,30 +112,30 @@ export const StatusIcon = (props) => (
 );
 
 // Icon with badge for notifications/counts
-export const BadgedIcon = ({ 
-  badge, 
-  badgeColor, 
+export const BadgedIcon = ({
+  badge,
+  badgeColor,
   badgeTextColor,
   children,
-  ...props 
+  ...props
 }) => {
   const { theme } = useTheme();
-  
+
   return (
-    <View style={{ position: 'relative' }}>
+    <View style={{ position: "relative" }}>
       {children}
       {badge && (
         <View
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: -6,
             right: -6,
             backgroundColor: badgeColor || theme.colors.error[500],
             borderRadius: 10,
             minWidth: 20,
             height: 20,
-            justifyContent: 'center',
-            alignItems: 'center',
+            justifyContent: "center",
+            alignItems: "center",
             paddingHorizontal: 4,
           }}
         >
@@ -183,11 +143,11 @@ export const BadgedIcon = ({
             style={{
               color: badgeTextColor || theme.colors.text.inverse,
               fontSize: 12,
-              fontWeight: '600',
-              textAlign: 'center',
+              fontWeight: "600",
+              textAlign: "center",
             }}
           >
-            {badge > 99 ? '99+' : badge}
+            {badge > 99 ? "99+" : badge}
           </Text>
         </View>
       )}
@@ -196,11 +156,11 @@ export const BadgedIcon = ({
 };
 
 // Animated icon wrapper (for future use)
-export const AnimatedIcon = ({ 
-  animation = 'pulse',
+export const AnimatedIcon = ({
+  animation = "pulse",
   duration = 1000,
   children,
-  ...props 
+  ...props
 }) => {
   // TODO: Implement animations
   return children;

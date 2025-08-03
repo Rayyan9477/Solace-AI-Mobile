@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,23 +12,26 @@ import {
   Vibration,
   ActivityIndicator,
   BackHandler,
-} from 'react-native';
-import styled from 'styled-components/native';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components/native";
 
-import { useTheme } from '../../contexts/ThemeContext';
-import { addMessage, setTyping, toggleVoice } from '../../store/slices/chatSlice';
-import MessageBubble from '../../components/chat/MessageBubble';
-import VoiceRecorder from '../../components/chat/VoiceRecorder';
-import TypingIndicator from '../../components/chat/TypingIndicator';
-import EmotionIndicator from '../../components/chat/EmotionIndicator';
+import EmotionIndicator from "../../components/chat/EmotionIndicator";
+import MessageBubble from "../../components/chat/MessageBubble";
+import TypingIndicator from "../../components/chat/TypingIndicator";
+import VoiceRecorder from "../../components/chat/VoiceRecorder";
+import { useTheme } from "../../contexts/ThemeContext";
+import {
+  addMessage,
+  setTyping,
+  toggleVoice,
+} from "../../store/slices/chatSlice";
 
 const ChatContainer = styled(SafeAreaView)`
   flex: 1;
-  background-color: ${props => props.backgroundColor};
+  background-color: ${(props) => props.backgroundColor};
 `;
 
 const Header = styled(View)`
@@ -36,8 +40,8 @@ const Header = styled(View)`
   justify-content: space-between;
   padding: 16px 20px;
   border-bottom-width: 1px;
-  border-bottom-color: ${props => props.borderColor};
-  background-color: ${props => props.backgroundColor};
+  border-bottom-color: ${(props) => props.borderColor};
+  background-color: ${(props) => props.backgroundColor};
 `;
 
 const HeaderTitle = styled(View)`
@@ -48,12 +52,12 @@ const HeaderTitle = styled(View)`
 const AIName = styled(Text)`
   font-size: 18px;
   font-weight: 600;
-  color: ${props => props.color};
+  color: ${(props) => props.color};
 `;
 
 const AIStatus = styled(Text)`
   font-size: 12px;
-  color: ${props => props.color};
+  color: ${(props) => props.color};
   margin-top: 2px;
 `;
 
@@ -61,14 +65,14 @@ const HeaderButton = styled(TouchableOpacity)`
   width: 44px;
   height: 44px;
   border-radius: 22px;
-  background-color: ${props => props.backgroundColor};
+  background-color: ${(props) => props.backgroundColor};
   justify-content: center;
   align-items: center;
 `;
 
 const MessagesContainer = styled(View)`
   flex: 1;
-  background-color: ${props => props.backgroundColor};
+  background-color: ${(props) => props.backgroundColor};
 `;
 
 const MessagesList = styled(FlatList)`
@@ -77,20 +81,20 @@ const MessagesList = styled(FlatList)`
 `;
 
 const InputContainer = styled(KeyboardAvoidingView)`
-  background-color: ${props => props.backgroundColor};
+  background-color: ${(props) => props.backgroundColor};
   border-top-width: 1px;
-  border-top-color: ${props => props.borderColor};
+  border-top-color: ${(props) => props.borderColor};
   padding: 16px 20px;
 `;
 
 const InputWrapper = styled(View)`
   flex-direction: row;
   align-items: flex-end;
-  background-color: ${props => props.backgroundColor};
+  background-color: ${(props) => props.backgroundColor};
   border-radius: 25px;
   padding: 8px 16px;
   max-height: 120px;
-  border: 1px solid ${props => props.borderColor};
+  border: 1px solid ${(props) => props.borderColor};
 `;
 
 const MessageInput = styled(TextInput)`
@@ -98,7 +102,7 @@ const MessageInput = styled(TextInput)`
   max-height: 100px;
   min-height: 40px;
   font-size: 16px;
-  color: ${props => props.textColor};
+  color: ${(props) => props.textColor};
   padding: 8px 0;
   text-align-vertical: top;
 `;
@@ -111,7 +115,7 @@ const ActionButton = styled(TouchableOpacity)`
   width: 44px;
   height: 44px;
   border-radius: 22px;
-  background-color: ${props => props.backgroundColor};
+  background-color: ${(props) => props.backgroundColor};
   justify-content: center;
   align-items: center;
 `;
@@ -120,7 +124,7 @@ const VoiceButton = styled(TouchableOpacity)`
   width: 44px;
   height: 44px;
   border-radius: 22px;
-  background-color: ${props => props.backgroundColor};
+  background-color: ${(props) => props.backgroundColor};
   justify-content: center;
   align-items: center;
   margin-left: 8px;
@@ -128,22 +132,24 @@ const VoiceButton = styled(TouchableOpacity)`
 
 const EmotionContainer = styled(View)`
   padding: 12px 20px;
-  background-color: ${props => props.backgroundColor};
+  background-color: ${(props) => props.backgroundColor};
   border-top-width: 1px;
-  border-top-color: ${props => props.borderColor};
+  border-top-color: ${(props) => props.borderColor};
 `;
 
 const ChatScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { messages, isTyping, voiceEnabled } = useSelector(state => state.chat);
-  
-  const [inputText, setInputText] = useState('');
+  const { messages, isTyping, voiceEnabled } = useSelector(
+    (state) => state.chat,
+  );
+
+  const [inputText, setInputText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [currentEmotion, setCurrentEmotion] = useState(null);
   const [sendingMessage, setSendingMessage] = useState(false);
-  
+
   const flatListRef = useRef(null);
   const sendButtonScale = useRef(new Animated.Value(0)).current;
   const inputHeight = useRef(new Animated.Value(40)).current;
@@ -151,14 +157,14 @@ const ChatScreen = () => {
   // Handle hardware back button on Android
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
+      "hardwareBackPress",
       () => {
         if (navigation.canGoBack()) {
           navigation.goBack();
           return true;
         }
         return false;
-      }
+      },
     );
 
     return () => backHandler.remove();
@@ -183,13 +189,13 @@ const ChatScreen = () => {
       const userMessage = {
         id: Date.now().toString(),
         text: inputText.trim(),
-        type: 'user',
+        type: "user",
         timestamp: new Date().toISOString(),
         emotion: currentEmotion,
       };
 
       dispatch(addMessage(userMessage));
-      setInputText('');
+      setInputText("");
       setCurrentEmotion(null);
 
       // Scroll to bottom
@@ -199,20 +205,23 @@ const ChatScreen = () => {
 
       // Simulate AI typing
       dispatch(setTyping(true));
-      
+
       // Simulate AI response delay
-      setTimeout(() => {
-        const aiResponse = generateAIResponse(userMessage.text);
-        dispatch(addMessage(aiResponse));
-        dispatch(setTyping(false));
-        setSendingMessage(false);
-        
-        setTimeout(() => {
-          flatListRef.current?.scrollToEnd({ animated: true });
-        }, 100);
-      }, 1500 + Math.random() * 2000);
+      setTimeout(
+        () => {
+          const aiResponse = generateAIResponse(userMessage.text);
+          dispatch(addMessage(aiResponse));
+          dispatch(setTyping(false));
+          setSendingMessage(false);
+
+          setTimeout(() => {
+            flatListRef.current?.scrollToEnd({ animated: true });
+          }, 100);
+        },
+        1500 + Math.random() * 2000,
+      );
     } catch (error) {
-      console.error('Failed to send message:', error);
+      console.error("Failed to send message:", error);
       setSendingMessage(false);
       dispatch(setTyping(false));
     }
@@ -227,13 +236,13 @@ const ChatScreen = () => {
       "That sounds challenging. How are you taking care of yourself during this time?",
       "I'm here to listen and support you. What feels most important to discuss right now?",
     ];
-    
+
     return {
-      id: Date.now().toString() + '_ai',
+      id: Date.now().toString() + "_ai",
       text: responses[Math.floor(Math.random() * responses.length)],
-      type: 'ai',
+      type: "ai",
       timestamp: new Date().toISOString(),
-      emotion: 'supportive',
+      emotion: "supportive",
     };
   };
 
@@ -246,20 +255,20 @@ const ChatScreen = () => {
   const detectEmotion = (text) => {
     // Simple emotion detection - replace with actual emotion API
     const emotions = {
-      happy: ['happy', 'joy', 'great', 'awesome', 'good', 'wonderful'],
-      sad: ['sad', 'down', 'depressed', 'awful', 'terrible', 'bad'],
-      anxious: ['anxious', 'worried', 'nervous', 'scared', 'fear'],
-      angry: ['angry', 'mad', 'frustrated', 'upset', 'annoyed'],
-      calm: ['calm', 'peaceful', 'relaxed', 'zen', 'tranquil'],
+      happy: ["happy", "joy", "great", "awesome", "good", "wonderful"],
+      sad: ["sad", "down", "depressed", "awful", "terrible", "bad"],
+      anxious: ["anxious", "worried", "nervous", "scared", "fear"],
+      angry: ["angry", "mad", "frustrated", "upset", "annoyed"],
+      calm: ["calm", "peaceful", "relaxed", "zen", "tranquil"],
     };
 
     const lowerText = text.toLowerCase();
     for (const [emotion, keywords] of Object.entries(emotions)) {
-      if (keywords.some(keyword => lowerText.includes(keyword))) {
+      if (keywords.some((keyword) => lowerText.includes(keyword))) {
         return emotion;
       }
     }
-    return 'neutral';
+    return "neutral";
   };
 
   const handleTextChange = (text) => {
@@ -293,14 +302,14 @@ const ChatScreen = () => {
         >
           <Icon name="menu" size={24} color={theme.colors.text.primary} />
         </HeaderButton>
-        
+
         <HeaderTitle>
           <AIName color={theme.colors.text.primary}>Solace AI</AIName>
           <AIStatus color={theme.colors.success[500]}>
-            {isTyping ? 'Typing...' : 'Online'}
+            {isTyping ? "Typing..." : "Online"}
           </AIStatus>
         </HeaderTitle>
-        
+
         <HeaderButton
           backgroundColor={theme.colors.background.secondary}
           onPress={() => {}}
@@ -322,7 +331,7 @@ const ChatScreen = () => {
             flatListRef.current?.scrollToEnd({ animated: true });
           }}
         />
-        
+
         {isTyping && <TypingIndicator />}
       </MessagesContainer>
 
@@ -338,7 +347,7 @@ const ChatScreen = () => {
 
       {/* Input Container */}
       <InputContainer
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         backgroundColor={theme.colors.background.primary}
         borderColor={theme.colors.gray[200]}
       >
@@ -356,19 +365,21 @@ const ChatScreen = () => {
             blurOnSubmit={false}
             onSubmitEditing={handleSendMessage}
           />
-          
+
           <VoiceButton
-            backgroundColor={isRecording ? theme.colors.error[500] : theme.colors.primary[500]}
+            backgroundColor={
+              isRecording ? theme.colors.error[500] : theme.colors.primary[500]
+            }
             onPress={handleVoiceToggle}
             onLongPress={handleVoiceToggle}
           >
-            <Icon 
-              name={isRecording ? "stop" : "mic"} 
-              size={20} 
-              color={theme.colors.text.inverse} 
+            <Icon
+              name={isRecording ? "stop" : "mic"}
+              size={20}
+              color={theme.colors.text.inverse}
             />
           </VoiceButton>
-          
+
           <SendButton
             style={{
               transform: [{ scale: sendButtonScale }],
@@ -381,7 +392,10 @@ const ChatScreen = () => {
               disabled={!inputText.trim() || sendingMessage}
             >
               {sendingMessage ? (
-                <ActivityIndicator size="small" color={theme.colors.text.inverse} />
+                <ActivityIndicator
+                  size="small"
+                  color={theme.colors.text.inverse}
+                />
               ) : (
                 <Icon name="send" size={20} color={theme.colors.text.inverse} />
               )}

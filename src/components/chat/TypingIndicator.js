@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, Animated, StyleSheet } from 'react-native';
-import styled from 'styled-components/native';
-import { useTheme } from '../../contexts/ThemeContext';
+import React, { useEffect, useRef } from "react";
+import { View, Text, Animated, StyleSheet } from "react-native";
+import styled from "styled-components/native";
+
+import { useTheme } from "../../contexts/ThemeContext";
 
 const Container = styled(View)`
   padding: 12px 16px;
@@ -9,7 +10,7 @@ const Container = styled(View)`
   margin-bottom: 16px;
   max-width: 70%;
   border-radius: 20px;
-  background-color: ${props => props.backgroundColor};
+  background-color: ${(props) => props.backgroundColor};
   align-self: flex-start;
 `;
 
@@ -94,7 +95,7 @@ const TypingIndicator = () => {
   );
 
   return (
-    <Container 
+    <Container
       backgroundColor={theme.colors.background.secondary}
       accessibilityLabel="Solace AI is typing"
       accessibilityRole="image"
@@ -111,7 +112,8 @@ const TypingIndicator = () => {
 
 const styles = StyleSheet.create({
   dot: {
-    width: 44, height: 44,
+    width: 44,
+    height: 44,
     borderRadius: 4,
     marginRight: 4,
   },

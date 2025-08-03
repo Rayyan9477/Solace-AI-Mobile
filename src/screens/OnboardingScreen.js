@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import * as Haptics from 'expo-haptics';
+import * as Haptics from "expo-haptics";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -7,18 +7,19 @@ import {
   Dimensions,
   ScrollView,
   Animated,
-} from 'react-native';
-import styled from 'styled-components/native';
-import { useDispatch } from 'react-redux';
-import { completeOnboarding } from '../store/slices/authSlice';
-import { useTheme } from '../contexts/ThemeContext';
-import { lightTheme } from '../styles/theme';
+} from "react-native";
+import { useDispatch } from "react-redux";
+import styled from "styled-components/native";
 
-const { width, height } = Dimensions.get('window');
+import { useTheme } from "../contexts/ThemeContext";
+import { completeOnboarding } from "../store/slices/authSlice";
+import { lightTheme } from "../styles/theme";
+
+const { width, height } = Dimensions.get("window");
 
 const OnboardingContainer = styled(View)`
   flex: 1;
-  background-color: ${props => props.backgroundColor};
+  background-color: ${(props) => props.backgroundColor};
 `;
 
 const SlideContainer = styled(View)`
@@ -33,7 +34,7 @@ const IllustrationContainer = styled(View)`
   width: 200px;
   height: 200px;
   border-radius: 100px;
-  background-color: ${props => props.color};
+  background-color: ${(props) => props.color};
   justify-content: center;
   align-items: center;
   margin-bottom: 40px;
@@ -41,20 +42,20 @@ const IllustrationContainer = styled(View)`
 
 const IllustrationText = styled(Text)`
   font-size: 80px;
-  color: ${props => props.theme.colors.text.inverse};
+  color: ${(props) => props.theme.colors.text.inverse};
 `;
 
 const TitleText = styled(Text)`
   font-size: 28px;
   font-weight: bold;
-  color: ${props => props.color};
+  color: ${(props) => props.color};
   text-align: center;
   margin-bottom: 16px;
 `;
 
 const DescriptionText = styled(Text)`
   font-size: 16px;
-  color: ${props => props.color};
+  color: ${(props) => props.color};
   text-align: center;
   line-height: 24px;
   max-width: 300px;
@@ -81,12 +82,13 @@ const PaginationDot = styled(View)`
   width: 12px;
   height: 12px;
   border-radius: 6px;
-  background-color: ${props => props.active ? props.activeColor : props.inactiveColor};
+  background-color: ${(props) =>
+    props.active ? props.activeColor : props.inactiveColor};
   margin: 0 4px;
 `;
 
 const NavigationButton = styled(TouchableOpacity)`
-  background-color: ${props => props.backgroundColor};
+  background-color: ${(props) => props.backgroundColor};
   padding: 16px 32px;
   border-radius: 25px;
   min-width: 100px;
@@ -94,7 +96,7 @@ const NavigationButton = styled(TouchableOpacity)`
 `;
 
 const ButtonText = styled(Text)`
-  color: ${props => props.color};
+  color: ${(props) => props.color};
   font-size: 16px;
   font-weight: 600;
 `;
@@ -104,37 +106,41 @@ const SkipButton = styled(TouchableOpacity)`
 `;
 
 const SkipText = styled(Text)`
-  color: ${props => props.color};
+  color: ${(props) => props.color};
   font-size: 16px;
 `;
 
 const onboardingData = [
   {
     id: 1,
-    title: 'Welcome to Solace AI',
-    description: 'Your personal mental health companion that understands your emotions and provides empathetic support.',
-    illustration: '🧠',
+    title: "Welcome to Solace AI",
+    description:
+      "Your personal mental health companion that understands your emotions and provides empathetic support.",
+    illustration: "🧠",
     color: lightTheme.colors.primary[500],
   },
   {
     id: 2,
-    title: 'Emotional Intelligence',
-    description: 'Advanced AI that detects emotions in your voice and text to provide personalized therapeutic responses.',
-    illustration: '💝',
+    title: "Emotional Intelligence",
+    description:
+      "Advanced AI that detects emotions in your voice and text to provide personalized therapeutic responses.",
+    illustration: "💝",
     color: lightTheme.colors.warning[500],
   },
   {
     id: 3,
-    title: 'Privacy & Security',
-    description: 'Your conversations are encrypted and secure. Your mental health journey remains completely private.',
-    illustration: '🔒',
+    title: "Privacy & Security",
+    description:
+      "Your conversations are encrypted and secure. Your mental health journey remains completely private.",
+    illustration: "🔒",
     color: lightTheme.colors.success[500],
   },
   {
     id: 4,
-    title: 'Track Your Progress',
-    description: 'Monitor your emotional patterns and mental wellness journey with beautiful insights and analytics.',
-    illustration: '📊',
+    title: "Track Your Progress",
+    description:
+      "Monitor your emotional patterns and mental wellness journey with beautiful insights and analytics.",
+    illustration: "📊",
     color: lightTheme.colors.secondary[500],
   },
 ];
@@ -200,13 +206,15 @@ const OnboardingScreen = () => {
           {onboardingData.map((item, index) => (
             <SlideContainer key={item.id}>
               <IllustrationContainer color={item.color}>
-                <IllustrationText theme={theme}>{item.illustration}</IllustrationText>
+                <IllustrationText theme={theme}>
+                  {item.illustration}
+                </IllustrationText>
               </IllustrationContainer>
-              
+
               <TitleText color={theme.colors.text.primary}>
                 {item.title}
               </TitleText>
-              
+
               <DescriptionText color={theme.colors.text.secondary}>
                 {item.description}
               </DescriptionText>
@@ -223,12 +231,16 @@ const OnboardingScreen = () => {
               accessibilityHint="Navigate to the previous onboarding screen"
               accessibilityRole="button"
             >
-              <ButtonText color={theme.colors.text.primary}>Previous</ButtonText>
+              <ButtonText color={theme.colors.text.primary}>
+                Previous
+              </ButtonText>
             </NavigationButton>
           ) : (
-            <SkipButton 
+            <SkipButton
               onPress={() => {
-                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                Haptics.notificationAsync(
+                  Haptics.NotificationFeedbackType.Success,
+                );
                 handleComplete();
               }}
               accessibilityLabel="Skip onboarding"
@@ -253,12 +265,22 @@ const OnboardingScreen = () => {
           <NavigationButton
             backgroundColor={theme.colors.primary[500]}
             onPress={handleNext}
-            accessibilityLabel={currentIndex === onboardingData.length - 1 ? 'Get started with Solace' : 'Continue to next step'}
-            accessibilityHint={currentIndex === onboardingData.length - 1 ? 'Complete onboarding and enter the app' : 'Proceed to the next onboarding screen'}
+            accessibilityLabel={
+              currentIndex === onboardingData.length - 1
+                ? "Get started with Solace"
+                : "Continue to next step"
+            }
+            accessibilityHint={
+              currentIndex === onboardingData.length - 1
+                ? "Complete onboarding and enter the app"
+                : "Proceed to the next onboarding screen"
+            }
             accessibilityRole="button"
           >
             <ButtonText color={theme.colors.text.inverse}>
-              {currentIndex === onboardingData.length - 1 ? 'Get Started' : 'Next'}
+              {currentIndex === onboardingData.length - 1
+                ? "Get Started"
+                : "Next"}
             </ButtonText>
           </NavigationButton>
         </NavigationContainer>

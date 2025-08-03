@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import * as Speech from 'expo-speech';
-import { useTheme } from '../../contexts/ThemeContext';
-import { hapticUtils, styleUtils } from '../../utils/platformOptimizations';
-import Icon from '../common/Icon';
+import * as Speech from "expo-speech";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
 
-const TherapeuticIndicator = ({ type = 'listening' }) => {
+import { useTheme } from "../../contexts/ThemeContext";
+import { hapticUtils, styleUtils } from "../../utils/platformOptimizations";
+import Icon from "../common/Icon";
+
+const TherapeuticIndicator = ({ type = "listening" }) => {
   const { theme } = useTheme();
   const [pulseAnim] = useState(new Animated.Value(1));
 
@@ -25,7 +32,7 @@ const TherapeuticIndicator = ({ type = 'listening' }) => {
       ]).start(() => pulse());
     };
 
-    if (type === 'listening' || type === 'thinking') {
+    if (type === "listening" || type === "thinking") {
       pulse();
     }
 
@@ -34,29 +41,29 @@ const TherapeuticIndicator = ({ type = 'listening' }) => {
 
   const getIndicatorConfig = () => {
     switch (type) {
-      case 'listening':
+      case "listening":
         return {
           color: theme.colors.therapeutic.calming[500],
-          icon: '👂',
-          text: 'Listening with care'
+          icon: "👂",
+          text: "Listening with care",
         };
-      case 'thinking':
+      case "thinking":
         return {
           color: theme.colors.therapeutic.peaceful[500],
-          icon: '💭',
-          text: 'Thinking thoughtfully'
+          icon: "💭",
+          text: "Thinking thoughtfully",
         };
-      case 'supportive':
+      case "supportive":
         return {
           color: theme.colors.therapeutic.nurturing[500],
-          icon: '🤝',
-          text: 'Here to support you'
+          icon: "🤝",
+          text: "Here to support you",
         };
       default:
         return {
           color: theme.colors.primary[500],
-          icon: '🤖',
-          text: 'AI Therapist'
+          icon: "🤖",
+          text: "AI Therapist",
         };
     }
   };
@@ -64,13 +71,13 @@ const TherapeuticIndicator = ({ type = 'listening' }) => {
   const config = getIndicatorConfig();
 
   return (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.therapeuticIndicator,
-        { 
-          backgroundColor: config.color + '20',
-          transform: [{ scale: pulseAnim }]
-        }
+        {
+          backgroundColor: config.color + "20",
+          transform: [{ scale: pulseAnim }],
+        },
       ]}
     >
       <Text style={styles.indicatorIcon}>{config.icon}</Text>
@@ -83,7 +90,7 @@ const TherapeuticIndicator = ({ type = 'listening' }) => {
 
 const EmotionalContext = ({ userMood, intensity }) => {
   const { theme } = useTheme();
-  
+
   if (!userMood) return null;
 
   const getMoodColor = (mood) => {
@@ -100,10 +107,12 @@ const EmotionalContext = ({ userMood, intensity }) => {
 
   return (
     <View style={styles.emotionalContext}>
-      <View style={[
-        styles.moodIndicator,
-        { backgroundColor: getMoodColor(userMood) + '20' }
-      ]}>
+      <View
+        style={[
+          styles.moodIndicator,
+          { backgroundColor: getMoodColor(userMood) + "20" },
+        ]}
+      >
         <Text style={[styles.contextText, { color: getMoodColor(userMood) }]}>
           Responding to your {userMood} mood
           {intensity && ` (${intensity}/5)`}
@@ -113,34 +122,62 @@ const EmotionalContext = ({ userMood, intensity }) => {
   );
 };
 
-const SupportOptions = ({ onBreakSuggested, onResourcesRequested, onClarification }) => {
+const SupportOptions = ({
+  onBreakSuggested,
+  onResourcesRequested,
+  onClarification,
+}) => {
   const { theme } = useTheme();
 
   return (
     <View style={styles.supportOptions}>
-      <TouchableOpacity 
-        style={[styles.supportOption, { backgroundColor: theme.colors.therapeutic.calming[50] }]}
+      <TouchableOpacity
+        style={[
+          styles.supportOption,
+          { backgroundColor: theme.colors.therapeutic.calming[50] },
+        ]}
         onPress={onBreakSuggested}
       >
-        <Text style={[styles.supportOptionText, { color: theme.colors.therapeutic.calming[700] }]}>
+        <Text
+          style={[
+            styles.supportOptionText,
+            { color: theme.colors.therapeutic.calming[700] },
+          ]}
+        >
           💆‍♀️ Take a break
         </Text>
       </TouchableOpacity>
-      
-      <TouchableOpacity 
-        style={[styles.supportOption, { backgroundColor: theme.colors.therapeutic.nurturing[50] }]}
+
+      <TouchableOpacity
+        style={[
+          styles.supportOption,
+          { backgroundColor: theme.colors.therapeutic.nurturing[50] },
+        ]}
         onPress={onResourcesRequested}
       >
-        <Text style={[styles.supportOptionText, { color: theme.colors.therapeutic.nurturing[700] }]}>
+        <Text
+          style={[
+            styles.supportOptionText,
+            { color: theme.colors.therapeutic.nurturing[700] },
+          ]}
+        >
           📚 Resources
         </Text>
       </TouchableOpacity>
-      
-      <TouchableOpacity 
-        style={[styles.supportOption, { backgroundColor: theme.colors.therapeutic.peaceful[50] }]}
+
+      <TouchableOpacity
+        style={[
+          styles.supportOption,
+          { backgroundColor: theme.colors.therapeutic.peaceful[50] },
+        ]}
         onPress={onClarification}
       >
-        <Text style={[styles.supportOptionText, { color: theme.colors.therapeutic.peaceful[700] }]}>
+        <Text
+          style={[
+            styles.supportOptionText,
+            { color: theme.colors.therapeutic.peaceful[700] },
+          ]}
+        >
           ❓ Clarify
         </Text>
       </TouchableOpacity>
@@ -152,7 +189,7 @@ const TherapeuticChatBubble = ({
   message,
   isUser = false,
   timestamp,
-  type = 'message',
+  type = "message",
   userMood,
   moodIntensity,
   confidence = 1,
@@ -160,7 +197,7 @@ const TherapeuticChatBubble = ({
   onBreakSuggested,
   onResourcesRequested,
   onClarification,
-  supportLevel = 'standard',
+  supportLevel = "standard",
   showSupportOptions = false,
   accessibilityLabel,
 }) => {
@@ -170,8 +207,8 @@ const TherapeuticChatBubble = ({
 
   const handleSpeak = async () => {
     setIsLoading(true);
-    hapticUtils.impact('light');
-    
+    hapticUtils.impact("light");
+
     try {
       const isSpeaking = await Speech.isSpeakingAsync();
       if (isSpeaking) {
@@ -179,14 +216,14 @@ const TherapeuticChatBubble = ({
       } else {
         // Use therapeutic speech settings
         await Speech.speak(message, {
-          language: 'en',
-          pitch: 0.9,  // Slightly lower, more calming
-          rate: 0.85,  // Slower for comprehension
-          voice: 'com.apple.voice.compact.en-US.Samantha', // iOS
+          language: "en",
+          pitch: 0.9, // Slightly lower, more calming
+          rate: 0.85, // Slower for comprehension
+          voice: "com.apple.voice.compact.en-US.Samantha", // iOS
         });
       }
     } catch (error) {
-      console.error('Error in therapeutic speech:', error);
+      console.error("Error in therapeutic speech:", error);
     } finally {
       setIsLoading(false);
     }
@@ -198,7 +235,7 @@ const TherapeuticChatBubble = ({
       borderRadius: 20,
       paddingHorizontal: 16,
       paddingVertical: 12,
-      maxWidth: '80%',
+      maxWidth: "80%",
       minWidth: 48,
       minHeight: 44,
     };
@@ -207,7 +244,7 @@ const TherapeuticChatBubble = ({
       return {
         ...baseStyle,
         backgroundColor: theme.colors.primary[500],
-        alignSelf: 'flex-end',
+        alignSelf: "flex-end",
         marginLeft: 40,
       };
     }
@@ -223,7 +260,7 @@ const TherapeuticChatBubble = ({
     return {
       ...baseStyle,
       backgroundColor: supportColors[supportLevel] || supportColors.standard,
-      alignSelf: 'flex-start',
+      alignSelf: "flex-start",
       marginRight: 40,
       borderColor: theme.colors.therapeutic.calming[200],
       borderWidth: 1,
@@ -234,7 +271,7 @@ const TherapeuticChatBubble = ({
     const baseStyle = {
       fontSize: 16,
       lineHeight: 24,
-      ...styleUtils.createTextStyle('body'),
+      ...styleUtils.createTextStyle("body"),
     };
 
     if (isUser) {
@@ -254,19 +291,26 @@ const TherapeuticChatBubble = ({
   };
 
   const formatTime = () => {
-    if (!timestamp) return '';
+    if (!timestamp) return "";
     return new Date(timestamp).toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const getConfidenceIndicator = () => {
     if (isUser || confidence >= 0.9) return null;
-    
+
     return (
-      <View style={[styles.confidenceIndicator, { borderTopColor: theme.colors.border.primary }]}>
-        <Text style={[styles.confidenceText, { color: theme.colors.text.tertiary }]}>
+      <View
+        style={[
+          styles.confidenceIndicator,
+          { borderTopColor: theme.colors.border.primary },
+        ]}
+      >
+        <Text
+          style={[styles.confidenceText, { color: theme.colors.text.tertiary }]}
+        >
           Let me know if this helps, or if you'd like me to explain differently
         </Text>
       </View>
@@ -276,11 +320,11 @@ const TherapeuticChatBubble = ({
   return (
     <View style={styles.container}>
       {/* AI Therapeutic Indicator */}
-      {!isUser && type === 'thinking' && (
+      {!isUser && type === "thinking" && (
         <TherapeuticIndicator type="thinking" />
       )}
-      
-      {!isUser && type === 'listening' && (
+
+      {!isUser && type === "listening" && (
         <TherapeuticIndicator type="listening" />
       )}
 
@@ -294,33 +338,36 @@ const TherapeuticChatBubble = ({
         style={getBubbleStyle()}
         onLongPress={onLongPress}
         onPress={() => !isUser && setShowOptions(!showOptions)}
-        accessible={true}
+        accessible
         accessibilityRole="text"
         accessibilityLabel={
-          accessibilityLabel || 
-          `${isUser ? 'Your' : 'AI therapist'} message: ${message}`
+          accessibilityLabel ||
+          `${isUser ? "Your" : "AI therapist"} message: ${message}`
         }
         accessibilityHint={
-          isUser 
-            ? "Long press for message options" 
+          isUser
+            ? "Long press for message options"
             : "Tap for support options, long press to hear message spoken aloud"
         }
       >
         {/* Therapeutic Indicator for AI messages */}
-        {!isUser && (
-          <TherapeuticIndicator type="supportive" />
-        )}
+        {!isUser && <TherapeuticIndicator type="supportive" />}
 
         {/* Message Text */}
-        <Text style={getTextStyle()}>
-          {message}
-        </Text>
+        <Text style={getTextStyle()}>{message}</Text>
 
         {/* Message Footer */}
         <View style={styles.messageFooter}>
-          <Text style={[styles.timestamp, { 
-            color: isUser ? theme.colors.text.onPrimary : theme.colors.text.secondary 
-          }]}>
+          <Text
+            style={[
+              styles.timestamp,
+              {
+                color: isUser
+                  ? theme.colors.text.onPrimary
+                  : theme.colors.text.secondary,
+              },
+            ]}
+          >
             {formatTime()}
           </Text>
 
@@ -328,14 +375,18 @@ const TherapeuticChatBubble = ({
           <TouchableOpacity
             style={styles.voiceButton}
             onPress={handleSpeak}
-            accessible={true}
+            accessible
             accessibilityLabel="Speak message aloud"
             accessibilityRole="button"
           >
             <Icon
               name="volume-high"
               size={16}
-              color={isUser ? theme.colors.text.onPrimary : theme.colors.text.secondary}
+              color={
+                isUser
+                  ? theme.colors.text.onPrimary
+                  : theme.colors.text.secondary
+              }
             />
           </TouchableOpacity>
         </View>
@@ -362,9 +413,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   therapeuticIndicator: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
@@ -376,11 +427,11 @@ const styles = StyleSheet.create({
   },
   indicatorText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   emotionalContext: {
     marginBottom: 8,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   moodIndicator: {
     paddingHorizontal: 12,
@@ -389,13 +440,13 @@ const styles = StyleSheet.create({
   },
   contextText: {
     fontSize: 12,
-    fontWeight: '500',
-    fontStyle: 'italic',
+    fontWeight: "500",
+    fontStyle: "italic",
   },
   messageFooter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginTop: 8,
   },
   timestamp: {
@@ -406,8 +457,8 @@ const styles = StyleSheet.create({
     padding: 4,
     minWidth: 24,
     minHeight: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   confidenceIndicator: {
     marginTop: 8,
@@ -416,12 +467,12 @@ const styles = StyleSheet.create({
   },
   confidenceText: {
     fontSize: 12,
-    fontStyle: 'italic',
-    textAlign: 'center',
+    fontStyle: "italic",
+    textAlign: "center",
   },
   supportOptions: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     marginTop: 8,
     paddingHorizontal: 20,
   },
@@ -431,12 +482,12 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     minWidth: 44,
     minHeight: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   supportOptionText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 });
 

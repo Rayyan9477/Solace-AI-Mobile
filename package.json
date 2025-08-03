@@ -27,7 +27,8 @@
     "dev": "concurrently \"npm start\" \"npm run theme-preview\"",
     "expo:install": "npx install-expo-modules@latest",
     "prebuild": "expo prebuild",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "sync:figma": "node scripts/fetch-figma-data.js && node scripts/figma-component-analyzer.js"
   },
   "dependencies": {
     "@expo/config-plugins": "~9.0.0",

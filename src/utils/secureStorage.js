@@ -1,5 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import CryptoJS from 'crypto-js';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import CryptoJS from "crypto-js";
 
 class SecureStorageService {
   constructor() {
@@ -11,31 +11,34 @@ class SecureStorageService {
   async initializeKey() {
     try {
       // Check if we have a stored key
-      const storedKey = await AsyncStorage.getItem('__secure_key__');
+      const storedKey = await AsyncStorage.getItem("__secure_key__");
       if (storedKey) {
         this.encryptionKey = storedKey;
       } else {
         // Generate and store new key
         const newKey = this.generateEncryptionKey();
-        await AsyncStorage.setItem('__secure_key__', newKey);
+        await AsyncStorage.setItem("__secure_key__", newKey);
         this.encryptionKey = newKey;
       }
     } catch (error) {
-      console.error('Error initializing encryption key:', error);
+      console.error("Error initializing encryption key:", error);
     }
   }
 
   generateEncryptionKey() {
     // Generate a secure random key
-    return CryptoJS.lib.WordArray.random(256/8).toString();
+    return CryptoJS.lib.WordArray.random(256 / 8).toString();
   }
 
   encrypt(data) {
     try {
-      const encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), this.encryptionKey).toString();
+      const encrypted = CryptoJS.AES.encrypt(
+        JSON.stringify(data),
+        this.encryptionKey,
+      ).toString();
       return encrypted;
     } catch (error) {
-      console.error('Encryption error:', error);
+      console.error("Encryption error:", error);
       return null;
     }
   }
@@ -46,7 +49,7 @@ class SecureStorageService {
       const decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
       return JSON.parse(decryptedString);
     } catch (error) {
-      console.error('Decryption error:', error);
+      console.error("Decryption error:", error);
       return null;
     }
   }
@@ -62,17 +65,20 @@ class SecureStorageService {
       };
 
       const encrypted = this.encrypt(dataWithTimestamp);
-      if (!encrypted) throw new Error('Failed to encrypt mood data');
+      if (!encrypted) throw new Error("Failed to encrypt mood data");
 
-      await AsyncStorage.setItem(`secure_mood_${dataWithTimestamp.id}`, encrypted);
-      
+      await AsyncStorage.setItem(
+        `secure_mood_${dataWithTimestamp.id}`,
+        encrypted,
+      );
+
       // Update mood data index
       await this.updateMoodDataIndex(dataWithTimestamp.id);
-      
-      console.log('Mood data stored securely');
+
+      console.log("Mood data stored securely");
       return dataWithTimestamp.id;
     } catch (error) {
-      console.error('Error storing mood data:', error);
+      console.error("Error storing mood data:", error);
       throw error;
     }
   }
@@ -85,7 +91,7 @@ class SecureStorageService {
       const decrypted = this.decrypt(encrypted);
       return decrypted;
     } catch (error) {
-      console.error('Error retrieving mood data:', error);
+      console.error("Error retrieving mood data:", error);
       return null;
     }
   }
@@ -93,15 +99,15 @@ class SecureStorageService {
   async getAllMoodData() {
     try {
       const index = await this.getMoodDataIndex();
-      const moodDataPromises = index.map(id => this.getMoodData(id));
+      const moodDataPromises = index.map((id) => this.getMoodData(id));
       const moodDataArray = await Promise.all(moodDataPromises);
-      
+
       // Filter out null values and sort by timestamp
       return moodDataArray
-        .filter(data => data !== null)
+        .filter((data) => data !== null)
         .sort((a, b) => new Date(b.stored_at) - new Date(a.stored_at));
     } catch (error) {
-      console.error('Error retrieving all mood data:', error);
+      console.error("Error retrieving all mood data:", error);
       return [];
     }
   }
@@ -112,22 +118,22 @@ class SecureStorageService {
       if (!index.includes(moodId)) {
         index.push(moodId);
         const encrypted = this.encrypt(index);
-        await AsyncStorage.setItem('secure_mood_index', encrypted);
+        await AsyncStorage.setItem("secure_mood_index", encrypted);
       }
     } catch (error) {
-      console.error('Error updating mood data index:', error);
+      console.error("Error updating mood data index:", error);
     }
   }
 
   async getMoodDataIndex() {
     try {
-      const encrypted = await AsyncStorage.getItem('secure_mood_index');
+      const encrypted = await AsyncStorage.getItem("secure_mood_index");
       if (!encrypted) return [];
-      
+
       const decrypted = this.decrypt(encrypted);
       return Array.isArray(decrypted) ? decrypted : [];
     } catch (error) {
-      console.error('Error retrieving mood data index:', error);
+      console.error("Error retrieving mood data index:", error);
       return [];
     }
   }
@@ -141,32 +147,37 @@ class SecureStorageService {
         stored_at: timestamp,
         id: assessmentData.id || `assessment_${Date.now()}`,
         // Add metadata for privacy
-        privacy_level: 'high',
-        data_type: 'mental_health_assessment'
+        privacy_level: "high",
+        data_type: "mental_health_assessment",
       };
 
       const encrypted = this.encrypt(dataWithTimestamp);
-      if (!encrypted) throw new Error('Failed to encrypt assessment data');
+      if (!encrypted) throw new Error("Failed to encrypt assessment data");
 
-      await AsyncStorage.setItem(`secure_assessment_${dataWithTimestamp.id}`, encrypted);
+      await AsyncStorage.setItem(
+        `secure_assessment_${dataWithTimestamp.id}`,
+        encrypted,
+      );
       await this.updateAssessmentDataIndex(dataWithTimestamp.id);
-      
-      console.log('Assessment data stored securely');
+
+      console.log("Assessment data stored securely");
       return dataWithTimestamp.id;
     } catch (error) {
-      console.error('Error storing assessment data:', error);
+      console.error("Error storing assessment data:", error);
       throw error;
     }
   }
 
   async getAssessmentData(assessmentId) {
     try {
-      const encrypted = await AsyncStorage.getItem(`secure_assessment_${assessmentId}`);
+      const encrypted = await AsyncStorage.getItem(
+        `secure_assessment_${assessmentId}`,
+      );
       if (!encrypted) return null;
 
       return this.decrypt(encrypted);
     } catch (error) {
-      console.error('Error retrieving assessment data:', error);
+      console.error("Error retrieving assessment data:", error);
       return null;
     }
   }
@@ -174,14 +185,16 @@ class SecureStorageService {
   async getAllAssessmentData() {
     try {
       const index = await this.getAssessmentDataIndex();
-      const assessmentDataPromises = index.map(id => this.getAssessmentData(id));
+      const assessmentDataPromises = index.map((id) =>
+        this.getAssessmentData(id),
+      );
       const assessmentDataArray = await Promise.all(assessmentDataPromises);
-      
+
       return assessmentDataArray
-        .filter(data => data !== null)
+        .filter((data) => data !== null)
         .sort((a, b) => new Date(b.stored_at) - new Date(a.stored_at));
     } catch (error) {
-      console.error('Error retrieving all assessment data:', error);
+      console.error("Error retrieving all assessment data:", error);
       return [];
     }
   }
@@ -192,22 +205,22 @@ class SecureStorageService {
       if (!index.includes(assessmentId)) {
         index.push(assessmentId);
         const encrypted = this.encrypt(index);
-        await AsyncStorage.setItem('secure_assessment_index', encrypted);
+        await AsyncStorage.setItem("secure_assessment_index", encrypted);
       }
     } catch (error) {
-      console.error('Error updating assessment data index:', error);
+      console.error("Error updating assessment data index:", error);
     }
   }
 
   async getAssessmentDataIndex() {
     try {
-      const encrypted = await AsyncStorage.getItem('secure_assessment_index');
+      const encrypted = await AsyncStorage.getItem("secure_assessment_index");
       if (!encrypted) return [];
-      
+
       const decrypted = this.decrypt(encrypted);
       return Array.isArray(decrypted) ? decrypted : [];
     } catch (error) {
-      console.error('Error retrieving assessment data index:', error);
+      console.error("Error retrieving assessment data index:", error);
       return [];
     }
   }
@@ -220,28 +233,33 @@ class SecureStorageService {
         ...crisisData,
         stored_at: timestamp,
         id: crisisData.id || `crisis_${Date.now()}`,
-        privacy_level: 'maximum',
-        data_type: 'crisis_event',
+        privacy_level: "maximum",
+        data_type: "crisis_event",
         // Add additional security metadata
-        requires_professional_review: crisisData.severity === 'critical',
+        requires_professional_review: crisisData.severity === "critical",
       };
 
       const encrypted = this.encrypt(dataWithTimestamp);
-      if (!encrypted) throw new Error('Failed to encrypt crisis data');
+      if (!encrypted) throw new Error("Failed to encrypt crisis data");
 
-      await AsyncStorage.setItem(`secure_crisis_${dataWithTimestamp.id}`, encrypted);
+      await AsyncStorage.setItem(
+        `secure_crisis_${dataWithTimestamp.id}`,
+        encrypted,
+      );
       await this.updateCrisisDataIndex(dataWithTimestamp.id);
-      
-      console.log('Crisis event stored securely');
-      
+
+      console.log("Crisis event stored securely");
+
       // Schedule data review reminder if critical
       if (dataWithTimestamp.requires_professional_review) {
-        console.log('Critical crisis event stored - consider professional review');
+        console.log(
+          "Critical crisis event stored - consider professional review",
+        );
       }
-      
+
       return dataWithTimestamp.id;
     } catch (error) {
-      console.error('Error storing crisis data:', error);
+      console.error("Error storing crisis data:", error);
       throw error;
     }
   }
@@ -253,7 +271,7 @@ class SecureStorageService {
 
       return this.decrypt(encrypted);
     } catch (error) {
-      console.error('Error retrieving crisis data:', error);
+      console.error("Error retrieving crisis data:", error);
       return null;
     }
   }
@@ -261,14 +279,14 @@ class SecureStorageService {
   async getAllCrisisData() {
     try {
       const index = await this.getCrisisDataIndex();
-      const crisisDataPromises = index.map(id => this.getCrisisData(id));
+      const crisisDataPromises = index.map((id) => this.getCrisisData(id));
       const crisisDataArray = await Promise.all(crisisDataPromises);
-      
+
       return crisisDataArray
-        .filter(data => data !== null)
+        .filter((data) => data !== null)
         .sort((a, b) => new Date(b.stored_at) - new Date(a.stored_at));
     } catch (error) {
-      console.error('Error retrieving all crisis data:', error);
+      console.error("Error retrieving all crisis data:", error);
       return [];
     }
   }
@@ -279,22 +297,22 @@ class SecureStorageService {
       if (!index.includes(crisisId)) {
         index.push(crisisId);
         const encrypted = this.encrypt(index);
-        await AsyncStorage.setItem('secure_crisis_index', encrypted);
+        await AsyncStorage.setItem("secure_crisis_index", encrypted);
       }
     } catch (error) {
-      console.error('Error updating crisis data index:', error);
+      console.error("Error updating crisis data index:", error);
     }
   }
 
   async getCrisisDataIndex() {
     try {
-      const encrypted = await AsyncStorage.getItem('secure_crisis_index');
+      const encrypted = await AsyncStorage.getItem("secure_crisis_index");
       if (!encrypted) return [];
-      
+
       const decrypted = this.decrypt(encrypted);
       return Array.isArray(decrypted) ? decrypted : [];
     } catch (error) {
-      console.error('Error retrieving crisis data index:', error);
+      console.error("Error retrieving crisis data index:", error);
       return [];
     }
   }
@@ -303,22 +321,22 @@ class SecureStorageService {
   async storeUserSettings(settings) {
     try {
       const encrypted = this.encrypt(settings);
-      await AsyncStorage.setItem('secure_user_settings', encrypted);
-      console.log('User settings stored securely');
+      await AsyncStorage.setItem("secure_user_settings", encrypted);
+      console.log("User settings stored securely");
     } catch (error) {
-      console.error('Error storing user settings:', error);
+      console.error("Error storing user settings:", error);
       throw error;
     }
   }
 
   async getUserSettings() {
     try {
-      const encrypted = await AsyncStorage.getItem('secure_user_settings');
+      const encrypted = await AsyncStorage.getItem("secure_user_settings");
       if (!encrypted) return null;
 
       return this.decrypt(encrypted);
     } catch (error) {
-      console.error('Error retrieving user settings:', error);
+      console.error("Error retrieving user settings:", error);
       return null;
     }
   }
@@ -333,18 +351,19 @@ class SecureStorageService {
 
       const exportData = {
         export_date: new Date().toISOString(),
-        data_type: 'mental_health_export',
+        data_type: "mental_health_export",
         mood_entries: moodData,
         assessments: assessmentData,
         crisis_events: crisisData,
         user_settings: settings,
         // Add privacy notice
-        privacy_notice: 'This export contains sensitive mental health data. Handle with care and delete when no longer needed.',
+        privacy_notice:
+          "This export contains sensitive mental health data. Handle with care and delete when no longer needed.",
       };
 
       return exportData;
     } catch (error) {
-      console.error('Error exporting user data:', error);
+      console.error("Error exporting user data:", error);
       throw error;
     }
   }
@@ -353,16 +372,16 @@ class SecureStorageService {
   async deleteMoodData(moodId) {
     try {
       await AsyncStorage.removeItem(`secure_mood_${moodId}`);
-      
+
       // Update index
       const index = await this.getMoodDataIndex();
-      const updatedIndex = index.filter(id => id !== moodId);
+      const updatedIndex = index.filter((id) => id !== moodId);
       const encrypted = this.encrypt(updatedIndex);
-      await AsyncStorage.setItem('secure_mood_index', encrypted);
-      
-      console.log('Mood data deleted securely');
+      await AsyncStorage.setItem("secure_mood_index", encrypted);
+
+      console.log("Mood data deleted securely");
     } catch (error) {
-      console.error('Error deleting mood data:', error);
+      console.error("Error deleting mood data:", error);
       throw error;
     }
   }
@@ -370,15 +389,15 @@ class SecureStorageService {
   async deleteAssessmentData(assessmentId) {
     try {
       await AsyncStorage.removeItem(`secure_assessment_${assessmentId}`);
-      
+
       const index = await this.getAssessmentDataIndex();
-      const updatedIndex = index.filter(id => id !== assessmentId);
+      const updatedIndex = index.filter((id) => id !== assessmentId);
       const encrypted = this.encrypt(updatedIndex);
-      await AsyncStorage.setItem('secure_assessment_index', encrypted);
-      
-      console.log('Assessment data deleted securely');
+      await AsyncStorage.setItem("secure_assessment_index", encrypted);
+
+      console.log("Assessment data deleted securely");
     } catch (error) {
-      console.error('Error deleting assessment data:', error);
+      console.error("Error deleting assessment data:", error);
       throw error;
     }
   }
@@ -406,14 +425,14 @@ class SecureStorageService {
       }
 
       // Delete indices and settings
-      await AsyncStorage.removeItem('secure_mood_index');
-      await AsyncStorage.removeItem('secure_assessment_index');
-      await AsyncStorage.removeItem('secure_crisis_index');
-      await AsyncStorage.removeItem('secure_user_settings');
+      await AsyncStorage.removeItem("secure_mood_index");
+      await AsyncStorage.removeItem("secure_assessment_index");
+      await AsyncStorage.removeItem("secure_crisis_index");
+      await AsyncStorage.removeItem("secure_user_settings");
 
-      console.log('All user data deleted securely');
+      console.log("All user data deleted securely");
     } catch (error) {
-      console.error('Error deleting all user data:', error);
+      console.error("Error deleting all user data:", error);
       throw error;
     }
   }
@@ -451,10 +470,10 @@ class SecureStorageService {
         if (!data) results.crisis_data.corrupted++;
       }
 
-      console.log('Data integrity check completed:', results);
+      console.log("Data integrity check completed:", results);
       return results;
     } catch (error) {
-      console.error('Error verifying data integrity:', error);
+      console.error("Error verifying data integrity:", error);
       return null;
     }
   }

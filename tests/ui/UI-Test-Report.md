@@ -1,13 +1,13 @@
 # Solace AI Mobile - UI Test Report
 
-Generated: 2025-07-31, 6:24:56 a.m.
+Generated: 2025-08-03, 4:43:38 p.m.
 
 ## Overall Results
 
-- **Success Rate**: 96%
-- **Tests Passed**: 206
+- **Success Rate**: 94%
+- **Tests Passed**: 286
 - **Tests Failed**: 3  
-- **Warnings**: 5
+- **Warnings**: 14
 - **Production Ready**: ❌ NO
 
 ## Test Suite Results
@@ -18,9 +18,9 @@ Generated: 2025-07-31, 6:24:56 a.m.
 - **Results**: 21 passed, 0 failed, 0 warnings
 
 ### Component Integration
-- **Success Rate**: 96%
+- **Success Rate**: 94%
 - **Status**: ❌ FAILED
-- **Results**: 152 passed, 2 failed, 4 warnings
+- **Results**: 232 passed, 2 failed, 13 warnings
 
 ### Design System
 - **Success Rate**: 94%

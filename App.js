@@ -3,23 +3,23 @@
  * Your Empathetic Digital Confidant
  */
 
-import React, { useEffect, useCallback } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { View } from 'react-native';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { NavigationContainer } from '@react-navigation/native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import * as SplashScreen from 'expo-splash-screen';
-import * as Font from 'expo-font';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { NavigationContainer } from "@react-navigation/native";
+import * as Font from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect, useCallback } from "react";
+import { View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
-import { store, persistor } from './src/store/store';
-import AppNavigator from './src/navigation/AppNavigator';
-import LoadingScreen from './src/components/LoadingScreen';
-import { ThemeProvider, useTheme } from './src/contexts/ThemeContext';
-import { DesignSystemProvider } from './src/design-system/DesignSystemContext';
+import LoadingScreen from "./src/components/LoadingScreen";
+import { ThemeProvider, useTheme } from "./src/contexts/ThemeContext";
+import { DesignSystemProvider } from "./src/design-system/DesignSystemContext";
+import AppNavigator from "./src/navigation/AppNavigator";
+import { store, persistor } from "./src/store/store";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -54,16 +54,13 @@ const ThemedApp = () => {
   if (!appIsReady) {
     return null;
   }
-  
+
   return (
-    <View 
-      style={{ flex: 1 }}
-      onLayout={onLayoutRootView}
-    >
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <StatusBar
         style={isDarkMode ? "light" : "dark"}
         backgroundColor={theme.colors.background.primary}
-        translucent={true}
+        translucent
       />
       <AppNavigator />
     </View>

@@ -1,29 +1,30 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import Badge from '../../../components/common/Badge';
+import { render, fireEvent } from "@testing-library/react-native";
+import React from "react";
+
+import Badge from "../../../components/common/Badge";
 
 // Mock theme context
 const mockTheme = {
   colors: {
     primary: {
-      light: '#E3F2FD',
-      dark: '#1976D2',
+      light: "#E3F2FD",
+      dark: "#1976D2",
     },
     success: {
-      light: '#E8F5E8',
-      dark: '#2E7D32',
+      light: "#E8F5E8",
+      dark: "#2E7D32",
     },
     warning: {
-      light: '#FFF8E1',
-      dark: '#F57C00',
+      light: "#FFF8E1",
+      dark: "#F57C00",
     },
     error: {
-      light: '#FFEBEE',
-      dark: '#C62828',
+      light: "#FFEBEE",
+      dark: "#C62828",
     },
     info: {
-      light: '#E1F5FE',
-      dark: '#0277BD',
+      light: "#E1F5FE",
+      dark: "#0277BD",
     },
   },
 };
@@ -33,167 +34,167 @@ const MockThemeProvider = ({ children }) => {
 };
 
 // Mock useTheme hook
-jest.mock('../../../contexts/ThemeContext', () => ({
+jest.mock("../../../contexts/ThemeContext", () => ({
   useTheme: () => ({ theme: mockTheme }),
 }));
 
-describe('Badge Component', () => {
+describe("Badge Component", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders correctly with default props', () => {
+  it("renders correctly with default props", () => {
     const { getByText } = render(
       <MockThemeProvider>
         <Badge label="5" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByText('5')).toBeTruthy();
+    expect(getByText("5")).toBeTruthy();
   });
 
-  it('renders with different variants', () => {
-    const variants = ['primary', 'success', 'warning', 'error', 'info'];
-    
-    variants.forEach(variant => {
+  it("renders with different variants", () => {
+    const variants = ["primary", "success", "warning", "error", "info"];
+
+    variants.forEach((variant) => {
       const { getByText } = render(
         <MockThemeProvider>
           <Badge label="Test" variant={variant} />
-        </MockThemeProvider>
+        </MockThemeProvider>,
       );
 
-      expect(getByText('Test')).toBeTruthy();
+      expect(getByText("Test")).toBeTruthy();
     });
   });
 
-  it('renders with different sizes', () => {
-    const sizes = ['small', 'medium', 'large'];
-    
-    sizes.forEach(size => {
+  it("renders with different sizes", () => {
+    const sizes = ["small", "medium", "large"];
+
+    sizes.forEach((size) => {
       const { getByText } = render(
         <MockThemeProvider>
           <Badge label="Test" size={size} />
-        </MockThemeProvider>
+        </MockThemeProvider>,
       );
 
-      expect(getByText('Test')).toBeTruthy();
+      expect(getByText("Test")).toBeTruthy();
     });
   });
 
-  it('renders dot variant correctly', () => {
+  it("renders dot variant correctly", () => {
     const { getByLabelText } = render(
       <MockThemeProvider>
         <Badge dot />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    const dotBadge = getByLabelText('Status indicator');
+    const dotBadge = getByLabelText("Status indicator");
     expect(dotBadge).toBeTruthy();
   });
 
-  it('renders with icon', () => {
+  it("renders with icon", () => {
     const { getByText } = render(
       <MockThemeProvider>
         <Badge label="5" icon="⭐" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByText('⭐')).toBeTruthy();
-    expect(getByText('5')).toBeTruthy();
+    expect(getByText("⭐")).toBeTruthy();
+    expect(getByText("5")).toBeTruthy();
   });
 
-  it('renders with icon on right', () => {
+  it("renders with icon on right", () => {
     const { getByText } = render(
       <MockThemeProvider>
         <Badge label="5" icon="⭐" iconPosition="right" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByText('⭐')).toBeTruthy();
-    expect(getByText('5')).toBeTruthy();
+    expect(getByText("⭐")).toBeTruthy();
+    expect(getByText("5")).toBeTruthy();
   });
 
-  it('handles press events when onPress is provided', () => {
+  it("handles press events when onPress is provided", () => {
     const mockOnPress = jest.fn();
     const { getByRole } = render(
       <MockThemeProvider>
         <Badge label="5" onPress={mockOnPress} />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    const badge = getByRole('button');
+    const badge = getByRole("button");
     fireEvent.press(badge);
     expect(mockOnPress).toHaveBeenCalledTimes(1);
   });
 
-  it('renders as text role when no onPress is provided', () => {
+  it("renders as text role when no onPress is provided", () => {
     const { getByRole } = render(
       <MockThemeProvider>
         <Badge label="5" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByRole('text')).toBeTruthy();
+    expect(getByRole("text")).toBeTruthy();
   });
 
-  it('renders as button role when onPress is provided', () => {
+  it("renders as button role when onPress is provided", () => {
     const mockOnPress = jest.fn();
     const { getByRole } = render(
       <MockThemeProvider>
         <Badge label="5" onPress={mockOnPress} />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByRole('button')).toBeTruthy();
+    expect(getByRole("button")).toBeTruthy();
   });
 
-  it('formats numeric labels correctly with max limit', () => {
+  it("formats numeric labels correctly with max limit", () => {
     const { getByText } = render(
       <MockThemeProvider>
         <Badge label={150} max={99} />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByText('99+')).toBeTruthy();
+    expect(getByText("99+")).toBeTruthy();
   });
 
-  it('does not format labels under max limit', () => {
+  it("does not format labels under max limit", () => {
     const { getByText } = render(
       <MockThemeProvider>
         <Badge label={50} max={99} />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByText('50')).toBeTruthy();
+    expect(getByText("50")).toBeTruthy();
   });
 
-  it('renders with outline variant', () => {
+  it("renders with outline variant", () => {
     const { getByText } = render(
       <MockThemeProvider>
         <Badge label="Outline" outline />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByText('Outline')).toBeTruthy();
+    expect(getByText("Outline")).toBeTruthy();
   });
 
-  it('applies correct accessibility label', () => {
+  it("applies correct accessibility label", () => {
     const { getByLabelText } = render(
       <MockThemeProvider>
         <Badge label="5" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByLabelText('5 badge')).toBeTruthy();
+    expect(getByLabelText("5 badge")).toBeTruthy();
   });
 
-  it('applies custom accessibility label', () => {
+  it("applies custom accessibility label", () => {
     const { getByLabelText } = render(
       <MockThemeProvider>
         <Badge label="5" accessibilityLabel="Custom label" />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
 
-    expect(getByLabelText('Custom label')).toBeTruthy();
+    expect(getByLabelText("Custom label")).toBeTruthy();
   });
 });

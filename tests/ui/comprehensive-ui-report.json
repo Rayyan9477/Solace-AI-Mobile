@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-07-31T01:24:56.563Z",
+  "timestamp": "2025-08-03T11:43:38.996Z",
   "summary": {
-    "passed": 206,
+    "passed": 286,
     "failed": 3,
-    "warnings": 5,
-    "successRate": 96
+    "warnings": 14,
+    "successRate": 94
   },
   "suites": [
     {
@@ -147,9 +147,9 @@
     {
       "name": "Component Integration",
       "results": {
-        "passed": 152,
+        "passed": 232,
         "failed": 2,
-        "warnings": 4,
+        "warnings": 13,
         "tests": [
           {
             "name": "Import in AccessibilitySettingsScreen.js",
@@ -166,7 +166,7 @@
           {
             "name": "Import Validation",
             "status": "passed",
-            "message": "99% of imports are valid",
+            "message": "100% of imports are valid",
             "details": null
           },
           {
@@ -278,6 +278,18 @@
             "details": null
           },
           {
+            "name": "ThemeToggle Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "CrisisRiskAssessment Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
             "name": "DailyInsights Export",
             "status": "passed",
             "message": "Has default export",
@@ -326,7 +338,43 @@
             "details": null
           },
           {
+            "name": "AccessibilityCommunicationIcons Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "AllIcons Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
             "name": "AppIcons Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "ArrowsDirectionsIcons Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "DataVisualizationIcons Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "GeneralUIIcons Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "HealthTechIcons Export",
             "status": "passed",
             "message": "Has default export",
             "details": null
@@ -341,6 +389,24 @@
             "name": "index Export",
             "status": "warnings",
             "message": "No default export found",
+            "details": null
+          },
+          {
+            "name": "MentalHealthIcons Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "NavigationInterfaceIcons Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "NotificationStatusIcons Export",
+            "status": "passed",
+            "message": "Has default export",
             "details": null
           },
           {
@@ -518,6 +584,18 @@
             "details": null
           },
           {
+            "name": "ThemeToggle.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "CrisisRiskAssessment.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
             "name": "DailyInsights.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
@@ -662,19 +740,67 @@
             "details": null
           },
           {
+            "name": "ComprehensiveAssessmentScreen.js Theme",
+            "status": "warnings",
+            "message": "Imports theme but may not use colors",
+            "details": null
+          },
+          {
+            "name": "ForgotPasswordScreen.js Theme",
+            "status": "warnings",
+            "message": "Imports theme but may not use colors",
+            "details": null
+          },
+          {
             "name": "LoginScreen.js Theme",
+            "status": "warnings",
+            "message": "Imports theme but may not use colors",
+            "details": null
+          },
+          {
+            "name": "OnboardingScreen.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
             "details": null
           },
           {
             "name": "RegisterScreen.js Theme",
+            "status": "warnings",
+            "message": "Imports theme but may not use colors",
+            "details": null
+          },
+          {
+            "name": "SignInScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "AITherapyChatScreen.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
             "details": null
           },
           {
             "name": "ChatScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "CommunityMainScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "CommunityScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "NewPostScreen.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
             "details": null
@@ -698,7 +824,79 @@
             "details": null
           },
           {
+            "name": "FreudScoreScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "HomeScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "MentalHealthScoreScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
             "name": "IconTestScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "JournalScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "JournalStatsScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "MentalHealthJournalScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "MyJournalsScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "NewJournalScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "LoadingScreen.js Theme",
+            "status": "warnings",
+            "message": "Imports theme but may not use colors",
+            "details": null
+          },
+          {
+            "name": "MainAppScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "EnhancedMoodTrackerScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "MoodStatsScreen.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
             "details": null
@@ -722,9 +920,39 @@
             "details": null
           },
           {
-            "name": "SplashScreen.js Theme",
+            "name": "ProfileSettingsScreen.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "ProfileSetupScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "SearchScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "NotificationsScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "SettingsScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "SplashScreen.js Theme",
+            "status": "warnings",
+            "message": "Imports theme but may not use colors",
             "details": null
           },
           {
@@ -734,9 +962,45 @@
             "details": null
           },
           {
+            "name": "ErrorUtilitiesScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "WelcomeScreen.js Theme",
+            "status": "warnings",
+            "message": "Imports theme but may not use colors",
+            "details": null
+          },
+          {
+            "name": "MindfulHoursScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "MindfulResourcesScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "SleepQualityScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "StressManagementScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
             "name": "Theme Coverage",
             "status": "passed",
-            "message": "96% of files use theme system",
+            "message": "89% of files use theme system",
             "details": null
           },
           {
@@ -746,7 +1010,31 @@
             "details": null
           },
           {
+            "name": "ThemeToggle.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "CrisisRiskAssessment.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "DailyInsights.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
             "name": "MoodCheckIn.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "ProgressOverview.js Icons",
             "status": "passed",
             "message": "Uses modern icon system",
             "details": null
@@ -758,7 +1046,25 @@
             "details": null
           },
           {
+            "name": "RecentActivity.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "AllIcons.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
             "name": "AppIcons.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "ArrowsDirectionsIcons.js Icons",
             "status": "passed",
             "message": "Uses modern icon system",
             "details": null
@@ -776,13 +1082,91 @@
             "details": null
           },
           {
+            "name": "MentalHealthIcons.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "ComprehensiveAssessmentScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "ForgotPasswordScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "LoginScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "RegisterScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "SignInScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "AITherapyChatScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
             "name": "ChatScreen.js Icons",
             "status": "warnings",
             "message": "Uses legacy icon system",
             "details": null
           },
           {
+            "name": "CommunityMainScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "CommunityScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "NewPostScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
             "name": "DesignSystemScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "FreudScoreScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "HomeScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "MentalHealthScoreScreen.js Icons",
             "status": "passed",
             "message": "Uses modern icon system",
             "details": null
@@ -794,9 +1178,141 @@
             "details": null
           },
           {
+            "name": "JournalScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "JournalStatsScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "MentalHealthJournalScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "MyJournalsScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "NewJournalScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "LoadingScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "MainAppScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "EnhancedMoodTrackerScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "MoodStatsScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "MoodTrackerScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "ProfileSettingsScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "ProfileSetupScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "SearchScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "NotificationsScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "SettingsScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "SplashScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "ErrorUtilitiesScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "WelcomeScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "MindfulHoursScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "MindfulResourcesScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "SleepQualityScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "StressManagementScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
             "name": "Icon System",
             "status": "passed",
-            "message": "7 files use modern icon system",
+            "message": "49 files use modern icon system",
             "details": null
           },
           {
@@ -814,7 +1330,7 @@
           {
             "name": "AssessmentHistory.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (4/4)",
+            "message": "Good accessibility support (3/4)",
             "details": null
           },
           {
@@ -844,7 +1360,7 @@
           {
             "name": "TherapeuticChatBubble.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (4/4)",
+            "message": "Good accessibility support (3/4)",
             "details": null
           },
           {
@@ -880,7 +1396,7 @@
           {
             "name": "Button.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (4/4)",
+            "message": "Good accessibility support (3/4)",
             "details": null
           },
           {
@@ -898,13 +1414,25 @@
           {
             "name": "Input.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (4/4)",
+            "message": "Good accessibility support (3/4)",
+            "details": null
+          },
+          {
+            "name": "CrisisRiskAssessment.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (2/4)",
+            "details": null
+          },
+          {
+            "name": "DailyInsights.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (2/4)",
             "details": null
           },
           {
             "name": "MoodCheckIn.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (4/4)",
+            "message": "Good accessibility support (3/4)",
             "details": null
           },
           {
@@ -916,19 +1444,19 @@
           {
             "name": "RecentActivity.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (4/4)",
+            "message": "Good accessibility support (3/4)",
             "details": null
           },
           {
             "name": "WelcomeHeader.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (4/4)",
+            "message": "Good accessibility support (3/4)",
             "details": null
           },
           {
             "name": "LightModeDemo.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (4/4)",
+            "message": "Good accessibility support (3/4)",
             "details": null
           },
           {
@@ -938,9 +1466,15 @@
             "details": null
           },
           {
+            "name": "AllIcons.js A11y",
+            "status": "warnings",
+            "message": "Basic accessibility support (1/4)",
+            "details": null
+          },
+          {
             "name": "PlatformIcon.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (4/4)",
+            "message": "Good accessibility support (3/4)",
             "details": null
           },
           {
@@ -976,13 +1510,13 @@
           {
             "name": "SafeNavigationHeader.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (4/4)",
+            "message": "Good accessibility support (3/4)",
             "details": null
           },
           {
             "name": "PlatformButton.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (3/4)",
+            "message": "Good accessibility support (2/4)",
             "details": null
           },
           {
@@ -1000,19 +1534,13 @@
           {
             "name": "AssessmentScreen.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (4/4)",
-            "details": null
-          },
-          {
-            "name": "LoginScreen.js A11y",
-            "status": "passed",
             "message": "Good accessibility support (3/4)",
             "details": null
           },
           {
-            "name": "RegisterScreen.js A11y",
+            "name": "OnboardingScreen.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (3/4)",
+            "message": "Good accessibility support (2/4)",
             "details": null
           },
           {
@@ -1034,9 +1562,15 @@
             "details": null
           },
           {
-            "name": "MoodTrackerScreen.js A11y",
+            "name": "MainAppScreen.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (4/4)",
+            "message": "Good accessibility support (3/4)",
+            "details": null
+          },
+          {
+            "name": "EnhancedMoodTrackerScreen.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (3/4)",
             "details": null
           },
           {
@@ -1048,7 +1582,7 @@
           {
             "name": "ProfileScreen.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (4/4)",
+            "message": "Good accessibility support (3/4)",
             "details": null
           },
           {
@@ -1059,8 +1593,8 @@
           },
           {
             "name": "Accessibility Coverage",
-            "status": "passed",
-            "message": "78% of files have good accessibility",
+            "status": "warnings",
+            "message": "Only 46% of files have good accessibility",
             "details": null
           },
           {

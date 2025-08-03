@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import {
   View,
   Text,
@@ -8,22 +9,28 @@ import {
   RefreshControl,
   Alert,
   BackHandler,
-} from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MentalHealthAccessibility } from '../../utils/accessibility';
-import { colors, typography, spacing, borderRadius, shadows } from '../../styles/theme';
-import { fetchMoodHistory } from '../../store/slices/moodSlice';
-import { fetchUserStats } from '../../store/slices/userSlice';
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+
+import DailyInsights from "../../components/dashboard/DailyInsights";
+import MoodCheckIn from "../../components/dashboard/MoodCheckIn";
+import ProgressOverview from "../../components/dashboard/ProgressOverview";
+import QuickActions from "../../components/dashboard/QuickActions";
+import RecentActivity from "../../components/dashboard/RecentActivity";
+import WelcomeHeader from "../../components/dashboard/WelcomeHeader";
+import { useTheme } from "../../contexts/ThemeContext";
+import { fetchMoodHistory } from "../../store/slices/moodSlice";
+import { fetchUserStats } from "../../store/slices/userSlice";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../../styles/theme";
+import { MentalHealthAccessibility } from "../../utils/accessibility";
 
 // Dashboard components
-import WelcomeHeader from '../../components/dashboard/WelcomeHeader';
-import MoodCheckIn from '../../components/dashboard/MoodCheckIn';
-import DailyInsights from '../../components/dashboard/DailyInsights';
-import QuickActions from '../../components/dashboard/QuickActions';
-import ProgressOverview from '../../components/dashboard/ProgressOverview';
-import RecentActivity from '../../components/dashboard/RecentActivity';
 
 const DashboardScreen = () => {
   const navigation = useNavigation();
@@ -35,20 +42,20 @@ const DashboardScreen = () => {
   // Handle hardware back button on Android
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
+      "hardwareBackPress",
       () => {
         if (navigation.canGoBack()) {
           navigation.goBack();
           return true;
         }
         return false;
-      }
+      },
     );
 
     return () => backHandler.remove();
   }, [navigation]);
-  
-  const { user, mood, chat, loading } = useSelector(state => ({
+
+  const { user, mood, chat, loading } = useSelector((state) => ({
     user: state.user,
     mood: state.mood,
     chat: state.chat,
@@ -60,18 +67,20 @@ const DashboardScreen = () => {
       setError(null);
       await Promise.all([
         dispatch(fetchMoodHistory()).unwrap(),
-        dispatch(fetchUserStats()).unwrap()
+        dispatch(fetchUserStats()).unwrap(),
       ]);
     } catch (error) {
-      console.error('Failed to fetch dashboard data:', error);
-      setError('Unable to load dashboard data. Please check your connection and try again.');
+      console.error("Failed to fetch dashboard data:", error);
+      setError(
+        "Unable to load dashboard data. Please check your connection and try again.",
+      );
       Alert.alert(
-        'Data Load Error',
-        'We couldn\'t load your dashboard data. Please check your internet connection and try again.',
+        "Data Load Error",
+        "We couldn't load your dashboard data. Please check your internet connection and try again.",
         [
-          { text: 'Retry', onPress: () => fetchData() },
-          { text: 'OK', style: 'cancel' }
-        ]
+          { text: "Retry", onPress: () => fetchData() },
+          { text: "OK", style: "cancel" },
+        ],
       );
     }
   }, [dispatch]);
@@ -93,45 +102,59 @@ const DashboardScreen = () => {
   }, [fetchData]);
 
   const handleMoodCheckIn = useCallback(() => {
-    navigation.navigate('MoodTracker');
+    navigation.navigate("MoodTracker");
   }, [navigation]);
 
   const handleStartChat = useCallback(() => {
-    navigation.navigate('Chat');
+    navigation.navigate("Chat");
   }, [navigation]);
 
   const handleTakeAssessment = useCallback(() => {
-    navigation.navigate('Assessment');
+    navigation.navigate("Assessment");
   }, [navigation]);
 
   const handleViewProfile = useCallback(() => {
-    navigation.navigate('Profile');
+    navigation.navigate("Profile");
   }, [navigation]);
 
   const showEmergencyAlert = useCallback(() => {
     Alert.alert(
-      'Emergency Resources',
-      'If you are experiencing a mental health crisis, please contact:\n\n• National Suicide Prevention Lifeline: 988\n• Crisis Text Line: Text HOME to 741741\n• Or call 911 for immediate assistance',
+      "Emergency Resources",
+      "If you are experiencing a mental health crisis, please contact:\n\n• National Suicide Prevention Lifeline: 988\n• Crisis Text Line: Text HOME to 741741\n• Or call 911 for immediate assistance",
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Call 988', onPress: () => {/* TODO: Implement phone call */} },
-      ]
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Call 988",
+          onPress: () => {
+            /* TODO: Implement phone call */
+          },
+        },
+      ],
     );
   }, []);
 
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
   }, []);
 
-  const moodHistorySlice = useMemo(() => mood.moodHistory.slice(0, 3), [mood.moodHistory]);
-  const chatHistorySlice = useMemo(() => chat.conversations.slice(0, 2), [chat.conversations]);
+  const moodHistorySlice = useMemo(
+    () => mood.moodHistory.slice(0, 3),
+    [mood.moodHistory],
+  );
+  const chatHistorySlice = useMemo(
+    () => chat.conversations.slice(0, 2),
+    [chat.conversations],
+  );
 
   return (
-    <View 
-      style={[styles.container, { backgroundColor: theme.colors.background.primary }]}
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background.primary },
+      ]}
       accessibilityRole="main"
       accessibilityLabel="Dashboard screen"
     >
@@ -154,10 +177,12 @@ const DashboardScreen = () => {
         {/* Welcome Header */}
         <WelcomeHeader
           greeting={greeting}
-          userName={user.profile.name || 'Friend'}
+          userName={user.profile.name || "Friend"}
           onProfilePress={handleViewProfile}
           onEmergencyPress={showEmergencyAlert}
-          {...MentalHealthAccessibility.dashboard.welcomeMessage(user.profile.name || 'Friend')}
+          {...MentalHealthAccessibility.dashboard.welcomeMessage(
+            user.profile.name || "Friend",
+          )}
         />
 
         {/* Mood Check-in */}

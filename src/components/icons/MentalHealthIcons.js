@@ -1,55 +1,63 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Svg, { 
-  Path, 
-  Circle, 
-  Rect, 
-  Line, 
-  Polyline, 
+import PropTypes from "prop-types";
+import React from "react";
+import Svg, {
+  Path,
+  Circle,
+  Rect,
+  Line,
+  Polyline,
   Polygon,
   Ellipse,
   G,
   Defs,
   LinearGradient,
   Stop,
-} from 'react-native-svg';
-import { BaseDesignTokens } from '../../design-system/DesignTokens';
+} from "react-native-svg";
+
+import { BaseDesignTokens } from "../../design-system/DesignTokens";
 
 // Base Mental Health Icon Component
-const MentalHealthIcon = ({ 
-  name, 
-  size = 24, 
-  color, 
-  therapeuticTheme = 'nurturing',
-  variant = 'outline',
+const MentalHealthIcon = ({
+  name,
+  size = 24,
+  color,
+  therapeuticTheme = "nurturing",
+  variant = "outline",
   strokeWidth = 2,
   style,
-  testID 
+  testID,
 }) => {
   const tokens = BaseDesignTokens;
-  
+
   const getColor = () => {
     if (color) return color;
-    
+
     if (therapeuticTheme) {
       const therapeuticColors = tokens.colors.therapeutic[therapeuticTheme];
       return therapeuticColors?.[600] || tokens.colors.primary[600];
     }
-    
+
     return tokens.colors.primary[600];
   };
 
   const iconColor = getColor();
-  const fillColor = variant === 'filled' ? iconColor : 'none';
-  const strokeColor = variant === 'filled' ? 'none' : iconColor;
+  const fillColor = variant === "filled" ? iconColor : "none";
+  const strokeColor = variant === "filled" ? "none" : iconColor;
 
   const renderIcon = () => {
     switch (name) {
       // Mindfulness and Meditation
-      case 'mindfulness':
+      case "mindfulness":
         return (
           <G>
-            <Circle cx="12" cy="8" r="3" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="8"
+              r="3"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M12 11c-2 0-4 1-4 3v4c0 1 1 2 2 2h4c1 0 2-1 2-2v-4c0-2-2-3-4-3z"
               fill={fillColor}
@@ -58,8 +66,18 @@ const MentalHealthIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Path d="M8 14l-2-2" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Path d="M16 14l2-2" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
+            <Path
+              d="M8 14l-2-2"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Path
+              d="M16 14l2-2"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
             <Circle cx="12" cy="4" r="1" fill={strokeColor} />
             <Circle cx="8" cy="6" r="0.5" fill={strokeColor} />
             <Circle cx="16" cy="6" r="0.5" fill={strokeColor} />
@@ -68,10 +86,17 @@ const MentalHealthIcon = ({
           </G>
         );
 
-      case 'meditation-pose':
+      case "meditation-pose":
         return (
           <G>
-            <Circle cx="12" cy="6" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="6"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M8 10c0-1 1-2 2-2h4c1 0 2 1 2 2v2l-2 2v4c0 1-1 2-2 2s-2-1-2-2v-4l-2-2v-2z"
               fill={fillColor}
@@ -80,30 +105,68 @@ const MentalHealthIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Path d="M8 12l-3 1" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Path d="M16 12l3 1" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Circle cx="6" cy="16" r="1" stroke={strokeColor} strokeWidth={strokeWidth} fill={fillColor} />
-            <Circle cx="18" cy="16" r="1" stroke={strokeColor} strokeWidth={strokeWidth} fill={fillColor} />
+            <Path
+              d="M8 12l-3 1"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Path
+              d="M16 12l3 1"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Circle
+              cx="6"
+              cy="16"
+              r="1"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              fill={fillColor}
+            />
+            <Circle
+              cx="18"
+              cy="16"
+              r="1"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              fill={fillColor}
+            />
           </G>
         );
 
-      case 'zen-circle':
+      case "zen-circle":
         return (
           <G>
-            <Circle cx="12" cy="12" r="9" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="12"
+              r="9"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M12 3c-2.5 4-2.5 10 0 18"
               fill="none"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth * 1.5}
               strokeLinecap="round"
             />
-            <Circle cx="12" cy="12" r="2" fill={variant === 'filled' ? '#FFFFFF' : fillColor} stroke={variant === 'filled' ? '#FFFFFF' : strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="12"
+              r="2"
+              fill={variant === "filled" ? "#FFFFFF" : fillColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth}
+            />
           </G>
         );
 
       // Emotional Wellness
-      case 'emotional-balance':
+      case "emotional-balance":
         return (
           <G>
             <Path
@@ -114,38 +177,85 @@ const MentalHealthIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="9" cy="6" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
-            <Circle cx="15" cy="6" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
-            <Line x1="12" y1="2" x2="12" y2="6" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Line x1="12" y1="10" x2="12" y2="14" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
+            <Circle
+              cx="9"
+              cy="6"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Circle
+              cx="15"
+              cy="6"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Line
+              x1="12"
+              y1="2"
+              x2="12"
+              y2="6"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Line
+              x1="12"
+              y1="10"
+              x2="12"
+              y2="14"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
             <Circle cx="12" cy="2" r="1" fill={strokeColor} />
           </G>
         );
 
-      case 'inner-peace':
+      case "inner-peace":
         return (
           <G>
-            <Circle cx="12" cy="12" r="9" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="12"
+              r="9"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M8 12c2-4 6-4 8 0"
               fill="none"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
             <Path
               d="M9 15c1.5-2 4.5-2 6 0"
               fill="none"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
-            <Circle cx="10" cy="9" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="14" cy="9" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="10"
+              cy="9"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="14"
+              cy="9"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
           </G>
         );
 
-      case 'emotional-growth':
+      case "emotional-growth":
         return (
           <G>
             <Path
@@ -178,21 +288,38 @@ const MentalHealthIcon = ({
         );
 
       // Mood and Feelings
-      case 'mood-tracker':
+      case "mood-tracker":
         return (
           <G>
-            <Circle cx="12" cy="12" r="9" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
-            <Circle cx="9" cy="9" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="15" cy="9" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="12"
+              cy="12"
+              r="9"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Circle
+              cx="9"
+              cy="9"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="15"
+              cy="9"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
             <Path
               d="M8 14s1.5 2 4 2 4-2 4-2"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
             <Path
               d="M6 6l12 12"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               strokeOpacity="0.5"
@@ -200,7 +327,7 @@ const MentalHealthIcon = ({
           </G>
         );
 
-      case 'emotions':
+      case "emotions":
         return (
           <G>
             <Path
@@ -211,32 +338,91 @@ const MentalHealthIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="9" cy="9" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="15" cy="9" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="9"
+              cy="9"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="15"
+              cy="9"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
             <Path
               d="M9 13s1 1 3 1 3-1 3-1"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
           </G>
         );
 
-      case 'feelings-journal':
+      case "feelings-journal":
         return (
           <G>
-            <Rect x="4" y="2" width="16" height="20" rx="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
-            <Line x1="8" y1="7" x2="16" y2="7" stroke={variant === 'filled' ? '#FFFFFF' : strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Line x1="8" y1="11" x2="16" y2="11" stroke={variant === 'filled' ? '#FFFFFF' : strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Line x1="8" y1="15" x2="14" y2="15" stroke={variant === 'filled' ? '#FFFFFF' : strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Circle cx="17" cy="17" r="2" fill={variant === 'filled' ? '#FFFFFF' : fillColor} stroke={variant === 'filled' ? '#FFFFFF' : strokeColor} strokeWidth={strokeWidth} />
-            <Circle cx="16.5" cy="16.5" r="0.5" fill={variant === 'filled' ? strokeColor : '#FFFFFF'} />
-            <Path d="M17.5 17.5c0 .3-.2.5-.5.5s-.5-.2-.5-.5.2-.5.5-.5.5.2.5.5z" stroke={variant === 'filled' ? strokeColor : '#FFFFFF'} strokeWidth="0.5" />
+            <Rect
+              x="4"
+              y="2"
+              width="16"
+              height="20"
+              rx="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Line
+              x1="8"
+              y1="7"
+              x2="16"
+              y2="7"
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Line
+              x1="8"
+              y1="11"
+              x2="16"
+              y2="11"
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Line
+              x1="8"
+              y1="15"
+              x2="14"
+              y2="15"
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Circle
+              cx="17"
+              cy="17"
+              r="2"
+              fill={variant === "filled" ? "#FFFFFF" : fillColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Circle
+              cx="16.5"
+              cy="16.5"
+              r="0.5"
+              fill={variant === "filled" ? strokeColor : "#FFFFFF"}
+            />
+            <Path
+              d="M17.5 17.5c0 .3-.2.5-.5.5s-.5-.2-.5-.5.2-.5.5-.5.5.2.5.5z"
+              stroke={variant === "filled" ? strokeColor : "#FFFFFF"}
+              strokeWidth="0.5"
+            />
           </G>
         );
 
       // Therapy and Support
-      case 'therapy-session':
+      case "therapy-session":
         return (
           <G>
             <Path
@@ -249,19 +435,38 @@ const MentalHealthIcon = ({
             />
             <Path
               d="M8 12c0-2 2-4 4-4s4 2 4 4-2 4-4 4"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
-            <Circle cx="12" cy="12" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="12"
+              cy="12"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
           </G>
         );
 
-      case 'support-group':
+      case "support-group":
         return (
           <G>
-            <Circle cx="9" cy="7" r="4" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
-            <Circle cx="15" cy="7" r="4" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="9"
+              cy="7"
+              r="4"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Circle
+              cx="15"
+              cy="7"
+              r="4"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"
               stroke={strokeColor}
@@ -283,14 +488,28 @@ const MentalHealthIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="12" cy="12" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="12"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
           </G>
         );
 
-      case 'counselor':
+      case "counselor":
         return (
           <G>
-            <Circle cx="12" cy="8" r="5" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="8"
+              r="5"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M20 21a8 8 0 1 0-16 0"
               stroke={strokeColor}
@@ -299,15 +518,25 @@ const MentalHealthIcon = ({
             />
             <Path
               d="M12 13v3"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
-            <Circle cx="10" cy="6" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="14" cy="6" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="10"
+              cy="6"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="14"
+              cy="6"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
             <Path
               d="M10 9s1 1 2 1 2-1 2-1"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
@@ -315,7 +544,7 @@ const MentalHealthIcon = ({
         );
 
       // Self-Care and Wellness
-      case 'self-care':
+      case "self-care":
         return (
           <G>
             <Path
@@ -328,38 +557,65 @@ const MentalHealthIcon = ({
             />
             <Path
               d="M12 7v8"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
             <Path
               d="M8 11h8"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
           </G>
         );
 
-      case 'wellness-routine':
+      case "wellness-routine":
         return (
           <G>
-            <Circle cx="12" cy="12" r="9" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="12"
+              r="9"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Polyline
               points="12,6 12,12 16,14"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="12" cy="4" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="20" cy="12" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="12" cy="20" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="4" cy="12" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="12"
+              cy="4"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="20"
+              cy="12"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="12"
+              cy="20"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="4"
+              cy="12"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
           </G>
         );
 
-      case 'mental-strength':
+      case "mental-strength":
         return (
           <G>
             <Path
@@ -370,10 +626,17 @@ const MentalHealthIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="12" cy="14" r="2" stroke={variant === 'filled' ? '#FFFFFF' : strokeColor} strokeWidth={strokeWidth} fill={variant === 'filled' ? '#FFFFFF' : fillColor} />
+            <Circle
+              cx="12"
+              cy="14"
+              r="2"
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth}
+              fill={variant === "filled" ? "#FFFFFF" : fillColor}
+            />
             <Path
               d="M10 12l4 4"
-              stroke={variant === 'filled' ? strokeColor : '#FFFFFF'}
+              stroke={variant === "filled" ? strokeColor : "#FFFFFF"}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
@@ -381,20 +644,63 @@ const MentalHealthIcon = ({
         );
 
       // Breathing and Relaxation
-      case 'breathing-exercise':
+      case "breathing-exercise":
         return (
           <G>
-            <Circle cx="12" cy="12" r="8" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} strokeOpacity="0.3" />
-            <Circle cx="12" cy="12" r="5" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} strokeOpacity="0.6" />
-            <Circle cx="12" cy="12" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
-            <Path d="M12 2v4" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Path d="M12 18v4" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Path d="M2 12h4" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
-            <Path d="M18 12h4" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
+            <Circle
+              cx="12"
+              cy="12"
+              r="8"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeOpacity="0.3"
+            />
+            <Circle
+              cx="12"
+              cy="12"
+              r="5"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeOpacity="0.6"
+            />
+            <Circle
+              cx="12"
+              cy="12"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Path
+              d="M12 2v4"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Path
+              d="M12 18v4"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Path
+              d="M2 12h4"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            <Path
+              d="M18 12h4"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
           </G>
         );
 
-      case 'relaxation':
+      case "relaxation":
         return (
           <G>
             <Path
@@ -405,14 +711,29 @@ const MentalHealthIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="15" cy="8" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="18" cy="6" r="0.5" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="16" cy="11" r="0.5" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="15"
+              cy="8"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="18"
+              cy="6"
+              r="0.5"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="16"
+              cy="11"
+              r="0.5"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
           </G>
         );
 
       // Progress and Goals
-      case 'progress-tracking':
+      case "progress-tracking":
         return (
           <G>
             <Path
@@ -433,13 +754,34 @@ const MentalHealthIcon = ({
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
-            <Circle cx="18" cy="8" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
-            <Circle cx="12" cy="2" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
-            <Circle cx="6" cy="12" r="2" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="18"
+              cy="8"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Circle
+              cx="12"
+              cy="2"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
+            <Circle
+              cx="6"
+              cy="12"
+              r="2"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
           </G>
         );
 
-      case 'mental-goals':
+      case "mental-goals":
         return (
           <G>
             <Path
@@ -449,7 +791,14 @@ const MentalHealthIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="8.5" cy="7" r="4" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="8.5"
+              cy="7"
+              r="4"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Polyline
               points="17,11 19,13 23,9"
               stroke={strokeColor}
@@ -457,10 +806,15 @@ const MentalHealthIcon = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <Circle cx="8" cy="6" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="8"
+              cy="6"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
             <Path
               d="M7 8s.5.5 1.5.5S10 8 10 8"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
@@ -468,17 +822,29 @@ const MentalHealthIcon = ({
         );
 
       // Crisis and Emergency
-      case 'crisis-support':
+      case "crisis-support":
         return (
           <G>
-            <Circle cx="12" cy="12" r="9" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} />
+            <Circle
+              cx="12"
+              cy="12"
+              r="9"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+            />
             <Path
               d="M12 7v6"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth * 1.5}
               strokeLinecap="round"
             />
-            <Circle cx="12" cy="17" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="12"
+              cy="17"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
             <Path
               d="M8 4l8 8"
               stroke="red"
@@ -496,7 +862,7 @@ const MentalHealthIcon = ({
           </G>
         );
 
-      case 'emergency-contact':
+      case "emergency-contact":
         return (
           <G>
             <Path
@@ -537,12 +903,22 @@ const MentalHealthIcon = ({
             <Path
               d="M8 12c2-4 6-4 8 0"
               fill="none"
-              stroke={variant === 'filled' ? '#FFFFFF' : strokeColor}
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />
-            <Circle cx="10" cy="9" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
-            <Circle cx="14" cy="9" r="1" fill={variant === 'filled' ? '#FFFFFF' : strokeColor} />
+            <Circle
+              cx="10"
+              cy="9"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Circle
+              cx="14"
+              cy="9"
+              r="1"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
           </G>
         );
     }
@@ -562,27 +938,69 @@ const MentalHealthIcon = ({
 };
 
 // Specialized Mental Health Icon Components
-export const MindfulnessIcon = (props) => <MentalHealthIcon name="mindfulness" {...props} />;
-export const MeditationPoseIcon = (props) => <MentalHealthIcon name="meditation-pose" {...props} />;
-export const ZenCircleIcon = (props) => <MentalHealthIcon name="zen-circle" {...props} />;
-export const EmotionalBalanceIcon = (props) => <MentalHealthIcon name="emotional-balance" {...props} />;
-export const InnerPeaceIcon = (props) => <MentalHealthIcon name="inner-peace" {...props} />;
-export const EmotionalGrowthIcon = (props) => <MentalHealthIcon name="emotional-growth" {...props} />;
-export const MoodTrackerIcon = (props) => <MentalHealthIcon name="mood-tracker" {...props} />;
-export const EmotionsIcon = (props) => <MentalHealthIcon name="emotions" {...props} />;
-export const FeelingsJournalIcon = (props) => <MentalHealthIcon name="feelings-journal" {...props} />;
-export const TherapySessionIcon = (props) => <MentalHealthIcon name="therapy-session" {...props} />;
-export const SupportGroupIcon = (props) => <MentalHealthIcon name="support-group" {...props} />;
-export const CounselorIcon = (props) => <MentalHealthIcon name="counselor" {...props} />;
-export const SelfCareIcon = (props) => <MentalHealthIcon name="self-care" {...props} />;
-export const WellnessRoutineIcon = (props) => <MentalHealthIcon name="wellness-routine" {...props} />;
-export const MentalStrengthIcon = (props) => <MentalHealthIcon name="mental-strength" {...props} />;
-export const BreathingExerciseIcon = (props) => <MentalHealthIcon name="breathing-exercise" {...props} />;
-export const RelaxationIcon = (props) => <MentalHealthIcon name="relaxation" {...props} />;
-export const ProgressTrackingIcon = (props) => <MentalHealthIcon name="progress-tracking" {...props} />;
-export const MentalGoalsIcon = (props) => <MentalHealthIcon name="mental-goals" {...props} />;
-export const CrisisSupportIcon = (props) => <MentalHealthIcon name="crisis-support" {...props} />;
-export const EmergencyContactIcon = (props) => <MentalHealthIcon name="emergency-contact" {...props} />;
+export const MindfulnessIcon = (props) => (
+  <MentalHealthIcon name="mindfulness" {...props} />
+);
+export const MeditationPoseIcon = (props) => (
+  <MentalHealthIcon name="meditation-pose" {...props} />
+);
+export const ZenCircleIcon = (props) => (
+  <MentalHealthIcon name="zen-circle" {...props} />
+);
+export const EmotionalBalanceIcon = (props) => (
+  <MentalHealthIcon name="emotional-balance" {...props} />
+);
+export const InnerPeaceIcon = (props) => (
+  <MentalHealthIcon name="inner-peace" {...props} />
+);
+export const EmotionalGrowthIcon = (props) => (
+  <MentalHealthIcon name="emotional-growth" {...props} />
+);
+export const MoodTrackerIcon = (props) => (
+  <MentalHealthIcon name="mood-tracker" {...props} />
+);
+export const EmotionsIcon = (props) => (
+  <MentalHealthIcon name="emotions" {...props} />
+);
+export const FeelingsJournalIcon = (props) => (
+  <MentalHealthIcon name="feelings-journal" {...props} />
+);
+export const TherapySessionIcon = (props) => (
+  <MentalHealthIcon name="therapy-session" {...props} />
+);
+export const SupportGroupIcon = (props) => (
+  <MentalHealthIcon name="support-group" {...props} />
+);
+export const CounselorIcon = (props) => (
+  <MentalHealthIcon name="counselor" {...props} />
+);
+export const SelfCareIcon = (props) => (
+  <MentalHealthIcon name="self-care" {...props} />
+);
+export const WellnessRoutineIcon = (props) => (
+  <MentalHealthIcon name="wellness-routine" {...props} />
+);
+export const MentalStrengthIcon = (props) => (
+  <MentalHealthIcon name="mental-strength" {...props} />
+);
+export const BreathingExerciseIcon = (props) => (
+  <MentalHealthIcon name="breathing-exercise" {...props} />
+);
+export const RelaxationIcon = (props) => (
+  <MentalHealthIcon name="relaxation" {...props} />
+);
+export const ProgressTrackingIcon = (props) => (
+  <MentalHealthIcon name="progress-tracking" {...props} />
+);
+export const MentalGoalsIcon = (props) => (
+  <MentalHealthIcon name="mental-goals" {...props} />
+);
+export const CrisisSupportIcon = (props) => (
+  <MentalHealthIcon name="crisis-support" {...props} />
+);
+export const EmergencyContactIcon = (props) => (
+  <MentalHealthIcon name="emergency-contact" {...props} />
+);
 
 // Mental Health Icon Collection
 export const MentalHealthIconCollection = {
@@ -590,35 +1008,35 @@ export const MentalHealthIconCollection = {
   mindfulness: MindfulnessIcon,
   meditationPose: MeditationPoseIcon,
   zenCircle: ZenCircleIcon,
-  
+
   // Emotional Wellness
   emotionalBalance: EmotionalBalanceIcon,
   innerPeace: InnerPeaceIcon,
   emotionalGrowth: EmotionalGrowthIcon,
-  
+
   // Mood & Feelings
   moodTracker: MoodTrackerIcon,
   emotions: EmotionsIcon,
   feelingsJournal: FeelingsJournalIcon,
-  
+
   // Therapy & Support
   therapySession: TherapySessionIcon,
   supportGroup: SupportGroupIcon,
   counselor: CounselorIcon,
-  
+
   // Self-Care & Wellness
   selfCare: SelfCareIcon,
   wellnessRoutine: WellnessRoutineIcon,
   mentalStrength: MentalStrengthIcon,
-  
+
   // Breathing & Relaxation
   breathingExercise: BreathingExerciseIcon,
   relaxation: RelaxationIcon,
-  
+
   // Progress & Goals
   progressTracking: ProgressTrackingIcon,
   mentalGoals: MentalGoalsIcon,
-  
+
   // Crisis & Emergency
   crisisSupport: CrisisSupportIcon,
   emergencyContact: EmergencyContactIcon,
@@ -630,10 +1048,16 @@ MentalHealthIcon.propTypes = {
   size: PropTypes.number,
   color: PropTypes.string,
   therapeuticTheme: PropTypes.oneOf([
-    'calming', 'nurturing', 'peaceful', 'grounding', 
-    'energizing', 'focus', 'mindful', 'balance'
+    "calming",
+    "nurturing",
+    "peaceful",
+    "grounding",
+    "energizing",
+    "focus",
+    "mindful",
+    "balance",
   ]),
-  variant: PropTypes.oneOf(['outline', 'filled']),
+  variant: PropTypes.oneOf(["outline", "filled"]),
   strokeWidth: PropTypes.number,
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   testID: PropTypes.string,

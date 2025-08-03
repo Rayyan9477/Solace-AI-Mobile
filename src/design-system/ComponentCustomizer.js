@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,14 +10,20 @@ import {
   Switch,
   Alert,
   Dimensions,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useDesignSystem } from './DesignSystemContext';
-import { useTheme } from '../contexts/ThemeContext';
-import { MentalHealthIcon, ActionIcon } from '../components/icons';
-import { colors, typography, spacing, borderRadius, shadows } from '../styles/theme';
+} from "react-native";
 
-const { width } = Dimensions.get('window');
+import { useDesignSystem } from "./DesignSystemContext";
+import { MentalHealthIcon, ActionIcon } from "../components/icons";
+import { useTheme } from "../contexts/ThemeContext";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../styles/theme";
+
+const { width } = Dimensions.get("window");
 
 const ComponentCustomizer = () => {
   const { theme } = useTheme();
@@ -48,7 +55,7 @@ const ComponentCustomizer = () => {
     },
   });
 
-  const [previewComponent, setPreviewComponent] = useState('button');
+  const [previewComponent, setPreviewComponent] = useState("button");
 
   useEffect(() => {
     // Update design tokens when customizations change
@@ -79,7 +86,7 @@ const ComponentCustomizer = () => {
   }, [customizations, updateTokens]);
 
   const handleCustomizationChange = (category, property, value) => {
-    setCustomizations(prev => ({
+    setCustomizations((prev) => ({
       ...prev,
       [category]: {
         ...prev[category],
@@ -90,13 +97,13 @@ const ComponentCustomizer = () => {
 
   const resetCustomizations = () => {
     Alert.alert(
-      'Reset Customizations',
-      'Are you sure you want to reset all component customizations?',
+      "Reset Customizations",
+      "Are you sure you want to reset all component customizations?",
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: "Cancel", style: "cancel" },
         {
-          text: 'Reset',
-          style: 'destructive',
+          text: "Reset",
+          style: "destructive",
           onPress: () => {
             resetToDefault();
             setCustomizations({
@@ -124,10 +131,13 @@ const ComponentCustomizer = () => {
                 speed: 250,
               },
             });
-            Alert.alert('Reset Complete', 'All customizations have been reset to default values.');
+            Alert.alert(
+              "Reset Complete",
+              "All customizations have been reset to default values.",
+            );
           },
         },
-      ]
+      ],
     );
   };
 
@@ -140,7 +150,7 @@ const ComponentCustomizer = () => {
           paddingVertical: customizations.spacing.medium,
           paddingHorizontal: customizations.spacing.large,
           borderRadius: customizations.borderRadius.medium,
-          alignItems: 'center',
+          alignItems: "center",
           marginVertical: spacing[2],
         },
         customizations.shadows.enabled && {
@@ -195,7 +205,8 @@ const ComponentCustomizer = () => {
           lineHeight: customizations.typography.small * 1.5,
         }}
       >
-        This is a preview of how cards will look with your customizations applied.
+        This is a preview of how cards will look with your customizations
+        applied.
       </Text>
     </View>
   );
@@ -223,14 +234,25 @@ const ComponentCustomizer = () => {
     </View>
   );
 
-  const CustomizationSlider = ({ label, value, onValueChange, minimumValue = 0, maximumValue = 100, step = 1 }) => (
+  const CustomizationSlider = ({
+    label,
+    value,
+    onValueChange,
+    minimumValue = 0,
+    maximumValue = 100,
+    step = 1,
+  }) => (
     <View style={styles.sliderContainer}>
       <View style={styles.sliderHeader}>
-        <Text style={[styles.sliderLabel, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[styles.sliderLabel, { color: theme.colors.text.primary }]}
+        >
           {label}
         </Text>
-        <Text style={[styles.sliderValue, { color: theme.colors.text.secondary }]}>
-          {typeof value === 'number' ? Math.round(value) : value}
+        <Text
+          style={[styles.sliderValue, { color: theme.colors.text.secondary }]}
+        >
+          {typeof value === "number" ? Math.round(value) : value}
         </Text>
       </View>
       <Slider
@@ -266,11 +288,11 @@ const ComponentCustomizer = () => {
 
   const ComponentPreview = () => {
     switch (previewComponent) {
-      case 'button':
+      case "button":
         return <PreviewButton />;
-      case 'card':
+      case "card":
         return <PreviewCard />;
-      case 'input':
+      case "input":
         return <PreviewInput />;
       default:
         return <PreviewButton />;
@@ -279,7 +301,10 @@ const ComponentCustomizer = () => {
 
   return (
     <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background.primary }]}
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background.primary },
+      ]}
       contentContainerStyle={styles.content}
     >
       {/* Header */}
@@ -295,21 +320,24 @@ const ComponentCustomizer = () => {
 
       {/* Preview Section */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+        >
           Live Preview
         </Text>
 
         {/* Component Selector */}
         <View style={styles.componentSelector}>
-          {['button', 'card', 'input'].map((component) => (
+          {["button", "card", "input"].map((component) => (
             <TouchableOpacity
               key={component}
               style={[
                 styles.componentSelectorButton,
                 {
-                  backgroundColor: previewComponent === component
-                    ? theme.colors.primary[500]
-                    : theme.colors.background.secondary,
+                  backgroundColor:
+                    previewComponent === component
+                      ? theme.colors.primary[500]
+                      : theme.colors.background.secondary,
                   borderColor: theme.colors.border.primary,
                 },
               ]}
@@ -319,9 +347,10 @@ const ComponentCustomizer = () => {
                 style={[
                   styles.componentSelectorText,
                   {
-                    color: previewComponent === component
-                      ? theme.colors.text.inverse
-                      : theme.colors.text.primary,
+                    color:
+                      previewComponent === component
+                        ? theme.colors.text.inverse
+                        : theme.colors.text.primary,
                   },
                 ]}
               >
@@ -347,14 +376,18 @@ const ComponentCustomizer = () => {
 
       {/* Border Radius Customization */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+        >
           Border Radius
         </Text>
 
         <CustomizationSlider
           label="Small Components"
           value={customizations.borderRadius.small}
-          onValueChange={(value) => handleCustomizationChange('borderRadius', 'small', value)}
+          onValueChange={(value) =>
+            handleCustomizationChange("borderRadius", "small", value)
+          }
           minimumValue={0}
           maximumValue={20}
           step={1}
@@ -363,7 +396,9 @@ const ComponentCustomizer = () => {
         <CustomizationSlider
           label="Medium Components"
           value={customizations.borderRadius.medium}
-          onValueChange={(value) => handleCustomizationChange('borderRadius', 'medium', value)}
+          onValueChange={(value) =>
+            handleCustomizationChange("borderRadius", "medium", value)
+          }
           minimumValue={0}
           maximumValue={30}
           step={1}
@@ -372,7 +407,9 @@ const ComponentCustomizer = () => {
         <CustomizationSlider
           label="Large Components"
           value={customizations.borderRadius.large}
-          onValueChange={(value) => handleCustomizationChange('borderRadius', 'large', value)}
+          onValueChange={(value) =>
+            handleCustomizationChange("borderRadius", "large", value)
+          }
           minimumValue={0}
           maximumValue={40}
           step={1}
@@ -381,14 +418,18 @@ const ComponentCustomizer = () => {
 
       {/* Spacing Customization */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+        >
           Spacing & Padding
         </Text>
 
         <CustomizationSlider
           label="Small Spacing"
           value={customizations.spacing.small}
-          onValueChange={(value) => handleCustomizationChange('spacing', 'small', value)}
+          onValueChange={(value) =>
+            handleCustomizationChange("spacing", "small", value)
+          }
           minimumValue={4}
           maximumValue={16}
           step={2}
@@ -397,7 +438,9 @@ const ComponentCustomizer = () => {
         <CustomizationSlider
           label="Medium Spacing"
           value={customizations.spacing.medium}
-          onValueChange={(value) => handleCustomizationChange('spacing', 'medium', value)}
+          onValueChange={(value) =>
+            handleCustomizationChange("spacing", "medium", value)
+          }
           minimumValue={8}
           maximumValue={32}
           step={2}
@@ -406,7 +449,9 @@ const ComponentCustomizer = () => {
         <CustomizationSlider
           label="Large Spacing"
           value={customizations.spacing.large}
-          onValueChange={(value) => handleCustomizationChange('spacing', 'large', value)}
+          onValueChange={(value) =>
+            handleCustomizationChange("spacing", "large", value)
+          }
           minimumValue={16}
           maximumValue={48}
           step={2}
@@ -415,14 +460,18 @@ const ComponentCustomizer = () => {
 
       {/* Typography Customization */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+        >
           Typography Sizes
         </Text>
 
         <CustomizationSlider
           label="Small Text"
           value={customizations.typography.small}
-          onValueChange={(value) => handleCustomizationChange('typography', 'small', value)}
+          onValueChange={(value) =>
+            handleCustomizationChange("typography", "small", value)
+          }
           minimumValue={10}
           maximumValue={16}
           step={1}
@@ -431,7 +480,9 @@ const ComponentCustomizer = () => {
         <CustomizationSlider
           label="Medium Text"
           value={customizations.typography.medium}
-          onValueChange={(value) => handleCustomizationChange('typography', 'medium', value)}
+          onValueChange={(value) =>
+            handleCustomizationChange("typography", "medium", value)
+          }
           minimumValue={14}
           maximumValue={20}
           step={1}
@@ -440,7 +491,9 @@ const ComponentCustomizer = () => {
         <CustomizationSlider
           label="Large Text"
           value={customizations.typography.large}
-          onValueChange={(value) => handleCustomizationChange('typography', 'large', value)}
+          onValueChange={(value) =>
+            handleCustomizationChange("typography", "large", value)
+          }
           minimumValue={16}
           maximumValue={24}
           step={1}
@@ -449,21 +502,27 @@ const ComponentCustomizer = () => {
 
       {/* Visual Effects */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+        >
           Visual Effects
         </Text>
 
         <CustomizationSwitch
           label="Enable Shadows"
           value={customizations.shadows.enabled}
-          onValueChange={(value) => handleCustomizationChange('shadows', 'enabled', value)}
+          onValueChange={(value) =>
+            handleCustomizationChange("shadows", "enabled", value)
+          }
         />
 
         {customizations.shadows.enabled && (
           <CustomizationSlider
             label="Shadow Intensity"
             value={customizations.shadows.intensity}
-            onValueChange={(value) => handleCustomizationChange('shadows', 'intensity', value)}
+            onValueChange={(value) =>
+              handleCustomizationChange("shadows", "intensity", value)
+            }
             minimumValue={0.05}
             maximumValue={0.3}
             step={0.05}
@@ -473,14 +532,18 @@ const ComponentCustomizer = () => {
         <CustomizationSwitch
           label="Enable Animations"
           value={customizations.animations.enabled}
-          onValueChange={(value) => handleCustomizationChange('animations', 'enabled', value)}
+          onValueChange={(value) =>
+            handleCustomizationChange("animations", "enabled", value)
+          }
         />
 
         {customizations.animations.enabled && (
           <CustomizationSlider
             label="Animation Speed (ms)"
             value={customizations.animations.speed}
-            onValueChange={(value) => handleCustomizationChange('animations', 'speed', value)}
+            onValueChange={(value) =>
+              handleCustomizationChange("animations", "speed", value)
+            }
             minimumValue={100}
             maximumValue={1000}
             step={50}
@@ -500,8 +563,17 @@ const ComponentCustomizer = () => {
           ]}
           onPress={resetCustomizations}
         >
-          <ActionIcon name="Close" size="sm" color={theme.colors.text.inverse} />
-          <Text style={[styles.resetButtonText, { color: theme.colors.text.inverse }]}>
+          <ActionIcon
+            name="Close"
+            size="sm"
+            color={theme.colors.text.inverse}
+          />
+          <Text
+            style={[
+              styles.resetButtonText,
+              { color: theme.colors.text.inverse },
+            ]}
+          >
             Reset All Customizations
           </Text>
         </TouchableOpacity>
@@ -519,18 +591,18 @@ const styles = StyleSheet.create({
     paddingBottom: spacing[8],
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: spacing[8],
   },
   title: {
-    fontSize: typography.sizes['2xl'],
+    fontSize: typography.sizes["2xl"],
     fontWeight: typography.weights.bold,
     marginTop: spacing[4],
     marginBottom: spacing[2],
   },
   subtitle: {
     fontSize: typography.sizes.base,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: typography.lineHeights.lg,
   },
   section: {
@@ -542,7 +614,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing[6],
   },
   componentSelector: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: spacing[4],
     gap: spacing[2],
   },
@@ -552,7 +624,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing[3],
     borderRadius: borderRadius.base,
     borderWidth: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   componentSelectorText: {
     fontSize: typography.sizes.sm,
@@ -563,15 +635,15 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.lg,
     borderWidth: 1,
     minHeight: 120,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   sliderContainer: {
     marginBottom: spacing[6],
   },
   sliderHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: spacing[2],
   },
   sliderLabel: {
@@ -586,9 +658,9 @@ const styles = StyleSheet.create({
     height: 40,
   },
   switchContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: spacing[4],
     paddingVertical: spacing[2],
   },
@@ -598,12 +670,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   footer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: spacing[4],
   },
   resetButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: spacing[3],
     paddingHorizontal: spacing[6],
     borderRadius: borderRadius.lg,

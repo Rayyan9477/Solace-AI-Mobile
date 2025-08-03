@@ -1,9 +1,22 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MentalHealthIcon, ActionIcon } from '../icons';
-import { colors, typography, spacing, borderRadius, shadows } from '../../styles/theme';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useRef, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+} from "react-native";
+
+import { useTheme } from "../../contexts/ThemeContext";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../../styles/theme";
+import { MentalHealthIcon, ActionIcon } from "../icons";
 
 const QuickActions = ({ onStartChat, onTakeAssessment, onMoodTracker }) => {
   const { theme } = useTheme();
@@ -29,43 +42,55 @@ const QuickActions = ({ onStartChat, onTakeAssessment, onMoodTracker }) => {
 
   const actions = [
     {
-      id: 'chat',
-      title: 'Start Chat',
-      subtitle: 'Talk to AI therapist',
-      iconName: 'Therapy',
+      id: "chat",
+      title: "Start Chat",
+      subtitle: "Talk to AI therapist",
+      iconName: "Therapy",
       onPress: onStartChat,
-      gradientColors: [theme.colors.therapeutic.calming[400], theme.colors.therapeutic.calming[600]],
+      gradientColors: [
+        theme.colors.therapeutic.calming[400],
+        theme.colors.therapeutic.calming[600],
+      ],
     },
     {
-      id: 'assessment',
-      title: 'Take Assessment',
-      subtitle: 'PHQ-9 or GAD-7',
-      iconName: 'Journal',
+      id: "assessment",
+      title: "Take Assessment",
+      subtitle: "PHQ-9 or GAD-7",
+      iconName: "Journal",
       onPress: onTakeAssessment,
-      gradientColors: [theme.colors.therapeutic.grounding[400], theme.colors.therapeutic.grounding[600]],
+      gradientColors: [
+        theme.colors.therapeutic.grounding[400],
+        theme.colors.therapeutic.grounding[600],
+      ],
     },
     {
-      id: 'mood',
-      title: 'Track Mood',
-      subtitle: 'Log your feelings',
-      iconName: 'Heart',
+      id: "mood",
+      title: "Track Mood",
+      subtitle: "Log your feelings",
+      iconName: "Heart",
       onPress: onMoodTracker,
-      gradientColors: [theme.colors.therapeutic.nurturing[400], theme.colors.therapeutic.nurturing[600]],
+      gradientColors: [
+        theme.colors.therapeutic.nurturing[400],
+        theme.colors.therapeutic.nurturing[600],
+      ],
     },
   ];
 
   return (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.container,
         {
           opacity: fadeAnim,
           transform: [{ translateY: slideAnim }],
-        }
+        },
       ]}
     >
       <LinearGradient
-        colors={[theme.colors.background.primary, theme.colors.background.secondary]}
+        colors={[
+          theme.colors.background.primary,
+          theme.colors.background.secondary,
+        ]}
         style={[styles.cardBackground, shadows.lg]}
       >
         <View style={styles.titleContainer}>
@@ -79,19 +104,21 @@ const QuickActions = ({ onStartChat, onTakeAssessment, onMoodTracker }) => {
             Quick Actions
           </Text>
         </View>
-        
+
         <View style={styles.actionsGrid}>
           {actions.map((action, index) => (
             <Animated.View
               key={action.id}
               style={{
                 opacity: fadeAnim,
-                transform: [{
-                  translateY: slideAnim.interpolate({
-                    inputRange: [0, 30],
-                    outputRange: [0, 30 + (index * 10)],
-                  })
-                }],
+                transform: [
+                  {
+                    translateY: slideAnim.interpolate({
+                      inputRange: [0, 30],
+                      outputRange: [0, 30 + index * 10],
+                    }),
+                  },
+                ],
               }}
             >
               <TouchableOpacity
@@ -138,8 +165,8 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.xl,
   },
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: spacing[5],
   },
   titleIcon: {
@@ -151,19 +178,19 @@ const styles = StyleSheet.create({
     lineHeight: typography.lineHeights.lg,
   },
   actionsGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     gap: spacing[3],
   },
   actionCard: {
     flex: 1,
     borderRadius: borderRadius.lg,
-    overflow: 'hidden',
+    overflow: "hidden",
     ...shadows.md,
   },
   actionGradient: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: spacing[5],
     paddingHorizontal: spacing[3],
     minHeight: 100,
@@ -174,14 +201,14 @@ const styles = StyleSheet.create({
     fontWeight: typography.weights.semiBold,
     lineHeight: typography.lineHeights.sm,
     marginBottom: spacing[1],
-    textAlign: 'center',
+    textAlign: "center",
   },
   actionSubtitle: {
     color: colors.text.inverse,
     fontSize: typography.sizes.xs,
     fontWeight: typography.weights.normal,
     lineHeight: typography.lineHeights.xs,
-    textAlign: 'center',
+    textAlign: "center",
     opacity: 0.9,
   },
 });

@@ -1,57 +1,57 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Async thunk for updating user profile
 export const updateUserProfile = createAsyncThunk(
-  'user/updateProfile',
+  "user/updateProfile",
   async (profileData, { rejectWithValue }) => {
     try {
       // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       return profileData;
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 // Async thunk for fetching user stats
 export const fetchUserStats = createAsyncThunk(
-  'user/fetchStats',
+  "user/fetchStats",
   async (_, { rejectWithValue }) => {
     try {
       // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       // Mock user stats
       const mockStats = {
         totalSessions: 24,
         streakDays: 7,
         assessmentsCompleted: 3,
         moodEntriesCount: 15,
-        favoriteActivities: ['meditation', 'exercise', 'reading'],
-        joinDate: new Date('2024-01-15').toISOString(),
+        favoriteActivities: ["meditation", "exercise", "reading"],
+        joinDate: new Date("2024-01-15").toISOString(),
       };
-      
+
       return mockStats;
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 const initialState = {
   profile: {
     id: null,
-    name: '',
-    email: '',
+    name: "",
+    email: "",
     avatar: null,
-    phoneNumber: '',
-    dateOfBirth: '',
+    phoneNumber: "",
+    dateOfBirth: "",
     emergencyContact: {
-      name: '',
-      phone: '',
-      relationship: '',
+      name: "",
+      phone: "",
+      relationship: "",
     },
   },
   preferences: {
@@ -65,8 +65,8 @@ const initialState = {
       shareData: false,
       analytics: true,
     },
-    theme: 'light', // 'light' | 'dark' | 'system'
-    language: 'en',
+    theme: "light", // 'light' | 'dark' | 'system'
+    language: "en",
   },
   stats: {
     totalSessions: 0,
@@ -83,7 +83,7 @@ const initialState = {
 };
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     setUserProfile: (state, action) => {
@@ -105,13 +105,13 @@ const userSlice = createSlice({
     },
     updateGoal: (state, action) => {
       const { id, ...updates } = action.payload;
-      const goalIndex = state.goals.findIndex(goal => goal.id === id);
+      const goalIndex = state.goals.findIndex((goal) => goal.id === id);
       if (goalIndex !== -1) {
         state.goals[goalIndex] = { ...state.goals[goalIndex], ...updates };
       }
     },
     deleteGoal: (state, action) => {
-      state.goals = state.goals.filter(goal => goal.id !== action.payload);
+      state.goals = state.goals.filter((goal) => goal.id !== action.payload);
     },
     addAchievement: (state, action) => {
       state.achievements.push({

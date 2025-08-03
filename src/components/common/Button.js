@@ -1,20 +1,27 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, Animated } from 'react-native';
-import * as Haptics from 'expo-haptics';
-import { useTheme } from '../../contexts/ThemeContext';
+import * as Haptics from "expo-haptics";
+import PropTypes from "prop-types";
+import React from "react";
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  Animated,
+} from "react-native";
+
+import { useTheme } from "../../contexts/ThemeContext";
 
 const Button = ({
   onPress,
   title,
-  variant = 'primary',
-  size = 'medium',
+  variant = "primary",
+  size = "medium",
   disabled = false,
   fullWidth = false,
   withHaptics = true,
   loading = false,
   icon,
-  iconPosition = 'left',
+  iconPosition = "left",
   animationDuration = 150,
   accessibilityLabel,
   accessibilityHint,
@@ -54,20 +61,20 @@ const Button = ({
 
   const getVariantStyles = () => {
     switch (variant) {
-      case 'secondary':
+      case "secondary":
         return {
           backgroundColor: theme.colors.secondary[500],
           borderColor: theme.colors.border.secondary,
         };
-      case 'outline':
+      case "outline":
         return {
-          backgroundColor: 'transparent',
+          backgroundColor: "transparent",
           borderColor: theme.colors.primary[500],
           borderWidth: 2,
         };
-      case 'text':
+      case "text":
         return {
-          backgroundColor: 'transparent',
+          backgroundColor: "transparent",
           elevation: 0,
           shadowOpacity: 0,
         };
@@ -81,13 +88,13 @@ const Button = ({
 
   const getSizeStyles = () => {
     switch (size) {
-      case 'small':
+      case "small":
         return {
           paddingVertical: 8,
           paddingHorizontal: 16,
           borderRadius: theme.borderRadius?.sm || 8,
         };
-      case 'large':
+      case "large":
         return {
           paddingVertical: 16,
           paddingHorizontal: 32,
@@ -113,14 +120,14 @@ const Button = ({
         getSizeStyles(),
         fullWidth && styles.fullWidth,
         disabled && styles.disabled,
-        { minWidth: 44, minHeight: 44 }
+        { minWidth: 44, minHeight: 44 },
       ]}
-      accessible={true}
+      accessible
       accessibilityRole="button"
       testID={testID || `button-${title}`}
       accessibilityLabel={accessibilityLabel || `${title} button`}
-      accessibilityHint={accessibilityHint || 'Double tap to activate'}
-      accessibilityState={{ 
+      accessibilityHint={accessibilityHint || "Double tap to activate"}
+      accessibilityState={{
         disabled,
         busy: loading,
       }}
@@ -131,18 +138,23 @@ const Button = ({
         {loading ? (
           <ActivityIndicator size="small" color={theme.colors.text.inverse} />
         ) : (
-          icon && iconPosition === 'left' && icon
+          icon && iconPosition === "left" && icon
         )}
         <Text
           style={[
             styles.text,
-            { color: variant === 'text' ? theme.colors.primary[500] : theme.colors.text.inverse },
+            {
+              color:
+                variant === "text"
+                  ? theme.colors.primary[500]
+                  : theme.colors.text.inverse,
+            },
             disabled && styles.textDisabled,
           ]}
         >
-          {loading ? 'Loading...' : title}
+          {loading ? "Loading..." : title}
         </Text>
-        {loading ? null : icon && iconPosition === 'right' && icon}
+        {loading ? null : icon && iconPosition === "right" && icon}
       </Animated.View>
     </TouchableOpacity>
   );
@@ -150,9 +162,9 @@ const Button = ({
 
 const styles = StyleSheet.create({
   button: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 1,
     elevation: 2,
     shadowOffset: { width: 0, height: 2 },
@@ -160,15 +172,15 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   fullWidth: {
-    width: '100%',
+    width: "100%",
   },
   disabled: {
     opacity: 0.5,
   },
   text: {
     fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
   },
   textDisabled: {
     opacity: 0.5,
@@ -178,14 +190,14 @@ const styles = StyleSheet.create({
 Button.propTypes = {
   onPress: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  variant: PropTypes.oneOf(['primary', 'secondary', 'outline', 'text']),
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  variant: PropTypes.oneOf(["primary", "secondary", "outline", "text"]),
+  size: PropTypes.oneOf(["small", "medium", "large"]),
   disabled: PropTypes.bool,
   fullWidth: PropTypes.bool,
   withHaptics: PropTypes.bool,
   loading: PropTypes.bool,
   icon: PropTypes.node,
-  iconPosition: PropTypes.oneOf(['left', 'right']),
+  iconPosition: PropTypes.oneOf(["left", "right"]),
   animationDuration: PropTypes.number,
   accessibilityLabel: PropTypes.string,
   accessibilityHint: PropTypes.string,
@@ -193,14 +205,14 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-  variant: 'primary',
-  size: 'medium',
+  variant: "primary",
+  size: "medium",
   disabled: false,
   fullWidth: false,
   withHaptics: true,
   loading: false,
   icon: null,
-  iconPosition: 'left',
+  iconPosition: "left",
   animationDuration: 150,
   accessibilityLabel: null,
   accessibilityHint: null,

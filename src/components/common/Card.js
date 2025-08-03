@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Animated } from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
+import React, { useState } from "react";
+import { View, StyleSheet, Pressable, Animated } from "react-native";
+
+import { useTheme } from "../../contexts/ThemeContext";
 
 const Card = ({
   children,
   onPress,
   style,
   elevation = 2,
-  variant = 'default',
+  variant = "default",
   accessibilityLabel,
   accessibilityHint,
-  accessibilityRole = 'none',
+  accessibilityRole = "none",
   borderRadius,
   padding,
   margin,
@@ -46,7 +47,7 @@ const Card = ({
 
   const getVariantStyles = () => {
     switch (variant) {
-      case 'outlined':
+      case "outlined":
         return {
           backgroundColor: backgroundColor || theme.colors.background.surface,
           borderWidth: borderWidth || 1,
@@ -54,13 +55,13 @@ const Card = ({
           elevation: 0,
           shadowOpacity: 0,
         };
-      case 'flat':
+      case "flat":
         return {
           backgroundColor: backgroundColor || theme.colors.background.surface,
           elevation: 0,
           shadowOpacity: 0,
         };
-      case 'elevated':
+      case "elevated":
         return {
           backgroundColor: backgroundColor || theme.colors.background.surface,
           elevation: elevation + 2,
@@ -69,13 +70,13 @@ const Card = ({
           shadowOpacity: 0.3,
           shadowRadius: (elevation + 2) * 2,
         };
-      case 'filled':
+      case "filled":
         return {
           backgroundColor: backgroundColor || theme.colors.primary.light,
           elevation: 0,
           shadowOpacity: 0,
         };
-      case 'gradient':
+      case "gradient":
         return {
           backgroundColor: backgroundColor || theme.colors.background.surface,
           elevation,
@@ -121,7 +122,7 @@ const Card = ({
           disabled={disabled || loading}
           accessibilityLabel={accessibilityLabel}
           accessibilityHint={accessibilityHint}
-          accessibilityRole={onPress ? 'button' : accessibilityRole}
+          accessibilityRole={onPress ? "button" : accessibilityRole}
           accessibilityState={{
             disabled: disabled || loading,
             busy: loading,
@@ -140,7 +141,7 @@ const Card = ({
       disabled={disabled || loading}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
-      accessibilityRole={onPress ? 'button' : accessibilityRole}
+      accessibilityRole={onPress ? "button" : accessibilityRole}
       accessibilityState={{
         disabled: disabled || loading,
         busy: loading,

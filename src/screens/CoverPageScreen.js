@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import {
   View,
   Text,
@@ -9,20 +11,25 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '../contexts/ThemeContext';
-import { colors, typography, spacing, borderRadius, shadows } from '../styles/theme';
-import { MentalHealthAccessibility } from '../utils/accessibility';
+} from "react-native";
 
-const { width, height } = Dimensions.get('window');
+import { useTheme } from "../contexts/ThemeContext";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../styles/theme";
+import { MentalHealthAccessibility } from "../utils/accessibility";
+
+const { width, height } = Dimensions.get("window");
 
 const CoverPageScreen = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
   const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
-  
+
   // Animation refs
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
@@ -30,36 +37,39 @@ const CoverPageScreen = () => {
   const pulseAnim = useRef(new Animated.Value(1)).current;
 
   // Feature highlights for the cover page
-  const features = useMemo(() => [
-    {
-      id: 1,
-      icon: '🧠',
-      title: 'AI-Powered Support',
-      description: 'Intelligent conversations that understand your emotions',
-      color: theme.colors.therapeutic.calming[500],
-    },
-    {
-      id: 2,
-      icon: '💚',
-      title: 'Mental Wellness',
-      description: 'Track your mood and build healthy mental habits',
-      color: theme.colors.therapeutic.nurturing[500],
-    },
-    {
-      id: 3,
-      icon: '🔒',
-      title: 'Private & Secure',
-      description: 'Your conversations remain completely confidential',
-      color: theme.colors.therapeutic.peaceful[500],
-    },
-    {
-      id: 4,
-      icon: '📊',
-      title: 'Progress Insights',
-      description: 'Beautiful analytics to track your mental health journey',
-      color: theme.colors.therapeutic.grounding[500],
-    },
-  ], [theme]);
+  const features = useMemo(
+    () => [
+      {
+        id: 1,
+        icon: "🧠",
+        title: "AI-Powered Support",
+        description: "Intelligent conversations that understand your emotions",
+        color: theme.colors.therapeutic.calming[500],
+      },
+      {
+        id: 2,
+        icon: "💚",
+        title: "Mental Wellness",
+        description: "Track your mood and build healthy mental habits",
+        color: theme.colors.therapeutic.nurturing[500],
+      },
+      {
+        id: 3,
+        icon: "🔒",
+        title: "Private & Secure",
+        description: "Your conversations remain completely confidential",
+        color: theme.colors.therapeutic.peaceful[500],
+      },
+      {
+        id: 4,
+        icon: "📊",
+        title: "Progress Insights",
+        description: "Beautiful analytics to track your mental health journey",
+        color: theme.colors.therapeutic.grounding[500],
+      },
+    ],
+    [theme],
+  );
 
   useEffect(() => {
     // Start entrance animations
@@ -95,15 +105,13 @@ const CoverPageScreen = () => {
           duration: 1000,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     );
     pulseAnimation.start();
 
     // Auto-cycle through features
     const featureCycleInterval = setInterval(() => {
-      setCurrentFeatureIndex((prevIndex) => 
-        (prevIndex + 1) % features.length
-      );
+      setCurrentFeatureIndex((prevIndex) => (prevIndex + 1) % features.length);
     }, 3000);
 
     return () => {
@@ -115,19 +123,16 @@ const CoverPageScreen = () => {
   const currentFeature = features[currentFeatureIndex];
 
   const handleGetStarted = () => {
-    navigation.navigate('Home');
+    navigation.navigate("Home");
   };
 
   const handleLearnMore = () => {
-    navigation.navigate('Onboarding');
+    navigation.navigate("Onboarding");
   };
 
   const animatedHeaderStyle = {
     opacity: fadeAnim,
-    transform: [
-      { translateY: slideAnim },
-      { scale: scaleAnim },
-    ],
+    transform: [{ translateY: slideAnim }, { scale: scaleAnim }],
   };
 
   const animatedContentStyle = {
@@ -141,8 +146,12 @@ const CoverPageScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-      
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
+
       <LinearGradient
         colors={[
           theme.colors.therapeutic.calming[600],
@@ -153,7 +162,7 @@ const CoverPageScreen = () => {
         end={{ x: 1, y: 1 }}
         style={styles.gradientBackground}
       >
-        <ScrollView 
+        <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           accessibilityRole="scrollbar"
@@ -163,58 +172,76 @@ const CoverPageScreen = () => {
           <Animated.View style={[styles.heroSection, animatedHeaderStyle]}>
             <View style={styles.logoContainer}>
               <LinearGradient
-                colors={[theme.colors.background.primary, theme.colors.background.surface]}
+                colors={[
+                  theme.colors.background.primary,
+                  theme.colors.background.surface,
+                ]}
                 style={styles.logoCircle}
               >
                 <Text style={styles.logoEmoji}>🧠</Text>
               </LinearGradient>
             </View>
-            
-            <Text 
+
+            <Text
               style={[styles.appTitle, { color: theme.colors.text.inverse }]}
               accessibilityRole="header"
               accessibilityLabel="Solace AI"
             >
               Solace AI
             </Text>
-            
-            <Text 
+
+            <Text
               style={[styles.appSubtitle, { color: theme.colors.text.inverse }]}
               accessibilityLabel="Your empathetic digital companion for mental wellness"
             >
               Your Empathetic Digital Companion
             </Text>
-            
-            <Text 
-              style={[styles.appDescription, { color: theme.colors.text.inverse }]}
+
+            <Text
+              style={[
+                styles.appDescription,
+                { color: theme.colors.text.inverse },
+              ]}
               accessibilityLabel="Experience personalized mental health support powered by advanced AI technology"
             >
-              Experience personalized mental health support powered by advanced AI technology
+              Experience personalized mental health support powered by advanced
+              AI technology
             </Text>
           </Animated.View>
 
           {/* Feature Highlight */}
           <Animated.View style={[styles.featureSection, animatedContentStyle]}>
-            <View 
+            <View
               style={[
                 styles.featureCard,
                 { backgroundColor: theme.colors.background.primary },
-                shadows.lg
+                shadows.lg,
               ]}
             >
-              <View style={[styles.featureIconContainer, { backgroundColor: currentFeature.color + '20' }]}>
+              <View
+                style={[
+                  styles.featureIconContainer,
+                  { backgroundColor: currentFeature.color + "20" },
+                ]}
+              >
                 <Text style={styles.featureIcon}>{currentFeature.icon}</Text>
               </View>
-              
-              <Text 
-                style={[styles.featureTitle, { color: theme.colors.text.primary }]}
+
+              <Text
+                style={[
+                  styles.featureTitle,
+                  { color: theme.colors.text.primary },
+                ]}
                 accessibilityRole="header"
               >
                 {currentFeature.title}
               </Text>
-              
-              <Text 
-                style={[styles.featureDescription, { color: theme.colors.text.secondary }]}
+
+              <Text
+                style={[
+                  styles.featureDescription,
+                  { color: theme.colors.text.secondary },
+                ]}
               >
                 {currentFeature.description}
               </Text>
@@ -228,15 +255,18 @@ const CoverPageScreen = () => {
                   style={[
                     styles.dot,
                     {
-                      backgroundColor: index === currentFeatureIndex 
-                        ? theme.colors.text.inverse 
-                        : theme.colors.text.inverse + '40'
-                    }
+                      backgroundColor:
+                        index === currentFeatureIndex
+                          ? theme.colors.text.inverse
+                          : theme.colors.text.inverse + "40",
+                    },
                   ]}
                   onPress={() => setCurrentFeatureIndex(index)}
                   accessibilityRole="tab"
                   accessibilityLabel={`Feature ${index + 1}`}
-                  accessibilityState={{ selected: index === currentFeatureIndex }}
+                  accessibilityState={{
+                    selected: index === currentFeatureIndex,
+                  }}
                 />
               ))}
             </View>
@@ -249,16 +279,21 @@ const CoverPageScreen = () => {
                 style={[
                   styles.primaryButton,
                   { backgroundColor: theme.colors.background.primary },
-                  shadows.md
+                  shadows.md,
                 ]}
                 onPress={handleGetStarted}
                 activeOpacity={0.8}
                 accessibilityRole="button"
                 accessibilityLabel="Get started with Solace AI"
                 accessibilityHint="Begin your mental wellness journey"
-                {...MentalHealthAccessibility.buttons.primary('Get Started')}
+                {...MentalHealthAccessibility.buttons.primary("Get Started")}
               >
-                <Text style={[styles.primaryButtonText, { color: theme.colors.primary[600] }]}>
+                <Text
+                  style={[
+                    styles.primaryButtonText,
+                    { color: theme.colors.primary[600] },
+                  ]}
+                >
                   Get Started
                 </Text>
               </TouchableOpacity>
@@ -267,10 +302,10 @@ const CoverPageScreen = () => {
             <TouchableOpacity
               style={[
                 styles.secondaryButton,
-                { 
-                  borderColor: theme.colors.text.inverse + '60',
-                  backgroundColor: theme.colors.background.surface + '20'
-                }
+                {
+                  borderColor: theme.colors.text.inverse + "60",
+                  backgroundColor: theme.colors.background.surface + "20",
+                },
               ]}
               onPress={handleLearnMore}
               activeOpacity={0.8}
@@ -278,7 +313,12 @@ const CoverPageScreen = () => {
               accessibilityLabel="Learn more about Solace AI"
               accessibilityHint="View introduction and features"
             >
-              <Text style={[styles.secondaryButtonText, { color: theme.colors.text.inverse }]}>
+              <Text
+                style={[
+                  styles.secondaryButtonText,
+                  { color: theme.colors.text.inverse },
+                ]}
+              >
                 Learn More
               </Text>
             </TouchableOpacity>
@@ -286,7 +326,12 @@ const CoverPageScreen = () => {
 
           {/* Footer */}
           <Animated.View style={[styles.footer, animatedContentStyle]}>
-            <Text style={[styles.footerText, { color: theme.colors.text.inverse + '80' }]}>
+            <Text
+              style={[
+                styles.footerText,
+                { color: theme.colors.text.inverse + "80" },
+              ]}
+            >
               Start your mental wellness journey today
             </Text>
           </Animated.View>
@@ -309,88 +354,88 @@ const styles = StyleSheet.create({
     paddingBottom: spacing[10],
   },
   heroSection: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: spacing[16],
     paddingBottom: spacing[8],
     minHeight: height * 0.5,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   logoContainer: {
     marginBottom: spacing[6],
-    alignItems: 'center',
+    alignItems: "center",
   },
   logoCircle: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     ...shadows.xl,
   },
   logoEmoji: {
     fontSize: 48,
   },
   appTitle: {
-    fontSize: typography.sizes['5xl'],
+    fontSize: typography.sizes["5xl"],
     fontWeight: typography.weights.bold,
-    lineHeight: typography.lineHeights['5xl'],
-    textAlign: 'center',
+    lineHeight: typography.lineHeights["5xl"],
+    textAlign: "center",
     marginBottom: spacing[3],
   },
   appSubtitle: {
     fontSize: typography.sizes.xl,
     fontWeight: typography.weights.medium,
     lineHeight: typography.lineHeights.xl,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: spacing[4],
     opacity: 0.9,
   },
   appDescription: {
     fontSize: typography.sizes.base,
     lineHeight: typography.lineHeights.lg,
-    textAlign: 'center',
+    textAlign: "center",
     opacity: 0.8,
     maxWidth: width * 0.85,
     paddingHorizontal: spacing[4],
   },
   featureSection: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: spacing[10],
   },
   featureCard: {
     width: width * 0.85,
     padding: spacing[6],
     borderRadius: borderRadius.xl,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: spacing[6],
   },
   featureIconContainer: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: spacing[4],
   },
   featureIcon: {
     fontSize: 32,
   },
   featureTitle: {
-    fontSize: typography.sizes['2xl'],
+    fontSize: typography.sizes["2xl"],
     fontWeight: typography.weights.bold,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: spacing[3],
   },
   featureDescription: {
     fontSize: typography.sizes.base,
     lineHeight: typography.lineHeights.lg,
-    textAlign: 'center',
+    textAlign: "center",
     maxWidth: width * 0.7,
   },
   dotsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     gap: spacing[2],
   },
   dot: {
@@ -399,7 +444,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   ctaSection: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: spacing[4],
     marginBottom: spacing[8],
   },
@@ -408,7 +453,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[4],
     paddingHorizontal: spacing[8],
     borderRadius: borderRadius.xl,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: spacing[4],
   },
   primaryButtonText: {
@@ -420,7 +465,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[4],
     paddingHorizontal: spacing[8],
     borderRadius: borderRadius.xl,
-    alignItems: 'center',
+    alignItems: "center",
     borderWidth: 2,
   },
   secondaryButtonText: {
@@ -428,12 +473,12 @@ const styles = StyleSheet.create({
     fontWeight: typography.weights.medium,
   },
   footer: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: spacing[6],
   },
   footerText: {
     fontSize: typography.sizes.sm,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

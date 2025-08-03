@@ -1,9 +1,16 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Animated } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MentalHealthIcon } from '../icons';
-import { colors, typography, spacing, borderRadius, shadows } from '../../styles/theme';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useRef, useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView, Animated } from "react-native";
+
+import { useTheme } from "../../contexts/ThemeContext";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../../styles/theme";
+import { MentalHealthIcon } from "../icons";
 
 const DailyInsights = ({ insights }) => {
   const { theme } = useTheme();
@@ -31,37 +38,46 @@ const DailyInsights = ({ insights }) => {
   const sampleInsights = [
     {
       id: 1,
-      type: 'positive',
-      icon: '🌟',
-      title: 'Great Progress!',
-      message: 'You\'ve been consistent with your mood tracking this week.'
+      type: "positive",
+      icon: "🌟",
+      title: "Great Progress!",
+      message: "You've been consistent with your mood tracking this week.",
     },
     {
       id: 2,
-      type: 'suggestion',
-      icon: '🧘',
-      title: 'Try Meditation',
-      message: 'Consider a 5-minute mindfulness session today.'
+      type: "suggestion",
+      icon: "🧘",
+      title: "Try Meditation",
+      message: "Consider a 5-minute mindfulness session today.",
     },
     {
       id: 3,
-      type: 'insight',
-      icon: '📈',
-      title: 'Mood Pattern',
-      message: 'Your mood tends to improve in the afternoon.'
-    }
+      type: "insight",
+      icon: "📈",
+      title: "Mood Pattern",
+      message: "Your mood tends to improve in the afternoon.",
+    },
   ];
 
-  const displayInsights = insights && insights.length > 0 ? insights : sampleInsights;
+  const displayInsights =
+    insights && insights.length > 0 ? insights : sampleInsights;
 
   if (!displayInsights || displayInsights.length === 0) {
     return (
-      <View style={[styles.container, { backgroundColor: theme.colors.background.secondary }]}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: theme.colors.background.secondary },
+        ]}
+      >
         <Text style={[styles.title, { color: theme.colors.text.primary }]}>
           Daily Insights
         </Text>
-        <Text style={[styles.noInsights, { color: theme.colors.text.secondary }]}>
-          Check back later for personalized insights based on your mood patterns.
+        <Text
+          style={[styles.noInsights, { color: theme.colors.text.secondary }]}
+        >
+          Check back later for personalized insights based on your mood
+          patterns.
         </Text>
       </View>
     );
@@ -69,19 +85,19 @@ const DailyInsights = ({ insights }) => {
 
   const getInsightColors = (type) => {
     switch (type) {
-      case 'positive':
+      case "positive":
         return {
           background: theme.colors.success[50],
           border: theme.colors.success[200],
           text: theme.colors.success[800],
         };
-      case 'suggestion':
+      case "suggestion":
         return {
           background: theme.colors.warning[50],
           border: theme.colors.warning[200],
           text: theme.colors.warning[800],
         };
-      case 'alert':
+      case "alert":
         return {
           background: theme.colors.error[50],
           border: theme.colors.error[200],
@@ -97,17 +113,20 @@ const DailyInsights = ({ insights }) => {
   };
 
   return (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.container,
         {
           opacity: fadeAnim,
           transform: [{ translateY: slideAnim }],
-        }
+        },
       ]}
     >
       <LinearGradient
-        colors={[theme.colors.background.primary, theme.colors.background.secondary]}
+        colors={[
+          theme.colors.background.primary,
+          theme.colors.background.secondary,
+        ]}
         style={[styles.cardBackground, shadows.lg]}
       >
         <View style={styles.titleContainer}>
@@ -121,33 +140,38 @@ const DailyInsights = ({ insights }) => {
             Daily Insights
           </Text>
         </View>
-        
+
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.insightsContainer}
-          accessible={true}
+          accessible
           accessibilityRole="scrollbar"
           accessibilityLabel="Daily insights carousel"
         >
           {displayInsights.map((insight, index) => {
             const insightColors = getInsightColors(insight.type);
-            
+
             return (
               <Animated.View
                 key={insight.id || index}
                 style={{
                   opacity: fadeAnim,
-                  transform: [{
-                    translateY: slideAnim.interpolate({
-                      inputRange: [0, 30],
-                      outputRange: [0, 30 + (index * 5)],
-                    })
-                  }],
+                  transform: [
+                    {
+                      translateY: slideAnim.interpolate({
+                        inputRange: [0, 30],
+                        outputRange: [0, 30 + index * 5],
+                      }),
+                    },
+                  ],
                 }}
               >
                 <LinearGradient
-                  colors={[insightColors.background, insightColors.background + '80']}
+                  colors={[
+                    insightColors.background,
+                    insightColors.background + "80",
+                  ]}
                   style={[
                     styles.insightCard,
                     {
@@ -158,10 +182,17 @@ const DailyInsights = ({ insights }) => {
                   <View style={styles.insightIconContainer}>
                     <Text style={styles.insightIcon}>{insight.icon}</Text>
                   </View>
-                  <Text style={[styles.insightTitle, { color: insightColors.text }]}>
+                  <Text
+                    style={[styles.insightTitle, { color: insightColors.text }]}
+                  >
                     {insight.title}
                   </Text>
-                  <Text style={[styles.insightMessage, { color: insightColors.text }]}>
+                  <Text
+                    style={[
+                      styles.insightMessage,
+                      { color: insightColors.text },
+                    ]}
+                  >
                     {insight.message}
                   </Text>
                 </LinearGradient>
@@ -184,8 +215,8 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.xl,
   },
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: spacing[4],
   },
   titleIcon: {
@@ -200,8 +231,8 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.sm,
     fontWeight: typography.weights.normal,
     lineHeight: typography.lineHeights.sm,
-    textAlign: 'center',
-    fontStyle: 'italic',
+    textAlign: "center",
+    fontStyle: "italic",
   },
   insightsContainer: {
     paddingRight: spacing[4],
@@ -215,24 +246,24 @@ const styles = StyleSheet.create({
     ...shadows.md,
   },
   insightIconContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: spacing[3],
   },
   insightIcon: {
-    fontSize: typography.sizes['3xl'],
+    fontSize: typography.sizes["3xl"],
   },
   insightTitle: {
     fontSize: typography.sizes.base,
     fontWeight: typography.weights.semiBold,
     lineHeight: typography.lineHeights.base,
     marginBottom: spacing[2],
-    textAlign: 'center',
+    textAlign: "center",
   },
   insightMessage: {
     fontSize: typography.sizes.sm,
     fontWeight: typography.weights.normal,
     lineHeight: typography.lineHeights.sm,
-    textAlign: 'center',
+    textAlign: "center",
     opacity: 0.9,
   },
 });

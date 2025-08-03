@@ -1,7 +1,8 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useTheme } from '../../contexts/ThemeContext';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React from "react";
+import { StyleSheet } from "react-native";
+
+import { useTheme } from "../../contexts/ThemeContext";
 
 const Icon = ({
   name,
@@ -21,14 +22,14 @@ const Icon = ({
       style={[styles.icon, style]}
       onPress={onPress}
       accessibilityLabel={accessibilityLabel}
-      accessibilityRole={onPress ? 'button' : 'image'}
+      accessibilityRole={onPress ? "button" : "image"}
     />
   );
 };
 
 const styles = StyleSheet.create({
   icon: {
-    alignSelf: 'center',
+    alignSelf: "center",
   },
 });
 

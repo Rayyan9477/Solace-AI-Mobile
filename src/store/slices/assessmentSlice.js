@@ -1,176 +1,251 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Async thunk for starting an assessment
 export const startAssessment = createAsyncThunk(
-  'assessment/startAssessment',
+  "assessment/startAssessment",
   async (assessmentType, { rejectWithValue }) => {
     try {
       // TODO: Replace with actual API call to fetch assessment questions
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       // Mock assessment data
       const mockAssessments = {
         phq9: {
-          id: 'phq9',
-          title: 'PHQ-9 Depression Assessment',
-          description: 'Patient Health Questionnaire-9 for depression screening',
+          id: "phq9",
+          title: "PHQ-9 Depression Assessment",
+          description:
+            "Patient Health Questionnaire-9 for depression screening",
           questions: [
             {
-              id: 'q1',
-              text: 'Little interest or pleasure in doing things',
-              type: 'scale',
+              id: "q1",
+              text: "Little interest or pleasure in doing things",
+              type: "scale",
               scale: {
                 min: 0,
                 max: 3,
-                labels: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day']
-              }
+                labels: [
+                  "Not at all",
+                  "Several days",
+                  "More than half the days",
+                  "Nearly every day",
+                ],
+              },
             },
             {
-              id: 'q2',
-              text: 'Feeling down, depressed, or hopeless',
-              type: 'scale',
+              id: "q2",
+              text: "Feeling down, depressed, or hopeless",
+              type: "scale",
               scale: {
                 min: 0,
                 max: 3,
-                labels: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day']
-              }
+                labels: [
+                  "Not at all",
+                  "Several days",
+                  "More than half the days",
+                  "Nearly every day",
+                ],
+              },
             },
             {
-              id: 'q3',
-              text: 'Trouble falling or staying asleep, or sleeping too much',
-              type: 'scale',
+              id: "q3",
+              text: "Trouble falling or staying asleep, or sleeping too much",
+              type: "scale",
               scale: {
                 min: 0,
                 max: 3,
-                labels: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day']
-              }
+                labels: [
+                  "Not at all",
+                  "Several days",
+                  "More than half the days",
+                  "Nearly every day",
+                ],
+              },
             },
             {
-              id: 'q4',
-              text: 'Feeling tired or having little energy',
-              type: 'scale',
+              id: "q4",
+              text: "Feeling tired or having little energy",
+              type: "scale",
               scale: {
                 min: 0,
                 max: 3,
-                labels: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day']
-              }
+                labels: [
+                  "Not at all",
+                  "Several days",
+                  "More than half the days",
+                  "Nearly every day",
+                ],
+              },
             },
             {
-              id: 'q5',
-              text: 'Poor appetite or overeating',
-              type: 'scale',
+              id: "q5",
+              text: "Poor appetite or overeating",
+              type: "scale",
               scale: {
                 min: 0,
                 max: 3,
-                labels: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day']
-              }
+                labels: [
+                  "Not at all",
+                  "Several days",
+                  "More than half the days",
+                  "Nearly every day",
+                ],
+              },
             },
-          ]
+          ],
         },
         gad7: {
-          id: 'gad7',
-          title: 'GAD-7 Anxiety Assessment',
-          description: 'Generalized Anxiety Disorder-7 screening tool',
+          id: "gad7",
+          title: "GAD-7 Anxiety Assessment",
+          description: "Generalized Anxiety Disorder-7 screening tool",
           questions: [
             {
-              id: 'q1',
-              text: 'Feeling nervous, anxious, or on edge',
-              type: 'scale',
+              id: "q1",
+              text: "Feeling nervous, anxious, or on edge",
+              type: "scale",
               scale: {
                 min: 0,
                 max: 3,
-                labels: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day']
-              }
+                labels: [
+                  "Not at all",
+                  "Several days",
+                  "More than half the days",
+                  "Nearly every day",
+                ],
+              },
             },
             {
-              id: 'q2',
-              text: 'Not being able to stop or control worrying',
-              type: 'scale',
+              id: "q2",
+              text: "Not being able to stop or control worrying",
+              type: "scale",
               scale: {
                 min: 0,
                 max: 3,
-                labels: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day']
-              }
+                labels: [
+                  "Not at all",
+                  "Several days",
+                  "More than half the days",
+                  "Nearly every day",
+                ],
+              },
             },
             {
-              id: 'q3',
-              text: 'Worrying too much about different things',
-              type: 'scale',
+              id: "q3",
+              text: "Worrying too much about different things",
+              type: "scale",
               scale: {
                 min: 0,
                 max: 3,
-                labels: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day']
-              }
+                labels: [
+                  "Not at all",
+                  "Several days",
+                  "More than half the days",
+                  "Nearly every day",
+                ],
+              },
             },
-          ]
-        }
+          ],
+        },
       };
-      
+
       return mockAssessments[assessmentType];
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 // Async thunk for submitting assessment
 export const submitAssessment = createAsyncThunk(
-  'assessment/submitAssessment',
+  "assessment/submitAssessment",
   async ({ assessmentId, responses }, { rejectWithValue }) => {
     try {
       // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       // Calculate score based on responses
-      const totalScore = Object.values(responses).reduce((sum, value) => sum + value, 0);
-      
+      const totalScore = Object.values(responses).reduce(
+        (sum, value) => sum + value,
+        0,
+      );
+
       const result = {
         id: Date.now().toString(),
         assessmentId,
         responses,
         totalScore,
         completedAt: new Date().toISOString(),
-        severity: totalScore < 5 ? 'Minimal' : totalScore < 10 ? 'Mild' : totalScore < 15 ? 'Moderate' : 'Severe',
+        severity:
+          totalScore < 5
+            ? "Minimal"
+            : totalScore < 10
+              ? "Mild"
+              : totalScore < 15
+                ? "Moderate"
+                : "Severe",
         recommendations: generateRecommendations(totalScore, assessmentId),
       };
-      
+
       return result;
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 // Helper function to generate recommendations based on score
 const generateRecommendations = (score, assessmentType) => {
   const recommendations = [];
-  
-  if (assessmentType === 'phq9') {
+
+  if (assessmentType === "phq9") {
     if (score < 5) {
-      recommendations.push('Your responses suggest minimal depressive symptoms. Continue with your current self-care routine.');
+      recommendations.push(
+        "Your responses suggest minimal depressive symptoms. Continue with your current self-care routine.",
+      );
     } else if (score < 10) {
-      recommendations.push('Your responses suggest mild depressive symptoms. Consider incorporating mood-boosting activities.');
-      recommendations.push('Regular exercise and social connection can be helpful.');
+      recommendations.push(
+        "Your responses suggest mild depressive symptoms. Consider incorporating mood-boosting activities.",
+      );
+      recommendations.push(
+        "Regular exercise and social connection can be helpful.",
+      );
     } else if (score < 15) {
-      recommendations.push('Your responses suggest moderate depressive symptoms. Consider speaking with a healthcare provider.');
-      recommendations.push('Cognitive behavioral therapy (CBT) may be beneficial.');
+      recommendations.push(
+        "Your responses suggest moderate depressive symptoms. Consider speaking with a healthcare provider.",
+      );
+      recommendations.push(
+        "Cognitive behavioral therapy (CBT) may be beneficial.",
+      );
     } else {
-      recommendations.push('Your responses suggest severe depressive symptoms. Please consider contacting a mental health professional.');
-      recommendations.push('If you are having thoughts of self-harm, please reach out for immediate help.');
+      recommendations.push(
+        "Your responses suggest severe depressive symptoms. Please consider contacting a mental health professional.",
+      );
+      recommendations.push(
+        "If you are having thoughts of self-harm, please reach out for immediate help.",
+      );
     }
-  } else if (assessmentType === 'gad7') {
+  } else if (assessmentType === "gad7") {
     if (score < 5) {
-      recommendations.push('Your responses suggest minimal anxiety symptoms. Great job managing your anxiety!');
+      recommendations.push(
+        "Your responses suggest minimal anxiety symptoms. Great job managing your anxiety!",
+      );
     } else if (score < 10) {
-      recommendations.push('Your responses suggest mild anxiety symptoms. Try relaxation techniques like deep breathing.');
+      recommendations.push(
+        "Your responses suggest mild anxiety symptoms. Try relaxation techniques like deep breathing.",
+      );
     } else if (score < 15) {
-      recommendations.push('Your responses suggest moderate anxiety symptoms. Consider speaking with a healthcare provider.');
-      recommendations.push('Mindfulness and stress management techniques may help.');
+      recommendations.push(
+        "Your responses suggest moderate anxiety symptoms. Consider speaking with a healthcare provider.",
+      );
+      recommendations.push(
+        "Mindfulness and stress management techniques may help.",
+      );
     } else {
-      recommendations.push('Your responses suggest severe anxiety symptoms. Please consider contacting a mental health professional.');
+      recommendations.push(
+        "Your responses suggest severe anxiety symptoms. Please consider contacting a mental health professional.",
+      );
     }
   }
-  
+
   return recommendations;
 };
 
@@ -181,18 +256,18 @@ const initialState = {
   assessmentHistory: [],
   availableAssessments: [
     {
-      id: 'phq9',
-      title: 'PHQ-9 Depression Assessment',
-      description: 'Screen for depression symptoms',
-      duration: '5-10 minutes',
-      icon: '🧠',
+      id: "phq9",
+      title: "PHQ-9 Depression Assessment",
+      description: "Screen for depression symptoms",
+      duration: "5-10 minutes",
+      icon: "🧠",
     },
     {
-      id: 'gad7',
-      title: 'GAD-7 Anxiety Assessment',
-      description: 'Screen for anxiety symptoms',
-      duration: '3-5 minutes',
-      icon: '😰',
+      id: "gad7",
+      title: "GAD-7 Anxiety Assessment",
+      description: "Screen for anxiety symptoms",
+      duration: "3-5 minutes",
+      icon: "😰",
     },
   ],
   loading: false,
@@ -200,7 +275,7 @@ const initialState = {
 };
 
 const assessmentSlice = createSlice({
-  name: 'assessment',
+  name: "assessment",
   initialState,
   reducers: {
     setCurrentQuestion: (state, action) => {
@@ -211,7 +286,10 @@ const assessmentSlice = createSlice({
       state.responses[questionId] = response;
     },
     nextQuestion: (state) => {
-      if (state.currentAssessment && state.currentQuestion < state.currentAssessment.questions.length - 1) {
+      if (
+        state.currentAssessment &&
+        state.currentQuestion < state.currentAssessment.questions.length - 1
+      ) {
         state.currentQuestion += 1;
       }
     },

@@ -1,12 +1,20 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
+import React, { useCallback, useMemo, useState } from "react";
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
+
+import { useTheme } from "../../contexts/ThemeContext";
 
 const Avatar = ({
   source,
   name,
-  size = 'medium',
-  variant = 'circle',
+  size = "medium",
+  variant = "circle",
   style,
   accessibilityLabel,
   onPress,
@@ -17,7 +25,7 @@ const Avatar = ({
   animated = false,
   showInitials = true,
   backgroundColor,
-  fallbackIcon = '👤',
+  fallbackIcon = "👤",
 }) => {
   const { theme } = useTheme();
   const [scaleValue] = useState(new Animated.Value(1));
@@ -42,13 +50,13 @@ const Avatar = ({
 
   const getStatusColor = () => {
     switch (status) {
-      case 'online':
+      case "online":
         return theme.colors.success.main;
-      case 'away':
+      case "away":
         return theme.colors.warning.main;
-      case 'busy':
+      case "busy":
         return theme.colors.error.main;
-      case 'offline':
+      case "offline":
         return theme.colors.gray[400];
       default:
         return null;
@@ -57,18 +65,19 @@ const Avatar = ({
 
   const getSizeStyle = () => {
     switch (size) {
-      case 'small':
+      case "small":
         return {
-          width: 44, height: 44,
+          width: 44,
+          height: 44,
           fontSize: 14,
         };
-      case 'large':
+      case "large":
         return {
           width: 64,
           height: 64,
           fontSize: 24,
         };
-      case 'xlarge':
+      case "xlarge":
         return {
           width: 96,
           height: 96,
@@ -84,16 +93,15 @@ const Avatar = ({
   };
 
   const sizeStyle = getSizeStyle();
-  const borderRadius = variant === 'square' 
-    ? theme.borderRadius.medium 
-    : sizeStyle.width / 2;
+  const borderRadius =
+    variant === "square" ? theme.borderRadius.medium : sizeStyle.width / 2;
 
   const getInitials = (name) => {
     if (!name) return fallbackIcon;
     return name
-      .split(' ')
-      .map(part => part[0])
-      .join('')
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
@@ -110,28 +118,31 @@ const Avatar = ({
             width: sizeStyle.width,
             height: sizeStyle.height,
             borderRadius,
-            backgroundColor: backgroundColor || (source ? 'transparent' : theme.colors.primary.light),
-            borderColor: borderColor,
-            borderWidth: borderWidth,
+            backgroundColor:
+              backgroundColor ||
+              (source ? "transparent" : theme.colors.primary.light),
+            borderColor,
+            borderWidth,
           },
           style,
         ]}
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
-        accessibilityLabel={accessibilityLabel || `${name}'s avatar${status ? `, status: ${status}` : ''}`}
-        accessibilityRole={onPress ? 'button' : 'image'}
-        accessibilityHint={onPress ? 'Double tap to view profile' : undefined}
+        accessibilityLabel={
+          accessibilityLabel ||
+          `${name}'s avatar${status ? `, status: ${status}` : ""}`
+        }
+        accessibilityRole={onPress ? "button" : "image"}
+        accessibilityHint={onPress ? "Double tap to view profile" : undefined}
       >
         {source ? (
           <Image
             source={source}
-            style={[
-              styles.image,
-              { borderRadius },
-            ]}
+            style={[styles.image, { borderRadius }]}
             accessibilityRole="none"
-          / resizeMode="cover">
+            resizeMode="cover"
+          />
         ) : (
           <Text
             style={[
@@ -171,14 +182,17 @@ const Avatar = ({
             style={[
               styles.badge,
               {
-                backgroundColor: badge.backgroundColor || theme.colors.error.main,
+                backgroundColor:
+                  badge.backgroundColor || theme.colors.error.main,
                 minWidth: sizeStyle.width * 0.3,
                 height: sizeStyle.width * 0.3,
                 borderRadius: (sizeStyle.width * 0.3) / 2,
               },
             ]}
             accessibilityRole="text"
-            accessibilityLabel={badge.accessibilityLabel || `Badge: ${badge.text || badge.count}`}
+            accessibilityLabel={
+              badge.accessibilityLabel || `Badge: ${badge.text || badge.count}`
+            }
           >
             <Text
               style={[
@@ -200,33 +214,33 @@ const Avatar = ({
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   initials: {
-    fontWeight: '600',
+    fontWeight: "600",
   },
   statusIndicator: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     right: 0,
   },
   badge: {
-    position: 'absolute',
+    position: "absolute",
     top: -5,
     right: -5,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 4,
   },
   badgeText: {
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 

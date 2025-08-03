@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import * as ImagePicker from "expo-image-picker";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -10,25 +12,24 @@ import {
   Alert,
   Animated,
   SafeAreaView,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import * as ImagePicker from 'expo-image-picker';
-import { useTheme } from '../../contexts/ThemeContext';
-import { MentalHealthIcon, NavigationIcon } from '../../components/icons';
+} from "react-native";
+
+import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const ProfileSetupScreen = ({ navigation, route }) => {
   const { theme } = useTheme();
   const [currentStep, setCurrentStep] = useState(0);
   const [profileData, setProfileData] = useState({
     avatar: null,
-    displayName: '',
-    bio: '',
+    displayName: "",
+    bio: "",
     goals: [],
     preferences: {
-      communication: 'balanced',
-      sessionLength: 'medium',
-      reminderFrequency: 'daily',
-      privacyLevel: 'moderate',
+      communication: "balanced",
+      sessionLength: "medium",
+      reminderFrequency: "daily",
+      privacyLevel: "moderate",
     },
     mentalHealthGoals: [],
     interests: [],
@@ -39,57 +40,57 @@ const ProfileSetupScreen = ({ navigation, route }) => {
 
   const setupSteps = [
     {
-      id: 'basic_info',
-      title: 'Basic Information',
-      description: 'Tell us a bit about yourself',
-      icon: 'Brain',
+      id: "basic_info",
+      title: "Basic Information",
+      description: "Tell us a bit about yourself",
+      icon: "Brain",
     },
     {
-      id: 'goals',
-      title: 'Your Goals',
-      description: 'What would you like to achieve?',
-      icon: 'Heart',
+      id: "goals",
+      title: "Your Goals",
+      description: "What would you like to achieve?",
+      icon: "Heart",
     },
     {
-      id: 'preferences',
-      title: 'Preferences',
-      description: 'Customize your experience',
-      icon: 'Mindfulness',
+      id: "preferences",
+      title: "Preferences",
+      description: "Customize your experience",
+      icon: "Mindfulness",
     },
     {
-      id: 'interests',
-      title: 'Interests & Activities',
-      description: 'What activities help you feel better?',
-      icon: 'Therapy',
+      id: "interests",
+      title: "Interests & Activities",
+      description: "What activities help you feel better?",
+      icon: "Therapy",
     },
   ];
 
   const mentalHealthGoals = [
-    'Reduce anxiety',
-    'Improve mood',
-    'Better sleep',
-    'Stress management',
-    'Build confidence',
-    'Improve relationships',
-    'Develop coping skills',
-    'Increase self-awareness',
-    'Manage emotions',
-    'Find life purpose',
+    "Reduce anxiety",
+    "Improve mood",
+    "Better sleep",
+    "Stress management",
+    "Build confidence",
+    "Improve relationships",
+    "Develop coping skills",
+    "Increase self-awareness",
+    "Manage emotions",
+    "Find life purpose",
   ];
 
   const interests = [
-    'Meditation',
-    'Exercise',
-    'Reading',
-    'Music',
-    'Art & Creativity',
-    'Nature walks',
-    'Journaling',
-    'Cooking',
-    'Photography',
-    'Learning new skills',
-    'Volunteering',
-    'Socializing',
+    "Meditation",
+    "Exercise",
+    "Reading",
+    "Music",
+    "Art & Creativity",
+    "Nature walks",
+    "Journaling",
+    "Cooking",
+    "Photography",
+    "Learning new skills",
+    "Volunteering",
+    "Socializing",
   ];
 
   const currentStepData = setupSteps[currentStep];
@@ -99,7 +100,7 @@ const ProfileSetupScreen = ({ navigation, route }) => {
     // Animate in when component mounts or step changes
     fadeAnim.setValue(0);
     slideAnim.setValue(50);
-    
+
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -117,9 +118,12 @@ const ProfileSetupScreen = ({ navigation, route }) => {
 
   const handleAvatarPick = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
-    if (status !== 'granted') {
-      Alert.alert('Permission needed', 'We need camera roll permissions to set your profile picture.');
+
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission needed",
+        "We need camera roll permissions to set your profile picture.",
+      );
       return;
     }
 
@@ -131,7 +135,7 @@ const ProfileSetupScreen = ({ navigation, route }) => {
     });
 
     if (!result.canceled) {
-      setProfileData(prev => ({
+      setProfileData((prev) => ({
         ...prev,
         avatar: result.assets[0].uri,
       }));
@@ -139,26 +143,26 @@ const ProfileSetupScreen = ({ navigation, route }) => {
   };
 
   const handleGoalToggle = (goal) => {
-    setProfileData(prev => ({
+    setProfileData((prev) => ({
       ...prev,
       mentalHealthGoals: prev.mentalHealthGoals.includes(goal)
-        ? prev.mentalHealthGoals.filter(g => g !== goal)
+        ? prev.mentalHealthGoals.filter((g) => g !== goal)
         : [...prev.mentalHealthGoals, goal],
     }));
   };
 
   const handleInterestToggle = (interest) => {
-    setProfileData(prev => ({
+    setProfileData((prev) => ({
       ...prev,
       interests: prev.interests.includes(interest)
-        ? prev.interests.filter(i => i !== interest)
+        ? prev.interests.filter((i) => i !== interest)
         : [...prev.interests, interest],
     }));
   };
 
   const handleNext = () => {
     if (currentStep < setupSteps.length - 1) {
-      setCurrentStep(prev => prev + 1);
+      setCurrentStep((prev) => prev + 1);
     } else {
       handleComplete();
     }
@@ -166,33 +170,33 @@ const ProfileSetupScreen = ({ navigation, route }) => {
 
   const handlePrevious = () => {
     if (currentStep > 0) {
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep((prev) => prev - 1);
     }
   };
 
   const handleComplete = () => {
     // Save profile data and navigate
     Alert.alert(
-      'Profile Setup Complete!',
-      'Your profile has been set up successfully. You can always update these settings later.',
+      "Profile Setup Complete!",
+      "Your profile has been set up successfully. You can always update these settings later.",
       [
         {
-          text: 'Continue',
-          onPress: () => navigation.navigate('Home'),
+          text: "Continue",
+          onPress: () => navigation.navigate("Home"),
         },
-      ]
+      ],
     );
   };
 
   const isStepComplete = () => {
     switch (currentStepData.id) {
-      case 'basic_info':
+      case "basic_info":
         return profileData.displayName.trim().length > 0;
-      case 'goals':
+      case "goals":
         return profileData.mentalHealthGoals.length > 0;
-      case 'preferences':
+      case "preferences":
         return true; // Preferences have defaults
-      case 'interests':
+      case "interests":
         return profileData.interests.length > 0;
       default:
         return false;
@@ -201,15 +205,26 @@ const ProfileSetupScreen = ({ navigation, route }) => {
 
   const renderStepContent = () => {
     switch (currentStepData.id) {
-      case 'basic_info':
+      case "basic_info":
         return (
           <View style={styles.stepContent}>
             {/* Avatar Selection */}
-            <TouchableOpacity style={styles.avatarContainer} onPress={handleAvatarPick}>
+            <TouchableOpacity
+              style={styles.avatarContainer}
+              onPress={handleAvatarPick}
+            >
               {profileData.avatar ? (
-                <Image source={{ uri: profileData.avatar }} style={styles.avatar} />
+                <Image
+                  source={{ uri: profileData.avatar }}
+                  style={styles.avatar}
+                />
               ) : (
-                <View style={[styles.avatarPlaceholder, { backgroundColor: theme.colors.gray[200] }]}>
+                <View
+                  style={[
+                    styles.avatarPlaceholder,
+                    { backgroundColor: theme.colors.gray[200] },
+                  ]}
+                >
                   <MentalHealthIcon
                     name="Brain"
                     size={40}
@@ -218,7 +233,12 @@ const ProfileSetupScreen = ({ navigation, route }) => {
                   />
                 </View>
               )}
-              <View style={[styles.avatarBadge, { backgroundColor: theme.colors.therapeutic.calming[500] }]}>
+              <View
+                style={[
+                  styles.avatarBadge,
+                  { backgroundColor: theme.colors.therapeutic.calming[500] },
+                ]}
+              >
                 <NavigationIcon
                   name="Home"
                   size={16}
@@ -228,13 +248,23 @@ const ProfileSetupScreen = ({ navigation, route }) => {
               </View>
             </TouchableOpacity>
 
-            <Text style={[styles.avatarLabel, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[
+                styles.avatarLabel,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
               Tap to add profile picture (optional)
             </Text>
 
             {/* Display Name */}
             <View style={styles.inputContainer}>
-              <Text style={[styles.inputLabel, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.inputLabel,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 Display Name *
               </Text>
               <TextInput
@@ -250,14 +280,19 @@ const ProfileSetupScreen = ({ navigation, route }) => {
                 placeholderTextColor={theme.colors.text.tertiary}
                 value={profileData.displayName}
                 onChangeText={(text) =>
-                  setProfileData(prev => ({ ...prev, displayName: text }))
+                  setProfileData((prev) => ({ ...prev, displayName: text }))
                 }
               />
             </View>
 
             {/* Bio */}
             <View style={styles.inputContainer}>
-              <Text style={[styles.inputLabel, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.inputLabel,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 About You (Optional)
               </Text>
               <TextInput
@@ -274,7 +309,7 @@ const ProfileSetupScreen = ({ navigation, route }) => {
                 placeholderTextColor={theme.colors.text.tertiary}
                 value={profileData.bio}
                 onChangeText={(text) =>
-                  setProfileData(prev => ({ ...prev, bio: text }))
+                  setProfileData((prev) => ({ ...prev, bio: text }))
                 }
                 multiline
                 numberOfLines={3}
@@ -284,11 +319,17 @@ const ProfileSetupScreen = ({ navigation, route }) => {
           </View>
         );
 
-      case 'goals':
+      case "goals":
         return (
           <View style={styles.stepContent}>
-            <Text style={[styles.stepDescription, { color: theme.colors.text.secondary }]}>
-              Select the areas you'd like to focus on (choose as many as you like):
+            <Text
+              style={[
+                styles.stepDescription,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
+              Select the areas you'd like to focus on (choose as many as you
+              like):
             </Text>
             <View style={styles.goalsContainer}>
               {mentalHealthGoals.map((goal, index) => (
@@ -297,7 +338,9 @@ const ProfileSetupScreen = ({ navigation, route }) => {
                   style={[
                     styles.goalItem,
                     {
-                      backgroundColor: profileData.mentalHealthGoals.includes(goal)
+                      backgroundColor: profileData.mentalHealthGoals.includes(
+                        goal,
+                      )
                         ? theme.colors.therapeutic.calming[100]
                         : theme.colors.background.secondary,
                       borderColor: profileData.mentalHealthGoals.includes(goal)
@@ -325,20 +368,20 @@ const ProfileSetupScreen = ({ navigation, route }) => {
           </View>
         );
 
-      case 'preferences':
+      case "preferences":
         return (
           <View style={styles.stepContent}>
             <PreferenceSection
               title="Communication Style"
               description="How would you like AI to communicate with you?"
               options={[
-                { value: 'gentle', label: 'Gentle and supportive' },
-                { value: 'balanced', label: 'Balanced approach' },
-                { value: 'direct', label: 'Direct and actionable' },
+                { value: "gentle", label: "Gentle and supportive" },
+                { value: "balanced", label: "Balanced approach" },
+                { value: "direct", label: "Direct and actionable" },
               ]}
               selected={profileData.preferences.communication}
               onSelect={(value) =>
-                setProfileData(prev => ({
+                setProfileData((prev) => ({
                   ...prev,
                   preferences: { ...prev.preferences, communication: value },
                 }))
@@ -350,13 +393,13 @@ const ProfileSetupScreen = ({ navigation, route }) => {
               title="Session Length"
               description="Preferred length for therapy sessions"
               options={[
-                { value: 'short', label: '10-15 minutes' },
-                { value: 'medium', label: '20-30 minutes' },
-                { value: 'long', label: '45+ minutes' },
+                { value: "short", label: "10-15 minutes" },
+                { value: "medium", label: "20-30 minutes" },
+                { value: "long", label: "45+ minutes" },
               ]}
               selected={profileData.preferences.sessionLength}
               onSelect={(value) =>
-                setProfileData(prev => ({
+                setProfileData((prev) => ({
                   ...prev,
                   preferences: { ...prev.preferences, sessionLength: value },
                 }))
@@ -368,15 +411,18 @@ const ProfileSetupScreen = ({ navigation, route }) => {
               title="Reminder Frequency"
               description="How often would you like check-in reminders?"
               options={[
-                { value: 'none', label: 'No reminders' },
-                { value: 'weekly', label: 'Weekly' },
-                { value: 'daily', label: 'Daily' },
+                { value: "none", label: "No reminders" },
+                { value: "weekly", label: "Weekly" },
+                { value: "daily", label: "Daily" },
               ]}
               selected={profileData.preferences.reminderFrequency}
               onSelect={(value) =>
-                setProfileData(prev => ({
+                setProfileData((prev) => ({
                   ...prev,
-                  preferences: { ...prev.preferences, reminderFrequency: value },
+                  preferences: {
+                    ...prev.preferences,
+                    reminderFrequency: value,
+                  },
                 }))
               }
               theme={theme}
@@ -384,10 +430,15 @@ const ProfileSetupScreen = ({ navigation, route }) => {
           </View>
         );
 
-      case 'interests':
+      case "interests":
         return (
           <View style={styles.stepContent}>
-            <Text style={[styles.stepDescription, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[
+                styles.stepDescription,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
               What activities help you feel better? (Select all that apply):
             </Text>
             <View style={styles.interestsContainer}>
@@ -455,17 +506,24 @@ const ProfileSetupScreen = ({ navigation, route }) => {
               variant="outline"
             />
           </TouchableOpacity>
-          
-          <Text style={[styles.headerTitle, { color: theme.colors.text.primary }]}>
+
+          <Text
+            style={[styles.headerTitle, { color: theme.colors.text.primary }]}
+          >
             Profile Setup
           </Text>
-          
+
           <View style={styles.placeholder} />
         </View>
 
         {/* Progress Bar */}
         <View style={styles.progressContainer}>
-          <View style={[styles.progressBar, { backgroundColor: theme.colors.gray[200] }]}>
+          <View
+            style={[
+              styles.progressBar,
+              { backgroundColor: theme.colors.gray[200] },
+            ]}
+          >
             <View
               style={[
                 styles.progressFill,
@@ -476,7 +534,12 @@ const ProfileSetupScreen = ({ navigation, route }) => {
               ]}
             />
           </View>
-          <Text style={[styles.progressText, { color: theme.colors.text.secondary }]}>
+          <Text
+            style={[
+              styles.progressText,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
             Step {currentStep + 1} of {setupSteps.length}
           </Text>
         </View>
@@ -494,7 +557,12 @@ const ProfileSetupScreen = ({ navigation, route }) => {
           >
             {/* Step Header */}
             <View style={styles.stepHeader}>
-              <View style={[styles.iconContainer, { backgroundColor: theme.colors.therapeutic.calming[500] }]}>
+              <View
+                style={[
+                  styles.iconContainer,
+                  { backgroundColor: theme.colors.therapeutic.calming[500] },
+                ]}
+              >
                 <MentalHealthIcon
                   name={currentStepData.icon}
                   size={28}
@@ -502,10 +570,17 @@ const ProfileSetupScreen = ({ navigation, route }) => {
                   variant="filled"
                 />
               </View>
-              <Text style={[styles.stepTitle, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[styles.stepTitle, { color: theme.colors.text.primary }]}
+              >
                 {currentStepData.title}
               </Text>
-              <Text style={[styles.stepSubtitle, { color: theme.colors.text.secondary }]}>
+              <Text
+                style={[
+                  styles.stepSubtitle,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
                 {currentStepData.description}
               </Text>
             </View>
@@ -518,15 +593,24 @@ const ProfileSetupScreen = ({ navigation, route }) => {
         <View style={styles.navigationContainer}>
           {currentStep > 0 && (
             <TouchableOpacity
-              style={[styles.navButton, styles.previousButton, { borderColor: theme.colors.gray[300] }]}
+              style={[
+                styles.navButton,
+                styles.previousButton,
+                { borderColor: theme.colors.gray[300] },
+              ]}
               onPress={handlePrevious}
             >
-              <Text style={[styles.navButtonText, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.navButtonText,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 Previous
               </Text>
             </TouchableOpacity>
           )}
-          
+
           <TouchableOpacity
             style={[
               styles.navButton,
@@ -540,8 +624,15 @@ const ProfileSetupScreen = ({ navigation, route }) => {
             onPress={handleNext}
             disabled={!isStepComplete()}
           >
-            <Text style={[styles.navButtonText, { color: theme.colors.text.inverse }]}>
-              {currentStep === setupSteps.length - 1 ? 'Complete Setup' : 'Continue'}
+            <Text
+              style={[
+                styles.navButtonText,
+                { color: theme.colors.text.inverse },
+              ]}
+            >
+              {currentStep === setupSteps.length - 1
+                ? "Complete Setup"
+                : "Continue"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -550,12 +641,26 @@ const ProfileSetupScreen = ({ navigation, route }) => {
   );
 };
 
-const PreferenceSection = ({ title, description, options, selected, onSelect, theme }) => (
+const PreferenceSection = ({
+  title,
+  description,
+  options,
+  selected,
+  onSelect,
+  theme,
+}) => (
   <View style={styles.preferenceSection}>
-    <Text style={[styles.preferenceTitle, { color: theme.colors.text.primary }]}>
+    <Text
+      style={[styles.preferenceTitle, { color: theme.colors.text.primary }]}
+    >
       {title}
     </Text>
-    <Text style={[styles.preferenceDescription, { color: theme.colors.text.secondary }]}>
+    <Text
+      style={[
+        styles.preferenceDescription,
+        { color: theme.colors.text.secondary },
+      ]}
+    >
       {description}
     </Text>
     <View style={styles.preferenceOptions}>
@@ -565,12 +670,14 @@ const PreferenceSection = ({ title, description, options, selected, onSelect, th
           style={[
             styles.preferenceOption,
             {
-              backgroundColor: selected === option.value
-                ? theme.colors.therapeutic.calming[100]
-                : theme.colors.background.secondary,
-              borderColor: selected === option.value
-                ? theme.colors.therapeutic.calming[500]
-                : theme.colors.gray[300],
+              backgroundColor:
+                selected === option.value
+                  ? theme.colors.therapeutic.calming[100]
+                  : theme.colors.background.secondary,
+              borderColor:
+                selected === option.value
+                  ? theme.colors.therapeutic.calming[500]
+                  : theme.colors.gray[300],
             },
           ]}
           onPress={() => onSelect(option.value)}
@@ -579,9 +686,10 @@ const PreferenceSection = ({ title, description, options, selected, onSelect, th
             style={[
               styles.preferenceOptionText,
               {
-                color: selected === option.value
-                  ? theme.colors.therapeutic.calming[700]
-                  : theme.colors.text.primary,
+                color:
+                  selected === option.value
+                    ? theme.colors.therapeutic.calming[700]
+                    : theme.colors.text.primary,
               },
             ]}
           >
@@ -601,21 +709,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
   backButton: {
     width: 44,
     height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   placeholder: {
     width: 44,
@@ -630,12 +738,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   progressFill: {
-    height: '100%',
+    height: "100%",
     borderRadius: 2,
   },
   progressText: {
     fontSize: 12,
-    textAlign: 'center',
+    textAlign: "center",
   },
   content: {
     flex: 1,
@@ -645,26 +753,26 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   stepHeader: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 32,
   },
   iconContainer: {
     width: 60,
     height: 60,
     borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 16,
   },
   stepTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 8,
   },
   stepSubtitle: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 22,
   },
   stepContent: {
@@ -672,14 +780,14 @@ const styles = StyleSheet.create({
   },
   stepDescription: {
     fontSize: 14,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 20,
     lineHeight: 20,
   },
   avatarContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 8,
-    position: 'relative',
+    position: "relative",
   },
   avatar: {
     width: 100,
@@ -690,22 +798,22 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   avatarBadge: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     right: 10,
     width: 32,
     height: 32,
     borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   avatarLabel: {
     fontSize: 12,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 24,
   },
   inputContainer: {
@@ -713,7 +821,7 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
   },
   textInput: {
@@ -726,8 +834,8 @@ const styles = StyleSheet.create({
     height: 80,
   },
   goalsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
   },
   goalItem: {
@@ -738,14 +846,14 @@ const styles = StyleSheet.create({
   },
   goalText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   preferenceSection: {
     marginBottom: 24,
   },
   preferenceTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 4,
   },
   preferenceDescription: {
@@ -762,12 +870,12 @@ const styles = StyleSheet.create({
   },
   preferenceOptionText: {
     fontSize: 14,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
   },
   interestsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
   },
   interestItem: {
@@ -778,10 +886,10 @@ const styles = StyleSheet.create({
   },
   interestText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   navigationContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 16,
     gap: 12,
@@ -790,7 +898,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 16,
     borderRadius: 12,
-    alignItems: 'center',
+    alignItems: "center",
   },
   previousButton: {
     borderWidth: 1,
@@ -800,7 +908,7 @@ const styles = StyleSheet.create({
   },
   navButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
 

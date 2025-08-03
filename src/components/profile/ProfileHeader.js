@@ -11,7 +11,7 @@ const ProfileHeader = ({ name, email, avatar, onEdit }) => {
     <View style={[styles.container, { backgroundColor: theme.colors.background.secondary }]}>
       <View style={styles.avatarContainer}>
         {avatar ? (
-          <Image source={{ uri: avatar }} style={styles.avatar} / resizeMode="cover">
+          <Image source={{ uri: avatar }} style={styles.avatar} resizeMode="cover" />
         ) : (
           <View style={[styles.avatarPlaceholder, { backgroundColor: theme.colors.primary[500] }]}>
             <Text style={styles.avatarText}>
@@ -20,14 +20,13 @@ const ProfileHeader = ({ name, email, avatar, onEdit }) => {
           </View>
         )}
         <TouchableOpacity 
-          style={[[styles.editAvatarButton, { backgroundColor: theme.colors.primary[500] , { minWidth: 44, minHeight: 44 }]}]}
+          style={[styles.editAvatarButton, { backgroundColor: theme.colors.primary[500], minWidth: 44, minHeight: 44 }]}
           onPress={onEdit}
-        
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="✏️"
-        accessibilityHint="Double tap to activate"
-      >
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="✏️"
+          accessibilityHint="Double tap to activate"
+        >
           <Text style={styles.editAvatarIcon}>✏️</Text>
         </TouchableOpacity>
       </View>
@@ -42,9 +41,8 @@ const ProfileHeader = ({ name, email, avatar, onEdit }) => {
       </View>
       
       <TouchableOpacity 
-        style={[[styles.editButton, { backgroundColor: theme.colors.primary[500] , { minWidth: 44, minHeight: 44 }]}]}
+        style={[styles.editButton, { backgroundColor: theme.colors.primary[500], minWidth: 44, minHeight: 44 }]}
         onPress={onEdit}
-      
         accessible={true}
         accessibilityRole="button"
         accessibilityLabel="Edit Profile"
@@ -59,31 +57,31 @@ const ProfileHeader = ({ name, email, avatar, onEdit }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    paddingVertical: theme.theme.spacing[8],
-    paddingHorizontal: theme.theme.spacing[4],
-    marginBottom: theme.theme.spacing[4],
-    ...theme.theme.shadows.base,
+    paddingVertical: spacing[8],
+    paddingHorizontal: spacing[4],
+    marginBottom: spacing[4],
+    ...shadows.base,
   },
   avatarContainer: {
     position: 'relative',
-    marginBottom: theme.theme.spacing[4],
+    marginBottom: spacing[4],
   },
   avatar: {
     width: 80,
     height: 80,
-    borderRadius: theme.theme.borderRadius.full,
+    borderRadius: borderRadius.full,
   },
   avatarPlaceholder: {
     width: 80,
     height: 80,
-    borderRadius: theme.theme.borderRadius.full,
+    borderRadius: borderRadius.full,
     justifyContent: 'center',
     alignItems: 'center',
-    ...theme.theme.shadows.base,
+    ...shadows.base,
   },
   avatarText: {
     color: theme.colors.text.inverse,
-    fontSize: theme.theme.typography.sizes['3xl'],
+    fontSize: typography.sizes['3xl'],
     fontWeight: '700',
   },
   editAvatarButton: {
@@ -91,38 +89,38 @@ const styles = StyleSheet.create({
     bottom: -4,
     right: -4,
     width: 44, height: 44,
-    borderRadius: theme.theme.borderRadius.full,
+    borderRadius: borderRadius.full,
     justifyContent: 'center',
     alignItems: 'center',
-    ...theme.theme.shadows.sm,
+    ...shadows.sm,
   },
   editAvatarIcon: {
-    fontSize: theme.theme.typography.sizes.sm,
+    fontSize: typography.sizes.sm,
   },
   infoContainer: {
     alignItems: 'center',
-    marginBottom: theme.theme.spacing[4],
+    marginBottom: spacing[4],
   },
   name: {
-    fontSize: theme.theme.typography.sizes['2xl'],
+    fontSize: typography.sizes['2xl'],
     fontWeight: '700',
-    lineHeight: theme.theme.typography.lineHeights['2xl'],
-    marginBottom: theme.theme.spacing[1],
+    lineHeight: typography.lineHeights['2xl'],
+    marginBottom: spacing[1],
   },
   email: {
-    fontSize: theme.theme.typography.sizes.base,
+    fontSize: typography.sizes.base,
     fontWeight: '400',
-    lineHeight: theme.theme.typography.lineHeights.base,
+    lineHeight: typography.lineHeights.base,
   },
   editButton: {
-    paddingVertical: theme.theme.spacing[3],
-    paddingHorizontal: theme.theme.spacing[6],
-    borderRadius: theme.theme.borderRadius.md,
-    ...theme.theme.shadows.sm,
+    paddingVertical: spacing[3],
+    paddingHorizontal: spacing[6],
+    borderRadius: borderRadius.md,
+    ...shadows.sm,
   },
   editButtonText: {
     color: theme.colors.text.inverse,
-    fontSize: theme.theme.typography.sizes.base,
+    fontSize: typography.sizes.base,
     fontWeight: '600',
   },
 });

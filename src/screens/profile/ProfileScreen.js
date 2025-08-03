@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import * as Haptics from 'expo-haptics';
+import { useNavigation } from "@react-navigation/native";
+import * as Haptics from "expo-haptics";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,16 +10,22 @@ import {
   Switch,
   Alert,
   BackHandler,
-} from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '../../contexts/ThemeContext';
-import { colors, typography, spacing, borderRadius, shadows } from '../../styles/theme';
-import { updatePreferences, setTheme } from '../../store/slices/userSlice';
-import { logout } from '../../store/slices/authSlice';
-import ProfileHeader from '../../components/profile/ProfileHeader';
-import SettingsSection from '../../components/profile/SettingsSection';
-import StatsCard from '../../components/profile/StatsCard';
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+
+import ProfileHeader from "../../components/profile/ProfileHeader";
+import SettingsSection from "../../components/profile/SettingsSection";
+import StatsCard from "../../components/profile/StatsCard";
+import { useTheme } from "../../contexts/ThemeContext";
+import { logout } from "../../store/slices/authSlice";
+import { updatePreferences, setTheme } from "../../store/slices/userSlice";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../../styles/theme";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -26,115 +33,129 @@ const ProfileScreen = () => {
   // Handle hardware back button on Android
   React.useEffect(() => {
     const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
+      "hardwareBackPress",
       () => {
         if (navigation.canGoBack()) {
           navigation.goBack();
           return true;
         }
         return false;
-      }
+      },
     );
 
     return () => backHandler.remove();
   }, [navigation]);
   const dispatch = useDispatch();
   const { isDarkMode, toggleTheme } = useTheme();
-  
-  const { user, auth } = useSelector(state => ({
+
+  const { user, auth } = useSelector((state) => ({
     user: state.user,
     auth: state.auth,
   }));
 
-  
-
   const handleLogout = () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: () => {
-            dispatch(logout());
-          },
+    Alert.alert("Logout", "Are you sure you want to logout?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Logout",
+        style: "destructive",
+        onPress: () => {
+          dispatch(logout());
         },
-      ]
-    );
+      },
+    ]);
   };
 
   const handleThemeToggle = (value) => {
     toggleTheme();
-    dispatch(setTheme(value ? 'dark' : 'light'));
+    dispatch(setTheme(value ? "dark" : "light"));
   };
 
   const handleNotificationToggle = (type, value) => {
-    dispatch(updatePreferences({
-      notifications: {
-        ...user.preferences.notifications,
-        [type]: value,
-      },
-    }));
+    dispatch(
+      updatePreferences({
+        notifications: {
+          ...user.preferences.notifications,
+          [type]: value,
+        },
+      }),
+    );
   };
 
   const handlePrivacyToggle = (type, value) => {
-    dispatch(updatePreferences({
-      privacy: {
-        ...user.preferences.privacy,
-        [type]: value,
-      },
-    }));
+    dispatch(
+      updatePreferences({
+        privacy: {
+          ...user.preferences.privacy,
+          [type]: value,
+        },
+      }),
+    );
   };
 
   const handleEditProfile = () => {
-    navigation.navigate('EditProfile');
+    navigation.navigate("EditProfile");
   };
 
   const handleEmergencyContacts = () => {
-    navigation.navigate('EmergencyContacts');
+    navigation.navigate("EmergencyContacts");
   };
 
   const handleDataExport = () => {
     Alert.alert(
-      'Export Data',
-      'This will export all your data including mood entries, chat history, and assessments. This may take a few minutes.',
+      "Export Data",
+      "This will export all your data including mood entries, chat history, and assessments. This may take a few minutes.",
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Export', onPress: () => {/* TODO: Implement data export */} },
-      ]
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Export",
+          onPress: () => {
+            /* TODO: Implement data export */
+          },
+        },
+      ],
     );
   };
 
   const handleDeleteAccount = () => {
     Alert.alert(
-      'Delete Account',
-      'This action cannot be undone. All your data will be permanently deleted.',
+      "Delete Account",
+      "This action cannot be undone. All your data will be permanently deleted.",
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: "Cancel", style: "cancel" },
         {
-          text: 'Delete Account',
-          style: 'destructive',
+          text: "Delete Account",
+          style: "destructive",
           onPress: () => {
             // TODO: Implement account deletion
-            Alert.alert('Feature Coming Soon', 'Account deletion will be available in a future update.');
+            Alert.alert(
+              "Feature Coming Soon",
+              "Account deletion will be available in a future update.",
+            );
           },
         },
-      ]
+      ],
     );
   };
 
   const handleDesignSystem = () => {
-    navigation.navigate('DesignSystem');
+    navigation.navigate("DesignSystem");
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background.primary },
+      ]}
+    >
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Profile Header */}
         <ProfileHeader
-          name={user.profile.name || 'User'}
+          name={user.profile.name || "User"}
           email={user.profile.email || auth.email}
           avatar={user.profile.avatar}
           onEdit={handleEditProfile}
@@ -172,49 +193,89 @@ const ProfileScreen = () => {
         {/* Settings Sections */}
         <SettingsSection title="Notifications">
           <View style={styles.settingItem}>
-            <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.settingLabel,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Mood Reminders
             </Text>
             <Switch
               value={user.preferences.notifications.moodReminders}
-              onValueChange={(value) => handleNotificationToggle('moodReminders', value)}
-              trackColor={{ false: theme.colors.gray[300], true: theme.colors.primary[500] }}
+              onValueChange={(value) =>
+                handleNotificationToggle("moodReminders", value)
+              }
+              trackColor={{
+                false: theme.colors.gray[300],
+                true: theme.colors.primary[500],
+              }}
               thumbColor={theme.colors.text.inverse}
             />
           </View>
 
           <View style={styles.settingItem}>
-            <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.settingLabel,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Chat Messages
             </Text>
             <Switch
               value={user.preferences.notifications.chatMessages}
-              onValueChange={(value) => handleNotificationToggle('chatMessages', value)}
-              trackColor={{ false: theme.colors.gray[300], true: theme.colors.primary[500] }}
+              onValueChange={(value) =>
+                handleNotificationToggle("chatMessages", value)
+              }
+              trackColor={{
+                false: theme.colors.gray[300],
+                true: theme.colors.primary[500],
+              }}
               thumbColor={theme.colors.text.inverse}
             />
           </View>
 
           <View style={styles.settingItem}>
-            <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.settingLabel,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Assessment Due
             </Text>
             <Switch
               value={user.preferences.notifications.assessmentDue}
-              onValueChange={(value) => handleNotificationToggle('assessmentDue', value)}
-              trackColor={{ false: theme.colors.gray[300], true: theme.colors.primary[500] }}
+              onValueChange={(value) =>
+                handleNotificationToggle("assessmentDue", value)
+              }
+              trackColor={{
+                false: theme.colors.gray[300],
+                true: theme.colors.primary[500],
+              }}
               thumbColor={theme.colors.text.inverse}
             />
           </View>
 
           <View style={styles.settingItem}>
-            <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.settingLabel,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Insights
             </Text>
             <Switch
               value={user.preferences.notifications.insights}
-              onValueChange={(value) => handleNotificationToggle('insights', value)}
-              trackColor={{ false: theme.colors.gray[300], true: theme.colors.primary[500] }}
+              onValueChange={(value) =>
+                handleNotificationToggle("insights", value)
+              }
+              trackColor={{
+                false: theme.colors.gray[300],
+                true: theme.colors.primary[500],
+              }}
               thumbColor={theme.colors.text.inverse}
             />
           </View>
@@ -222,13 +283,21 @@ const ProfileScreen = () => {
 
         <SettingsSection title="Appearance">
           <View style={styles.settingItem}>
-            <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.settingLabel,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Dark Mode
             </Text>
             <Switch
               value={isDarkMode}
               onValueChange={handleThemeToggle}
-              trackColor={{ false: theme.colors.gray[300], true: theme.colors.primary[500] }}
+              trackColor={{
+                false: theme.colors.gray[300],
+                true: theme.colors.primary[500],
+              }}
               thumbColor={theme.colors.text.inverse}
             />
           </View>
@@ -236,12 +305,17 @@ const ProfileScreen = () => {
           <TouchableOpacity
             style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}
             onPress={handleDesignSystem}
-            accessible={true}
+            accessible
             accessibilityRole="button"
             accessibilityLabel="Design System"
             accessibilityHint="Customize colors and components"
           >
-            <Text style={[styles.settingButtonText, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.settingButtonText,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Design System
             </Text>
             <Text style={styles.settingButtonIcon}>🎨</Text>
@@ -250,25 +324,41 @@ const ProfileScreen = () => {
 
         <SettingsSection title="Privacy">
           <View style={styles.settingItem}>
-            <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.settingLabel,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Share Data for Research
             </Text>
             <Switch
               value={user.preferences.privacy.shareData}
-              onValueChange={(value) => handlePrivacyToggle('shareData', value)}
-              trackColor={{ false: theme.colors.gray[300], true: theme.colors.primary[500] }}
+              onValueChange={(value) => handlePrivacyToggle("shareData", value)}
+              trackColor={{
+                false: theme.colors.gray[300],
+                true: theme.colors.primary[500],
+              }}
               thumbColor={theme.colors.text.inverse}
             />
           </View>
 
           <View style={styles.settingItem}>
-            <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.settingLabel,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Analytics
             </Text>
             <Switch
               value={user.preferences.privacy.analytics}
-              onValueChange={(value) => handlePrivacyToggle('analytics', value)}
-              trackColor={{ false: theme.colors.gray[300], true: theme.colors.primary[500] }}
+              onValueChange={(value) => handlePrivacyToggle("analytics", value)}
+              trackColor={{
+                false: theme.colors.gray[300],
+                true: theme.colors.primary[500],
+              }}
               thumbColor={theme.colors.text.inverse}
             />
           </View>
@@ -278,12 +368,17 @@ const ProfileScreen = () => {
           <TouchableOpacity
             style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}
             onPress={handleEmergencyContacts}
-            accessible={true}
+            accessible
             accessibilityRole="button"
             accessibilityLabel="Emergency Contacts"
             accessibilityHint="Double tap to get help"
           >
-            <Text style={[styles.settingButtonText, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.settingButtonText,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Emergency Contacts
             </Text>
             <Text style={styles.settingButtonIcon}>➡️</Text>
@@ -292,12 +387,17 @@ const ProfileScreen = () => {
           <TouchableOpacity
             style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}
             onPress={handleDataExport}
-            accessible={true}
+            accessible
             accessibilityRole="button"
             accessibilityLabel="Export My Data"
             accessibilityHint="Double tap to activate"
           >
-            <Text style={[styles.settingButtonText, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.settingButtonText,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Export My Data
             </Text>
             <Text style={styles.settingButtonIcon}>⬇️</Text>
@@ -306,15 +406,22 @@ const ProfileScreen = () => {
           <TouchableOpacity
             style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}
             onPress={() => {
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+              Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Warning,
+              );
               handleDeleteAccount();
             }}
-            accessible={true}
+            accessible
             accessibilityRole="button"
             accessibilityLabel="Delete account"
             accessibilityHint="Permanently delete your account and all data"
           >
-            <Text style={[styles.settingButtonText, { color: theme.colors.error[500] }]}>
+            <Text
+              style={[
+                styles.settingButtonText,
+                { color: theme.colors.error[500] },
+              ]}
+            >
               Delete Account
             </Text>
             <Text style={styles.settingButtonIcon}>🗑️</Text>
@@ -323,9 +430,16 @@ const ProfileScreen = () => {
 
         <View style={styles.logoutContainer}>
           <TouchableOpacity
-            style={[styles.logoutButton, { backgroundColor: theme.colors.error[500], minWidth: 44, minHeight: 44 }]}
+            style={[
+              styles.logoutButton,
+              {
+                backgroundColor: theme.colors.error[500],
+                minWidth: 44,
+                minHeight: 44,
+              },
+            ]}
             onPress={handleLogout}
-            accessible={true}
+            accessible
             accessibilityRole="button"
             accessibilityLabel="Logout"
             accessibilityHint="Double tap to activate"
@@ -346,16 +460,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   statsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     paddingHorizontal: spacing[4],
     gap: spacing[3],
     marginBottom: spacing[4],
   },
   settingItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: spacing[3],
     paddingHorizontal: spacing[4],
     borderBottomWidth: 1,
@@ -363,13 +477,13 @@ const styles = StyleSheet.create({
   },
   settingLabel: {
     fontSize: typography.sizes.base,
-    fontWeight: '400',
+    fontWeight: "400",
     lineHeight: typography.lineHeights.base,
   },
   settingButton: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: spacing[4],
     paddingHorizontal: spacing[4],
     borderBottomWidth: 1,
@@ -377,7 +491,7 @@ const styles = StyleSheet.create({
   },
   settingButtonText: {
     fontSize: typography.sizes.base,
-    fontWeight: '400',
+    fontWeight: "400",
     lineHeight: typography.lineHeights.base,
   },
   settingButtonIcon: {
@@ -391,13 +505,13 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[4],
     paddingHorizontal: spacing[6],
     borderRadius: borderRadius.md,
-    alignItems: 'center',
+    alignItems: "center",
     ...shadows.base,
   },
   logoutButtonText: {
     color: colors.text.inverse,
     fontSize: typography.sizes.base,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
 
