@@ -277,10 +277,10 @@ const TherapySessionRecorder = ({
   const isNearLimit = duration > maxDuration * 0.8;
 
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, style]} data-testid="therapy-session-recorder">
       {/* Recording Status */}
       {isRecording && (
-        <View style={styles.statusContainer}>
+        <View style={styles.statusContainer} data-testid="recording-status">
           <LinearGradient
             colors={[
               theme.colors.therapeutic.calming[50],
@@ -320,6 +320,7 @@ const TherapySessionRecorder = ({
                       : theme.colors.text.primary,
                   },
                 ]}
+                data-testid="recording-timer"
               >
                 {formatDuration(duration)} / {formatDuration(maxDuration)}
               </Text>
@@ -349,6 +350,7 @@ const TherapySessionRecorder = ({
                 disabled={isProcessing}
                 accessibilityLabel="Cancel recording"
                 accessibilityRole="button"
+                data-testid="cancel-recording-button"
               >
                 <MentalHealthIcon
                   name="Heart"
@@ -397,6 +399,7 @@ const TherapySessionRecorder = ({
               ? 'Double tap to stop and save your voice recording'
               : 'Double tap to start recording your voice for the therapy session'
           }
+          data-testid="record-button"
         >
           <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
             <MentalHealthIcon

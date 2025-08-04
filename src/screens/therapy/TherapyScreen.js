@@ -392,12 +392,13 @@ const TherapyScreen = ({ navigation, route }) => {
         message={message}
         onSuggestionPress={handleSuggestionPress}
         theme={theme}
+        data-testid={message.sender === 'user' ? 'user-message' : 'ai-message'}
       />
     );
   };
 
   const renderModeSelector = () => (
-    <View style={styles.modeSelector}>
+    <View style={styles.modeSelector} data-testid="mode-selector">
       <TouchableOpacity
         style={[
           styles.modeButton,
@@ -408,6 +409,7 @@ const TherapyScreen = ({ navigation, route }) => {
           }
         ]}
         onPress={() => setInteractionMode('text')}
+        data-testid="text-mode-button"
       >
         <MentalHealthIcon
           name="Journal"
@@ -433,6 +435,7 @@ const TherapyScreen = ({ navigation, route }) => {
           }
         ]}
         onPress={() => setInteractionMode('voice')}
+        data-testid="voice-mode-button"
       >
         <MentalHealthIcon
           name="Mindfulness"
@@ -458,6 +461,7 @@ const TherapyScreen = ({ navigation, route }) => {
           }
         ]}
         onPress={() => setInteractionMode('guided')}
+        data-testid="guided-mode-button"
       >
         <MentalHealthIcon
           name="Therapy"
@@ -476,8 +480,11 @@ const TherapyScreen = ({ navigation, route }) => {
   );
 
   const renderGuidedExercises = () => (
-    <View style={styles.exercisesContainer}>
-      <Text style={[styles.exercisesTitle, { color: theme.colors.text.primary }]}>
+    <View style={styles.exercisesContainer} data-testid="exercises-container">
+      <Text 
+        style={[styles.exercisesTitle, { color: theme.colors.text.primary }]}
+        data-testid="exercises-title"
+      >
         Guided Exercises
       </Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.exercisesScroll}>
@@ -486,6 +493,7 @@ const TherapyScreen = ({ navigation, route }) => {
             key={exercise.id}
             style={[styles.exerciseCard, { backgroundColor: theme.colors.background.primary }]}
             onPress={() => startGuidedExercise(exercise.id)}
+            data-testid="exercise-card"
           >
             <LinearGradient
               colors={[exercise.color + '20', exercise.color + '10']}
@@ -511,7 +519,10 @@ const TherapyScreen = ({ navigation, route }) => {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
+    <SafeAreaView 
+      style={[styles.container, { backgroundColor: theme.colors.background.primary }]}
+      data-testid="therapy-screen"
+    >
       <LinearGradient
         colors={[
           theme.colors.therapeutic.calming[50],
@@ -531,12 +542,14 @@ const TherapyScreen = ({ navigation, route }) => {
               opacity: headerAnim 
             }
           ]}
+          data-testid="therapy-header"
         >
           <TouchableOpacity
             style={styles.headerButton}
             onPress={() => navigation.goBack()}
             accessibilityLabel="Go back"
             accessibilityRole="button"
+            data-testid="back-button"
           >
             <NavigationIcon
               name="Home"
@@ -547,10 +560,16 @@ const TherapyScreen = ({ navigation, route }) => {
           </TouchableOpacity>
 
           <View style={styles.headerContent}>
-            <Text style={[styles.headerTitle, { color: theme.colors.text.primary }]}>
+            <Text 
+              style={[styles.headerTitle, { color: theme.colors.text.primary }]}
+              data-testid="therapy-title"
+            >
               Therapy Session
             </Text>
-            <Text style={[styles.headerSubtitle, { color: theme.colors.text.secondary }]}>
+            <Text 
+              style={[styles.headerSubtitle, { color: theme.colors.text.secondary }]}
+              data-testid="session-timer"
+            >
               {formatSessionDuration(sessionDuration)}
             </Text>
           </View>
@@ -560,6 +579,7 @@ const TherapyScreen = ({ navigation, route }) => {
             onPress={handleEndSession}
             accessibilityLabel="End session"
             accessibilityRole="button"
+            data-testid="end-session-button"
           >
             <MentalHealthIcon
               name="Heart"
@@ -579,6 +599,7 @@ const TherapyScreen = ({ navigation, route }) => {
               opacity: fadeAnim 
             }
           ]}
+          data-testid="mode-selector-container"
         >
           {renderModeSelector()}
         </Animated.View>
@@ -589,6 +610,7 @@ const TherapyScreen = ({ navigation, route }) => {
             styles.messagesContainer,
             { opacity: fadeAnim }
           ]}
+          data-testid="messages-container"
         >
           <ScrollView
             ref={scrollViewRef}
@@ -598,7 +620,7 @@ const TherapyScreen = ({ navigation, route }) => {
           >
             {messages.map(renderMessage)}
             {isAIResponding && (
-              <View style={styles.typingIndicator}>
+              <View style={styles.typingIndicator} data-testid="typing-indicator">
                 <Text style={[styles.typingText, { color: theme.colors.text.secondary }]}>
                   Therapist is responding...
                 </Text>
@@ -609,7 +631,7 @@ const TherapyScreen = ({ navigation, route }) => {
 
         {/* Guided Exercises */}
         {interactionMode === 'guided' && (
-          <Animated.View style={{ opacity: fadeAnim }}>
+          <Animated.View style={{ opacity: fadeAnim }} data-testid="guided-exercises">
             {renderGuidedExercises()}
           </Animated.View>
         )}
@@ -618,6 +640,7 @@ const TherapyScreen = ({ navigation, route }) => {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.inputContainer}
+          data-testid="input-container"
         >
           {interactionMode === 'text' && (
             <ChatInput
@@ -625,6 +648,7 @@ const TherapyScreen = ({ navigation, route }) => {
               placeholder="Share your thoughts and feelings..."
               disabled={isAIResponding}
               theme={theme}
+              data-testid="chat-input"
             />
           )}
 
@@ -634,6 +658,7 @@ const TherapyScreen = ({ navigation, route }) => {
               sessionId={sessionId}
               maxDuration={300}
               disabled={isAIResponding}
+              data-testid="therapy-recorder"
             />
           )}
         </KeyboardAvoidingView>
