@@ -15,6 +15,7 @@ import Svg, {
 } from "react-native-svg";
 
 import { BaseDesignTokens } from "../../design-system/DesignTokens";
+import { InfoIcon } from "./NotificationStatusIcons";
 
 // Base General UI Icon Component
 const GeneralUIIcon = ({
@@ -1004,10 +1005,8 @@ export const CheckCircleIcon = (props) => (
 export const XCircleIcon = (props) => (
   <GeneralUIIcon name="x-circle" {...props} />
 );
-export const AlertCircleIcon = (props) => (
-  <GeneralUIIcon name="alert-circle" {...props} />
-);
-export const InfoIcon = (props) => <GeneralUIIcon name="info" {...props} />;
+// AlertCircleIcon moved to NotificationStatusIcons to avoid conflicts
+export const GeneralInfoIcon = (props) => <GeneralUIIcon name="info" {...props} />;
 export const PlayIcon = (props) => <GeneralUIIcon name="play" {...props} />;
 export const PauseIcon = (props) => <GeneralUIIcon name="pause" {...props} />;
 export const StopIcon = (props) => <GeneralUIIcon name="stop" {...props} />;
@@ -1056,7 +1055,7 @@ export const GeneralUIIconCollection = {
   check: CheckIcon,
   checkCircle: CheckCircleIcon,
   xCircle: XCircleIcon,
-  alertCircle: AlertCircleIcon,
+  // alertCircle: moved to NotificationStatusIcons
   info: InfoIcon,
 
   // Media

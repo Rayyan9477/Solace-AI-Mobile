@@ -1,31 +1,17 @@
 // playwright.config.js
 // Comprehensive Playwright config for Solace AI Mobile MCP testing environment
 
+// Import devices from Playwright
+const { devices } = require('@playwright/test');
+
 /** @type {import('@playwright/test').PlaywrightTestConfig} */
 const config = {
-  webServer: [
-    {
-      command: "npm run web",
-      port: 8081,
-      timeout: 120 * 1000,
-      reuseExistingServer: true,
-      env: {
-        NODE_ENV: 'test'
-      }
-    },
-    {
-      command: "npm run theme-preview",
-      port: 3000,
-      timeout: 120 * 1000,
-      reuseExistingServer: true,
-    }
-  ],
   
-  // Timeout settings optimized for therapy tests
-  globalTimeout: 300 * 1000, // 5 minute global timeout for therapy suite
-  timeout: 60 * 1000, // 1 minute per test for therapy interactions
+  // Timeout settings standardized to 20s per requirements
+  globalTimeout: 300 * 1000, // Keep generous global timeout
+  timeout: 20 * 1000, // 20s per test
   expect: {
-    timeout: 15 * 1000 // 15 second assertion timeout for AI responses
+    timeout: 20 * 1000 // 20s assertion timeout
   },
   
   // Test configuration
@@ -70,9 +56,9 @@ const config = {
     // Trace collection for debugging
     trace: 'retain-on-failure',
     
-    // Default timeout for actions (increased for therapy interactions)
-    actionTimeout: 15 * 1000,
-    navigationTimeout: 30 * 1000,
+    // Default timeouts set to 20s
+    actionTimeout: 20 * 1000,
+    navigationTimeout: 20 * 1000,
   },
   
   // Device and viewport configurations
@@ -232,10 +218,19 @@ const config = {
       },
       testIgnore: ['**/therapy-*.spec.js'],
     },
+    
+    // UI/UX Analysis Testing
+    {
+      name: 'ui-analysis',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: "http://localhost:8082",
+        viewport: { width: 1280, height: 720 },
+        headless: false, // Show browser for UI analysis
+      },
+      testMatch: ['**/solace-comprehensive-ui-analysis.spec.js', '**/solace-mental-health-accessibility.spec.js'],
+    },
   ],
 };
-
-// Import devices from Playwright
-const { devices } = require('@playwright/test');
 
 module.exports = config;

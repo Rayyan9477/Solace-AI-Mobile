@@ -61,7 +61,7 @@ const PlatformIcon = ({
 };
 
 // Platform-specific tab bar icon
-export const TabBarIcon = ({ focused, ...props }) => {
+export const PlatformTabBarIcon = ({ focused, ...props }) => {
   const { theme } = useTheme();
   const config = getPlatformConfig();
 
@@ -139,7 +139,7 @@ export const TouchableIcon = ({
 };
 
 // Icon with platform-specific loading state
-export const LoadingIcon = ({ isLoading, loadingColor, ...props }) => {
+export const PlatformLoadingIcon = ({ isLoading, loadingColor, ...props }) => {
   const { theme } = useTheme();
 
   if (isLoading) {

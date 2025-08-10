@@ -117,23 +117,23 @@ const styles = StyleSheet.create({
   },
   valueContainer: {
     alignItems: "center",
-    marginBottom: theme.theme.spacing[4],
+    marginBottom: 124],
   },
   valueText: {
-    fontSize: theme.theme.typography.sizes.xl,
+    fontSize: 18xl,
     fontWeight: "600",
-    lineHeight: theme.theme.typography.lineHeights.xl,
-    marginBottom: theme.theme.spacing[1],
+    lineHeight: 22xl,
+    marginBottom: 121],
   },
   valueNumber: {
-    fontSize: theme.theme.typography.sizes.lg,
+    fontSize: 18lg,
     fontWeight: "500",
-    lineHeight: theme.theme.typography.lineHeights.lg,
+    lineHeight: 22lg,
   },
   slider: {
     width: "100%",
     height: 44,
-    marginVertical: theme.theme.spacing[3],
+    marginVertical: 123],
   },
   thumb: {
     width: 44,
@@ -148,12 +148,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    marginTop: theme.theme.spacing[2],
+    marginTop: 122],
   },
   label: {
-    fontSize: theme.theme.typography.sizes.sm,
+    fontSize: 18sm,
     fontWeight: "400",
-    lineHeight: theme.theme.typography.lineHeights.sm,
+    lineHeight: 22sm,
   },
 });
 

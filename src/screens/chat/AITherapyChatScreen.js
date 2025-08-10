@@ -285,6 +285,14 @@ const AITherapyChatScreen = ({ navigation }) => {
                   },
                 ],
           ]}
+          accessible={true}
+          accessibilityRole="text"
+          accessibilityLabel={isUser 
+            ? `Your message: ${message.text}` 
+            : `AI therapist message: ${message.text}`}
+          accessibilityHint={isUser 
+            ? undefined 
+            : "AI response to your message"}
         >
           <Text
             style={[
@@ -297,6 +305,7 @@ const AITherapyChatScreen = ({ navigation }) => {
                     : theme.colors.text.primary,
               },
             ]}
+            accessibilityElementsHidden={true}
           >
             {message.text}
           </Text>

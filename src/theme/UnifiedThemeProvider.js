@@ -85,6 +85,16 @@ export const UnifiedThemeProvider = ({ children }) => {
     return styleFunction(theme);
   }, [theme]);
 
+  // Persisted setters defined at top-level (Hooks cannot be called inside useMemo)
+  const setFontScaleValue = useCallback(async (scale) => {
+    setFontScale(scale);
+    try {
+      await AsyncStorage.setItem("accessibility_font_scale", scale.toString());
+    } catch (error) {
+      console.error("Error saving font scale:", error);
+    }
+  }, []);
+
   // Load saved preferences
   useEffect(() => {
     loadThemePreferences();
@@ -184,14 +194,7 @@ export const UnifiedThemeProvider = ({ children }) => {
     isReducedMotionEnabled,
     isHighContrastEnabled,
     fontScale,
-    setFontScale: useCallback(async (scale) => {
-      setFontScale(scale);
-      try {
-        await AsyncStorage.setItem("accessibility_font_scale", scale.toString());
-      } catch (error) {
-        console.error("Error saving font scale:", error);
-      }
-    }, []),
+    setFontScale: setFontScaleValue,
     
     // Performance optimized getters
     getThemeValue,
@@ -208,6 +211,7 @@ export const UnifiedThemeProvider = ({ children }) => {
     isReducedMotionEnabled,
     isHighContrastEnabled,
     fontScale,
+    setFontScaleValue,
     getThemeValue,
     getColor,
     getSpacing,

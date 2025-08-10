@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     ...shadows.base,
   },
   avatarText: {
-    color: theme.colors.text.inverse,
+    color: '#FFFFFF', // Default white text for avatar
     fontSize: typography.sizes['3xl'],
     fontWeight: '700',
   },
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     ...shadows.sm,
   },
   editButtonText: {
-    color: theme.colors.text.inverse,
+    color: '#FFFFFF', // Default white text for edit button
     fontSize: typography.sizes.base,
     fontWeight: '600',
   },

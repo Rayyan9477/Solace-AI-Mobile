@@ -17,6 +17,7 @@ import { PersistGate } from "redux-persist/integration/react";
 
 import LoadingScreen from "./src/components/LoadingScreen";
 import { UnifiedThemeProvider, useUnifiedTheme } from "./src/theme/UnifiedThemeProvider";
+import { ThemeProvider } from "./src/contexts/ThemeContext";
 import AppNavigator from "./src/navigation/AppNavigator";
 import { store, persistor } from "./src/store/store";
 
@@ -73,9 +74,11 @@ const App = () => {
         <Provider store={store}>
           <PersistGate loading={<LoadingScreen />} persistor={persistor}>
             <UnifiedThemeProvider>
-              <NavigationContainer>
-                <ThemedApp />
-              </NavigationContainer>
+              <ThemeProvider>
+                <NavigationContainer>
+                  <ThemedApp />
+                </NavigationContainer>
+              </ThemeProvider>
             </UnifiedThemeProvider>
           </PersistGate>
         </Provider>

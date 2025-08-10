@@ -238,6 +238,11 @@ const EnhancedMoodTrackerScreen = () => {
     }
   };
 
+  const getStepName = (stepIndex) => {
+    const stepNames = ['Mood Selection', 'Intensity Rating', 'Activities', 'Notes & Triggers'];
+    return stepNames[stepIndex] || 'Unknown Step';
+  };
+
   const renderProgressBar = () => (
     <View style={styles.progressContainer}>
       <View
@@ -245,6 +250,16 @@ const EnhancedMoodTrackerScreen = () => {
           styles.progressBar,
           { backgroundColor: theme.colors.gray[200] },
         ]}
+        accessible={true}
+        accessibilityRole="progressbar"
+        accessibilityLabel="Mood check-in progress"
+        accessibilityValue={{
+          min: 0,
+          max: 4,
+          now: currentStep + 1,
+          text: `Step ${currentStep + 1} of 4: ${getStepName(currentStep)}`
+        }}
+        accessibilityHint="Progress through mood check-in steps"
       >
         <Animated.View
           style={[
@@ -257,12 +272,14 @@ const EnhancedMoodTrackerScreen = () => {
               }),
             },
           ]}
+          importantForAccessibility="no"
         />
       </View>
       <Text
         style={[styles.progressText, { color: theme.colors.text.secondary }]}
+        accessibilityRole="text"
       >
-        Step {currentStep + 1} of 4
+        Step {currentStep + 1} of 4: {getStepName(currentStep)}
       </Text>
     </View>
   );
@@ -368,11 +385,22 @@ const EnhancedMoodTrackerScreen = () => {
                       : theme.colors.gray[300],
                 },
               ]}
-              onPress={() => setIntensity(level)}
+              onPress={() => {
+                setIntensity(level);
+                // Announce intensity change for screen readers
+                const intensityLabels = ['Very mild', 'Mild', 'Moderate', 'Strong', 'Very intense'];
+                if (AccessibilityInfo) {
+                  AccessibilityInfo.announceForAccessibility(
+                    `Intensity set to ${intensityLabels[level - 1] || level} out of 5`
+                  );
+                }
+              }}
               accessible
               accessibilityRole="button"
-              accessibilityLabel={`Intensity level ${level}`}
+              accessibilityLabel={`Intensity level ${level} out of 5`}
+              accessibilityHint={`Set mood intensity to ${level}`}
               accessibilityState={{ selected: intensity === level }}
+              testID={`intensity-dot-${level}`}
             />
           ))}
         </View>
@@ -778,9 +806,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing[2],
   },
   intensityDot: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 44, // WCAG compliant touch target
+    height: 44,
+    borderRadius: 22,
     ...shadows.sm,
   },
   intensityLabels: {

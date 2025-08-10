@@ -19,7 +19,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { MentalHealthIcon, NavigationIcon } from '../../components/icons';
 import { useTheme } from '../../contexts/ThemeContext';
 import TherapySessionRecorder from '../../components/therapy/TherapySessionRecorder';
-import { ChatInput, TherapeuticChatBubble } from '../../components/chat';
+import ChatInput from '../../components/chat/ChatInput';
+import TherapeuticChatBubble from '../../components/chat/TherapeuticChatBubble';
 import { Button } from '../../components/common';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');

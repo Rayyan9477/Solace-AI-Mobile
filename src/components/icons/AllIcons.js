@@ -12,17 +12,13 @@ import { MentalHealthIconCollection } from "./MentalHealthIcons";
 import { NavigationInterfaceIconCollection } from "./NavigationInterfaceIcons";
 import { NotificationStatusIconCollection } from "./NotificationStatusIcons";
 
+// Export core system components only to avoid conflicts
 export * from "./IconSystem";
 export * from "./AppIcons";
 export * from "./PlatformIcon";
-export * from "./HealthTechIcons";
-export * from "./GeneralUIIcons";
-export * from "./ArrowsDirectionsIcons";
-export * from "./MentalHealthIcons";
-export * from "./NavigationInterfaceIcons";
-export * from "./DataVisualizationIcons";
-export * from "./AccessibilityCommunicationIcons";
-export * from "./NotificationStatusIcons";
+
+// Note: Individual icon components are available through IconCollections
+// to avoid naming conflicts between collections
 
 // Comprehensive Icon Collections
 export const IconCollections = {

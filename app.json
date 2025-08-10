@@ -8,7 +8,6 @@
     "userInterfaceStyle": "automatic",
     "primaryColor": "#6366f1",
     "description": "Your empathetic digital confidant for mental health and wellness support",
-    "privacy": "public",
     "platforms": ["ios", "android", "web"],
     "splash": {
       "image": "./assets/splash.png",

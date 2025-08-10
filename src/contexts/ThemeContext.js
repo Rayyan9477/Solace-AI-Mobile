@@ -236,7 +236,7 @@ export const ThemeProvider = ({ children }) => {
     return adjustedTheme;
   };
 
-  const currentTheme = getAccessibleTheme();
+  const currentTheme = getAccessibleTheme(isDarkMode ? darkTheme : lightTheme);
 
   if (!themeLoaded) {
     return null; // or a loading component

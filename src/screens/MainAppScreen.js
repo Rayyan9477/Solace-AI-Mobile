@@ -336,7 +336,13 @@ const MainAppScreen = () => {
           style={[styles.wellnessTipCard, shadows.md]}
         >
           <View style={styles.wellnessTipIcon}>
-            <Text style={styles.wellnessTipEmoji}>{currentTip.icon}</Text>
+            <Text 
+              style={styles.wellnessTipEmoji}
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no"
+            >
+              {currentTip.icon}
+            </Text>
           </View>
           <View style={styles.wellnessTipContent}>
             <Text

@@ -12,7 +12,7 @@ import {
 import { useTheme } from '../../contexts/ThemeContext';
 import { createFormInputAccessibility, createCardAccessibility } from '../../utils/accessibility';
 
-const AccessibilitySettingsScreen = ({
+const AccessibilitySettingsScreen = ({ navigation }) => {
 
   // Handle hardware back button on Android
   React.useEffect(() => {
@@ -29,7 +29,6 @@ const AccessibilitySettingsScreen = ({
 
     return () => backHandler.remove();
   }, [navigation]);
- navigation }) => {
   const { 
     theme, 
     isReducedMotionEnabled,

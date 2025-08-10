@@ -7,13 +7,14 @@ import assessmentSlice from "./slices/assessmentSlice";
 import authSlice from "./slices/authSlice";
 import chatSlice from "./slices/chatSlice";
 import moodSlice from "./slices/moodSlice";
+import enhancedMoodSlice from "./slices/enhancedMoodSlice";
 import userSlice from "./slices/userSlice";
 import therapySlice from "./slices/therapySlice";
 
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["auth", "user", "mood", "assessment", "therapy"], // Only persist these reducers
+  whitelist: ["auth", "user", "mood", "enhancedMood", "assessment", "therapy"], // Only persist these reducers
 };
 
 const rootReducer = combineReducers({
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   user: userSlice,
   assessment: assessmentSlice,
   mood: moodSlice,
+  enhancedMood: enhancedMoodSlice,
   therapy: therapySlice,
 });
 

@@ -14,8 +14,12 @@ export const getCurrentEnvironment = () => {
   // Check if we're in Expo Go
   if (Constants.appOwnership === "expo") return ENV.DEVELOPMENT;
 
-  // Check for staging build
-  if (Constants.manifest?.releaseChannel === "staging") return ENV.STAGING;
+  // Check for staging build - Updated for new Expo SDK
+  const releaseChannel = Constants.expoConfig?.releaseChannel || 
+                        Constants.executionEnvironment?.releaseChannel ||
+                        Constants.manifest?.releaseChannel; // Fallback for older SDK
+  
+  if (releaseChannel === "staging") return ENV.STAGING;
 
   return ENV.PRODUCTION;
 };
@@ -58,18 +62,31 @@ export const FEATURE_FLAGS = {
   ENABLE_BIOMETRIC_AUTH: Platform.OS !== "web",
 };
 
-// App Configuration
+// App Configuration - Updated for new Expo SDK
 export const APP_CONFIG = {
-  VERSION: Constants.manifest?.version || "1.0.0",
+  VERSION: Constants.expoConfig?.version || 
+           Constants.executionEnvironment?.version || 
+           Constants.manifest?.version || 
+           "1.0.0",
   BUILD_NUMBER: Platform.select({
-    ios: Constants.manifest?.ios?.buildNumber,
-    android: Constants.manifest?.android?.versionCode,
+    ios: Constants.expoConfig?.ios?.buildNumber || 
+         Constants.executionEnvironment?.ios?.buildNumber ||
+         Constants.manifest?.ios?.buildNumber,
+    android: Constants.expoConfig?.android?.versionCode || 
+             Constants.executionEnvironment?.android?.versionCode ||
+             Constants.manifest?.android?.versionCode,
     web: null,
   }),
   BUNDLE_ID: Platform.select({
-    ios: Constants.manifest?.ios?.bundleIdentifier,
-    android: Constants.manifest?.android?.package,
-    web: Constants.manifest?.name,
+    ios: Constants.expoConfig?.ios?.bundleIdentifier || 
+         Constants.executionEnvironment?.ios?.bundleIdentifier ||
+         Constants.manifest?.ios?.bundleIdentifier,
+    android: Constants.expoConfig?.android?.package || 
+             Constants.executionEnvironment?.android?.package ||
+             Constants.manifest?.android?.package,
+    web: Constants.expoConfig?.name || 
+         Constants.executionEnvironment?.name ||
+         Constants.manifest?.name,
   }),
   MIN_SUPPORTED_VERSION: "1.0.0",
 };

@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 4,
-    shadowColor: theme.colors.icon.primary,
+    shadowColor: '#2196F3', // Default shadow color
     shadowOffset: { width: 44, height: 44 },
     shadowOpacity: 0.25,
     shadowRadius: 4,

@@ -1,298 +1,392 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import React, { useEffect, useMemo } from "react";
-import { useSelector } from "react-redux";
+import React, { Suspense, useEffect } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+import { useSelector } from 'react-redux';
 
-import { NavigationIcon, IconPresets } from "../components/icons";
-import { useTheme } from "../contexts/ThemeContext";
-import {
-  LazyChatScreen,
-  LazyAITherapyChatScreen,
-  LazyTherapyScreen,
-  LazyAssessmentScreen,
-  LazyComprehensiveAssessmentScreen,
-  LazyJournalScreen,
-  LazyMentalHealthJournalScreen,
-  LazyWellnessScreens,
-  preloadCriticalComponents,
-} from "../utils/LazyComponents";
+import { NavigationIcon, IconPresets } from '../components/icons';
+import { useTheme } from '../contexts/ThemeContext';
+import { usePerformanceMonitor } from '../hooks/usePerformanceMonitor';
+import { 
+  createScreenBundle, 
+  withSuspense, 
+  preloadComponent,
+  LoadingComponent,
+  withPerformanceTracking 
+} from '../utils/bundleOptimization';
 
-// Import only critical components that need to be available immediately
-import CoverPageScreen from "../screens/CoverPageScreen";
-import MainAppScreen from "../screens/MainAppScreen";
-import SplashScreen from "../screens/SplashScreen";
-import OnboardingScreen from "../screens/auth/OnboardingScreen";
-import RegisterScreen from "../screens/auth/RegisterScreen";
-import SignInScreen from "../screens/auth/SignInScreen";
-import EnhancedMoodTrackerScreen from "../screens/mood/EnhancedMoodTrackerScreen";
-import ProfileScreen from "../screens/profile/ProfileScreen";
+// Critical screens loaded immediately (small and essential)
+import SplashScreen from '../screens/SplashScreen';
 
-// Lazy load non-critical utility screens
-const LazyUtilityScreens = {
-  Search: React.lazy(() => import("../screens/search/SearchScreen")),
-  ErrorUtilities: React.lazy(() => import("../screens/utils/ErrorUtilitiesScreen")),
-  Notifications: React.lazy(() => import("../screens/settings/NotificationsScreen")),
-  DesignSystem: React.lazy(() => import("../screens/DesignSystemScreen")),
-  IconTest: React.lazy(() => import("../screens/IconTestScreen")),
-};
+// Lazy loaded screens with performance tracking
+const CoverPageScreen = withPerformanceTracking(
+  createScreenBundle('CoverPageScreen', () => import('../screens/CoverPageScreen')),
+  'CoverPageScreen'
+);
+
+const MainAppScreen = withPerformanceTracking(
+  createScreenBundle('MainAppScreen', () => import('../screens/MainAppScreen')),
+  'MainAppScreen'
+);
+
+// Authentication screens bundle
+const SignInScreen = createScreenBundle('SignInScreen', () => import('../screens/auth/SignInScreen'));
+const RegisterScreen = createScreenBundle('RegisterScreen', () => import('../screens/auth/RegisterScreen'));
+const OnboardingScreen = createScreenBundle('OnboardingScreen', () => import('../screens/auth/OnboardingScreen'));
+
+// Chat screens bundle
+const ChatScreen = createScreenBundle('ChatScreen', () => import('../screens/chat/ChatScreen'));
+
+// Assessment screens bundle  
+const AssessmentScreen = createScreenBundle('AssessmentScreen', () => import('../screens/assessment/AssessmentScreen'));
+
+// Mood tracking bundle
+const EnhancedMoodTrackerScreen = createScreenBundle('EnhancedMoodTrackerScreen', () => import('../screens/mood/EnhancedMoodTrackerScreen'));
+
+// Profile screens bundle
+const ProfileScreen = createScreenBundle('ProfileScreen', () => import('../screens/profile/ProfileScreen'));
+const DesignSystemScreen = createScreenBundle('DesignSystemScreen', () => import('../screens/DesignSystemScreen'));
+const NotificationsScreen = createScreenBundle('NotificationsScreen', () => import('../screens/settings/NotificationsScreen'));
+
+// Wellness screens bundle (largest screens - highest priority for lazy loading)
+const MindfulResourcesScreen = createScreenBundle('MindfulResourcesScreen', () => import('../screens/wellness/MindfulResourcesScreen'));
+const MindfulHoursScreen = createScreenBundle('MindfulHoursScreen', () => import('../screens/wellness/MindfulHoursScreen'));
+const SleepQualityScreen = createScreenBundle('SleepQualityScreen', () => import('../screens/wellness/SleepQualityScreen'));
+const StressManagementScreen = createScreenBundle('StressManagementScreen', () => import('../screens/wellness/StressManagementScreen'));
+const TherapyScreen = createScreenBundle('TherapyScreen', () => import('../screens/therapy/TherapyScreen'));
+const TherapyTestScreen = createScreenBundle('TherapyTestScreen', () => import('../screens/therapy/TherapyTestScreen'));
+
+// Utility screens bundle
+const SearchScreen = createScreenBundle('SearchScreen', () => import('../screens/search/SearchScreen'));
+const ErrorUtilitiesScreen = createScreenBundle('ErrorUtilitiesScreen', () => import('../screens/utils/ErrorUtilitiesScreen'));
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+// Optimized Loading Component with therapeutic design
+const OptimizedLoadingComponent = ({ theme, message = 'Loading...' }) => (
+  <LoadingComponent theme={theme} message={message} />
+);
 
-// Memoized navigation configurations
-const useNavigationConfig = () => {
-  const { theme } = useTheme();
-  
-  return useMemo(() => ({
-    screenOptions: {
-      headerStyle: {
-        backgroundColor: theme.colors.background.primary,
-      },
-      headerTintColor: theme.colors.text.primary,
-      headerTitleStyle: {
-        fontWeight: "bold",
-      },
-    },
-    tabBarOptions: {
-      activeTintColor: theme.colors.primary[500],
-      inactiveTintColor: theme.colors.gray[500],
-      style: {
-        backgroundColor: theme.colors.background.primary,
-        borderTopColor: theme.colors.gray[200],
-        paddingVertical: 8,
-        height: 70,
-      },
-      labelStyle: {
-        fontSize: 12,
-        fontWeight: "500",
-        marginBottom: 8,
-      },
-    },
-  }), [theme]);
-};
-
+// Auth Stack with lazy loading
 const AuthStack = () => {
-  const config = useNavigationConfig();
+  const { theme } = useTheme();
+  const { performanceMetrics } = usePerformanceMonitor('AuthStack');
 
   return (
-    <Stack.Navigator screenOptions={config.screenOptions}>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.colors.background.primary,
+        },
+        headerTintColor: theme.colors.text.primary,
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
       <Stack.Screen
         name="SignIn"
-        component={SignInScreen}
+        component={withSuspense(SignInScreen, 'Loading Sign In...', OptimizedLoadingComponent)}
         options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Register"
-        component={RegisterScreen}
-        options={{ title: "Create Account" }}
+        component={withSuspense(RegisterScreen, 'Loading Registration...', OptimizedLoadingComponent)}
+        options={{ title: 'Create Account' }}
       />
     </Stack.Navigator>
   );
 };
 
+// Profile Stack with lazy loading
 const ProfileStack = () => {
-  const config = useNavigationConfig();
+  const { theme } = useTheme();
+  const { performanceMetrics } = usePerformanceMonitor('ProfileStack');
 
   return (
-    <Stack.Navigator screenOptions={config.screenOptions}>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.colors.background.primary,
+        },
+        headerTintColor: theme.colors.text.primary,
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
       <Stack.Screen
         name="ProfileMain"
-        component={ProfileScreen}
-        options={{ title: "Profile" }}
+        component={withSuspense(ProfileScreen, 'Loading Profile...', OptimizedLoadingComponent)}
+        options={{ title: 'Profile' }}
       />
       <Stack.Screen
         name="DesignSystem"
-        component={LazyUtilityScreens.DesignSystem}
-        options={{ title: "Design System", headerShown: false }}
+        component={withSuspense(DesignSystemScreen, 'Loading Design System...', OptimizedLoadingComponent)}
+        options={{ title: 'Design System', headerShown: false }}
       />
       <Stack.Screen
         name="Notifications"
-        component={LazyUtilityScreens.Notifications}
-        options={{ title: "Notifications", headerShown: false }}
+        component={withSuspense(NotificationsScreen, 'Loading Notifications...', OptimizedLoadingComponent)}
+        options={{ title: 'Notifications', headerShown: false }}
       />
     </Stack.Navigator>
   );
 };
 
+// Wellness Stack with lazy loading and preloading
 const WellnessStack = () => {
-  const config = useNavigationConfig();
+  const { theme } = useTheme();
+  const { performanceMetrics } = usePerformanceMonitor('WellnessStack');
+
+  // Preload therapy screen since it's commonly accessed from wellness
+  useEffect(() => {
+    const preloadTimer = setTimeout(() => {
+      preloadComponent(() => import('../screens/therapy/TherapyScreen'), 'TherapyScreen');
+    }, 2000);
+
+    return () => clearTimeout(preloadTimer);
+  }, []);
 
   return (
-    <Stack.Navigator screenOptions={config.screenOptions}>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.colors.background.primary,
+        },
+        headerTintColor: theme.colors.text.primary,
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
       <Stack.Screen
         name="MindfulResources"
-        component={LazyWellnessScreens.MindfulResources}
-        options={{ title: "Wellness Hub", headerShown: false }}
+        component={withSuspense(MindfulResourcesScreen, 'Loading Wellness Hub...', OptimizedLoadingComponent)}
+        options={{ title: 'Wellness Hub', headerShown: false }}
       />
       <Stack.Screen
         name="MindfulHours"
-        component={LazyWellnessScreens.MindfulHours}
-        options={{ title: "Mindful Hours", headerShown: false }}
+        component={withSuspense(MindfulHoursScreen, 'Loading Mindful Hours...', OptimizedLoadingComponent)}
+        options={{ title: 'Mindful Hours', headerShown: false }}
       />
       <Stack.Screen
         name="SleepQuality"
-        component={LazyWellnessScreens.SleepQuality}
-        options={{ title: "Sleep Quality", headerShown: false }}
+        component={withSuspense(SleepQualityScreen, 'Loading Sleep Quality...', OptimizedLoadingComponent)}
+        options={{ title: 'Sleep Quality', headerShown: false }}
       />
       <Stack.Screen
         name="StressManagement"
-        component={LazyWellnessScreens.StressManagement}
-        options={{ title: "Stress Management", headerShown: false }}
+        component={withSuspense(StressManagementScreen, 'Loading Stress Management...', OptimizedLoadingComponent)}
+        options={{ title: 'Stress Management', headerShown: false }}
       />
       <Stack.Screen
         name="Therapy"
-        component={LazyTherapyScreen}
-        options={{ title: "Therapy Session", headerShown: false }}
+        component={withSuspense(TherapyScreen, 'Loading Therapy Session...', OptimizedLoadingComponent)}
+        options={{ title: 'Therapy Session', headerShown: false }}
+      />
+      <Stack.Screen
+        name="TherapyTest"
+        component={withSuspense(TherapyTestScreen, 'Loading Therapy Test...', OptimizedLoadingComponent)}
+        options={{ title: 'Therapy System Test', headerShown: false }}
       />
     </Stack.Navigator>
   );
 };
 
+// Utility Stack with lazy loading
 const UtilityStack = () => {
-  const config = useNavigationConfig();
+  const { theme } = useTheme();
+  const { performanceMetrics } = usePerformanceMonitor('UtilityStack');
 
   return (
-    <Stack.Navigator screenOptions={config.screenOptions}>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.colors.background.primary,
+        },
+        headerTintColor: theme.colors.text.primary,
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
       <Stack.Screen
         name="Search"
-        component={LazyUtilityScreens.Search}
-        options={{ title: "Search", headerShown: false }}
+        component={withSuspense(SearchScreen, 'Loading Search...', OptimizedLoadingComponent)}
+        options={{ title: 'Search', headerShown: false }}
       />
       <Stack.Screen
         name="ErrorUtilities"
-        component={LazyUtilityScreens.ErrorUtilities}
-        options={{ title: "Help & Support", headerShown: false }}
+        component={withSuspense(ErrorUtilitiesScreen, 'Loading Help & Support...', OptimizedLoadingComponent)}
+        options={{ title: 'Help & Support', headerShown: false }}
       />
     </Stack.Navigator>
   );
 };
 
-// Memoized tab icon component to prevent re-renders
-const TabIcon = React.memo(({ route, focused, color, size }) => {
-  const iconMap = {
-    Cover: "Welcome",
-    Home: "Home", 
-    Chat: "Chat",
-    Mood: "Mood",
-    Assessment: "Assessment",
-    Wellness: "Mindfulness",
-    Utilities: "Settings",
-    Profile: "Profile",
-  };
-  
-  const iconName = iconMap[route.name];
-  
-  return (
-    <NavigationIcon
-      name={iconName}
-      size={size}
-      color={color}
-      variant={focused ? "filled" : "outline"}
-      {...IconPresets.tabBar}
-    />
-  );
-});
-
+// Main Tabs with performance optimization
 const MainTabs = () => {
   const { theme } = useTheme();
-  const config = useNavigationConfig();
+  const { performanceMetrics } = usePerformanceMonitor('MainTabs');
 
-  const tabScreenOptions = useMemo(() => ({
-    tabBarIcon: ({ focused, color, size }) => (
-      <TabIcon 
-        route={{ name: route.name }} 
-        focused={focused} 
-        color={color} 
-        size={size} 
-      />
-    ),
-    ...config.tabBarOptions,
-    headerStyle: {
-      backgroundColor: theme.colors.background.primary,
-    },
-    headerTintColor: theme.colors.text.primary,
-  }), [theme, config]);
+  // Preload commonly accessed screens after initial render
+  useEffect(() => {
+    const preloadSequence = async () => {
+      // Wait for initial render to complete
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Preload in order of likelihood to be accessed
+      const preloadOrder = [
+        { component: () => import('../screens/chat/ChatScreen'), name: 'ChatScreen' },
+        { component: () => import('../screens/mood/EnhancedMoodTrackerScreen'), name: 'MoodTrackerScreen' },
+        { component: () => import('../screens/assessment/AssessmentScreen'), name: 'AssessmentScreen' },
+      ];
+
+      for (const { component, name } of preloadOrder) {
+        await new Promise(resolve => setTimeout(resolve, 500)); // Stagger preloads
+        preloadComponent(component, name);
+      }
+    };
+
+    preloadSequence();
+  }, []);
 
   return (
-    <Tab.Navigator screenOptions={tabScreenOptions}>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Cover') {
+            iconName = 'Welcome';
+          } else if (route.name === 'Home') {
+            iconName = 'Home';
+          } else if (route.name === 'Chat') {
+            iconName = 'Chat';
+          } else if (route.name === 'Mood') {
+            iconName = 'Mood';
+          } else if (route.name === 'Assessment') {
+            iconName = 'Assessment';
+          } else if (route.name === 'Wellness') {
+            iconName = 'Mindfulness';
+          } else if (route.name === 'Utilities') {
+            iconName = 'Settings';
+          } else if (route.name === 'Profile') {
+            iconName = 'Profile';
+          }
+
+          return (
+            <NavigationIcon
+              name={iconName}
+              size={size}
+              color={color}
+              variant={focused ? 'filled' : 'outline'}
+              {...IconPresets.tabBar}
+            />
+          );
+        },
+        tabBarActiveTintColor: theme.colors.primary[500],
+        tabBarInactiveTintColor: theme.colors.gray[500],
+        tabBarStyle: {
+          backgroundColor: theme.colors.background.primary,
+          borderTopColor: theme.colors.gray[200],
+          paddingVertical: 8,
+          height: 70,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '500',
+          marginBottom: 8,
+        },
+        headerStyle: {
+          backgroundColor: theme.colors.background.primary,
+        },
+        headerTintColor: theme.colors.text.primary,
+        lazy: true, // Enable lazy loading for tab screens
+        unmountOnBlur: false, // Keep screens mounted for better UX
+      })}
+    >
       <Tab.Screen
         name="Cover"
-        component={CoverPageScreen}
-        options={{ title: "Welcome", headerShown: false }}
+        component={withSuspense(CoverPageScreen, 'Loading Welcome...', OptimizedLoadingComponent)}
+        options={{ title: 'Welcome', headerShown: false }}
       />
       <Tab.Screen
         name="Home"
-        component={MainAppScreen}
-        options={{ title: "Dashboard", headerShown: false }}
+        component={withSuspense(MainAppScreen, 'Loading Dashboard...', OptimizedLoadingComponent)}
+        options={{ title: 'Dashboard', headerShown: false }}
       />
       <Tab.Screen
         name="Chat"
-        component={LazyChatScreen}
-        options={{ title: "Chat" }}
+        component={withSuspense(ChatScreen, 'Loading Chat...', OptimizedLoadingComponent)}
+        options={{ title: 'Chat' }}
       />
       <Tab.Screen
         name="Mood"
-        component={EnhancedMoodTrackerScreen}
-        options={{ title: "Mood", headerShown: false }}
+        component={withSuspense(EnhancedMoodTrackerScreen, 'Loading Mood Tracker...', OptimizedLoadingComponent)}
+        options={{ title: 'Mood', headerShown: false }}
       />
       <Tab.Screen
         name="Assessment"
-        component={LazyAssessmentScreen}
-        options={{ title: "Assessment" }}
+        component={withSuspense(AssessmentScreen, 'Loading Assessment...', OptimizedLoadingComponent)}
+        options={{ title: 'Assessment' }}
       />
       <Tab.Screen
         name="Wellness"
         component={WellnessStack}
-        options={{ title: "Wellness", headerShown: false }}
+        options={{ title: 'Wellness', headerShown: false }}
       />
       <Tab.Screen
         name="Utilities"
         component={UtilityStack}
-        options={{ title: "Tools", headerShown: false }}
+        options={{ title: 'Tools', headerShown: false }}
       />
       <Tab.Screen
         name="Profile"
         component={ProfileStack}
-        options={{ title: "Profile", headerShown: false }}
+        options={{ title: 'Profile', headerShown: false }}
       />
     </Tab.Navigator>
   );
 };
 
+// Main App Navigator with performance monitoring
 const OptimizedAppNavigator = () => {
-  const { isAuthenticated, onboardingCompleted } = useSelector(
-    (state) => state.auth,
-  );
+  const { isAuthenticated, onboardingCompleted } = useSelector((state) => state.auth);
   const [isAppReady, setIsAppReady] = React.useState(false);
+  const { performanceMetrics, memoryInfo } = usePerformanceMonitor('AppNavigator');
 
-  useEffect(() => {
-    let mounted = true;
-    
+  // App initialization with performance tracking
+  React.useEffect(() => {
     const initializeApp = async () => {
-      try {
-        // Preload critical components
-        await preloadCriticalComponents();
-        
-        // Simulate app initialization with preloading
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        if (mounted) {
-          setIsAppReady(true);
-        }
-      } catch (error) {
-        console.warn('App initialization warning:', error);
-        if (mounted) {
-          setIsAppReady(true);
-        }
+      const startTime = performance.now();
+      
+      // Simulate app initialization
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const endTime = performance.now();
+      
+      if (__DEV__) {
+        console.log(`🚀 App initialized in ${(endTime - startTime).toFixed(2)}ms`);
+        console.log(`📊 Initial memory usage: ${memoryInfo.percentage}%`);
       }
+      
+      setIsAppReady(true);
     };
 
     initializeApp();
-    
-    return () => {
-      mounted = false;
-    };
   }, []);
+
+  // Performance monitoring in development
+  useEffect(() => {
+    if (__DEV__ && performanceMetrics.renderCount > 0) {
+      console.log('📊 App Navigator Performance:', {
+        renders: performanceMetrics.renderCount,
+        lastRender: `${performanceMetrics.renderTime.toFixed(2)}ms`,
+        memory: `${memoryInfo.percentage}%`,
+      });
+    }
+  }, [performanceMetrics, memoryInfo]);
 
   if (!isAppReady) {
     return <SplashScreen />;
@@ -301,7 +395,10 @@ const OptimizedAppNavigator = () => {
   if (!onboardingCompleted) {
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen 
+          name="Onboarding" 
+          component={withSuspense(OnboardingScreen, 'Loading Onboarding...', OptimizedLoadingComponent)}
+        />
       </Stack.Navigator>
     );
   }
@@ -310,7 +407,11 @@ const OptimizedAppNavigator = () => {
     return <AuthStack />;
   }
 
-  return <MainTabs />;
+  return (
+    <Suspense fallback={<OptimizedLoadingComponent message="Loading App..." />}>
+      <MainTabs />
+    </Suspense>
+  );
 };
 
 export default OptimizedAppNavigator;
