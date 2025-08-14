@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef, useState, useMemo } from "react";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   View,
   Text,
@@ -15,13 +15,6 @@ import {
 } from "react-native";
 
 import { useTheme } from "../../contexts/ThemeContext";
-import {
-  colors,
-  typography,
-  spacing,
-  borderRadius,
-  shadows,
-} from "../../styles/theme";
 import { MentalHealthAccessibility } from "../../utils/accessibility";
 
 const { width, height } = Dimensions.get("window");
@@ -164,6 +157,98 @@ const OnboardingScreen = () => {
     transform: [{ translateY: slideAnim }, { scale: scaleAnim }],
   };
 
+  // Create dynamic styles based on theme
+  const dynamicStyles = StyleSheet.create({
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: theme.spacing[5],
+      paddingTop: theme.spacing[8],
+      paddingBottom: theme.spacing[4],
+    },
+    stepIndicator: {
+      paddingHorizontal: theme.spacing[3],
+      paddingVertical: theme.spacing[1],
+      borderRadius: theme.borderRadius.full,
+      backgroundColor: "rgba(255, 255, 255, 0.2)",
+    },
+    stepLabel: {
+      fontSize: theme.typography.sizes.sm,
+      fontWeight: theme.typography.weights.medium,
+    },
+    skipButton: {
+      paddingHorizontal: theme.spacing[3],
+      paddingVertical: theme.spacing[1],
+    },
+    skipText: {
+      fontSize: theme.typography.sizes.base,
+      fontWeight: theme.typography.weights.medium,
+    },
+    scrollContent: {
+      flexGrow: 1,
+      paddingHorizontal: theme.spacing[5],
+      justifyContent: "space-between",
+    },
+    illustrationSection: {
+      alignItems: "center",
+      paddingVertical: theme.spacing[12],
+      flex: 1,
+      justifyContent: "center",
+    },
+    illustrationContainer: {
+      width: 200,
+      height: 200,
+      borderRadius: 100,
+      backgroundColor: "rgba(255, 255, 255, 0.9)",
+      justifyContent: "center",
+      alignItems: "center",
+      ...theme.shadows.lg,
+    },
+    contentSection: {
+      alignItems: "center",
+      paddingVertical: theme.spacing[8],
+    },
+    title: {
+      fontSize: theme.typography.sizes["3xl"],
+      fontWeight: theme.typography.weights.bold,
+      lineHeight: theme.typography.lineHeights["3xl"],
+      textAlign: "center",
+      marginBottom: theme.spacing[4],
+      maxWidth: width * 0.9,
+    },
+    subtitle: {
+      fontSize: theme.typography.sizes.lg,
+      lineHeight: theme.typography.lineHeights.xl,
+      textAlign: "center",
+      maxWidth: width * 0.85,
+      opacity: 0.8,
+    },
+    navigationSection: {
+      alignItems: "center",
+      paddingVertical: theme.spacing[8],
+    },
+    dotsContainer: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: theme.spacing[2],
+      marginBottom: theme.spacing[8],
+    },
+    actionButton: {
+      width: width * 0.8,
+      paddingVertical: theme.spacing[4],
+      paddingHorizontal: theme.spacing[8],
+      borderRadius: theme.borderRadius.xl,
+      alignItems: "center",
+      ...theme.shadows.md,
+    },
+    actionButtonText: {
+      fontSize: theme.typography.sizes.lg,
+      fontWeight: theme.typography.weights.semiBold,
+    },
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
@@ -179,10 +264,10 @@ const OnboardingScreen = () => {
         style={styles.gradientBackground}
       >
         {/* Header with Step Indicator */}
-        <View style={styles.header}>
-          <View style={styles.stepIndicator}>
+        <View style={dynamicStyles.header}>
+          <View style={dynamicStyles.stepIndicator}>
             <Text
-              style={[styles.stepLabel, { color: theme.colors.text.tertiary }]}
+              style={[dynamicStyles.stepLabel, { color: theme.colors.text.tertiary }]}
             >
               {currentStepData.stepLabel}
             </Text>
@@ -190,12 +275,12 @@ const OnboardingScreen = () => {
 
           <TouchableOpacity
             onPress={handleSkip}
-            style={styles.skipButton}
+            style={dynamicStyles.skipButton}
             accessibilityRole="button"
             accessibilityLabel="Skip onboarding"
           >
             <Text
-              style={[styles.skipText, { color: theme.colors.text.secondary }]}
+              style={[dynamicStyles.skipText, { color: theme.colors.text.secondary }]}
             >
               Skip
             </Text>
@@ -203,13 +288,13 @@ const OnboardingScreen = () => {
         </View>
 
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={dynamicStyles.scrollContent}
           showsVerticalScrollIndicator={false}
           accessibilityRole="scrollbar"
         >
           {/* Illustration Section */}
-          <Animated.View style={[styles.illustrationSection, animatedStyle]}>
-            <View style={[styles.illustrationContainer, shadows.lg]}>
+          <Animated.View style={[dynamicStyles.illustrationSection, animatedStyle]}>
+            <View style={dynamicStyles.illustrationContainer}>
               <Text style={styles.illustration}>
                 {currentStepData.illustration}
               </Text>
@@ -217,25 +302,25 @@ const OnboardingScreen = () => {
           </Animated.View>
 
           {/* Content Section */}
-          <Animated.View style={[styles.contentSection, animatedStyle]}>
+          <Animated.View style={[dynamicStyles.contentSection, animatedStyle]}>
             <Text
-              style={[styles.title, { color: theme.colors.text.primary }]}
+              style={[dynamicStyles.title, { color: theme.colors.text.primary }]}
               accessibilityRole="header"
             >
               {currentStepData.title}
             </Text>
 
             <Text
-              style={[styles.subtitle, { color: theme.colors.text.secondary }]}
+              style={[dynamicStyles.subtitle, { color: theme.colors.text.secondary }]}
             >
               {currentStepData.subtitle}
             </Text>
           </Animated.View>
 
           {/* Navigation Section */}
-          <Animated.View style={[styles.navigationSection, animatedStyle]}>
+          <Animated.View style={[dynamicStyles.navigationSection, animatedStyle]}>
             {/* Step Dots */}
-            <View style={styles.dotsContainer} accessibilityRole="tablist">
+            <View style={dynamicStyles.dotsContainer} accessibilityRole="tablist">
               {onboardingSteps.map((_, index) => (
                 <View
                   key={index}
@@ -259,9 +344,8 @@ const OnboardingScreen = () => {
             {/* Action Button */}
             <TouchableOpacity
               style={[
-                styles.actionButton,
+                dynamicStyles.actionButton,
                 { backgroundColor: theme.colors.primary[500] },
-                shadows.md,
               ]}
               onPress={handleNext}
               activeOpacity={0.8}
@@ -273,7 +357,7 @@ const OnboardingScreen = () => {
             >
               <Text
                 style={[
-                  styles.actionButtonText,
+                  dynamicStyles.actionButtonText,
                   { color: theme.colors.text.inverse },
                 ]}
               >
@@ -294,99 +378,12 @@ const styles = StyleSheet.create({
   gradientBackground: {
     flex: 1,
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: spacing[5],
-    paddingTop: spacing[8],
-    paddingBottom: spacing[4],
-  },
-  stepIndicator: {
-    paddingHorizontal: spacing[3],
-    paddingVertical: spacing[1],
-    borderRadius: borderRadius.full,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-  },
-  stepLabel: {
-    fontSize: typography.sizes.sm,
-    fontWeight: typography.weights.medium,
-  },
-  skipButton: {
-    paddingHorizontal: spacing[3],
-    paddingVertical: spacing[1],
-  },
-  skipText: {
-    fontSize: typography.sizes.base,
-    fontWeight: typography.weights.medium,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingHorizontal: spacing[5],
-    justifyContent: "space-between",
-  },
-  illustrationSection: {
-    alignItems: "center",
-    paddingVertical: spacing[12],
-    flex: 1,
-    justifyContent: "center",
-  },
-  illustrationContainer: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   illustration: {
     fontSize: 80,
-  },
-  contentSection: {
-    alignItems: "center",
-    paddingVertical: spacing[8],
-  },
-  title: {
-    fontSize: typography.sizes["3xl"],
-    fontWeight: typography.weights.bold,
-    lineHeight: typography.lineHeights["3xl"],
-    textAlign: "center",
-    marginBottom: spacing[4],
-    maxWidth: width * 0.9,
-  },
-  subtitle: {
-    fontSize: typography.sizes.lg,
-    lineHeight: typography.lineHeights.xl,
-    textAlign: "center",
-    maxWidth: width * 0.85,
-    opacity: 0.8,
-  },
-  navigationSection: {
-    alignItems: "center",
-    paddingVertical: spacing[8],
-  },
-  dotsContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: spacing[2],
-    marginBottom: spacing[8],
   },
   dot: {
     height: 8,
     borderRadius: 4,
-    transition: "all 0.3s ease",
-  },
-  actionButton: {
-    width: width * 0.8,
-    paddingVertical: spacing[4],
-    paddingHorizontal: spacing[8],
-    borderRadius: borderRadius.xl,
-    alignItems: "center",
-  },
-  actionButtonText: {
-    fontSize: typography.sizes.lg,
-    fontWeight: typography.weights.semiBold,
   },
 });
 
