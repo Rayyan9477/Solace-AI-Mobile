@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
-import Icon from '../common/Icon';
+import { useTheme } from '../../shared/theme/ThemeContext';
+import { NavigationIcon } from '../icons';
+import { typography, spacing } from '../../shared/theme/theme';
 import * as Haptics from 'expo-haptics';
 
 const TAB_ITEMS = [
@@ -14,26 +15,26 @@ const TAB_ITEMS = [
   {
     id: 'mood',
     label: 'Mood',
-    icon: 'emoticon-outline',
-    activeIcon: 'emoticon',
+    icon: 'heart',
+    activeIcon: 'heart',
   },
   {
     id: 'chat',
     label: 'Chat',
-    icon: 'message-text-outline',
-    activeIcon: 'message-text',
+    icon: 'chat',
+    activeIcon: 'chat',
   },
   {
     id: 'journal',
     label: 'Journal',
-    icon: 'book-outline',
-    activeIcon: 'book',
+    icon: 'journal',
+    activeIcon: 'journal',
   },
   {
     id: 'profile',
     label: 'Profile',
-    icon: 'account-outline',
-    activeIcon: 'account',
+    icon: 'profile',
+    activeIcon: 'profile',
   },
 ];
 
@@ -77,20 +78,18 @@ const BottomTabBar = ({
         return (
           <Pressable
             key={route.key}
-            onPress={() =
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="{tabItem.label}"
-        accessibilityHint="Double tap to activate"
-      > handlePress(route, isFocused)}
-            style={styles.tab}
+            onPress={() => handlePress(route, isFocused)}
+            accessible={true}
             accessibilityRole="tab"
-            accessibilityLabel={options.tabBarAccessibilityLabel}
+            accessibilityLabel={tabItem.label}
+            accessibilityHint={`Navigate to ${tabItem.label} screen`}
             accessibilityState={{ selected: isFocused }}
+            style={[styles.tab, { minWidth: 44, minHeight: 44 }]}
           >
-            <Icon
+            <NavigationIcon
               name={isFocused ? tabItem.activeIcon : tabItem.icon}
               size={24}
+              variant={isFocused ? "filled" : "outline"}
               color={isFocused ? theme.colors.primary.main : theme.colors.text.secondary}
             />
             <Text
@@ -98,6 +97,8 @@ const BottomTabBar = ({
                 styles.label,
                 {
                   color: isFocused ? theme.colors.primary.main : theme.colors.text.secondary,
+                  fontSize: typography.sizes.xs,
+                  fontWeight: isFocused ? typography.weights.semiBold : typography.weights.medium,
                 },
               ]}
             >
@@ -114,17 +115,15 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     borderTopWidth: 1,
-    paddingBottom: 8,
+    paddingBottom: spacing[2],
   },
   tab: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: spacing[2],
   },
   label: {
-    fontSize: 12,
-    marginTop: 4,
-    fontWeight: '500',
+    marginTop: spacing[1],
   },
 });
 

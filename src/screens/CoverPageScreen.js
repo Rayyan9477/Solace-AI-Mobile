@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef, useState, useMemo } from "react";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   View,
   Text,
@@ -13,15 +13,9 @@ import {
   StatusBar,
 } from "react-native";
 
-import { useTheme } from "../contexts/ThemeContext";
-import {
-  colors,
-  typography,
-  spacing,
-  borderRadius,
-  shadows,
-} from "../styles/theme";
+import { useTheme } from "../shared/theme/ThemeContext";
 import { MentalHealthAccessibility } from "../utils/accessibility";
+import { spacing, typography, borderRadius, shadows } from "../shared/theme/theme";
 
 const { width, height } = Dimensions.get("window");
 
@@ -44,28 +38,28 @@ const CoverPageScreen = () => {
         icon: "🧠",
         title: "AI-Powered Support",
         description: "Intelligent conversations that understand your emotions",
-        color: theme.colors.therapeutic.calming[500],
+        color: theme.colors.therapeutic.empathy[500],
       },
       {
         id: 2,
         icon: "💚",
         title: "Mental Wellness",
         description: "Track your mood and build healthy mental habits",
-        color: theme.colors.therapeutic.nurturing[500],
+        color: theme.colors.therapeutic.zen[500],
       },
       {
         id: 3,
         icon: "🔒",
         title: "Private & Secure",
         description: "Your conversations remain completely confidential",
-        color: theme.colors.therapeutic.peaceful[500],
+        color: theme.colors.therapeutic.kind[500],
       },
       {
         id: 4,
         icon: "📊",
         title: "Progress Insights",
         description: "Beautiful analytics to track your mental health journey",
-        color: theme.colors.therapeutic.grounding[500],
+        color: theme.colors.therapeutic.optimistic[500],
       },
     ],
     [theme],
@@ -154,9 +148,9 @@ const CoverPageScreen = () => {
 
       <LinearGradient
         colors={[
-          theme.colors.therapeutic.calming[600],
-          theme.colors.therapeutic.peaceful[500],
-          theme.colors.therapeutic.nurturing[400],
+          theme.colors.therapeutic.empathy[600],
+          theme.colors.therapeutic.zen[500],
+          theme.colors.therapeutic.kind[400],
         ]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
@@ -183,7 +177,15 @@ const CoverPageScreen = () => {
             </View>
 
             <Text
-              style={[styles.appTitle, { color: theme.colors.text.inverse }]}
+              style={[
+                styles.appTitle,
+                {
+                  color: theme.colors.text.inverse,
+                  textShadowColor: theme.colors.background.overlay,
+                  textShadowOffset: { width: 0, height: 2 },
+                  textShadowRadius: 4,
+                },
+              ]}
               accessibilityRole="header"
               accessibilityLabel="Solace AI"
             >
@@ -191,7 +193,15 @@ const CoverPageScreen = () => {
             </Text>
 
             <Text
-              style={[styles.appSubtitle, { color: theme.colors.text.inverse }]}
+              style={[
+                styles.appSubtitle,
+                {
+                  color: theme.colors.text.inverse,
+                  textShadowColor: theme.colors.background.overlay,
+                  textShadowOffset: { width: 0, height: 1 },
+                  textShadowRadius: 3,
+                },
+              ]}
               accessibilityLabel="Your empathetic digital companion for mental wellness"
             >
               Your Empathetic Digital Companion
@@ -200,7 +210,12 @@ const CoverPageScreen = () => {
             <Text
               style={[
                 styles.appDescription,
-                { color: theme.colors.text.inverse },
+                {
+                  color: theme.colors.text.inverse,
+                  textShadowColor: theme.colors.background.overlay,
+                  textShadowOffset: { width: 0, height: 1 },
+                  textShadowRadius: 2,
+                },
               ]}
               accessibilityLabel="Experience personalized mental health support powered by advanced AI technology"
             >
@@ -365,15 +380,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logoCircle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: spacing[30],
+    height: spacing[30],
+    borderRadius: spacing[15],
     justifyContent: "center",
     alignItems: "center",
     ...shadows.xl,
   },
   logoEmoji: {
-    fontSize: 48,
+    fontSize: typography.sizes["6xl"],
   },
   appTitle: {
     fontSize: typography.sizes["5xl"],
@@ -410,15 +425,15 @@ const styles = StyleSheet.create({
     marginBottom: spacing[6],
   },
   featureIconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: spacing[20],
+    height: spacing[20],
+    borderRadius: spacing[10],
     justifyContent: "center",
     alignItems: "center",
     marginBottom: spacing[4],
   },
   featureIcon: {
-    fontSize: 32,
+    fontSize: typography.sizes["5xl"],
   },
   featureTitle: {
     fontSize: typography.sizes["2xl"],
@@ -439,9 +454,9 @@ const styles = StyleSheet.create({
     gap: spacing[2],
   },
   dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: spacing[2],
+    height: spacing[2],
+    borderRadius: spacing[1],
   },
   ctaSection: {
     alignItems: "center",

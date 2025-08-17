@@ -18,7 +18,7 @@ import ProgressOverview from "../../components/dashboard/ProgressOverview";
 import QuickActions from "../../components/dashboard/QuickActions";
 import RecentActivity from "../../components/dashboard/RecentActivity";
 import WelcomeHeader from "../../components/dashboard/WelcomeHeader";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 import { fetchMoodHistory } from "../../store/slices/moodSlice";
 import { fetchUserStats } from "../../store/slices/userSlice";
 import {
@@ -27,7 +27,7 @@ import {
   spacing,
   borderRadius,
   shadows,
-} from "../../styles/theme";
+} from "../../shared/theme/theme";
 import { MentalHealthAccessibility } from "../../utils/accessibility";
 
 // Dashboard components

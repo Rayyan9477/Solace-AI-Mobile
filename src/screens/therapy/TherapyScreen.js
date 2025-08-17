@@ -17,7 +17,7 @@ import * as Haptics from 'expo-haptics';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { MentalHealthIcon, NavigationIcon } from '../../components/icons';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../shared/theme/ThemeContext';
 import TherapySessionRecorder from '../../components/therapy/TherapySessionRecorder';
 import ChatInput from '../../components/chat/ChatInput';
 import TherapeuticChatBubble from '../../components/chat/TherapeuticChatBubble';

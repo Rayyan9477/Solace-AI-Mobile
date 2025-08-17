@@ -9,7 +9,7 @@ import {
   BackHandler,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../shared/theme/ThemeContext';
 
 const ThemeShowcaseScreen = () => {
   const { theme, isDarkMode, toggleTheme } = useTheme();
@@ -53,11 +53,10 @@ const ThemeShowcaseScreen = () => {
         <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
           {title}
         </Text>
-        <View style={styles.colorGrid}>
-          {colorItems}
-        </View>
-    </View>
-  );
+        <View style={styles.colorGrid}>{colorItems}</View>
+      </View>
+    );
+  };
 
   const TypographyShowcase = () => (
     <View style={[styles.section, { backgroundColor: theme.colors.background.card }]}>
@@ -135,16 +134,17 @@ const ThemeShowcaseScreen = () => {
         </TouchableOpacity>
         
         <TouchableOpacity 
-          style={[[
+          style={[
             styles.button, 
             styles.secondaryButton,
             { 
               backgroundColor: theme.colors.secondary[500],
-              borderColor: theme.colors.secondary[500] 
-            , { minWidth: 44, minHeight: 44 }]}
+              borderColor: theme.colors.secondary[500],
+              minWidth: 44,
+              minHeight: 44,
+            }
           ]}
-        
-        accessible={true}
+          accessible
         accessibilityRole="button"
         accessibilityLabel="Secondary"
         accessibilityHint="Double tap to activate"
@@ -155,17 +155,18 @@ const ThemeShowcaseScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity 
-          style={[[
+          style={[
             styles.button, 
             styles.outlineButton,
             { 
               backgroundColor: 'transparent',
               borderColor: theme.colors.border.primary,
-              borderWidth: 1 
-            , { minWidth: 44, minHeight: 44 }]}
+              borderWidth: 1,
+              minWidth: 44,
+              minHeight: 44,
+            }
           ]}
-        
-        accessible={true}
+          accessible
         accessibilityRole="button"
         accessibilityLabel="Outline"
         accessibilityHint="Double tap to activate"
@@ -192,12 +193,11 @@ const ThemeShowcaseScreen = () => {
           This card demonstrates the new light mode design inspired by the Freud UI Kit with proper contrast ratios and therapeutic colors.
         </Text>
         <TouchableOpacity 
-          style={[[
+          style={[
             styles.cardButton,
-            { backgroundColor: theme.colors.therapeutic.calming[500] , { minWidth: 44, minHeight: 44 }]}
+            { backgroundColor: theme.colors.therapeutic?.calming?.[500] ?? theme.colors.primary[500], minWidth: 44, minHeight: 44 }
           ]}
-        
-        accessible={true}
+          accessible
         accessibilityRole="button"
         accessibilityLabel="Learn More"
         accessibilityHint="Double tap to activate"
@@ -307,17 +307,16 @@ const ThemeShowcaseScreen = () => {
           Freud UI Kit Light Mode
         </Text>
         <TouchableOpacity 
-          style={[[
+          style={[
             styles.themeToggle,
-            { backgroundColor: theme.colors.primary[500] , { minWidth: 44, minHeight: 44 }]}
+            { backgroundColor: theme.colors.primary[500], minWidth: 44, minHeight: 44 }
           ]}
           onPress={toggleTheme}
-        
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="{isDarkMode ? '☀️ Light' : '🌙 Dark'}"
-        accessibilityHint="Double tap to activate"
-      >
+          accessible
+          accessibilityRole="button"
+          accessibilityLabel={isDarkMode ? '☀️ Light' : '🌙 Dark'}
+          accessibilityHint="Double tap to activate"
+        >
           <Text style={[styles.toggleText, { color: theme.colors.text.inverse }]}>
             {isDarkMode ? '☀️ Light' : '🌙 Dark'}
           </Text>

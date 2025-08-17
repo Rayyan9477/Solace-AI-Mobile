@@ -10,7 +10,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 
 import { MentalHealthIcon } from '../../components/icons';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../shared/theme/ThemeContext';
 import { TherapySessionRecorder } from '../../components/therapy';
 import { 
   startSession, 

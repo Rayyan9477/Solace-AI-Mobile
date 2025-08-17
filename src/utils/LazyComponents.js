@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../shared/theme/ThemeContext';
 
 // Enhanced loading component with therapeutic design
 const LoadingFallback = ({ componentName, size = 'large' }) => {

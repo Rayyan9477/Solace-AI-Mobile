@@ -11,8 +11,8 @@ import {
   IconSizes,
   IconPresets,
 } from "../components/icons";
-import { useTheme } from "../contexts/ThemeContext";
-import { colors, typography, spacing, borderRadius } from "../styles/theme";
+import { useTheme } from "../shared/theme/ThemeContext";
+import { colors, typography, spacing, borderRadius } from "../shared/theme/theme";
 
 const IconTestScreen = () => {
   const { theme } = useTheme();

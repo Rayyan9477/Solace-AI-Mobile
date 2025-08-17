@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import styled from "styled-components/native";
 
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 
 const Container = styled(View)`
   flex-direction: row;

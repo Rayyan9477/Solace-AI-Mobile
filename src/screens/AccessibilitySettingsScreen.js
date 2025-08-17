@@ -7,9 +7,10 @@ import {
   Switch,
   TouchableOpacity,
   Alert,
-  Slider,
+  BackHandler,
 } from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
+import Slider from '@react-native-community/slider';
+import { useTheme } from '../../shared/theme/ThemeContext';
 import { createFormInputAccessibility, createCardAccessibility } from '../../utils/accessibility';
 
 const AccessibilitySettingsScreen = ({ navigation }) => {
@@ -201,21 +202,19 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
               {['small', 'normal', 'large', 'extraLarge'].map((size) => (
                 <TouchableOpacity
                   key={size}
-                  style={[[
+                  style={[
                     styles.fontSizeButton,
                     {
                       backgroundColor: fontSize === size 
                         ? theme.colors.primary[500] 
                         : theme.colors.background.primary,
                       borderColor: theme.colors.primary[500],
-                    , { minWidth: 44, minHeight: 44 }]}
+                      minWidth: 44,
+                      minHeight: 44,
+                    }
                   ]}
-                  onPress={() =
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="{getFontSizeLabel(size)}"
-        accessibilityHint="Double tap to activate"
-      > handleFontSizeChange(size)}
+                  onPress={() => handleFontSizeChange(size)}
+                  accessible
                   accessibilityRole="radio"
                   accessibilityLabel={`Font size ${getFontSizeLabel(size)}`}
                   accessibilityState={{ checked: fontSize === size }}
@@ -368,19 +367,20 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
           description="Accessibility features specific to mental health support"
         >
           <TouchableOpacity
-            style={[[styles.actionButton, { 
-              backgroundColor: theme.colors.therapeutic.calming,
-              borderColor: theme.colors.therapeutic.calming,
-            , { minWidth: 44, minHeight: 44 }]}]}
-            onPress={() =
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="Emergency Resources"
-        accessibilityHint="Double tap to get help"
-      > navigation.navigate('CrisisResources')}
+            style={[
+              styles.actionButton,
+              {
+                backgroundColor: theme.colors.therapeutic?.calming?.[500] ?? theme.colors.primary[500],
+                borderColor: theme.colors.therapeutic?.calming?.[500] ?? theme.colors.primary[500],
+                minWidth: 44,
+                minHeight: 44,
+              }
+            ]}
+            onPress={() => navigation.navigate('CrisisResources')}
+            accessible
             accessibilityRole="button"
-            accessibilityLabel="Crisis resources"
-            accessibilityHint="Double tap to view emergency mental health resources"
+            accessibilityLabel="Emergency Resources"
+            accessibilityHint="Double tap to get help"
           >
             <Text style={[styles.actionButtonText, { color: theme.colors.text.inverse }]}>
               Emergency Resources
@@ -388,19 +388,20 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[[styles.actionButton, { 
-              backgroundColor: theme.colors.background.primary,
-              borderColor: theme.colors.primary[500],
-            , { minWidth: 44, minHeight: 44 }]}]}
-            onPress={() =
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="Accessibility Guide"
-        accessibilityHint="Double tap to activate"
-      > navigation.navigate('AccessibilityGuide')}
+            style={[
+              styles.actionButton,
+              {
+                backgroundColor: theme.colors.background.primary,
+                borderColor: theme.colors.primary[500],
+                minWidth: 44,
+                minHeight: 44,
+              }
+            ]}
+            onPress={() => navigation.navigate('AccessibilityGuide')}
+            accessible
             accessibilityRole="button"
-            accessibilityLabel="Accessibility guide"
-            accessibilityHint="Double tap to view app accessibility features guide"
+            accessibilityLabel="Accessibility Guide"
+            accessibilityHint="Double tap to activate"
           >
             <Text style={[styles.actionButtonText, { color: theme.colors.primary[500] }]}>
               Accessibility Guide
@@ -410,10 +411,15 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
 
         {/* Reset Settings */}
         <TouchableOpacity
-          style={[[styles.resetButton, { 
-            backgroundColor: theme.colors.error[500],
-            borderColor: theme.colors.error[500],
-          , { minWidth: 44, minHeight: 44 }]}]}
+          style={[
+            styles.resetButton,
+            { 
+              backgroundColor: theme.colors.error[500],
+              borderColor: theme.colors.error[500],
+              minWidth: 44,
+              minHeight: 44,
+            }
+          ]}
           onPress={resetToDefaults}
           accessibilityRole="button"
           accessibilityLabel="Reset accessibility settings"

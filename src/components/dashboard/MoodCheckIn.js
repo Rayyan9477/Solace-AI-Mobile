@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useMemo, useCallback, memo } from "react";
 import {
   View,
   Text,
@@ -8,14 +8,14 @@ import {
   Animated,
 } from "react-native";
 
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 import {
   colors,
   typography,
   spacing,
   borderRadius,
   shadows,
-} from "../../styles/theme";
+} from "../../shared/theme/theme";
 import { MentalHealthIcon } from "../icons";
 import {
   TouchTargetHelpers,
@@ -24,7 +24,21 @@ import {
   MentalHealthAccessibility,
 } from "../../utils/accessibility";
 
-const MoodCheckIn = ({ 
+// PERFORMANCE: Memoize static data outside component
+const MOOD_EMOJIS = {
+  happy: "😊",
+  calm: "😌",
+  anxious: "😰",
+  sad: "😢",
+  angry: "😠",
+  neutral: "😐",
+  excited: "🤩",
+  tired: "😴",
+  stressed: "😤",
+  content: "😊",
+};
+
+const MoodCheckIn = memo(({ 
   currentMood, 
   onCheckIn,
   accessibilityLabel,
@@ -36,26 +50,21 @@ const MoodCheckIn = ({
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   
-  // Enhanced touch target sizing
-  const { style: touchTargetStyle, hitSlop } = TouchTargetHelpers.ensureMinimumTouchTarget({
+  // PERFORMANCE: Memoize expensive calculations
+  const touchTargetConfig = useMemo(() => TouchTargetHelpers.ensureMinimumTouchTarget({
     minWidth: WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
     minHeight: WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
-  });
+  }), []);
 
-  const moodEmojis = {
-    happy: "😊",
-    calm: "😌",
-    anxious: "😰",
-    sad: "😢",
-    angry: "😠",
-    neutral: "😐",
-    excited: "🤩",
-    tired: "😴",
-    stressed: "😤",
-    content: "😊",
-  };
+  // PERFORMANCE: Memoize callbacks
+  const handleCheckIn = useCallback(() => {
+    if (!disabled && onCheckIn) {
+      onCheckIn();
+    }
+  }, [disabled, onCheckIn]);
 
-  const moodColors = {
+  // PERFORMANCE: Memoize mood colors to prevent recalculation
+  const moodColors = useMemo(() => ({
     happy: theme.colors.mood.happy,
     calm: theme.colors.mood.calm,
     anxious: theme.colors.mood.anxious,
@@ -66,7 +75,7 @@ const MoodCheckIn = ({
     tired: theme.colors.mood.tired,
     stressed: theme.colors.mood.stressed,
     content: theme.colors.mood.content,
-  };
+  }), [theme.colors.mood]);
 
   useEffect(() => {
     // Fade in animation
@@ -102,7 +111,7 @@ const MoodCheckIn = ({
   const getCurrentMoodDisplay = () => {
     if (currentMood) {
       return {
-        emoji: moodEmojis[currentMood],
+        emoji: MOOD_EMOJIS[currentMood],
         color: moodColors[currentMood],
         text: currentMood.charAt(0).toUpperCase() + currentMood.slice(1),
       };
@@ -210,7 +219,7 @@ const MoodCheckIn = ({
       </LinearGradient>
     </Animated.View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

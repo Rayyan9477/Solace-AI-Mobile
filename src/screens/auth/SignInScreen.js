@@ -1,5 +1,5 @@
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useState, useEffect, useRef } from "react";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   View,
   Text,
@@ -15,7 +15,7 @@ import {
 } from "react-native";
 
 import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 
 const { width } = Dimensions.get("window");
 
@@ -67,7 +67,7 @@ const SignInScreen = ({ navigation }) => {
     setTimeout(() => {
       setIsLoading(false);
       // Navigate to main app or handle auth success
-      navigation.navigate("MainApp");
+      navigation.navigate("Home");
     }, 2000);
   };
 

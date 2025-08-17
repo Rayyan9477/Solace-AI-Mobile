@@ -1,5 +1,5 @@
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef, useMemo, useState } from "react";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   View,
   Text,
@@ -10,7 +10,8 @@ import {
 } from "react-native";
 
 import { MentalHealthIcon } from "../components/icons";
-import { useTheme } from "../contexts/ThemeContext";
+import { useTheme } from "../shared/theme/ThemeContext";
+import { spacing, typography, borderRadius, shadows } from "../shared/theme/theme";
 
 const { width, height } = Dimensions.get("window");
 
@@ -106,12 +107,28 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
   const getGradientColors = () => {
     if (showQuote) {
       return theme.isDark
-        ? ["#8B4513", "#A0522D", "#CD853F"] // Dark orange theme
-        : ["#FF8C00", "#FFA500", "#FFB84D"]; // Light orange theme
+        ? [
+            theme.colors.therapeutic.empathy[700],
+            theme.colors.therapeutic.empathy[600],
+            theme.colors.therapeutic.empathy[500],
+          ]
+        : [
+            theme.colors.therapeutic.energizing[500],
+            theme.colors.therapeutic.energizing[400],
+            theme.colors.therapeutic.energizing[300],
+          ];
     }
     return theme.isDark
-      ? ["#2E3B4E", "#1A1A1A", "#0A0A0A"] // Dark theme
-      : ["#F8F9FA", "#E9ECEF", "#DEE2E6"]; // Light theme
+      ? [
+          theme.colors.background.secondary,
+          theme.colors.background.primary,
+          theme.colors.background.tertiary,
+        ]
+      : [
+          theme.colors.background.primary,
+          theme.colors.background.secondary,
+          theme.colors.background.tertiary,
+        ];
   };
 
   useEffect(() => {
@@ -215,25 +232,41 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
                 <View
                   style={[
                     styles.logoCircle,
-                    { backgroundColor: theme.isDark ? "#8B4513" : "#CD853F" },
+                    {
+                      backgroundColor: theme.isDark
+                        ? theme.colors.therapeutic.empathy[700]
+                        : theme.colors.therapeutic.empathy[400],
+                    },
                   ]}
                 />
                 <View
                   style={[
                     styles.logoCircle,
-                    { backgroundColor: theme.isDark ? "#A0522D" : "#8B4513" },
+                    {
+                      backgroundColor: theme.isDark
+                        ? theme.colors.therapeutic.empathy[600]
+                        : theme.colors.therapeutic.empathy[500],
+                    },
                   ]}
                 />
                 <View
                   style={[
                     styles.logoCircle,
-                    { backgroundColor: theme.isDark ? "#A0522D" : "#8B4513" },
+                    {
+                      backgroundColor: theme.isDark
+                        ? theme.colors.therapeutic.empathy[600]
+                        : theme.colors.therapeutic.empathy[500],
+                    },
                   ]}
                 />
                 <View
                   style={[
                     styles.logoCircle,
-                    { backgroundColor: theme.isDark ? "#8B4513" : "#CD853F" },
+                    {
+                      backgroundColor: theme.isDark
+                        ? theme.colors.therapeutic.empathy[700]
+                        : theme.colors.therapeutic.empathy[400],
+                    },
                   ]}
                 />
               </View>
@@ -242,7 +275,7 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
             <Animated.Text
               style={[
                 styles.appTitle,
-                { color: theme.isDark ? "#FFFFFF" : "#2D3436" },
+                { color: theme.colors.text.primary },
                 fadeStyle,
               ]}
             >
@@ -253,7 +286,7 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
               <Animated.Text
                 style={[
                   styles.appSubtitle,
-                  { color: theme.isDark ? "#B2BEB5" : "#636E72" },
+                  { color: theme.colors.text.secondary },
                   fadeStyle,
                 ]}
               >
@@ -269,13 +302,18 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
                 <MentalHealthIcon
                   name="mindfulness"
                   size={24}
-                  color={theme.isDark ? "#FFFFFF" : "#2D3436"}
+                  color={theme.colors.text.primary}
                 />
               </View>
               <Text
                 style={[
                   styles.quoteText,
-                  { color: theme.isDark ? "#FFFFFF" : "#2D3436" },
+                  {
+                    color: theme.colors.text.primary,
+                    textShadowColor: theme.colors.background.overlay,
+                    textShadowOffset: { width: 0, height: 1 },
+                    textShadowRadius: 3,
+                  },
                 ]}
               >
                 "{currentQuote.text}"
@@ -283,7 +321,12 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
               <Text
                 style={[
                   styles.quoteAuthor,
-                  { color: theme.isDark ? "#B2BEB5" : "#636E72" },
+                  {
+                    color: theme.colors.text.secondary,
+                    textShadowColor: theme.colors.background.overlay,
+                    textShadowOffset: { width: 0, height: 1 },
+                    textShadowRadius: 2,
+                  },
                 ]}
               >
                 — {currentQuote.author}
@@ -297,7 +340,7 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
               <Text
                 style={[
                   styles.loadingText,
-                  { color: theme.isDark ? "#B2BEB5" : "#636E72" },
+                  { color: theme.colors.text.secondary },
                 ]}
               >
                 {currentMessage}
@@ -307,9 +350,7 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
                 style={[
                   styles.progressContainer,
                   {
-                    backgroundColor: theme.isDark
-                      ? "rgba(255,255,255,0.1)"
-                      : "rgba(0,0,0,0.1)",
+                    backgroundColor: theme.colors.background.disabled,
                   },
                 ]}
               >
@@ -317,7 +358,7 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
                   style={[
                     styles.progressBar,
                     progressBarStyle,
-                    { backgroundColor: theme.isDark ? "#FFFFFF" : "#2D3436" },
+                    { backgroundColor: theme.colors.primary[500] },
                   ]}
                 />
               </View>
@@ -325,7 +366,7 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
               <Text
                 style={[
                   styles.progressText,
-                  { color: theme.isDark ? "#B2BEB5" : "#636E72" },
+                  { color: theme.colors.text.secondary },
                 ]}
               >
                 {Math.round(progress)}%
@@ -339,11 +380,7 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
           <Text
             style={[
               styles.brandingText,
-              {
-                color: theme.isDark
-                  ? "rgba(255,255,255,0.6)"
-                  : "rgba(0,0,0,0.6)",
-              },
+              { color: theme.colors.text.quaternary },
             ]}
           >
             Powered by Therapeutic AI
@@ -362,100 +399,104 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 40,
+    paddingHorizontal: spacing[10],
   },
   logoContainer: {
     alignItems: "center",
-    marginBottom: 60,
+    marginBottom: spacing[15],
   },
   logoIcon: {
-    marginBottom: 24,
+    marginBottom: spacing[6],
   },
   logoGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    width: 44,
-    height: 44,
+    width: spacing[11],
+    height: spacing[11],
     justifyContent: "space-between",
   },
   logoCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    marginBottom: 4,
+    width: spacing[5],
+    height: spacing[5],
+    borderRadius: borderRadius.full,
+    marginBottom: spacing[1],
   },
   appTitle: {
-    fontSize: 32,
-    fontWeight: "700",
+    fontSize: typography.sizes["5xl"],
+    fontWeight: typography.weights.bold,
     textAlign: "center",
-    marginBottom: 8,
+    marginBottom: spacing[2],
     letterSpacing: -0.5,
+    lineHeight: typography.lineHeights["5xl"],
   },
   appSubtitle: {
-    fontSize: 16,
+    fontSize: typography.sizes.lg,
+    fontWeight: typography.weights.normal,
     textAlign: "center",
-    lineHeight: 22,
-    maxWidth: 320,
+    lineHeight: typography.lineHeights.lg,
+    maxWidth: spacing[80],
     opacity: 0.9,
   },
   quoteContainer: {
     alignItems: "center",
-    maxWidth: 300,
-    marginBottom: 40,
+    maxWidth: spacing[75],
+    marginBottom: spacing[10],
   },
   quoteIcon: {
-    marginBottom: 16,
+    marginBottom: spacing[4],
   },
   quoteText: {
-    fontSize: 18,
+    fontSize: typography.sizes.xl,
+    fontWeight: typography.weights.normal,
     textAlign: "center",
-    lineHeight: 26,
-    marginBottom: 16,
+    lineHeight: typography.lineHeights.xl,
+    marginBottom: spacing[4],
     fontStyle: "italic",
   },
   quoteAuthor: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.semiBold,
     letterSpacing: 1,
     textAlign: "center",
   },
   loadingContainer: {
     alignItems: "center",
     width: "100%",
-    maxWidth: 280,
+    maxWidth: spacing[70],
   },
   loadingText: {
-    fontSize: 16,
+    fontSize: typography.sizes.lg,
+    fontWeight: typography.weights.normal,
     textAlign: "center",
-    marginBottom: 24,
+    marginBottom: spacing[6],
     opacity: 0.8,
   },
   progressContainer: {
     width: "100%",
-    height: 4,
-    borderRadius: 2,
+    height: spacing[1],
+    borderRadius: borderRadius.sm,
     overflow: "hidden",
-    marginBottom: 12,
+    marginBottom: spacing[3],
   },
   progressBar: {
     height: "100%",
-    borderRadius: 2,
+    borderRadius: borderRadius.sm,
   },
   progressText: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.semiBold,
     opacity: 0.7,
   },
   bottomContainer: {
     position: "absolute",
-    bottom: 50,
+    bottom: spacing[12],
     left: 0,
     right: 0,
     alignItems: "center",
   },
   brandingText: {
-    fontSize: 12,
-    fontWeight: "500",
+    fontSize: typography.sizes.xs,
+    fontWeight: typography.weights.medium,
     letterSpacing: 0.5,
   },
 });

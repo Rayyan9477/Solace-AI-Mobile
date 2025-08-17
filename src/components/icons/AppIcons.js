@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Platform } from "react-native";
 
 import Icon, { IconVariants, IconSizes } from "./IconSystem";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 
 // App-specific icon presets with therapeutic colors
 const AppIcons = {

@@ -1,9 +1,9 @@
 {
-  "timestamp": "2025-08-03T11:43:38.996Z",
+  "timestamp": "2025-08-14T19:28:34.141Z",
   "summary": {
-    "passed": 286,
-    "failed": 3,
-    "warnings": 14,
+    "passed": 361,
+    "failed": 5,
+    "warnings": 18,
     "successRate": 94
   },
   "suites": [
@@ -147,9 +147,9 @@
     {
       "name": "Component Integration",
       "results": {
-        "passed": 232,
-        "failed": 2,
-        "warnings": 13,
+        "passed": 308,
+        "failed": 3,
+        "warnings": 17,
         "tests": [
           {
             "name": "Import in AccessibilitySettingsScreen.js",
@@ -176,6 +176,24 @@
             "details": null
           },
           {
+            "name": "index Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "MentalHealthAccessible Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "AnimatedButton Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
             "name": "AssessmentCard Export",
             "status": "passed",
             "message": "Has default export",
@@ -183,6 +201,12 @@
           },
           {
             "name": "AssessmentHistory Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "OptimizedAssessmentCard Export",
             "status": "passed",
             "message": "Has default export",
             "details": null
@@ -225,6 +249,12 @@
           },
           {
             "name": "VoiceRecorder Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "AccessibleButton Export",
             "status": "passed",
             "message": "Has default export",
             "details": null
@@ -278,6 +308,18 @@
             "details": null
           },
           {
+            "name": "KeyboardAwareScrollView Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "LazyComponentWrapper Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
             "name": "ThemeToggle Export",
             "status": "passed",
             "message": "Has default export",
@@ -297,6 +339,24 @@
           },
           {
             "name": "MoodCheckIn Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "MoodCheckIn.optimized Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "OptimizedMoodCheckIn Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "OptimizedQuickActions Export",
             "status": "passed",
             "message": "Has default export",
             "details": null
@@ -332,7 +392,67 @@
             "details": null
           },
           {
+            "name": "EnhancedMoodCheckIn Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "FeatureCard Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "FixedCoverScreen Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "FixedDashboard Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "FixedLoadingScreen Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "FixedSplashScreen Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "FixedThemeProvider Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "EnhancedInput Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "MentalHealthForms Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
             "name": "TherapeuticForm Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "GradientBackground Export",
             "status": "passed",
             "message": "Has default export",
             "details": null
@@ -416,7 +536,19 @@
             "details": null
           },
           {
+            "name": "IconSystem.test Export",
+            "status": "warnings",
+            "message": "No default export found",
+            "details": null
+          },
+          {
             "name": "LoadingScreen Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "LogoDisplay Export",
             "status": "passed",
             "message": "Has default export",
             "details": null
@@ -482,7 +614,37 @@
             "details": null
           },
           {
+            "name": "ProgressIndicator Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
+            "name": "index Export",
+            "status": "warnings",
+            "message": "No default export found",
+            "details": null
+          },
+          {
+            "name": "TherapySessionRecorder Export",
+            "status": "passed",
+            "message": "Has default export",
+            "details": null
+          },
+          {
             "name": "AccessibleTouchable.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "MentalHealthAccessible.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "AnimatedButton.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
             "details": null
@@ -495,6 +657,12 @@
           },
           {
             "name": "AssessmentHistory.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "OptimizedAssessmentCard.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
             "details": null
@@ -542,6 +710,12 @@
             "details": null
           },
           {
+            "name": "AccessibleButton.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
             "name": "ActivityIndicator.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
@@ -584,6 +758,18 @@
             "details": null
           },
           {
+            "name": "KeyboardAwareScrollView.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "LazyComponentWrapper.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
             "name": "ThemeToggle.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
@@ -603,6 +789,24 @@
           },
           {
             "name": "MoodCheckIn.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "MoodCheckIn.optimized.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "OptimizedMoodCheckIn.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "OptimizedQuickActions.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
             "details": null
@@ -638,7 +842,67 @@
             "details": null
           },
           {
+            "name": "EnhancedMoodCheckIn.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "FeatureCard.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "FixedCoverScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "FixedDashboard.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "FixedLoadingScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "FixedSplashScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "FixedThemeProvider.js Theme",
+            "status": "warnings",
+            "message": "Imports theme but may not use colors",
+            "details": null
+          },
+          {
+            "name": "EnhancedInput.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "MentalHealthForms.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
             "name": "TherapeuticForm.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "GradientBackground.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
             "details": null
@@ -656,6 +920,12 @@
             "details": null
           },
           {
+            "name": "NavigationInterfaceIcons.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
             "name": "PlatformIcon.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
@@ -663,6 +933,12 @@
           },
           {
             "name": "LoadingScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "LogoDisplay.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
             "details": null
@@ -723,6 +999,18 @@
           },
           {
             "name": "StatsCard.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "ProgressIndicator.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "TherapySessionRecorder.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
             "details": null
@@ -890,6 +1178,12 @@
             "details": null
           },
           {
+            "name": "MainAppScreen.optimized.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
             "name": "EnhancedMoodTrackerScreen.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
@@ -909,6 +1203,18 @@
           },
           {
             "name": "OnboardingScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "OptimizedChatScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "OptimizedMainAppScreen.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
             "details": null
@@ -962,6 +1268,18 @@
             "details": null
           },
           {
+            "name": "TherapyScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
+            "name": "TherapyTestScreen.js Theme",
+            "status": "passed",
+            "message": "Properly uses theme colors",
+            "details": null
+          },
+          {
             "name": "ErrorUtilitiesScreen.js Theme",
             "status": "passed",
             "message": "Properly uses theme colors",
@@ -1004,6 +1322,12 @@
             "details": null
           },
           {
+            "name": "OptimizedAssessmentCard.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
             "name": "MessageBubble.js Icons",
             "status": "warnings",
             "message": "Uses legacy icon system",
@@ -1034,6 +1358,24 @@
             "details": null
           },
           {
+            "name": "MoodCheckIn.optimized.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "OptimizedMoodCheckIn.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "OptimizedQuickActions.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
             "name": "ProgressOverview.js Icons",
             "status": "passed",
             "message": "Uses modern icon system",
@@ -1047,6 +1389,12 @@
           },
           {
             "name": "RecentActivity.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "EnhancedMoodCheckIn.js Icons",
             "status": "passed",
             "message": "Uses modern icon system",
             "details": null
@@ -1083,6 +1431,18 @@
           },
           {
             "name": "MentalHealthIcons.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "IconSystem.test.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "TherapySessionRecorder.js Icons",
             "status": "passed",
             "message": "Uses modern icon system",
             "details": null
@@ -1220,6 +1580,12 @@
             "details": null
           },
           {
+            "name": "MainAppScreen.optimized.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
             "name": "EnhancedMoodTrackerScreen.js Icons",
             "status": "passed",
             "message": "Uses modern icon system",
@@ -1233,6 +1599,12 @@
           },
           {
             "name": "MoodTrackerScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "OptimizedMainAppScreen.js Icons",
             "status": "passed",
             "message": "Uses modern icon system",
             "details": null
@@ -1269,6 +1641,18 @@
           },
           {
             "name": "SplashScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "TherapyScreen.js Icons",
+            "status": "passed",
+            "message": "Uses modern icon system",
+            "details": null
+          },
+          {
+            "name": "TherapyTestScreen.js Icons",
             "status": "passed",
             "message": "Uses modern icon system",
             "details": null
@@ -1312,11 +1696,23 @@
           {
             "name": "Icon System",
             "status": "passed",
-            "message": "49 files use modern icon system",
+            "message": "60 files use modern icon system",
             "details": null
           },
           {
             "name": "AccessibleTouchable.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (3/4)",
+            "details": null
+          },
+          {
+            "name": "index.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (3/4)",
+            "details": null
+          },
+          {
+            "name": "MentalHealthAccessible.js A11y",
             "status": "passed",
             "message": "Good accessibility support (3/4)",
             "details": null
@@ -1329,6 +1725,12 @@
           },
           {
             "name": "AssessmentHistory.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (3/4)",
+            "details": null
+          },
+          {
+            "name": "OptimizedAssessmentCard.js A11y",
             "status": "passed",
             "message": "Good accessibility support (3/4)",
             "details": null
@@ -1376,6 +1778,12 @@
             "details": null
           },
           {
+            "name": "AccessibleButton.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (4/4)",
+            "details": null
+          },
+          {
             "name": "ActivityIndicator.js A11y",
             "status": "passed",
             "message": "Good accessibility support (2/4)",
@@ -1418,6 +1826,12 @@
             "details": null
           },
           {
+            "name": "KeyboardAwareScrollView.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (4/4)",
+            "details": null
+          },
+          {
             "name": "CrisisRiskAssessment.js A11y",
             "status": "passed",
             "message": "Good accessibility support (2/4)",
@@ -1431,6 +1845,24 @@
           },
           {
             "name": "MoodCheckIn.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (3/4)",
+            "details": null
+          },
+          {
+            "name": "MoodCheckIn.optimized.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (3/4)",
+            "details": null
+          },
+          {
+            "name": "OptimizedMoodCheckIn.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (3/4)",
+            "details": null
+          },
+          {
+            "name": "OptimizedQuickActions.js A11y",
             "status": "passed",
             "message": "Good accessibility support (3/4)",
             "details": null
@@ -1460,6 +1892,24 @@
             "details": null
           },
           {
+            "name": "EnhancedMoodCheckIn.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (3/4)",
+            "details": null
+          },
+          {
+            "name": "EnhancedInput.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (4/4)",
+            "details": null
+          },
+          {
+            "name": "MentalHealthForms.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (4/4)",
+            "details": null
+          },
+          {
             "name": "TherapeuticForm.js A11y",
             "status": "passed",
             "message": "Good accessibility support (2/4)",
@@ -1475,6 +1925,12 @@
             "name": "PlatformIcon.js A11y",
             "status": "passed",
             "message": "Good accessibility support (3/4)",
+            "details": null
+          },
+          {
+            "name": "IconSystem.test.js A11y",
+            "status": "warnings",
+            "message": "Basic accessibility support (1/4)",
             "details": null
           },
           {
@@ -1526,9 +1982,15 @@
             "details": null
           },
           {
+            "name": "TherapySessionRecorder.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (3/4)",
+            "details": null
+          },
+          {
             "name": "AccessibilitySettingsScreen.js A11y",
             "status": "passed",
-            "message": "Good accessibility support (4/4)",
+            "message": "Good accessibility support (3/4)",
             "details": null
           },
           {
@@ -1541,6 +2003,12 @@
             "name": "OnboardingScreen.js A11y",
             "status": "passed",
             "message": "Good accessibility support (2/4)",
+            "details": null
+          },
+          {
+            "name": "AITherapyChatScreen.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (4/4)",
             "details": null
           },
           {
@@ -1568,13 +2036,25 @@
             "details": null
           },
           {
-            "name": "EnhancedMoodTrackerScreen.js A11y",
+            "name": "MainAppScreen.optimized.js A11y",
             "status": "passed",
             "message": "Good accessibility support (3/4)",
             "details": null
           },
           {
+            "name": "EnhancedMoodTrackerScreen.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (4/4)",
+            "details": null
+          },
+          {
             "name": "OnboardingScreen.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (3/4)",
+            "details": null
+          },
+          {
+            "name": "OptimizedMainAppScreen.js A11y",
             "status": "passed",
             "message": "Good accessibility support (3/4)",
             "details": null
@@ -1592,9 +2072,15 @@
             "details": null
           },
           {
+            "name": "TherapyScreen.js A11y",
+            "status": "passed",
+            "message": "Good accessibility support (2/4)",
+            "details": null
+          },
+          {
             "name": "Accessibility Coverage",
             "status": "warnings",
-            "message": "Only 46% of files have good accessibility",
+            "message": "Only 48% of files have good accessibility",
             "details": null
           },
           {
@@ -1629,8 +2115,8 @@
           },
           {
             "name": "App Integration",
-            "status": "passed",
-            "message": "DesignSystemProvider integrated in App.js",
+            "status": "failed",
+            "message": "DesignSystemProvider not integrated in App.js",
             "details": null
           }
         ]
@@ -1640,8 +2126,8 @@
     {
       "name": "Design System",
       "results": {
-        "passed": 33,
-        "failed": 1,
+        "passed": 32,
+        "failed": 2,
         "warnings": 1,
         "tests": [
           {
@@ -1826,8 +2312,8 @@
           },
           {
             "name": "App Integration",
-            "status": "passed",
-            "message": "DesignSystemProvider in App.js",
+            "status": "failed",
+            "message": "App-level integration missing",
             "details": null
           },
           {
@@ -1862,8 +2348,8 @@
   "productionReady": false,
   "criticalFunctionality": {
     "themeToggle": true,
-    "componentIntegration": true,
-    "designSystem": true,
+    "componentIntegration": false,
+    "designSystem": false,
     "navigation": true,
     "iconSystem": true,
     "accessibility": true

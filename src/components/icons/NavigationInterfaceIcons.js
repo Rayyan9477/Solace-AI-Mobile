@@ -10,7 +10,7 @@ import Svg, {
   G,
 } from "react-native-svg";
 
-import { BaseDesignTokens } from "../../design-system/DesignTokens";
+import { useTheme } from "../../shared/theme/ThemeContext";
 
 // Base Navigation Interface Icon Component
 const NavigationInterfaceIcon = ({
@@ -23,17 +23,17 @@ const NavigationInterfaceIcon = ({
   style,
   testID,
 }) => {
-  const tokens = BaseDesignTokens;
+  const { theme } = useTheme();
 
   const getColor = () => {
     if (color) return color;
 
     if (therapeuticTheme) {
-      const therapeuticColors = tokens.colors.therapeutic[therapeuticTheme];
-      return therapeuticColors?.[600] || tokens.colors.primary[600];
+      const therapeuticColors = theme.colors.therapeutic[therapeuticTheme];
+      return therapeuticColors?.[600] || theme.colors.primary[600];
     }
 
-    return tokens.colors.primary[600];
+    return theme.colors.primary[600];
   };
 
   const iconColor = getColor();

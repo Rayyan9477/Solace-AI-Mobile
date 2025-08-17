@@ -24,7 +24,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../shared/theme/ThemeContext';
 import { FocusManagement } from '../../utils/accessibility';
 
 const { height: screenHeight } = Dimensions.get('window');

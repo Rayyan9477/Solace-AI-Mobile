@@ -803,3 +803,12 @@ if (require.main === module) {
 }
 
 module.exports = DesignSystemTest;
+
+// Jest test wrapper for CI compatibility
+describe('Design System Tests', () => {
+  test('Design system functionality', () => {
+    const test = new DesignSystemTest();
+    const success = test.run();
+    expect(success).toBe(true);
+  });
+});

@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Svg, { Path, Circle, Rect, Line, Polyline, Polygon } from 'react-native-svg';
-import { useTheme } from '../../contexts/ThemeContext';
-import { colors } from '../../styles/theme';
+import { useTheme } from '../../shared/theme/ThemeContext';
+import { colors } from '../../shared/theme/theme';
 
 // Icon size presets
 export const IconSizes = {

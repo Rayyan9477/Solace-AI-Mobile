@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isAuthenticated: true, // Set to true for development/testing - bypasses login
+  isAuthenticated: false, // Proper security - require authentication
   user: null,
   token: null,
   isLoading: false,
   error: null,
-  onboardingCompleted: true, // Set to true for development/testing - allows direct access to main app
+  onboardingCompleted: false, // Require onboarding first
 };
 
 const authSlice = createSlice({

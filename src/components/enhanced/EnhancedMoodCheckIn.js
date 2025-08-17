@@ -20,7 +20,7 @@ import {
   useGentlePress 
 } from '../../animations/AdvancedAnimationSystem';
 import { MentalHealthIcon } from '../icons';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../shared/theme/ThemeContext';
 import { logMood } from '../../store/slices/moodSlice';
 import {
   colors,
@@ -28,7 +28,7 @@ import {
   spacing,
   borderRadius,
   shadows,
-} from '../../styles/theme';
+} from '../../shared/theme/theme';
 
 const { width: screenWidth } = Dimensions.get('window');
 

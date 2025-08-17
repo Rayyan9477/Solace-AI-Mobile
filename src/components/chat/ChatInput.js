@@ -11,7 +11,7 @@ import {
   Platform,
 } from "react-native";
 
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 import Icon from "../common/Icon";
 
 const ChatInput = ({

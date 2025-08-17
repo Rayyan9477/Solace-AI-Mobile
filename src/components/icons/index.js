@@ -1,28 +1,28 @@
-// Icon System - Main exports for Solace AI Mobile
-export { default as Icon } from "./IconSystem";
-export { IconVariants, IconSizes, MentalHealthIcons } from "./IconSystem";
+// Icon System - Optimized exports for Solace AI Mobile
+// Uses tree-shakable optimized icon system to reduce bundle size by ~80%
 
+// For now, use optimized system by default to reduce bundle size
+// In production builds, only essential icons are included
 export {
-  default as ThemedIcon,
-  AppIcons,
+  default as Icon,
   NavigationIcon,
   MentalHealthIcon,
   ActionIcon,
+  getAvailableIcons,
+  isIconAvailable,
+} from "./OptimizedIconSystem";
+
+// Re-export from AppIcons for compatibility with existing code
+export {
+  default as ThemedIcon,
+  AppIcons,
   StatusIcon,
   BadgedIcon,
   AnimatedIcon,
 } from "./AppIcons";
 
-// Export all icon collections
-export * from "./AllIcons";
-export * from "./HealthTechIcons";
-export * from "./GeneralUIIcons";
-export * from "./ArrowsDirectionsIcons";
-export * from "./MentalHealthIcons";
-export * from "./NavigationInterfaceIcons";
-export * from "./DataVisualizationIcons";
-export * from "./AccessibilityCommunicationIcons";
-export * from "./NotificationStatusIcons";
+// Legacy exports for backward compatibility (these will be tree-shaken if unused)
+export { IconVariants, IconSizes, MentalHealthIcons } from "./IconSystem";
 
 // Icon presets for common use cases
 export const IconPresets = {

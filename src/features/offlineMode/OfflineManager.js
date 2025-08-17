@@ -1,4 +1,10 @@
-import NetInfo from '@react-native-community/netinfo';
+import { Platform } from 'react-native';
+
+// Conditionally import NetInfo for native platforms only
+let NetInfo;
+if (Platform.OS !== 'web') {
+  NetInfo = require('@react-native-community/netinfo').default;
+}
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 
@@ -29,25 +35,64 @@ class OfflineManager {
    * Setup network connectivity listener
    */
   setupNetworkListener() {
-    this.networkUnsubscribe = NetInfo.addEventListener(state => {
-      const wasOnline = this.isOnline;
-      this.isOnline = state.isConnected && state.isInternetReachable;
-      this.connectionType = state.type;
-
-      // Notify listeners of connectivity change
-      this.notifyListeners({
-        isOnline: this.isOnline,
-        connectionType: this.connectionType,
-        wasOnline
+    // For web platform, use navigator.onLine
+    if (Platform.OS === 'web') {
+      this.isOnline = navigator.onLine;
+      this.connectionType = navigator.onLine ? 'wifi' : 'none';
+      
+      // Listen for online/offline events on web
+      window.addEventListener('online', () => {
+        const wasOnline = this.isOnline;
+        this.isOnline = true;
+        this.connectionType = 'wifi';
+        this.notifyListeners({
+          isOnline: this.isOnline,
+          connectionType: this.connectionType,
+          wasOnline
+        });
+        if (!wasOnline && this.isOnline) {
+          this.handleOnlineTransition();
+        }
       });
+      
+      window.addEventListener('offline', () => {
+        const wasOnline = this.isOnline;
+        this.isOnline = false;
+        this.connectionType = 'none';
+        this.notifyListeners({
+          isOnline: this.isOnline,
+          connectionType: this.connectionType,
+          wasOnline
+        });
+        if (wasOnline && !this.isOnline) {
+          this.handleOfflineTransition();
+        }
+      });
+      return;
+    }
 
-      // Handle online/offline transitions
-      if (!wasOnline && this.isOnline) {
-        this.handleOnlineTransition();
-      } else if (wasOnline && !this.isOnline) {
-        this.handleOfflineTransition();
-      }
-    });
+    // For native platforms, use NetInfo
+    if (NetInfo) {
+      this.networkUnsubscribe = NetInfo.addEventListener(state => {
+        const wasOnline = this.isOnline;
+        this.isOnline = state.isConnected && state.isInternetReachable;
+        this.connectionType = state.type;
+
+        // Notify listeners of connectivity change
+        this.notifyListeners({
+          isOnline: this.isOnline,
+          connectionType: this.connectionType,
+          wasOnline
+        });
+
+        // Handle online/offline transitions
+        if (!wasOnline && this.isOnline) {
+          this.handleOnlineTransition();
+        } else if (wasOnline && !this.isOnline) {
+          this.handleOfflineTransition();
+        }
+      });
+    }
   }
 
   /**

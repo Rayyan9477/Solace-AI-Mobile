@@ -8,7 +8,7 @@ import {
 } from "react-native";
 
 import { PLATFORM_CONFIG } from "../../config/environment";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 import { styleUtils, hapticUtils } from "../../utils/platformOptimizations";
 
 const PlatformButton = ({

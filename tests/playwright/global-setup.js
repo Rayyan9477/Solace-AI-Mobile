@@ -1,8 +1,9 @@
 // tests/playwright/global-setup.js
 // Global setup for Playwright MCP testing environment with port cleanup
 
-const { execSync } = require('child_process');
+const { execSync, spawn } = require('child_process');
 const net = require('net');
+let expoProc = null;
 
 /**
  * Check if a port is in use
@@ -67,7 +68,7 @@ async function killPortProcesses(ports) {
  * @param {number} port - Port number to wait for
  * @param {number} timeout - Timeout in milliseconds
  */
-async function waitForPort(port, timeout = 30000) {
+async function waitForPort(port, timeout = 20000) {
   const startTime = Date.now();
   
   while (Date.now() - startTime < timeout) {
@@ -111,6 +112,7 @@ async function globalSetup() {
     process.env.NODE_ENV = 'test';
     process.env.EXPO_USE_FAST_RESOLVER = 'true';
     process.env.PLAYWRIGHT_TEST_MODE = 'true';
+    process.env.CI = process.env.CI || '1';
     
     // Step 5: Create test directories if they don't exist
     const fs = require('fs');
@@ -130,7 +132,36 @@ async function globalSetup() {
       }
     }
     
-    // Step 6: Setup therapy testing environment mocks
+    // Step 6: Start Expo Web server (non-interactive)
+    console.log('🌐 Launching Expo Web server...');
+    const npxCmd = process.platform === 'win32' ? 'npx.cmd' : 'npx';
+    expoProc = spawn(npxCmd, [
+      '--yes',
+      'expo',
+      'start',
+      '--web',
+      '--non-interactive',
+      '--port',
+      '8081',
+    ], {
+      env: {
+        ...process.env,
+        NODE_ENV: 'development',
+        BROWSER: 'none',
+        CI: '1',
+      },
+      stdio: 'inherit',
+      shell: true,
+    });
+
+    // Wait for server to become available (20s)
+    await waitForPort(8081, 20000).catch(async () => {
+      console.warn('⚠️  Port 8081 not ready, trying 19006...');
+      return waitForPort(19006, 20000);
+    });
+    console.log('✅ Expo Web server is up');
+
+    // Step 7: Setup therapy testing environment mocks
     console.log('🎭 Setting up therapy testing mocks...');
     await setupTherapyTestingMocks();
     
@@ -141,6 +172,7 @@ async function globalSetup() {
       testStartTime: Date.now(),
       availablePorts: testPorts.filter(async port => !(await isPortInUse(port))),
       testEnvironment: 'playwright-mcp',
+      expoPid: expoProc?.pid || null,
     };
     
   } catch (error) {

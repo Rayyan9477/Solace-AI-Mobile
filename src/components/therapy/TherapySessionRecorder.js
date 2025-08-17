@@ -14,7 +14,7 @@ import * as FileSystem from 'expo-file-system';
 import * as Haptics from 'expo-haptics';
 
 import { MentalHealthIcon } from '../icons';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../shared/theme/ThemeContext';
 
 const TherapySessionRecorder = ({
   onRecordingComplete,

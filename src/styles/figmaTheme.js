@@ -6,7 +6,7 @@
 import {
   colors as existingColors,
   typography as existingTypography,
-} from "../styles/theme";
+} from "../shared/theme/theme";
 
 export const figmaTokens = {
   colors: {

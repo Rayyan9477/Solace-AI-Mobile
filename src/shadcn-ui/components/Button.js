@@ -34,7 +34,7 @@ import {
   accessibilityUtils,
   platformUtils 
 } from '../utils';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../shared/theme/ThemeContext';
 
 const ShadcnButton = ({
   children,

@@ -4,7 +4,7 @@
  */
 import { useMemo } from "react";
 import { StyleSheet } from "react-native";
-import { useUnifiedTheme } from "../theme/UnifiedThemeProvider";
+import { useUnifiedTheme } from "../shared/theme/UnifiedThemeProvider";
 import { createStyleUtilities } from "../theme/OptimizedTheme";
 
 /**

@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { View, Text, Animated, StyleSheet } from "react-native";
 import styled from "styled-components/native";
 
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 
 const Container = styled(View)`
   padding: 12px 16px;

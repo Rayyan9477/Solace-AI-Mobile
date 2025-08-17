@@ -7,7 +7,7 @@ import {
   Animated,
 } from "react-native";
 
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 import { MentalHealthIcon } from "../icons";
 
 const ThemeToggle = ({ style, showLabel = true }) => {

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 import { MentalHealthIcon } from "../components/icons";
-import { useTheme } from "../contexts/ThemeContext";
+import { useTheme } from "../shared/theme/ThemeContext";
 
 const { width, height } = Dimensions.get("window");
 

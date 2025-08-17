@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { Animated, Easing, Platform, Dimensions } from 'react-native';
 import { useReducedMotion } from '../hooks/useReducedMotion';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../shared/theme/ThemeContext';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 

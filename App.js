@@ -9,15 +9,20 @@ import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useCallback } from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
+// Conditionally import web setup only for web platform
+if (Platform.OS === 'web') {
+  require("./src/setupWebReactGlobal");
+}
+
 import LoadingScreen from "./src/components/LoadingScreen";
-import { UnifiedThemeProvider, useUnifiedTheme } from "./src/theme/UnifiedThemeProvider";
-import { ThemeProvider } from "./src/contexts/ThemeContext";
+import ErrorBoundary from "./src/components/ErrorBoundary";
+import { ThemeProvider, useTheme } from "./src/shared/theme/ThemeContext";
 import AppNavigator from "./src/navigation/AppNavigator";
 import { store, persistor } from "./src/store/store";
 
@@ -25,8 +30,9 @@ import { store, persistor } from "./src/store/store";
 SplashScreen.preventAutoHideAsync();
 
 const ThemedApp = () => {
-  const { theme, isDarkMode } = useUnifiedTheme();
-  const [appIsReady, setAppIsReady] = React.useState(false);
+  // Ensure React is globally available in web runtime for third-party modules relying on global React
+  // setupWebReactGlobal ensures global React for web
+  const { theme, isDarkMode } = useTheme();
 
   useEffect(() => {
     async function prepare() {
@@ -36,27 +42,18 @@ const ThemedApp = () => {
           ...MaterialCommunityIcons.font,
         });
       } catch (e) {
-        console.warn(e);
-      } finally {
-        setAppIsReady(true);
+        console.warn("Error loading fonts:", e);
       }
+      // Hide splash screen when fonts are loaded
+      SplashScreen.hideAsync().catch(console.warn);
     }
 
     prepare();
   }, []);
 
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
-      await SplashScreen.hideAsync();
-    }
-  }, [appIsReady]);
-
-  if (!appIsReady) {
-    return null;
-  }
-
+  // Always render the app content
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+    <View style={{ flex: 1 }}>
       <StatusBar
         style={isDarkMode ? "light" : "dark"}
         backgroundColor={theme.colors.background.primary}
@@ -68,22 +65,32 @@ const ThemedApp = () => {
 };
 
 const App = () => {
+  const handleAppRestart = () => {
+    // In a real app, you might want to use a library like react-native-restart
+    // For now, we'll just reload the app state
+    console.log("App restart requested");
+  };
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <Provider store={store}>
-          <PersistGate loading={<LoadingScreen />} persistor={persistor}>
-            <UnifiedThemeProvider>
+    <ErrorBoundary onRestart={handleAppRestart}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <Provider store={store}>
+            <PersistGate loading={<LoadingScreen />} persistor={persistor}>
               <ThemeProvider>
-                <NavigationContainer>
-                  <ThemedApp />
-                </NavigationContainer>
+                <ErrorBoundary>
+                  <NavigationContainer>
+                    <ErrorBoundary>
+                      <ThemedApp />
+                    </ErrorBoundary>
+                  </NavigationContainer>
+                </ErrorBoundary>
               </ThemeProvider>
-            </UnifiedThemeProvider>
-          </PersistGate>
-        </Provider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+            </PersistGate>
+          </Provider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </ErrorBoundary>
   );
 };
 

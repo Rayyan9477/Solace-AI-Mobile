@@ -34,14 +34,14 @@ import {
   NavigationIcon,
   ActionIcon,
 } from "../components/icons";
-import { useTheme } from "../contexts/ThemeContext";
+import { useTheme } from "../shared/theme/ThemeContext";
 import {
   colors,
   typography,
   spacing,
   borderRadius,
   shadows,
-} from "../styles/theme";
+} from "../shared/theme/theme";
 import { MentalHealthAccessibility } from "../utils/accessibility";
 
 // Enhanced Components

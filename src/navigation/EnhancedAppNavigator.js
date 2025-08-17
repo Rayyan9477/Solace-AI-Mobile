@@ -23,7 +23,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../shared/theme/ThemeContext';
 import { NavigationIcon, IconPresets } from '../components/icons';
 import { 
   saveNavigationState, 

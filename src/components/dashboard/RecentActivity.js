@@ -8,14 +8,14 @@ import {
   Animated,
 } from "react-native";
 
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 import {
   colors,
   typography,
   spacing,
   borderRadius,
   shadows,
-} from "../../styles/theme";
+} from "../../shared/theme/theme";
 import { MentalHealthIcon, ActionIcon } from "../icons";
 
 const RecentActivity = ({ moodHistory, chatHistory }) => {

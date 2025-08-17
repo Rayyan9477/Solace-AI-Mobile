@@ -22,7 +22,7 @@ import EmotionIndicator from "../../components/chat/EmotionIndicator";
 import MessageBubble from "../../components/chat/MessageBubble";
 import TypingIndicator from "../../components/chat/TypingIndicator";
 import VoiceRecorder from "../../components/chat/VoiceRecorder";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 import {
   addMessage,
   setTyping,

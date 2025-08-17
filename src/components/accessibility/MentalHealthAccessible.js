@@ -14,7 +14,7 @@ import {
   StyleSheet,
   Animated,
 } from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../shared/theme/ThemeContext';
 import { WCAG_CONSTANTS, FocusManagement } from '../../utils/accessibility';
 
 const MentalHealthAccessible = ({

@@ -1,11 +1,25 @@
+/**
+ * Jest Setup for Mental Health App Testing
+ * Enhanced setup with mental health specific mocks and utilities
+ */
+
+import '@testing-library/jest-native/extend-expect';
 import "react-native-gesture-handler/jestSetup";
 
+// Enhanced Expo Haptics mock for mental health app
 jest.mock("expo-haptics", () => ({
   impactAsync: jest.fn(),
+  notificationAsync: jest.fn(),
+  selectionAsync: jest.fn(),
   ImpactFeedbackStyle: {
     Light: "light",
     Medium: "medium",
     Heavy: "heavy",
+  },
+  NotificationFeedbackType: {
+    Success: "success",
+    Warning: "warning", 
+    Error: "error",
   },
 }));
 
@@ -55,8 +69,76 @@ jest.mock("expo-linear-gradient", () => {
   };
 });
 
+// Mental Health App Specific Setup
 global.window = {};
 global.window = global;
+
+// Mock Crisis Manager for safety testing
+jest.mock('./src/features/crisisIntervention/CrisisManager', () => {
+  return jest.fn().mockImplementation(() => ({
+    detectCrisis: jest.fn((text) => ({
+      isCrisis: text.toLowerCase().includes('suicide') || text.toLowerCase().includes('hurt myself'),
+      severity: 'high',
+      keywords: ['suicide', 'hurt myself'].filter(k => text.toLowerCase().includes(k)),
+      riskScore: 0.9,
+      timestamp: new Date().toISOString(),
+    })),
+    handleCrisisDetected: jest.fn(),
+    getEmergencyResources: jest.fn(() => [
+      {
+        id: 'suicide_prevention_lifeline',
+        name: '988 Suicide & Crisis Lifeline',
+        number: '988',
+        type: 'voice',
+        priority: 1,
+      },
+    ]),
+    callEmergencyService: jest.fn(),
+    logCrisisEvent: jest.fn(),
+  }));
+});
+
+// Mental health testing utilities
+global.testUtils = {
+  createMoodEntry: (mood = 'happy', intensity = 7) => ({
+    id: `mood-${Date.now()}`,
+    mood,
+    intensity,
+    timestamp: new Date().toISOString(),
+    activities: ['exercise'],
+    notes: 'Test mood entry',
+  }),
+  
+  createCrisisScenario: (severity = 'high') => ({
+    text: 'I feel hopeless',
+    severity,
+    keywords: ['hopeless'],
+    isCrisis: true,
+    riskScore: 0.8,
+  }),
+};
+
+// Enhanced accessibility mocking
+jest.mock('react-native', () => {
+  const RN = jest.requireActual('react-native');
+  
+  return {
+    ...RN,
+    AccessibilityInfo: {
+      isScreenReaderEnabled: jest.fn(() => Promise.resolve(false)),
+      isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),
+      announceForAccessibility: jest.fn(),
+      setAccessibilityFocus: jest.fn(),
+    },
+    Alert: {
+      alert: jest.fn(),
+    },
+    Linking: {
+      openURL: jest.fn(() => Promise.resolve()),
+      canOpenURL: jest.fn(() => Promise.resolve(true)),
+    },
+  };
+});
 
 // Mock React Native Animated module (updated path for newer RN versions)
 jest.mock("react-native/Libraries/Animated/AnimatedImplementation", () => ({

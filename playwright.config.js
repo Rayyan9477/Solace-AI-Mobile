@@ -230,6 +230,56 @@ const config = {
       },
       testMatch: ['**/solace-comprehensive-ui-analysis.spec.js', '**/solace-mental-health-accessibility.spec.js'],
     },
+    
+    // Comprehensive Mental Health E2E Testing (Main Test Suite)
+    {
+      name: 'mental-health-comprehensive',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: "http://localhost:8082",
+        viewport: { width: 375, height: 812 }, // iPhone 14 Pro for mobile-first testing
+        userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15',
+        deviceScaleFactor: 3,
+        isMobile: true,
+        hasTouch: true,
+        permissions: ['microphone', 'geolocation'], // Mental health app permissions
+      },
+      testMatch: ['**/solace-comprehensive-mental-health-e2e.spec.js'],
+    },
+    
+    // Mental Health Desktop Testing
+    {
+      name: 'mental-health-desktop',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: "http://localhost:8082",
+        viewport: { width: 1280, height: 720 },
+        permissions: ['microphone', 'geolocation'],
+      },
+      testMatch: ['**/solace-comprehensive-mental-health-e2e.spec.js'],
+    },
+    
+    // Mental Health Mobile iOS Testing
+    {
+      name: 'mental-health-ios',
+      use: {
+        ...devices['iPhone 14 Pro'],
+        baseURL: "http://localhost:8082",
+        permissions: ['microphone', 'geolocation'],
+      },
+      testMatch: ['**/solace-comprehensive-mental-health-e2e.spec.js'],
+    },
+    
+    // Mental Health Mobile Android Testing  
+    {
+      name: 'mental-health-android',
+      use: {
+        ...devices['Galaxy S21'],
+        baseURL: "http://localhost:8082",
+        permissions: ['microphone', 'geolocation'],
+      },
+      testMatch: ['**/solace-comprehensive-mental-health-e2e.spec.js'],
+    },
   ],
 };
 

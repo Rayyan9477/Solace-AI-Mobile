@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
-import { colors, typography, spacing, borderRadius, shadows } from '../../styles/theme';
+import { useTheme } from '../../shared/theme/ThemeContext';
+import { colors, typography, spacing, borderRadius, shadows } from '../../shared/theme/theme';
 
 const ProfileHeader = ({ name, email, avatar, onEdit }) => {
   const { theme } = useTheme();

@@ -20,7 +20,7 @@ import {
   Alert,
 } from 'react-native';
 
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../shared/theme/ThemeContext';
 import KeyboardAwareScrollView from '../common/KeyboardAwareScrollView';
 import EnhancedInput from './EnhancedInput';
 import AccessibleButton from '../common/AccessibleButton';

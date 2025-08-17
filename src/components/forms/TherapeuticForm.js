@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
 
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 import { hapticUtils, styleUtils } from "../../utils/platformOptimizations";
 import Button from "../common/Button";
 import Input from "../common/Input";

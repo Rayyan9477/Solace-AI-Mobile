@@ -449,3 +449,12 @@ if (require.main === module) {
 }
 
 module.exports = ThemeToggleTest;
+
+// Jest test wrapper for CI compatibility
+describe('Theme Toggle Tests', () => {
+  test('Theme toggle functionality', () => {
+    const test = new ThemeToggleTest();
+    const success = test.run();
+    expect(success).toBe(true);
+  });
+});

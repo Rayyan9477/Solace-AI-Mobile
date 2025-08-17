@@ -23,7 +23,7 @@ import {
   AccessibilityInfo,
 } from 'react-native';
 
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../shared/theme/ThemeContext';
 import {
   TouchTargetHelpers,
   WCAG_CONSTANTS,

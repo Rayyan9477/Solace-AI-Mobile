@@ -2,9 +2,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { useSelector } from "react-redux";
+import { View, Text, StyleSheet } from "react-native";
 
-import { NavigationIcon, IconPresets } from "../components/icons";
-import { useTheme } from "../contexts/ThemeContext";
+import NavigationInterfaceIcon from "../components/icons/NavigationInterfaceIcons";
+import { IconPresets } from "../components/icons";
+import { useTheme } from "../shared/theme/ThemeContext";
 
 // Screens
 import CoverPageScreen from "../screens/CoverPageScreen";
@@ -36,6 +38,46 @@ import StressManagementScreen from "../screens/wellness/StressManagementScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+// Error boundary component for navigation failures
+const NavigationErrorBoundary = ({ children }) => {
+  const { theme } = useTheme();
+  
+  try {
+    return children;
+  } catch (error) {
+    console.error('Navigation Error:', error);
+    return (
+      <View style={[styles.errorContainer, { backgroundColor: theme.colors.background.primary }]}>
+        <Text style={[styles.errorText, { color: theme.colors.text.primary }]}>
+          Navigation Error: Unable to load screen
+        </Text>
+        <Text style={[styles.errorSubtext, { color: theme.colors.text.secondary }]}>
+          Please restart the app or contact support
+        </Text>
+      </View>
+    );
+  }
+};
+
+const styles = StyleSheet.create({
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  errorSubtext: {
+    fontSize: 14,
+    textAlign: 'center',
+  },
+});
 
 const AuthStack = () => {
   const { theme } = useTheme();
@@ -188,32 +230,30 @@ const MainTabs = () => {
           let iconName;
 
           if (route.name === "Cover") {
-            iconName = "Welcome";
+            iconName = "explore"; // Maps to ExploreIcon for welcome/discovery
           } else if (route.name === "Home") {
-            iconName = "Home";
+            iconName = "home"; // Maps to HomeIcon
           } else if (route.name === "Chat") {
-            iconName = "Chat";
+            iconName = "chat"; // Maps to ChatIcon
           } else if (route.name === "Mood") {
-            iconName = "Mood";
+            iconName = "dashboard"; // Maps to DashboardIcon for mood tracking
           } else if (route.name === "Assessment") {
-            iconName = "Assessment";
+            iconName = "discover"; // Maps to DiscoverIcon for assessment
           } else if (route.name === "Wellness") {
-            iconName = "Mindfulness";
+            iconName = "layout-grid"; // Maps to LayoutGridIcon for wellness hub
           } else if (route.name === "Utilities") {
-            iconName = "Settings";
+            iconName = "menu-bars"; // Maps to MenuBarsIcon for utilities
           } else if (route.name === "Profile") {
-            iconName = "Profile";
-          } else if (route.name === "IconTest") {
-            iconName = "Settings";
+            iconName = "profile"; // Maps to ProfileIcon
           }
 
           return (
-            <NavigationIcon
+            <NavigationInterfaceIcon
               name={iconName}
               size={size}
               color={color}
               variant={focused ? "filled" : "outline"}
-              {...IconPresets.tabBar}
+              strokeWidth={IconPresets.tabBar.strokeWidth}
             />
           );
         },
@@ -239,66 +279,104 @@ const MainTabs = () => {
       <Tab.Screen
         name="Cover"
         component={CoverPageScreen}
-        options={{ title: "Welcome", headerShown: false }}
+        options={{
+          title: "Welcome",
+          tabBarLabel: "Welcome",
+          tabBarTestID: "tab-welcome",
+          tabBarAccessibilityLabel: "Welcome",
+          headerShown: false,
+        }}
       />
       <Tab.Screen
         name="Home"
         component={MainAppScreen}
-        options={{ title: "Dashboard", headerShown: false }}
+        options={{
+          title: "Dashboard",
+          tabBarLabel: "Home",
+          tabBarTestID: "tab-home",
+          tabBarAccessibilityLabel: "Home",
+          headerShown: false,
+        }}
       />
       <Tab.Screen
         name="Chat"
         component={ChatScreen}
-        options={{ title: "Chat" }}
+        options={{
+          title: "Chat",
+          tabBarLabel: "Chat",
+          tabBarTestID: "tab-chat",
+          tabBarAccessibilityLabel: "Chat",
+        }}
       />
       <Tab.Screen
         name="Mood"
         component={EnhancedMoodTrackerScreen}
-        options={{ title: "Mood", headerShown: false }}
+        options={{
+          title: "Mood",
+          tabBarLabel: "Mood",
+          tabBarTestID: "tab-mood",
+          tabBarAccessibilityLabel: "Mood",
+          headerShown: false,
+        }}
       />
       <Tab.Screen
         name="Assessment"
         component={AssessmentScreen}
-        options={{ title: "Assessment" }}
+        options={{
+          title: "Assessment",
+          tabBarLabel: "Assessment",
+          tabBarTestID: "tab-assessment",
+          tabBarAccessibilityLabel: "Assessment",
+        }}
       />
       <Tab.Screen
         name="Wellness"
         component={WellnessStack}
-        options={{ title: "Wellness", headerShown: false }}
+        options={{
+          title: "Wellness",
+          tabBarLabel: "Wellness",
+          tabBarTestID: "tab-wellness",
+          tabBarAccessibilityLabel: "Wellness",
+          headerShown: false,
+        }}
       />
       <Tab.Screen
         name="Utilities"
         component={UtilityStack}
-        options={{ title: "Tools", headerShown: false }}
+        options={{
+          title: "Tools",
+          tabBarLabel: "Utilities",
+          tabBarTestID: "tab-utilities",
+          tabBarAccessibilityLabel: "Utilities",
+          headerShown: false,
+        }}
       />
       <Tab.Screen
         name="Profile"
         component={ProfileStack}
-        options={{ title: "Profile", headerShown: false }}
+        options={{
+          title: "Profile",
+          tabBarLabel: "Profile",
+          tabBarTestID: "tab-profile",
+          tabBarAccessibilityLabel: "Profile",
+          headerShown: false,
+        }}
       />
     </Tab.Navigator>
   );
 };
 
 const AppNavigator = () => {
-  const { isAuthenticated, onboardingCompleted } = useSelector(
+  const { isAuthenticated, onboardingCompleted, isLoading } = useSelector(
     (state) => state.auth,
   );
-  const [isAppReady, setIsAppReady] = React.useState(false);
 
-  React.useEffect(() => {
-    // Simulate app initialization
-    const timer = setTimeout(() => {
-      setIsAppReady(true);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!isAppReady) {
+  // Show splash screen while loading
+  if (isLoading) {
     return <SplashScreen />;
   }
 
+  // Show onboarding if not completed
   if (!onboardingCompleted) {
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -307,11 +385,22 @@ const AppNavigator = () => {
     );
   }
 
+  // Show authentication screens if not authenticated
   if (!isAuthenticated) {
     return <AuthStack />;
   }
 
+  // Show main app if authenticated and onboarding completed
   return <MainTabs />;
 };
 
-export default AppNavigator;
+// Wrap the main navigator with error boundary
+const SafeAppNavigator = () => {
+  return (
+    <NavigationErrorBoundary>
+      <AppNavigator />
+    </NavigationErrorBoundary>
+  );
+};
+
+export default SafeAppNavigator;

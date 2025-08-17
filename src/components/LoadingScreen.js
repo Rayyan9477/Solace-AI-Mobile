@@ -2,7 +2,7 @@ import React from "react";
 import { View, ActivityIndicator } from "react-native";
 import styled from "styled-components/native";
 
-import { useTheme } from "../contexts/ThemeContext";
+import { useTheme } from "../shared/theme/ThemeContext";
 
 const LoadingContainer = styled(View)`
   flex: 1;

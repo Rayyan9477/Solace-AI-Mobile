@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import AssessmentCard from "../../components/assessment/AssessmentCard";
 import AssessmentHistory from "../../components/assessment/AssessmentHistory";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 import { startAssessment } from "../../store/slices/assessmentSlice";
 import {
   colors,
@@ -21,7 +21,7 @@ import {
   spacing,
   borderRadius,
   shadows,
-} from "../../styles/theme";
+} from "../../shared/theme/theme";
 
 const AssessmentScreen = () => {
   const navigation = useNavigation();

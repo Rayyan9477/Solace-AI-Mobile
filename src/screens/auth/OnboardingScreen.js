@@ -13,14 +13,17 @@ import {
   StatusBar,
   Image,
 } from "react-native";
+import { useDispatch } from "react-redux";
 
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 import { MentalHealthAccessibility } from "../../utils/accessibility";
+import { completeOnboarding, loginSuccess } from "../../store/slices/authSlice";
 
 const { width, height } = Dimensions.get("window");
 
 const OnboardingScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const { theme } = useTheme();
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -113,24 +116,40 @@ const OnboardingScreen = () => {
 
   useEffect(() => {
     // Animate step transition
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 600,
-        useNativeDriver: true,
-      }),
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        tension: 20,
-        friction: 7,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    const fadeAnimation = Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    });
+
+    const slideAnimation = Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 600,
+      useNativeDriver: true,
+    });
+
+    const scaleAnimation = Animated.spring(scaleAnim, {
+      toValue: 1,
+      tension: 20,
+      friction: 7,
+      useNativeDriver: true,
+    });
+
+    const parallelAnimation = Animated.parallel([
+      fadeAnimation,
+      slideAnimation,
+      scaleAnimation,
+    ]);
+
+    parallelAnimation.start();
+
+    // Cleanup function to stop animations on unmount or step change
+    return () => {
+      parallelAnimation.stop();
+      fadeAnimation.stop();
+      slideAnimation.stop();
+      scaleAnimation.stop();
+    };
   }, [currentStep, fadeAnim, slideAnim, scaleAnim]);
 
   const currentStepData = onboardingSteps[currentStep];
@@ -143,13 +162,30 @@ const OnboardingScreen = () => {
       scaleAnim.setValue(0.9);
       setCurrentStep(currentStep + 1);
     } else {
-      // Navigate to main app
-      navigation.navigate("SignIn");
+      // Complete onboarding and automatically sign in for demo
+      dispatch(completeOnboarding());
+      dispatch(loginSuccess({ 
+        user: { 
+          id: 'demo_user', 
+          name: 'Welcome User', 
+          email: 'demo@solace.ai' 
+        }, 
+        token: 'demo_token_' + Date.now() 
+      }));
     }
   };
 
   const handleSkip = () => {
-    navigation.navigate("SignIn");
+    // Complete onboarding and automatically sign in for demo
+    dispatch(completeOnboarding());
+    dispatch(loginSuccess({ 
+      user: { 
+        id: 'demo_user', 
+        name: 'Welcome User', 
+        email: 'demo@solace.ai' 
+      }, 
+      token: 'demo_token_' + Date.now() 
+    }));
   };
 
   const animatedStyle = {

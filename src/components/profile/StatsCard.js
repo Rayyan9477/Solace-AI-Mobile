@@ -1,14 +1,14 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 import {
   colors,
   typography,
   spacing,
   borderRadius,
   shadows,
-} from "../../styles/theme";
+} from "../../shared/theme/theme";
 
 const StatsCard = ({ title, value, subtitle, icon, color }) => {
   const { theme } = useTheme();

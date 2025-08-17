@@ -14,15 +14,42 @@
  */
 
 const { test, expect } = require('@playwright/test');
+const fs = require('fs');
+const path = require('path');
 
 // Test configuration
-const BASE_URL = 'http://localhost:8082';
-const NAVIGATION_TIMEOUT = 30000;
-const SCREENSHOT_PATH = 'test-results/screenshots/frontend-validation';
+let BASE_URL = process.env.SOLACE_BASE_URL || 'http://localhost:8083';
+const NAVIGATION_TIMEOUT = 20000; // standardized to 20s
+const SCREENSHOT_PATH = path.resolve('test-results/screenshots/frontend-validation');
+
+function ensureDir(dir) {
+  try { fs.mkdirSync(dir, { recursive: true }); } catch {}
+}
+
+async function resolveBaseUrl(browser) {
+  const candidates = [];
+  if (process.env.SOLACE_BASE_URL) candidates.push(process.env.SOLACE_BASE_URL);
+  candidates.push('http://localhost:8083', 'http://localhost:8082', 'http://localhost:8081');
+  for (const url of candidates) {
+    try {
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 4000 });
+      await context.close();
+      return url;
+    } catch {}
+  }
+  return candidates[0];
+}
 
 test.describe('Solace AI Mental Health App - Frontend Validation', () => {
   let consoleMessages = [];
   let consoleErrors = [];
+
+  test.beforeAll(async ({ browser }) => {
+    BASE_URL = await resolveBaseUrl(browser);
+    ensureDir(SCREENSHOT_PATH);
+  });
 
   test.beforeEach(async ({ page }) => {
     // Clear console message arrays
@@ -102,6 +129,14 @@ test.describe('Solace AI Mental Health App - Frontend Validation', () => {
 
     // Wait for the app to fully render
     await page.waitForTimeout(5000);
+    // Try to advance from splash/cover states
+    try {
+      const getStarted = page.getByText('Get Started', { exact: false }).first();
+      if (await getStarted.isVisible({ timeout: 1000 }).catch(() => false)) {
+        await getStarted.click({ timeout: 1000 }).catch(() => {});
+        await page.waitForTimeout(500);
+      }
+    } catch {}
 
     // Check for mental health app specific elements
     const mentalHealthElements = [

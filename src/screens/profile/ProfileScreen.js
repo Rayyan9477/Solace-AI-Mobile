@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ProfileHeader from "../../components/profile/ProfileHeader";
 import SettingsSection from "../../components/profile/SettingsSection";
 import StatsCard from "../../components/profile/StatsCard";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 import { logout } from "../../store/slices/authSlice";
 import { updatePreferences, setTheme } from "../../store/slices/userSlice";
 import {
@@ -25,7 +25,7 @@ import {
   spacing,
   borderRadius,
   shadows,
-} from "../../styles/theme";
+} from "../../shared/theme/theme";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();

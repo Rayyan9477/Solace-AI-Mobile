@@ -8,7 +8,7 @@ import {
   SafeAreaView,
 } from "react-native";
 
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 
 const LightModeDemo = () => {
   const { theme } = useTheme();

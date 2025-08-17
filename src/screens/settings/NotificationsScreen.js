@@ -13,7 +13,7 @@ import {
 } from "react-native";
 
 import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 
 const NotificationsScreen = ({ navigation }) => {
   const { theme } = useTheme();

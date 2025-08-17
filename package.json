@@ -28,6 +28,7 @@
     "test:playwright:mobile": "playwright test --project=iphone-14-pro --project=samsung-galaxy-s21 --project=pixel-7",
     "test:playwright:desktop": "playwright test --project=edge-desktop",
     "test:playwright:report": "playwright show-report",
+    "test:playwright:frontend": "set SOLACE_BASE_URL=http://localhost:8081&& playwright test tests/playwright/solace-comprehensive-frontend-validation.spec.js",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "theme-preview": "cd theme-preview && npm start",
@@ -45,6 +46,8 @@
     "@expo/metro-runtime": "~4.0.1",
     "@expo/prebuild-config": "^8.0.0",
     "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-community/cli": "^20.0.0",
+    "@react-native-community/netinfo": "^11.4.1",
     "@react-native-community/slider": "4.5.5",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.18",
@@ -102,5 +105,15 @@
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "react-test-renderer": "18.3.1"
+  },
+  "overrides": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "@types/react": "~18.3.12"
+  },
+  "resolutions": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "@types/react": "~18.3.12"
   }
 }

@@ -190,6 +190,12 @@ async function globalTeardown() {
     // Step 1: Kill processes on test ports with comprehensive cleanup
     const testPorts = [8081, 3000, 8082, 3001, 19006];
     await killPortProcesses(testPorts);
+    // Ensure Expo process tree is terminated on Windows
+    try {
+      if (process.platform === 'win32' && process.env.EXPO_PID) {
+        execSync(`taskkill /PID ${process.env.EXPO_PID} /T /F`, { stdio: 'ignore' });
+      }
+    } catch {}
     
     // Step 2: Wait for processes to fully terminate
     console.log('⏳ Waiting for processes to terminate...');

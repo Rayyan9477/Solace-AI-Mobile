@@ -8,14 +8,14 @@ import {
   Animated,
 } from "react-native";
 
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 import {
   colors,
   typography,
   spacing,
   borderRadius,
   shadows,
-} from "../../styles/theme";
+} from "../../shared/theme/theme";
 import { MentalHealthIcon, ActionIcon } from "../icons";
 
 const QuickActions = ({ onStartChat, onTakeAssessment, onMoodTracker }) => {
@@ -139,12 +139,26 @@ const QuickActions = ({ onStartChat, onTakeAssessment, onMoodTracker }) => {
                   <MentalHealthIcon
                     name={action.iconName}
                     size="lg"
-                    color={colors.text.inverse}
+                    color={theme.colors.text.inverse}
                     variant="outline"
                     strokeWidth={1.5}
                   />
-                  <Text style={styles.actionTitle}>{action.title}</Text>
-                  <Text style={styles.actionSubtitle}>{action.subtitle}</Text>
+                  <Text
+                    style={[
+                      styles.actionTitle,
+                      { color: theme.colors.text.inverse },
+                    ]}
+                  >
+                    {action.title}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.actionSubtitle,
+                      { color: theme.colors.text.inverse },
+                    ]}
+                  >
+                    {action.subtitle}
+                  </Text>
                 </LinearGradient>
               </TouchableOpacity>
             </Animated.View>
@@ -196,7 +210,6 @@ const styles = StyleSheet.create({
     minHeight: 100,
   },
   actionTitle: {
-    color: colors.text.inverse,
     fontSize: typography.sizes.sm,
     fontWeight: typography.weights.semiBold,
     lineHeight: typography.lineHeights.sm,
@@ -204,7 +217,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   actionSubtitle: {
-    color: colors.text.inverse,
     fontSize: typography.sizes.xs,
     fontWeight: typography.weights.normal,
     lineHeight: typography.lineHeights.xs,

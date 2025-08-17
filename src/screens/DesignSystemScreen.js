@@ -11,7 +11,7 @@ import {
 } from "react-native";
 
 import { MentalHealthIcon, ActionIcon } from "../components/icons";
-import { useTheme } from "../contexts/ThemeContext";
+import { useTheme } from "../shared/theme/ThemeContext";
 import ColorCustomizer from "../design-system/ColorCustomizer";
 import ComponentCustomizer from "../design-system/ComponentCustomizer";
 import { DesignSystemProvider } from "../design-system/DesignSystemContext";
@@ -21,7 +21,7 @@ import {
   spacing,
   borderRadius,
   shadows,
-} from "../styles/theme";
+} from "../shared/theme/theme";
 
 const { width } = Dimensions.get("window");
 

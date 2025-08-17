@@ -16,7 +16,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import { MentalHealthIcon } from "../../components/icons";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 import {
   loginStart,
   loginSuccess,

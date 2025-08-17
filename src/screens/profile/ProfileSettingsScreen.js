@@ -15,7 +15,7 @@ import {
 
 import ThemeToggle from "../../components/common/ThemeToggle";
 import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 
 const ProfileSettingsScreen = ({ navigation }) => {
   const { theme, isDarkMode } = useTheme();

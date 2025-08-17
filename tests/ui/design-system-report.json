@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-08-03T11:43:38.992Z",
+  "timestamp": "2025-08-14T19:28:34.139Z",
   "summary": {
-    "passed": 33,
-    "failed": 1,
+    "passed": 32,
+    "failed": 2,
     "warnings": 1,
-    "successRate": 94
+    "successRate": 91
   },
   "tests": [
     {
@@ -189,8 +189,8 @@
     },
     {
       "name": "App Integration",
-      "status": "passed",
-      "message": "DesignSystemProvider in App.js",
+      "status": "failed",
+      "message": "App-level integration missing",
       "details": null
     },
     {

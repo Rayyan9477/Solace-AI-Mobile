@@ -32,7 +32,7 @@ import {
   animationUtils, 
   accessibilityUtils 
 } from '../utils';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../shared/theme/ThemeContext';
 import { MentalHealthIcon } from '../../components/icons';
 
 // Linear Progress Bar Component

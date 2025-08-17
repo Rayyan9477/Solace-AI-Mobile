@@ -2,7 +2,7 @@ import React from "react";
 import { Platform, View, TouchableOpacity } from "react-native";
 
 import Icon, { IconVariants, IconSizes } from "./IconSystem";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../shared/theme/ThemeContext";
 
 // Platform-specific icon configurations
 const PlatformConfig = {
