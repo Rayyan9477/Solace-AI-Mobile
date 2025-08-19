@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
-import Svg, {
+import {
+  WebSafeSvg as Svg,
   Path,
   Circle,
   Rect,
@@ -8,7 +9,8 @@ import Svg, {
   Polyline,
   Polygon,
   G,
-} from "react-native-svg";
+  getWebSafeSvgProps,
+} from "./WebSafeSvg";
 
 import { useTheme } from "../../shared/theme/ThemeContext";
 
@@ -1051,14 +1053,16 @@ const NavigationInterfaceIcon = ({
     }
   };
 
+  const svgProps = getWebSafeSvgProps({
+    width: size,
+    height: size,
+    viewBox: "0 0 24 24",
+    style,
+    testID: testID || `navigation-interface-icon-${name}`,
+  });
+
   return (
-    <Svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      style={style}
-      testID={testID || `navigation-interface-icon-${name}`}
-    >
+    <Svg {...svgProps}>
       {renderIcon()}
     </Svg>
   );

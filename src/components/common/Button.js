@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 import { useTheme } from "../../shared/theme/ThemeContext";
-import { TouchTargetHelpers, WCAG_CONSTANTS, FocusManagement } from "../../utils/accessibility";
+import { TouchTargetHelpers, WCAG_CONSTANTS, FocusManagement } from "../../shared/utils/accessibility";
 
 const Button = ({
   onPress,

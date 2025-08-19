@@ -1,4 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
+import * as Crypto from "expo-crypto";
 import axios from "axios";
 import { Platform } from "react-native";
 
@@ -43,53 +45,155 @@ const apiClient = axios.create({
   },
 });
 
-// Token management
-const TOKEN_KEY = "auth_token";
-const REFRESH_TOKEN_KEY = "refresh_token";
+// Secure token management
+const TOKEN_KEY = "secure_auth_token";
+const REFRESH_TOKEN_KEY = "secure_refresh_token";
+const ENCRYPTION_KEY = "secure_encryption_key";
 
-const tokenManager = {
+const secureTokenManager = {
+  async getEncryptionKey() {
+    try {
+      let key = await SecureStore.getItemAsync(ENCRYPTION_KEY);
+      if (!key) {
+        // Generate a new encryption key
+        key = await Crypto.digestStringAsync(
+          Crypto.CryptoDigestAlgorithm.SHA256,
+          await Crypto.getRandomBytesAsync(32).then(bytes => 
+            Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('')
+          )
+        );
+        await SecureStore.setItemAsync(ENCRYPTION_KEY, key, {
+          requireAuthentication: false // Don't require biometric for encryption key
+        });
+      }
+      return key;
+    } catch (error) {
+      if (__DEV__) console.error("Error getting encryption key:", error);
+      throw new Error("Failed to initialize secure storage");
+    }
+  },
+
+  async encryptData(data) {
+    try {
+      const key = await this.getEncryptionKey();
+      // Use simple base64 encoding with key mixing for Expo compatibility
+      const dataStr = JSON.stringify(data);
+      const keyBytes = key.split('').map(c => c.charCodeAt(0));
+      const dataBytes = dataStr.split('').map(c => c.charCodeAt(0));
+      
+      const encrypted = dataBytes.map((byte, i) => 
+        byte ^ keyBytes[i % keyBytes.length]
+      );
+      
+      return btoa(String.fromCharCode(...encrypted));
+    } catch (error) {
+      if (__DEV__) console.error("Encryption error:", error);
+      throw new Error("Failed to encrypt data");
+    }
+  },
+
+  async decryptData(encryptedData) {
+    try {
+      const key = await this.getEncryptionKey();
+      const keyBytes = key.split('').map(c => c.charCodeAt(0));
+      const encryptedBytes = Array.from(atob(encryptedData)).map(c => c.charCodeAt(0));
+      
+      const decrypted = encryptedBytes.map((byte, i) => 
+        byte ^ keyBytes[i % keyBytes.length]
+      );
+      
+      const decryptedStr = String.fromCharCode(...decrypted);
+      return JSON.parse(decryptedStr);
+    } catch (error) {
+      if (__DEV__) console.error("Decryption error:", error);
+      return null;
+    }
+  },
+
   async getToken() {
     try {
-      return await AsyncStorage.getItem(TOKEN_KEY);
+      if (Platform.OS === 'web') {
+        // Use AsyncStorage for web with encryption
+        const encryptedToken = await AsyncStorage.getItem(TOKEN_KEY);
+        if (!encryptedToken) return null;
+        return await this.decryptData(encryptedToken);
+      } else {
+        // Use SecureStore for mobile
+        const encryptedToken = await SecureStore.getItemAsync(TOKEN_KEY);
+        if (!encryptedToken) return null;
+        return await this.decryptData(encryptedToken);
+      }
     } catch (error) {
-      console.error("Error getting token:", error);
+      if (__DEV__) console.error("Error getting secure token:", error);
       return null;
     }
   },
 
   async setToken(token) {
     try {
-      await AsyncStorage.setItem(TOKEN_KEY, token);
+      const encryptedToken = await this.encryptData(token);
+      if (Platform.OS === 'web') {
+        await AsyncStorage.setItem(TOKEN_KEY, encryptedToken);
+      } else {
+        await SecureStore.setItemAsync(TOKEN_KEY, encryptedToken, {
+          requireAuthentication: false
+        });
+      }
     } catch (error) {
-      console.error("Error setting token:", error);
+      if (__DEV__) console.error("Error setting secure token:", error);
+      throw new Error("Failed to store authentication token");
     }
   },
 
   async getRefreshToken() {
     try {
-      return await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
+      if (Platform.OS === 'web') {
+        const encryptedToken = await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
+        if (!encryptedToken) return null;
+        return await this.decryptData(encryptedToken);
+      } else {
+        const encryptedToken = await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+        if (!encryptedToken) return null;
+        return await this.decryptData(encryptedToken);
+      }
     } catch (error) {
-      console.error("Error getting refresh token:", error);
+      if (__DEV__) console.error("Error getting secure refresh token:", error);
       return null;
     }
   },
 
   async setRefreshToken(refreshToken) {
     try {
-      await AsyncStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+      const encryptedToken = await this.encryptData(refreshToken);
+      if (Platform.OS === 'web') {
+        await AsyncStorage.setItem(REFRESH_TOKEN_KEY, encryptedToken);
+      } else {
+        await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, encryptedToken, {
+          requireAuthentication: false
+        });
+      }
     } catch (error) {
-      console.error("Error setting refresh token:", error);
+      if (__DEV__) console.error("Error setting secure refresh token:", error);
+      throw new Error("Failed to store refresh token");
     }
   },
 
   async clearTokens() {
     try {
-      await AsyncStorage.multiRemove([TOKEN_KEY, REFRESH_TOKEN_KEY]);
+      if (Platform.OS === 'web') {
+        await AsyncStorage.multiRemove([TOKEN_KEY, REFRESH_TOKEN_KEY]);
+      } else {
+        await SecureStore.deleteItemAsync(TOKEN_KEY);
+        await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
+      }
     } catch (error) {
-      console.error("Error clearing tokens:", error);
+      if (__DEV__) console.error("Error clearing secure tokens:", error);
     }
   },
 };
+
+// Keep old tokenManager for compatibility but redirect to secure version
+const tokenManager = secureTokenManager;
 
 // Request interceptor
 apiClient.interceptors.request.use(
@@ -112,10 +216,12 @@ apiClient.interceptors.request.use(
 // Response interceptor
 apiClient.interceptors.response.use(
   (response) => {
-    // Log response time for debugging
-    const endTime = new Date();
-    const duration = endTime - response.config.metadata.startTime;
-    console.log(`API Request to ${response.config.url} took ${duration}ms`);
+    // Log response time for debugging (only in development)
+    if (__DEV__) {
+      const endTime = new Date();
+      const duration = endTime - response.config.metadata.startTime;
+      console.log(`API Request to ${response.config.url} took ${duration}ms`);
+    }
 
     return response;
   },

@@ -26,7 +26,16 @@ import {
   borderRadius,
   shadows,
 } from "../../shared/theme/theme";
-import { MentalHealthAccessibility } from "../../utils/accessibility";
+import { 
+  MentalHealthAccessibility, 
+  MentalHealthAccessibilityHelpers,
+  MentalHealthAnnouncements 
+} from "../../utils/accessibility";
+import { MoodTrackingLayout } from "../../components/layout/ResponsiveLayout";
+import { MentalHealthCard, MoodCard } from "../../components/ui/MentalHealthCard";
+import { TherapeuticActionButton, SecondaryButton } from "../../components/ui/TherapeuticButton";
+import { useMotionAccessibility } from "../../utils/motionAccessibility";
+import { MoodEmoji } from "../../utils/emojiAccessibility";
 
 const { width, height } = Dimensions.get("window");
 
@@ -62,19 +71,19 @@ const EnhancedMoodTrackerScreen = () => {
     const parallelAnimation = Animated.parallel([fadeAnimation, slideAnimation]);
     parallelAnimation.start();
 
-    // Cleanup function to stop animations on unmount
+    // Proper cleanup function to stop animations on unmount
     return () => {
       parallelAnimation.stop();
-      fadeAnimation.stop();
-      slideAnimation.stop();
+      fadeAnim.setValue(0);
+      slideAnim.setValue(30);
     };
-  }, [fadeAnim, slideAnim]);
+  }, []);
 
   useEffect(() => {
     const progressAnimation = Animated.timing(progressAnim, {
       toValue: (currentStep + 1) / 4,
       duration: 300,
-      useNativeDriver: false,
+      useNativeDriver: true,
     });
 
     progressAnimation.start();
@@ -83,7 +92,7 @@ const EnhancedMoodTrackerScreen = () => {
     return () => {
       progressAnimation.stop();
     };
-  }, [currentStep, progressAnim]);
+  }, [currentStep]);
 
   const moods = [
     {
@@ -220,17 +229,36 @@ const EnhancedMoodTrackerScreen = () => {
       // Simulate async operation
       await new Promise((resolve) => setTimeout(resolve, 500));
 
+      // Announce mood completion with mental health context
+      const moodLabel = moods.find(m => m.id === selectedMood)?.label || selectedMood;
+      MentalHealthAccessibilityHelpers.announceWithContext(
+        MentalHealthAnnouncements.moodLogged(moodLabel, intensity),
+        "mood"
+      );
+
       Alert.alert(
         "Mood Saved! 🎉",
-        "Thank you for checking in with yourself. Your mood has been recorded.",
+        "Thank you for checking in with yourself. Your mood has been recorded. Remember, your feelings are valid and you're taking positive steps for your mental health.",
         [
           {
             text: "View Insights",
-            onPress: () => navigation.navigate("Dashboard"),
+            onPress: () => {
+              MentalHealthAccessibilityHelpers.announceWithContext(
+                "Navigating to mood insights dashboard",
+                "mood"
+              );
+              navigation.navigate("Dashboard");
+            },
           },
           {
             text: "Done",
-            onPress: () => navigation.goBack(),
+            onPress: () => {
+              MentalHealthAccessibilityHelpers.announceWithContext(
+                "Mood check-in completed successfully",
+                "mood"
+              );
+              navigation.goBack();
+            },
             style: "cancel",
           },
         ],
@@ -320,7 +348,13 @@ const EnhancedMoodTrackerScreen = () => {
         Choose the mood that best describes your current emotional state
       </Text>
 
-      <View style={styles.moodGrid}>
+      <View 
+        style={styles.moodGrid}
+        accessible={true}
+        accessibilityRole="radiogroup"
+        accessibilityLabel="Mood selection options"
+        accessibilityHint="Choose your current mood from the available options"
+      >
         {moods.map((mood, index) => (
           <Animated.View
             key={mood.id}
@@ -345,12 +379,24 @@ const EnhancedMoodTrackerScreen = () => {
                   borderWidth: 2,
                 },
               ]}
-              onPress={() => setSelectedMood(mood.id)}
+              onPress={() => {
+                setSelectedMood(mood.id);
+                // Announce mood selection for screen readers
+                MentalHealthAccessibilityHelpers.announceWithContext(
+                  `${mood.label} mood selected. ${mood.description}`,
+                  "mood"
+                );
+              }}
               activeOpacity={0.8}
               accessible
-              accessibilityRole="button"
+              accessibilityRole="radio"
               accessibilityLabel={`${mood.label}: ${mood.description}`}
-              accessibilityState={{ selected: selectedMood === mood.id }}
+              accessibilityState={{ 
+                selected: selectedMood === mood.id,
+                checked: selectedMood === mood.id 
+              }}
+              accessibilityHint={`Double tap to select ${mood.label} as your current mood`}
+              testID={`mood-option-${mood.id}`}
             >
               <Text style={styles.moodEmoji}>{mood.emoji}</Text>
               <Text
@@ -388,8 +434,19 @@ const EnhancedMoodTrackerScreen = () => {
         from 1 (mild) to 5 (very intense)
       </Text>
 
-      <View style={styles.intensityContainer}>
-        <View style={styles.intensityScale}>
+      <View 
+        style={styles.intensityContainer}
+        accessible={true}
+        accessibilityRole="group"
+        accessibilityLabel="Mood intensity rating"
+        accessibilityHint="Rate the intensity of your current mood feeling"
+      >
+        <View 
+          style={styles.intensityScale}
+          accessible={true}
+          accessibilityRole="radiogroup"
+          accessibilityLabel="Intensity scale from 1 to 5"
+        >
           {[1, 2, 3, 4, 5].map((level) => (
             <TouchableOpacity
               key={level}
@@ -404,19 +461,21 @@ const EnhancedMoodTrackerScreen = () => {
               ]}
               onPress={() => {
                 setIntensity(level);
-                // Announce intensity change for screen readers
+                // Announce intensity change for screen readers with mental health context
                 const intensityLabels = ['Very mild', 'Mild', 'Moderate', 'Strong', 'Very intense'];
-                if (AccessibilityInfo) {
-                  AccessibilityInfo.announceForAccessibility(
-                    `Intensity set to ${intensityLabels[level - 1] || level} out of 5`
-                  );
-                }
+                MentalHealthAccessibilityHelpers.announceWithContext(
+                  `Intensity set to ${intensityLabels[level - 1] || level} out of 5`,
+                  "mood"
+                );
               }}
               accessible
-              accessibilityRole="button"
-              accessibilityLabel={`Intensity level ${level} out of 5`}
+              accessibilityRole="radio"
+              accessibilityLabel={`Intensity level ${level} out of 5: ${['Very mild', 'Mild', 'Moderate', 'Strong', 'Very intense'][level - 1]}`}
               accessibilityHint={`Set mood intensity to ${level}`}
-              accessibilityState={{ selected: intensity === level }}
+              accessibilityState={{ 
+                selected: intensity === level,
+                checked: intensity === level 
+              }}
               testID={`intensity-dot-${level}`}
             />
           ))}
@@ -468,7 +527,13 @@ const EnhancedMoodTrackerScreen = () => {
         (optional)
       </Text>
 
-      <View style={styles.optionsGrid}>
+      <View 
+        style={styles.optionsGrid}
+        accessible={true}
+        accessibilityRole="group"
+        accessibilityLabel="Activity selection grid"
+        accessibilityHint="Select activities related to your current mood"
+      >
         {commonActivities.map((activity) => (
           <TouchableOpacity
             key={activity.id}
@@ -481,17 +546,31 @@ const EnhancedMoodTrackerScreen = () => {
               },
             ]}
             onPress={() => {
-              if (activities.includes(activity.id)) {
+              const isSelected = activities.includes(activity.id);
+              if (isSelected) {
                 setActivities(activities.filter((a) => a !== activity.id));
+                MentalHealthAccessibilityHelpers.announceWithContext(
+                  `${activity.label} deselected`,
+                  "mood"
+                );
               } else {
                 setActivities([...activities, activity.id]);
+                MentalHealthAccessibilityHelpers.announceWithContext(
+                  `${activity.label} selected`,
+                  "mood"
+                );
               }
             }}
             activeOpacity={0.8}
             accessible
-            accessibilityRole="button"
+            accessibilityRole="checkbox"
             accessibilityLabel={activity.label}
-            accessibilityState={{ selected: activities.includes(activity.id) }}
+            accessibilityHint={`${activities.includes(activity.id) ? 'Remove' : 'Add'} ${activity.label} to your mood context`}
+            accessibilityState={{ 
+              selected: activities.includes(activity.id),
+              checked: activities.includes(activity.id)
+            }}
+            testID={`activity-${activity.id}`}
           >
             <Text style={styles.optionIcon}>{activity.icon}</Text>
             <Text
@@ -548,10 +627,20 @@ const EnhancedMoodTrackerScreen = () => {
       </View>
 
       {/* Triggers Section */}
-      <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+      <Text 
+        style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+        accessibilityRole="header"
+        accessibilityLevel={3}
+      >
         Any potential triggers?
       </Text>
-      <View style={styles.optionsGrid}>
+      <View 
+        style={styles.optionsGrid}
+        accessible={true}
+        accessibilityRole="group"
+        accessibilityLabel="Trigger identification grid"
+        accessibilityHint="Select any triggers that may have influenced your mood"
+      >
         {commonTriggers.map((trigger) => (
           <TouchableOpacity
             key={trigger.id}
@@ -565,17 +654,31 @@ const EnhancedMoodTrackerScreen = () => {
               },
             ]}
             onPress={() => {
-              if (triggers.includes(trigger.id)) {
+              const isSelected = triggers.includes(trigger.id);
+              if (isSelected) {
                 setTriggers(triggers.filter((t) => t !== trigger.id));
+                MentalHealthAccessibilityHelpers.announceWithContext(
+                  `${trigger.label} trigger removed`,
+                  "mood"
+                );
               } else {
                 setTriggers([...triggers, trigger.id]);
+                MentalHealthAccessibilityHelpers.announceWithContext(
+                  `${trigger.label} trigger identified`,
+                  "mood"
+                );
               }
             }}
             activeOpacity={0.8}
             accessible
-            accessibilityRole="button"
+            accessibilityRole="checkbox"
             accessibilityLabel={trigger.label}
-            accessibilityState={{ selected: triggers.includes(trigger.id) }}
+            accessibilityHint={`${triggers.includes(trigger.id) ? 'Remove' : 'Identify'} ${trigger.label} as a mood trigger`}
+            accessibilityState={{ 
+              selected: triggers.includes(trigger.id),
+              checked: triggers.includes(trigger.id)
+            }}
+            testID={`trigger-${trigger.id}`}
           >
             <Text style={styles.optionIcon}>{trigger.icon}</Text>
             <Text

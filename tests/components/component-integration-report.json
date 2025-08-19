@@ -1,18 +1,18 @@
 {
-  "timestamp": "2025-08-14T19:28:34.135Z",
+  "timestamp": "2025-08-19T05:33:44.119Z",
   "summary": {
-    "passed": 308,
+    "passed": 311,
     "failed": 3,
-    "warnings": 17,
-    "successRate": 94,
-    "componentsCount": 77,
-    "screensCount": 51
+    "warnings": 25,
+    "successRate": 92,
+    "componentsCount": 89,
+    "screensCount": 49
   },
   "tests": [
     {
       "name": "Import in AccessibilitySettingsScreen.js",
       "status": "failed",
-      "message": "Invalid import: import { useTheme } from '../../contexts/ThemeContext';",
+      "message": "Invalid import: import { useTheme } from '../../shared/theme/ThemeContext';",
       "details": null
     },
     {
@@ -52,6 +52,18 @@
       "details": null
     },
     {
+      "name": "TherapeuticAnimations Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "AppProvider Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
       "name": "AssessmentCard Export",
       "status": "passed",
       "message": "Has default export",
@@ -59,12 +71,6 @@
     },
     {
       "name": "AssessmentHistory Export",
-      "status": "passed",
-      "message": "Has default export",
-      "details": null
-    },
-    {
-      "name": "OptimizedAssessmentCard Export",
       "status": "passed",
       "message": "Has default export",
       "details": null
@@ -184,6 +190,12 @@
       "details": null
     },
     {
+      "name": "WebSafeLinearGradient Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
       "name": "CrisisRiskAssessment Export",
       "status": "passed",
       "message": "Has default export",
@@ -197,24 +209,6 @@
     },
     {
       "name": "MoodCheckIn Export",
-      "status": "passed",
-      "message": "Has default export",
-      "details": null
-    },
-    {
-      "name": "MoodCheckIn.optimized Export",
-      "status": "passed",
-      "message": "Has default export",
-      "details": null
-    },
-    {
-      "name": "OptimizedMoodCheckIn Export",
-      "status": "passed",
-      "message": "Has default export",
-      "details": null
-    },
-    {
-      "name": "OptimizedQuickActions Export",
       "status": "passed",
       "message": "Has default export",
       "details": null
@@ -250,7 +244,19 @@
       "details": null
     },
     {
+      "name": "CrisisOptimization Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
       "name": "EnhancedMoodCheckIn Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "ErrorBoundary Export",
       "status": "passed",
       "message": "Has default export",
       "details": null
@@ -295,6 +301,12 @@
       "name": "EnhancedInput Export",
       "status": "passed",
       "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "index Export",
+      "status": "warnings",
+      "message": "No default export found",
       "details": null
     },
     {
@@ -388,15 +400,45 @@
       "details": null
     },
     {
+      "name": "OptimizedIconSystem Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
       "name": "PlatformIcon Export",
       "status": "passed",
       "message": "Has default export",
       "details": null
     },
     {
+      "name": "WebSafeSvg Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "IconSystem.simple.test Export",
+      "status": "warnings",
+      "message": "No default export found",
+      "details": null
+    },
+    {
       "name": "IconSystem.test Export",
       "status": "warnings",
       "message": "No default export found",
+      "details": null
+    },
+    {
+      "name": "index Export",
+      "status": "warnings",
+      "message": "No default export found",
+      "details": null
+    },
+    {
+      "name": "ResponsiveLayout Export",
+      "status": "passed",
+      "message": "Has default export",
       "details": null
     },
     {
@@ -415,6 +457,12 @@
       "name": "ActivitySelector Export",
       "status": "passed",
       "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "index Export",
+      "status": "warnings",
+      "message": "No default export found",
       "details": null
     },
     {
@@ -439,6 +487,12 @@
       "name": "Header Export",
       "status": "passed",
       "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "index Export",
+      "status": "warnings",
+      "message": "No default export found",
       "details": null
     },
     {
@@ -490,6 +544,24 @@
       "details": null
     },
     {
+      "name": "MentalHealthCard Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "TherapeuticButton Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
+      "name": "WebCompatibilityErrorBoundary Export",
+      "status": "passed",
+      "message": "Has default export",
+      "details": null
+    },
+    {
       "name": "AccessibleTouchable.js Theme",
       "status": "passed",
       "message": "Properly uses theme colors",
@@ -508,6 +580,12 @@
       "details": null
     },
     {
+      "name": "AppProvider.js Theme",
+      "status": "warnings",
+      "message": "Imports theme but may not use colors",
+      "details": null
+    },
+    {
       "name": "AssessmentCard.js Theme",
       "status": "passed",
       "message": "Properly uses theme colors",
@@ -515,12 +593,6 @@
     },
     {
       "name": "AssessmentHistory.js Theme",
-      "status": "passed",
-      "message": "Properly uses theme colors",
-      "details": null
-    },
-    {
-      "name": "OptimizedAssessmentCard.js Theme",
       "status": "passed",
       "message": "Properly uses theme colors",
       "details": null
@@ -652,24 +724,6 @@
       "details": null
     },
     {
-      "name": "MoodCheckIn.optimized.js Theme",
-      "status": "passed",
-      "message": "Properly uses theme colors",
-      "details": null
-    },
-    {
-      "name": "OptimizedMoodCheckIn.js Theme",
-      "status": "passed",
-      "message": "Properly uses theme colors",
-      "details": null
-    },
-    {
-      "name": "OptimizedQuickActions.js Theme",
-      "status": "passed",
-      "message": "Properly uses theme colors",
-      "details": null
-    },
-    {
       "name": "ProgressOverview.js Theme",
       "status": "passed",
       "message": "Properly uses theme colors",
@@ -701,6 +755,12 @@
     },
     {
       "name": "EnhancedMoodCheckIn.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "ErrorBoundary.js Theme",
       "status": "passed",
       "message": "Properly uses theme colors",
       "details": null
@@ -784,7 +844,25 @@
       "details": null
     },
     {
+      "name": "OptimizedIconSystem.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
       "name": "PlatformIcon.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "IconSystem.simple.test.js Theme",
+      "status": "warnings",
+      "message": "Imports theme but may not use colors",
+      "details": null
+    },
+    {
+      "name": "ResponsiveLayout.js Theme",
       "status": "passed",
       "message": "Properly uses theme colors",
       "details": null
@@ -874,6 +952,24 @@
       "details": null
     },
     {
+      "name": "MentalHealthCard.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "TherapeuticButton.js Theme",
+      "status": "passed",
+      "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "WebCompatibilityErrorBoundary.js Theme",
+      "status": "warnings",
+      "message": "Imports theme but may not use colors",
+      "details": null
+    },
+    {
       "name": "AccessibilitySettingsScreen.js Theme",
       "status": "passed",
       "message": "Properly uses theme colors",
@@ -919,6 +1015,12 @@
       "name": "SignInScreen.js Theme",
       "status": "passed",
       "message": "Properly uses theme colors",
+      "details": null
+    },
+    {
+      "name": "SimpleOnboardingScreen.js Theme",
+      "status": "warnings",
+      "message": "Imports theme but may not use colors",
       "details": null
     },
     {
@@ -1036,12 +1138,6 @@
       "details": null
     },
     {
-      "name": "MainAppScreen.optimized.js Theme",
-      "status": "passed",
-      "message": "Properly uses theme colors",
-      "details": null
-    },
-    {
       "name": "EnhancedMoodTrackerScreen.js Theme",
       "status": "passed",
       "message": "Properly uses theme colors",
@@ -1061,18 +1157,6 @@
     },
     {
       "name": "OnboardingScreen.js Theme",
-      "status": "passed",
-      "message": "Properly uses theme colors",
-      "details": null
-    },
-    {
-      "name": "OptimizedChatScreen.js Theme",
-      "status": "passed",
-      "message": "Properly uses theme colors",
-      "details": null
-    },
-    {
-      "name": "OptimizedMainAppScreen.js Theme",
       "status": "passed",
       "message": "Properly uses theme colors",
       "details": null
@@ -1115,8 +1199,8 @@
     },
     {
       "name": "SplashScreen.js Theme",
-      "status": "warnings",
-      "message": "Imports theme but may not use colors",
+      "status": "passed",
+      "message": "Properly uses theme colors",
       "details": null
     },
     {
@@ -1176,13 +1260,7 @@
     {
       "name": "Theme Coverage",
       "status": "passed",
-      "message": "89% of files use theme system",
-      "details": null
-    },
-    {
-      "name": "OptimizedAssessmentCard.js Icons",
-      "status": "passed",
-      "message": "Uses modern icon system",
+      "message": "84% of files use theme system",
       "details": null
     },
     {
@@ -1211,24 +1289,6 @@
     },
     {
       "name": "MoodCheckIn.js Icons",
-      "status": "passed",
-      "message": "Uses modern icon system",
-      "details": null
-    },
-    {
-      "name": "MoodCheckIn.optimized.js Icons",
-      "status": "passed",
-      "message": "Uses modern icon system",
-      "details": null
-    },
-    {
-      "name": "OptimizedMoodCheckIn.js Icons",
-      "status": "passed",
-      "message": "Uses modern icon system",
-      "details": null
-    },
-    {
-      "name": "OptimizedQuickActions.js Icons",
       "status": "passed",
       "message": "Uses modern icon system",
       "details": null
@@ -1294,7 +1354,31 @@
       "details": null
     },
     {
+      "name": "OptimizedIconSystem.js Icons",
+      "status": "passed",
+      "message": "Uses modern icon system",
+      "details": null
+    },
+    {
+      "name": "IconSystem.simple.test.js Icons",
+      "status": "passed",
+      "message": "Uses modern icon system",
+      "details": null
+    },
+    {
       "name": "IconSystem.test.js Icons",
+      "status": "passed",
+      "message": "Uses modern icon system",
+      "details": null
+    },
+    {
+      "name": "index.js Icons",
+      "status": "passed",
+      "message": "Uses modern icon system",
+      "details": null
+    },
+    {
+      "name": "BottomTabBar.js Icons",
       "status": "passed",
       "message": "Uses modern icon system",
       "details": null
@@ -1438,12 +1522,6 @@
       "details": null
     },
     {
-      "name": "MainAppScreen.optimized.js Icons",
-      "status": "passed",
-      "message": "Uses modern icon system",
-      "details": null
-    },
-    {
       "name": "EnhancedMoodTrackerScreen.js Icons",
       "status": "passed",
       "message": "Uses modern icon system",
@@ -1457,12 +1535,6 @@
     },
     {
       "name": "MoodTrackerScreen.js Icons",
-      "status": "passed",
-      "message": "Uses modern icon system",
-      "details": null
-    },
-    {
-      "name": "OptimizedMainAppScreen.js Icons",
       "status": "passed",
       "message": "Uses modern icon system",
       "details": null
@@ -1554,7 +1626,7 @@
     {
       "name": "Icon System",
       "status": "passed",
-      "message": "60 files use modern icon system",
+      "message": "58 files use modern icon system",
       "details": null
     },
     {
@@ -1583,12 +1655,6 @@
     },
     {
       "name": "AssessmentHistory.js A11y",
-      "status": "passed",
-      "message": "Good accessibility support (3/4)",
-      "details": null
-    },
-    {
-      "name": "OptimizedAssessmentCard.js A11y",
       "status": "passed",
       "message": "Good accessibility support (3/4)",
       "details": null
@@ -1708,24 +1774,6 @@
       "details": null
     },
     {
-      "name": "MoodCheckIn.optimized.js A11y",
-      "status": "passed",
-      "message": "Good accessibility support (3/4)",
-      "details": null
-    },
-    {
-      "name": "OptimizedMoodCheckIn.js A11y",
-      "status": "passed",
-      "message": "Good accessibility support (3/4)",
-      "details": null
-    },
-    {
-      "name": "OptimizedQuickActions.js A11y",
-      "status": "passed",
-      "message": "Good accessibility support (3/4)",
-      "details": null
-    },
-    {
       "name": "QuickActions.js A11y",
       "status": "passed",
       "message": "Good accessibility support (3/4)",
@@ -1750,9 +1798,21 @@
       "details": null
     },
     {
+      "name": "CrisisOptimization.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
       "name": "EnhancedMoodCheckIn.js A11y",
       "status": "passed",
       "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "ErrorBoundary.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (2/4)",
       "details": null
     },
     {
@@ -1806,7 +1866,7 @@
     {
       "name": "MoodSelector.js A11y",
       "status": "passed",
-      "message": "Good accessibility support (4/4)",
+      "message": "Good accessibility support (3/4)",
       "details": null
     },
     {
@@ -1846,6 +1906,18 @@
       "details": null
     },
     {
+      "name": "MentalHealthCard.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
+      "name": "TherapeuticButton.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (3/4)",
+      "details": null
+    },
+    {
       "name": "AccessibilitySettingsScreen.js A11y",
       "status": "passed",
       "message": "Good accessibility support (3/4)",
@@ -1859,6 +1931,12 @@
     },
     {
       "name": "OnboardingScreen.js A11y",
+      "status": "passed",
+      "message": "Good accessibility support (2/4)",
+      "details": null
+    },
+    {
+      "name": "SimpleOnboardingScreen.js A11y",
       "status": "passed",
       "message": "Good accessibility support (2/4)",
       "details": null
@@ -1894,12 +1972,6 @@
       "details": null
     },
     {
-      "name": "MainAppScreen.optimized.js A11y",
-      "status": "passed",
-      "message": "Good accessibility support (3/4)",
-      "details": null
-    },
-    {
       "name": "EnhancedMoodTrackerScreen.js A11y",
       "status": "passed",
       "message": "Good accessibility support (4/4)",
@@ -1907,12 +1979,6 @@
     },
     {
       "name": "OnboardingScreen.js A11y",
-      "status": "passed",
-      "message": "Good accessibility support (3/4)",
-      "details": null
-    },
-    {
-      "name": "OptimizedMainAppScreen.js A11y",
       "status": "passed",
       "message": "Good accessibility support (3/4)",
       "details": null
@@ -1938,7 +2004,7 @@
     {
       "name": "Accessibility Coverage",
       "status": "warnings",
-      "message": "Only 48% of files have good accessibility",
+      "message": "Only 43% of files have good accessibility",
       "details": null
     },
     {

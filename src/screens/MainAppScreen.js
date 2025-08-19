@@ -1,5 +1,5 @@
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
+import { WebSafeLinearGradient as LinearGradient } from "../components/common/WebSafeLinearGradient";
 import React, {
   useEffect,
   useRef,
@@ -42,7 +42,15 @@ import {
   borderRadius,
   shadows,
 } from "../shared/theme/theme";
-import { MentalHealthAccessibility } from "../utils/accessibility";
+import { 
+  MentalHealthAccessibility, 
+  MentalHealthAccessibilityHelpers 
+} from "../utils/accessibility";
+import { WellnessTipEmoji } from "../utils/emojiAccessibility";
+import { useMotionAccessibility } from "../utils/motionAccessibility";
+import { DashboardLayout, ResponsiveGrid } from "../components/layout/ResponsiveLayout";
+import { MentalHealthCard, InsightCard } from "../components/ui/MentalHealthCard";
+import { TherapeuticActionButton, CrisisButton } from "../components/ui/TherapeuticButton";
 
 // Enhanced Components
 
@@ -52,6 +60,7 @@ const MainAppScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { theme } = useTheme();
+  const motionUtils = useMotionAccessibility();
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [currentSection, setCurrentSection] = useState("dashboard");
@@ -168,15 +177,35 @@ const MainAppScreen = () => {
   }, [navigation]);
 
   const showEmergencyAlert = useCallback(() => {
+    // Announce emergency mode activation for screen readers
+    MentalHealthAccessibilityHelpers.announceWithContext(
+      "Emergency support activated. Crisis resources are now available.",
+      "emergency"
+    );
+
     Alert.alert(
-      "Emergency Resources",
-      "If you are experiencing a mental health crisis, please contact:\n\n• National Suicide Prevention Lifeline: 988\n• Crisis Text Line: Text HOME to 741741\n• Or call 911 for immediate assistance",
+      "🚨 Emergency Crisis Support",
+      "If you are experiencing a mental health crisis, please contact:\n\n• National Suicide Prevention Lifeline: 988\n• Crisis Text Line: Text HOME to 741741\n• Or call 911 for immediate assistance\n\nYou are not alone. Help is available 24/7.",
       [
-        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Cancel", 
+          style: "cancel",
+          onPress: () => {
+            MentalHealthAccessibilityHelpers.announceWithContext(
+              "Emergency support closed. Remember, help is always available.",
+              "emergency"
+            );
+          }
+        },
         {
-          text: "Call 988",
+          text: "Call 988 Now",
+          style: "default",
           onPress: async () => {
             try {
+              MentalHealthAccessibilityHelpers.announceWithContext(
+                "Calling crisis support hotline",
+                "emergency"
+              );
               const supported = await Linking.canOpenURL("tel:988");
               if (supported) {
                 await Linking.openURL("tel:988");
@@ -198,9 +227,13 @@ const MainAppScreen = () => {
           },
         },
         {
-          text: "Text Crisis Line",
+          text: "Crisis Chat",
           onPress: async () => {
             try {
+              MentalHealthAccessibilityHelpers.announceWithContext(
+                "Opening crisis text support",
+                "emergency"
+              );
               const supported = await Linking.canOpenURL("sms:741741");
               if (supported) {
                 await Linking.openURL("sms:741741?body=HOME");
@@ -267,8 +300,10 @@ const MainAppScreen = () => {
         activeOpacity={0.8}
         accessible
         accessibilityRole="button"
-        accessibilityLabel="Start Chat"
-        accessibilityHint="Double tap to start a new therapy session"
+        accessibilityLabel="Start AI Therapy Session"
+        accessibilityHint="Double tap to begin a private conversation with your AI therapist"
+        testID="start-therapy-fab"
+        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
       >
         <LinearGradient
           colors={[
@@ -327,6 +362,10 @@ const MainAppScreen = () => {
             transform: [{ translateY: slideAnim }],
           },
         ]}
+        accessible={true}
+        accessibilityRole="group"
+        accessibilityLabel={`Daily wellness tip: ${currentTip.title}`}
+        accessibilityHint="Therapeutic guidance for your mental well-being"
       >
         <LinearGradient
           colors={[
@@ -335,14 +374,21 @@ const MainAppScreen = () => {
           ]}
           style={[styles.wellnessTipCard, shadows.md]}
         >
-          <View style={styles.wellnessTipIcon}>
-            <Text 
+          <View 
+            style={styles.wellnessTipIcon}
+            accessible={true}
+            accessibilityRole="image"
+            accessibilityLabel={`${currentTip.title} tip icon`}
+            accessibilityHint="Visual icon representing the wellness tip category"
+          >
+            <WellnessTipEmoji
+              emoji={currentTip.icon}
+              tipTitle={currentTip.title}
               style={styles.wellnessTipEmoji}
+              testID="wellness-tip-emoji"
               accessibilityElementsHidden={true}
               importantForAccessibility="no"
-            >
-              {currentTip.icon}
-            </Text>
+            />
           </View>
           <View style={styles.wellnessTipContent}>
             <Text
@@ -390,33 +436,8 @@ const MainAppScreen = () => {
         style={styles.backgroundGradient}
       />
 
-      <Animated.View
-        style={[
-          styles.contentContainer,
-          {
-            opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }],
-          },
-        ]}
-      >
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          refreshControl={
-            <RefreshControl
-              refreshing={loading || refreshing}
-              onRefresh={handleRefresh}
-              colors={[theme.colors.primary[500]]}
-              tintColor={theme.colors.primary[500]}
-              progressBackgroundColor={theme.colors.background.primary}
-              accessibilityLabel="Pull to refresh app content"
-            />
-          }
-          showsVerticalScrollIndicator={false}
-          accessibilityRole="scrollbar"
-          accessibilityLabel="Main app content"
-        >
-          {/* Enhanced Welcome Header */}
+      <DashboardLayout
+        header={
           <WelcomeHeader
             greeting={greeting}
             userName={user?.profile?.name || "Friend"}
@@ -426,42 +447,98 @@ const MainAppScreen = () => {
               user?.profile?.name || "Friend",
             )}
           />
-
-          {/* Wellness Tip of the Day */}
+        }
+        style={[
+          styles.contentContainer,
+          {
+            opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }],
+          },
+        ]}
+      >
+        {/* Wellness Tip of the Day */}
+        <InsightCard
+          title="Daily Wellness Tip"
+          animated={true}
+          animationDelay={0}
+          style={styles.wellnessTipCard}
+        >
           <WellnessTips />
+        </InsightCard>
 
-          {/* Mood Check-in */}
-          <MoodCheckIn
-            currentMood={mood?.currentMood}
-            onCheckIn={handleMoodCheckIn}
-          />
+        {/* Dashboard Grid */}
+        <ResponsiveGrid animated={true} style={styles.dashboardGrid}>
+          {/* Mood Check-in Card */}
+          <MentalHealthCard
+            variant="mood"
+            title="Daily Mood Check-in"
+            subtitle="How are you feeling today?"
+            animated={true}
+            animationDelay={100}
+          >
+            <MoodCheckIn
+              currentMood={mood?.currentMood}
+              onCheckIn={handleMoodCheckIn}
+            />
+          </MentalHealthCard>
 
-          {/* Daily Insights */}
-          <DailyInsights insights={mood?.insights} />
+          {/* Quick Actions Card */}
+          <MentalHealthCard
+            variant="therapeutic"
+            title="Quick Actions"
+            subtitle="Start your wellness journey"
+            animated={true}
+            animationDelay={200}
+          >
+            <QuickActions
+              onStartChat={handleStartChat}
+              onTakeAssessment={handleTakeAssessment}
+              onMoodTracker={handleMoodCheckIn}
+            />
+          </MentalHealthCard>
 
-          {/* Quick Actions */}
-          <QuickActions
-            onStartChat={handleStartChat}
-            onTakeAssessment={handleTakeAssessment}
-            onMoodTracker={handleMoodCheckIn}
-          />
+          {/* Daily Insights Card */}
+          <InsightCard
+            title="Personal Insights"
+            subtitle="Discover patterns in your wellbeing"
+            animated={true}
+            animationDelay={300}
+          >
+            <DailyInsights insights={mood?.insights} />
+          </InsightCard>
 
-          {/* Progress Overview */}
-          <ProgressOverview
-            weeklyStats={mood?.weeklyStats}
-            userStats={user?.stats}
-          />
+          {/* Progress Overview Card */}
+          <MentalHealthCard
+            variant="success"
+            title="Your Progress"
+            subtitle="Celebrating your journey"
+            animated={true}
+            animationDelay={400}
+          >
+            <ProgressOverview
+              weeklyStats={mood?.weeklyStats}
+              userStats={user?.stats}
+            />
+          </MentalHealthCard>
 
-          {/* Recent Activity */}
-          <RecentActivity
-            moodHistory={moodHistorySlice}
-            chatHistory={chatHistorySlice}
-          />
+          {/* Recent Activity Card */}
+          <MentalHealthCard
+            variant="default"
+            title="Recent Activity"
+            subtitle="Your wellness timeline"
+            animated={true}
+            animationDelay={500}
+          >
+            <RecentActivity
+              moodHistory={moodHistorySlice}
+              chatHistory={chatHistorySlice}
+            />
+          </MentalHealthCard>
+        </ResponsiveGrid>
 
-          {/* Bottom spacing for FAB */}
-          <View style={styles.bottomSpacing} />
-        </ScrollView>
-      </Animated.View>
+        {/* Bottom spacing for FAB */}
+        <View style={styles.bottomSpacing} />
+      </DashboardLayout>
 
       {/* Floating Action Button */}
       <FloatingActionButton />
@@ -498,6 +575,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: spacing[4],
     borderRadius: borderRadius.lg,
+    marginBottom: spacing.lg,
   },
   wellnessTipIcon: {
     width: 48,
@@ -549,6 +627,10 @@ const styles = StyleSheet.create({
   },
   bottomSpacing: {
     height: spacing[20],
+  },
+  // Enhanced layout styles
+  dashboardGrid: {
+    marginBottom: spacing.lg,
   },
 });
 

@@ -1,4 +1,4 @@
-import { LinearGradient } from "expo-linear-gradient";
+import { WebSafeLinearGradient as LinearGradient } from "../common/WebSafeLinearGradient";
 import React, { useRef, useEffect, useMemo, useCallback, memo } from "react";
 import {
   View,
@@ -22,6 +22,7 @@ import {
   WCAG_CONSTANTS,
   FocusManagement,
   MentalHealthAccessibility,
+  MentalHealthAccessibilityHelpers,
 } from "../../utils/accessibility";
 
 // PERFORMANCE: Memoize static data outside component
@@ -59,6 +60,11 @@ const MoodCheckIn = memo(({
   // PERFORMANCE: Memoize callbacks
   const handleCheckIn = useCallback(() => {
     if (!disabled && onCheckIn) {
+      // Announce check-in start for screen readers
+      MentalHealthAccessibilityHelpers.announceWithContext(
+        "Starting mood check-in. Your mental health journey is important.",
+        "mood"
+      );
       onCheckIn();
     }
   }, [disabled, onCheckIn]);

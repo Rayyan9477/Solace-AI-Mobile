@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import Svg, { Path, Circle, Rect, Line, Polyline, Polygon } from 'react-native-svg';
+import { WebSafeSvg as Svg, Path, Circle, Rect, Line, Polyline, Polygon } from './WebSafeSvg';
 import { useTheme } from '../../shared/theme/ThemeContext';
 import { colors } from '../../shared/theme/theme';
 

@@ -19,9 +19,9 @@ const StatsCard = ({ title, value, subtitle, icon, color }) => {
         styles.container,
         { 
           backgroundColor: theme.colors.background.secondary,
-          padding: theme.theme.spacing[4],
-          borderRadius: theme.theme.borderRadius.md,
-          ...theme.theme.shadows.base,
+          padding: theme.spacing[4],
+          borderRadius: theme.borderRadius.md,
+          ...theme.shadows.base,
         },
       ]}
     >
@@ -29,20 +29,20 @@ const StatsCard = ({ title, value, subtitle, icon, color }) => {
         styles.iconContainer, 
         { 
           backgroundColor: color,
-          borderRadius: theme.theme.borderRadius.full,
-          marginBottom: theme.theme.spacing[3],
+          borderRadius: theme.borderRadius.full,
+          marginBottom: theme.spacing[3],
         }
       ]}>
-        <Text style={[styles.icon, { fontSize: theme.theme.typography.sizes.lg }]}>{icon}</Text>
+        <Text style={[styles.icon, { fontSize: theme.typography.sizes.lg }]}>{icon}</Text>
       </View>
       <View style={styles.content}>
         <Text style={[
           styles.value, 
           { 
             color: theme.colors.text.primary,
-            fontSize: theme.theme.typography.sizes.xl,
-            lineHeight: theme.theme.typography.lineHeights.xl,
-            marginBottom: theme.theme.spacing[1],
+            fontSize: theme.typography.sizes.xl,
+            lineHeight: theme.typography.lineHeights.xl,
+            marginBottom: theme.spacing[1],
           }
         ]}>
           {value}
@@ -52,7 +52,7 @@ const StatsCard = ({ title, value, subtitle, icon, color }) => {
                 styles.subtitle, 
                 { 
                   color: theme.colors.text.secondary,
-                  fontSize: theme.theme.typography.sizes.sm,
+                  fontSize: theme.typography.sizes.sm,
                 }
               ]}
             >
@@ -65,8 +65,8 @@ const StatsCard = ({ title, value, subtitle, icon, color }) => {
           styles.title, 
           { 
             color: theme.colors.text.secondary,
-            fontSize: theme.theme.typography.sizes.sm,
-            lineHeight: theme.theme.typography.lineHeights.sm,
+            fontSize: theme.typography.sizes.sm,
+            lineHeight: theme.typography.lineHeights.sm,
           }
         ]}>
           {title}

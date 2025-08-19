@@ -15,7 +15,7 @@ import {
   Animated,
 } from 'react-native';
 import { useTheme } from '../../shared/theme/ThemeContext';
-import { WCAG_CONSTANTS, FocusManagement } from '../../utils/accessibility';
+import { WCAG_CONSTANTS, FocusManagement } from '../../shared/utils/accessibility';
 
 const MentalHealthAccessible = ({
   children,

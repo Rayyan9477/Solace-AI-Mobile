@@ -13,6 +13,8 @@ config.resolver = {
   alias: {
     // Ensure consistent module resolution for hot reload
     'react-native$': 'react-native-web',
+    // Add web-specific aliases for better compatibility
+    'react-native-svg$': 'react-native-svg/lib/commonjs/ReactNativeSVG.web.js',
   },
   resolverMainFields: ['react-native', 'browser', 'main'],
   extensions: [

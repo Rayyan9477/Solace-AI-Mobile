@@ -14,7 +14,7 @@ import {
 } from "react-native";
 
 import { useTheme } from "../shared/theme/ThemeContext";
-import { MentalHealthAccessibility } from "../utils/accessibility";
+import { MentalHealthAccessibility } from "../shared/utils/accessibility";
 import { spacing, typography, borderRadius, shadows } from "../shared/theme/theme";
 
 const { width, height } = Dimensions.get("window");

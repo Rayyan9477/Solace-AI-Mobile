@@ -31,7 +31,7 @@ import {
   saveAccessibilityHistory,
   handleDeepLink,
 } from '../utils/navigationPersistence';
-import { FocusManagement } from '../utils/accessibility';
+import { FocusManagement } from '../shared/utils/accessibility';
 
 // Import screens
 import SplashScreen from '../screens/SplashScreen';

@@ -1,18 +1,31 @@
 import PropTypes from "prop-types";
 import React from "react";
-import Svg, {
+import {
+  WebSafeSvg as Svg,
   Path,
   Circle,
   Rect,
   Line,
   Polyline,
   Polygon,
-  Ellipse,
   G,
-  Defs,
-  LinearGradient,
-  Stop,
-} from "react-native-svg";
+} from "./WebSafeSvg";
+
+// For gradient support, we need to import these separately
+let Ellipse, Defs, LinearGradient, Stop;
+try {
+  const svgComponents = require("react-native-svg");
+  Ellipse = svgComponents.Ellipse;
+  Defs = svgComponents.Defs;
+  LinearGradient = svgComponents.LinearGradient;
+  Stop = svgComponents.Stop;
+} catch (error) {
+  // Fallback for web compatibility
+  Ellipse = Circle;
+  Defs = G;
+  LinearGradient = G;
+  Stop = G;
+}
 
 import { BaseDesignTokens } from "../../design-system/DesignTokens";
 

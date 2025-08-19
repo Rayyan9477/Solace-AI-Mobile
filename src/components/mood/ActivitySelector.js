@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     borderRadius: 8full,
     borderWidth: 1,
     marginBottom: 122],
-    ...theme.theme.shadows.sm,
+    ...theme.shadows.sm,
   },
   activityEmoji: {
     fontSize: 14base,
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   selectedTitle: {
     fontSize: 14base,
     fontWeight: '600',
-    lineHeight: theme.theme.typography.lineHeights.base,
+    lineHeight: theme.typography.lineHeights.base,
     marginBottom: 123],
   },
   selectedList: {
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   selectedLabel: {
     fontSize: 14xs,
     fontWeight: '400',
-    lineHeight: theme.theme.typography.lineHeights.xs,
+    lineHeight: theme.typography.lineHeights.xs,
   },
 });
 

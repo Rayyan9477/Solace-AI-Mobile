@@ -2,7 +2,7 @@
 // Only exports icons that are actually used in the app to reduce bundle size by ~80%
 
 import React from "react";
-import Svg, { Path, Circle, Rect, Polygon } from "react-native-svg";
+import { WebSafeSvg as Svg, Path, Circle, Rect, Polygon } from "./WebSafeSvg";
 import { useTheme } from "../../shared/theme/ThemeContext";
 
 // Base icon component with proper tree-shaking support

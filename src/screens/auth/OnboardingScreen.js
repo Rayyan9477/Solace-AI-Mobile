@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import { LinearGradient } from "expo-linear-gradient";
+import { WebSafeLinearGradient as LinearGradient } from "../../components/common/WebSafeLinearGradient";
 import {
   View,
   Text,
@@ -16,7 +16,7 @@ import {
 import { useDispatch } from "react-redux";
 
 import { useTheme } from "../../shared/theme/ThemeContext";
-import { MentalHealthAccessibility } from "../../utils/accessibility";
+import { MentalHealthAccessibility } from "../../shared/utils/accessibility";
 import { completeOnboarding, loginSuccess } from "../../store/slices/authSlice";
 
 const { width, height } = Dimensions.get("window");

@@ -1,4 +1,4 @@
-import { LinearGradient } from "expo-linear-gradient";
+import { WebSafeLinearGradient as LinearGradient } from "../common/WebSafeLinearGradient";
 import React, { useRef, useEffect } from "react";
 import {
   View,
@@ -68,6 +68,8 @@ const WelcomeHeader = ({
     ];
   };
 
+  const styles = createStyles(theme);
+
   return (
     <LinearGradient
       colors={getTimeBasedGradient()}
@@ -108,7 +110,7 @@ const WelcomeHeader = ({
         ]}
       >
         <TouchableOpacity
-          style={[styles.avatarButton, shadows.sm]}
+          style={[styles.avatarButton, theme.shadows.sm]}
           onPress={onProfilePress}
           activeOpacity={0.8}
           accessible
@@ -129,19 +131,26 @@ const WelcomeHeader = ({
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.emergencyButton, shadows.sm]}
+          style={[styles.emergencyButton, theme.shadows.sm]}
           onPress={onEmergencyPress}
           activeOpacity={0.8}
           accessible
           accessibilityRole="button"
-          accessibilityLabel="Emergency Help"
-          accessibilityHint="Double tap to access emergency support"
+          accessibilityLabel="Emergency Crisis Support"
+          accessibilityHint="Double tap for immediate crisis support and emergency resources"
+          accessibilityTraits={['button', 'startsMedia']}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          testID="emergency-button"
         >
           <LinearGradient
             colors={[theme.colors.error[400], theme.colors.error[600]]}
             style={styles.emergencyGradient}
           >
-            <Text style={styles.emergencyText}>🚨</Text>
+            <Text 
+              style={styles.emergencyText}
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no"
+            >🚨</Text>
           </LinearGradient>
         </TouchableOpacity>
       </Animated.View>
@@ -149,40 +158,40 @@ const WelcomeHeader = ({
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "flex-start",
-    paddingHorizontal: spacing[5],
-    paddingTop: spacing[12],
-    paddingBottom: spacing[6],
+    paddingHorizontal: theme.theme.spacing[5],
+    paddingTop: theme.spacing[12],
+    paddingBottom: theme.spacing[6],
   },
   mainContent: {
     flex: 1,
-    paddingRight: spacing[4],
+    paddingRight: theme.spacing[4],
   },
   greetingContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: spacing[1],
+    marginBottom: theme.spacing[1],
   },
   timeEmoji: {
-    fontSize: typography.sizes.lg,
-    marginRight: spacing[2],
+    fontSize: theme.typography.sizes.lg,
+    marginRight: theme.spacing[2],
   },
   greeting: {
-    fontSize: typography.sizes.base,
-    fontWeight: typography.weights.medium,
-    lineHeight: typography.lineHeights.base,
+    fontSize: theme.typography.sizes.base,
+    fontWeight: theme.typography.weights.medium,
+    lineHeight: theme.typography.lineHeights.base,
   },
   userName: {
-    fontSize: typography.sizes["3xl"],
-    fontWeight: typography.weights.bold,
-    lineHeight: typography.lineHeights["3xl"],
-    marginBottom: spacing[2],
+    fontSize: theme.typography.sizes["3xl"],
+    fontWeight: theme.typography.weights.bold,
+    lineHeight: theme.typography.lineHeights["3xl"],
+    marginBottom: theme.spacing[2],
   },
   subtitle: {
-    fontSize: typography.sizes.sm,
+    fontSize: theme.typography.sizes.sm,
     fontWeight: typography.weights.normal,
     lineHeight: typography.lineHeights.sm,
     opacity: 0.8,
@@ -190,10 +199,10 @@ const styles = StyleSheet.create({
   headerActions: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing[2],
+    gap: theme.spacing[2],
   },
   avatarButton: {
-    borderRadius: borderRadius.full,
+    borderRadius: theme.borderRadius.full,
     overflow: "hidden",
   },
   avatarGradient: {
@@ -204,22 +213,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   avatarText: {
-    fontSize: typography.sizes.lg,
+    fontSize: theme.typography.sizes.lg,
     fontWeight: typography.weights.semiBold,
   },
   emergencyButton: {
-    borderRadius: borderRadius.full,
+    borderRadius: theme.borderRadius.full,
     overflow: "hidden",
   },
   emergencyGradient: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    minWidth: 56, // MENTAL_HEALTH_ACCESSIBILITY_CONSTANTS.CRISIS_BUTTON_MIN_SIZE
+    minHeight: 56,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     justifyContent: "center",
     alignItems: "center",
   },
   emergencyText: {
-    fontSize: typography.sizes.sm,
+    fontSize: theme.typography.sizes.sm,
   },
 });
 

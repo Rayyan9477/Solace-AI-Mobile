@@ -1,4 +1,4 @@
-import { LinearGradient } from "expo-linear-gradient";
+import { WebSafeLinearGradient as LinearGradient } from "../common/WebSafeLinearGradient";
 import React, { useRef, useEffect } from "react";
 import {
   View,

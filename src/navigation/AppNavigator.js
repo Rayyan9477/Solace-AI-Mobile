@@ -2,11 +2,14 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { useSelector } from "react-redux";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Platform } from "react-native";
 
 import NavigationInterfaceIcon from "../components/icons/NavigationInterfaceIcons";
 import { IconPresets } from "../components/icons";
 import { useTheme } from "../shared/theme/ThemeContext";
+import { TouchOptimizations } from "../utils/mobileOptimizations";
+import { useMotionAccessibility } from "../utils/motionAccessibility";
+import { MentalHealthAccessibility } from "../utils/accessibility";
 
 // Screens
 import CoverPageScreen from "../screens/CoverPageScreen";
@@ -16,6 +19,7 @@ import MainAppScreen from "../screens/MainAppScreen";
 import SplashScreen from "../screens/SplashScreen";
 import AssessmentScreen from "../screens/assessment/AssessmentScreen";
 import OnboardingScreen from "../screens/auth/OnboardingScreen";
+import SimpleOnboardingScreen from "../screens/auth/SimpleOnboardingScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
 import SignInScreen from "../screens/auth/SignInScreen";
 import ChatScreen from "../screens/chat/ChatScreen";
@@ -222,6 +226,8 @@ const UtilityStack = () => {
 
 const MainTabs = () => {
   const { theme } = useTheme();
+  const motionUtils = useMotionAccessibility();
+  const optimalTouchTarget = TouchOptimizations.getOptimalTouchTarget();
 
   return (
     <Tab.Navigator
@@ -263,8 +269,10 @@ const MainTabs = () => {
           backgroundColor: theme.colors.background.primary,
           borderTopColor: theme.colors.gray[200],
           paddingVertical: 8,
-          height: 70,
+          height: Math.max(70, optimalTouchTarget + 16), // Ensure adequate touch targets
         },
+        tabBarAccessibilityRole: "tablist",
+        tabBarAccessibilityLabel: "Main navigation tabs",
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: "500",
@@ -283,7 +291,8 @@ const MainTabs = () => {
           title: "Welcome",
           tabBarLabel: "Welcome",
           tabBarTestID: "tab-welcome",
-          tabBarAccessibilityLabel: "Welcome",
+          tabBarAccessibilityLabel: "Welcome tab - App introduction and features",
+          tabBarAccessibilityHint: "Double tap to view app welcome and features",
           headerShown: false,
         }}
       />
@@ -294,7 +303,8 @@ const MainTabs = () => {
           title: "Dashboard",
           tabBarLabel: "Home",
           tabBarTestID: "tab-home",
-          tabBarAccessibilityLabel: "Home",
+          tabBarAccessibilityLabel: "Home tab - Main dashboard with wellness overview",
+          tabBarAccessibilityHint: "Double tap to access your mental health dashboard",
           headerShown: false,
         }}
       />
@@ -305,7 +315,8 @@ const MainTabs = () => {
           title: "Chat",
           tabBarLabel: "Chat",
           tabBarTestID: "tab-chat",
-          tabBarAccessibilityLabel: "Chat",
+          tabBarAccessibilityLabel: "Chat tab - AI therapy conversations",
+          tabBarAccessibilityHint: "Double tap to start or continue therapy conversation",
         }}
       />
       <Tab.Screen
@@ -315,7 +326,8 @@ const MainTabs = () => {
           title: "Mood",
           tabBarLabel: "Mood",
           tabBarTestID: "tab-mood",
-          tabBarAccessibilityLabel: "Mood",
+          tabBarAccessibilityLabel: "Mood tab - Track and monitor your emotional state",
+          tabBarAccessibilityHint: "Double tap to record your current mood and feelings",
           headerShown: false,
         }}
       />
@@ -326,7 +338,8 @@ const MainTabs = () => {
           title: "Assessment",
           tabBarLabel: "Assessment",
           tabBarTestID: "tab-assessment",
-          tabBarAccessibilityLabel: "Assessment",
+          tabBarAccessibilityLabel: "Assessment tab - Mental health evaluation and screening",
+          tabBarAccessibilityHint: "Double tap to take mental health assessments",
         }}
       />
       <Tab.Screen
@@ -336,7 +349,8 @@ const MainTabs = () => {
           title: "Wellness",
           tabBarLabel: "Wellness",
           tabBarTestID: "tab-wellness",
-          tabBarAccessibilityLabel: "Wellness",
+          tabBarAccessibilityLabel: "Wellness tab - Mindfulness and stress management resources",
+          tabBarAccessibilityHint: "Double tap to access wellness tools and resources",
           headerShown: false,
         }}
       />
@@ -347,7 +361,8 @@ const MainTabs = () => {
           title: "Tools",
           tabBarLabel: "Utilities",
           tabBarTestID: "tab-utilities",
-          tabBarAccessibilityLabel: "Utilities",
+          tabBarAccessibilityLabel: "Utilities tab - App tools and support features",
+          tabBarAccessibilityHint: "Double tap to access app utilities and support",
           headerShown: false,
         }}
       />
@@ -358,7 +373,8 @@ const MainTabs = () => {
           title: "Profile",
           tabBarLabel: "Profile",
           tabBarTestID: "tab-profile",
-          tabBarAccessibilityLabel: "Profile",
+          tabBarAccessibilityLabel: "Profile tab - Account settings and personal information",
+          tabBarAccessibilityHint: "Double tap to view and edit your profile",
           headerShown: false,
         }}
       />
@@ -367,31 +383,63 @@ const MainTabs = () => {
 };
 
 const AppNavigator = () => {
-  const { isAuthenticated, onboardingCompleted, isLoading } = useSelector(
-    (state) => state.auth,
-  );
+  const authState = useSelector((state) => state.auth);
+  const { isAuthenticated, onboardingCompleted, isLoading } = authState || {};
+
+  // Enhanced debugging for web
+  React.useEffect(() => {
+    if (Platform.OS === 'web') {
+      console.log('🧭 AppNavigator: Auth state received:', authState);
+      console.log('🧭 AppNavigator: isAuthenticated:', isAuthenticated);
+      console.log('🧭 AppNavigator: onboardingCompleted:', onboardingCompleted);
+      console.log('🧭 AppNavigator: isLoading:', isLoading);
+      console.log('🧭 AppNavigator: Will render:', 
+        isLoading ? 'SplashScreen' : 
+        !onboardingCompleted ? 'OnboardingScreen' :
+        !isAuthenticated ? 'AuthStack' : 'MainTabs'
+      );
+    }
+  }, [authState, isAuthenticated, onboardingCompleted, isLoading]);
 
   // Show splash screen while loading
   if (isLoading) {
+    console.log('🧭 AppNavigator: Rendering SplashScreen (isLoading=true)');
     return <SplashScreen />;
   }
 
-  // Show onboarding if not completed
-  if (!onboardingCompleted) {
+  // Show onboarding if not completed (handle undefined/null as false)
+  if (onboardingCompleted !== true) {
+    console.log('🧭 AppNavigator: Rendering OnboardingScreen (onboardingCompleted=', onboardingCompleted, ')');
+    
+    // Use SimpleOnboardingScreen for web debugging
+    const OnboardingComponent = Platform.OS === 'web' ? SimpleOnboardingScreen : OnboardingScreen;
+    
     return (
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-      </Stack.Navigator>
+      <NavigationErrorBoundary>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Onboarding" component={OnboardingComponent} />
+        </Stack.Navigator>
+      </NavigationErrorBoundary>
     );
   }
 
-  // Show authentication screens if not authenticated
-  if (!isAuthenticated) {
-    return <AuthStack />;
+  // Show authentication screens if not authenticated (handle undefined/null as false)
+  if (isAuthenticated !== true) {
+    console.log('🧭 AppNavigator: Rendering AuthStack (isAuthenticated=', isAuthenticated, ')');
+    return (
+      <NavigationErrorBoundary>
+        <AuthStack />
+      </NavigationErrorBoundary>
+    );
   }
 
   // Show main app if authenticated and onboarding completed
-  return <MainTabs />;
+  console.log('🧭 AppNavigator: Rendering MainTabs (fully authenticated)');
+  return (
+    <NavigationErrorBoundary>
+      <MainTabs />
+    </NavigationErrorBoundary>
+  );
 };
 
 // Wrap the main navigator with error boundary

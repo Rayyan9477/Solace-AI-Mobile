@@ -1,14 +1,28 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { View } from "react-native";
-import { useColorScheme, AccessibilityInfo } from "react-native";
+import { View, Platform } from "react-native";
+import { useColorScheme } from "react-native";
+
+// Web-safe AccessibilityInfo import
+let AccessibilityInfo;
+if (Platform.OS === 'web') {
+  // Web fallback for AccessibilityInfo
+  AccessibilityInfo = {
+    isReduceMotionEnabled: () => Promise.resolve(false),
+    isScreenReaderEnabled: () => Promise.resolve(false),
+    isInvertColorsEnabled: () => Promise.resolve(false),
+    addEventListener: () => ({ remove: () => {} }),
+  };
+} else {
+  AccessibilityInfo = require('react-native').AccessibilityInfo;
+}
 
 import {
   lightTheme,
   darkTheme,
   highContrastLightTheme,
   highContrastDarkTheme,
-} from "../shared/theme/theme";
+} from "./theme";
 
 const ThemeContext = createContext({
   theme: lightTheme,
@@ -238,6 +252,18 @@ export const ThemeProvider = ({ children }) => {
   };
 
   const currentTheme = getAccessibleTheme(isDarkMode ? darkTheme : lightTheme);
+
+  // Enhanced debugging for web
+  React.useEffect(() => {
+    if (Platform.OS === 'web') {
+      console.log('🎨 ThemeProvider: Initializing...');
+      console.log('🎨 ThemeProvider: System color scheme:', systemColorScheme);
+      console.log('🎨 ThemeProvider: isDarkMode:', isDarkMode);
+      console.log('🎨 ThemeProvider: currentTheme available:', !!currentTheme);
+      console.log('🎨 ThemeProvider: Theme colors available:', !!currentTheme?.colors);
+      console.log('🎨 ThemeProvider: Theme loaded successfully');
+    }
+  }, [systemColorScheme, isDarkMode, currentTheme]);
 
   // Always render children, don't wait for theme loading
   return (
