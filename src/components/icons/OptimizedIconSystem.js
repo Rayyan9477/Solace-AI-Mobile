@@ -44,6 +44,23 @@ const OptimizedIcon = ({
 // This reduces bundle size by ~80% compared to including all icons
 const USED_ICONS = {
   // Navigation icons (actually used in AppNavigator)
+  Home: ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill={variant === "filled" ? color : "none"}
+      />
+      <Path
+        d="M9 22V12h6v10"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+    </Svg>
+  ),
+  
   home: ({ width, height, color, variant, strokeWidth }) => (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
       <Path
@@ -57,6 +74,17 @@ const USED_ICONS = {
         stroke={color}
         strokeWidth={strokeWidth}
         fill="none"
+      />
+    </Svg>
+  ),
+
+  Chat: ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill={variant === "filled" ? color : "none"}
       />
     </Svg>
   ),
@@ -131,6 +159,86 @@ const USED_ICONS = {
     </Svg>
   ),
 
+  Mood: ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Circle
+        cx="12"
+        cy="12"
+        r="10"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill={variant === "filled" ? color : "none"}
+      />
+      <Path
+        d="M8 14s1.5 2 4 2 4-2 4-2"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+      <Path
+        d="M9 9h.01M15 9h.01"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+    </Svg>
+  ),
+
+  Assessment: ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill={variant === "filled" ? color : "none"}
+      />
+      <Path
+        d="M14 2v6h6M16 13H8M16 17H8M10 9H8"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+    </Svg>
+  ),
+
+  Profile: ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+      <Circle
+        cx="12"
+        cy="7"
+        r="4"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill={variant === "filled" ? color : "none"}
+      />
+    </Svg>
+  ),
+
+  Emergency: ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Circle
+        cx="12"
+        cy="12"
+        r="10"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill={variant === "filled" ? color : "none"}
+      />
+      <Path
+        d="M12 8v4M12 16h.01"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+    </Svg>
+  ),
+
   profile: ({ width, height, color, variant, strokeWidth }) => (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
       <Path
@@ -162,6 +270,167 @@ const USED_ICONS = {
   ),
 
   // Mental health icons (actually used in components)
+  Heart: ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill={variant === "filled" ? color : "none"}
+      />
+    </Svg>
+  ),
+
+  Brain: ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M12 2C8 2 5 5 5 9c0 1 0 2 0 3 0 3 2 5 5 5h4c3 0 5-2 5-5 0-1 0-2 0-3 0-4-3-7-7-7z"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill={variant === "filled" ? color : "none"}
+      />
+      <Path
+        d="M12 2v15"
+        stroke={color}
+        strokeWidth={strokeWidth}
+      />
+      <Path
+        d="M5 12h14"
+        stroke={color}
+        strokeWidth={strokeWidth}
+      />
+    </Svg>
+  ),
+
+  Therapy: ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Circle
+        cx="12"
+        cy="12"
+        r="3"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill={variant === "filled" ? color : "none"}
+      />
+      <Path
+        d="M12 1v6m0 6v6m11-7h-6m-6 0H1"
+        stroke={color}
+        strokeWidth={strokeWidth}
+      />
+    </Svg>
+  ),
+
+  Journal: ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"
+        stroke={color}
+        strokeWidth={strokeWidth}
+      />
+      <Path
+        d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill={variant === "filled" ? color : "none"}
+      />
+    </Svg>
+  ),
+
+  Mindfulness: ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Circle
+        cx="12"
+        cy="12"
+        r="10"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill={variant === "filled" ? color : "none"}
+      />
+      <Path
+        d="M8 12h8"
+        stroke={color}
+        strokeWidth={strokeWidth}
+      />
+      <Circle
+        cx="9"
+        cy="9"
+        r="1"
+        fill={color}
+      />
+      <Circle
+        cx="15"
+        cy="9"
+        r="1"
+        fill={color}
+      />
+    </Svg>
+  ),
+
+  Meditation: ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Circle
+        cx="12"
+        cy="12"
+        r="10"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill={variant === "filled" ? color : "none"}
+      />
+      <Path
+        d="M8 12h8"
+        stroke={color}
+        strokeWidth={strokeWidth}
+      />
+      <Circle
+        cx="9"
+        cy="9"
+        r="1"
+        fill={color}
+      />
+      <Circle
+        cx="15"
+        cy="9"
+        r="1"
+        fill={color}
+      />
+    </Svg>
+  ),
+
+  Insights: ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M9 12l2 2 4-4"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+      <Path
+        d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+      <Path
+        d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+      <Path
+        d="M12 21c0-1-1-3-3-3s-3 2-3 3 1 3 3 3 3-2 3-3"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+      <Path
+        d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+    </Svg>
+  ),
+
   heart: ({ width, height, color, variant, strokeWidth }) => (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
       <Path

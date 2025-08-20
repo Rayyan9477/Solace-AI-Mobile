@@ -21,8 +21,8 @@ export {
   AnimatedIcon,
 } from "./AppIcons";
 
-// Legacy exports for backward compatibility (these will be tree-shaken if unused)
-export { IconVariants, IconSizes, MentalHealthIcons } from "./IconSystem";
+// Legacy exports for backward compatibility - commented out until IconSystem.js is restored
+// export { IconVariants, IconSizes, MentalHealthIcons } from "./IconSystem";
 
 // Icon presets for common use cases
 export const IconPresets = {
