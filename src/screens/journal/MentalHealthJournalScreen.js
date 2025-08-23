@@ -15,7 +15,10 @@ import {
 } from "react-native";
 
 import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
+import { FreudLogo, ThemedFreudIcon } from "../../components/icons/FreudIcons";
+import FreudButton from "../../components/ui/FreudButton";
 import { useTheme } from "../../shared/theme/ThemeContext";
+import { freudTheme } from "../../shared/theme/freudTheme";
 
 const { width, height } = Dimensions.get("window");
 
@@ -112,21 +115,21 @@ const MentalHealthJournalScreen = ({ navigation }) => {
       title: "Text Entry",
       description: "Write your thoughts and feelings",
       icon: "Journal",
-      color: theme.colors.therapeutic.nurturing[500],
+      color: freudTheme.colors.green[60],
     },
     {
       id: "voice",
       title: "Voice Entry",
       description: "Record your thoughts with voice",
       icon: "Heart",
-      color: theme.colors.therapeutic.calming[500],
+      color: freudTheme.colors.brown[60],
     },
     {
       id: "guided",
       title: "Guided Journal",
       description: "Follow prompts for structured reflection",
       icon: "Brain",
-      color: theme.colors.therapeutic.grounding[500],
+      color: freudTheme.colors.orange[60],
     },
   ];
 
@@ -197,7 +200,7 @@ const MentalHealthJournalScreen = ({ navigation }) => {
 
           <View style={styles.mainStatContainer}>
             <LinearGradient
-              colors={["#FF8A65", "#FFAB91"]}
+              colors={[freudTheme.colors.brown[60], freudTheme.colors.brown[50]]}
               style={styles.mainStatGradient}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
@@ -225,25 +228,25 @@ const MentalHealthJournalScreen = ({ navigation }) => {
             <StatItem
               title="This Month"
               value={journalData.stats.thisMonth}
-              color="#4CAF50"
+              color={freudTheme.colors.green[60]}
               theme={theme}
             />
             <StatItem
               title="Current Streak"
               value={`${journalData.stats.streak} days`}
-              color="#FF9800"
+              color={freudTheme.colors.orange[60]}
               theme={theme}
             />
             <StatItem
               title="Avg Words"
               value={journalData.stats.averageWordsPerEntry}
-              color="#2196F3"
+              color={freudTheme.colors.purple[60]}
               theme={theme}
             />
             <StatItem
               title="Total Words"
               value={journalData.stats.totalWords.toLocaleString()}
-              color="#9C27B0"
+              color={freudTheme.colors.yellow[60]}
               theme={theme}
             />
           </View>
@@ -405,11 +408,10 @@ const MentalHealthJournalScreen = ({ navigation }) => {
               style={styles.modalCloseButton}
               onPress={() => setShowNewEntry(false)}
             >
-              <NavigationIcon
-                name="Home"
+              <ThemedFreudIcon
+                name="close"
                 size={24}
-                color={theme.colors.text.primary}
-                variant="outline"
+                color={freudTheme.colors.text.primary}
               />
             </TouchableOpacity>
           </View>
@@ -529,11 +531,10 @@ const MentalHealthJournalScreen = ({ navigation }) => {
                     onPress={startVoiceRecording}
                     disabled={isRecording}
                   >
-                    <MentalHealthIcon
-                      name="Heart"
+                    <ThemedFreudIcon
+                      name="therapy"
                       size={32}
-                      color={theme.colors.text.inverse}
-                      variant="filled"
+                      color={freudTheme.colors.text.inverse}
                     />
                   </TouchableOpacity>
                   <Text
@@ -595,22 +596,15 @@ const MentalHealthJournalScreen = ({ navigation }) => {
           </ScrollView>
 
           <View style={styles.modalFooter}>
-            <TouchableOpacity
-              style={[
-                styles.saveButton,
-                { backgroundColor: theme.colors.primary[500] },
-              ]}
+            <FreudButton
+              title="Save Entry"
+              variant="primary"
+              size="large"
+              fullWidth
               onPress={handleSaveEntry}
-            >
-              <Text
-                style={[
-                  styles.saveButtonText,
-                  { color: theme.colors.text.inverse },
-                ]}
-              >
-                Save Entry
-              </Text>
-            </TouchableOpacity>
+              icon={<ThemedFreudIcon name="heart" size={20} color={freudTheme.colors.text.inverse} />}
+              iconPosition="right"
+            />
           </View>
         </View>
       </View>
@@ -623,8 +617,8 @@ const MentalHealthJournalScreen = ({ navigation }) => {
         theme.colors.dark.background.secondary,
       ]
     : [
-        theme.colors.therapeutic.calming[50],
-        theme.colors.therapeutic.peaceful[50],
+        freudTheme.colors.brown[20],
+        freudTheme.colors.brown[10],
       ];
 
   return (
@@ -652,11 +646,10 @@ const MentalHealthJournalScreen = ({ navigation }) => {
               }
             }}
           >
-            <NavigationIcon
-              name="Home"
+            <ThemedFreudIcon
+              name="chevron-left"
               size={24}
-              color={theme.colors.text.primary}
-              variant="outline"
+              color={freudTheme.colors.text.primary}
             />
           </TouchableOpacity>
 
@@ -672,11 +665,10 @@ const MentalHealthJournalScreen = ({ navigation }) => {
             style={styles.headerButton}
             onPress={() => setShowNewEntry(true)}
           >
-            <MentalHealthIcon
-              name="Journal"
+            <ThemedFreudIcon
+              name="journal"
               size={24}
-              color={theme.colors.text.primary}
-              variant="outline"
+              color={freudTheme.colors.text.primary}
             />
           </TouchableOpacity>
         </View>

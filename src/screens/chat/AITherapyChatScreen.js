@@ -14,7 +14,10 @@ import {
 } from "react-native";
 
 import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
+import { FreudLogo, ThemedFreudIcon } from "../../components/icons/FreudIcons";
+import FreudButton from "../../components/ui/FreudButton";
 import { useTheme } from "../../shared/theme/ThemeContext";
+import { freudTheme } from "../../shared/theme/freudTheme";
 
 const AITherapyChatScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -31,28 +34,28 @@ const AITherapyChatScreen = ({ navigation }) => {
       title: "General Support",
       description: "Open conversation for any concerns",
       icon: "Heart",
-      color: theme.colors.therapeutic.nurturing[500],
+      color: freudTheme.colors.green[60],
     },
     {
       id: "anxiety",
       title: "Anxiety Support",
       description: "Focused help for anxiety management",
       icon: "Mindfulness",
-      color: theme.colors.therapeutic.calming[500],
+      color: freudTheme.colors.green[50],
     },
     {
       id: "depression",
       title: "Mood Support",
       description: "Support for low mood and depression",
       icon: "Brain",
-      color: theme.colors.therapeutic.peaceful[500],
+      color: freudTheme.colors.brown[60],
     },
     {
       id: "crisis",
       title: "Crisis Support",
       description: "Immediate support for difficult times",
       icon: "Therapy",
-      color: theme.colors.error[400],
+      color: freudTheme.colors.orange[60],
     },
   ];
 
@@ -68,7 +71,7 @@ const AITherapyChatScreen = ({ navigation }) => {
   const initialMessages = [
     {
       id: "1",
-      text: "Hello! I'm Solace, your AI therapy companion. I'm here to provide support, listen without judgment, and help you work through whatever you're experiencing.",
+      text: "Hello! I'm Doctor Freud, your AI therapy companion. 🧠 I'm here to provide support, listen without judgment, and help you work through whatever you're experiencing.",
       sender: "ai",
       timestamp: new Date(),
       type: "welcome",
@@ -389,11 +392,7 @@ const AITherapyChatScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient
-        colors={[
-          theme.colors.therapeutic.calming[50],
-          theme.colors.therapeutic.peaceful[50],
-          theme.colors.therapeutic.nurturing[50],
-        ]}
+        colors={[freudTheme.colors.green[60], freudTheme.colors.green[50]]}
         style={styles.gradient}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
@@ -404,11 +403,10 @@ const AITherapyChatScreen = ({ navigation }) => {
             style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
-            <NavigationIcon
-              name="Home"
+            <ThemedFreudIcon
+              name="chevron-left"
               size={24}
-              color={theme.colors.text.primary}
-              variant="outline"
+              color={freudTheme.colors.text.primary}
             />
           </TouchableOpacity>
 
@@ -416,7 +414,7 @@ const AITherapyChatScreen = ({ navigation }) => {
             <Text
               style={[styles.headerTitle, { color: theme.colors.text.primary }]}
             >
-              Solace AI Therapist
+              Doctor Freud AI
             </Text>
             <Text
               style={[

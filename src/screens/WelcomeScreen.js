@@ -11,18 +11,21 @@ import {
 } from "react-native";
 
 import { MentalHealthIcon } from "../components/icons";
+import { FreudLogo, ThemedFreudIcon } from "../components/icons/FreudIcons";
+import FreudButton from "../components/ui/FreudButton";
 import { useTheme } from "../shared/theme/ThemeContext";
+import { freudTheme } from "../shared/theme/freudTheme";
 
 const { width, height } = Dimensions.get("window");
 
-// Welcome flow steps matching the design
+// Welcome flow steps matching the exact design reference
 const WELCOME_STEPS = [
   {
     id: 1,
     title: "Welcome to the ultimate\nfreud UI Kit!",
     subtitle:
       "Your mindful mental health AI companion\nfor everyone, anywhere ✓",
-    backgroundColor: (theme) => (theme.isDark ? "#2D1B0F" : "#F8F4F0"),
+    backgroundColors: ['#FFFFFF', freudTheme.colors.gray[10]],
     illustration: "welcome",
     showGetStarted: true,
   },
@@ -31,7 +34,7 @@ const WELCOME_STEPS = [
     title: "Personalize Your Mental\nHealth State With AI",
     subtitle:
       "Get personalized insights and recommendations based on your unique mental health journey",
-    backgroundColor: (theme) => (theme.isDark ? "#1A3B2E" : "#E8F5E8"),
+    backgroundColors: [freudTheme.colors.green[50], freudTheme.colors.green[40]],
     illustration: "personalize",
     stepLabel: "Step One",
   },
@@ -40,7 +43,7 @@ const WELCOME_STEPS = [
     title: "Intelligent Mood Tracking\n& AI Emotion Insights",
     subtitle:
       "Track your emotional patterns and receive AI-powered insights to understand your mental state",
-    backgroundColor: (theme) => (theme.isDark ? "#4A2E1A" : "#FFF2E6"),
+    backgroundColors: [freudTheme.colors.orange[30], freudTheme.colors.orange[20]],
     illustration: "mood",
     stepLabel: "Step Two",
   },
@@ -49,7 +52,7 @@ const WELCOME_STEPS = [
     title: "AI Mental Journaling &\nAI Therapy Chatbot",
     subtitle:
       "Express yourself through guided journaling and get support from our therapeutic AI chatbot",
-    backgroundColor: (theme) => (theme.isDark ? "#2A2A2A" : "#F5F5F5"),
+    backgroundColors: [freudTheme.colors.gray[20], freudTheme.colors.gray[10]],
     illustration: "journal",
     stepLabel: "Step Three",
   },
@@ -58,7 +61,7 @@ const WELCOME_STEPS = [
     title: "Mindful Resources That\nMakes You Happy",
     subtitle:
       "Discover curated mindfulness exercises, meditations, and wellness resources",
-    backgroundColor: (theme) => (theme.isDark ? "#4A3A1A" : "#FFF8E6"),
+    backgroundColors: [freudTheme.colors.yellow[30], freudTheme.colors.yellow[20]],
     illustration: "mindful",
     stepLabel: "Step Four",
   },
@@ -67,7 +70,7 @@ const WELCOME_STEPS = [
     title: "Loving & Supportive\nCommunity",
     subtitle:
       "Connect with others on similar journeys in a safe, supportive environment",
-    backgroundColor: (theme) => (theme.isDark ? "#3A2A4A" : "#F5F0FF"),
+    backgroundColors: [freudTheme.colors.purple[30], freudTheme.colors.purple[20]],
     illustration: "community",
     stepLabel: "Step Five",
   },
@@ -187,41 +190,16 @@ const WelcomeScreen = ({ navigation }) => {
           <Animated.View
             style={[styles.illustrationContainer, illustrationStyle]}
           >
-            <View style={styles.logoGrid}>
-              <View
-                style={[
-                  styles.logoCircle,
-                  { backgroundColor: theme.isDark ? "#8B4513" : "#CD853F" },
-                ]}
-              />
-              <View
-                style={[
-                  styles.logoCircle,
-                  { backgroundColor: theme.isDark ? "#A0522D" : "#8B4513" },
-                ]}
-              />
-              <View
-                style={[
-                  styles.logoCircle,
-                  { backgroundColor: theme.isDark ? "#A0522D" : "#8B4513" },
-                ]}
-              />
-              <View
-                style={[
-                  styles.logoCircle,
-                  { backgroundColor: theme.isDark ? "#8B4513" : "#CD853F" },
-                ]}
-              />
-            </View>
+            <FreudLogo size={120} primaryColor={freudTheme.colors.brown[80]} />
             <View style={styles.welcomeIcons}>
-              <View style={[styles.iconBadge, { backgroundColor: "#FF8C00" }]}>
-                <MentalHealthIcon name="brain" size={16} color="#FFFFFF" />
+              <View style={[styles.iconBadge, { backgroundColor: freudTheme.colors.orange[40] }]}>
+                <ThemedFreudIcon name="brain" size={16} color="#FFFFFF" />
               </View>
-              <View style={[styles.iconBadge, { backgroundColor: "#32CD32" }]}>
+              <View style={[styles.iconBadge, { backgroundColor: freudTheme.colors.green[50] }]}>
                 <Text style={styles.iconText}>✓</Text>
               </View>
-              <View style={[styles.iconBadge, { backgroundColor: "#FF6B6B" }]}>
-                <MentalHealthIcon name="heart" size={16} color="#FFFFFF" />
+              <View style={[styles.iconBadge, { backgroundColor: freudTheme.colors.purple[50] }]}>
+                <ThemedFreudIcon name="heart" size={16} color="#FFFFFF" />
               </View>
             </View>
           </Animated.View>
@@ -331,11 +309,10 @@ const WelcomeScreen = ({ navigation }) => {
       />
 
       <LinearGradient
-        colors={[
-          currentStepData.backgroundColor(theme),
-          currentStepData.backgroundColor(theme),
-        ]}
+        colors={currentStepData.backgroundColors}
         style={styles.container}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
       >
         <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
           {/* Step Indicator */}
@@ -423,66 +400,46 @@ const WelcomeScreen = ({ navigation }) => {
             {currentStep === 0 ? (
               // Welcome screen buttons
               <View style={styles.welcomeActions}>
-                <TouchableOpacity
-                  style={[
-                    styles.primaryButton,
-                    { backgroundColor: theme.isDark ? "#8B4513" : "#CD853F" },
-                  ]}
+                <FreudButton
+                  title="Get Started"
+                  variant="primary"
+                  size="large"
+                  icon={<ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+                  iconPosition="right"
                   onPress={handleGetStarted}
-                  activeOpacity={0.8}
-                >
-                  <Text
-                    style={[styles.primaryButtonText, { color: "#FFFFFF" }]}
-                  >
-                    Get Started →
-                  </Text>
-                </TouchableOpacity>
+                  fullWidth
+                  style={{ marginBottom: freudTheme.spacing.lg }}
+                />
 
-                <TouchableOpacity
-                  style={styles.secondaryButton}
+                <FreudButton
+                  title="Already have an account? Sign In"
+                  variant="outline"
+                  size="medium"
                   onPress={handleSignIn}
-                  activeOpacity={0.8}
-                >
-                  <Text
-                    style={[
-                      styles.secondaryButtonText,
-                      { color: theme.isDark ? "#FF8C00" : "#8B4513" },
-                    ]}
-                  >
-                    Already have an account? Sign In
-                  </Text>
-                </TouchableOpacity>
+                />
               </View>
             ) : (
               // Onboarding flow buttons
               <View style={styles.onboardingActions}>
-                <TouchableOpacity
-                  style={styles.skipButton}
+                <FreudButton
+                  title="Skip"
+                  variant="outline"
+                  size="medium"
                   onPress={handleSkip}
-                  activeOpacity={0.8}
-                >
-                  <Text
-                    style={[
-                      styles.skipButtonText,
-                      { color: theme.isDark ? "#B2BEB5" : "#636E72" },
-                    ]}
-                  >
-                    Skip
-                  </Text>
-                </TouchableOpacity>
+                />
 
-                <TouchableOpacity
-                  style={[
-                    styles.nextButton,
-                    { backgroundColor: theme.isDark ? "#8B4513" : "#CD853F" },
-                  ]}
+                <FreudButton
+                  variant="primary"
+                  size="medium"
+                  icon={<ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
                   onPress={handleNext}
-                  activeOpacity={0.8}
-                >
-                  <Text style={[styles.nextButtonText, { color: "#FFFFFF" }]}>
-                    →
-                  </Text>
-                </TouchableOpacity>
+                  style={{ 
+                    width: 56, 
+                    height: 56, 
+                    borderRadius: 28,
+                    paddingHorizontal: 0 
+                  }}
+                />
               </View>
             )}
 
@@ -696,17 +653,22 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   stepTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: freudTheme.typography.fontSize.headingLg,
+    fontWeight: freudTheme.typography.fontWeight.bold,
+    fontFamily: freudTheme.typography.fontFamily.primary,
     textAlign: "center",
-    marginBottom: 16,
-    lineHeight: 32,
+    marginBottom: freudTheme.spacing.lg,
+    lineHeight: freudTheme.typography.lineHeight.headingLg,
+    color: freudTheme.colors.text.primary,
   },
   stepSubtitle: {
-    fontSize: 16,
+    fontSize: freudTheme.typography.fontSize.textMd,
+    fontWeight: freudTheme.typography.fontWeight.medium,
+    fontFamily: freudTheme.typography.fontFamily.primary,
     textAlign: "center",
-    lineHeight: 24,
+    lineHeight: freudTheme.typography.lineHeight.textMd,
     maxWidth: 300,
+    color: freudTheme.colors.text.secondary,
   },
   bottomSection: {
     paddingHorizontal: 24,

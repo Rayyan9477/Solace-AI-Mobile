@@ -13,7 +13,10 @@ import {
 } from "react-native";
 
 import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
+import { FreudLogo, ThemedFreudIcon } from "../../components/icons/FreudIcons";
+import FreudButton from "../../components/ui/FreudButton";
 import { useTheme } from "../../shared/theme/ThemeContext";
+import { freudTheme } from "../../shared/theme/freudTheme";
 
 const { width, height } = Dimensions.get("window");
 
@@ -104,7 +107,7 @@ const MoodTrackerScreen = ({ navigation }) => {
       title: "Mood History",
       subtitle: "View past entries",
       icon: "Journal",
-      color: theme.colors.therapeutic.calming[500],
+      color: freudTheme.colors.green[60],
       onPress: () => setCurrentView("history"),
     },
     {
@@ -112,7 +115,7 @@ const MoodTrackerScreen = ({ navigation }) => {
       title: "Mood Statistics",
       subtitle: "Analyze patterns",
       icon: "Brain",
-      color: theme.colors.therapeutic.nurturing[500],
+      color: freudTheme.colors.brown[60],
       onPress: () => setCurrentView("stats"),
     },
     {
@@ -120,7 +123,7 @@ const MoodTrackerScreen = ({ navigation }) => {
       title: "AI Insights",
       subtitle: "Get recommendations",
       icon: "Therapy",
-      color: theme.colors.therapeutic.grounding[500],
+      color: freudTheme.colors.orange[60],
       onPress: () => navigation.navigate("AITherapyChat"),
     },
   ];
@@ -200,46 +203,25 @@ const MoodTrackerScreen = ({ navigation }) => {
                   minute: "2-digit",
                 })}
               </Text>
-              <TouchableOpacity
-                style={[
-                  styles.updateMoodButton,
-                  { backgroundColor: theme.colors.primary[500] },
-                ]}
+              <FreudButton
+                title="Update Mood"
+                variant="primary"
+                size="medium"
                 onPress={() => setShowMoodSelection(true)}
-              >
-                <Text
-                  style={[
-                    styles.updateMoodText,
-                    { color: theme.colors.text.inverse },
-                  ]}
-                >
-                  Update Mood
-                </Text>
-              </TouchableOpacity>
+                icon={<ThemedFreudIcon name="heart" size={16} color={freudTheme.colors.text.inverse} />}
+                iconPosition="left"
+                style={{ marginTop: freudTheme.spacing.md }}
+              />
             </View>
           ) : (
-            <TouchableOpacity
-              style={[
-                styles.selectMoodButton,
-                { backgroundColor: theme.colors.primary[500] },
-              ]}
+            <FreudButton
+              title="Log Your Mood"
+              variant="primary"
+              size="large"
               onPress={() => setShowMoodSelection(true)}
-            >
-              <MentalHealthIcon
-                name="Heart"
-                size={24}
-                color={theme.colors.text.inverse}
-                variant="filled"
-              />
-              <Text
-                style={[
-                  styles.selectMoodText,
-                  { color: theme.colors.text.inverse },
-                ]}
-              >
-                Log Your Mood
-              </Text>
-            </TouchableOpacity>
+              icon={<ThemedFreudIcon name="heart" size={20} color={freudTheme.colors.text.inverse} />}
+              iconPosition="left"
+            />
           )}
         </View>
 
@@ -273,28 +255,28 @@ const MoodTrackerScreen = ({ navigation }) => {
               title="Weekly Average"
               value={moodData.weeklyAverage.toFixed(1)}
               icon="Heart"
-              color={theme.colors.therapeutic.nurturing[500]}
+              color={freudTheme.colors.green[60]}
               theme={theme}
             />
             <StatCard
               title="Current Streak"
               value={`${moodData.streak} days`}
               icon="Therapy"
-              color={theme.colors.therapeutic.calming[500]}
+              color={freudTheme.colors.brown[60]}
               theme={theme}
             />
             <StatCard
               title="Total Entries"
               value={moodData.totalEntries}
               icon="Journal"
-              color={theme.colors.therapeutic.grounding[500]}
+              color={freudTheme.colors.orange[60]}
               theme={theme}
             />
             <StatCard
               title="Most Common"
               value={moodData.moodStats.mostCommon}
               icon="Brain"
-              color={theme.colors.therapeutic.peaceful[500]}
+              color={freudTheme.colors.purple[60]}
               theme={theme}
             />
           </View>
@@ -448,11 +430,10 @@ const MoodTrackerScreen = ({ navigation }) => {
               style={styles.modalCloseButton}
               onPress={() => setShowMoodSelection(false)}
             >
-              <NavigationIcon
-                name="Home"
+              <ThemedFreudIcon
+                name="close"
                 size={24}
-                color={theme.colors.text.primary}
-                variant="outline"
+                color={freudTheme.colors.text.primary}
               />
             </TouchableOpacity>
           </View>
@@ -469,22 +450,16 @@ const MoodTrackerScreen = ({ navigation }) => {
             ))}
           </ScrollView>
 
-          <TouchableOpacity
-            style={[
-              styles.saveButton,
-              { backgroundColor: theme.colors.primary[500] },
-            ]}
+          <FreudButton
+            title="Save Mood Entry"
+            variant="primary"
+            size="large"
+            fullWidth
             onPress={saveMoodEntry}
-          >
-            <Text
-              style={[
-                styles.saveButtonText,
-                { color: theme.colors.text.inverse },
-              ]}
-            >
-              Save Mood Entry
-            </Text>
-          </TouchableOpacity>
+            icon={<ThemedFreudIcon name="heart" size={20} color={freudTheme.colors.text.inverse} />}
+            iconPosition="right"
+            style={{ margin: freudTheme.spacing.lg }}
+          />
         </View>
       </View>
     </Modal>
@@ -496,8 +471,8 @@ const MoodTrackerScreen = ({ navigation }) => {
         theme.colors.dark.background.secondary,
       ]
     : [
-        theme.colors.therapeutic.calming[50],
-        theme.colors.therapeutic.peaceful[50],
+        freudTheme.colors.green[20],
+        freudTheme.colors.green[10],
       ];
 
   return (
@@ -525,11 +500,10 @@ const MoodTrackerScreen = ({ navigation }) => {
               }
             }}
           >
-            <NavigationIcon
-              name="Home"
+            <ThemedFreudIcon
+              name="chevron-left"
               size={24}
-              color={theme.colors.text.primary}
-              variant="outline"
+              color={freudTheme.colors.text.primary}
             />
           </TouchableOpacity>
 
@@ -547,11 +521,10 @@ const MoodTrackerScreen = ({ navigation }) => {
             style={styles.headerButton}
             onPress={() => setShowMoodSelection(true)}
           >
-            <MentalHealthIcon
-              name="Heart"
+            <ThemedFreudIcon
+              name="heart"
               size={24}
-              color={theme.colors.text.primary}
-              variant="outline"
+              color={freudTheme.colors.text.primary}
             />
           </TouchableOpacity>
         </View>

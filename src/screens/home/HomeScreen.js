@@ -13,7 +13,10 @@ import {
 } from "react-native";
 
 import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
+import { FreudLogo, ThemedFreudIcon } from "../../components/icons/FreudIcons";
+import FreudButton from "../../components/ui/FreudButton";
 import { useTheme } from "../../shared/theme/ThemeContext";
+import { freudTheme } from "../../shared/theme/freudTheme";
 
 const { width } = Dimensions.get("window");
 
@@ -198,15 +201,10 @@ const HomeScreen = ({ navigation }) => {
     return theme.colors[category]?.[shade] || theme.colors.primary[500];
   };
 
-  const backgroundColors = isDarkMode
-    ? [
-        theme.colors.dark.background.primary,
-        theme.colors.dark.background.secondary,
-      ]
-    : [
-        theme.colors.therapeutic.calming[50],
-        theme.colors.therapeutic.peaceful[50],
-      ];
+  const backgroundColors = [
+    freudTheme.colors.green[60], // Serenity Green from design reference
+    freudTheme.colors.green[50],
+  ];
 
   return (
     <SafeAreaView
@@ -233,17 +231,17 @@ const HomeScreen = ({ navigation }) => {
         >
           <View style={styles.greetingSection}>
             <Text
-              style={[styles.greeting, { color: theme.colors.text.secondary }]}
+              style={[styles.greeting, { color: 'rgba(255,255,255,0.8)' }]}
             >
               {getTimeBasedGreeting()}
             </Text>
             <Text
-              style={[styles.username, { color: theme.colors.text.primary }]}
+              style={[styles.username, { color: '#FFFFFF' }]}
             >
               Hi, {userName}!
             </Text>
             <Text
-              style={[styles.subtitle, { color: theme.colors.text.tertiary }]}
+              style={[styles.subtitle, { color: 'rgba(255,255,255,0.7)' }]}
             >
               How are you feeling today?
             </Text>
@@ -253,32 +251,30 @@ const HomeScreen = ({ navigation }) => {
             <TouchableOpacity
               style={[
                 styles.headerButton,
-                { backgroundColor: theme.colors.background.secondary },
+                { backgroundColor: 'rgba(255,255,255,0.2)' },
               ]}
               onPress={() => navigation.navigate("Search")}
             >
-              <NavigationIcon
-                name="Home"
+              <ThemedFreudIcon
+                name="search"
                 size={20}
-                color={theme.colors.text.primary}
-                variant="outline"
+                color="#FFFFFF"
               />
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[
                 styles.emergencyButton,
-                { backgroundColor: theme.colors.error[500] },
+                { backgroundColor: freudTheme.colors.orange[40] },
               ]}
               onPress={() => {
                 /* Emergency support */
               }}
             >
-              <MentalHealthIcon
-                name="Heart"
+              <ThemedFreudIcon
+                name="settings"
                 size={20}
-                color={theme.colors.text.inverse}
-                variant="filled"
+                color="#FFFFFF"
               />
             </TouchableOpacity>
           </View>

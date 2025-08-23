@@ -16,7 +16,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import { MentalHealthIcon } from "../../components/icons";
+import { FreudLogo, ThemedFreudIcon } from "../../components/icons/FreudIcons";
+import FreudButton from "../../components/ui/FreudButton";
 import { useTheme } from "../../shared/theme/ThemeContext";
+import { freudTheme } from "../../shared/theme/freudTheme";
 import {
   registerStart,
   registerSuccess,
@@ -167,29 +170,14 @@ const RegisterScreen = ({ navigation }) => {
 
       {/* Header with gradient */}
       <LinearGradient
-        colors={theme.isDark ? ["#4A5D4A", "#90CDB0"] : ["#90CDB0", "#7FCDCD"]}
+        colors={[freudTheme.colors.green[60], freudTheme.colors.green[50]]}
         style={styles.header}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
       >
         <View style={styles.headerContent}>
           {/* freud.ai Logo */}
-          <View style={styles.logoContainer}>
-            <View style={styles.logoGrid}>
-              <View
-                style={[styles.logoCircle, { backgroundColor: "#FFFFFF" }]}
-              />
-              <View
-                style={[styles.logoCircle, { backgroundColor: "#FFFFFF" }]}
-              />
-              <View
-                style={[styles.logoCircle, { backgroundColor: "#FFFFFF" }]}
-              />
-              <View
-                style={[styles.logoCircle, { backgroundColor: "#FFFFFF" }]}
-              />
-            </View>
-          </View>
+          <FreudLogo size={64} primaryColor="#FFFFFF" />
         </View>
       </LinearGradient>
 
@@ -239,7 +227,7 @@ const RegisterScreen = ({ navigation }) => {
                 </Text>
                 <View style={styles.inputWrapper}>
                   <View style={styles.inputIcon}>
-                    <MentalHealthIcon name="brain" size={20} color="#90CDB0" />
+                    <ThemedFreudIcon name="heart" size={20} color={freudTheme.colors.green[60]} />
                   </View>
                   <TextInput
                     style={[
@@ -281,7 +269,7 @@ const RegisterScreen = ({ navigation }) => {
                 </Text>
                 <View style={styles.inputWrapper}>
                   <View style={styles.inputIcon}>
-                    <MentalHealthIcon name="heart" size={20} color="#90CDB0" />
+                    <ThemedFreudIcon name="brain" size={20} color={freudTheme.colors.green[60]} />
                   </View>
                   <TextInput
                     style={[
@@ -332,7 +320,7 @@ const RegisterScreen = ({ navigation }) => {
                 </Text>
                 <View style={styles.inputWrapper}>
                   <View style={styles.inputIcon}>
-                    <MentalHealthIcon name="heart" size={20} color="#90CDB0" />
+                    <ThemedFreudIcon name="mindfulness" size={20} color={freudTheme.colors.green[60]} />
                   </View>
                   <TextInput
                     style={[
@@ -374,38 +362,29 @@ const RegisterScreen = ({ navigation }) => {
               </View>
 
               {/* Sign Up Button */}
-              <TouchableOpacity
-                style={[
-                  styles.signUpButton,
-                  {
-                    backgroundColor: theme.isDark ? "#8B4513" : "#8B4513",
-                    opacity: isLoading ? 0.6 : 1,
-                  },
-                ]}
-                onPress={handleRegister}
+              <FreudButton
+                title={isLoading ? "Creating Account..." : "Sign Up"}
+                variant="primary"
+                size="large"
+                fullWidth
+                loading={isLoading}
                 disabled={isLoading}
-                activeOpacity={0.8}
-              >
-                <Text style={styles.signUpButtonText}>
-                  {isLoading ? "Creating Account..." : "Sign Up"} →
-                </Text>
-              </TouchableOpacity>
+                onPress={handleRegister}
+                icon={!isLoading && <ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+                iconPosition="right"
+                style={{ marginTop: freudTheme.spacing.sm, marginBottom: freudTheme.spacing.xl }}
+              />
 
               {/* Footer Links */}
-              <TouchableOpacity
-                style={styles.linkButton}
+              <FreudButton
+                title="Already have an account? Sign In"
+                variant="outline"
+                size="medium"
+                fullWidth
                 onPress={handleSignIn}
-                activeOpacity={0.8}
-              >
-                <Text
-                  style={[
-                    styles.linkText,
-                    { color: theme.isDark ? "#FF8C00" : "#FF8C00" },
-                  ]}
-                >
-                  Already have an account? Sign In
-                </Text>
-              </TouchableOpacity>
+                style={{ borderColor: freudTheme.colors.brown[80] }}
+                textStyle={{ color: freudTheme.colors.brown[80] }}
+              />
             </Animated.View>
           </ScrollView>
         </KeyboardAvoidingView>

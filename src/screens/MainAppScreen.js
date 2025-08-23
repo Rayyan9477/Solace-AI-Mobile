@@ -1,5 +1,8 @@
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { WebSafeLinearGradient as LinearGradient } from "../components/common/WebSafeLinearGradient";
+import EnhancedCard from "../components/ui/EnhancedCard";
+import EnhancedButton from "../components/ui/EnhancedButton";
+import EnhancedShadersContainer from "../components/enhanced/EnhancedShadersContainer";
 import React, {
   useEffect,
   useRef,
@@ -283,7 +286,7 @@ const MainAppScreen = () => {
     ];
   };
 
-  // Enhanced floating action button
+  // Enhanced floating action button with shader effects
   const FloatingActionButton = () => (
     <Animated.View
       style={[
@@ -294,33 +297,20 @@ const MainAppScreen = () => {
         },
       ]}
     >
-      <TouchableOpacity
-        style={styles.fabButton}
+      <EnhancedButton
+        variant="therapeutic"
+        size="large"
+        icon="Therapy"
+        iconPosition="only"
+        animated={true}
+        shaderEffect={true}
+        shaderVariant="mesh"
         onPress={handleStartChat}
-        activeOpacity={0.8}
-        accessible
-        accessibilityRole="button"
+        style={styles.fabButton}
+        testID="start-therapy-fab"
         accessibilityLabel="Start AI Therapy Session"
         accessibilityHint="Double tap to begin a private conversation with your AI therapist"
-        testID="start-therapy-fab"
-        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-      >
-        <LinearGradient
-          colors={[
-            theme.colors.therapeutic.calming[500],
-            theme.colors.therapeutic.peaceful[500],
-          ]}
-          style={styles.fabGradient}
-        >
-          <MentalHealthIcon
-            name="Therapy"
-            size="lg"
-            color={colors.text.inverse}
-            variant="outline"
-            strokeWidth={2}
-          />
-        </LinearGradient>
-      </TouchableOpacity>
+      />
     </Animated.View>
   );
 
@@ -457,45 +447,50 @@ const MainAppScreen = () => {
         ]}
       >
         {/* Wellness Tip of the Day */}
-        <InsightCard
+        <EnhancedCard
           title="Daily Wellness Tip"
+          subtitle="Your personalized guidance for today"
+          variant="therapeutic"
+          size="medium"
           animated={true}
-          animationDelay={0}
+          shaderVariant="waves"
+          shaderIntensity={0.2}
           style={styles.wellnessTipCard}
         >
           <WellnessTips />
-        </InsightCard>
+        </EnhancedCard>
 
         {/* Dashboard Grid */}
         <ResponsiveGrid animated={true} style={styles.dashboardGrid}>
           {/* Mood Check-in Card */}
-          <MentalHealthCard
-            variant="mood"
-            title="Daily Mood Check-in"
-            subtitle="How are you feeling today?"
+          <EnhancedCard
+            variant="glass"
+            size="medium"
             animated={true}
-            animationDelay={100}
+            shaderVariant="dots"
+            shaderIntensity={0.3}
           >
             <MoodCheckIn
               currentMood={mood?.currentMood}
               onCheckIn={handleMoodCheckIn}
             />
-          </MentalHealthCard>
+          </EnhancedCard>
 
           {/* Quick Actions Card */}
-          <MentalHealthCard
-            variant="therapeutic"
-            title="Quick Actions"
-            subtitle="Start your wellness journey"
+          <EnhancedCard
+            variant="gradient"
+            size="medium"
             animated={true}
-            animationDelay={200}
+            shaderVariant="mesh"
+            shaderIntensity={0.4}
+            interactive={true}
           >
             <QuickActions
               onStartChat={handleStartChat}
               onTakeAssessment={handleTakeAssessment}
               onMoodTracker={handleMoodCheckIn}
             />
-          </MentalHealthCard>
+          </EnhancedCard>
 
           {/* Daily Insights Card */}
           <InsightCard

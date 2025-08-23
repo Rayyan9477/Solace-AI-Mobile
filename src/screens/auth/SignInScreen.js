@@ -15,7 +15,10 @@ import {
 } from "react-native";
 
 import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
+import { FreudLogo, ThemedFreudIcon } from "../../components/icons/FreudIcons";
+import FreudButton from "../../components/ui/FreudButton";
 import { useTheme } from "../../shared/theme/ThemeContext";
+import { freudTheme } from "../../shared/theme/freudTheme";
 
 const { width } = Dimensions.get("window");
 
@@ -78,12 +81,10 @@ const SignInScreen = ({ navigation }) => {
     );
   };
 
-  const backgroundColors = isDarkMode
-    ? [
-        theme.colors.dark.background.primary,
-        theme.colors.dark.background.secondary,
-      ]
-    : ["#8BC34A", "#AED581", "#C8E6C9"];
+  const backgroundColors = [
+    freudTheme.colors.green[60], // Serenity Green from design reference
+    freudTheme.colors.green[50],
+  ];
 
   return (
     <SafeAreaView
@@ -102,21 +103,12 @@ const SignInScreen = ({ navigation }) => {
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
-          {/* Header Curve */}
+          {/* Header Curve with Freud Logo */}
           <View style={styles.headerCurve}>
-            <View
-              style={[
-                styles.logoContainer,
-                { backgroundColor: "rgba(255,255,255,0.2)" },
-              ]}
-            >
-              <MentalHealthIcon
-                name="Brain"
-                size={32}
-                color={theme.colors.text.inverse}
-                variant="filled"
-              />
-            </View>
+            <FreudLogo 
+              size={64} 
+              primaryColor="#FFFFFF"
+            />
           </View>
 
           {/* Content Container */}
@@ -158,11 +150,10 @@ const SignInScreen = ({ navigation }) => {
                     },
                   ]}
                 >
-                  <MentalHealthIcon
-                    name="Heart"
+                  <ThemedFreudIcon
+                    name="heart"
                     size={20}
-                    color={theme.colors.text.quaternary}
-                    variant="outline"
+                    color={freudTheme.colors.text.tertiary}
                   />
                   <TextInput
                     style={[
@@ -220,11 +211,10 @@ const SignInScreen = ({ navigation }) => {
                     },
                   ]}
                 >
-                  <MentalHealthIcon
-                    name="Brain"
+                  <ThemedFreudIcon
+                    name="brain"
                     size={20}
-                    color={theme.colors.text.quaternary}
-                    variant="outline"
+                    color={freudTheme.colors.text.tertiary}
                   />
                   <TextInput
                     style={[
@@ -242,62 +232,28 @@ const SignInScreen = ({ navigation }) => {
                     style={styles.eyeButton}
                     onPress={() => setShowPassword(!showPassword)}
                   >
-                    <MentalHealthIcon
-                      name="Mindfulness"
+                    <ThemedFreudIcon
+                      name="mindfulness"
                       size={20}
-                      color={theme.colors.text.quaternary}
-                      variant="outline"
+                      color={freudTheme.colors.text.tertiary}
                     />
                   </TouchableOpacity>
                 </View>
               </View>
 
               {/* Sign In Button */}
-              <TouchableOpacity
-                style={[
-                  styles.signInButton,
-                  {
-                    backgroundColor:
-                      email.trim() && password.trim() && !emailError
-                        ? "#8B4513"
-                        : theme.colors.background.tertiary,
-                  },
-                ]}
+              <FreudButton
+                title={isLoading ? "Signing In..." : "Sign In"}
+                variant="primary"
+                size="large"
+                fullWidth
+                loading={isLoading}
+                disabled={!email.trim() || !password.trim() || emailError}
                 onPress={handleSignIn}
-                disabled={
-                  isLoading || !email.trim() || !password.trim() || emailError
-                }
-              >
-                {isLoading ? (
-                  <View style={styles.loadingContainer}>
-                    <Text
-                      style={[
-                        styles.signInButtonText,
-                        { color: theme.colors.text.inverse },
-                      ]}
-                    >
-                      Signing In...
-                    </Text>
-                  </View>
-                ) : (
-                  <View style={styles.signInContent}>
-                    <Text
-                      style={[
-                        styles.signInButtonText,
-                        { color: theme.colors.text.inverse },
-                      ]}
-                    >
-                      Sign In
-                    </Text>
-                    <NavigationIcon
-                      name="Home"
-                      size={20}
-                      color={theme.colors.text.inverse}
-                      variant="outline"
-                    />
-                  </View>
-                )}
-              </TouchableOpacity>
+                icon={!isLoading && <ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+                iconPosition="right"
+                style={{ marginTop: freudTheme.spacing.xl, marginBottom: freudTheme.spacing['2xl'] }}
+              />
 
               {/* Social Sign In */}
               <View style={styles.socialContainer}>
@@ -399,18 +355,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   title: {
-    fontSize: 24,
-    fontWeight: "600",
+    fontSize: freudTheme.typography.fontSize.headingXl,
+    fontWeight: freudTheme.typography.fontWeight.bold,
+    fontFamily: freudTheme.typography.fontFamily.primary,
     textAlign: "center",
-    marginBottom: 40,
+    marginBottom: freudTheme.spacing['4xl'],
+    color: freudTheme.colors.text.primary,
   },
   inputContainer: {
     marginBottom: 20,
   },
   inputLabel: {
-    fontSize: 14,
-    fontWeight: "500",
-    marginBottom: 8,
+    fontSize: freudTheme.typography.fontSize.textMd,
+    fontWeight: freudTheme.typography.fontWeight.medium,
+    fontFamily: freudTheme.typography.fontFamily.primary,
+    marginBottom: freudTheme.spacing.sm,
+    color: freudTheme.colors.text.primary,
   },
   inputWrapper: {
     flexDirection: "row",

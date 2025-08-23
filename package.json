@@ -37,6 +37,7 @@
     "@expo/metro-config": "~0.19.0",
     "@expo/metro-runtime": "~4.0.1",
     "@expo/prebuild-config": "^8.0.0",
+    "@paper-design/shaders-react": "^0.0.46",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/cli": "^20.0.0",
     "@react-native-community/netinfo": "^11.4.1",

@@ -1,4 +1,7 @@
 import { WebSafeLinearGradient as LinearGradient } from "../common/WebSafeLinearGradient";
+import AdvancedShadersContainer from "../advanced/AdvancedShadersContainer";
+import ModernButton from "../modern/ModernButton";
+import { modernDarkColors, modernTypography, modernSpacing } from "../../shared/theme/darkTheme";
 import React, { useRef, useEffect } from "react";
 import {
   View,
@@ -78,12 +81,24 @@ const WelcomeHeader = ({
   const styles = createStyles(theme);
 
   return (
-    <LinearGradient
-      colors={getTimeBasedGradient()}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.container}
+    <AdvancedShadersContainer
+      variant="aurora"
+      intensity={0.4}
+      animated={true}
+      interactive={false}
+      glowEffect={true}
+      style={styles.containerWrapper}
     >
+      <LinearGradient
+        colors={[
+          modernDarkColors.background.primary + 'E6',
+          modernDarkColors.background.secondary + 'CC',
+          modernDarkColors.background.tertiary + 'B3',
+        ]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.container}
+      >
       <Animated.View
         style={[
           styles.mainContent,
@@ -116,62 +131,50 @@ const WelcomeHeader = ({
           },
         ]}
       >
-        <TouchableOpacity
-          style={[styles.avatarButton, theme.shadows.sm]}
+        <ModernButton
+          title={userName.charAt(0).toUpperCase()}
+          variant="glass"
+          size="medium"
+          animated={true}
+          glowEffect={false}
+          iconPosition="only"
           onPress={onProfilePress}
-          activeOpacity={0.8}
-          accessible
-          accessibilityRole="button"
-          accessibilityLabel="Profile"
-          accessibilityHint="Double tap to view your profile"
-        >
-          <LinearGradient
-            colors={[theme.colors.primary[400], theme.colors.primary[600]]}
-            style={styles.avatarGradient}
-          >
-            <Text
-              style={[styles.avatarText, { color: theme.colors.text.inverse }]}
-            >
-              {userName.charAt(0).toUpperCase()}
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
+          style={styles.avatarButton}
+          testID="profile-button"
+        />
 
-        <TouchableOpacity
-          style={[styles.emergencyButton, theme.shadows.sm]}
+        <ModernButton
+          title="🚨"
+          variant="void"
+          size="large"
+          animated={true}
+          glowEffect={true}
+          shaderEffect={true}
+          iconPosition="only"
           onPress={onEmergencyPress}
-          activeOpacity={0.8}
-          accessible
-          accessibilityRole="button"
-          accessibilityLabel="Emergency Crisis Support"
-          accessibilityHint="Double tap for immediate crisis support and emergency resources"
-          accessibilityTraits={['button', 'startsMedia']}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          style={styles.emergencyButton}
           testID="emergency-button"
-        >
-          <LinearGradient
-            colors={[theme.colors.error[400], theme.colors.error[600]]}
-            style={styles.emergencyGradient}
-          >
-            <Text 
-              style={styles.emergencyText}
-              accessibilityElementsHidden={true}
-              importantForAccessibility="no"
-            >🚨</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+          accessibilityLabel="Emergency Crisis Support"
+          accessibilityHint="Double tap for immediate crisis support"
+        />
       </Animated.View>
-    </LinearGradient>
+      </LinearGradient>
+    </AdvancedShadersContainer>
   );
 };
 
 const createStyles = (theme) => StyleSheet.create({
+  containerWrapper: {
+    marginHorizontal: modernSpacing[2],
+    marginVertical: modernSpacing[2],
+  },
   container: {
     flexDirection: "row",
     alignItems: "flex-start",
-    paddingHorizontal: theme.theme.spacing[5],
-    paddingTop: theme.spacing[12],
-    paddingBottom: theme.spacing[6],
+    paddingHorizontal: modernSpacing[6],
+    paddingTop: modernSpacing[12],
+    paddingBottom: modernSpacing[6],
+    borderRadius: borderRadius.lg,
   },
   mainContent: {
     flex: 1,
@@ -187,15 +190,18 @@ const createStyles = (theme) => StyleSheet.create({
     marginRight: theme.spacing[2],
   },
   greeting: {
-    fontSize: theme.typography.sizes.base,
-    fontWeight: theme.typography.weights.medium,
-    lineHeight: theme.typography.lineHeights.base,
+    fontSize: modernTypography.sizes.base,
+    fontWeight: modernTypography.weights.medium,
+    lineHeight: modernTypography.lineHeights.base,
+    fontFamily: modernTypography.fontFamily.sans,
   },
   userName: {
-    fontSize: theme.typography.sizes["3xl"],
-    fontWeight: theme.typography.weights.bold,
-    lineHeight: theme.typography.lineHeights["3xl"],
-    marginBottom: theme.spacing[2],
+    fontSize: modernTypography.sizes['3xl'],
+    fontWeight: modernTypography.weights.black,
+    lineHeight: modernTypography.lineHeights['3xl'],
+    letterSpacing: modernTypography.letterSpacing.tight,
+    marginBottom: modernSpacing[2],
+    fontFamily: modernTypography.fontFamily.display,
   },
   subtitle: {
     fontSize: theme.typography.sizes.sm,
@@ -209,35 +215,12 @@ const createStyles = (theme) => StyleSheet.create({
     gap: theme.spacing[2],
   },
   avatarButton: {
-    borderRadius: theme.borderRadius.full,
-    overflow: "hidden",
-  },
-  avatarGradient: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  avatarText: {
-    fontSize: theme.typography.sizes.lg,
-    fontWeight: typography.weights.semiBold,
+    width: 48,
+    height: 48,
   },
   emergencyButton: {
-    borderRadius: theme.borderRadius.full,
-    overflow: "hidden",
-  },
-  emergencyGradient: {
-    minWidth: 56, // MENTAL_HEALTH_ACCESSIBILITY_CONSTANTS.CRISIS_BUTTON_MIN_SIZE
-    minHeight: 56,
     width: 56,
     height: 56,
-    borderRadius: 28,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  emergencyText: {
-    fontSize: theme.typography.sizes.sm,
   },
 });
 

@@ -1,4 +1,7 @@
 import { WebSafeLinearGradient as LinearGradient } from "../common/WebSafeLinearGradient";
+import ModernCard from "../modern/ModernCard";
+import ModernButton from "../modern/ModernButton";
+import { modernDarkColors } from "../../shared/theme/darkTheme";
 import React, { useRef, useEffect, memo, useCallback } from "react";
 import {
   View,
@@ -77,33 +80,23 @@ const QuickActions = ({ onStartChat, onTakeAssessment, onMoodTracker }) => {
   ];
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        {
+    <ModernCard
+      title="Quick Actions"
+      subtitle="Start your wellness journey"
+      variant="neon"
+      elevation="high"
+      animated={true}
+      glowEffect={true}
+      interactive={true}
+      shaderVariant="holographic"
+      style={styles.container}
+    >
+      <Animated.View
+        style={{
           opacity: fadeAnim,
           transform: [{ translateY: slideAnim }],
-        },
-      ]}
-    >
-      <LinearGradient
-        colors={[
-          theme.colors.background.primary,
-          theme.colors.background.secondary,
-        ]}
-        style={[styles.cardBackground, shadows.lg]}
+        }}
       >
-        <View style={styles.titleContainer}>
-          <ActionIcon
-            name="Add"
-            size="sm"
-            colorScheme="energizing"
-            style={styles.titleIcon}
-          />
-          <Text style={[styles.title, { color: theme.colors.text.primary }]}>
-            Quick Actions
-          </Text>
-        </View>
 
         <View style={styles.actionsGrid}>
           {actions.map((action, index) => (
@@ -121,51 +114,23 @@ const QuickActions = ({ onStartChat, onTakeAssessment, onMoodTracker }) => {
                 ],
               }}
             >
-              <TouchableOpacity
-                style={styles.actionCard}
+              <ModernButton
+                title={action.title}
+                variant={index === 0 ? "neon" : index === 1 ? "neural" : "glass"}
+                size="medium"
+                animated={true}
+                glowEffect={index === 0}
+                shaderEffect={index === 0}
+                icon={action.iconName}
                 onPress={action.onPress}
-                activeOpacity={0.8}
-                accessibilityRole="button"
-                accessibilityLabel={action.title}
-                accessibilityHint={action.subtitle}
+                style={styles.actionButton}
                 testID={`quick-action-${action.id}`}
-              >
-                <LinearGradient
-                  colors={action.gradientColors}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={styles.actionGradient}
-                >
-                  <MentalHealthIcon
-                    name={action.iconName}
-                    size="lg"
-                    color={theme.colors.text.inverse}
-                    variant="outline"
-                    strokeWidth={1.5}
-                  />
-                  <Text
-                    style={[
-                      styles.actionTitle,
-                      { color: theme.colors.text.inverse },
-                    ]}
-                  >
-                    {action.title}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.actionSubtitle,
-                      { color: theme.colors.text.inverse },
-                    ]}
-                  >
-                    {action.subtitle}
-                  </Text>
-                </LinearGradient>
-              </TouchableOpacity>
+              />
             </Animated.View>
           ))}
         </View>
-      </LinearGradient>
-    </Animated.View>
+      </Animated.View>
+    </ModernCard>
   );
 };
 
@@ -174,56 +139,11 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing[4],
     marginVertical: spacing[3],
   },
-  cardBackground: {
-    padding: spacing[5],
-    borderRadius: borderRadius.xl,
-  },
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: spacing[5],
-  },
-  titleIcon: {
-    marginRight: spacing[2],
-  },
-  title: {
-    fontSize: typography.sizes.lg,
-    fontWeight: typography.weights.semiBold,
-    lineHeight: typography.lineHeights.lg,
-  },
   actionsGrid: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    flexWrap: "wrap", // Allow wrapping on smaller screens
+    gap: spacing[3],
   },
-  actionCard: {
-    flex: 1,
-    minWidth: 100, // Ensure minimum width for touch targets
-    marginHorizontal: spacing[1], // Add spacing between cards
-    borderRadius: borderRadius.lg,
-    overflow: "hidden",
-    ...shadows.md,
-  },
-  actionGradient: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: spacing[5],
-    paddingHorizontal: spacing[3],
-    minHeight: 100,
-  },
-  actionTitle: {
-    fontSize: typography.sizes.sm,
-    fontWeight: typography.weights.semiBold,
-    lineHeight: typography.lineHeights.sm,
-    marginBottom: spacing[1],
-    textAlign: "center",
-  },
-  actionSubtitle: {
-    fontSize: typography.sizes.xs,
-    fontWeight: typography.weights.normal,
-    lineHeight: typography.lineHeights.xs,
-    textAlign: "center",
-    opacity: 0.9,
+  actionButton: {
+    marginVertical: spacing[1],
   },
 });
 

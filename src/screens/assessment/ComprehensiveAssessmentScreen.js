@@ -15,7 +15,10 @@ import {
 } from "react-native";
 
 import { MentalHealthIcon } from "../../components/icons";
+import { FreudLogo, ThemedFreudIcon } from "../../components/icons/FreudIcons";
+import FreudButton from "../../components/ui/FreudButton";
 import { useTheme } from "../../shared/theme/ThemeContext";
+import { freudTheme } from "../../shared/theme/freudTheme";
 
 const { width, height } = Dimensions.get("window");
 
@@ -35,7 +38,7 @@ const ASSESSMENT_STEPS = [
         icon: "😴",
       },
     ],
-    backgroundColor: (theme) => (theme.isDark ? "#2E5234" : "#E8F5E8"),
+    backgroundColor: (theme) => freudTheme.colors.green[20],
   },
   {
     id: 2,
@@ -47,7 +50,7 @@ const ASSESSMENT_STEPS = [
       { id: "non_binary", label: "Non-binary", icon: "🏳️‍⚧️" },
       { id: "prefer_not_to_say", label: "Prefer not to say", icon: "❓" },
     ],
-    backgroundColor: (theme) => (theme.isDark ? "#4A2E1A" : "#FFF2E6"),
+    backgroundColor: (theme) => freudTheme.colors.brown[20],
   },
   {
     id: 3,
@@ -268,7 +271,7 @@ const ComprehensiveAssessmentScreen = ({ navigation }) => {
                 inputRange: [0, 1],
                 outputRange: ["0%", "100%"],
               }),
-              backgroundColor: theme.isDark ? "#8B4513" : "#CD853F",
+              backgroundColor: freudTheme.colors.green[60],
             },
           ]}
         />
@@ -343,16 +346,15 @@ const ComprehensiveAssessmentScreen = ({ navigation }) => {
         />
       </View>
 
-      <TouchableOpacity
-        style={[
-          styles.nextButton,
-          { backgroundColor: theme.isDark ? "#8B4513" : "#CD853F" },
-        ]}
+      <FreudButton
+        title="Continue"
+        variant="primary"
+        size="large"
         onPress={handleNext}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.nextButtonText}>Continue →</Text>
-      </TouchableOpacity>
+        icon={<ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+        iconPosition="right"
+        style={{ marginTop: freudTheme.spacing.lg }}
+      />
     </View>
   );
 
@@ -483,16 +485,15 @@ const ComprehensiveAssessmentScreen = ({ navigation }) => {
         );
       })}
 
-      <TouchableOpacity
-        style={[
-          styles.nextButton,
-          { backgroundColor: theme.isDark ? "#8B4513" : "#CD853F" },
-        ]}
+      <FreudButton
+        title="Continue"
+        variant="primary"
+        size="large"
         onPress={handleNext}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.nextButtonText}>Continue →</Text>
-      </TouchableOpacity>
+        icon={<ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+        iconPosition="right"
+        style={{ marginTop: freudTheme.spacing.lg }}
+      />
     </View>
   );
 
@@ -552,16 +553,15 @@ const ComprehensiveAssessmentScreen = ({ navigation }) => {
           </View>
         </View>
 
-        <TouchableOpacity
-          style={[
-            styles.nextButton,
-            { backgroundColor: theme.isDark ? "#8B4513" : "#CD853F" },
-          ]}
+        <FreudButton
+          title="Continue"
+          variant="primary"
+          size="large"
           onPress={handleNext}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.nextButtonText}>Continue →</Text>
-        </TouchableOpacity>
+          icon={<ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+          iconPosition="right"
+          style={{ marginTop: freudTheme.spacing.lg }}
+        />
       </View>
     );
   };
@@ -652,16 +652,15 @@ const ComprehensiveAssessmentScreen = ({ navigation }) => {
         insights are being prepared.
       </Text>
 
-      <TouchableOpacity
-        style={[
-          styles.viewResultsButton,
-          { backgroundColor: theme.isDark ? "#8B4513" : "#CD853F" },
-        ]}
+      <FreudButton
+        title="View My Results"
+        variant="primary"
+        size="large"
         onPress={() => navigation.navigate("MainApp")}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.viewResultsButtonText}>View My Results →</Text>
-      </TouchableOpacity>
+        icon={<ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+        iconPosition="right"
+        style={{ marginTop: freudTheme.spacing.lg }}
+      />
     </View>
   );
 
@@ -714,14 +713,11 @@ const ComprehensiveAssessmentScreen = ({ navigation }) => {
             onPress={handleBack}
             activeOpacity={0.8}
           >
-            <Text
-              style={[
-                styles.backIcon,
-                { color: theme.isDark ? "#FFFFFF" : "#2D3436" },
-              ]}
-            >
-              ←
-            </Text>
+            <ThemedFreudIcon
+              name="chevron-left"
+              size={24}
+              color={freudTheme.colors.text.primary}
+            />
           </TouchableOpacity>
 
           {renderProgressBar()}

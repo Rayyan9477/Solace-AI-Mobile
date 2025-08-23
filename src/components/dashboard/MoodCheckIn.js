@@ -1,4 +1,7 @@
 import { WebSafeLinearGradient as LinearGradient } from "../common/WebSafeLinearGradient";
+import ModernCard from "../modern/ModernCard";
+import ModernButton from "../modern/ModernButton";
+import { modernDarkColors } from "../../shared/theme/darkTheme";
 import React, { useRef, useEffect, useMemo, useCallback, memo } from "react";
 import {
   View,
@@ -128,14 +131,14 @@ const MoodCheckIn = memo(({
   const moodDisplay = getCurrentMoodDisplay();
 
   return (
-    <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
-      <LinearGradient
-        colors={[
-          theme.colors.background.primary,
-          theme.colors.background.secondary,
-        ]}
-        style={[styles.cardBackground, shadows.md]}
-      >
+    <ModernCard
+      variant="neural"
+      elevation="medium"
+      animated={true}
+      glowEffect={true}
+      shaderVariant="neural"
+      style={[styles.container, { opacity: fadeAnim }]}
+    >
         <View style={styles.header}>
           <View style={styles.titleContainer}>
             <MentalHealthIcon
@@ -191,39 +194,19 @@ const MoodCheckIn = memo(({
           </Animated.View>
         )}
 
-        <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
-          <TouchableOpacity
-            style={styles.checkInButton}
-            onPress={onCheckIn}
-            activeOpacity={0.8}
-            accessible
-            accessibilityRole="button"
-            accessibilityLabel={moodDisplay ? "Update Mood" : "Check In Now"}
-            accessibilityHint="Double tap to open mood check-in"
-          >
-            <LinearGradient
-              colors={[
-                theme.colors.therapeutic.calming[500],
-                theme.colors.therapeutic.peaceful[500],
-              ]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.buttonGradient}
-            >
-              <Text
-                style={[
-                  styles.checkInButtonText,
-                  { color: theme.colors.text.inverse },
-                ]}
-              >
-                {moodDisplay ? "Update Mood" : "Check In Now"}
-              </Text>
-              <Text style={styles.checkInButtonIcon}>✨</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </Animated.View>
-      </LinearGradient>
-    </Animated.View>
+        <ModernButton
+          title={moodDisplay ? "Update Mood" : "Check In Now"}
+          variant="neural"
+          size="large"
+          animated={true}
+          glowEffect={true}
+          shaderEffect={true}
+          icon="Heart"
+          onPress={onCheckIn}
+          style={styles.checkInButton}
+          testID="mood-check-in-button"
+        />
+    </ModernCard>
   );
 });
 
@@ -231,10 +214,6 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: spacing[4],
     marginVertical: spacing[3],
-  },
-  cardBackground: {
-    padding: spacing[5],
-    borderRadius: borderRadius.xl,
   },
   header: {
     marginBottom: spacing[5],
@@ -292,24 +271,7 @@ const styles = StyleSheet.create({
     fontWeight: typography.weights.semiBold,
   },
   checkInButton: {
-    borderRadius: borderRadius.lg,
-    overflow: "hidden",
-    ...shadows.md,
-  },
-  buttonGradient: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: spacing[4],
-    paddingHorizontal: spacing[6],
-  },
-  checkInButtonText: {
-    fontSize: typography.sizes.base,
-    fontWeight: typography.weights.semiBold,
-    marginRight: spacing[2],
-  },
-  checkInButtonIcon: {
-    fontSize: typography.sizes.base,
+    marginTop: spacing[4],
   },
 });
 

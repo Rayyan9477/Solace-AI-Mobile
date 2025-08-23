@@ -10,7 +10,9 @@ import {
 } from "react-native";
 
 import { MentalHealthIcon } from "../components/icons";
+import { FreudLogo } from "../components/icons/FreudIcons";
 import { useTheme } from "../shared/theme/ThemeContext";
+import { freudTheme } from "../shared/theme/freudTheme";
 import { spacing, typography, borderRadius, shadows } from "../shared/theme/theme";
 
 const { width, height } = Dimensions.get("window");
@@ -103,32 +105,18 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
     [progressAnim],
   );
 
-  // Get theme-appropriate gradient colors
+  // Get theme-appropriate gradient colors following Freud design references
   const getGradientColors = () => {
     if (showQuote) {
-      return theme.isDark
-        ? [
-            theme.colors.therapeutic.empathy[700],
-            theme.colors.therapeutic.empathy[600],
-            theme.colors.therapeutic.empathy[500],
-          ]
-        : [
-            theme.colors.therapeutic.energizing[500],
-            theme.colors.therapeutic.energizing[400],
-            theme.colors.therapeutic.energizing[300],
-          ];
+      return [
+        freudTheme.colors.orange[50], // Empathy Orange from design reference
+        freudTheme.colors.orange[40],
+      ];
     }
-    return theme.isDark
-      ? [
-          theme.colors.background.secondary,
-          theme.colors.background.primary,
-          theme.colors.background.tertiary,
-        ]
-      : [
-          theme.colors.background.primary,
-          theme.colors.background.secondary,
-          theme.colors.background.tertiary,
-        ];
+    return [
+      '#FFFFFF', // Clean white background like design reference
+      freudTheme.colors.gray[10],
+    ];
   };
 
   useEffect(() => {
@@ -211,7 +199,7 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
   return (
     <View style={styles.container}>
       <StatusBar
-        barStyle={theme.isDark ? "light-content" : "dark-content"}
+        barStyle={showQuote ? "light-content" : "dark-content"}
         backgroundColor="transparent"
         translucent
       />
@@ -224,58 +212,21 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
       >
         {/* Main Content */}
         <View style={styles.contentContainer}>
-          {/* Logo Section */}
+          {/* Logo Section - Freud Design System */}
           <Animated.View style={[styles.logoContainer, logoContainerStyle]}>
-            {/* freud.ai Logo - 4 circles */}
-            <View style={styles.logoIcon}>
-              <View style={[styles.logoGrid]}>
-                <View
-                  style={[
-                    styles.logoCircle,
-                    {
-                      backgroundColor: theme.isDark
-                        ? theme.colors.therapeutic.empathy[700]
-                        : theme.colors.therapeutic.empathy[400],
-                    },
-                  ]}
-                />
-                <View
-                  style={[
-                    styles.logoCircle,
-                    {
-                      backgroundColor: theme.isDark
-                        ? theme.colors.therapeutic.empathy[600]
-                        : theme.colors.therapeutic.empathy[500],
-                    },
-                  ]}
-                />
-                <View
-                  style={[
-                    styles.logoCircle,
-                    {
-                      backgroundColor: theme.isDark
-                        ? theme.colors.therapeutic.empathy[600]
-                        : theme.colors.therapeutic.empathy[500],
-                    },
-                  ]}
-                />
-                <View
-                  style={[
-                    styles.logoCircle,
-                    {
-                      backgroundColor: theme.isDark
-                        ? theme.colors.therapeutic.empathy[700]
-                        : theme.colors.therapeutic.empathy[400],
-                    },
-                  ]}
-                />
-              </View>
-            </View>
+            <FreudLogo 
+              size={80} 
+              primaryColor={freudTheme.colors.brown[80]} 
+            />
 
             <Animated.Text
               style={[
                 styles.appTitle,
-                { color: theme.colors.text.primary },
+                { 
+                  color: showQuote 
+                    ? freudTheme.colors.text.inverse 
+                    : freudTheme.colors.text.primary 
+                },
                 fadeStyle,
               ]}
             >
@@ -286,7 +237,7 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
               <Animated.Text
                 style={[
                   styles.appSubtitle,
-                  { color: theme.colors.text.secondary },
+                  { color: freudTheme.colors.text.secondary },
                   fadeStyle,
                 ]}
               >
@@ -295,24 +246,18 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
             )}
           </Animated.View>
 
-          {/* Quote Section (for loading with quote) */}
+          {/* Quote Section - Orange Background like Design Reference */}
           {showQuote && (
             <Animated.View style={[styles.quoteContainer, quoteFadeStyle]}>
-              <View style={styles.quoteIcon}>
-                <MentalHealthIcon
-                  name="mindfulness"
-                  size={24}
-                  color={theme.colors.text.primary}
-                />
-              </View>
+              <FreudLogo 
+                size={48} 
+                primaryColor={freudTheme.colors.text.inverse} 
+              />
               <Text
                 style={[
                   styles.quoteText,
                   {
-                    color: theme.colors.text.primary,
-                    textShadowColor: theme.colors.background.overlay,
-                    textShadowOffset: { width: 0, height: 1 },
-                    textShadowRadius: 3,
+                    color: freudTheme.colors.text.inverse,
                   },
                 ]}
               >
@@ -322,10 +267,8 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
                 style={[
                   styles.quoteAuthor,
                   {
-                    color: theme.colors.text.secondary,
-                    textShadowColor: theme.colors.background.overlay,
-                    textShadowOffset: { width: 0, height: 1 },
-                    textShadowRadius: 2,
+                    color: freudTheme.colors.text.inverse,
+                    opacity: 0.9,
                   },
                 ]}
               >
@@ -422,19 +365,20 @@ const styles = StyleSheet.create({
     marginBottom: spacing[1],
   },
   appTitle: {
-    fontSize: typography.sizes["5xl"],
-    fontWeight: typography.weights.bold,
+    fontSize: freudTheme.typography.fontSize.heading2xl,
+    fontWeight: freudTheme.typography.fontWeight.bold,
+    fontFamily: freudTheme.typography.fontFamily.primary,
     textAlign: "center",
-    marginBottom: spacing[2],
+    marginTop: freudTheme.spacing.lg,
+    marginBottom: freudTheme.spacing.sm,
     letterSpacing: -0.5,
-    lineHeight: typography.lineHeights["5xl"],
   },
   appSubtitle: {
-    fontSize: typography.sizes.lg,
-    fontWeight: typography.weights.normal,
+    fontSize: freudTheme.typography.fontSize.textMd,
+    fontWeight: freudTheme.typography.fontWeight.medium,
+    fontFamily: freudTheme.typography.fontFamily.primary,
     textAlign: "center",
-    lineHeight: typography.lineHeights.lg,
-    maxWidth: spacing[80],
+    maxWidth: 280,
     opacity: 0.9,
   },
   quoteContainer: {
@@ -446,17 +390,20 @@ const styles = StyleSheet.create({
     marginBottom: spacing[4],
   },
   quoteText: {
-    fontSize: typography.sizes.xl,
-    fontWeight: typography.weights.normal,
+    fontSize: freudTheme.typography.fontSize.headingLg,
+    fontWeight: freudTheme.typography.fontWeight.medium,
+    fontFamily: freudTheme.typography.fontFamily.primary,
     textAlign: "center",
-    lineHeight: typography.lineHeights.xl,
-    marginBottom: spacing[4],
-    fontStyle: "italic",
+    lineHeight: freudTheme.typography.lineHeight.headingLg,
+    marginTop: freudTheme.spacing['2xl'],
+    marginBottom: freudTheme.spacing.lg,
+    paddingHorizontal: freudTheme.spacing['4xl'],
   },
   quoteAuthor: {
-    fontSize: typography.sizes.sm,
-    fontWeight: typography.weights.semiBold,
-    letterSpacing: 1,
+    fontSize: freudTheme.typography.fontSize.textSm,
+    fontWeight: freudTheme.typography.fontWeight.semibold,
+    fontFamily: freudTheme.typography.fontFamily.primary,
+    letterSpacing: 1.2,
     textAlign: "center",
   },
   loadingContainer: {
