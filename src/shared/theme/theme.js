@@ -145,7 +145,7 @@ export const colors = {
       100: "#FFF89E", // Orange 20 - Light
       200: "#FFF360", // Orange 30 - Soft
       300: "#F76360", // Orange 40 - Medium light
-      400: "#ED7E1C", // Orange 50 - Medium (fixed typo)
+      400: "#F59E0B", // Orange 50 - Medium (fixed typo)
       500: "#C96100", // Orange 60 - Main empathy color
       600: "#943200", // Orange 70 - Darker
       700: "#663600", // Orange 80 - Deep
@@ -170,7 +170,7 @@ export const colors = {
     // Kind Purple - For wisdom and spirituality
     kind: {
       50: "#F9F4FF", // Purple 10 - Very light
-      100: "#F350FF", // Purple 20 - Light
+      100: "#F3E8FF", // Purple 20 - Light
       200: "#E9D5FF", // Purple 30 - Soft
       300: "#B695F3", // Purple 40 - Medium light
       400: "#9654F5", // Purple 50 - Medium

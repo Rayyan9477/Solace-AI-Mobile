@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, memo } from "react";
 import { View, Text, StyleSheet, ScrollView, Animated } from "react-native";
 
 import { useTheme } from "../../shared/theme/ThemeContext";
@@ -268,4 +268,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DailyInsights;
+export default memo(DailyInsights);

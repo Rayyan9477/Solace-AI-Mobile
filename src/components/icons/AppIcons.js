@@ -1,7 +1,23 @@
 import React from "react";
 import { View, Text, Platform } from "react-native";
 
-import Icon, { IconVariants, IconSizes } from "./IconSystem";
+import Icon from "./OptimizedIconSystem";
+
+// Temporary icon variants and sizes until IconSystem.js is restored
+const IconVariants = {
+  OUTLINE: "outline",
+  FILLED: "filled",
+  DUOTONE: "duotone",
+};
+
+const IconSizes = {
+  xs: 16,
+  sm: 20,
+  md: 24,
+  lg: 32,
+  xl: 40,
+  "2xl": 48,
+};
 import { useTheme } from "../../shared/theme/ThemeContext";
 
 // App-specific icon presets with therapeutic colors

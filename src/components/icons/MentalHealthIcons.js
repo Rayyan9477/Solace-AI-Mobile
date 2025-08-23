@@ -27,7 +27,8 @@ try {
   Stop = G;
 }
 
-import { BaseDesignTokens } from "../../design-system/DesignTokens";
+// Design tokens moved to shared/theme - using theme context instead
+// import { BaseDesignTokens } from "../../design-system/DesignTokens";
 
 // Base Mental Health Icon Component
 const MentalHealthIcon = ({
@@ -40,7 +41,7 @@ const MentalHealthIcon = ({
   style,
   testID,
 }) => {
-  const tokens = BaseDesignTokens;
+  // const tokens = BaseDesignTokens; // Using theme context instead
 
   const getColor = () => {
     if (color) return color;

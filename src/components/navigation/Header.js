@@ -29,15 +29,12 @@ const Header = ({
       <View style={styles.leftAction}>
         {showBack && (
           <Pressable
-            onPress={() =
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="Button"
-        accessibilityHint="Double tap to activate"
-      > navigation.goBack()}
+            onPress={() => navigation.goBack()}
             style={styles.backButton}
-            accessibilityLabel="Go back"
+            accessible={true}
             accessibilityRole="button"
+            accessibilityLabel="Go back"
+            accessibilityHint="Double tap to go back"
           >
             <Icon
               name="chevron-left"

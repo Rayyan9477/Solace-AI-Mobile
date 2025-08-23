@@ -24,11 +24,18 @@ const WelcomeHeader = ({
   onProfilePress,
   onEmergencyPress,
 }) => {
-  const { theme } = useTheme();
+  const { theme, isReducedMotionEnabled } = useTheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(-20)).current;
 
   useEffect(() => {
+    if (isReducedMotionEnabled) {
+      // Skip animations for reduced motion
+      fadeAnim.setValue(1);
+      slideAnim.setValue(0);
+      return;
+    }
+
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -41,7 +48,7 @@ const WelcomeHeader = ({
         useNativeDriver: true,
       }),
     ]).start();
-  }, [fadeAnim, slideAnim]);
+  }, [fadeAnim, slideAnim, isReducedMotionEnabled]);
 
   const getTimeBasedEmoji = () => {
     const hour = new Date().getHours();

@@ -76,7 +76,7 @@ class ImageCache {
     
     if (this.cache.has(key)) {
       const cached = this.cache.get(key);
-      if (await FileSystem.getInfoAsync(cached.localUri)).exists) {
+      if ((await FileSystem.getInfoAsync(cached.localUri)).exists) {
         return cached.localUri;
       } else {
         // Remove stale cache entry

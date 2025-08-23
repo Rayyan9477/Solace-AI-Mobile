@@ -1,5 +1,5 @@
 import { WebSafeLinearGradient as LinearGradient } from "../common/WebSafeLinearGradient";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, memo, useCallback } from "react";
 import {
   View,
   Text,
@@ -194,10 +194,12 @@ const styles = StyleSheet.create({
   actionsGrid: {
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: spacing[3],
+    flexWrap: "wrap", // Allow wrapping on smaller screens
   },
   actionCard: {
     flex: 1,
+    minWidth: 100, // Ensure minimum width for touch targets
+    marginHorizontal: spacing[1], // Add spacing between cards
     borderRadius: borderRadius.lg,
     overflow: "hidden",
     ...shadows.md,
@@ -225,4 +227,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuickActions;
+export default memo(QuickActions);

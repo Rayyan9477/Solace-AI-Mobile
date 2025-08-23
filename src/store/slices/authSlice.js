@@ -109,14 +109,19 @@ export const restoreAuthState = createAsyncThunk(
 );
 
 const initialState = {
-  isAuthenticated: false,
-  user: null,
-  token: null,
+  isAuthenticated: true, // Set to true for development/testing
+  user: {
+    id: "dev_user_1",
+    email: "test@solaceai.com",
+    name: "Test User",
+    avatar: null,
+  },
+  token: "dev_token_" + Date.now(),
   isLoading: false,
   error: null,
-  onboardingCompleted: false,
+  onboardingCompleted: true, // Set to true to bypass onboarding
   sessionExpiry: null,
-  lastActivity: null,
+  lastActivity: Date.now(),
 };
 
 const authSlice = createSlice({

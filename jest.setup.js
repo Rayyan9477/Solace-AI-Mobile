@@ -73,6 +73,41 @@ jest.mock("expo-linear-gradient", () => {
 global.window = {};
 global.window = global;
 
+// Mock TurboModuleRegistry for React Native 0.76+ compatibility
+jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => ({
+  getEnforcing: jest.fn((name) => {
+    if (name === 'SettingsManager') {
+      return {
+        settings: {},
+        setSettings: jest.fn(),
+        getSettings: jest.fn(() => ({})),
+      };
+    }
+    if (name === 'DeviceInfo') {
+      return {
+        getConstants: jest.fn(() => ({
+          Dimensions: {
+            window: { width: 375, height: 667, scale: 2, fontScale: 1 },
+            screen: { width: 375, height: 667, scale: 2, fontScale: 1 },
+          },
+        })),
+      };
+    }
+    return null;
+  }),
+  get: jest.fn(() => null),
+}));
+
+// Mock NativeDeviceInfo specifically
+jest.mock('react-native/src/private/specs/modules/NativeDeviceInfo', () => ({
+  getConstants: jest.fn(() => ({
+    Dimensions: {
+      window: { width: 375, height: 667, scale: 2, fontScale: 1 },
+      screen: { width: 375, height: 667, scale: 2, fontScale: 1 },
+    },
+  })),
+}));
+
 // Mock Crisis Manager for safety testing
 jest.mock('./src/features/crisisIntervention/CrisisManager', () => {
   return jest.fn().mockImplementation(() => ({

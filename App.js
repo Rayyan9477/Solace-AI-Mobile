@@ -1,208 +1,165 @@
-/**
- * Solace AI Mobile App
- * Your Empathetic Digital Confidant
- */
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import React, { useEffect } from "react";
-import { TouchableOpacity, Text, Platform, View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { NavigationContainer } from "@react-navigation/native";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import { StatusBar } from "expo-status-bar";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Provider } from "react-redux";
+const Tab = createBottomTabNavigator();
 
-import LoadingScreen from "./src/screens/LoadingScreen";
-import ErrorBoundary from "./src/components/ErrorBoundary";
-import WebCompatibilityErrorBoundary from "./src/components/WebCompatibilityErrorBoundary";
-import { useTheme } from "./src/shared/theme/ThemeContext";
-import OptimizedAppNavigator from "./src/navigation/OptimizedAppNavigator";
-import { store, persistor } from "./src/store/store";
-import { AppProvider } from "./src/components/AppProvider";
+// Simple screens
+const HomeScreen = () => (
+  <View style={styles.screen}>
+    <Text style={styles.title}>🌸 Solace AI Mobile</Text>
+    <Text style={styles.subtitle}>Welcome to Mental Health Support</Text>
+    <Text style={styles.status}>✅ Home Screen Working</Text>
+  </View>
+);
 
-// Conditionally import web setup only for web platform
-if (Platform.OS === "web") {
-  require("./src/setupWebReactGlobal");
-  // Initialize web polyfills for better compatibility
-  const { initializeWebPolyfills } = require("./src/utils/webPolyfills");
-  initializeWebPolyfills();
-}
-
-// Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync();
-
-const ThemedApp = () => {
-  // Ensure React is globally available in web runtime for third-party modules relying on global React
-  // setupWebReactGlobal ensures global React for web
-  const { theme, isDarkMode } = useTheme();
-
-  useEffect(() => {
-    async function prepare() {
-      try {
-        // Pre-load fonts
-        await Font.loadAsync({
-          ...MaterialCommunityIcons.font,
-        });
-      } catch (e) {
-        console.warn("Error loading fonts:", e);
-      }
-      // Hide splash screen when fonts are loaded
-      SplashScreen.hideAsync().catch(console.warn);
-    }
-
-    prepare();
-  }, []);
-
-  // Always render the app content
-  return (
-    <View style={{ flex: 1 }}>
-      <StatusBar
-        style={isDarkMode ? "light" : "dark"}
-        backgroundColor={theme.colors.background.primary}
-        translucent
-      />
-      <OptimizedAppNavigator />
+const MoodScreen = () => (
+  <View style={styles.screen}>
+    <Text style={styles.title}>📊 Mood Tracker</Text>
+    <Text style={styles.subtitle}>Track your emotional wellbeing</Text>
+    <View style={styles.buttonContainer}>
+      <View style={styles.button}>
+        <Text style={styles.buttonText}>Log Mood</Text>
+      </View>
     </View>
+  </View>
+);
+
+const ChatScreen = () => (
+  <View style={styles.screen}>
+    <Text style={styles.title}>💬 AI Therapy Chat</Text>
+    <Text style={styles.subtitle}>Talk to your AI counselor</Text>
+    <View style={styles.chatBox}>
+      <Text style={styles.chatText}>Hello! How are you feeling today?</Text>
+    </View>
+  </View>
+);
+
+const ProfileScreen = () => (
+  <View style={styles.screen}>
+    <Text style={styles.title}>👤 Your Profile</Text>
+    <Text style={styles.subtitle}>Personal settings and progress</Text>
+    <Text style={styles.info}>🎯 Wellness Goals: In Progress</Text>
+    <Text style={styles.info}>📈 Mood Streak: 7 days</Text>
+  </View>
+);
+
+const TabNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor: '#2d5aa0',
+          paddingBottom: 8,
+          height: 70,
+        },
+        tabBarActiveTintColor: '#ffffff',
+        tabBarInactiveTintColor: '#a0c4ff',
+        headerShown: false,
+      }}
+    >
+      <Tab.Screen 
+        name="Home" 
+        component={HomeScreen}
+        options={{
+          tabBarLabel: 'Home',
+        }}
+      />
+      <Tab.Screen 
+        name="Mood" 
+        component={MoodScreen}
+        options={{
+          tabBarLabel: 'Mood',
+        }}
+      />
+      <Tab.Screen 
+        name="Chat" 
+        component={ChatScreen}
+        options={{
+          tabBarLabel: 'Chat',
+        }}
+      />
+      <Tab.Screen 
+        name="Profile" 
+        component={ProfileScreen}
+        options={{
+          tabBarLabel: 'Profile',
+        }}
+      />
+    </Tab.Navigator>
   );
 };
 
 const App = () => {
-  const [persistorLoaded, setPersistorLoaded] = React.useState(false);
-  const [debugInfo, setDebugInfo] = React.useState("Initializing...");
-
-  const handleAppRestart = () => {
-    // In a real app, you might want to use a library like react-native-restart
-    // For now, we'll just reload the app state
-    console.log("App restart requested");
-    if (Platform.OS === "web" && typeof window !== "undefined") {
-      window.location.reload();
-    }
-  };
-
-  // Enhanced debugging for web initialization
-  React.useEffect(() => {
-    if (Platform.OS === "web") {
-      console.log("🔍 App.js: Starting initialization checks...");
-      console.log("🔍 App.js: React available:", typeof React !== "undefined");
-      console.log("🔍 App.js: Store available:", !!store);
-      console.log("🔍 App.js: Persistor available:", !!persistor);
-      console.log("🔍 App.js: Platform:", Platform.OS);
-      setDebugInfo("Platform checks complete");
-
-      // Test store state
-      try {
-        const state = store.getState();
-        console.log("🔍 App.js: Initial Redux state:", state);
-        console.log("🔍 App.js: Auth state:", state.auth);
-        setDebugInfo("Redux state accessible");
-      } catch (error) {
-        console.error("🚨 App.js: Redux state error:", error);
-        setDebugInfo(`Redux error: ${error.message}`);
-      }
-    }
-  }, []);
-
-  // Custom PersistGate with timeout and debugging
-  const CustomPersistGate = ({ children }) => {
-    const [isLoading, setIsLoading] = React.useState(true);
-    const [error, setError] = React.useState(null);
-    const timeoutRef = React.useRef();
-
-    React.useEffect(() => {
-      console.log("🔍 PersistGate: Starting persistence check...");
-
-      // Set a timeout for persistor
-      timeoutRef.current = setTimeout(() => {
-        console.log(
-          "⚠️ PersistGate: Persistence timeout reached, proceeding anyway",
-        );
-        setIsLoading(false);
-        setPersistorLoaded(true);
-        setDebugInfo("Persistence timeout - continuing without persistence");
-      }, 3000); // 3 second timeout
-
-      const unsubscribe = persistor.subscribe(() => {
-        const state = persistor.getState();
-        console.log("🔍 PersistGate: Persistor state change:", state);
-
-        if (state.bootstrapped) {
-          console.log("✅ PersistGate: Persistence bootstrapped successfully");
-          clearTimeout(timeoutRef.current);
-          setIsLoading(false);
-          setPersistorLoaded(true);
-          setDebugInfo("Persistence loaded successfully");
-        }
-      });
-
-      return () => {
-        unsubscribe();
-        clearTimeout(timeoutRef.current);
-      };
-    }, []);
-
-    if (isLoading) {
-      return (
-        <LoadingScreen
-          text={
-            Platform.OS === "web" ? `Loading... (${debugInfo})` : "Loading..."
-          }
-        />
-      );
-    }
-
-    if (error) {
-      return (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 20,
-          }}
-        >
-          <Text style={{ fontSize: 18, marginBottom: 10, color: "red" }}>
-            Persistence Error
-          </Text>
-          <Text style={{ fontSize: 14, textAlign: "center", marginBottom: 20 }}>
-            {error}
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              setError(null);
-              setIsLoading(false);
-            }}
-            style={{ padding: 10, backgroundColor: "#007AFF", borderRadius: 5 }}
-          >
-            <Text style={{ color: "white" }}>Continue Anyway</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-
-    return children;
-  };
-
   return (
-    <ErrorBoundary onRestart={handleAppRestart}>
-      <WebCompatibilityErrorBoundary>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <SafeAreaProvider>
-            <Provider store={store}>
-              <CustomPersistGate>
-                <AppProvider>
-                  <NavigationContainer>
-                    <ThemedApp />
-                  </NavigationContainer>
-                </AppProvider>
-              </CustomPersistGate>
-            </Provider>
-          </SafeAreaProvider>
-        </GestureHandlerRootView>
-      </WebCompatibilityErrorBoundary>
-    </ErrorBoundary>
+    <NavigationContainer>
+      <TabNavigator />
+    </NavigationContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f0f8ff',
+    padding: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#2d5aa0',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#5a7bc0',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  status: {
+    fontSize: 14,
+    color: '#22c55e',
+    marginBottom: 12,
+    fontWeight: '600',
+  },
+  info: {
+    fontSize: 14,
+    color: '#2d5aa0',
+    marginBottom: 8,
+  },
+  buttonContainer: {
+    marginTop: 20,
+  },
+  button: {
+    backgroundColor: '#2d5aa0',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  chatBox: {
+    backgroundColor: 'white',
+    padding: 16,
+    borderRadius: 12,
+    marginTop: 20,
+    minWidth: 200,
+    borderLeftWidth: 4,
+    borderLeftColor: '#2d5aa0',
+  },
+  chatText: {
+    fontSize: 14,
+    color: '#333',
+    lineHeight: 20,
+  },
+});
 
 export default App;

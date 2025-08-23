@@ -6,7 +6,7 @@ import * as Haptics from 'expo-haptics';
 
 import { MentalHealthIcon } from '../components/icons';
 import { useTheme } from '../shared/theme/ThemeContext';
-import { colors, typography, spacing, borderRadius, shadows } from '../styles/theme';
+import { colors, typography, spacing, borderRadius, shadows } from '../shared/theme/theme';
 
 /**
  * Enhanced Error Boundary for Mental Health App

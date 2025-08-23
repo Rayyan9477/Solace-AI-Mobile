@@ -20,7 +20,7 @@ const LoadingScreen = ({
   variant = "default",
   onComplete = () => {},
 }) => {
-  const { theme } = useTheme();
+  const { theme, isReducedMotionEnabled } = useTheme();
   const [progress, setProgress] = useState(0);
   const [shakeToInteract, setShakeToInteract] = useState(false);
 
@@ -75,6 +75,14 @@ const LoadingScreen = ({
   const variantStyles = getVariantStyles();
 
   useEffect(() => {
+    if (isReducedMotionEnabled) {
+      // Skip animations for reduced motion
+      fadeAnim.setValue(1);
+      scaleAnim.setValue(1);
+      pulseAnim.setValue(1);
+      return;
+    }
+
     // Start entrance animations
     Animated.parallel([
       Animated.timing(fadeAnim, {

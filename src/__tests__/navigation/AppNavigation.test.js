@@ -11,6 +11,7 @@ import {
   waitFor,
   act,
 } from '@testing-library/react-native';
+import { Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 

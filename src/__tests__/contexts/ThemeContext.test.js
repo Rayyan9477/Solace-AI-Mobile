@@ -9,7 +9,7 @@ import {
   fireEvent,
   waitFor,
 } from '@testing-library/react-native';
-import { AccessibilityInfo } from 'react-native';
+import { View, Text, AccessibilityInfo } from 'react-native';
 import { ThemeProvider, useTheme } from '../../shared/theme/ThemeContext';
 
 // Test component to consume theme
