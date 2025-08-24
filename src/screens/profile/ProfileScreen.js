@@ -17,6 +17,7 @@ import ProfileHeader from "../../components/profile/ProfileHeader";
 import SettingsSection from "../../components/profile/SettingsSection";
 import StatsCard from "../../components/profile/StatsCard";
 import { useTheme } from "../../shared/theme/ThemeContext";
+import DarkModeToggle from "../../components/ui/DarkModeToggle";
 import { logout } from "../../store/slices/authSlice";
 import { updatePreferences, setTheme } from "../../store/slices/userSlice";
 import {
@@ -289,18 +290,29 @@ const ProfileScreen = () => {
                 { color: theme.colors.text.primary },
               ]}
             >
-              Dark Mode
+              Theme
             </Text>
-            <Switch
-              value={isDarkMode}
-              onValueChange={handleThemeToggle}
-              trackColor={{
-                false: theme.colors.gray[300],
-                true: theme.colors.primary[500],
-              }}
-              thumbColor={theme.colors.text.inverse}
-            />
+            <DarkModeToggle size="normal" showLabel={false} />
           </View>
+
+          <TouchableOpacity
+            style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}
+            onPress={() => navigation.navigate('DarkModeShowcase')}
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel="Dark Mode Showcase"
+            accessibilityHint="View dark mode implementation demo"
+          >
+            <Text
+              style={[
+                styles.settingButtonText,
+                { color: theme.colors.text.primary },
+              ]}
+            >
+              Dark Mode Demo
+            </Text>
+            <Text style={styles.settingButtonIcon}>🌙</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}

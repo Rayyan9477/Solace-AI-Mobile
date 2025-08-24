@@ -38,6 +38,9 @@ import MindfulResourcesScreen from "../screens/wellness/MindfulResourcesScreen";
 import SleepQualityScreen from "../screens/wellness/SleepQualityScreen";
 import StressManagementScreen from "../screens/wellness/StressManagementScreen";
 
+// Dark Mode Screens
+import DarkModeShowcaseScreen from "../screens/DarkModeShowcaseScreen";
+
 // Utility Screens
 
 const Stack = createStackNavigator();
@@ -219,6 +222,11 @@ const UtilityStack = () => {
         name="ErrorUtilities"
         component={ErrorUtilitiesScreen}
         options={{ title: "Help & Support", headerShown: false }}
+      />
+      <Stack.Screen
+        name="DarkModeShowcase"
+        component={DarkModeShowcaseScreen}
+        options={{ title: "Dark Mode Demo", headerShown: false }}
       />
     </Stack.Navigator>
   );

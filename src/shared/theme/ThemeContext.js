@@ -23,6 +23,7 @@ import {
   highContrastLightTheme,
   highContrastDarkTheme,
 } from "./theme";
+import { freudDarkTheme } from "./freudDarkTheme";
 
 const ThemeContext = createContext({
   theme: lightTheme,
@@ -215,7 +216,8 @@ export const ThemeProvider = ({ children }) => {
         adjustedTheme = { ...highContrastLightTheme };
       }
     } else {
-      adjustedTheme = isDarkMode ? darkTheme : lightTheme;
+      // Use Freud dark theme for better design consistency
+      adjustedTheme = isDarkMode ? freudDarkTheme : lightTheme;
     }
 
     // Apply font scaling
@@ -251,7 +253,7 @@ export const ThemeProvider = ({ children }) => {
     return adjustedTheme;
   };
 
-  const currentTheme = getAccessibleTheme(isDarkMode ? darkTheme : lightTheme);
+  const currentTheme = getAccessibleTheme(isDarkMode ? freudDarkTheme : lightTheme);
 
   // Enhanced debugging for web
   React.useEffect(() => {
