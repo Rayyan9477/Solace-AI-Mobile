@@ -1,7 +1,3 @@
-import { WebSafeLinearGradient as LinearGradient } from "../common/WebSafeLinearGradient";
-import AdvancedShadersContainer from "../advanced/AdvancedShadersContainer";
-import ModernButton from "../modern/ModernButton";
-import { modernDarkColors, modernTypography, modernSpacing } from "../../shared/theme/darkTheme";
 import React, { useRef, useEffect } from "react";
 import {
   View,
@@ -11,6 +7,8 @@ import {
   Alert,
   Animated,
 } from "react-native";
+
+import SimpleCard from "../ui/SimpleCard";
 
 import { useTheme } from "../../shared/theme/ThemeContext";
 import {
@@ -81,24 +79,7 @@ const WelcomeHeader = ({
   const styles = createStyles(theme);
 
   return (
-    <AdvancedShadersContainer
-      variant="aurora"
-      intensity={0.4}
-      animated={true}
-      interactive={false}
-      glowEffect={true}
-      style={styles.containerWrapper}
-    >
-      <LinearGradient
-        colors={[
-          modernDarkColors.background.primary + 'E6',
-          modernDarkColors.background.secondary + 'CC',
-          modernDarkColors.background.tertiary + 'B3',
-        ]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.container}
-      >
+    <SimpleCard style={styles.container}>
       <Animated.View
         style={[
           styles.mainContent,
@@ -131,50 +112,40 @@ const WelcomeHeader = ({
           },
         ]}
       >
-        <ModernButton
-          title={userName.charAt(0).toUpperCase()}
-          variant="glass"
-          size="medium"
-          animated={true}
-          glowEffect={false}
-          iconPosition="only"
+        <TouchableOpacity
           onPress={onProfilePress}
           style={styles.avatarButton}
           testID="profile-button"
-        />
+          accessibilityLabel="View Profile"
+          accessibilityHint="Double tap to view your profile"
+        >
+          <Text style={[styles.avatarText, { color: theme.colors.text.inverse }]}>
+            {userName.charAt(0).toUpperCase()}
+          </Text>
+        </TouchableOpacity>
 
-        <ModernButton
-          title="🚨"
-          variant="void"
-          size="large"
-          animated={true}
-          glowEffect={true}
-          shaderEffect={true}
-          iconPosition="only"
+        <TouchableOpacity
           onPress={onEmergencyPress}
           style={styles.emergencyButton}
           testID="emergency-button"
           accessibilityLabel="Emergency Crisis Support"
           accessibilityHint="Double tap for immediate crisis support"
-        />
+        >
+          <Text style={styles.emergencyText}>🚨</Text>
+        </TouchableOpacity>
       </Animated.View>
-      </LinearGradient>
-    </AdvancedShadersContainer>
+    </SimpleCard>
   );
 };
 
 const createStyles = (theme) => StyleSheet.create({
-  containerWrapper: {
-    marginHorizontal: modernSpacing[2],
-    marginVertical: modernSpacing[2],
-  },
   container: {
     flexDirection: "row",
     alignItems: "flex-start",
-    paddingHorizontal: modernSpacing[6],
-    paddingTop: modernSpacing[12],
-    paddingBottom: modernSpacing[6],
-    borderRadius: borderRadius.lg,
+    paddingHorizontal: spacing[4],
+    paddingVertical: spacing[6],
+    marginHorizontal: spacing[4],
+    marginBottom: spacing[4],
   },
   mainContent: {
     flex: 1,
@@ -190,18 +161,15 @@ const createStyles = (theme) => StyleSheet.create({
     marginRight: theme.spacing[2],
   },
   greeting: {
-    fontSize: modernTypography.sizes.base,
-    fontWeight: modernTypography.weights.medium,
-    lineHeight: modernTypography.lineHeights.base,
-    fontFamily: modernTypography.fontFamily.sans,
+    fontSize: typography.sizes.base,
+    fontWeight: typography.weights.medium,
+    lineHeight: typography.lineHeights.base,
   },
   userName: {
-    fontSize: modernTypography.sizes['3xl'],
-    fontWeight: modernTypography.weights.black,
-    lineHeight: modernTypography.lineHeights['3xl'],
-    letterSpacing: modernTypography.letterSpacing.tight,
-    marginBottom: modernSpacing[2],
-    fontFamily: modernTypography.fontFamily.display,
+    fontSize: typography.sizes['3xl'],
+    fontWeight: typography.weights.bold,
+    lineHeight: typography.lineHeights['3xl'],
+    marginBottom: spacing[2],
   },
   subtitle: {
     fontSize: theme.typography.sizes.sm,
@@ -217,10 +185,27 @@ const createStyles = (theme) => StyleSheet.create({
   avatarButton: {
     width: 48,
     height: 48,
+    borderRadius: 24,
+    backgroundColor: theme.colors.primary[500],
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...shadows.md,
+  },
+  avatarText: {
+    fontSize: typography.sizes.xl,
+    fontWeight: typography.weights.bold,
   },
   emergencyButton: {
     width: 56,
     height: 56,
+    borderRadius: 28,
+    backgroundColor: theme.colors.error[500],
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...shadows.md,
+  },
+  emergencyText: {
+    fontSize: typography.sizes.xl,
   },
 });
 

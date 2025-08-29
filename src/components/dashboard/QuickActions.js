@@ -1,14 +1,9 @@
-import { WebSafeLinearGradient as LinearGradient } from "../common/WebSafeLinearGradient";
-import ModernCard from "../modern/ModernCard";
-import ModernButton from "../modern/ModernButton";
-import { modernDarkColors } from "../../shared/theme/darkTheme";
-import React, { useRef, useEffect, memo, useCallback } from "react";
+import React from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  Animated,
 } from "react-native";
 
 import { useTheme } from "../../shared/theme/ThemeContext";
@@ -19,132 +14,126 @@ import {
   borderRadius,
   shadows,
 } from "../../shared/theme/theme";
-import { MentalHealthIcon, ActionIcon } from "../icons";
 
 const QuickActions = ({ onStartChat, onTakeAssessment, onMoodTracker }) => {
   const { theme } = useTheme();
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(30)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 800,
-        delay: 200,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 600,
-        delay: 200,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [fadeAnim, slideAnim]);
 
   const actions = [
     {
       id: "chat",
-      title: "Start Chat",
-      subtitle: "Talk to AI therapist",
-      iconName: "Therapy",
+      title: "AI Therapy",
+      subtitle: "Talk with your AI companion",
+      icon: "💬",
+      color: colors.therapeutic.calming[500],
       onPress: onStartChat,
-      gradientColors: [
-        theme.colors.therapeutic.calming[400],
-        theme.colors.therapeutic.calming[600],
-      ],
     },
     {
       id: "assessment",
-      title: "Take Assessment",
-      subtitle: "PHQ-9 or GAD-7",
-      iconName: "Journal",
+      title: "Assessment",
+      subtitle: "Check your mental health",
+      icon: "📝",
+      color: colors.therapeutic.nurturing[500],
       onPress: onTakeAssessment,
-      gradientColors: [
-        theme.colors.therapeutic.grounding[400],
-        theme.colors.therapeutic.grounding[600],
-      ],
     },
     {
       id: "mood",
-      title: "Track Mood",
-      subtitle: "Log your feelings",
-      iconName: "Heart",
+      title: "Mood Tracker",
+      subtitle: "Log how you're feeling",
+      icon: "😊",
+      color: colors.therapeutic.empathy[500],
       onPress: onMoodTracker,
-      gradientColors: [
-        theme.colors.therapeutic.nurturing[400],
-        theme.colors.therapeutic.nurturing[600],
-      ],
     },
   ];
 
-  return (
-    <ModernCard
-      title="Quick Actions"
-      subtitle="Start your wellness journey"
-      variant="neon"
-      elevation="high"
-      animated={true}
-      glowEffect={true}
-      interactive={true}
-      shaderVariant="holographic"
-      style={styles.container}
-    >
-      <Animated.View
-        style={{
-          opacity: fadeAnim,
-          transform: [{ translateY: slideAnim }],
-        }}
-      >
+  const styles = createStyles(theme);
 
-        <View style={styles.actionsGrid}>
-          {actions.map((action, index) => (
-            <Animated.View
-              key={action.id}
-              style={{
-                opacity: fadeAnim,
-                transform: [
-                  {
-                    translateY: slideAnim.interpolate({
-                      inputRange: [0, 30],
-                      outputRange: [0, 30 + index * 10],
-                    }),
-                  },
-                ],
-              }}
-            >
-              <ModernButton
-                title={action.title}
-                variant={index === 0 ? "neon" : index === 1 ? "neural" : "glass"}
-                size="medium"
-                animated={true}
-                glowEffect={index === 0}
-                shaderEffect={index === 0}
-                icon={action.iconName}
-                onPress={action.onPress}
-                style={styles.actionButton}
-                testID={`quick-action-${action.id}`}
-              />
-            </Animated.View>
-          ))}
-        </View>
-      </Animated.View>
-    </ModernCard>
+  return (
+    <View style={styles.container}>
+      <Text style={[styles.title, { color: theme.colors.text.primary }]}>
+        Quick Actions
+      </Text>
+      <Text style={[styles.subtitle, { color: theme.colors.text.secondary }]}>
+        What would you like to do today?
+      </Text>
+
+      <View style={styles.actionsGrid}>
+        {actions.map((action) => (
+          <TouchableOpacity
+            key={action.id}
+            style={[styles.actionButton, { backgroundColor: action.color + '20' }]}
+            onPress={action.onPress}
+            accessibilityLabel={action.title}
+            accessibilityHint={action.subtitle}
+            accessibilityRole="button"
+            testID={`quick-action-${action.id}`}
+          >
+            <View style={[styles.iconContainer, { backgroundColor: action.color }]}>
+              <Text style={styles.actionIcon}>{action.icon}</Text>
+            </View>
+            <Text style={[styles.actionTitle, { color: theme.colors.text.primary }]}>
+              {action.title}
+            </Text>
+            <Text style={[styles.actionSubtitle, { color: theme.colors.text.secondary }]}>
+              {action.subtitle}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
-    marginHorizontal: spacing[4],
-    marginVertical: spacing[3],
+    padding: spacing[4],
+  },
+  title: {
+    fontSize: typography.sizes.lg,
+    fontWeight: typography.weights.semiBold,
+    lineHeight: typography.lineHeights.lg,
+    marginBottom: spacing[1],
+  },
+  subtitle: {
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.normal,
+    lineHeight: typography.lineHeights.sm,
+    opacity: 0.8,
+    marginBottom: spacing[4],
   },
   actionsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing[3],
   },
   actionButton: {
-    marginVertical: spacing[1],
+    width: '30%',
+    padding: spacing[3],
+    borderRadius: borderRadius.lg,
+    alignItems: 'center',
+    ...shadows.sm,
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: spacing[2],
+  },
+  actionIcon: {
+    fontSize: typography.sizes.lg,
+  },
+  actionTitle: {
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.semiBold,
+    textAlign: 'center',
+    marginBottom: spacing[1],
+  },
+  actionSubtitle: {
+    fontSize: typography.sizes.xs,
+    textAlign: 'center',
+    opacity: 0.8,
   },
 });
 
-export default memo(QuickActions);
+export default QuickActions;

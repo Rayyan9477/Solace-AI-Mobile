@@ -73,10 +73,9 @@ coverage
 mcp.json
 .cursor
 
-Light mode/
-Dark mode/
 .bmad-core
 .bmad-core/
 
 test-reports
 test-results
+nul

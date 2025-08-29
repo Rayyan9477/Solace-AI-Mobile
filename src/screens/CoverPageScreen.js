@@ -16,6 +16,7 @@ import {
 import { useTheme } from "../shared/theme/ThemeContext";
 import { MentalHealthAccessibility } from "../shared/utils/accessibility";
 import { spacing, typography, borderRadius, shadows } from "../shared/theme/theme";
+import ThemeToggle from "../components/common/ThemeToggle";
 
 const { width, height } = Dimensions.get("window");
 
@@ -145,6 +146,11 @@ const CoverPageScreen = () => {
         backgroundColor="transparent"
         translucent
       />
+      
+      {/* Theme Toggle */}
+      <View style={styles.themeToggleContainer}>
+        <ThemeToggle showLabel={false} />
+      </View>
 
       <LinearGradient
         colors={[
@@ -359,6 +365,12 @@ const CoverPageScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  themeToggleContainer: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+    zIndex: 1000,
   },
   gradientBackground: {
     flex: 1,

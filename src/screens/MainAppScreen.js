@@ -1,8 +1,3 @@
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { WebSafeLinearGradient as LinearGradient } from "../components/common/WebSafeLinearGradient";
-import EnhancedCard from "../components/ui/EnhancedCard";
-import EnhancedButton from "../components/ui/EnhancedButton";
-import EnhancedShadersContainer from "../components/enhanced/EnhancedShadersContainer";
 import React, {
   useEffect,
   useRef,
@@ -23,21 +18,33 @@ import {
   Dimensions,
   Animated,
   Linking,
+  SafeAreaView,
 } from "react-native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
+import * as Animatable from 'react-native-animatable';
+import LinearGradient from 'expo-linear-gradient';
 
+// Enhanced UI Components
+import { TherapeuticGradient, GlassmorphismContainer, FloatingParticles, OrganicBlobBackground } from '../components/shaders/PageShaders';
+import { FloatingActionButton, StaggeredListAnimation, ParallaxBackground, TherapeuticBreathingAnimation } from '../components/animations/AdvancedAnimations';
+import { TherapeuticCard, MindfulCard, EmpathyCard, GlassMorphCard } from '../components/ui/Card';
+import { CalmingButton, NurturingButton, GroundingButton } from '../components/ui/Button';
+import { MentalHealthIcon } from '../components/icons';
+import SimpleCard from "../components/ui/SimpleCard";
+import MentalHealthScoreWidget from "../components/ui/MentalHealthScoreWidget";
+
+// Dashboard Components
 import DailyInsights from "../components/dashboard/DailyInsights";
 import MoodCheckIn from "../components/dashboard/MoodCheckIn";
 import ProgressOverview from "../components/dashboard/ProgressOverview";
 import QuickActions from "../components/dashboard/QuickActions";
 import RecentActivity from "../components/dashboard/RecentActivity";
 import WelcomeHeader from "../components/dashboard/WelcomeHeader";
-import {
-  MentalHealthIcon,
-  NavigationIcon,
-  ActionIcon,
-} from "../components/icons";
+
+// Theme and Utils
 import { useTheme } from "../shared/theme/ThemeContext";
+import FreudDesignSystem, { FreudColors, FreudSpacing, FreudTypography, FreudShadows, FreudBorderRadius } from '../shared/theme/FreudDesignSystem';
 import {
   colors,
   typography,
@@ -49,24 +56,58 @@ import {
   MentalHealthAccessibility, 
   MentalHealthAccessibilityHelpers 
 } from "../utils/accessibility";
-import { WellnessTipEmoji } from "../utils/emojiAccessibility";
-import { useMotionAccessibility } from "../utils/motionAccessibility";
-import { DashboardLayout, ResponsiveGrid } from "../components/layout/ResponsiveLayout";
-import { MentalHealthCard, InsightCard } from "../components/ui/MentalHealthCard";
-import { TherapeuticActionButton, CrisisButton } from "../components/ui/TherapeuticButton";
 
-// Enhanced Components
+// Enhanced Therapeutic Tips
+const THERAPEUTIC_TIPS = [
+  {
+    tip: "Take three deep breaths and notice how your body feels in this moment",
+    category: "Mindfulness",
+    icon: "Mindfulness",
+    color: FreudColors.serenityGreen[50]
+  },
+  {
+    tip: "Practice the 5-4-3-2-1 grounding technique to center yourself",
+    category: "Grounding",
+    icon: "Therapy",
+    color: FreudColors.mindfulBrown[50]
+  },
+  {
+    tip: "Remember: it's okay to not be okay. Your feelings are valid",
+    category: "Self-Compassion",
+    icon: "Heart",
+    color: FreudColors.kindPurple[50]
+  },
+  {
+    tip: "Journal three things you're grateful for today",
+    category: "Gratitude",
+    icon: "Journal",
+    color: FreudColors.empathyOrange[50]
+  },
+  {
+    tip: "Connect with someone you care about today",
+    category: "Connection",
+    icon: "Heart",
+    color: FreudColors.zenYellow[50]
+  },
+  {
+    tip: "Progress isn't linear. Celebrate small wins along your journey",
+    category: "Growth",
+    icon: "Insights",
+    color: FreudColors.serenityGreen[60]
+  },
+];
 
 const { width, height } = Dimensions.get("window");
 
 const MainAppScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { theme } = useTheme();
-  const motionUtils = useMotionAccessibility();
+  const { theme, isDarkMode } = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [currentSection, setCurrentSection] = useState("dashboard");
+  const [currentTip, setCurrentTip] = useState(THERAPEUTIC_TIPS[0]);
+  const [isBreathingActive, setIsBreathingActive] = useState(false);
 
   // Animation refs
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -155,13 +196,25 @@ const MainAppScreen = () => {
     try {
       setRefreshing(true);
       setError(null);
+      
+      // Update therapeutic tip
+      setCurrentTip(getRandomTip());
+      
       await fetchData();
+      
+      // Gentle success feedback
+      Alert.alert(
+        "✨ Refreshed",
+        "Your wellness dashboard has been updated with fresh insights and support.",
+        [{ text: "Thank you", style: "default" }],
+        { userInterfaceStyle: isDarkMode ? 'dark' : 'light' }
+      );
     } catch (error) {
       // Error already handled in fetchData
     } finally {
       setRefreshing(false);
     }
-  }, [fetchData]);
+  }, [fetchData, isDarkMode]);
 
   const handleMoodCheckIn = useCallback(() => {
     navigation.navigate("Mood");
@@ -286,7 +339,7 @@ const MainAppScreen = () => {
     ];
   };
 
-  // Enhanced floating action button with shader effects
+  // Clean professional floating action button
   const FloatingActionButton = () => (
     <Animated.View
       style={[
@@ -297,109 +350,58 @@ const MainAppScreen = () => {
         },
       ]}
     >
-      <EnhancedButton
-        variant="therapeutic"
-        size="large"
-        icon="Therapy"
-        iconPosition="only"
-        animated={true}
-        shaderEffect={true}
-        shaderVariant="mesh"
+      <TouchableOpacity
         onPress={handleStartChat}
         style={styles.fabButton}
         testID="start-therapy-fab"
         accessibilityLabel="Start AI Therapy Session"
         accessibilityHint="Double tap to begin a private conversation with your AI therapist"
-      />
+        activeOpacity={0.8}
+      >
+        <View style={styles.fabContent}>
+          <ActionIcon
+            name="plus"
+            size={24}
+            color="#FFFFFF"
+          />
+        </View>
+      </TouchableOpacity>
     </Animated.View>
   );
 
-  // Enhanced wellness tips component
-  const WellnessTips = () => {
-    const tips = [
-      {
-        icon: "🌱",
-        title: "Mindful Moment",
-        tip: "Take 3 deep breaths and notice your surroundings",
-      },
-      {
-        icon: "💧",
-        title: "Stay Hydrated",
-        tip: "Drink a glass of water to refresh your mind",
-      },
-      {
-        icon: "🚶",
-        title: "Move Gently",
-        tip: "Take a short walk or do light stretching",
-      },
-      {
-        icon: "📖",
-        title: "Gratitude",
-        tip: "Think of one thing you're grateful for today",
-      },
-    ];
+  // Get random therapeutic tip
+  const getRandomTip = () => {
+    const randomIndex = Math.floor(Math.random() * THERAPEUTIC_TIPS.length);
+    return THERAPEUTIC_TIPS[randomIndex];
+  };
 
-    const [currentTip] = useState(
-      tips[Math.floor(Math.random() * tips.length)],
-    );
-
+  // Enhanced therapeutic tips component
+  const TherapeuticTipCard = () => {
     return (
-      <Animated.View
-        style={[
-          styles.wellnessTipContainer,
-          {
-            opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }],
-          },
-        ]}
-        accessible={true}
-        accessibilityRole="group"
-        accessibilityLabel={`Daily wellness tip: ${currentTip.title}`}
-        accessibilityHint="Therapeutic guidance for your mental well-being"
+      <TherapeuticCard
+        title="Today's Therapeutic Insight"
+        icon={currentTip.icon}
+        style={styles.tipCard}
+        elevation="lg"
       >
         <LinearGradient
-          colors={[
-            theme.colors.therapeutic.nurturing[100],
-            theme.colors.therapeutic.nurturing[50],
-          ]}
-          style={[styles.wellnessTipCard, shadows.md]}
+          colors={[currentTip.color + '20', currentTip.color + '10']}
+          style={styles.tipGradient}
         >
-          <View 
-            style={styles.wellnessTipIcon}
-            accessible={true}
-            accessibilityRole="image"
-            accessibilityLabel={`${currentTip.title} tip icon`}
-            accessibilityHint="Visual icon representing the wellness tip category"
-          >
-            <WellnessTipEmoji
-              emoji={currentTip.icon}
-              tipTitle={currentTip.title}
-              style={styles.wellnessTipEmoji}
-              testID="wellness-tip-emoji"
-              accessibilityElementsHidden={true}
-              importantForAccessibility="no"
-            />
-          </View>
-          <View style={styles.wellnessTipContent}>
-            <Text
-              style={[
-                styles.wellnessTipTitle,
-                { color: theme.colors.text.primary },
-              ]}
-            >
-              {currentTip.title}
+          <View style={styles.tipContent}>
+            <Text style={[styles.tipCategory, {
+              color: currentTip.color
+            }]}>
+              {currentTip.category.toUpperCase()}
             </Text>
-            <Text
-              style={[
-                styles.wellnessTipText,
-                { color: theme.colors.text.secondary },
-              ]}
-            >
+            <Text style={[styles.tipText, {
+              color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.primary : FreudDesignSystem.themes.light.colors.text.primary
+            }]}>
               {currentTip.tip}
             </Text>
           </View>
         </LinearGradient>
-      </Animated.View>
+      </TherapeuticCard>
     );
   };
 
@@ -412,221 +414,312 @@ const MainAppScreen = () => {
     [chat.conversations],
   );
 
+  useEffect(() => {
+    // Set initial therapeutic tip
+    setCurrentTip(getRandomTip());
+  }, []);
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar
+        barStyle={isDarkMode ? "light-content" : "dark-content"}
         backgroundColor="transparent"
-        translucent
-        barStyle={theme.isDark ? "light-content" : "dark-content"}
+        translucent={true}
       />
-
-      {/* Background Gradient */}
-      <LinearGradient
-        colors={getTimeBasedGradient()}
-        style={styles.backgroundGradient}
-      />
-
-      <DashboardLayout
-        header={
-          <WelcomeHeader
-            greeting={greeting}
-            userName={user?.profile?.name || "Friend"}
-            onProfilePress={handleViewProfile}
-            onEmergencyPress={showEmergencyAlert}
-            {...MentalHealthAccessibility.dashboard.welcomeMessage(
-              user?.profile?.name || "Friend",
-            )}
-          />
-        }
-        style={[
-          styles.contentContainer,
-          {
-            opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }],
-          },
+      
+      <OrganicBlobBackground
+        blobCount={4}
+        colors={[
+          FreudColors.serenityGreen[10],
+          FreudColors.kindPurple[10],
+          FreudColors.empathyOrange[10],
+          FreudColors.zenYellow[10],
         ]}
       >
-        {/* Wellness Tip of the Day */}
-        <EnhancedCard
-          title="Daily Wellness Tip"
-          subtitle="Your personalized guidance for today"
-          variant="therapeutic"
-          size="medium"
-          animated={true}
-          shaderVariant="waves"
-          shaderIntensity={0.2}
-          style={styles.wellnessTipCard}
+        <FloatingParticles 
+          particleCount={15}
+          particleColor={FreudColors.serenityGreen[30]}
+          particleSize={6}
+        />
+        
+        <ParallaxBackground parallaxSpeed={0.3}>
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+                tintColor={FreudColors.serenityGreen[60]}
+                colors={[FreudColors.serenityGreen[60], FreudColors.mindfulBrown[60]]}
+                progressBackgroundColor={isDarkMode ? FreudColors.optimisticGray[90] : '#FFFFFF'}
+                title="Refreshing your wellness dashboard..."
+                titleColor={FreudColors.mindfulBrown[70]}
+              />
+            }
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Enhanced Welcome Header */}
+            <Animatable.View 
+              animation="fadeInDown" 
+              duration={1000}
+            >
+              <GlassmorphismContainer style={styles.welcomeCard}>
+                <WelcomeHeader
+                  greeting={greeting}
+                  userName={user?.profile?.name || "Friend"}
+                  onProfilePress={handleViewProfile}
+                  onEmergencyPress={showEmergencyAlert}
+                  {...MentalHealthAccessibility.dashboard.welcomeMessage(
+                    user?.profile?.name || "Friend",
+                  )}
+                />
+              </GlassmorphismContainer>
+            </Animatable.View>
+
+            {/* Therapeutic Tip Card */}
+            <Animatable.View 
+              animation="slideInUp" 
+              duration={1200} 
+              delay={200}
+            >
+              <TherapeuticTipCard />
+            </Animatable.View>
+
+            {/* Mental Health Score Widget */}
+            <Animatable.View 
+              animation="zoomIn" 
+              duration={1000} 
+              delay={400}
+              style={styles.scoreSection}
+            >
+              <GlassMorphCard style={styles.scoreCard}>
+                <MentalHealthScoreWidget
+                  score={user?.mentalHealthScore || 80}
+                  animated={true}
+                  showTrend={true}
+                  trend="stable"
+                  onPress={() => navigation.navigate("MentalHealthDetails")}
+                />
+              </GlassMorphCard>
+            </Animatable.View>
+
+            {/* Enhanced Dashboard Grid */}
+            <StaggeredListAnimation stagger={150} animation="slideInUp">
+              {/* Enhanced Mood Check-in */}
+              <MindfulCard
+                title="Mindful Check-In"
+                subtitle="How are you feeling in this moment?"
+                icon="Heart"
+                style={styles.dashboardCard}
+              >
+                <View style={styles.moodCheckInContainer}>
+                  <MoodCheckIn
+                    currentMood={mood?.currentMood}
+                    onCheckIn={(moodId, moodData) => {
+                      // Enhanced mood handling
+                      setCurrentSection('mood');
+                      handleMoodCheckIn();
+                    }}
+                    compact={false}
+                  />
+                  
+                  {/* Breathing Exercise Integration */}
+                  <View style={styles.breathingContainer}>
+                    <TherapeuticBreathingAnimation
+                      isActive={isBreathingActive}
+                      size={80}
+                      duration={4000}
+                      onCycleComplete={() => console.log('Breathing cycle complete')}
+                    />
+                    <GroundingButton
+                      title={isBreathingActive ? "Stop Breathing" : "Start Breathing"}
+                      onPress={() => setIsBreathingActive(!isBreathingActive)}
+                      size="small"
+                      icon="Mindfulness"
+                      style={styles.breathingButton}
+                    />
+                  </View>
+                </View>
+              </MindfulCard>
+
+              {/* Enhanced Quick Actions */}
+              <EmpathyCard
+                title="Quick Wellness Actions"
+                subtitle="Choose what feels right for you today"
+                icon="Therapy"
+                style={styles.dashboardCard}
+              >
+                <QuickActions
+                  onStartChat={handleStartChat}
+                  onTakeAssessment={handleTakeAssessment}
+                  onMoodTracker={handleMoodCheckIn}
+                />
+              </EmpathyCard>
+
+              {/* Enhanced Insights */}
+              <TherapeuticCard 
+                title="Personal Insights"
+                subtitle="Discover patterns in your wellbeing"
+                icon="Insights"
+                style={styles.dashboardCard}
+              >
+                <DailyInsights insights={mood?.insights} />
+              </TherapeuticCard>
+
+              {/* Enhanced Progress */}
+              <MindfulCard
+                title="Your Progress"
+                subtitle="Celebrating your journey"
+                icon="Heart"
+                style={styles.dashboardCard}
+              >
+                <ProgressOverview
+                  weeklyStats={mood?.weeklyStats}
+                  userStats={user?.stats}
+                />
+              </MindfulCard>
+
+              {/* Enhanced Activity */}
+              <EmpathyCard
+                title="Recent Activity"
+                subtitle="Your wellness timeline" 
+                icon="Journal"
+                style={styles.dashboardCard}
+              >
+                <RecentActivity
+                  moodHistory={moodHistorySlice}
+                  chatHistory={chatHistorySlice}
+                />
+              </EmpathyCard>
+            </StaggeredListAnimation>
+
+            {/* Bottom spacing for FAB */}
+            <View style={styles.bottomSpacing} />
+          </ScrollView>
+        </ParallaxBackground>
+
+        {/* Enhanced Floating Action Button */}
+        <FloatingActionButton
+          onPress={handleStartChat}
+          size={64}
+          backgroundColor={FreudColors.mindfulBrown[90]}
+          rippleColor={FreudColors.mindfulBrown[70]}
+          style={styles.fab}
         >
-          <WellnessTips />
-        </EnhancedCard>
-
-        {/* Dashboard Grid */}
-        <ResponsiveGrid animated={true} style={styles.dashboardGrid}>
-          {/* Mood Check-in Card */}
-          <EnhancedCard
-            variant="glass"
-            size="medium"
-            animated={true}
-            shaderVariant="dots"
-            shaderIntensity={0.3}
-          >
-            <MoodCheckIn
-              currentMood={mood?.currentMood}
-              onCheckIn={handleMoodCheckIn}
-            />
-          </EnhancedCard>
-
-          {/* Quick Actions Card */}
-          <EnhancedCard
-            variant="gradient"
-            size="medium"
-            animated={true}
-            shaderVariant="mesh"
-            shaderIntensity={0.4}
-            interactive={true}
-          >
-            <QuickActions
-              onStartChat={handleStartChat}
-              onTakeAssessment={handleTakeAssessment}
-              onMoodTracker={handleMoodCheckIn}
-            />
-          </EnhancedCard>
-
-          {/* Daily Insights Card */}
-          <InsightCard
-            title="Personal Insights"
-            subtitle="Discover patterns in your wellbeing"
-            animated={true}
-            animationDelay={300}
-          >
-            <DailyInsights insights={mood?.insights} />
-          </InsightCard>
-
-          {/* Progress Overview Card */}
-          <MentalHealthCard
-            variant="success"
-            title="Your Progress"
-            subtitle="Celebrating your journey"
-            animated={true}
-            animationDelay={400}
-          >
-            <ProgressOverview
-              weeklyStats={mood?.weeklyStats}
-              userStats={user?.stats}
-            />
-          </MentalHealthCard>
-
-          {/* Recent Activity Card */}
-          <MentalHealthCard
-            variant="default"
-            title="Recent Activity"
-            subtitle="Your wellness timeline"
-            animated={true}
-            animationDelay={500}
-          >
-            <RecentActivity
-              moodHistory={moodHistorySlice}
-              chatHistory={chatHistorySlice}
-            />
-          </MentalHealthCard>
-        </ResponsiveGrid>
-
-        {/* Bottom spacing for FAB */}
-        <View style={styles.bottomSpacing} />
-      </DashboardLayout>
-
-      {/* Floating Action Button */}
-      <FloatingActionButton />
-    </View>
+          <View style={styles.fabContent}>
+            <MentalHealthIcon name="Therapy" size={28} color="#FFFFFF" />
+            <Text style={styles.fabLabel}>Dr. Freud</Text>
+          </View>
+        </FloatingActionButton>
+      </OrganicBlobBackground>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  backgroundGradient: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: height * 0.4,
-  },
-  contentContainer: {
-    flex: 1,
+    backgroundColor: 'transparent',
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: spacing[20],
+    paddingBottom: 140,
+    paddingTop: FreudSpacing[4],
+    paddingHorizontal: FreudSpacing[4],
   },
-  wellnessTipContainer: {
-    marginHorizontal: spacing[4],
-    marginVertical: spacing[2],
+  
+  // Welcome Section
+  welcomeCard: {
+    borderRadius: FreudBorderRadius['2xl'],
+    padding: FreudSpacing[1],
+    marginBottom: FreudSpacing[4],
+    ...FreudShadows.md,
   },
-  wellnessTipCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: spacing[4],
-    borderRadius: borderRadius.lg,
-    marginBottom: spacing.lg,
+  
+  // Therapeutic Tip Card
+  tipCard: {
+    marginBottom: FreudSpacing[4],
+    overflow: 'hidden',
   },
-  wellnessTipIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: spacing[3],
+  tipGradient: {
+    padding: FreudSpacing[4],
+    borderRadius: FreudBorderRadius.xl,
   },
-  wellnessTipEmoji: {
-    fontSize: typography.sizes["2xl"],
+  tipContent: {
+    alignItems: 'flex-start',
   },
-  wellnessTipContent: {
-    flex: 1,
+  tipCategory: {
+    fontSize: FreudTypography.sizes.xs,
+    fontWeight: FreudTypography.weights.bold,
+    fontFamily: FreudTypography.fontFamily.primary,
+    letterSpacing: 1.2,
+    marginBottom: FreudSpacing[2],
   },
-  wellnessTipTitle: {
-    fontSize: typography.sizes.base,
-    fontWeight: typography.weights.semiBold,
-    lineHeight: typography.lineHeights.base,
-    marginBottom: spacing[1],
+  tipText: {
+    fontSize: FreudTypography.sizes.base,
+    lineHeight: FreudTypography.sizes.base * FreudTypography.lineHeights.relaxed,
+    fontWeight: FreudTypography.weights.normal,
+    fontFamily: FreudTypography.fontFamily.primary,
   },
-  wellnessTipText: {
-    fontSize: typography.sizes.sm,
-    fontWeight: typography.weights.normal,
-    lineHeight: typography.lineHeights.sm,
-    opacity: 0.8,
+  
+  // Score Section
+  scoreSection: {
+    alignItems: 'center',
+    marginBottom: FreudSpacing[6],
   },
+  scoreCard: {
+    padding: FreudSpacing[4],
+    borderRadius: FreudBorderRadius['2xl'],
+  },
+  
+  // Dashboard Cards
+  dashboardCard: {
+    marginBottom: FreudSpacing[4],
+  },
+  moodCheckInContainer: {
+    paddingTop: FreudSpacing[2],
+  },
+  breathingContainer: {
+    alignItems: 'center',
+    marginTop: FreudSpacing[4],
+    paddingTop: FreudSpacing[3],
+    borderTopWidth: 1,
+    borderTopColor: FreudColors.optimisticGray[20],
+  },
+  breathingButton: {
+    marginTop: FreudSpacing[2],
+  },
+  
+  // Floating Action Button
   fab: {
-    position: "absolute",
-    right: spacing[5],
-    bottom: spacing[8],
+    position: 'absolute',
+    bottom: FreudSpacing[8],
+    right: FreudSpacing[6],
+    zIndex: 1000,
   },
-  fabButton: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    elevation: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+  fabContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  fabGradient: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 32,
-    justifyContent: "center",
-    alignItems: "center",
+  fabLabel: {
+    fontSize: FreudTypography.sizes.xs,
+    fontWeight: FreudTypography.weights.bold,
+    fontFamily: FreudTypography.fontFamily.primary,
+    color: '#FFFFFF',
+    marginTop: FreudSpacing[1],
+    textAlign: 'center',
   },
+  
+  // Spacing
   bottomSpacing: {
-    height: spacing[20],
-  },
-  // Enhanced layout styles
-  dashboardGrid: {
-    marginBottom: spacing.lg,
+    height: 160,
   },
 });
 
 export default MainAppScreen;
+
+// Export therapeutic tips for use in other components
+export { THERAPEUTIC_TIPS };

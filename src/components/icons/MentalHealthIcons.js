@@ -10,6 +10,7 @@ import {
   Polygon,
   G,
 } from "./WebSafeSvg";
+import { useTheme } from "../../shared/theme/ThemeContext";
 
 // For gradient support, we need to import these separately
 let Ellipse, Defs, LinearGradient, Stop;
@@ -27,9 +28,6 @@ try {
   Stop = G;
 }
 
-// Design tokens moved to shared/theme - using theme context instead
-// import { BaseDesignTokens } from "../../design-system/DesignTokens";
-
 // Base Mental Health Icon Component
 const MentalHealthIcon = ({
   name,
@@ -41,17 +39,17 @@ const MentalHealthIcon = ({
   style,
   testID,
 }) => {
-  // const tokens = BaseDesignTokens; // Using theme context instead
+  const { theme } = useTheme();
 
   const getColor = () => {
     if (color) return color;
 
-    if (therapeuticTheme) {
-      const therapeuticColors = tokens.colors.therapeutic[therapeuticTheme];
-      return therapeuticColors?.[600] || tokens.colors.primary[600];
+    if (therapeuticTheme && theme?.colors?.therapeutic?.[therapeuticTheme]) {
+      const therapeuticColors = theme.colors.therapeutic[therapeuticTheme];
+      return therapeuticColors?.[600] || therapeuticColors?.[500] || theme.colors.primary[600];
     }
 
-    return tokens.colors.primary[600];
+    return theme?.colors?.primary?.[600] || "#6366F1"; // Fallback color
   };
 
   const iconColor = getColor();
@@ -899,6 +897,148 @@ const MentalHealthIcon = ({
               strokeWidth={strokeWidth * 1.5}
               strokeLinecap="round"
             />
+          </G>
+        );
+
+      // UI and Navigation Icons
+      case "brain":
+        return (
+          <G>
+            <Path
+              d="M9.5 2A2.5 2.5 0 0 0 7 4.5v.5a2.5 2.5 0 0 0 0 5v.5A2.5 2.5 0 0 0 9.5 13h5a2.5 2.5 0 0 0 2.5-2.5v-.5a2.5 2.5 0 0 0 0-5v-.5A2.5 2.5 0 0 0 14.5 2z"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <Path
+              d="M9 6.5a1 1 0 1 1 2 0 1 1 0 0 1-2 0"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Path
+              d="M13 8.5a1 1 0 1 1 2 0 1 1 0 0 1-2 0"
+              fill={variant === "filled" ? "#FFFFFF" : strokeColor}
+            />
+            <Path
+              d="M9 10c1 1 2 1 3 0s2-1 3 0"
+              stroke={variant === "filled" ? "#FFFFFF" : strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+          </G>
+        );
+
+      case "heart":
+        return (
+          <G>
+            <Path
+              d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"
+              fill={fillColor}
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </G>
+        );
+
+      case "menu":
+        return (
+          <G>
+            <Line x1="3" y1="6" x2="21" y2="6" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round"/>
+            <Line x1="3" y1="12" x2="21" y2="12" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round"/>
+            <Line x1="3" y1="18" x2="21" y2="18" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round"/>
+          </G>
+        );
+
+      case "search":
+        return (
+          <G>
+            <Circle cx="11" cy="11" r="8" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth}/>
+            <Path d="m21 21-4.35-4.35" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+          </G>
+        );
+
+      case "settings":
+        return (
+          <G>
+            <Circle cx="12" cy="12" r="3" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth}/>
+            <Path d="M12 1v6" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round"/>
+            <Path d="M12 17v6" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round"/>
+            <Path d="m4.2 19.8 4.2-4.2" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round"/>
+            <Path d="m15.8 8.2 4.2-4.2" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round"/>
+            <Path d="M1 12h6" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round"/>
+            <Path d="M17 12h6" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round"/>
+            <Path d="m4.2 4.2 4.2 4.2" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round"/>
+            <Path d="m15.8 15.8 4.2 4.2" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round"/>
+          </G>
+        );
+
+      case "close":
+        return (
+          <G>
+            <Line x1="18" y1="6" x2="6" y2="18" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+            <Line x1="6" y1="6" x2="18" y2="18" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+          </G>
+        );
+
+      case "grid":
+        return (
+          <G>
+            <Rect x="3" y="3" width="7" height="7" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} rx="1"/>
+            <Rect x="14" y="3" width="7" height="7" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} rx="1"/>
+            <Rect x="14" y="14" width="7" height="7" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} rx="1"/>
+            <Rect x="3" y="14" width="7" height="7" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} rx="1"/>
+          </G>
+        );
+
+      case "users":
+        return (
+          <G>
+            <Circle cx="9" cy="7" r="4" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth}/>
+            <Path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+            <Path d="M16 3.13a4 4 0 0 1 0 7.75" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+            <Path d="M21 21v-2a4 4 0 0 0-3-3.85" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+          </G>
+        );
+
+      case "plus":
+        return (
+          <G>
+            <Line x1="12" y1="5" x2="12" y2="19" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+            <Line x1="5" y1="12" x2="19" y2="12" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+          </G>
+        );
+
+      case "bookmark":
+        return (
+          <G>
+            <Path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+          </G>
+        );
+
+      case "trash":
+        return (
+          <G>
+            <Polyline points="3,6 5,6 21,6" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+            <Path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+            <Line x1="10" y1="11" x2="10" y2="17" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round"/>
+            <Line x1="14" y1="11" x2="14" y2="17" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round"/>
+          </G>
+        );
+
+      case "folder":
+        return (
+          <G>
+            <Path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2l5 2h9a2 2 0 0 1 2 2z" fill={fillColor} stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+          </G>
+        );
+
+      case "chevron-right":
+        return (
+          <G>
+            <Polyline points="9,18 15,12 9,6" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
           </G>
         );
 

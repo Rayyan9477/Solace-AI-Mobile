@@ -1,31 +1,31 @@
 // Design System for Solace AI Mobile - Based on Freud UI Kit Design Specifications
 export const colors = {
-  // Mindful Brown - Primary brand color based on Figma design
+  // Mindful Brown - Primary brand color (exact Figma match)
   primary: {
-    50: "#FDFCFC", // Brown 10 - Very light
-    100: "#F7F4F2", // Brown 20 - Light
-    200: "#E8D0D9", // Brown 30 - Soft
-    300: "#D3C2BB", // Brown 40 - Medium light
-    400: "#AC836C", // Brown 50 - Medium
-    500: "#926247", // Brown 60 - Main primary color
-    600: "#704533", // Brown 70 - Darker
-    700: "#4F3422", // Brown 80 - Deep
-    800: "#372315", // Brown 90 - Very dark
-    900: "#372315", // Brown 100 - Darkest
+    50: "#F7F4F2", // Brown 10 - Very light (exact Figma)
+    100: "#E8D0D9", // Brown 20 - Light (exact Figma)
+    200: "#D3C2BB", // Brown 30 - Soft (exact Figma)
+    300: "#C0A091", // Brown 40 - Medium light (exact Figma)
+    400: "#AC836C", // Brown 50 - Medium (exact Figma)
+    500: "#926247", // Brown 60 - Main primary color (exact Figma)
+    600: "#663600", // Brown 70 - Darker (exact Figma)
+    700: "#432500", // Brown 80 - Deep (exact Figma)
+    800: "#372218", // Brown 90 - Very dark (exact Figma)
+    900: "#2E1A00", // Brown 100 - Darkest (exact Figma)
   },
 
-  // Serenity Green - Secondary color based on Figma design
+  // Serenity Green - Secondary color (exact Figma match)
   secondary: {
-    50: "#F2F5EB", // Green 10 - Very light
-    100: "#E5EAD7", // Green 20 - Light
-    200: "#CFD985", // Green 30 - Soft
-    300: "#7DD44D", // Green 40 - Medium light
-    400: "#98BD68", // Green 50 - Medium
-    500: "#7DD44D", // Green 60 - Main secondary color
-    600: "#5A6638", // Green 70 - Darker
-    700: "#504626", // Green 80 - Deep
-    800: "#29321A", // Green 90 - Very dark
-    900: "#191E10", // Green 100 - Darkest
+    50: "#F2F5EB", // Green 10 - Very light (exact Figma)
+    100: "#E5EAD7", // Green 20 - Light (exact Figma)
+    200: "#CFD985", // Green 30 - Soft (exact Figma)
+    300: "#B4C480", // Green 40 - Medium light (exact Figma)
+    400: "#98BD68", // Green 50 - Medium (exact Figma)
+    500: "#7DD44D", // Green 60 - Main secondary color (exact Figma)
+    600: "#5A6638", // Green 70 - Darker (exact Figma)
+    700: "#29321A", // Green 80 - Deep (exact Figma)
+    800: "#191E10", // Green 90 - Very dark (exact Figma)
+    900: "#0F120A", // Green 100 - Darkest
   },
 
   // Accent Colors - Refined for mental health app
@@ -139,60 +139,60 @@ export const colors = {
 
   // Therapeutic color palette based on Figma design specifications
   therapeutic: {
-    // Empathy Orange - For warmth and connection
+    // Empathy Orange - For warmth and connection (exact Figma match)
     empathy: {
-      50: "#FFFEE2", // Orange 10 - Very light
-      100: "#FFF89E", // Orange 20 - Light
-      200: "#FFF360", // Orange 30 - Soft
-      300: "#F76360", // Orange 40 - Medium light
-      400: "#F59E0B", // Orange 50 - Medium (fixed typo)
-      500: "#C96100", // Orange 60 - Main empathy color
-      600: "#943200", // Orange 70 - Darker
-      700: "#663600", // Orange 80 - Deep
-      800: "#4D2500", // Orange 90 - Very dark
-      900: "#2E1500", // Orange 100 - Darkest
+      50: "#FFEEE2", // Orange 10 - Very light (exact Figma)
+      100: "#FFC89E", // Orange 20 - Light (exact Figma)
+      200: "#FFB374", // Orange 30 - Soft (exact Figma)
+      300: "#F6A360", // Orange 40 - Medium light (exact Figma)
+      400: "#ED7100", // Orange 50 - Medium (exact Figma)
+      500: "#C96100", // Orange 60 - Main empathy color (exact Figma)
+      600: "#AA5500", // Orange 70 - Darker (exact Figma)
+      700: "#894700", // Orange 80 - Deep (exact Figma)
+      800: "#663600", // Orange 90 - Very dark (exact Figma)
+      900: "#2E1200", // Orange 100 - Darkest (exact Figma)
     },
 
-    // Zen Yellow - For clarity and optimism
+    // Zen Yellow - For clarity and optimism (exact Figma match)
     zen: {
-      50: "#FFFEEC", // Yellow 10 - Very light
-      100: "#FFFEBC", // Yellow 20 - Light
-      200: "#FFF088", // Yellow 30 - Soft
-      300: "#A37A00", // Yellow 40 - Medium light
-      400: "#A37A00", // Yellow 50 - Medium
-      500: "#EDA600", // Yellow 60 - Main zen color
-      600: "#FD3C00", // Yellow 70 - Darker
-      700: "#705600", // Yellow 80 - Deep
-      800: "#4D3C00", // Yellow 90 - Very dark
-      900: "#2E2300", // Yellow 100 - Darkest
+      50: "#FFF4E0", // Yellow 10 - Very light (exact Figma)
+      100: "#FFE5BC", // Yellow 20 - Light
+      200: "#FFD688", // Yellow 30 - Soft
+      300: "#FFC65C", // Yellow 40 - Medium light
+      400: "#FFB514", // Yellow 50 - Medium (exact Figma)
+      500: "#EDA600", // Yellow 60 - Main zen color (exact Figma)
+      600: "#A37A00", // Yellow 70 - Darker (exact Figma)
+      700: "#705600", // Yellow 80 - Deep (exact Figma)
+      800: "#4D3C00", // Yellow 90 - Very dark (exact Figma)
+      900: "#2E2500", // Yellow 100 - Darkest (exact Figma)
     },
 
-    // Kind Purple - For wisdom and spirituality
+    // Kind Purple - For wisdom and spirituality (exact Figma match)  
     kind: {
-      50: "#F9F4FF", // Purple 10 - Very light
-      100: "#F3E8FF", // Purple 20 - Light
-      200: "#E9D5FF", // Purple 30 - Soft
-      300: "#B695F3", // Purple 40 - Medium light
-      400: "#9654F5", // Purple 50 - Medium
-      500: "#6C53F3", // Purple 60 - Main kind color
-      600: "#553ED9", // Purple 70 - Darker
-      700: "#4530F7", // Purple 80 - Deep
-      800: "#3E2350", // Purple 90 - Very dark
-      900: "#161054", // Purple 100 - Darkest
+      50: "#F4F0FF", // Purple 10 - Very light (exact Figma)
+      100: "#E9DEFF", // Purple 20 - Light
+      200: "#D5C4FF", // Purple 30 - Soft
+      300: "#C0A5FF", // Purple 40 - Medium light
+      400: "#A685FF", // Purple 50 - Medium
+      500: "#8965FF", // Purple 60 - Main kind color
+      600: "#6C53F3", // Purple 70 - Darker (exact Figma)
+      700: "#5539CF", // Purple 80 - Deep
+      800: "#292350", // Purple 90 - Very dark (exact Figma)
+      900: "#1A1324", // Purple 100 - Darkest (exact Figma)
     },
 
-    // Optimistic Gray - For balance and neutrality
+    // Optimistic Gray - For balance and neutrality (exact Figma match)
     optimistic: {
-      50: "#FCFCFD", // Gray 10 - Very light
-      100: "#E1E1E0", // Gray 20 - Light
-      200: "#A9A9A5", // Gray 30 - Soft
-      300: "#54954E", // Gray 40 - Medium light
-      400: "#4C47C5", // Gray 50 - Medium
+      50: "#F5F5F5", // Gray 10 - Very light (exact Figma)
+      100: "#E1E1E0", // Gray 20 - Light (exact Figma)
+      200: "#C7C7C5", // Gray 30 - Soft
+      300: "#ADADAA", // Gray 40 - Medium light
+      400: "#929290", // Gray 50 - Medium
       500: "#738068", // Gray 60 - Main optimistic color
-      600: "#926855", // Gray 70 - Darker
-      700: "#54954E", // Gray 80 - Deep
-      800: "#242423", // Gray 90 - Very dark
-      900: "#161615", // Gray 100 - Darkest
+      600: "#5A554E", // Gray 70 - Darker (exact Figma)
+      700: "#3F3C38", // Gray 80 - Deep
+      800: "#242423", // Gray 90 - Very dark (exact Figma)
+      900: "#161615", // Gray 100 - Darkest (exact Figma)
     },
 
     // Additional therapeutic colors referenced by components

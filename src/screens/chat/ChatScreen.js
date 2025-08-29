@@ -12,17 +12,23 @@ import {
   Vibration,
   ActivityIndicator,
   BackHandler,
+  StyleSheet,
+  StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/native";
 
+import ChatTopicSidebar from "../../components/chat/ChatTopicSidebar";
 import EmotionIndicator from "../../components/chat/EmotionIndicator";
 import MessageBubble from "../../components/chat/MessageBubble";
 import TypingIndicator from "../../components/chat/TypingIndicator";
 import VoiceRecorder from "../../components/chat/VoiceRecorder";
+import { MentalHealthIcon } from "../../components/icons/MentalHealthIcons";
 import { useTheme } from "../../shared/theme/ThemeContext";
+import { spacing, typography, borderRadius, shadows } from "../../shared/theme/theme";
 import {
   addMessage,
   setTyping,
@@ -138,7 +144,7 @@ const EmotionContainer = styled(View)`
 `;
 
 const ChatScreen = () => {
-  const { theme } = useTheme();
+  const { theme, isDarkMode } = useTheme();
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { messages, isTyping, voiceEnabled } = useSelector(
@@ -149,10 +155,14 @@ const ChatScreen = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [currentEmotion, setCurrentEmotion] = useState(null);
   const [sendingMessage, setSendingMessage] = useState(false);
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState(null);
+  const [currentTopicCount, setCurrentTopicCount] = useState(24);
 
   const flatListRef = useRef(null);
   const sendButtonScale = useRef(new Animated.Value(0)).current;
   const inputHeight = useRef(new Animated.Value(40)).current;
+  const headerAnimation = useRef(new Animated.Value(0)).current;
 
   // Handle hardware back button on Android
   useEffect(() => {
@@ -252,6 +262,26 @@ const ChatScreen = () => {
     dispatch(toggleVoice());
   };
 
+  const handleSidebarToggle = () => {
+    setSidebarVisible(!sidebarVisible);
+  };
+
+  const handleTopicSelect = (topic) => {
+    setSelectedTopic(topic);
+    setSidebarVisible(false);
+    // Here you would typically load the conversation history for this topic
+    console.log('Selected topic:', topic);
+  };
+
+  // Header animation on scroll
+  useEffect(() => {
+    Animated.timing(headerAnimation, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
   const detectEmotion = (text) => {
     // Simple emotion detection - replace with actual emotion API
     const emotions = {
@@ -290,33 +320,132 @@ const ChatScreen = () => {
   );
 
   return (
-    <ChatContainer backgroundColor={theme.colors.background.primary}>
-      {/* Header */}
-      <Header
+    <View style={styles.container}>
+      <StatusBar 
+        barStyle={isDarkMode ? "light-content" : "dark-content"} 
         backgroundColor={theme.colors.background.primary}
-        borderColor={theme.colors.gray[200]}
-      >
-        <HeaderButton
-          backgroundColor={theme.colors.background.secondary}
-          onPress={() => {}}
+      />
+      
+      <ChatContainer backgroundColor={theme.colors.background.primary}>
+        {/* Enhanced Professional Header */}
+        <Animated.View
+          style={[
+            styles.professionalHeader,
+            {
+              backgroundColor: theme.colors.background.primary,
+              borderBottomColor: theme.colors.border.primary,
+              transform: [{ translateY: headerAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [-50, 0],
+              })}],
+              opacity: headerAnimation,
+            }
+          ]}
         >
-          <Icon name="menu" size={24} color={theme.colors.text.primary} />
-        </HeaderButton>
+          {/* Top Header Row */}
+          <View style={styles.topHeaderRow}>
+            <TouchableOpacity
+              style={[styles.menuButton, { backgroundColor: theme.colors.background.secondary }]}
+              onPress={handleSidebarToggle}
+              accessibilityRole="button"
+              accessibilityLabel="Open chat topics sidebar"
+            >
+              <MentalHealthIcon name="menu" size={20} color={theme.colors.text.primary} />
+            </TouchableOpacity>
 
-        <HeaderTitle>
-          <AIName color={theme.colors.text.primary}>Solace AI</AIName>
-          <AIStatus color={theme.colors.success[500]}>
-            {isTyping ? "Typing..." : "Online"}
-          </AIStatus>
-        </HeaderTitle>
+            <View style={styles.topicsInfo}>
+              <MentalHealthIcon name="grid" size={16} color={theme.colors.therapeutic.empathy[500]} />
+              <Text style={[styles.topicsText, { color: theme.colors.text.primary }]}>
+                Topics
+              </Text>
+              <View style={[styles.topicsBadge, { backgroundColor: theme.colors.therapeutic.empathy[500] }]}>
+                <Text style={[styles.topicsBadgeText, { color: theme.colors.text.inverse }]}>
+                  {currentTopicCount}
+                </Text>
+              </View>
+            </View>
 
-        <HeaderButton
-          backgroundColor={theme.colors.background.secondary}
-          onPress={() => {}}
-        >
-          <Icon name="more-vert" size={24} color={theme.colors.text.primary} />
-        </HeaderButton>
-      </Header>
+            <View style={styles.brandingHeader}>
+              <Text style={[styles.brandingText, { color: theme.colors.text.primary }]}>
+                Doctor Freud.ai
+              </Text>
+              <View style={styles.statusIndicators}>
+                <View style={[styles.statusTag, { backgroundColor: theme.colors.success[100] }]}>
+                  <Text style={[styles.statusTagText, { color: theme.colors.success[700] }]}>
+                    GET A MOBILE
+                  </Text>
+                </View>
+                <View style={[styles.statusTag, { backgroundColor: theme.colors.warning[100] }]}>
+                  <Text style={[styles.statusTagText, { color: theme.colors.warning[700] }]}>
+                    GET A WEB BETA
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={styles.searchButton}
+              accessibilityRole="button"
+              accessibilityLabel="Search conversations"
+            >
+              <MentalHealthIcon name="search" size={18} color={theme.colors.text.secondary} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.settingsButton}
+              accessibilityRole="button" 
+              accessibilityLabel="Settings"
+            >
+              <MentalHealthIcon name="settings" size={18} color={theme.colors.text.secondary} />
+            </TouchableOpacity>
+          </View>
+
+          {/* AI Assistant Header */}
+          <LinearGradient
+            colors={[`${theme.colors.therapeutic.calming[500]}10`, `${theme.colors.therapeutic.nurturing[500]}10`]}
+            style={styles.aiHeaderGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
+            <View style={styles.aiHeaderContent}>
+              <View style={styles.aiAvatarContainer}>
+                <LinearGradient
+                  colors={[theme.colors.therapeutic.calming[400], theme.colors.therapeutic.nurturing[400]]}
+                  style={styles.aiAvatar}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                >
+                  <MentalHealthIcon name="brain" size={18} color={theme.colors.text.inverse} />
+                </LinearGradient>
+                {isTyping && (
+                  <View style={[styles.typingIndicator, { backgroundColor: theme.colors.success[500] }]} />
+                )}
+              </View>
+              
+              <View style={styles.aiInfoContainer}>
+                <Text style={[styles.aiName, { color: theme.colors.text.primary }]}>
+                  {selectedTopic ? selectedTopic.title : "Dr. Freud AI Assistant"}
+                </Text>
+                <Text style={[styles.aiStatus, { color: theme.colors.success[600] }]}>
+                  {isTyping ? "Analyzing your message..." : "Ready to help • Online"}
+                </Text>
+                {selectedTopic && (
+                  <Text style={[styles.topicSubtitle, { color: theme.colors.text.secondary }]}>
+                    {selectedTopic.subtitle}
+                  </Text>
+                )}
+              </View>
+
+              <TouchableOpacity 
+                style={[styles.emergencyButton, { backgroundColor: theme.colors.error[50] }]}
+                accessibilityRole="button"
+                accessibilityLabel="Emergency support"
+              >
+                <MentalHealthIcon name="heart" size={16} color={theme.colors.error[500]} />
+              </TouchableOpacity>
+            </View>
+          </LinearGradient>
+        </Animated.View>
 
       {/* Messages */}
       <MessagesContainer backgroundColor={theme.colors.background.secondary}>
@@ -404,19 +533,164 @@ const ChatScreen = () => {
         </InputWrapper>
       </InputContainer>
 
-      {/* Voice Recorder Modal */}
-      {isRecording && (
-        <VoiceRecorder
-          isVisible={isRecording}
-          onClose={() => setIsRecording(false)}
-          onSend={(voiceMessage) => {
-            dispatch(addMessage(voiceMessage));
-            setIsRecording(false);
-          }}
-        />
-      )}
-    </ChatContainer>
+        {/* Voice Recorder Modal */}
+        {isRecording && (
+          <VoiceRecorder
+            isVisible={isRecording}
+            onClose={() => setIsRecording(false)}
+            onSend={(voiceMessage) => {
+              dispatch(addMessage(voiceMessage));
+              setIsRecording(false);
+            }}
+          />
+        )}
+      </ChatContainer>
+
+      {/* Chat Topic Sidebar */}
+      <ChatTopicSidebar
+        isVisible={sidebarVisible}
+        onClose={() => setSidebarVisible(false)}
+        onTopicSelect={handleTopicSelect}
+        selectedTopicId={selectedTopic?.id}
+      />
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  professionalHeader: {
+    borderBottomWidth: 1,
+    paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight || 0,
+  },
+  topHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: spacing[4],
+    paddingVertical: spacing[3],
+    justifyContent: 'space-between',
+  },
+  menuButton: {
+    width: 36,
+    height: 36,
+    borderRadius: borderRadius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...shadows.sm,
+  },
+  topicsInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: spacing[3],
+    paddingVertical: spacing[1.5],
+    borderRadius: borderRadius.md,
+  },
+  topicsText: {
+    fontSize: typography.sizes.base,
+    fontWeight: typography.weights.medium,
+    marginLeft: spacing[2],
+    marginRight: spacing[2],
+  },
+  topicsBadge: {
+    paddingHorizontal: spacing[2],
+    paddingVertical: spacing[0.5],
+    borderRadius: borderRadius.full,
+    minWidth: 24,
+    alignItems: 'center',
+  },
+  topicsBadgeText: {
+    fontSize: typography.sizes.xs,
+    fontWeight: typography.weights.bold,
+  },
+  brandingHeader: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  brandingText: {
+    fontSize: typography.sizes.lg,
+    fontWeight: typography.weights.semiBold,
+    marginBottom: spacing[1],
+  },
+  statusIndicators: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  statusTag: {
+    paddingHorizontal: spacing[2],
+    paddingVertical: spacing[0.5],
+    borderRadius: borderRadius.sm,
+    marginHorizontal: spacing[1],
+  },
+  statusTagText: {
+    fontSize: typography.sizes.xs,
+    fontWeight: typography.weights.medium,
+  },
+  searchButton: {
+    padding: spacing[2],
+    marginLeft: spacing[2],
+  },
+  settingsButton: {
+    padding: spacing[2],
+    marginLeft: spacing[1],
+  },
+  aiHeaderGradient: {
+    paddingHorizontal: spacing[4],
+    paddingVertical: spacing[4],
+  },
+  aiHeaderContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  aiAvatarContainer: {
+    position: 'relative',
+  },
+  aiAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...shadows.md,
+  },
+  typingIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  aiInfoContainer: {
+    flex: 1,
+    marginLeft: spacing[3],
+  },
+  aiName: {
+    fontSize: typography.sizes.lg,
+    fontWeight: typography.weights.semiBold,
+    marginBottom: spacing[0.5],
+  },
+  aiStatus: {
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.medium,
+    marginBottom: spacing[0.5],
+  },
+  topicSubtitle: {
+    fontSize: typography.sizes.sm,
+    fontStyle: 'italic',
+  },
+  emergencyButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: spacing[2],
+    ...shadows.sm,
+  },
+});
 
 export default ChatScreen;

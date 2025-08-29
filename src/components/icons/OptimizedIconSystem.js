@@ -61,22 +61,6 @@ const USED_ICONS = {
     </Svg>
   ),
   
-  home: ({ width, height, color, variant, strokeWidth }) => (
-    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
-        stroke={color}
-        strokeWidth={strokeWidth}
-        fill={variant === "filled" ? color : "none"}
-      />
-      <Path
-        d="M9 22V12h6v10"
-        stroke={color}
-        strokeWidth={strokeWidth}
-        fill="none"
-      />
-    </Svg>
-  ),
 
   Chat: ({ width, height, color, variant, strokeWidth }) => (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
@@ -431,101 +415,6 @@ const USED_ICONS = {
     </Svg>
   ),
 
-  heart: ({ width, height, color, variant, strokeWidth }) => (
-    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-        stroke={color}
-        strokeWidth={strokeWidth}
-        fill={variant === "filled" ? color : "none"}
-      />
-    </Svg>
-  ),
-
-  brain: ({ width, height, color, variant, strokeWidth }) => (
-    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M12 2C8 2 5 5 5 9c0 1 0 2 0 3 0 3 2 5 5 5h4c3 0 5-2 5-5 0-1 0-2 0-3 0-4-3-7-7-7z"
-        stroke={color}
-        strokeWidth={strokeWidth}
-        fill={variant === "filled" ? color : "none"}
-      />
-      <Path
-        d="M12 2v15"
-        stroke={color}
-        strokeWidth={strokeWidth}
-      />
-      <Path
-        d="M5 12h14"
-        stroke={color}
-        strokeWidth={strokeWidth}
-      />
-    </Svg>
-  ),
-
-  therapy: ({ width, height, color, variant, strokeWidth }) => (
-    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
-      <Circle
-        cx="12"
-        cy="12"
-        r="3"
-        stroke={color}
-        strokeWidth={strokeWidth}
-        fill={variant === "filled" ? color : "none"}
-      />
-      <Path
-        d="M12 1v6m0 6v6m11-7h-6m-6 0H1"
-        stroke={color}
-        strokeWidth={strokeWidth}
-      />
-    </Svg>
-  ),
-
-  journal: ({ width, height, color, variant, strokeWidth }) => (
-    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"
-        stroke={color}
-        strokeWidth={strokeWidth}
-      />
-      <Path
-        d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
-        stroke={color}
-        strokeWidth={strokeWidth}
-        fill={variant === "filled" ? color : "none"}
-      />
-    </Svg>
-  ),
-
-  meditation: ({ width, height, color, variant, strokeWidth }) => (
-    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
-      <Circle
-        cx="12"
-        cy="12"
-        r="10"
-        stroke={color}
-        strokeWidth={strokeWidth}
-        fill={variant === "filled" ? color : "none"}
-      />
-      <Path
-        d="M8 12h8"
-        stroke={color}
-        strokeWidth={strokeWidth}
-      />
-      <Circle
-        cx="9"
-        cy="9"
-        r="1"
-        fill={color}
-      />
-      <Circle
-        cx="15"
-        cy="9"
-        r="1"
-        fill={color}
-      />
-    </Svg>
-  ),
 
   // Action icons (used in buttons and interactions)
   plus: ({ width, height, color, variant, strokeWidth }) => (
@@ -585,6 +474,55 @@ const USED_ICONS = {
         stroke={color}
         strokeWidth={strokeWidth}
         fill="none"
+      />
+    </Svg>
+  ),
+
+  // Wellness and emergency icons
+  "wellness": ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Circle
+        cx="12"
+        cy="12"
+        r="9"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill={variant === "filled" ? color : "none"}
+      />
+      <Path
+        d="M12 7v8"
+        stroke={variant === "filled" ? "#FFFFFF" : color}
+        strokeWidth={strokeWidth}
+      />
+      <Path
+        d="M8 11h8"
+        stroke={variant === "filled" ? "#FFFFFF" : color}
+        strokeWidth={strokeWidth}
+      />
+    </Svg>
+  ),
+
+  "emergency": ({ width, height, color, variant, strokeWidth }) => (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Circle
+        cx="12"
+        cy="12"
+        r="10"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill={variant === "filled" ? color : "none"}
+      />
+      <Path
+        d="M12 8v4"
+        stroke={variant === "filled" ? "#FFFFFF" : color}
+        strokeWidth={strokeWidth * 1.5}
+        strokeLinecap="round"
+      />
+      <Circle
+        cx="12"
+        cy="16"
+        r="1"
+        fill={variant === "filled" ? "#FFFFFF" : color}
       />
     </Svg>
   ),

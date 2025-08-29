@@ -1,0 +1,175 @@
+## **Complete Screen Breakdown by Image File:**
+
+### 1. **🔒 Welcome Screen.png**
+- **Step 1**: Welcome/Introduction Screen
+- **Step 2**: Personalization with AI Screen  
+- **Step 3**: Mood Tracking Introduction
+- **Step 4**: Community Features Preview
+- **Step 5**: AI Therapy Introduction
+- **Step 6**: Get Started Final Step
+- **Navigation**: Progress indicators and skip options
+
+### 2. **🔒 Splash & Loading.png**
+- **Splash Screen**: App launch with Freud logo
+- **Loading Screen**: Progress indicator with animations
+- **App Icon Display**: Brand identity screen
+- **Initial Boot**: System initialization screen
+
+### 3. **🔒 Sign In & Sign Up.png**
+- **Sign In Screen**: Email/password login form
+- **Sign Up Screen**: User registration form
+- **Forgot Password Screen**: Password recovery flow
+- **Social Login Options**: Third-party authentication
+- **Form Validation**: Error states and success states
+
+### 4. **🔒 Mental Health Assessment.png**
+- **Question 1**: Health goals selection
+- **Question 2**: Gender selection
+- **Question 3**: Age selection
+- **Question 4**: Sleep patterns assessment
+- **Question 5**: Stress levels evaluation
+- **Question 6**: Anxiety assessment
+- **Question 7**: Depression screening
+- **Question 8**: Physical activity evaluation
+- **Question 9**: Social connections assessment
+- **Question 10**: Medication/therapy history
+- **Question 11**: Lifestyle factors
+- **Question 12**: Support system evaluation
+- **Question 13**: Coping mechanisms
+- **Question 14**: Overall wellness goals
+- **Results Screen**: Mental health score and analysis
+
+### 5. **🔒 AI Therapy Chatbot.png**
+- **Chat Interface**: Main conversation screen
+- **Message Input**: Text input with send button
+- **AI Responses**: Therapeutic responses with avatars
+- **Voice Input**: Voice recording functionality
+- **Session History**: Previous conversation access
+- **Emotional Context**: Mood-aware responses
+- **Crisis Support**: Emergency intervention interface
+
+### 6. **🔒 Home & Mental Health Score.png**
+- **Main Dashboard**: Personalized greeting and overview
+- **Mental Health Score**: Current score (e.g., 80 - "Mentally Stable")
+- **Freud Score Card**: Detailed mental health metrics
+- **Quick Stats**: Mindful hours, sleep quality, journal entries
+- **Progress Overview**: Trend indicators and history
+- **Quick Actions**: Fast access to key features
+- **Today's Insights**: Personalized recommendations
+
+### 7. **🔒 Mental Health Journal.png**
+- **Journal Home**: List of journal entries
+- **New Entry**: Create new journal entry screen
+- **Entry Editor**: Rich text editor with mood tagging
+- **Calendar View**: Monthly/weekly journal overview
+- **Search Entries**: Find specific journal entries
+- **Mood Correlation**: Mood trends from journal entries
+- **Export Options**: Share or backup journal data
+
+### 8. **🔒 Mood Tracker.png**
+- **Mood Selection**: Choose current mood (Depressed, Sad, Neutral, Happy, Excited)
+- **Mood Intensity**: Slider for emotion intensity
+- **Activity Tracking**: What activities influenced mood
+- **Mood History**: Daily/weekly/monthly mood trends
+- **Mood Analytics**: Patterns and insights
+- **AI Suggestions**: Personalized mood improvement tips
+- **Mood Calendar**: Visual mood tracking over time
+
+### 9. **🔒 Community Support.png**
+- **Community Feed**: Posts from other users
+- **Support Groups**: Join mental health support groups
+- **New Post Creation**: Share experiences or ask for help
+- **Discussion Threads**: Topic-based conversations
+- **Peer Support**: Connect with others in similar situations
+- **Moderation**: Safe space guidelines and reporting
+- **Success Stories**: Inspirational community content
+
+### 10. **🔒 Profile Setup & Completion.png**
+- **Personal Info**: Name, age, profile picture setup
+- **Preferences**: App settings and customization
+- **Goals Setting**: Mental health objectives
+- **Notification Preferences**: How and when to be notified
+- **Privacy Settings**: Data sharing preferences
+- **Completion Progress**: Profile setup progress bar
+- **Skip Options**: Optional fields and continue buttons
+
+### 11. **🔒 Profile Settings & Help Center.png**
+- **Account Settings**: Personal information management
+- **App Preferences**: Theme, language, accessibility
+- **Notification Settings**: Push notification management
+- **Privacy & Security**: Data protection settings
+- **Help Center**: FAQ and support articles
+- **Contact Support**: Direct support channels
+- **About**: App version and legal information
+- **AI Support**: Integrated AI assistance
+
+### 12. **🔒 Search Screen.png**
+- **Search Bar**: Universal search functionality
+- **Recent Searches**: Previously searched terms
+- **Categories**: Filtered search by content type
+- **Results Display**: Search results with relevance
+- **Filter Options**: Refine search results
+- **Popular Searches**: Trending or suggested searches
+- **Voice Search**: Speech-to-text search option
+
+### 13. **🔒 Sleep Quality.png**
+- **Sleep Tracking**: Hours slept input/tracking
+- **Sleep Quality Rating**: Rate sleep quality (1-10)
+- **Sleep Patterns**: Weekly/monthly sleep analysis
+- **Sleep Goals**: Set target sleep hours
+- **Sleep Tips**: AI-generated sleep improvement suggestions
+- **Sleep History**: Historical sleep data visualization
+- **Bedtime Reminders**: Smart notification settings
+
+### 14. **🔒 Smart Notifications.png**
+- **Notification Settings**: Enable/disable notifications
+- **Scheduling**: When to receive notifications
+- **Notification Types**: Mood check-ins, reminders, etc.
+- **Personalization**: Customize notification content
+- **Frequency Control**: How often to be notified
+- **Do Not Disturb**: Quiet hours settings
+- **Notification History**: Previous notifications
+
+### 15. **🔒 Stress Management.png**
+- **Stress Assessment**: Current stress level input
+- **Breathing Exercises**: Guided breathing techniques
+- **Relaxation Techniques**: Various stress relief methods
+- **Progress Tracking**: Stress level trends over time
+- **Quick Relief**: Immediate stress reduction tools
+- **Personalized Plan**: AI-generated stress management plan
+- **Resources**: Educational content about stress
+
+### 16. **🔒 Mindful Hours.png**
+- **Mindfulness Timer**: Meditation session timer
+- **Session History**: Previous mindfulness sessions
+- **Progress Tracking**: Hours spent in mindfulness
+- **Guided Sessions**: Various mindfulness exercises
+- **Achievement Badges**: Mindfulness milestones
+- **Daily Goals**: Mindfulness time targets
+- **Session Types**: Different mindfulness practices
+
+### 17. **🔒 Mindful Resources.png**
+- **Resource Library**: Educational content about mindfulness
+- **Article Categories**: Organized mindfulness topics
+- **Video Content**: Guided mindfulness videos
+- **Audio Sessions**: Mindfulness audio content
+- **Bookmarks**: Save favorite resources
+- **Recommendations**: AI-suggested resources
+- **Progress Tracking**: Learning progress indicators
+
+### 18. **🔒 Error & Other Utilities.png**
+- **Error Screens**: Various error state displays
+- **Network Error**: Connection problem handling
+- **Server Error**: Backend issue notifications
+- **Maintenance Mode**: App maintenance notifications
+- **Empty States**: No data available screens
+- **Success Messages**: Positive feedback screens
+- **Loading States**: Various loading indicators
+- **Offline Mode**: App functionality without internet
+
+## **Summary:**
+**Total Screens Identified: ~85-90 individual screens across 18 image files**
+
+Each image file contains multiple screen states and variations, showing different user flows, error states, empty states, and interactive elements. The Dark-mode UI design system covers the complete user journey from onboarding through daily usage of mental health features.
+
+**✅ All identified screens are implemented in the codebase** with sophisticated dark theme styling, animations, and mental health-focused functionality.
