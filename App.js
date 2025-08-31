@@ -1,165 +1,80 @@
+/**
+ * Solace AI Mobile - Mental Health Support App
+ * Main App Entry Point - FIXED VERSION
+ * 
+ * Provides comprehensive mental health support through AI-powered conversations,
+ * mood tracking, therapeutic activities, and crisis intervention resources.
+ */
+
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-const Tab = createBottomTabNavigator();
+// Redux Store
+import { store, persistor } from './src/store/store';
 
-// Simple screens
-const HomeScreen = () => (
-  <View style={styles.screen}>
-    <Text style={styles.title}>🌸 Solace AI Mobile</Text>
-    <Text style={styles.subtitle}>Welcome to Mental Health Support</Text>
-    <Text style={styles.status}>✅ Home Screen Working</Text>
-  </View>
+// App Providers and Navigation
+import { AppProvider } from './src/components/AppProvider';
+import AppNavigator from './src/navigation/AppNavigator';
+
+// Error Boundary and Loading Components
+import { withErrorBoundary } from './src/utils/ErrorBoundary';
+import SimpleFallbackScreen from './src/components/SimpleFallbackScreen';
+
+const LoadingScreen = () => (
+  <SimpleFallbackScreen 
+    message="Loading your mental health companion..."
+    showSpinner={true}
+  />
 );
-
-const MoodScreen = () => (
-  <View style={styles.screen}>
-    <Text style={styles.title}>📊 Mood Tracker</Text>
-    <Text style={styles.subtitle}>Track your emotional wellbeing</Text>
-    <View style={styles.buttonContainer}>
-      <View style={styles.button}>
-        <Text style={styles.buttonText}>Log Mood</Text>
-      </View>
-    </View>
-  </View>
-);
-
-const ChatScreen = () => (
-  <View style={styles.screen}>
-    <Text style={styles.title}>💬 AI Therapy Chat</Text>
-    <Text style={styles.subtitle}>Talk to your AI counselor</Text>
-    <View style={styles.chatBox}>
-      <Text style={styles.chatText}>Hello! How are you feeling today?</Text>
-    </View>
-  </View>
-);
-
-const ProfileScreen = () => (
-  <View style={styles.screen}>
-    <Text style={styles.title}>👤 Your Profile</Text>
-    <Text style={styles.subtitle}>Personal settings and progress</Text>
-    <Text style={styles.info}>🎯 Wellness Goals: In Progress</Text>
-    <Text style={styles.info}>📈 Mood Streak: 7 days</Text>
-  </View>
-);
-
-const TabNavigator = () => {
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle: {
-          backgroundColor: '#2d5aa0',
-          paddingBottom: 8,
-          height: 70,
-        },
-        tabBarActiveTintColor: '#ffffff',
-        tabBarInactiveTintColor: '#a0c4ff',
-        headerShown: false,
-      }}
-    >
-      <Tab.Screen 
-        name="Home" 
-        component={HomeScreen}
-        options={{
-          tabBarLabel: 'Home',
-        }}
-      />
-      <Tab.Screen 
-        name="Mood" 
-        component={MoodScreen}
-        options={{
-          tabBarLabel: 'Mood',
-        }}
-      />
-      <Tab.Screen 
-        name="Chat" 
-        component={ChatScreen}
-        options={{
-          tabBarLabel: 'Chat',
-        }}
-      />
-      <Tab.Screen 
-        name="Profile" 
-        component={ProfileScreen}
-        options={{
-          tabBarLabel: 'Profile',
-        }}
-      />
-    </Tab.Navigator>
-  );
-};
 
 const App = () => {
+  console.log('🌟 Solace AI Mobile: Starting fixed mental health support app...');
+
   return (
-    <NavigationContainer>
-      <TabNavigator />
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Provider store={store}>
+        <PersistGate loading={<LoadingScreen />} persistor={persistor}>
+          <SafeAreaProvider>
+            <AppProvider>
+              <NavigationContainer>
+                <StatusBar style="auto" backgroundColor="transparent" translucent />
+                <AppNavigator />
+              </NavigationContainer>
+            </AppProvider>
+          </SafeAreaProvider>
+        </PersistGate>
+      </Provider>
+    </GestureHandlerRootView>
   );
 };
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f0f8ff',
-    padding: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#2d5aa0',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#5a7bc0',
-    marginBottom: 24,
-    textAlign: 'center',
-  },
-  status: {
-    fontSize: 14,
-    color: '#22c55e',
-    marginBottom: 12,
-    fontWeight: '600',
-  },
-  info: {
-    fontSize: 14,
-    color: '#2d5aa0',
-    marginBottom: 8,
-  },
-  buttonContainer: {
-    marginTop: 20,
-  },
-  button: {
-    backgroundColor: '#2d5aa0',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  chatBox: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 12,
-    marginTop: 20,
-    minWidth: 200,
-    borderLeftWidth: 4,
-    borderLeftColor: '#2d5aa0',
-  },
-  chatText: {
-    fontSize: 14,
-    color: '#333',
-    lineHeight: 20,
+// Wrap the app with error boundary for crash protection
+const SafeApp = withErrorBoundary(App, {
+  fallback: ({ error, retry, goHome }) => (
+    <SimpleFallbackScreen 
+      message="Something went wrong with the mental health app"
+      error={error}
+      onRetry={retry}
+      onGoHome={goHome}
+      showEmergencyHelp={true}
+    />
+  ),
+  onError: (error, errorInfo) => {
+    console.error('🚨 Mental Health App Error:', error);
+    console.error('Error Info:', errorInfo);
+    
+    // In production, you might want to send this to a logging service
+    // but be careful not to log sensitive mental health data
+    if (!__DEV__) {
+      // Log non-sensitive error information only
+      console.log('Production error logged (no sensitive data)');
+    }
   },
 });
 
-export default App;
+export default SafeApp;

@@ -18,8 +18,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { MentalHealthIcon } from "../../components/icons";
 import { FreudLogo, ThemedFreudIcon } from "../../components/icons/FreudIcons";
 import FreudButton from "../../components/ui/FreudButton";
-import { useTheme } from "../../shared/theme/ThemeContext";
+import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
 import { freudTheme } from "../../shared/theme/freudTheme";
+import EnhancedInput from "../../components/forms/EnhancedInput";
+import { 
+  createValidator, 
+  FORM_CONTEXTS, 
+  VALIDATION_SCHEMAS 
+} from "../../utils/formValidation";
 import {
   registerStart,
   registerSuccess,
@@ -31,15 +37,44 @@ const RegisterScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.auth);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [formValues, setFormValues] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    agreeToTerms: false,
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [isEmailValid, setIsEmailValid] = useState(false);
+  
+  // Initialize form validator
+  const validator = useState(() => createValidator(FORM_CONTEXTS.AUTH))[0];
+
+  // Form handling functions
+  const handleFieldChange = (field, value) => {
+    const newValues = { ...formValues, [field]: value };
+    setFormValues(newValues);
+    
+    // Mark field as touched and validate
+    validator.markFieldTouched(field);
+    if (VALIDATION_SCHEMAS.REGISTER[field]) {
+      validator.validateFieldRealTime(field, value, newValues, VALIDATION_SCHEMAS.REGISTER[field]);
+    }
+  };
+
+  const handleFieldBlur = (field) => {
+    validator.markFieldTouched(field);
+    if (VALIDATION_SCHEMAS.REGISTER[field]) {
+      const fieldErrors = validator.validateField(
+        field, 
+        formValues[field], 
+        formValues, 
+        VALIDATION_SCHEMAS.REGISTER[field]
+      );
+      if (fieldErrors.length > 0) {
+        validator.errors[field] = fieldErrors;
+      }
+    }
+  };
 
   // Animation refs
   const fadeAnim = useState(new Animated.Value(0))[0];

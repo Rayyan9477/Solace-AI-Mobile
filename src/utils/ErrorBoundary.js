@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 
 import { MentalHealthIcon } from '../components/icons';
-import { useTheme } from '../shared/theme/ThemeContext';
+import { useTheme } from '../shared/theme/UnifiedThemeProvider';
 import { colors, typography, spacing, borderRadius, shadows } from '../shared/theme/theme';
 
 /**

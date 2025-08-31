@@ -1,51 +1,37 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import tokenService from "../../services/tokenService";
 import secureStorage from "../../services/secureStorage";
+import apiService from "../../services/api";
 
 // Async thunk for secure login
 export const secureLogin = createAsyncThunk(
   'auth/secureLogin',
   async ({ email, password, rememberMe = false }, { rejectWithValue }) => {
     try {
-      // In a real app, this would make an API call
-      // const response = await apiService.auth.login(email, password);
-      
-      // Mock implementation - replace with real API call
+      // Input validation
       if (!email || !password) {
         throw new Error('Email and password are required');
       }
 
-      // Simulate API response
-      const mockResponse = {
-        user: {
-          id: "1",
-          email,
-          name: email.split('@')[0],
-          avatar: null,
-        },
-        accessToken: `mock_jwt_token_${Date.now()}`,
-        refreshToken: `mock_refresh_token_${Date.now()}`,
-        expiresIn: 3600 // 1 hour
-      };
-
-      // Store tokens securely
-      await tokenService.storeTokens(
-        mockResponse.accessToken,
-        mockResponse.refreshToken,
-        mockResponse.expiresIn
-      );
-
+      // Real API call using the actual API service
+      const response = await apiService.auth.login(email, password);
+      
       // Store user data securely
-      await secureStorage.storeSecureData('user_profile', mockResponse.user, {
+      await secureStorage.storeSecureData('user_profile', response.user, {
         dataType: 'user_profile'
       });
 
       return {
-        user: mockResponse.user,
-        token: mockResponse.accessToken
+        user: response.user,
+        token: response.access_token
       };
     } catch (error) {
-      return rejectWithValue(error.message);
+      console.error('Login error:', error);
+      return rejectWithValue(
+        error.response?.data?.message || 
+        error.message || 
+        'Login failed. Please try again.'
+      );
     }
   }
 );

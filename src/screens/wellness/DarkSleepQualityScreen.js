@@ -342,7 +342,7 @@ const DarkSleepQualityScreen = ({ navigation }) => {
             ))}
           </ScrollView>
         </View>
-      </View>
+      </Animated.View>
 
       {/* Quick Actions */}
       <Animated.View 

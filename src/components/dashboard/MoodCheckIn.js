@@ -7,445 +7,359 @@ import {
   Animated,
   Dimensions,
 } from "react-native";
-import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'expo-linear-gradient';
-import { useTheme } from "../../shared/theme/ThemeContext";
-import FreudDesignSystem, { FreudColors, FreudShadows, FreudBorderRadius, FreudSpacing, FreudTypography } from '../../shared/theme/FreudDesignSystem';
-import { TherapeuticGradient, GlassmorphismContainer } from '../shaders/PageShaders';
-import { MicroInteractionButton, StaggeredListAnimation } from '../animations/AdvancedAnimations';
+import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
+import FreudDesignSystem, { 
+  FreudColors, 
+  FreudShadows, 
+  FreudBorderRadius, 
+  FreudSpacing, 
+  FreudTypography 
+} from '../../shared/theme/FreudDesignSystem';
 import { MentalHealthIcon } from '../icons';
 
 const { width: screenWidth } = Dimensions.get('window');
 
+// Simplified mood options focused on core emotions
 const MOOD_OPTIONS = [
   { 
-    id: 'joyful', 
+    id: 'happy', 
     emoji: '😊', 
-    label: 'Joyful', 
-    description: 'Feeling bright and optimistic',
-    color: FreudColors.zenYellow[40],
-    gradientColors: [FreudColors.zenYellow[30], FreudColors.zenYellow[50]],
+    label: 'Happy', 
+    description: 'Feeling joyful and positive',
+    color: FreudColors.zenYellow[50],
+    gradientColors: [FreudColors.zenYellow[40], FreudColors.zenYellow[60]],
     icon: 'Heart'
   },
   { 
     id: 'calm', 
     emoji: '😌', 
     label: 'Calm', 
-    description: 'Peaceful and centered',
-    color: FreudColors.serenityGreen[40],
-    gradientColors: [FreudColors.serenityGreen[30], FreudColors.serenityGreen[50]],
+    description: 'Peaceful and relaxed',
+    color: FreudColors.serenityGreen[50],
+    gradientColors: [FreudColors.serenityGreen[40], FreudColors.serenityGreen[60]],
     icon: 'Mindfulness'
   },
   { 
-    id: 'focused', 
-    emoji: '🎯', 
-    label: 'Focused', 
-    description: 'Clear and concentrated',
-    color: FreudColors.kindPurple[40],
-    gradientColors: [FreudColors.kindPurple[30], FreudColors.kindPurple[50]],
+    id: 'neutral', 
+    emoji: '😐', 
+    label: 'Neutral', 
+    description: 'Feeling balanced',
+    color: FreudColors.optimisticGray[50],
+    gradientColors: [FreudColors.optimisticGray[40], FreudColors.optimisticGray[60]],
     icon: 'Brain'
   },
   { 
     id: 'anxious', 
     emoji: '😰', 
     label: 'Anxious', 
-    description: 'Feeling worried or unsettled',
-    color: FreudColors.empathyOrange[40],
-    gradientColors: [FreudColors.empathyOrange[30], FreudColors.empathyOrange[50]],
+    description: 'Feeling worried or restless',
+    color: FreudColors.empathyOrange[50],
+    gradientColors: [FreudColors.empathyOrange[40], FreudColors.empathyOrange[60]],
     icon: 'Therapy'
   },
   { 
-    id: 'melancholy', 
+    id: 'sad', 
     emoji: '😔', 
-    label: 'Melancholy', 
-    description: 'Feeling reflective and low',
-    color: FreudColors.optimisticGray[50],
-    gradientColors: [FreudColors.optimisticGray[40], FreudColors.optimisticGray[60]],
+    label: 'Sad', 
+    description: 'Feeling down or low',
+    color: FreudColors.kindPurple[50],
+    gradientColors: [FreudColors.kindPurple[40], FreudColors.kindPurple[60]],
     icon: 'Journal'
   },
-  { 
-    id: 'energized', 
-    emoji: '⚡', 
-    label: 'Energized', 
-    description: 'Full of vitality and motivation',
-    color: FreudColors.empathyOrange[50],
-    gradientColors: [FreudColors.empathyOrange[40], FreudColors.zenYellow[40]],
-    icon: 'Insights'
-  },
 ];
+
+// Simple mood button component with gentle animations
+const MoodButton = ({ mood, isSelected, onPress, isDarkMode }) => {
+  const scaleValue = useRef(new Animated.Value(1)).current;
+  const opacityValue = useRef(new Animated.Value(0.8)).current;
+
+  const handlePress = () => {
+    // Gentle bounce animation
+    Animated.sequence([
+      Animated.timing(scaleValue, {
+        toValue: 0.95,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleValue, {
+        toValue: isSelected ? 1.05 : 1,
+        tension: 300,
+        friction: 10,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    onPress(mood);
+  };
+
+  useEffect(() => {
+    Animated.timing(opacityValue, {
+      toValue: isSelected ? 1 : 0.8,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  }, [isSelected]);
+
+  return (
+    <Animated.View style={[
+      styles.moodButtonContainer,
+      { 
+        transform: [{ scale: scaleValue }],
+        opacity: opacityValue,
+      }
+    ]}>
+      <TouchableOpacity
+        onPress={handlePress}
+        style={[
+          styles.moodButton,
+          isSelected && styles.selectedMoodButton,
+        ]}
+        activeOpacity={0.9}
+        accessibilityLabel={`${mood.label} mood`}
+        accessibilityHint={`${mood.description}. Double tap to select this mood.`}
+        accessibilityRole="button"
+        accessibilityState={{ selected: isSelected }}
+      >
+        <LinearGradient
+          colors={mood.gradientColors}
+          style={styles.moodGradient}
+          start={[0, 0]}
+          end={[1, 1]}
+        >
+          <MentalHealthIcon 
+            name={mood.icon} 
+            size={16} 
+            color="rgba(255, 255, 255, 0.8)" 
+            style={styles.moodIcon}
+          />
+          <Text style={styles.moodEmoji}>{mood.emoji}</Text>
+          <Text style={styles.moodLabel}>{mood.label}</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
 
 const MoodCheckIn = ({ 
   currentMood, 
   onCheckIn,
-  accessibilityLabel,
-  accessibilityHint,
-  disabled = false,
   compact = false,
+  disabled = false,
 }) => {
   const { theme, isDarkMode } = useTheme();
   const [selectedMood, setSelectedMood] = useState(currentMood);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const pulseAnim = useRef(new Animated.Value(1)).current;
-  const scaleAnim = useRef(new Animated.Value(0.9)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Initial entrance animation
-    Animated.parallel([
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 600,
-        useNativeDriver: true,
-      }),
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
-    // Breathing pulse animation
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 1.05,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 1,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
+    // Gentle entrance animation
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
   }, []);
 
   const handleMoodSelect = (mood) => {
     setSelectedMood(mood.id);
-    
-    // Haptic feedback and scale animation
-    const selectedMoodAnim = new Animated.Value(1);
-    Animated.sequence([
-      Animated.timing(selectedMoodAnim, {
-        toValue: 1.2,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-      Animated.timing(selectedMoodAnim, {
-        toValue: 1,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-    ]).start();
-    
     onCheckIn?.(mood.id, mood);
   };
 
-  const styles = createStyles(theme);
-
+  // Compact version for dashboard
   if (compact) {
     return (
-      <GlassmorphismContainer style={styles.compactContainer}>
-        <Animated.View style={{ transform: [{ scale: scaleAnim }], opacity: fadeAnim }}>
-          <View style={styles.compactHeader}>
-            <MentalHealthIcon name="Heart" size={20} color={FreudColors.mindfulBrown[70]} />
-            <Text style={[styles.compactTitle, { color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.primary : FreudDesignSystem.themes.light.colors.text.primary }]}>
-              Quick Mood Check
-            </Text>
+      <Animated.View style={[styles.compactContainer, { opacity: fadeAnim }]}>
+        <View style={styles.compactMoodGrid}>
+          {MOOD_OPTIONS.map((mood) => (
+            <MoodButton
+              key={mood.id}
+              mood={mood}
+              isSelected={selectedMood === mood.id}
+              onPress={handleMoodSelect}
+              isDarkMode={isDarkMode}
+            />
+          ))}
+        </View>
+        
+        {selectedMood && (
+          <View style={styles.selectedMoodDisplay}>
+            <LinearGradient
+              colors={[FreudColors.serenityGreen[20], FreudColors.serenityGreen[10]]}
+              style={styles.selectedMoodGradient}
+            >
+              <MentalHealthIcon name="Heart" size={16} color={FreudColors.serenityGreen[70]} />
+              <Text style={[styles.selectedMoodText, { 
+                color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.primary : FreudDesignSystem.themes.light.colors.text.primary 
+              }]}>
+                Feeling {MOOD_OPTIONS.find(m => m.id === selectedMood)?.label?.toLowerCase() || 'neutral'}
+              </Text>
+            </LinearGradient>
           </View>
-          <View style={styles.compactMoodGrid}>
-            {MOOD_OPTIONS.slice(0, 3).map((mood, index) => (
-              <Animatable.View
-                key={mood.id}
-                animation="bounceIn"
-                delay={index * 100}
-                duration={600}
-              >
-                <MicroInteractionButton
-                  onPress={() => handleMoodSelect(mood)}
-                  style={[
-                    styles.compactMoodButton,
-                    selectedMood === mood.id && styles.selectedCompactMoodButton,
-                  ]}
-                >
-                  <LinearGradient
-                    colors={mood.gradientColors}
-                    style={styles.compactMoodGradient}
-                  >
-                    <Text style={styles.compactMoodEmoji}>{mood.emoji}</Text>
-                  </LinearGradient>
-                </MicroInteractionButton>
-              </Animatable.View>
-            ))}
-          </View>
-        </Animated.View>
-      </GlassmorphismContainer>
+        )}
+      </Animated.View>
     );
   }
 
+  // Full version for dedicated mood tracking
   return (
-    <TherapeuticGradient type="therapeutic" style={styles.container}>
-      <Animated.View style={{ transform: [{ scale: scaleAnim }], opacity: fadeAnim }}>
-        <GlassmorphismContainer style={styles.mainCard}>
-          <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
-            <View style={styles.header}>
-              <View style={styles.headerIcon}>
-                <MentalHealthIcon name="Heart" size={28} color={FreudColors.mindfulBrown[80]} />
-              </View>
-              <View style={styles.headerText}>
-                <Text style={[styles.title, { 
-                  color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.primary : FreudDesignSystem.themes.light.colors.text.primary 
-                }]}>
-                  How are you feeling today?
-                </Text>
-                <Text style={[styles.subtitle, { 
-                  color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.secondary : FreudDesignSystem.themes.light.colors.text.secondary 
-                }]}>
-                  Take a moment to check in with yourself
-                </Text>
-              </View>
+    <Animated.View style={[styles.fullContainer, { opacity: fadeAnim }]}>
+      <View style={styles.header}>
+        <MentalHealthIcon name="Heart" size={24} color={FreudColors.mindfulBrown[70]} />
+        <Text style={[styles.title, { 
+          color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.primary : FreudDesignSystem.themes.light.colors.text.primary 
+        }]}>
+          How are you feeling?
+        </Text>
+      </View>
+      
+      <Text style={[styles.subtitle, { 
+        color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.secondary : FreudDesignSystem.themes.light.colors.text.secondary 
+      }]}>
+        Tap the mood that best describes how you feel right now
+      </Text>
+
+      <View style={styles.fullMoodGrid}>
+        {MOOD_OPTIONS.map((mood) => (
+          <MoodButton
+            key={mood.id}
+            mood={mood}
+            isSelected={selectedMood === mood.id}
+            onPress={handleMoodSelect}
+            isDarkMode={isDarkMode}
+          />
+        ))}
+      </View>
+
+      {selectedMood && (
+        <View style={styles.selectedMoodDisplay}>
+          <LinearGradient
+            colors={[FreudColors.serenityGreen[20], FreudColors.serenityGreen[10]]}
+            style={styles.selectedMoodGradient}
+          >
+            <MentalHealthIcon name="Insights" size={20} color={FreudColors.serenityGreen[70]} />
+            <View style={styles.selectedMoodInfo}>
+              <Text style={[styles.selectedMoodLabel, { 
+                color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.primary : FreudDesignSystem.themes.light.colors.text.primary 
+              }]}>
+                You're feeling {MOOD_OPTIONS.find(m => m.id === selectedMood)?.label?.toLowerCase()}
+              </Text>
+              <Text style={[styles.selectedMoodDescription, { 
+                color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.secondary : FreudDesignSystem.themes.light.colors.text.secondary 
+              }]}>
+                {MOOD_OPTIONS.find(m => m.id === selectedMood)?.description}
+              </Text>
             </View>
-          </Animated.View>
-
-          <StaggeredListAnimation stagger={150} animation="slideInUp" style={styles.moodGrid}>
-            {MOOD_OPTIONS.map((mood, index) => {
-              const isSelected = selectedMood === mood.id;
-              return (
-                <View key={mood.id} style={styles.moodButtonContainer}>
-                  <MicroInteractionButton
-                    onPress={() => handleMoodSelect(mood)}
-                    style={[
-                      styles.moodButton,
-                      isSelected && styles.selectedMoodButton,
-                    ]}
-                    disabled={disabled}
-                  >
-                    <LinearGradient
-                      colors={mood.gradientColors}
-                      style={[
-                        styles.moodGradient,
-                        isSelected && styles.selectedMoodGradient,
-                      ]}
-                      start={[0, 0]}
-                      end={[1, 1]}
-                    >
-                      <View style={styles.moodContent}>
-                        <MentalHealthIcon 
-                          name={mood.icon} 
-                          size={24} 
-                          color="#FFFFFF" 
-                          style={styles.moodIcon}
-                        />
-                        <Text style={styles.moodEmoji}>{mood.emoji}</Text>
-                        <Text style={styles.moodLabel}>{mood.label}</Text>
-                        <Text style={styles.moodDescription}>{mood.description}</Text>
-                      </View>
-                    </LinearGradient>
-                  </MicroInteractionButton>
-                </View>
-              );
-            })}
-          </StaggeredListAnimation>
-
-          {selectedMood && (
-            <Animatable.View 
-              animation="slideInUp" 
-              duration={600}
-              style={styles.currentMoodContainer}
-            >
-              <LinearGradient
-                colors={[FreudColors.serenityGreen[20], FreudColors.serenityGreen[10]]}
-                style={styles.currentMoodGradient}
-              >
-                <View style={styles.currentMoodContent}>
-                  <MentalHealthIcon name="Insights" size={20} color={FreudColors.serenityGreen[70]} />
-                  <Text style={[styles.currentMoodText, { 
-                    color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.primary : FreudDesignSystem.themes.light.colors.text.primary 
-                  }]}>
-                    Current mood: <Text style={{ fontWeight: FreudTypography.weights.bold }}>
-                      {MOOD_OPTIONS.find(m => m.id === selectedMood)?.label || 'Unknown'}
-                    </Text>
-                  </Text>
-                  <Text style={[styles.currentMoodDescription, { 
-                    color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.secondary : FreudDesignSystem.themes.light.colors.text.secondary 
-                  }]}>
-                    {MOOD_OPTIONS.find(m => m.id === selectedMood)?.description || ''}
-                  </Text>
-                </View>
-              </LinearGradient>
-            </Animatable.View>
-          )}
-        </GlassmorphismContainer>
-      </Animated.View>
-    </TherapeuticGradient>
+          </LinearGradient>
+        </View>
+      )}
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: FreudSpacing[4],
-    paddingVertical: FreudSpacing[6],
+  // Compact version styles
+  compactContainer: {
+    paddingVertical: FreudSpacing[2],
   },
-  mainCard: {
-    padding: FreudSpacing[6],
-    borderRadius: FreudBorderRadius['2xl'],
-    ...FreudShadows.lg,
+  compactMoodGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: FreudSpacing[3],
+  },
+  
+  // Full version styles
+  fullContainer: {
+    padding: FreudSpacing[4],
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: FreudSpacing[6],
-  },
-  headerIcon: {
-    width: 50,
-    height: 50,
-    borderRadius: FreudBorderRadius.xl,
-    backgroundColor: FreudColors.serenityGreen[10],
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: FreudSpacing[4],
-  },
-  headerText: {
-    flex: 1,
+    marginBottom: FreudSpacing[2],
   },
   title: {
-    fontSize: FreudTypography.sizes['2xl'],
-    fontWeight: FreudTypography.weights.bold,
-    fontFamily: FreudTypography.fontFamily.primary,
-    lineHeight: FreudTypography.sizes['2xl'] * FreudTypography.lineHeights.tight,
-    marginBottom: FreudSpacing[1],
+    fontSize: FreudTypography.sizes.xl,
+    fontWeight: FreudTypography.weights.semiBold,
+    marginLeft: FreudSpacing[3],
   },
   subtitle: {
-    fontSize: FreudTypography.sizes.base,
+    fontSize: FreudTypography.sizes.sm,
     fontWeight: FreudTypography.weights.normal,
-    fontFamily: FreudTypography.fontFamily.primary,
-    lineHeight: FreudTypography.sizes.base * FreudTypography.lineHeights.relaxed,
+    lineHeight: FreudTypography.sizes.sm * FreudTypography.lineHeights.relaxed,
     opacity: 0.8,
+    marginBottom: FreudSpacing[4],
   },
-  moodGrid: {
+  fullMoodGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     gap: FreudSpacing[3],
+    marginBottom: FreudSpacing[4],
   },
+  
+  // Mood button styles
   moodButtonContainer: {
-    width: (screenWidth - FreudSpacing[8] * 2 - FreudSpacing[3] * 2) / 3,
+    width: compact ? (screenWidth - FreudSpacing[8] - FreudSpacing[3] * 4) / 5 : (screenWidth - FreudSpacing[8] - FreudSpacing[3] * 4) / 5,
   },
   moodButton: {
     width: '100%',
-    aspectRatio: 0.9,
-    borderRadius: FreudBorderRadius.xl,
+    aspectRatio: 1,
+    borderRadius: FreudBorderRadius.lg,
     overflow: 'hidden',
+    ...FreudShadows.sm,
+  },
+  selectedMoodButton: {
     ...FreudShadows.md,
   },
   moodGradient: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: FreudSpacing[3],
-  },
-  selectedMoodButton: {
-    transform: [{ scale: 1.05 }],
-    ...FreudShadows.xl,
-  },
-  selectedMoodGradient: {
-    borderWidth: 3,
-    borderColor: '#FFFFFF',
-  },
-  moodContent: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: FreudSpacing[2],
   },
   moodIcon: {
     marginBottom: FreudSpacing[1],
   },
   moodEmoji: {
-    fontSize: FreudTypography.sizes['2xl'],
+    fontSize: FreudTypography.sizes.lg,
     marginBottom: FreudSpacing[1],
   },
   moodLabel: {
-    fontSize: FreudTypography.sizes.sm,
-    fontWeight: FreudTypography.weights.bold,
-    fontFamily: FreudTypography.fontFamily.primary,
+    fontSize: FreudTypography.sizes.xs,
+    fontWeight: FreudTypography.weights.semiBold,
     color: '#FFFFFF',
     textAlign: 'center',
-    marginBottom: FreudSpacing[1],
   },
-  moodDescription: {
-    fontSize: FreudTypography.sizes.xs,
-    fontWeight: FreudTypography.weights.normal,
-    fontFamily: FreudTypography.fontFamily.primary,
-    color: 'rgba(255, 255, 255, 0.9)',
-    textAlign: 'center',
-    lineHeight: FreudTypography.sizes.xs * FreudTypography.lineHeights.tight,
-  },
-  currentMoodContainer: {
-    marginTop: FreudSpacing[6],
-    borderRadius: FreudBorderRadius.xl,
+  
+  // Selected mood display
+  selectedMoodDisplay: {
+    marginTop: FreudSpacing[3],
+    borderRadius: FreudBorderRadius.lg,
     overflow: 'hidden',
     ...FreudShadows.sm,
   },
-  currentMoodGradient: {
-    padding: FreudSpacing[4],
-  },
-  currentMoodContent: {
+  selectedMoodGradient: {
+    padding: FreudSpacing[3],
     flexDirection: 'row',
     alignItems: 'center',
   },
-  currentMoodText: {
-    fontSize: FreudTypography.sizes.base,
-    fontWeight: FreudTypography.weights.medium,
-    fontFamily: FreudTypography.fontFamily.primary,
-    marginLeft: FreudSpacing[3],
-    flex: 1,
-  },
-  currentMoodDescription: {
+  selectedMoodText: {
     fontSize: FreudTypography.sizes.sm,
-    fontWeight: FreudTypography.weights.normal,
-    fontFamily: FreudTypography.fontFamily.primary,
-    marginLeft: FreudSpacing[3],
-  },
-
-  // Compact mode styles
-  compactContainer: {
-    padding: FreudSpacing[4],
-    borderRadius: FreudBorderRadius.xl,
-    margin: FreudSpacing[2],
-  },
-  compactHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: FreudSpacing[3],
-  },
-  compactTitle: {
-    fontSize: FreudTypography.sizes.base,
-    fontWeight: FreudTypography.weights.semiBold,
-    fontFamily: FreudTypography.fontFamily.primary,
+    fontWeight: FreudTypography.weights.medium,
     marginLeft: FreudSpacing[2],
   },
-  compactMoodGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  compactMoodButton: {
-    width: 50,
-    height: 50,
-    borderRadius: FreudBorderRadius.xl,
-    overflow: 'hidden',
-  },
-  compactMoodGradient: {
+  selectedMoodInfo: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginLeft: FreudSpacing[3],
   },
-  compactMoodEmoji: {
-    fontSize: FreudTypography.sizes.lg,
+  selectedMoodLabel: {
+    fontSize: FreudTypography.sizes.base,
+    fontWeight: FreudTypography.weights.medium,
+    marginBottom: FreudSpacing[1],
   },
-  selectedCompactMoodButton: {
-    transform: [{ scale: 1.1 }],
-    ...FreudShadows.md,
+  selectedMoodDescription: {
+    fontSize: FreudTypography.sizes.sm,
+    fontWeight: FreudTypography.weights.normal,
+    opacity: 0.8,
   },
 });
 

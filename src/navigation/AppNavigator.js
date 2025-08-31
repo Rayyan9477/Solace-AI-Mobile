@@ -4,11 +4,11 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { View, Text, StyleSheet, Platform, TouchableOpacity } from "react-native";
 
-import { NavigationIcon, IconPresets } from "../components/icons";
+// import { NavigationIcon, IconPresets } from "../components/icons";
 import { useTheme } from "../shared/theme/ThemeContext";
-import { TouchOptimizations } from "../utils/mobileOptimizations";
-import { useMotionAccessibility } from "../utils/motionAccessibility";
-import { MentalHealthAccessibility } from "../utils/accessibility";
+// import { TouchOptimizations } from "../utils/mobileOptimizations";
+// import { useMotionAccessibility } from "../utils/motionAccessibility";
+// import { MentalHealthAccessibility } from "../utils/accessibility";
 
 // Light Mode Screens
 import CoverPageScreen from "../screens/CoverPageScreen";
@@ -313,41 +313,37 @@ const ThemeToggleButton = () => {
 
 const MainTabs = () => {
   const { theme, isDarkMode } = useTheme();
-  const motionUtils = useMotionAccessibility();
-  const optimalTouchTarget = TouchOptimizations.getOptimalTouchTarget();
+  // const motionUtils = useMotionAccessibility();
+  // const optimalTouchTarget = TouchOptimizations.getOptimalTouchTarget();
 
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
+          let iconText;
 
           if (route.name === "Cover") {
-            iconName = "explore"; // Maps to ExploreIcon for welcome/discovery
+            iconText = "🏠";
           } else if (route.name === "Home") {
-            iconName = "home"; // Maps to HomeIcon
+            iconText = "🏠";
           } else if (route.name === "Chat") {
-            iconName = "chat"; // Maps to ChatIcon
+            iconText = "💬";
           } else if (route.name === "Mood") {
-            iconName = "dashboard"; // Maps to DashboardIcon for mood tracking
+            iconText = "😊";
           } else if (route.name === "Assessment") {
-            iconName = "discover"; // Maps to DiscoverIcon for assessment
+            iconText = "📋";
           } else if (route.name === "Wellness") {
-            iconName = "layout-grid"; // Maps to LayoutGridIcon for wellness hub
+            iconText = "🧘";
           } else if (route.name === "Utilities") {
-            iconName = "menu-bars"; // Maps to MenuBarsIcon for utilities
+            iconText = "⚙️";
           } else if (route.name === "Profile") {
-            iconName = "profile"; // Maps to ProfileIcon
+            iconText = "👤";
           }
 
           return (
-            <NavigationIcon
-              name={iconName}
-              size={size}
-              color={color}
-              variant={focused ? "filled" : "outline"}
-              strokeWidth={IconPresets.tabBar.strokeWidth}
-            />
+            <Text style={{ fontSize: size, color }}>
+              {iconText}
+            </Text>
           );
         },
         tabBarActiveTintColor: theme.colors.primary[500],
@@ -356,7 +352,7 @@ const MainTabs = () => {
           backgroundColor: theme.colors.background.primary,
           borderTopColor: theme.colors.gray[200],
           paddingVertical: 8,
-          height: Math.max(70, optimalTouchTarget + 16), // Ensure adequate touch targets
+          height: Math.max(70, 44 + 16), // Ensure adequate touch targets
         },
         tabBarAccessibilityRole: "tablist",
         tabBarAccessibilityLabel: "Main navigation tabs",

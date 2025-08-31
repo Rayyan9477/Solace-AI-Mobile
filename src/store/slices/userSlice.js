@@ -1,16 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import apiService from "../../services/api";
 
 // Async thunk for updating user profile
 export const updateUserProfile = createAsyncThunk(
   "user/updateProfile",
   async (profileData, { rejectWithValue }) => {
     try {
-      // TODO: Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      return profileData;
+      // Real API call using the user service
+      const updatedProfile = await apiService.user.updateProfile(profileData);
+      return updatedProfile;
     } catch (error) {
-      return rejectWithValue(error.message);
+      console.error('Profile update error:', error);
+      return rejectWithValue(
+        error.response?.data?.message || 
+        error.message || 
+        'Failed to update profile. Please try again.'
+      );
     }
   },
 );
@@ -20,22 +25,16 @@ export const fetchUserStats = createAsyncThunk(
   "user/fetchStats",
   async (_, { rejectWithValue }) => {
     try {
-      // TODO: Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Mock user stats
-      const mockStats = {
-        totalSessions: 24,
-        streakDays: 7,
-        assessmentsCompleted: 3,
-        moodEntriesCount: 15,
-        favoriteActivities: ["meditation", "exercise", "reading"],
-        joinDate: new Date("2024-01-15").toISOString(),
-      };
-
-      return mockStats;
+      // Real API call using the user service
+      const userStats = await apiService.user.getStats();
+      return userStats;
     } catch (error) {
-      return rejectWithValue(error.message);
+      console.error('User stats fetch error:', error);
+      return rejectWithValue(
+        error.response?.data?.message || 
+        error.message || 
+        'Failed to fetch user statistics. Please try again.'
+      );
     }
   },
 );

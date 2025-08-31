@@ -27,8 +27,8 @@ export const FreudColors = {
     70: '#5A5A5E',
     60: '#738066',
     50: '#926CB8',
-    40: '#ACAYA5',
-    30: '#C9CYC5',
+    40: '#ACABA5',
+    30: '#C9CBC5',
     20: '#E1E1E0',
     10: '#F5F5F5'
   },
@@ -42,7 +42,7 @@ export const FreudColors = {
     60: '#7D9A4D',
     50: '#9BD658',
     40: '#B4C480',
-    30: '#CFC955',
+    30: '#CFD955',
     20: '#E5EAD7',
     10: '#F2F5EB'
   },
@@ -58,7 +58,7 @@ export const FreudColors = {
     40: '#ED7E1C',
     30: '#F6A360',
     20: '#FFC89E',
-    10: '#FFF6EZ'
+    10: '#FFF6E6'
   },
 
   // Zen Yellow Palette

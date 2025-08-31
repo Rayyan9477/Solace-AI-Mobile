@@ -18,7 +18,7 @@ import {
 import { useDispatch } from "react-redux";
 
 import { MentalHealthIcon, ActionIcon } from "../../components/icons";
-import { useTheme } from "../../shared/theme/ThemeContext";
+import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
 import {
   colors,
   typography,
@@ -26,6 +26,7 @@ import {
   borderRadius,
   shadows,
 } from "../../shared/theme/theme";
+import { withErrorBoundary } from '../../utils/ErrorBoundary';
 import { 
   MentalHealthAccessibility, 
   MentalHealthAccessibilityHelpers,
@@ -1030,4 +1031,28 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EnhancedMoodTrackerScreen;
+export default withErrorBoundary(EnhancedMoodTrackerScreen, {
+  fallback: ({ error, retry, goHome }) => (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20, backgroundColor: '#f8f9fa' }}>
+      <MentalHealthIcon name="Heart" size="xl" color="#e74c3c" style={{ marginBottom: 20 }} />
+      <Text style={{ fontSize: 18, textAlign: 'center', marginBottom: 15, color: '#333' }}>
+        Unable to load mood tracking
+      </Text>
+      <Text style={{ fontSize: 14, textAlign: 'center', marginBottom: 20, color: '#666' }}>
+        Your mood data is safe. This is just a temporary issue.
+      </Text>
+      <TouchableOpacity 
+        onPress={retry}
+        style={{ backgroundColor: '#007AFF', padding: 12, borderRadius: 8, marginBottom: 10, minWidth: 120 }}
+      >
+        <Text style={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Try Again</Text>
+      </TouchableOpacity>
+      <TouchableOpacity 
+        onPress={goHome}
+        style={{ backgroundColor: '#666', padding: 12, borderRadius: 8, minWidth: 120 }}
+      >
+        <Text style={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Go Home</Text>
+      </TouchableOpacity>
+    </View>
+  )
+});

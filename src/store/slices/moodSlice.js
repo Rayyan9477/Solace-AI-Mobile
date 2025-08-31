@@ -1,26 +1,28 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import apiService from "../../services/api";
 
 // Async thunk for logging mood
 export const logMood = createAsyncThunk(
   "mood/logMood",
   async ({ mood, notes, intensity, activities }, { rejectWithValue }) => {
     try {
-      // TODO: Replace with actual API call
-      const moodEntry = {
-        id: Date.now().toString(),
+      // Real API call using the mood service
+      const moodEntry = await apiService.mood.logMood({
         mood,
         notes,
         intensity,
         activities,
         timestamp: new Date().toISOString(),
-      };
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      });
 
       return moodEntry;
     } catch (error) {
-      return rejectWithValue(error.message);
+      console.error('Mood logging error:', error);
+      return rejectWithValue(
+        error.response?.data?.message || 
+        error.message || 
+        'Failed to log mood. Please try again.'
+      );
     }
   },
 );
@@ -28,42 +30,18 @@ export const logMood = createAsyncThunk(
 // Async thunk for fetching mood history
 export const fetchMoodHistory = createAsyncThunk(
   "mood/fetchMoodHistory",
-  async (_, { rejectWithValue }) => {
+  async ({ startDate, endDate } = {}, { rejectWithValue }) => {
     try {
-      // TODO: Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Mock mood history data
-      const mockHistory = [
-        {
-          id: "1",
-          mood: "happy",
-          notes: "Had a great day at work!",
-          intensity: 4,
-          activities: ["work", "exercise"],
-          timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-        },
-        {
-          id: "2",
-          mood: "calm",
-          notes: "Relaxing evening with a book",
-          intensity: 3,
-          activities: ["reading", "meditation"],
-          timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
-        },
-        {
-          id: "3",
-          mood: "anxious",
-          notes: "Stressed about upcoming presentation",
-          intensity: 3,
-          activities: ["work"],
-          timestamp: new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString(),
-        },
-      ];
-
-      return mockHistory;
+      // Real API call using the mood service
+      const moodHistory = await apiService.mood.getMoodHistory(startDate, endDate);
+      return moodHistory;
     } catch (error) {
-      return rejectWithValue(error.message);
+      console.error('Mood history fetch error:', error);
+      return rejectWithValue(
+        error.response?.data?.message || 
+        error.message || 
+        'Failed to fetch mood history. Please try again.'
+      );
     }
   },
 );

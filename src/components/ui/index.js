@@ -1,126 +1,118 @@
-// Core UI Components for Solace AI Mobile
-// Complete Freud Design System Implementation
-// Based on therapeutic color psychology and mental health UX patterns
+/**
+ * Enhanced UI Components Index
+ * Exports all Freud UI Kit components for easy import
+ */
 
-// Form Components
-export { default as Button, ButtonGroup, TherapeuticButton, CalmingButton, NurturingButton, PeacefulButton, GroundingButton, EnergizingButton } from './Button';
-export { default as Input, FloatingLabelInput, FilledInput, OutlineInput, UnderlineInput, TherapeuticInput, CalmingInput, NurturingInput, PasswordInput, EmailInput, PhoneInput, SearchInput } from './Input';
-export { default as Checkbox } from './Checkbox';
-export { default as Dropdown } from './Dropdown';
-export { default as Slider, RangeSlider, CalmingSlider, NurturingSlider, PeacefulSlider, GroundingSlider } from './Slider';
+// Theme System
+export { FreudThemeProvider, useFreudTheme, withFreudTheme } from './FreudThemeProvider';
 
-// Display Components
-export { default as Card, CardHeader, CardFooter, JournalCard, ProgressCard, TherapeuticCard, MindfulCard, EmpathyCard, GlassMorphCard, InteractiveCard, CardGroup } from './Card';
-export { default as Tag, TagGroup, TherapeuticTag, CalmingTag, NurturingTag, PeacefulTag, GroundingTag, EnergizingTag } from './Tag';
-export { default as Table, TableCell, TableHeader, TableRow } from './Table';
-export { default as Tooltip } from './Tooltip';
-export { default as MentalHealthScoreWidget, CompactMentalHealthScoreWidget, DetailedMentalHealthScoreWidget, MinimalMentalHealthScoreWidget } from './MentalHealthScoreWidget';
+// Background Components
+export { 
+  PageShaderBackground,
+  CalmingBackground,
+  NurturingBackground,
+  PeacefulBackground,
+  GroundingBackground,
+  EnergizingBackground,
+  ZenBackground,
+  TherapeuticBackground,
+  WelcomingBackground,
+} from './PageShaderBackground';
 
-// Overlay Components
-export { default as Modal, ModalHeader, ModalFooter, ConfirmModal, InfoModal } from './Modal';
+// Mood Components
+export { 
+  EnhancedMoodCard,
+  MoodGrid,
+  MoodSlider,
+  QuickMoodCheck,
+} from './EnhancedMoodCard';
 
-// Enhanced Components
-export { default as SimpleCard } from './SimpleCard';
-export { default as FreudHeader } from './FreudHeader';
+// Enhanced Dashboard Components (to be created)
+export { 
+  EnhancedDashboard,
+  EnhancedDashboardCard,
+} from './EnhancedDashboard';
 
-// Advanced Animation Components
-export {
-  TherapeuticBreathingAnimation,
-  FloatingActionButton,
-  StaggeredListAnimation,
-  MorphingCard,
-  ParallaxBackground,
-  MentalHealthLottie,
-  TherapeuticWave,
-  MicroInteractionButton,
-} from '../animations/AdvancedAnimations';
+// Enhanced Mood Tracker (to be created)
+export { 
+  EnhancedMoodTracker,
+} from './EnhancedMoodTracker';
 
-// Shader and Background Effects
-export {
-  TherapeuticGradient,
-  GlassmorphismContainer,
-  FloatingParticles,
-  OrganicBlobBackground,
-  NeuralNetworkBackground,
-  RippleEffectBackground,
-} from '../shaders/PageShaders';
-
-// Design System Utilities
-export const UIComponents = {
-  // Form Controls
-  Button,
-  ButtonGroup,
-  Input,
-  Checkbox,
-  Dropdown,
-  Slider,
-  RangeSlider,
-  
-  // Display Components
-  Card,
-  CardHeader,
-  CardFooter,
-  Tag,
-  TagGroup,
-  Table,
-  TableCell,
-  TableHeader,
-  TableRow,
-  Tooltip,
-  MentalHealthScoreWidget,
-  CompactMentalHealthScoreWidget,
-  DetailedMentalHealthScoreWidget,
-  MinimalMentalHealthScoreWidget,
-  
-  // Overlay Components
-  Modal,
-  ModalHeader,
-  ModalFooter,
-  
-  // Therapeutic Variants
+// Core UI Components
+export { 
+  FreudCard,
+  TherapeuticSurface,
+  FreudButton,
   TherapeuticButton,
-  CalmingButton,
-  NurturingButton,
-  PeacefulButton,
-  GroundingButton,
-  EnergizingButton,
-  
-  TherapeuticInput,
-  CalmingInput,
-  NurturingInput,
-  
-  TherapeuticTag,
-  CalmingTag,
-  NurturingTag,
-  PeacefulTag,
-  GroundingTag,
-  EnergizingTag,
-  
-  CalmingSlider,
-  NurturingSlider,
-  PeacefulSlider,
-  GroundingSlider,
-  
-  // Specialized Components
-  JournalCard,
-  ProgressCard,
-  ConfirmModal,
-  InfoModal,
-  FloatingLabelInput,
-  FilledInput,
-  OutlineInput,
-  UnderlineInput,
-  PasswordInput,
-  EmailInput,
-  PhoneInput,
-  SearchInput,
+  FreudText,
+  TherapeuticText,
+  ResponsiveView,
+  FreudContainer,
+} from './FreudUISystem';
+
+// Showcase Component
+export { FreudUIShowcase } from './FreudUIShowcase';
+
+// Pre-configured Component Combinations
+export const MentalHealthDashboard = ({ user, onNavigate, onMoodTrack, ...props }) => {
+  const EnhancedDashboard = require('./EnhancedDashboard').EnhancedDashboard;
+  return (
+    <EnhancedDashboard 
+      user={user}
+      onNavigate={onNavigate}
+      onMoodTrack={onMoodTrack}
+      {...props}
+    />
+  );
 };
 
-// Design System Re-exports
-export { default as FreudDesignSystem, FreudColors, FreudTypography, FreudSpacing, FreudBorderRadius, FreudShadows, FreudComponents, FreudAnimations, FreudThemes } from '../../shared/theme/FreudDesignSystem';
-export { FreudColorPalette, LightTheme, DarkTheme, getTherapeuticColor, getSemanticColor } from '../../shared/theme/ColorPalette';
+export const MoodTrackingFlow = ({ onComplete, onCancel, ...props }) => {
+  const EnhancedMoodTracker = require('./EnhancedMoodTracker').EnhancedMoodTracker;
+  return (
+    <EnhancedMoodTracker 
+      onComplete={onComplete}
+      onCancel={onCancel}
+      {...props}
+    />
+  );
+};
 
-// Icon System
-export { MentalHealthIcon, NavigationIcon, ActionIcon, StatusIcon } from '../icons';
+// Utility Functions
+export const getFreudThemeColors = (therapeutic = 'balanced', isDarkMode = false) => {
+  const { FreudColors } = require('../../shared/theme/FreudDesignSystem');
+  
+  const therapeuticThemes = {
+    calming: FreudColors.serenityGreen,
+    nurturing: FreudColors.empathyOrange,
+    peaceful: FreudColors.optimisticGray,
+    grounding: FreudColors.mindfulBrown,
+    energizing: FreudColors.zenYellow,
+    zen: FreudColors.kindPurple,
+    balanced: FreudColors.mindfulBrown,
+  };
 
-export default UIComponents;
+  return therapeuticThemes[therapeutic] || therapeuticThemes.balanced;
+};
+
+export const getShaderConfig = (shader = 'therapeutic') => {
+  return {
+    therapeutic: { colors: ['#E5EAD7', '#F2F5EB', '#FFF6E2'], type: 'gradient' },
+    calming: { colors: ['#E5EAD7', '#F2F5EB'], type: 'wave' },
+    nurturing: { colors: ['#FFF6E2', '#FFC89E'], type: 'gradient' },
+    peaceful: { colors: ['#F5F5F5', '#E1E1E0'], type: 'noise' },
+    grounding: { colors: ['#F7F4F2', '#FFF6E2'], type: 'wave' },
+    energizing: { colors: ['#FFF4E0', '#EAEFFF'], type: 'gradient' },
+    zen: { colors: ['#EAEFFF', '#E5EAD7'], type: 'wave' },
+  }[shader] || { colors: ['#E5EAD7', '#F2F5EB'], type: 'gradient' };
+};
+
+export default {
+  FreudThemeProvider,
+  PageShaderBackground,
+  EnhancedMoodCard,
+  MoodGrid,
+  MoodSlider,
+  QuickMoodCheck,
+  MentalHealthDashboard,
+  MoodTrackingFlow,
+};
