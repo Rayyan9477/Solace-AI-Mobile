@@ -1,11 +1,11 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import {
   View,
   StyleSheet,
   Animated,
   Dimensions,
   PanResponder,
-} from 'react-native';
+} from "react-native";
 import Svg, {
   Defs,
   LinearGradient as SvgLinearGradient,
@@ -14,17 +14,18 @@ import Svg, {
   Circle,
   Path,
   RadialGradient,
-} from 'react-native-svg';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { spacing, borderRadius } from '../../shared/theme/theme';
+} from "react-native-svg";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { spacing, borderRadius } from "../../shared/theme/theme";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 // Enhanced shader-inspired component using SVG gradients and animations
 // Inspired by Paper Design's aesthetic but optimized for React Native
 const EnhancedShadersContainer = ({
   children,
-  variant = 'mesh', // 'mesh', 'grain', 'waves', 'dots', 'glass'
+  variant = "mesh", // 'mesh', 'grain', 'waves', 'dots', 'glass'
   intensity = 0.6,
   animated = true,
   interactive = false,
@@ -39,19 +40,20 @@ const EnhancedShadersContainer = ({
 
   // Animated values for interactive effects
   const panResponder = useMemo(
-    () => PanResponder.create({
-      onMoveShouldSetPanResponder: () => interactive,
-      onPanResponderMove: (event) => {
-        if (interactive) {
-          const { locationX, locationY } = event.nativeEvent;
-          setMousePos({
-            x: locationX / screenWidth,
-            y: locationY / screenHeight,
-          });
-        }
-      },
-    }),
-    [interactive]
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponder: () => interactive,
+        onPanResponderMove: (event) => {
+          if (interactive) {
+            const { locationX, locationY } = event.nativeEvent;
+            setMousePos({
+              x: locationX / screenWidth,
+              y: locationY / screenHeight,
+            });
+          }
+        },
+      }),
+    [interactive],
   );
 
   useEffect(() => {
@@ -69,7 +71,7 @@ const EnhancedShadersContainer = ({
           toValue: 1,
           duration: 20000,
           useNativeDriver: true,
-        })
+        }),
       );
 
       // Breathing scale animation
@@ -85,7 +87,7 @@ const EnhancedShadersContainer = ({
             duration: 4000,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       );
 
       rotationAnimation.start();
@@ -101,7 +103,7 @@ const EnhancedShadersContainer = ({
   // Generate therapeutic color schemes based on time
   const getTimeBasedColors = () => {
     const hour = new Date().getHours();
-    
+
     if (hour < 12) {
       // Morning: Energizing colors
       return [
@@ -110,7 +112,7 @@ const EnhancedShadersContainer = ({
         theme.colors.therapeutic.peaceful[200],
       ];
     } else if (hour < 17) {
-      // Afternoon: Calming colors  
+      // Afternoon: Calming colors
       return [
         theme.colors.therapeutic.calming[300],
         theme.colors.therapeutic.peaceful[400],
@@ -129,7 +131,7 @@ const EnhancedShadersContainer = ({
   const colors = getTimeBasedColors();
   const rotation = rotateAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
+    outputRange: ["0deg", "360deg"],
   });
 
   // Render different shader-inspired patterns
@@ -138,21 +140,57 @@ const EnhancedShadersContainer = ({
     const svgHeight = screenHeight * 0.8;
 
     switch (variant) {
-      case 'mesh':
+      case "mesh":
         return (
           <Svg width={svgWidth} height={svgHeight} style={styles.svgBackground}>
             <Defs>
-              <SvgLinearGradient id="meshGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <Stop offset="0%" stopColor={colors[0]} stopOpacity={intensity} />
-                <Stop offset="50%" stopColor={colors[1]} stopOpacity={intensity * 0.8} />
-                <Stop offset="100%" stopColor={colors[2]} stopOpacity={intensity * 0.6} />
+              <SvgLinearGradient
+                id="meshGradient1"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <Stop
+                  offset="0%"
+                  stopColor={colors[0]}
+                  stopOpacity={intensity}
+                />
+                <Stop
+                  offset="50%"
+                  stopColor={colors[1]}
+                  stopOpacity={intensity * 0.8}
+                />
+                <Stop
+                  offset="100%"
+                  stopColor={colors[2]}
+                  stopOpacity={intensity * 0.6}
+                />
               </SvgLinearGradient>
-              <SvgLinearGradient id="meshGradient2" x1="100%" y1="0%" x2="0%" y2="100%">
-                <Stop offset="0%" stopColor={colors[2]} stopOpacity={intensity * 0.7} />
-                <Stop offset="100%" stopColor={colors[0]} stopOpacity={intensity * 0.4} />
+              <SvgLinearGradient
+                id="meshGradient2"
+                x1="100%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+              >
+                <Stop
+                  offset="0%"
+                  stopColor={colors[2]}
+                  stopOpacity={intensity * 0.7}
+                />
+                <Stop
+                  offset="100%"
+                  stopColor={colors[0]}
+                  stopOpacity={intensity * 0.4}
+                />
               </SvgLinearGradient>
             </Defs>
-            <Rect width={svgWidth} height={svgHeight} fill="url(#meshGradient1)" />
+            <Rect
+              width={svgWidth}
+              height={svgHeight}
+              fill="url(#meshGradient1)"
+            />
             <Circle
               cx={svgWidth * 0.3}
               cy={svgHeight * 0.3}
@@ -169,14 +207,32 @@ const EnhancedShadersContainer = ({
           </Svg>
         );
 
-      case 'waves':
+      case "waves":
         return (
           <Svg width={svgWidth} height={svgHeight} style={styles.svgBackground}>
             <Defs>
-              <SvgLinearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <Stop offset="0%" stopColor={colors[0]} stopOpacity={intensity} />
-                <Stop offset="50%" stopColor={colors[1]} stopOpacity={intensity * 0.8} />
-                <Stop offset="100%" stopColor={colors[2]} stopOpacity={intensity * 0.6} />
+              <SvgLinearGradient
+                id="waveGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="0%"
+              >
+                <Stop
+                  offset="0%"
+                  stopColor={colors[0]}
+                  stopOpacity={intensity}
+                />
+                <Stop
+                  offset="50%"
+                  stopColor={colors[1]}
+                  stopOpacity={intensity * 0.8}
+                />
+                <Stop
+                  offset="100%"
+                  stopColor={colors[2]}
+                  stopOpacity={intensity * 0.6}
+                />
               </SvgLinearGradient>
             </Defs>
             <Path
@@ -191,19 +247,24 @@ const EnhancedShadersContainer = ({
           </Svg>
         );
 
-      case 'dots':
+      case "dots":
         const dotCount = 20;
         return (
           <Svg width={svgWidth} height={svgHeight} style={styles.svgBackground}>
             <Defs>
               <RadialGradient id="dotGradient" cx="50%" cy="50%" r="50%">
-                <Stop offset="0%" stopColor={colors[0]} stopOpacity={intensity} />
+                <Stop
+                  offset="0%"
+                  stopColor={colors[0]}
+                  stopOpacity={intensity}
+                />
                 <Stop offset="100%" stopColor={colors[1]} stopOpacity={0} />
               </RadialGradient>
             </Defs>
             {Array.from({ length: dotCount }).map((_, index) => {
-              const x = (Math.sin(index * 0.8) * svgWidth * 0.3) + (svgWidth * 0.5);
-              const y = (Math.cos(index * 0.8) * svgHeight * 0.3) + (svgHeight * 0.5);
+              const x = Math.sin(index * 0.8) * svgWidth * 0.3 + svgWidth * 0.5;
+              const y =
+                Math.cos(index * 0.8) * svgHeight * 0.3 + svgHeight * 0.5;
               const radius = 20 + (index % 3) * 10;
               return (
                 <Circle
@@ -219,18 +280,44 @@ const EnhancedShadersContainer = ({
           </Svg>
         );
 
-      case 'glass':
+      case "glass":
         return (
           <Svg width={svgWidth} height={svgHeight} style={styles.svgBackground}>
             <Defs>
-              <SvgLinearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <Stop offset="0%" stopColor={colors[0]} stopOpacity={intensity * 0.1} />
-                <Stop offset="30%" stopColor={colors[1]} stopOpacity={intensity * 0.3} />
-                <Stop offset="70%" stopColor={colors[2]} stopOpacity={intensity * 0.2} />
-                <Stop offset="100%" stopColor={colors[0]} stopOpacity={intensity * 0.1} />
+              <SvgLinearGradient
+                id="glassGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <Stop
+                  offset="0%"
+                  stopColor={colors[0]}
+                  stopOpacity={intensity * 0.1}
+                />
+                <Stop
+                  offset="30%"
+                  stopColor={colors[1]}
+                  stopOpacity={intensity * 0.3}
+                />
+                <Stop
+                  offset="70%"
+                  stopColor={colors[2]}
+                  stopOpacity={intensity * 0.2}
+                />
+                <Stop
+                  offset="100%"
+                  stopColor={colors[0]}
+                  stopOpacity={intensity * 0.1}
+                />
               </SvgLinearGradient>
             </Defs>
-            <Rect width={svgWidth} height={svgHeight} fill="url(#glassGradient)" />
+            <Rect
+              width={svgWidth}
+              height={svgHeight}
+              fill="url(#glassGradient)"
+            />
             <Rect
               x={svgWidth * 0.1}
               y={svgHeight * 0.1}
@@ -249,13 +336,35 @@ const EnhancedShadersContainer = ({
         return (
           <Svg width={svgWidth} height={svgHeight} style={styles.svgBackground}>
             <Defs>
-              <SvgLinearGradient id="grainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <Stop offset="0%" stopColor={colors[0]} stopOpacity={intensity * 0.8} />
-                <Stop offset="50%" stopColor={colors[1]} stopOpacity={intensity * 0.6} />
-                <Stop offset="100%" stopColor={colors[2]} stopOpacity={intensity * 0.4} />
+              <SvgLinearGradient
+                id="grainGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <Stop
+                  offset="0%"
+                  stopColor={colors[0]}
+                  stopOpacity={intensity * 0.8}
+                />
+                <Stop
+                  offset="50%"
+                  stopColor={colors[1]}
+                  stopOpacity={intensity * 0.6}
+                />
+                <Stop
+                  offset="100%"
+                  stopColor={colors[2]}
+                  stopOpacity={intensity * 0.4}
+                />
               </SvgLinearGradient>
             </Defs>
-            <Rect width={svgWidth} height={svgHeight} fill="url(#grainGradient)" />
+            <Rect
+              width={svgWidth}
+              height={svgHeight}
+              fill="url(#grainGradient)"
+            />
             {/* Add grain-like texture with small circles */}
             {Array.from({ length: 50 }).map((_, index) => (
               <Circle
@@ -279,7 +388,7 @@ const EnhancedShadersContainer = ({
         {
           opacity: fadeAnim,
           transform: [
-            { rotate: animated ? rotation : '0deg' },
+            { rotate: animated ? rotation : "0deg" },
             { scale: animated ? scaleAnim : 1 },
           ],
         },
@@ -289,19 +398,20 @@ const EnhancedShadersContainer = ({
       {...props}
     >
       {/* Background shader pattern */}
-      <View style={styles.shaderBackground}>
-        {renderShaderPattern()}
-      </View>
+      <View style={styles.shaderBackground}>{renderShaderPattern()}</View>
 
       {/* Overlay blur effect for glassmorphism */}
-      {variant === 'glass' && (
-        <View style={[styles.glassOverlay, { backgroundColor: theme.colors.background.surface + '20' }]} />
+      {variant === "glass" && (
+        <View
+          style={[
+            styles.glassOverlay,
+            { backgroundColor: theme.colors.background.surface + "20" },
+          ]}
+        />
       )}
 
       {/* Content container */}
-      <View style={styles.contentContainer}>
-        {children}
-      </View>
+      <View style={styles.contentContainer}>{children}</View>
 
       {/* Interactive glow effect */}
       {interactive && (
@@ -333,12 +443,12 @@ const EnhancedShadersContainer = ({
 
 const styles = StyleSheet.create({
   container: {
-    position: 'relative',
+    position: "relative",
     borderRadius: borderRadius.xl,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   shaderBackground: {
-    position: 'absolute',
+    position: "absolute",
     top: -50,
     left: -50,
     right: -50,
@@ -346,34 +456,34 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   svgBackground: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
   },
   glassOverlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
     zIndex: 1,
-    backdropFilter: 'blur(10px)', // Web only
+    backdropFilter: "blur(10px)", // Web only
   },
   contentContainer: {
-    position: 'relative',
+    position: "relative",
     zIndex: 2,
     padding: spacing[4],
   },
   interactiveGlow: {
-    position: 'absolute',
+    position: "absolute",
     zIndex: 1,
-    pointerEvents: 'none',
+    pointerEvents: "none",
   },
   glowCircle: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 20,

@@ -1,8 +1,16 @@
-import { Platform, Alert } from 'react-native';
-import * as Notifications from 'expo-notifications';
-import * as Device from 'expo-device';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { format, addHours, addDays, startOfDay, isAfter, isBefore, parseISO } from 'date-fns';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  format,
+  addHours,
+  addDays,
+  startOfDay,
+  isAfter,
+  isBefore,
+  parseISO,
+} from "date-fns";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+import { Platform, Alert } from "react-native";
 
 /**
  * Smart Notification Manager for Mental Health App
@@ -23,40 +31,40 @@ class SmartNotificationManager {
     this.isInitialized = false;
     this.notificationChannels = {
       mood_reminders: {
-        id: 'mood_reminders',
-        name: 'Mood Check-ins',
-        description: 'Gentle reminders to check in with your emotions',
-        importance: 'default',
-        sound: 'gentle_bell.wav'
+        id: "mood_reminders",
+        name: "Mood Check-ins",
+        description: "Gentle reminders to check in with your emotions",
+        importance: "default",
+        sound: "gentle_bell.wav",
       },
       therapy_sessions: {
-        id: 'therapy_sessions',
-        name: 'Therapy Sessions',
-        description: 'Reminders for scheduled therapy sessions',
-        importance: 'high',
-        sound: 'therapy_chime.wav'
+        id: "therapy_sessions",
+        name: "Therapy Sessions",
+        description: "Reminders for scheduled therapy sessions",
+        importance: "high",
+        sound: "therapy_chime.wav",
       },
       wellness_tips: {
-        id: 'wellness_tips',
-        name: 'Wellness Tips',
-        description: 'Daily wellness and self-care tips',
-        importance: 'low',
-        sound: 'soft_notification.wav'
+        id: "wellness_tips",
+        name: "Wellness Tips",
+        description: "Daily wellness and self-care tips",
+        importance: "low",
+        sound: "soft_notification.wav",
       },
       crisis_support: {
-        id: 'crisis_support',
-        name: 'Crisis Support',
-        description: 'Crisis intervention and safety reminders',
-        importance: 'critical',
-        sound: 'urgent_gentle.wav'
+        id: "crisis_support",
+        name: "Crisis Support",
+        description: "Crisis intervention and safety reminders",
+        importance: "critical",
+        sound: "urgent_gentle.wav",
       },
       progress_celebrations: {
-        id: 'progress_celebrations',
-        name: 'Progress Celebrations',
-        description: 'Celebrating your mental health journey milestones',
-        importance: 'default',
-        sound: 'celebration.wav'
-      }
+        id: "progress_celebrations",
+        name: "Progress Celebrations",
+        description: "Celebrating your mental health journey milestones",
+        importance: "default",
+        sound: "celebration.wav",
+      },
     };
 
     this.therapeuticMessages = {
@@ -64,48 +72,48 @@ class SmartNotificationManager {
         {
           title: "Gentle Check-in 💙",
           body: "How are you feeling right now? Your emotions matter and are valid.",
-          therapeutic: true
+          therapeutic: true,
         },
         {
           title: "Mindful Moment 🌸",
           body: "Take a breath. Notice what you're feeling without judgment.",
-          therapeutic: true
+          therapeutic: true,
         },
         {
           title: "Emotional Awareness ✨",
           body: "Checking in with yourself is an act of self-care. How's your heart today?",
-          therapeutic: true
-        }
+          therapeutic: true,
+        },
       ],
       wellness_tips: [
         {
           title: "Self-Care Reminder 🌱",
           body: "You deserve kindness, especially from yourself.",
-          therapeutic: true
+          therapeutic: true,
         },
         {
           title: "Gentle Reminder 🤗",
           body: "It's okay to not be okay. Healing isn't linear, and that's perfectly normal.",
-          therapeutic: true
+          therapeutic: true,
         },
         {
           title: "Mindfulness Moment 🧘",
           body: "Try the 5-4-3-2-1 technique: 5 things you see, 4 you touch, 3 you hear, 2 you smell, 1 you taste.",
-          therapeutic: true
-        }
+          therapeutic: true,
+        },
       ],
       progress_celebrations: [
         {
           title: "You're Amazing! 🌟",
           body: "Look how far you've come on your mental health journey. Be proud of your progress!",
-          therapeutic: true
+          therapeutic: true,
         },
         {
           title: "Strength Recognition 💪",
           body: "Every day you choose to care for your mental health is a victory worth celebrating.",
-          therapeutic: true
-        }
-      ]
+          therapeutic: true,
+        },
+      ],
     };
   }
 
@@ -118,30 +126,31 @@ class SmartNotificationManager {
     try {
       // Check if device supports notifications
       if (!Device.isDevice) {
-        console.warn('Notifications not supported on simulator');
+        console.warn("Notifications not supported on simulator");
         return false;
       }
 
       // Request permissions
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
 
-      if (existingStatus !== 'granted') {
+      if (existingStatus !== "granted") {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
 
-      if (finalStatus !== 'granted') {
+      if (finalStatus !== "granted") {
         Alert.alert(
-          'Notification Permissions',
-          'Notifications help us provide timely mental health support. You can enable them later in Settings.',
-          [{ text: 'OK' }]
+          "Notification Permissions",
+          "Notifications help us provide timely mental health support. You can enable them later in Settings.",
+          [{ text: "OK" }],
         );
         return false;
       }
 
       // Set up notification channels for Android
-      if (Platform.OS === 'android') {
+      if (Platform.OS === "android") {
         await this.createNotificationChannels();
       }
 
@@ -151,7 +160,7 @@ class SmartNotificationManager {
       this.isInitialized = true;
       return true;
     } catch (error) {
-      console.error('Error initializing notifications:', error);
+      console.error("Error initializing notifications:", error);
       return false;
     }
   }
@@ -160,14 +169,14 @@ class SmartNotificationManager {
    * Create notification channels for Android
    */
   async createNotificationChannels() {
-    if (Platform.OS !== 'android') return;
+    if (Platform.OS !== "android") return;
 
     for (const channel of Object.values(this.notificationChannels)) {
       await Notifications.setNotificationChannelAsync(channel.id, {
         name: channel.name,
         description: channel.description,
         importance: this.mapImportance(channel.importance),
-        sound: channel.sound
+        sound: channel.sound,
       });
     }
   }
@@ -177,10 +186,10 @@ class SmartNotificationManager {
    */
   mapImportance(importance) {
     const importanceMap = {
-      'low': Notifications.AndroidImportance.LOW,
-      'default': Notifications.AndroidImportance.DEFAULT,
-      'high': Notifications.AndroidImportance.HIGH,
-      'critical': Notifications.AndroidImportance.MAX
+      low: Notifications.AndroidImportance.LOW,
+      default: Notifications.AndroidImportance.DEFAULT,
+      high: Notifications.AndroidImportance.HIGH,
+      critical: Notifications.AndroidImportance.MAX,
     };
     return importanceMap[importance] || Notifications.AndroidImportance.DEFAULT;
   }
@@ -190,10 +199,14 @@ class SmartNotificationManager {
    */
   async loadNotificationPreferences() {
     try {
-      const preferences = await AsyncStorage.getItem('notification_preferences');
-      this.userPreferences = preferences ? JSON.parse(preferences) : this.getDefaultPreferences();
+      const preferences = await AsyncStorage.getItem(
+        "notification_preferences",
+      );
+      this.userPreferences = preferences
+        ? JSON.parse(preferences)
+        : this.getDefaultPreferences();
     } catch (error) {
-      console.error('Error loading notification preferences:', error);
+      console.error("Error loading notification preferences:", error);
       this.userPreferences = this.getDefaultPreferences();
     }
   }
@@ -205,11 +218,11 @@ class SmartNotificationManager {
     return {
       mood_reminders: {
         enabled: true,
-        frequency: 'daily', // daily, twice_daily, custom
-        time: '19:00', // 7 PM default
+        frequency: "daily", // daily, twice_daily, custom
+        time: "19:00", // 7 PM default
         customTimes: [],
-        quietHours: { start: '22:00', end: '08:00' },
-        adaptiveFrequency: true // Adjust based on user patterns
+        quietHours: { start: "22:00", end: "08:00" },
+        adaptiveFrequency: true, // Adjust based on user patterns
       },
       therapy_sessions: {
         enabled: true,
@@ -218,27 +231,27 @@ class SmartNotificationManager {
       },
       wellness_tips: {
         enabled: true,
-        frequency: 'daily',
-        time: '09:00', // 9 AM default
-        categories: ['mindfulness', 'self-care', 'coping', 'motivation']
+        frequency: "daily",
+        time: "09:00", // 9 AM default
+        categories: ["mindfulness", "self-care", "coping", "motivation"],
       },
       crisis_support: {
         enabled: true,
         checkInAfterCrisis: 24, // hours
-        safetyPlanReminders: true
+        safetyPlanReminders: true,
       },
       progress_celebrations: {
         enabled: true,
         milestones: true,
         streaks: true,
-        achievements: true
+        achievements: true,
       },
       adaptive: {
         enabled: true,
         learnFromUsage: true,
         respectMoodPatterns: true,
-        avoidLowMoodTimes: true
-      }
+        avoidLowMoodTimes: true,
+      },
     };
   }
 
@@ -248,12 +261,15 @@ class SmartNotificationManager {
   async saveNotificationPreferences(preferences) {
     try {
       this.userPreferences = { ...this.userPreferences, ...preferences };
-      await AsyncStorage.setItem('notification_preferences', JSON.stringify(this.userPreferences));
-      
+      await AsyncStorage.setItem(
+        "notification_preferences",
+        JSON.stringify(this.userPreferences),
+      );
+
       // Reschedule notifications based on new preferences
       await this.scheduleAllNotifications();
     } catch (error) {
-      console.error('Error saving notification preferences:', error);
+      console.error("Error saving notification preferences:", error);
     }
   }
 
@@ -264,10 +280,10 @@ class SmartNotificationManager {
     if (!this.userPreferences.mood_reminders.enabled) return;
 
     // Cancel existing mood reminders
-    await this.cancelNotificationsByCategory('mood_reminder');
+    await this.cancelNotificationsByCategory("mood_reminder");
 
     // Analyze user patterns to determine optimal timing
-    const optimalTime = this.userPreferences.adaptive.enabled 
+    const optimalTime = this.userPreferences.adaptive.enabled
       ? await this.calculateOptimalMoodReminderTime(userMoodHistory)
       : this.userPreferences.mood_reminders.time;
 
@@ -275,60 +291,64 @@ class SmartNotificationManager {
     const messages = this.therapeuticMessages.mood_reminders;
 
     switch (frequency) {
-      case 'daily':
+      case "daily":
         await this.scheduleRecurringNotification({
-          id: 'daily_mood_reminder',
-          category: 'mood_reminder',
-          channelId: 'mood_reminders',
+          id: "daily_mood_reminder",
+          category: "mood_reminder",
+          channelId: "mood_reminders",
           title: messages[0].title,
           body: messages[0].body,
           time: optimalTime,
-          repeat: 'daily',
-          data: { type: 'mood_reminder', action: 'open_mood_tracker' }
+          repeat: "daily",
+          data: { type: "mood_reminder", action: "open_mood_tracker" },
         });
         break;
 
-      case 'twice_daily':
-        const morningTime = '09:00';
+      case "twice_daily":
+        const morningTime = "09:00";
         const eveningTime = optimalTime;
 
         await this.scheduleRecurringNotification({
-          id: 'morning_mood_reminder',
-          category: 'mood_reminder',
-          channelId: 'mood_reminders',
+          id: "morning_mood_reminder",
+          category: "mood_reminder",
+          channelId: "mood_reminders",
           title: "Morning Check-in 🌅",
           body: "Good morning! How are you starting your day?",
           time: morningTime,
-          repeat: 'daily',
-          data: { type: 'mood_reminder', action: 'open_mood_tracker' }
+          repeat: "daily",
+          data: { type: "mood_reminder", action: "open_mood_tracker" },
         });
 
         await this.scheduleRecurringNotification({
-          id: 'evening_mood_reminder',
-          category: 'mood_reminder',
-          channelId: 'mood_reminders',
+          id: "evening_mood_reminder",
+          category: "mood_reminder",
+          channelId: "mood_reminders",
           title: "Evening Reflection 🌙",
           body: "How has your day been? Take a moment to check in with yourself.",
           time: eveningTime,
-          repeat: 'daily',
-          data: { type: 'mood_reminder', action: 'open_mood_tracker' }
+          repeat: "daily",
+          data: { type: "mood_reminder", action: "open_mood_tracker" },
         });
         break;
 
-      case 'custom':
-        for (let i = 0; i < this.userPreferences.mood_reminders.customTimes.length; i++) {
+      case "custom":
+        for (
+          let i = 0;
+          i < this.userPreferences.mood_reminders.customTimes.length;
+          i++
+        ) {
           const customTime = this.userPreferences.mood_reminders.customTimes[i];
           const message = messages[i % messages.length];
 
           await this.scheduleRecurringNotification({
             id: `custom_mood_reminder_${i}`,
-            category: 'mood_reminder',
-            channelId: 'mood_reminders',
+            category: "mood_reminder",
+            channelId: "mood_reminders",
             title: message.title,
             body: message.body,
             time: customTime,
-            repeat: 'daily',
-            data: { type: 'mood_reminder', action: 'open_mood_tracker' }
+            repeat: "daily",
+            data: { type: "mood_reminder", action: "open_mood_tracker" },
           });
         }
         break;
@@ -344,24 +364,25 @@ class SmartNotificationManager {
     }
 
     // Analyze when user typically logs moods
-    const logTimes = moodHistory.map(entry => {
+    const logTimes = moodHistory.map((entry) => {
       const date = parseISO(entry.timestamp);
-      return date.getHours() + (date.getMinutes() / 60);
+      return date.getHours() + date.getMinutes() / 60;
     });
 
     // Find the most common time range
     const timeRanges = {};
-    logTimes.forEach(time => {
+    logTimes.forEach((time) => {
       const range = Math.floor(time);
       timeRanges[range] = (timeRanges[range] || 0) + 1;
     });
 
-    const mostCommonHour = Object.entries(timeRanges)
-      .sort(([,a], [,b]) => b - a)[0][0];
+    const mostCommonHour = Object.entries(timeRanges).sort(
+      ([, a], [, b]) => b - a,
+    )[0][0];
 
     // Suggest a time 1 hour before the most common logging time
     const optimalHour = Math.max(8, parseInt(mostCommonHour) - 1);
-    return `${optimalHour.toString().padStart(2, '0')}:00`;
+    return `${optimalHour.toString().padStart(2, "0")}:00`;
   }
 
   /**
@@ -376,50 +397,56 @@ class SmartNotificationManager {
     // Schedule pre-session reminders
     for (let i = 0; i < reminderTimes.length; i++) {
       const minutesBefore = reminderTimes[i];
-      const reminderTime = new Date(sessionTime.getTime() - (minutesBefore * 60 * 1000));
+      const reminderTime = new Date(
+        sessionTime.getTime() - minutesBefore * 60 * 1000,
+      );
 
-      if (reminderTime > new Date()) { // Only schedule future reminders
+      if (reminderTime > new Date()) {
+        // Only schedule future reminders
         await Notifications.scheduleNotificationAsync({
           identifier: `therapy_reminder_${sessionTime.getTime()}_${minutesBefore}`,
           content: {
             title: "Therapy Session Reminder 🤝",
             body: `Your therapy session is in ${this.formatTimeUntil(minutesBefore)}. Take a moment to prepare.`,
-            categoryIdentifier: 'therapy_session',
+            categoryIdentifier: "therapy_session",
             data: {
-              type: 'therapy_reminder',
+              type: "therapy_reminder",
               sessionDateTime,
               sessionDetails,
-              action: 'prepare_for_session'
-            }
+              action: "prepare_for_session",
+            },
           },
           trigger: {
             date: reminderTime,
-            channelId: 'therapy_sessions'
-          }
+            channelId: "therapy_sessions",
+          },
         });
       }
     }
 
     // Schedule post-session follow-up
     if (this.userPreferences.therapy_sessions.followUpAfter) {
-      const followUpTime = addHours(sessionTime, this.userPreferences.therapy_sessions.followUpAfter / 60);
+      const followUpTime = addHours(
+        sessionTime,
+        this.userPreferences.therapy_sessions.followUpAfter / 60,
+      );
 
       await Notifications.scheduleNotificationAsync({
         identifier: `therapy_followup_${sessionTime.getTime()}`,
         content: {
           title: "Session Reflection 🌱",
           body: "How was your therapy session? Take a moment to reflect on what you discussed.",
-          categoryIdentifier: 'therapy_followup',
+          categoryIdentifier: "therapy_followup",
           data: {
-            type: 'therapy_followup',
+            type: "therapy_followup",
             sessionDateTime,
-            action: 'session_reflection'
-          }
+            action: "session_reflection",
+          },
         },
         trigger: {
           date: followUpTime,
-          channelId: 'therapy_sessions'
-        }
+          channelId: "therapy_sessions",
+        },
       });
     }
   }
@@ -430,16 +457,17 @@ class SmartNotificationManager {
   async scheduleWellnessTips() {
     if (!this.userPreferences.wellness_tips.enabled) return;
 
-    await this.cancelNotificationsByCategory('wellness_tip');
+    await this.cancelNotificationsByCategory("wellness_tip");
 
     const time = this.userPreferences.wellness_tips.time;
     const messages = this.therapeuticMessages.wellness_tips;
 
     // Schedule rotating wellness tips
-    for (let i = 0; i < 7; i++) { // Schedule for next 7 days
+    for (let i = 0; i < 7; i++) {
+      // Schedule for next 7 days
       const message = messages[i % messages.length];
       const triggerDate = addDays(startOfDay(new Date()), i);
-      const [hours, minutes] = time.split(':').map(Number);
+      const [hours, minutes] = time.split(":").map(Number);
       triggerDate.setHours(hours, minutes, 0, 0);
 
       await Notifications.scheduleNotificationAsync({
@@ -447,17 +475,20 @@ class SmartNotificationManager {
         content: {
           title: message.title,
           body: message.body,
-          categoryIdentifier: 'wellness_tip',
+          categoryIdentifier: "wellness_tip",
           data: {
-            type: 'wellness_tip',
-            action: 'view_tip',
-            category: this.userPreferences.wellness_tips.categories[i % this.userPreferences.wellness_tips.categories.length]
-          }
+            type: "wellness_tip",
+            action: "view_tip",
+            category:
+              this.userPreferences.wellness_tips.categories[
+                i % this.userPreferences.wellness_tips.categories.length
+              ],
+          },
         },
         trigger: {
           date: triggerDate,
-          channelId: 'wellness_tips'
-        }
+          channelId: "wellness_tips",
+        },
       });
     }
   }
@@ -468,25 +499,28 @@ class SmartNotificationManager {
   async scheduleCrisisCheckIn(crisisDateTime) {
     if (!this.userPreferences.crisis_support.enabled) return;
 
-    const checkInTime = addHours(parseISO(crisisDateTime), this.userPreferences.crisis_support.checkInAfterCrisis);
+    const checkInTime = addHours(
+      parseISO(crisisDateTime),
+      this.userPreferences.crisis_support.checkInAfterCrisis,
+    );
 
     await Notifications.scheduleNotificationAsync({
       identifier: `crisis_checkin_${crisisDateTime}`,
       content: {
         title: "Gentle Check-in 💙",
         body: "We care about you. How are you feeling today? Remember, support is always available.",
-        categoryIdentifier: 'crisis_checkin',
+        categoryIdentifier: "crisis_checkin",
         data: {
-          type: 'crisis_checkin',
+          type: "crisis_checkin",
           crisisDateTime,
-          action: 'crisis_followup',
-          priority: 'high'
-        }
+          action: "crisis_followup",
+          priority: "high",
+        },
       },
       trigger: {
         date: checkInTime,
-        channelId: 'crisis_support'
-      }
+        channelId: "crisis_support",
+      },
     });
   }
 
@@ -504,17 +538,17 @@ class SmartNotificationManager {
       content: {
         title: message.title,
         body: `${message.body} ${milestone.description}`,
-        categoryIdentifier: 'progress_celebration',
+        categoryIdentifier: "progress_celebration",
         data: {
-          type: 'progress_celebration',
+          type: "progress_celebration",
           milestone,
-          action: 'view_progress'
-        }
+          action: "view_progress",
+        },
       },
       trigger: {
         seconds: 5, // Show immediately
-        channelId: 'progress_celebrations'
-      }
+        channelId: "progress_celebrations",
+      },
     });
   }
 
@@ -527,14 +561,21 @@ class SmartNotificationManager {
     const { moodPatterns, usagePatterns, riskFactors } = userAnalytics;
 
     // Avoid low mood times
-    if (this.userPreferences.adaptive.avoidLowMoodTimes && moodPatterns.lowMoodTimes) {
+    if (
+      this.userPreferences.adaptive.avoidLowMoodTimes &&
+      moodPatterns.lowMoodTimes
+    ) {
       // Reschedule notifications to avoid identified low mood times
-      await this.adjustNotificationTimingForMoodPatterns(moodPatterns.lowMoodTimes);
+      await this.adjustNotificationTimingForMoodPatterns(
+        moodPatterns.lowMoodTimes,
+      );
     }
 
     // Increase support during risk periods
     if (riskFactors && riskFactors.highRiskPeriods) {
-      await this.scheduleAdditionalSupportDuringRiskPeriods(riskFactors.highRiskPeriods);
+      await this.scheduleAdditionalSupportDuringRiskPeriods(
+        riskFactors.highRiskPeriods,
+      );
     }
 
     // Adjust frequency based on engagement
@@ -549,7 +590,7 @@ class SmartNotificationManager {
   async scheduleRecurringNotification(config) {
     const { id, channelId, title, body, time, repeat, data } = config;
 
-    const [hours, minutes] = time.split(':').map(Number);
+    const [hours, minutes] = time.split(":").map(Number);
     const triggerDate = new Date();
     triggerDate.setHours(hours, minutes, 0, 0);
 
@@ -558,9 +599,10 @@ class SmartNotificationManager {
       triggerDate.setDate(triggerDate.getDate() + 1);
     }
 
-    const trigger = repeat === 'daily' 
-      ? { hour: hours, minute: minutes, repeats: true }
-      : { date: triggerDate };
+    const trigger =
+      repeat === "daily"
+        ? { hour: hours, minute: minutes, repeats: true }
+        : { date: triggerDate };
 
     await Notifications.scheduleNotificationAsync({
       identifier: id,
@@ -568,12 +610,12 @@ class SmartNotificationManager {
         title,
         body,
         categoryIdentifier: config.category,
-        data
+        data,
       },
       trigger: {
         ...trigger,
-        channelId
-      }
+        channelId,
+      },
     });
   }
 
@@ -581,13 +623,16 @@ class SmartNotificationManager {
    * Cancel notifications by category
    */
   async cancelNotificationsByCategory(category) {
-    const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
+    const scheduledNotifications =
+      await Notifications.getAllScheduledNotificationsAsync();
     const categoryNotifications = scheduledNotifications.filter(
-      notification => notification.content.categoryIdentifier === category
+      (notification) => notification.content.categoryIdentifier === category,
     );
 
     for (const notification of categoryNotifications) {
-      await Notifications.cancelScheduledNotificationAsync(notification.identifier);
+      await Notifications.cancelScheduledNotificationAsync(
+        notification.identifier,
+      );
     }
   }
 
@@ -603,7 +648,7 @@ class SmartNotificationManager {
     // Reschedule based on current preferences
     await this.scheduleMoodReminder();
     await this.scheduleWellnessTips();
-    
+
     // Note: Therapy sessions and crisis check-ins are scheduled dynamically
     // when those events occur, not as part of the general scheduling
   }
@@ -611,34 +656,46 @@ class SmartNotificationManager {
   /**
    * Handle notification interaction
    */
-  async handleNotificationInteraction(notification, actionType = 'opened') {
+  async handleNotificationInteraction(notification, actionType = "opened") {
     const { data } = notification.request.content;
-    
+
     // Log interaction for analytics
     await this.logNotificationInteraction(notification, actionType);
 
     // Handle different notification types
     switch (data.type) {
-      case 'mood_reminder':
-        return { action: 'navigate', screen: 'MoodTracker' };
-      
-      case 'therapy_reminder':
-        return { action: 'navigate', screen: 'TherapySession', params: data.sessionDetails };
-      
-      case 'therapy_followup':
-        return { action: 'navigate', screen: 'SessionReflection', params: { sessionDateTime: data.sessionDateTime } };
-      
-      case 'wellness_tip':
-        return { action: 'navigate', screen: 'WellnessTips', params: { category: data.category } };
-      
-      case 'crisis_checkin':
-        return { action: 'navigate', screen: 'CrisisSupport' };
-      
-      case 'progress_celebration':
-        return { action: 'navigate', screen: 'Progress' };
-      
+      case "mood_reminder":
+        return { action: "navigate", screen: "MoodTracker" };
+
+      case "therapy_reminder":
+        return {
+          action: "navigate",
+          screen: "TherapySession",
+          params: data.sessionDetails,
+        };
+
+      case "therapy_followup":
+        return {
+          action: "navigate",
+          screen: "SessionReflection",
+          params: { sessionDateTime: data.sessionDateTime },
+        };
+
+      case "wellness_tip":
+        return {
+          action: "navigate",
+          screen: "WellnessTips",
+          params: { category: data.category },
+        };
+
+      case "crisis_checkin":
+        return { action: "navigate", screen: "CrisisSupport" };
+
+      case "progress_celebration":
+        return { action: "navigate", screen: "Progress" };
+
       default:
-        return { action: 'navigate', screen: 'Home' };
+        return { action: "navigate", screen: "Home" };
     }
   }
 
@@ -650,23 +707,28 @@ class SmartNotificationManager {
       const interaction = {
         timestamp: new Date().toISOString(),
         notificationId: notification.request.identifier,
-        type: notification.request.content.data?.type || 'unknown',
+        type: notification.request.content.data?.type || "unknown",
         actionType, // 'opened', 'dismissed', 'action_taken'
         title: notification.request.content.title,
-        scheduled: notification.date
+        scheduled: notification.date,
       };
 
-      const existingLogs = await AsyncStorage.getItem('notification_interactions');
+      const existingLogs = await AsyncStorage.getItem(
+        "notification_interactions",
+      );
       const logs = existingLogs ? JSON.parse(existingLogs) : [];
-      
+
       logs.push(interaction);
-      
+
       // Keep only last 1000 interactions
       const trimmedLogs = logs.slice(-1000);
-      
-      await AsyncStorage.setItem('notification_interactions', JSON.stringify(trimmedLogs));
+
+      await AsyncStorage.setItem(
+        "notification_interactions",
+        JSON.stringify(trimmedLogs),
+      );
     } catch (error) {
-      console.error('Error logging notification interaction:', error);
+      console.error("Error logging notification interaction:", error);
     }
   }
 
@@ -675,36 +737,40 @@ class SmartNotificationManager {
    */
   async getNotificationAnalytics() {
     try {
-      const interactions = await AsyncStorage.getItem('notification_interactions');
+      const interactions = await AsyncStorage.getItem(
+        "notification_interactions",
+      );
       const notificationLogs = interactions ? JSON.parse(interactions) : [];
 
       const last30Days = new Date();
       last30Days.setDate(last30Days.getDate() - 30);
 
       const recentInteractions = notificationLogs.filter(
-        log => new Date(log.timestamp) > last30Days
+        (log) => new Date(log.timestamp) > last30Days,
       );
 
       // Calculate engagement rates
       const sentCount = recentInteractions.length;
-      const openedCount = recentInteractions.filter(log => log.actionType === 'opened').length;
+      const openedCount = recentInteractions.filter(
+        (log) => log.actionType === "opened",
+      ).length;
       const engagementRate = sentCount > 0 ? openedCount / sentCount : 0;
 
       // Type distribution
       const typeDistribution = {};
-      recentInteractions.forEach(log => {
+      recentInteractions.forEach((log) => {
         typeDistribution[log.type] = (typeDistribution[log.type] || 0) + 1;
       });
 
       // Most effective times
       const timeEffectiveness = {};
-      recentInteractions.forEach(log => {
+      recentInteractions.forEach((log) => {
         const hour = new Date(log.timestamp).getHours();
         if (!timeEffectiveness[hour]) {
           timeEffectiveness[hour] = { sent: 0, opened: 0 };
         }
         timeEffectiveness[hour].sent++;
-        if (log.actionType === 'opened') {
+        if (log.actionType === "opened") {
           timeEffectiveness[hour].opened++;
         }
       });
@@ -715,10 +781,11 @@ class SmartNotificationManager {
         engagementRate: Math.round(engagementRate * 100),
         typeDistribution,
         timeEffectiveness,
-        recommendations: this.generateNotificationRecommendations(recentInteractions)
+        recommendations:
+          this.generateNotificationRecommendations(recentInteractions),
       };
     } catch (error) {
-      console.error('Error getting notification analytics:', error);
+      console.error("Error getting notification analytics:", error);
       return null;
     }
   }
@@ -730,44 +797,54 @@ class SmartNotificationManager {
     const recommendations = [];
 
     if (interactions.length === 0) {
-      return ['Start with daily mood reminders to establish a routine.'];
+      return ["Start with daily mood reminders to establish a routine."];
     }
 
     // Analyze engagement rates by type
     const typeEngagement = {};
-    interactions.forEach(log => {
+    interactions.forEach((log) => {
       if (!typeEngagement[log.type]) {
         typeEngagement[log.type] = { sent: 0, opened: 0 };
       }
       typeEngagement[log.type].sent++;
-      if (log.actionType === 'opened') {
+      if (log.actionType === "opened") {
         typeEngagement[log.type].opened++;
       }
     });
 
     // Find most and least engaging types
-    const engagementRates = Object.entries(typeEngagement).map(([type, stats]) => ({
-      type,
-      rate: stats.sent > 0 ? stats.opened / stats.sent : 0,
-      count: stats.sent
-    }));
+    const engagementRates = Object.entries(typeEngagement).map(
+      ([type, stats]) => ({
+        type,
+        rate: stats.sent > 0 ? stats.opened / stats.sent : 0,
+        count: stats.sent,
+      }),
+    );
 
-    const highEngagement = engagementRates.filter(item => item.rate > 0.7 && item.count >= 5);
-    const lowEngagement = engagementRates.filter(item => item.rate < 0.3 && item.count >= 5);
+    const highEngagement = engagementRates.filter(
+      (item) => item.rate > 0.7 && item.count >= 5,
+    );
+    const lowEngagement = engagementRates.filter(
+      (item) => item.rate < 0.3 && item.count >= 5,
+    );
 
     if (highEngagement.length > 0) {
       recommendations.push(
-        `Your ${highEngagement[0].type} notifications have high engagement (${Math.round(highEngagement[0].rate * 100)}%). Consider adding more of these.`
+        `Your ${highEngagement[0].type} notifications have high engagement (${Math.round(highEngagement[0].rate * 100)}%). Consider adding more of these.`,
       );
     }
 
     if (lowEngagement.length > 0) {
       recommendations.push(
-        `Your ${lowEngagement[0].type} notifications have low engagement (${Math.round(lowEngagement[0].rate * 100)}%). Consider adjusting the timing or content.`
+        `Your ${lowEngagement[0].type} notifications have low engagement (${Math.round(lowEngagement[0].rate * 100)}%). Consider adjusting the timing or content.`,
       );
     }
 
-    return recommendations.length > 0 ? recommendations : ['Your notification engagement looks good! Keep up with your current settings.'];
+    return recommendations.length > 0
+      ? recommendations
+      : [
+          "Your notification engagement looks good! Keep up with your current settings.",
+        ];
   }
 
   /**
@@ -775,10 +852,10 @@ class SmartNotificationManager {
    */
   formatTimeUntil(minutes) {
     if (minutes < 60) {
-      return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+      return `${minutes} minute${minutes !== 1 ? "s" : ""}`;
     }
     const hours = Math.floor(minutes / 60);
-    return `${hours} hour${hours !== 1 ? 's' : ''}`;
+    return `${hours} hour${hours !== 1 ? "s" : ""}`;
   }
 
   /**
@@ -787,10 +864,10 @@ class SmartNotificationManager {
   isWithinQuietHours() {
     const now = new Date();
     const currentTime = now.getHours() * 100 + now.getMinutes();
-    
+
     const quietHours = this.userPreferences.mood_reminders.quietHours;
-    const startTime = parseInt(quietHours.start.replace(':', ''));
-    const endTime = parseInt(quietHours.end.replace(':', ''));
+    const startTime = parseInt(quietHours.start.replace(":", ""));
+    const endTime = parseInt(quietHours.end.replace(":", ""));
 
     if (startTime > endTime) {
       // Quiet hours cross midnight
@@ -808,8 +885,8 @@ class SmartNotificationManager {
       const { status } = await Notifications.getPermissionsAsync();
       return status;
     } catch (error) {
-      console.error('Error getting permission status:', error);
-      return 'undetermined';
+      console.error("Error getting permission status:", error);
+      return "undetermined";
     }
   }
 
@@ -828,19 +905,19 @@ class SmartNotificationManager {
         },
       });
 
-      if (status === 'granted') {
+      if (status === "granted") {
         await this.initialize();
         return true;
       } else {
         Alert.alert(
-          'Notification Setup',
-          'Notifications help us provide timely mental health support and reminders. You can enable them anytime in Settings.',
-          [{ text: 'OK' }]
+          "Notification Setup",
+          "Notifications help us provide timely mental health support and reminders. You can enable them anytime in Settings.",
+          [{ text: "OK" }],
         );
         return false;
       }
     } catch (error) {
-      console.error('Error requesting permissions:', error);
+      console.error("Error requesting permissions:", error);
       return false;
     }
   }

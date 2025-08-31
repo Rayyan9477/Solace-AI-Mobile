@@ -4,6 +4,7 @@
  */
 import { useMemo } from "react";
 import { StyleSheet } from "react-native";
+
 import { useUnifiedTheme } from "../shared/theme/UnifiedThemeProvider";
 import { createStyleUtilities } from "../theme/OptimizedTheme";
 
@@ -14,7 +15,7 @@ import { createStyleUtilities } from "../theme/OptimizedTheme";
  */
 export const useThemedStyles = (styleFunction) => {
   const { theme } = useUnifiedTheme();
-  
+
   return useMemo(() => {
     const styles = styleFunction(theme);
     return StyleSheet.create(styles);
@@ -27,7 +28,7 @@ export const useThemedStyles = (styleFunction) => {
  */
 export const useStyleUtilities = () => {
   const { theme } = useUnifiedTheme();
-  
+
   return useMemo(() => {
     return createStyleUtilities(theme);
   }, [theme]);
@@ -39,16 +40,19 @@ export const useStyleUtilities = () => {
  */
 export const useThemeValues = () => {
   const { getColor, getSpacing, theme } = useUnifiedTheme();
-  
-  return useMemo(() => ({
-    getColor,
-    getSpacing,
-    colors: theme.colors,
-    spacing: theme.spacing,
-    typography: theme.typography,
-    borderRadius: theme.borderRadius,
-    shadows: theme.shadows,
-  }), [getColor, getSpacing, theme]);
+
+  return useMemo(
+    () => ({
+      getColor,
+      getSpacing,
+      colors: theme.colors,
+      spacing: theme.spacing,
+      typography: theme.typography,
+      borderRadius: theme.borderRadius,
+      shadows: theme.shadows,
+    }),
+    [getColor, getSpacing, theme],
+  );
 };
 
 /**
@@ -58,7 +62,7 @@ export const useThemeValues = () => {
  */
 export const useResponsiveStyles = (breakpoints = {}) => {
   const { theme } = useUnifiedTheme();
-  
+
   return useMemo(() => {
     return (styleFunction) => {
       const styles = styleFunction(theme, breakpoints);
@@ -73,10 +77,10 @@ export const useResponsiveStyles = (breakpoints = {}) => {
  */
 export const useAnimationStyles = () => {
   const { theme, isReducedMotionEnabled } = useUnifiedTheme();
-  
+
   return useMemo(() => {
     const duration = isReducedMotionEnabled ? 0 : theme.animation.timing.normal;
-    
+
     return {
       fadeIn: {
         opacity: 1,

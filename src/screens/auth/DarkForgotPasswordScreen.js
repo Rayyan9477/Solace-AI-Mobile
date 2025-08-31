@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -18,9 +18,12 @@ import { FreudLogo } from "../../components/icons/FreudIcons";
 import { useTheme } from "../../shared/theme/ThemeContext";
 import { freudDarkTheme } from "../../shared/theme/freudDarkTheme";
 
-const DarkForgotPasswordScreen = ({ navigation, onResetPassword = () => {} }) => {
+const DarkForgotPasswordScreen = ({
+  navigation,
+  onResetPassword = () => {},
+}) => {
   const { isDarkMode } = useTheme();
-  const [resetMethod, setResetMethod] = useState('email'); // 'email', '2fa', 'password', 'google'
+  const [resetMethod, setResetMethod] = useState("email"); // 'email', '2fa', 'password', 'google'
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -51,12 +54,12 @@ const DarkForgotPasswordScreen = ({ navigation, onResetPassword = () => {} }) =>
   };
 
   const handleSendReset = async () => {
-    if (resetMethod === 'email') {
+    if (resetMethod === "email") {
       if (!email.trim()) {
         Alert.alert("Error", "Email is required");
         return;
       }
-      
+
       if (!validateEmail(email)) {
         Alert.alert("Error", "Please enter a valid email address");
         return;
@@ -64,10 +67,10 @@ const DarkForgotPasswordScreen = ({ navigation, onResetPassword = () => {} }) =>
     }
 
     setIsLoading(true);
-    
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       setShowVerificationSent(true);
     } catch (error) {
       Alert.alert("Error", "Failed to send reset code. Please try again.");
@@ -78,10 +81,10 @@ const DarkForgotPasswordScreen = ({ navigation, onResetPassword = () => {} }) =>
 
   const handleResendCode = async () => {
     setIsLoading(true);
-    
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       Alert.alert("Success", "Verification code resent!");
     } catch (error) {
       Alert.alert("Error", "Failed to resend code. Please try again.");
@@ -100,30 +103,34 @@ const DarkForgotPasswordScreen = ({ navigation, onResetPassword = () => {} }) =>
 
   const renderResetOption = (method, icon, title, isSelected) => {
     const iconColors = {
-      '2fa': '#27AE60',
-      'password': '#8B9F6F',
-      'google': '#27AE60',
+      "2fa": "#27AE60",
+      password: "#8B9F6F",
+      google: "#27AE60",
     };
 
     return (
       <TouchableOpacity
         key={method}
-        style={[
-          styles.resetOption,
-          isSelected && styles.resetOptionSelected
-        ]}
+        style={[styles.resetOption, isSelected && styles.resetOptionSelected]}
         onPress={() => setResetMethod(method)}
       >
-        <View style={[
-          styles.resetOptionIcon,
-          { backgroundColor: iconColors[method] || freudDarkTheme.colors.accent.primary }
-        ]}>
+        <View
+          style={[
+            styles.resetOptionIcon,
+            {
+              backgroundColor:
+                iconColors[method] || freudDarkTheme.colors.accent.primary,
+            },
+          ]}
+        >
           <Text style={styles.resetOptionIconText}>{icon}</Text>
         </View>
-        <Text style={[
-          styles.resetOptionText,
-          isSelected && styles.resetOptionTextSelected
-        ]}>
+        <Text
+          style={[
+            styles.resetOptionText,
+            isSelected && styles.resetOptionTextSelected,
+          ]}
+        >
           {title}
         </Text>
       </TouchableOpacity>
@@ -133,8 +140,12 @@ const DarkForgotPasswordScreen = ({ navigation, onResetPassword = () => {} }) =>
   if (showVerificationSent) {
     return (
       <View style={styles.container}>
-        <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-        
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent
+        />
+
         {/* Main Content */}
         <View style={styles.verificationContent}>
           {/* Close Button */}
@@ -145,7 +156,7 @@ const DarkForgotPasswordScreen = ({ navigation, onResetPassword = () => {} }) =>
           {/* Illustration */}
           <View style={styles.illustrationContainer}>
             <LinearGradient
-              colors={['#F39C12', '#E67E22']}
+              colors={["#F39C12", "#E67E22"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.illustrationGradient}
@@ -155,14 +166,26 @@ const DarkForgotPasswordScreen = ({ navigation, onResetPassword = () => {} }) =>
               </View>
               <View style={styles.keypadContainer}>
                 <View style={styles.keypadRow}>
-                  <View style={styles.keypadKey}><Text style={styles.keypadText}>1</Text></View>
-                  <View style={styles.keypadKey}><Text style={styles.keypadText}>2</Text></View>
-                  <View style={styles.keypadKey}><Text style={styles.keypadText}>3</Text></View>
+                  <View style={styles.keypadKey}>
+                    <Text style={styles.keypadText}>1</Text>
+                  </View>
+                  <View style={styles.keypadKey}>
+                    <Text style={styles.keypadText}>2</Text>
+                  </View>
+                  <View style={styles.keypadKey}>
+                    <Text style={styles.keypadText}>3</Text>
+                  </View>
                 </View>
                 <View style={styles.keypadRow}>
-                  <View style={styles.keypadKey}><Text style={styles.keypadText}>4</Text></View>
-                  <View style={styles.keypadKey}><Text style={styles.keypadText}>5</Text></View>
-                  <View style={styles.keypadKey}><Text style={styles.keypadText}>6</Text></View>
+                  <View style={styles.keypadKey}>
+                    <Text style={styles.keypadText}>4</Text>
+                  </View>
+                  <View style={styles.keypadKey}>
+                    <Text style={styles.keypadText}>5</Text>
+                  </View>
+                  <View style={styles.keypadKey}>
+                    <Text style={styles.keypadText}>6</Text>
+                  </View>
                 </View>
               </View>
             </LinearGradient>
@@ -192,7 +215,9 @@ const DarkForgotPasswordScreen = ({ navigation, onResetPassword = () => {} }) =>
 
             <TouchableOpacity
               style={styles.sendPasswordButton}
-              onPress={() => Alert.alert("Info", "Check your email for reset instructions")}
+              onPress={() =>
+                Alert.alert("Info", "Check your email for reset instructions")
+              }
             >
               <Text style={styles.sendPasswordButtonText}>
                 Send Password 🚀
@@ -211,8 +236,12 @@ const DarkForgotPasswordScreen = ({ navigation, onResetPassword = () => {} }) =>
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-      
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
+
       {/* Back Button */}
       <TouchableOpacity style={styles.backButton} onPress={handleBackToSignIn}>
         <Text style={styles.backButtonText}>←</Text>
@@ -245,13 +274,28 @@ const DarkForgotPasswordScreen = ({ navigation, onResetPassword = () => {} }) =>
 
               {/* Reset Options */}
               <View style={styles.resetOptionsContainer}>
-                {renderResetOption('2fa', '🔐', 'Use 2FA', resetMethod === '2fa')}
-                {renderResetOption('password', '🔓', 'Password', resetMethod === 'password')}
-                {renderResetOption('google', '🔒', 'Google Authenticator', resetMethod === 'google')}
+                {renderResetOption(
+                  "2fa",
+                  "🔐",
+                  "Use 2FA",
+                  resetMethod === "2fa",
+                )}
+                {renderResetOption(
+                  "password",
+                  "🔓",
+                  "Password",
+                  resetMethod === "password",
+                )}
+                {renderResetOption(
+                  "google",
+                  "🔒",
+                  "Google Authenticator",
+                  resetMethod === "google",
+                )}
               </View>
 
               {/* Email Input (only for email method) */}
-              {resetMethod === 'email' && (
+              {resetMethod === "email" && (
                 <View style={styles.inputContainer}>
                   <Text style={styles.inputLabel}>Email Address</Text>
                   <View style={styles.inputWrapper}>
@@ -261,7 +305,9 @@ const DarkForgotPasswordScreen = ({ navigation, onResetPassword = () => {} }) =>
                     <TextInput
                       style={styles.textInput}
                       placeholder="Enter your email address"
-                      placeholderTextColor={freudDarkTheme.colors.text.placeholder}
+                      placeholderTextColor={
+                        freudDarkTheme.colors.text.placeholder
+                      }
                       value={email}
                       onChangeText={setEmail}
                       keyboardType="email-address"
@@ -300,18 +346,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: freudDarkTheme.colors.background.primary,
   },
-  
+
   // Navigation
   backButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 60,
     left: 20,
     width: 40,
     height: 40,
     borderRadius: 20,
     backgroundColor: freudDarkTheme.colors.card.background,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     zIndex: 1,
     ...freudDarkTheme.shadows.sm,
   },
@@ -359,14 +405,14 @@ const styles = StyleSheet.create({
     marginBottom: freudDarkTheme.spacing[8],
   },
   resetOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: freudDarkTheme.colors.card.background,
     borderRadius: freudDarkTheme.borderRadius.lg,
     padding: freudDarkTheme.spacing[4],
     marginBottom: freudDarkTheme.spacing[4],
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: "transparent",
     ...freudDarkTheme.shadows.sm,
   },
   resetOptionSelected: {
@@ -377,8 +423,8 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: freudDarkTheme.spacing[4],
   },
   resetOptionIconText: {
@@ -406,8 +452,8 @@ const styles = StyleSheet.create({
     marginBottom: freudDarkTheme.spacing[2],
   },
   inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: freudDarkTheme.colors.input.background,
     borderRadius: freudDarkTheme.borderRadius.lg,
     borderWidth: 1,
@@ -417,7 +463,7 @@ const styles = StyleSheet.create({
   },
   inputIcon: {
     width: 24,
-    alignItems: 'center',
+    alignItems: "center",
     marginRight: freudDarkTheme.spacing[3],
   },
   inputIconText: {
@@ -436,7 +482,7 @@ const styles = StyleSheet.create({
     backgroundColor: freudDarkTheme.colors.button.primary.background,
     borderRadius: freudDarkTheme.borderRadius.lg,
     paddingVertical: freudDarkTheme.spacing[4],
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: freudDarkTheme.spacing[4],
     ...freudDarkTheme.shadows.md,
   },
@@ -456,15 +502,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: freudDarkTheme.spacing[6],
   },
   closeButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 60,
     right: 20,
     width: 40,
     height: 40,
     borderRadius: 20,
     backgroundColor: freudDarkTheme.colors.card.background,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     zIndex: 1,
     ...freudDarkTheme.shadows.sm,
   },
@@ -473,10 +519,10 @@ const styles = StyleSheet.create({
     color: freudDarkTheme.colors.text.primary,
     fontWeight: freudDarkTheme.typography.weights.bold,
   },
-  
+
   // Illustration
   illustrationContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 120,
     marginBottom: freudDarkTheme.spacing[8],
   },
@@ -484,12 +530,12 @@ const styles = StyleSheet.create({
     width: 200,
     height: 250,
     borderRadius: freudDarkTheme.borderRadius["2xl"],
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
   },
   safeIcon: {
-    position: 'absolute',
+    position: "absolute",
     top: 30,
   },
   safeIconText: {
@@ -499,41 +545,41 @@ const styles = StyleSheet.create({
     marginTop: 80,
   },
   keypadRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 8,
   },
   keypadKey: {
     width: 30,
     height: 30,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
     borderRadius: 6,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginHorizontal: 4,
   },
   keypadText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontWeight: freudDarkTheme.typography.weights.bold,
     fontSize: 12,
   },
 
   // Verification text
   verificationTextContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: freudDarkTheme.spacing[8],
   },
   verificationTitle: {
     fontSize: freudDarkTheme.typography.sizes["2xl"],
     fontWeight: freudDarkTheme.typography.weights.bold,
     color: freudDarkTheme.colors.text.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: freudDarkTheme.spacing[4],
     paddingHorizontal: freudDarkTheme.spacing[4],
   },
   verificationSubtitle: {
     fontSize: freudDarkTheme.typography.sizes.base,
     color: freudDarkTheme.colors.text.secondary,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: freudDarkTheme.typography.sizes.base * 1.4,
     paddingHorizontal: freudDarkTheme.spacing[4],
   },
@@ -546,7 +592,7 @@ const styles = StyleSheet.create({
     backgroundColor: freudDarkTheme.colors.button.primary.background,
     borderRadius: freudDarkTheme.borderRadius.lg,
     paddingVertical: freudDarkTheme.spacing[4],
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: freudDarkTheme.spacing[4],
     ...freudDarkTheme.shadows.md,
   },
@@ -559,7 +605,7 @@ const styles = StyleSheet.create({
     backgroundColor: freudDarkTheme.colors.card.background,
     borderRadius: freudDarkTheme.borderRadius.lg,
     paddingVertical: freudDarkTheme.spacing[4],
-    alignItems: 'center',
+    alignItems: "center",
     borderWidth: 1,
     borderColor: freudDarkTheme.colors.border.primary,
   },
@@ -571,9 +617,9 @@ const styles = StyleSheet.create({
 
   // Bottom indicator
   bottomIndicator: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingBottom: freudDarkTheme.spacing[6],
-    marginTop: 'auto',
+    marginTop: "auto",
   },
   homeIndicator: {
     width: 134,

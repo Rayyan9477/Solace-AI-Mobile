@@ -200,7 +200,10 @@ const MentalHealthJournalScreen = ({ navigation }) => {
 
           <View style={styles.mainStatContainer}>
             <LinearGradient
-              colors={[freudTheme.colors.brown[60], freudTheme.colors.brown[50]]}
+              colors={[
+                freudTheme.colors.brown[60],
+                freudTheme.colors.brown[50],
+              ]}
               style={styles.mainStatGradient}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
@@ -602,7 +605,13 @@ const MentalHealthJournalScreen = ({ navigation }) => {
               size="large"
               fullWidth
               onPress={handleSaveEntry}
-              icon={<ThemedFreudIcon name="heart" size={20} color={freudTheme.colors.text.inverse} />}
+              icon={
+                <ThemedFreudIcon
+                  name="heart"
+                  size={20}
+                  color={freudTheme.colors.text.inverse}
+                />
+              }
               iconPosition="right"
             />
           </View>
@@ -616,10 +625,7 @@ const MentalHealthJournalScreen = ({ navigation }) => {
         theme.colors.dark.background.primary,
         theme.colors.dark.background.secondary,
       ]
-    : [
-        freudTheme.colors.brown[20],
-        freudTheme.colors.brown[10],
-      ];
+    : [freudTheme.colors.brown[20], freudTheme.colors.brown[10]];
 
   return (
     <SafeAreaView

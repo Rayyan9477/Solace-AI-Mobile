@@ -1,59 +1,54 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { 
-  View, 
-  Text, 
-  ScrollView, 
-  TouchableOpacity
-} from 'react-native';
+import { createStackNavigator } from "@react-navigation/stack";
+import React from "react";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 
 // Import all dark mode screens
-import DarkSplashScreen, { 
+import DarkSplashScreen, {
   LogoDarkSplashScreen,
-  ProgressDarkSplashScreen, 
+  ProgressDarkSplashScreen,
   QuoteDarkSplashScreen,
-  LoadingDarkSplashScreen 
-} from '../screens/DarkSplashScreen';
-import DarkWelcomeScreen from '../screens/DarkWelcomeScreen';
-import DarkSignInScreen from '../screens/auth/DarkSignInScreen';
-import DarkSignUpScreen from '../screens/auth/DarkSignUpScreen';
-import DarkForgotPasswordScreen from '../screens/auth/DarkForgotPasswordScreen';
-import DarkComprehensiveAssessmentScreen from '../screens/assessment/DarkComprehensiveAssessmentScreen';
+  LoadingDarkSplashScreen,
+} from "../screens/DarkSplashScreen";
+import DarkWelcomeScreen from "../screens/DarkWelcomeScreen";
+import DarkComprehensiveAssessmentScreen from "../screens/assessment/DarkComprehensiveAssessmentScreen";
+import DarkForgotPasswordScreen from "../screens/auth/DarkForgotPasswordScreen";
+import DarkSignInScreen from "../screens/auth/DarkSignInScreen";
+import DarkSignUpScreen from "../screens/auth/DarkSignUpScreen";
 
 // Import new dark mode screens
-import DarkHomeScreen from '../screens/home/DarkHomeScreen';
-import DarkMentalHealthScoreScreen from '../screens/home/DarkMentalHealthScoreScreen';
-import DarkAITherapyChatScreen from '../screens/chat/DarkAITherapyChatScreen';
-import DarkMentalHealthJournalScreen from '../screens/journal/DarkMentalHealthJournalScreen';
-import DarkMoodTrackerScreen from '../screens/mood/DarkMoodTrackerScreen';
-import DarkProfileSettingsScreen from '../screens/profile/DarkProfileSettingsScreen';
-import DarkProfileSetupScreen from '../screens/profile/DarkProfileSetupScreen';
-import DarkSearchScreen from '../screens/search/DarkSearchScreen';
-import DarkSmartNotificationsScreen from '../screens/settings/DarkSmartNotificationsScreen';
-import DarkSleepQualityScreen from '../screens/wellness/DarkSleepQualityScreen';
-import DarkStressManagementScreen from '../screens/wellness/DarkStressManagementScreen';
-import DarkMindfulHoursScreen from '../screens/mindfulness/DarkMindfulHoursScreen';
-import DarkMindfulResourcesScreen from '../screens/mindfulness/DarkMindfulResourcesScreen';
-import DarkCommunitySupportScreen from '../screens/community/DarkCommunitySupportScreen';
-import DarkErrorUtilityScreens, { 
-  NotFoundScreen, 
-  NoInternetScreen, 
-  InternalErrorScreen, 
-  MaintenanceScreen, 
+import DarkAITherapyChatScreen from "../screens/chat/DarkAITherapyChatScreen";
+import DarkCommunitySupportScreen from "../screens/community/DarkCommunitySupportScreen";
+import DarkHomeScreen from "../screens/home/DarkHomeScreen";
+import DarkMentalHealthScoreScreen from "../screens/home/DarkMentalHealthScoreScreen";
+import DarkMentalHealthJournalScreen from "../screens/journal/DarkMentalHealthJournalScreen";
+import DarkMindfulHoursScreen from "../screens/mindfulness/DarkMindfulHoursScreen";
+import DarkMindfulResourcesScreen from "../screens/mindfulness/DarkMindfulResourcesScreen";
+import DarkMoodTrackerScreen from "../screens/mood/DarkMoodTrackerScreen";
+import DarkProfileSettingsScreen from "../screens/profile/DarkProfileSettingsScreen";
+import DarkProfileSetupScreen from "../screens/profile/DarkProfileSetupScreen";
+import DarkSearchScreen from "../screens/search/DarkSearchScreen";
+import DarkSmartNotificationsScreen from "../screens/settings/DarkSmartNotificationsScreen";
+import DarkErrorUtilityScreens, {
+  NotFoundScreen,
+  NoInternetScreen,
+  InternalErrorScreen,
+  MaintenanceScreen,
   NotAllowedScreen,
-  DarkErrorShowcaseScreen 
-} from '../screens/utility/DarkErrorUtilityScreens';
+  DarkErrorShowcaseScreen,
+} from "../screens/utility/DarkErrorUtilityScreens";
+import DarkSleepQualityScreen from "../screens/wellness/DarkSleepQualityScreen";
+import DarkStressManagementScreen from "../screens/wellness/DarkStressManagementScreen";
 
 // Import theme and components
-import { useTheme } from '../shared/theme/ThemeContext';
-import { freudDarkTheme } from '../shared/theme/freudDarkTheme';
+import { useTheme } from "../shared/theme/ThemeContext";
+import { freudDarkTheme } from "../shared/theme/freudDarkTheme";
 
 const Stack = createStackNavigator();
 
-const DarkModeNavigator = ({ 
+const DarkModeNavigator = ({
   onAuthComplete = () => {},
   onAssessmentComplete = () => {},
-  startScreen = "DarkSplash" 
+  startScreen = "DarkSplash",
 }) => {
   const { isDarkMode, theme } = useTheme();
 
@@ -77,28 +72,28 @@ const DarkModeNavigator = ({
   };
 
   const handleSplashComplete = (navigation) => {
-    navigation.replace('DarkWelcome');
+    navigation.replace("DarkWelcome");
   };
 
   const handleWelcomeComplete = (navigation) => {
-    navigation.replace('DarkSignIn');
+    navigation.replace("DarkSignIn");
   };
 
   const handleSignIn = (navigation, credentials) => {
     // Handle sign in logic here
-    console.log('Sign in with:', credentials);
+    console.log("Sign in with:", credentials);
     onAuthComplete(credentials);
   };
 
   const handleSignUp = (navigation, userData) => {
     // Handle sign up logic here
-    console.log('Sign up with:', userData);
-    navigation.replace('DarkAssessment');
+    console.log("Sign up with:", userData);
+    navigation.replace("DarkAssessment");
   };
 
   const handleAssessmentComplete = (navigation, assessmentData) => {
     // Handle assessment completion
-    console.log('Assessment completed with:', assessmentData);
+    console.log("Assessment completed with:", assessmentData);
     onAssessmentComplete(assessmentData);
   };
 
@@ -108,48 +103,42 @@ const DarkModeNavigator = ({
       screenOptions={screenOptions}
     >
       {/* Splash Screen Variants */}
-      <Stack.Screen 
-        name="DarkSplash" 
-        options={{ gestureEnabled: false }}
-      >
+      <Stack.Screen name="DarkSplash" options={{ gestureEnabled: false }}>
         {({ navigation }) => (
-          <LogoDarkSplashScreen 
+          <LogoDarkSplashScreen
             onComplete={() => handleSplashComplete(navigation)}
             duration={3000}
           />
         )}
       </Stack.Screen>
 
-      <Stack.Screen 
-        name="DarkSplashProgress" 
+      <Stack.Screen
+        name="DarkSplashProgress"
         options={{ gestureEnabled: false }}
       >
         {({ navigation }) => (
-          <ProgressDarkSplashScreen 
+          <ProgressDarkSplashScreen
             onComplete={() => handleSplashComplete(navigation)}
             duration={3000}
           />
         )}
       </Stack.Screen>
 
-      <Stack.Screen 
-        name="DarkSplashQuote" 
-        options={{ gestureEnabled: false }}
-      >
+      <Stack.Screen name="DarkSplashQuote" options={{ gestureEnabled: false }}>
         {({ navigation }) => (
-          <QuoteDarkSplashScreen 
+          <QuoteDarkSplashScreen
             onComplete={() => handleSplashComplete(navigation)}
             duration={4000}
           />
         )}
       </Stack.Screen>
 
-      <Stack.Screen 
-        name="DarkSplashLoading" 
+      <Stack.Screen
+        name="DarkSplashLoading"
         options={{ gestureEnabled: false }}
       >
         {({ navigation }) => (
-          <LoadingDarkSplashScreen 
+          <LoadingDarkSplashScreen
             onComplete={() => handleSplashComplete(navigation)}
             duration={3500}
           />
@@ -157,12 +146,9 @@ const DarkModeNavigator = ({
       </Stack.Screen>
 
       {/* Welcome/Onboarding Screen */}
-      <Stack.Screen 
-        name="DarkWelcome"
-        options={{ gestureEnabled: false }}
-      >
+      <Stack.Screen name="DarkWelcome" options={{ gestureEnabled: false }}>
         {({ navigation }) => (
-          <DarkWelcomeScreen 
+          <DarkWelcomeScreen
             onComplete={() => handleWelcomeComplete(navigation)}
           />
         )}
@@ -171,7 +157,7 @@ const DarkModeNavigator = ({
       {/* Authentication Screens */}
       <Stack.Screen name="DarkSignIn">
         {({ navigation }) => (
-          <DarkSignInScreen 
+          <DarkSignInScreen
             navigation={navigation}
             onSignIn={(credentials) => handleSignIn(navigation, credentials)}
           />
@@ -180,7 +166,7 @@ const DarkModeNavigator = ({
 
       <Stack.Screen name="DarkSignUp">
         {({ navigation }) => (
-          <DarkSignUpScreen 
+          <DarkSignUpScreen
             navigation={navigation}
             onSignUp={(userData) => handleSignUp(navigation, userData)}
           />
@@ -189,10 +175,10 @@ const DarkModeNavigator = ({
 
       <Stack.Screen name="DarkForgotPassword">
         {({ navigation }) => (
-          <DarkForgotPasswordScreen 
+          <DarkForgotPasswordScreen
             navigation={navigation}
             onResetPassword={(resetData) => {
-              console.log('Password reset:', resetData);
+              console.log("Password reset:", resetData);
               navigation.goBack();
             }}
           />
@@ -200,23 +186,20 @@ const DarkModeNavigator = ({
       </Stack.Screen>
 
       {/* Assessment Screen */}
-      <Stack.Screen 
-        name="DarkAssessment"
-        options={{ gestureEnabled: false }}
-      >
+      <Stack.Screen name="DarkAssessment" options={{ gestureEnabled: false }}>
         {({ navigation }) => (
-          <DarkComprehensiveAssessmentScreen 
+          <DarkComprehensiveAssessmentScreen
             navigation={navigation}
-            onComplete={(assessmentData) => handleAssessmentComplete(navigation, assessmentData)}
+            onComplete={(assessmentData) =>
+              handleAssessmentComplete(navigation, assessmentData)
+            }
           />
         )}
       </Stack.Screen>
 
       {/* Main App Screens */}
       <Stack.Screen name="DarkHome">
-        {({ navigation }) => (
-          <DarkHomeScreen navigation={navigation} />
-        )}
+        {({ navigation }) => <DarkHomeScreen navigation={navigation} />}
       </Stack.Screen>
 
       <Stack.Screen name="DarkMentalHealthScore">
@@ -238,9 +221,7 @@ const DarkModeNavigator = ({
       </Stack.Screen>
 
       <Stack.Screen name="DarkMoodTracker">
-        {({ navigation }) => (
-          <DarkMoodTrackerScreen navigation={navigation} />
-        )}
+        {({ navigation }) => <DarkMoodTrackerScreen navigation={navigation} />}
       </Stack.Screen>
 
       <Stack.Screen name="DarkProfile">
@@ -251,17 +232,15 @@ const DarkModeNavigator = ({
 
       <Stack.Screen name="DarkProfileSetup">
         {({ navigation }) => (
-          <DarkProfileSetupScreen 
-            navigation={navigation} 
-            onComplete={() => navigation.navigate('DarkHome')}
+          <DarkProfileSetupScreen
+            navigation={navigation}
+            onComplete={() => navigation.navigate("DarkHome")}
           />
         )}
       </Stack.Screen>
 
       <Stack.Screen name="DarkSearch">
-        {({ navigation }) => (
-          <DarkSearchScreen navigation={navigation} />
-        )}
+        {({ navigation }) => <DarkSearchScreen navigation={navigation} />}
       </Stack.Screen>
 
       <Stack.Screen name="DarkNotifications">
@@ -271,9 +250,7 @@ const DarkModeNavigator = ({
       </Stack.Screen>
 
       <Stack.Screen name="DarkSleepQuality">
-        {({ navigation }) => (
-          <DarkSleepQualityScreen navigation={navigation} />
-        )}
+        {({ navigation }) => <DarkSleepQualityScreen navigation={navigation} />}
       </Stack.Screen>
 
       <Stack.Screen name="DarkStressManagement">
@@ -283,9 +260,7 @@ const DarkModeNavigator = ({
       </Stack.Screen>
 
       <Stack.Screen name="DarkMindfulHours">
-        {({ navigation }) => (
-          <DarkMindfulHoursScreen navigation={navigation} />
-        )}
+        {({ navigation }) => <DarkMindfulHoursScreen navigation={navigation} />}
       </Stack.Screen>
 
       <Stack.Screen name="DarkMindfulResources">
@@ -303,48 +278,50 @@ const DarkModeNavigator = ({
       {/* Error & Utility Screens */}
       <Stack.Screen name="DarkNotFound">
         {({ navigation }) => (
-          <NotFoundScreen onHomePress={() => navigation.navigate('DarkHome')} />
+          <NotFoundScreen onHomePress={() => navigation.navigate("DarkHome")} />
         )}
       </Stack.Screen>
 
       <Stack.Screen name="DarkNoInternet">
         {({ navigation }) => (
-          <NoInternetScreen 
-            onHomePress={() => navigation.navigate('DarkHome')}
-            onRetry={() => console.log('Retry connection')}
+          <NoInternetScreen
+            onHomePress={() => navigation.navigate("DarkHome")}
+            onRetry={() => console.log("Retry connection")}
           />
         )}
       </Stack.Screen>
 
       <Stack.Screen name="DarkInternalError">
         {({ navigation }) => (
-          <InternalErrorScreen onHomePress={() => navigation.navigate('DarkHome')} />
+          <InternalErrorScreen
+            onHomePress={() => navigation.navigate("DarkHome")}
+          />
         )}
       </Stack.Screen>
 
       <Stack.Screen name="DarkMaintenance">
         {({ navigation }) => (
-          <MaintenanceScreen onHomePress={() => navigation.navigate('DarkHome')} />
+          <MaintenanceScreen
+            onHomePress={() => navigation.navigate("DarkHome")}
+          />
         )}
       </Stack.Screen>
 
       <Stack.Screen name="DarkNotAllowed">
         {({ navigation }) => (
-          <NotAllowedScreen onHomePress={() => navigation.navigate('DarkHome')} />
+          <NotAllowedScreen
+            onHomePress={() => navigation.navigate("DarkHome")}
+          />
         )}
       </Stack.Screen>
 
       <Stack.Screen name="DarkErrorShowcase">
-        {({ navigation }) => (
-          <DarkErrorShowcaseScreen />
-        )}
+        {({ navigation }) => <DarkErrorShowcaseScreen />}
       </Stack.Screen>
 
       {/* Demo Screen - Shows all dark mode components */}
       <Stack.Screen name="DarkDemo">
-        {({ navigation }) => (
-          <DarkModeDemo navigation={navigation} />
-        )}
+        {({ navigation }) => <DarkModeDemo navigation={navigation} />}
       </Stack.Screen>
     </Stack.Navigator>
   );
@@ -452,14 +429,14 @@ const DarkModeDemo = ({ navigation }) => {
       color: freudDarkTheme.colors.accent.primary,
     },
     {
-      title: "⭕ Progress Splash", 
+      title: "⭕ Progress Splash",
       screen: "DarkSplashProgress",
       description: "Circular progress animation",
       color: freudDarkTheme.colors.header.primary,
     },
     {
       title: "💭 Quote Splash",
-      screen: "DarkSplashQuote", 
+      screen: "DarkSplashQuote",
       description: "Orange background with inspiration",
       color: "#E67E22",
     },
@@ -483,7 +460,7 @@ const DarkModeDemo = ({ navigation }) => {
     },
     {
       title: "📝 Sign Up",
-      screen: "DarkSignUp", 
+      screen: "DarkSignUp",
       description: "Registration form",
       color: freudDarkTheme.colors.header.primary,
     },
@@ -502,23 +479,25 @@ const DarkModeDemo = ({ navigation }) => {
   ];
 
   return (
-    <ScrollView 
-      style={{ 
-        flex: 1, 
-        backgroundColor: freudDarkTheme.colors.background.primary 
+    <ScrollView
+      style={{
+        flex: 1,
+        backgroundColor: freudDarkTheme.colors.background.primary,
       }}
-      contentContainerStyle={{ 
-        padding: freudDarkTheme.spacing[6] 
+      contentContainerStyle={{
+        padding: freudDarkTheme.spacing[6],
       }}
     >
-      <Text style={{
-        fontSize: freudDarkTheme.typography.sizes["3xl"],
-        fontWeight: freudDarkTheme.typography.weights.bold,
-        color: freudDarkTheme.colors.text.primary,
-        textAlign: 'center',
-        marginBottom: freudDarkTheme.spacing[8],
-        marginTop: 60,
-      }}>
+      <Text
+        style={{
+          fontSize: freudDarkTheme.typography.sizes["3xl"],
+          fontWeight: freudDarkTheme.typography.weights.bold,
+          color: freudDarkTheme.colors.text.primary,
+          textAlign: "center",
+          marginBottom: freudDarkTheme.spacing[8],
+          marginTop: 60,
+        }}
+      >
         Dark Mode Demo
       </Text>
 
@@ -536,19 +515,23 @@ const DarkModeDemo = ({ navigation }) => {
           }}
           onPress={() => navigation.navigate(option.screen)}
         >
-          <Text style={{
-            fontSize: freudDarkTheme.typography.sizes.lg,
-            fontWeight: freudDarkTheme.typography.weights.semibold,
-            color: freudDarkTheme.colors.text.primary,
-            marginBottom: freudDarkTheme.spacing[1],
-          }}>
+          <Text
+            style={{
+              fontSize: freudDarkTheme.typography.sizes.lg,
+              fontWeight: freudDarkTheme.typography.weights.semibold,
+              color: freudDarkTheme.colors.text.primary,
+              marginBottom: freudDarkTheme.spacing[1],
+            }}
+          >
             {option.title}
           </Text>
-          <Text style={{
-            fontSize: freudDarkTheme.typography.sizes.sm,
-            color: freudDarkTheme.colors.text.secondary,
-            lineHeight: freudDarkTheme.typography.sizes.sm * 1.4,
-          }}>
+          <Text
+            style={{
+              fontSize: freudDarkTheme.typography.sizes.sm,
+              color: freudDarkTheme.colors.text.secondary,
+              lineHeight: freudDarkTheme.typography.sizes.sm * 1.4,
+            }}
+          >
             {option.description}
           </Text>
         </TouchableOpacity>

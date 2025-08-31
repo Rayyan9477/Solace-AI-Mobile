@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -23,8 +23,12 @@ const WELCOME_STEPS = [
     id: 1,
     step: "Step One",
     title: "Welcome to the ultimate freud UI Kit!",
-    description: "Your mindful mental health AI companion for everyone, anywhere ✓",
-    backgroundColor: [freudDarkTheme.colors.background.primary, freudDarkTheme.colors.background.secondary],
+    description:
+      "Your mindful mental health AI companion for everyone, anywhere ✓",
+    backgroundColor: [
+      freudDarkTheme.colors.background.primary,
+      freudDarkTheme.colors.background.secondary,
+    ],
     textColor: freudDarkTheme.colors.text.primary,
     illustration: "welcome", // Custom illustration component
     showGetStarted: true,
@@ -33,9 +37,10 @@ const WELCOME_STEPS = [
     id: 2,
     step: "Step Two",
     title: "Personalize Your Mental Health State With AI",
-    description: "AI-powered insights tailored to your unique mental health journey",
-    backgroundColor: ['#8B9F6F', '#9CB079'], // Green gradient from design
-    textColor: '#FFFFFF',
+    description:
+      "AI-powered insights tailored to your unique mental health journey",
+    backgroundColor: ["#8B9F6F", "#9CB079"], // Green gradient from design
+    textColor: "#FFFFFF",
     illustration: "personalize",
     character: "🤖", // AI character
   },
@@ -43,9 +48,10 @@ const WELCOME_STEPS = [
     id: 3,
     step: "Step Three",
     title: "Intelligent Mood Tracking & Emotion Insights",
-    description: "Advanced mood analysis with actionable therapeutic recommendations",
-    backgroundColor: ['#E67E22', '#F39C12'], // Orange gradient from design
-    textColor: '#FFFFFF',
+    description:
+      "Advanced mood analysis with actionable therapeutic recommendations",
+    backgroundColor: ["#E67E22", "#F39C12"], // Orange gradient from design
+    textColor: "#FFFFFF",
     illustration: "mood",
     character: "😔", // Sad emoji
     happyCharacter: "😊", // Happy emoji for contrast
@@ -54,9 +60,10 @@ const WELCOME_STEPS = [
     id: 4,
     step: "Step Four",
     title: "AI Mental Journaling & AI Therapy Chatbot",
-    description: "Intelligent journaling with therapeutic AI guidance and support",
-    backgroundColor: ['#2C3E50', '#34495E'], // Dark slate from design
-    textColor: '#FFFFFF',
+    description:
+      "Intelligent journaling with therapeutic AI guidance and support",
+    backgroundColor: ["#2C3E50", "#34495E"], // Dark slate from design
+    textColor: "#FFFFFF",
     illustration: "journal",
     features: ["✨ Sparkles", "📝 Notes", "🧠 AI Brain"],
   },
@@ -64,9 +71,10 @@ const WELCOME_STEPS = [
     id: 5,
     step: "Step Five",
     title: "Mindful Resources That Makes You Happy",
-    description: "Curated mindfulness content personalized for your wellness journey",
-    backgroundColor: ['#F39C12', '#E67E22'], // Golden gradient from design
-    textColor: '#FFFFFF',
+    description:
+      "Curated mindfulness content personalized for your wellness journey",
+    backgroundColor: ["#F39C12", "#E67E22"], // Golden gradient from design
+    textColor: "#FFFFFF",
     illustration: "mindful",
     character: "🧘", // Meditation character
   },
@@ -74,9 +82,10 @@ const WELCOME_STEPS = [
     id: 6,
     step: "Step Six",
     title: "Loving & Supportive Community",
-    description: "Connect with others on similar mental health journeys in a safe space",
-    backgroundColor: ['#8E44AD', '#9B59B6'], // Purple gradient from design
-    textColor: '#FFFFFF',
+    description:
+      "Connect with others on similar mental health journeys in a safe space",
+    backgroundColor: ["#8E44AD", "#9B59B6"], // Purple gradient from design
+    textColor: "#FFFFFF",
     illustration: "community",
     character: "💜", // Heart character
     supportIcons: ["👥", "💬", "🤝"],
@@ -114,9 +123,9 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
 
   const animateToNextStep = () => {
     if (isAnimating) return;
-    
+
     setIsAnimating(true);
-    
+
     Animated.sequence([
       // Slide out current
       Animated.timing(slideAnim, {
@@ -136,9 +145,9 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
         onComplete();
         return;
       }
-      
+
       setCurrentStep(nextStep);
-      
+
       // Slide in new
       Animated.timing(slideAnim, {
         toValue: 0,
@@ -152,9 +161,9 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
 
   const goToPreviousStep = () => {
     if (isAnimating || currentStep === 0) return;
-    
+
     setIsAnimating(true);
-    
+
     Animated.sequence([
       // Slide out current
       Animated.timing(slideAnim, {
@@ -170,7 +179,7 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
       }),
     ]).start(() => {
       setCurrentStep(currentStep - 1);
-      
+
       // Slide in new
       Animated.timing(slideAnim, {
         toValue: 0,
@@ -184,27 +193,29 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
 
   const renderIllustration = (illustration, data) => {
     switch (illustration) {
-      case 'welcome':
+      case "welcome":
         return (
           <View style={styles.illustrationContainer}>
             <View style={styles.welcomeIcons}>
-              <View style={[styles.iconCircle, { backgroundColor: '#E67E22' }]}>
+              <View style={[styles.iconCircle, { backgroundColor: "#E67E22" }]}>
                 <Text style={styles.iconText}>💭</Text>
               </View>
-              <View style={[styles.iconCircle, { backgroundColor: '#8B9F6F' }]}>
+              <View style={[styles.iconCircle, { backgroundColor: "#8B9F6F" }]}>
                 <Text style={styles.iconText}>😊</Text>
               </View>
-              <View style={[styles.iconCircle, { backgroundColor: '#F39C12' }]}>
+              <View style={[styles.iconCircle, { backgroundColor: "#F39C12" }]}>
                 <Text style={styles.iconText}>🧠</Text>
               </View>
             </View>
-            <View style={[styles.mainCharacter, { backgroundColor: '#27AE60' }]}>
+            <View
+              style={[styles.mainCharacter, { backgroundColor: "#27AE60" }]}
+            >
               <Text style={styles.mainCharacterText}>🤖</Text>
             </View>
           </View>
         );
-      
-      case 'personalize':
+
+      case "personalize":
         return (
           <View style={styles.illustrationContainer}>
             <View style={styles.aiCharacterContainer}>
@@ -219,8 +230,8 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
             </View>
           </View>
         );
-      
-      case 'mood':
+
+      case "mood":
         return (
           <View style={styles.illustrationContainer}>
             <View style={styles.moodContainer}>
@@ -236,8 +247,8 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
             </View>
           </View>
         );
-      
-      case 'journal':
+
+      case "journal":
         return (
           <View style={styles.illustrationContainer}>
             <View style={styles.journalContainer}>
@@ -250,14 +261,16 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
               </View>
               <View style={styles.featureIcons}>
                 {data.features?.map((feature, index) => (
-                  <Text key={index} style={styles.featureIcon}>{feature}</Text>
+                  <Text key={index} style={styles.featureIcon}>
+                    {feature}
+                  </Text>
                 ))}
               </View>
             </View>
           </View>
         );
-      
-      case 'mindful':
+
+      case "mindful":
         return (
           <View style={styles.illustrationContainer}>
             <View style={styles.mindfulContainer}>
@@ -272,8 +285,8 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
             </View>
           </View>
         );
-      
-      case 'community':
+
+      case "community":
         return (
           <View style={styles.illustrationContainer}>
             <View style={styles.communityContainer}>
@@ -282,9 +295,15 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
               </View>
               <View style={styles.supportIconsContainer}>
                 {data.supportIcons?.map((icon, index) => (
-                  <View key={index} style={[styles.supportIcon, { 
-                    transform: [{ rotate: `${index * 120}deg` }] 
-                  }]}>
+                  <View
+                    key={index}
+                    style={[
+                      styles.supportIcon,
+                      {
+                        transform: [{ rotate: `${index * 120}deg` }],
+                      },
+                    ]}
+                  >
                     <Text style={styles.supportIconText}>{icon}</Text>
                   </View>
                 ))}
@@ -292,7 +311,7 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
             </View>
           </View>
         );
-      
+
       default:
         return <View style={styles.defaultIllustration} />;
     }
@@ -320,12 +339,12 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
         </View>
 
         {/* Main Content */}
-        <Animated.View 
+        <Animated.View
           style={[
             styles.contentContainer,
             {
               transform: [{ translateX: slideAnim }],
-            }
+            },
           ]}
         >
           {/* Illustration */}
@@ -335,20 +354,12 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
 
           {/* Text Content */}
           <View style={styles.textSection}>
-            <Text
-              style={[
-                styles.title,
-                { color: currentStepData.textColor },
-              ]}
-            >
+            <Text style={[styles.title, { color: currentStepData.textColor }]}>
               {currentStepData.title}
             </Text>
-            
+
             <Text
-              style={[
-                styles.description,
-                { color: currentStepData.textColor },
-              ]}
+              style={[styles.description, { color: currentStepData.textColor }]}
             >
               {currentStepData.description}
             </Text>
@@ -372,7 +383,12 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
           <TouchableOpacity
             style={[
               styles.nextButton,
-              { backgroundColor: currentStepData.textColor === '#FFFFFF' ? '#FFFFFF20' : freudDarkTheme.colors.accent.primary },
+              {
+                backgroundColor:
+                  currentStepData.textColor === "#FFFFFF"
+                    ? "#FFFFFF20"
+                    : freudDarkTheme.colors.accent.primary,
+              },
             ]}
             onPress={animateToNextStep}
             disabled={isAnimating}
@@ -396,9 +412,10 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
               style={[
                 styles.progressDot,
                 {
-                  backgroundColor: index === currentStep 
-                    ? currentStepData.textColor 
-                    : `${currentStepData.textColor}40`,
+                  backgroundColor:
+                    index === currentStep
+                      ? currentStepData.textColor
+                      : `${currentStepData.textColor}40`,
                 },
               ]}
             />
@@ -406,18 +423,25 @@ const DarkWelcomeScreen = ({ onComplete = () => {} }) => {
         </View>
 
         {/* Skip Button */}
-        <TouchableOpacity
-          style={styles.skipButton}
-          onPress={onComplete}
-        >
-          <Text style={[styles.skipButtonText, { color: currentStepData.textColor }]}>
+        <TouchableOpacity style={styles.skipButton} onPress={onComplete}>
+          <Text
+            style={[
+              styles.skipButtonText,
+              { color: currentStepData.textColor },
+            ]}
+          >
             Already have an account? Sign In
           </Text>
         </TouchableOpacity>
 
         {/* Bottom Home Indicator */}
         <View style={styles.bottomIndicator}>
-          <View style={[styles.homeIndicator, { backgroundColor: `${currentStepData.textColor}40` }]} />
+          <View
+            style={[
+              styles.homeIndicator,
+              { backgroundColor: `${currentStepData.textColor}40` },
+            ]}
+          />
         </View>
       </LinearGradient>
     </View>
@@ -429,10 +453,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   stepIndicator: {
-    position: 'absolute',
+    position: "absolute",
     top: 60,
     right: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -448,13 +472,13 @@ const styles = StyleSheet.create({
   },
   illustrationSection: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 100,
   },
   textSection: {
     paddingBottom: 120,
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
     fontSize: freudDarkTheme.typography.sizes["2xl"],
@@ -476,21 +500,21 @@ const styles = StyleSheet.create({
   illustrationContainer: {
     width: 250,
     height: 250,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
-  
+
   // Welcome illustration
   welcomeIcons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 20,
   },
   iconCircle: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginHorizontal: 5,
   },
   iconText: {
@@ -500,8 +524,8 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   mainCharacterText: {
     fontSize: 40,
@@ -509,25 +533,25 @@ const styles = StyleSheet.create({
 
   // AI Character illustration
   aiCharacterContainer: {
-    position: 'relative',
-    alignItems: 'center',
+    position: "relative",
+    alignItems: "center",
   },
   aiCharacter: {
     width: 100,
     height: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   characterEmoji: {
     fontSize: 60,
   },
   thoughtBubbles: {
-    position: 'absolute',
+    position: "absolute",
     top: -20,
     right: -30,
   },
   bubble: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
     borderRadius: 10,
     marginBottom: 5,
   },
@@ -548,31 +572,31 @@ const styles = StyleSheet.create({
 
   // Mood illustration
   moodContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   moodCharacter: {
     width: 80,
     height: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   moodTransition: {
     marginHorizontal: 20,
   },
   arrowText: {
     fontSize: 30,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: "rgba(255, 255, 255, 0.7)",
   },
 
   // Journal illustration
   journalContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   journalBook: {
     width: 120,
     height: 80,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderRadius: 8,
     padding: 15,
     marginBottom: 20,
@@ -582,11 +606,11 @@ const styles = StyleSheet.create({
   },
   journalLine: {
     height: 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
     marginBottom: 8,
   },
   featureIcons: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   featureIcon: {
     fontSize: 24,
@@ -595,23 +619,23 @@ const styles = StyleSheet.create({
 
   // Mindful illustration
   mindfulContainer: {
-    position: 'relative',
-    alignItems: 'center',
+    position: "relative",
+    alignItems: "center",
   },
   meditationFigure: {
     width: 100,
     height: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     zIndex: 1,
   },
   mindfulRings: {
-    position: 'absolute',
+    position: "absolute",
   },
   ring: {
-    position: 'absolute',
+    position: "absolute",
     borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: "rgba(255, 255, 255, 0.3)",
     borderRadius: 100,
   },
   ring1: {
@@ -635,28 +659,28 @@ const styles = StyleSheet.create({
 
   // Community illustration
   communityContainer: {
-    position: 'relative',
-    alignItems: 'center',
+    position: "relative",
+    alignItems: "center",
   },
   heartCenter: {
     width: 100,
     height: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     zIndex: 1,
   },
   supportIconsContainer: {
-    position: 'absolute',
+    position: "absolute",
     width: 150,
     height: 150,
   },
   supportIcon: {
-    position: 'absolute',
+    position: "absolute",
     width: 40,
     height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderRadius: 20,
     top: 10,
     left: 55,
@@ -669,15 +693,15 @@ const styles = StyleSheet.create({
   defaultIllustration: {
     width: 150,
     height: 150,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderRadius: 75,
   },
 
   // Navigation
   navigationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: freudDarkTheme.spacing[6],
     paddingBottom: 20,
   },
@@ -685,13 +709,13 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   prevButtonText: {
     fontSize: 20,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   nextButton: {
     flex: 1,
@@ -699,7 +723,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderRadius: freudDarkTheme.borderRadius.lg,
-    alignItems: 'center',
+    alignItems: "center",
   },
   nextButtonText: {
     fontSize: freudDarkTheme.typography.sizes.base,
@@ -708,9 +732,9 @@ const styles = StyleSheet.create({
 
   // Progress dots
   progressContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 20,
   },
   progressDot: {
@@ -722,7 +746,7 @@ const styles = StyleSheet.create({
 
   // Skip button
   skipButton: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 12,
   },
   skipButtonText: {
@@ -733,7 +757,7 @@ const styles = StyleSheet.create({
 
   // Bottom indicator
   bottomIndicator: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingBottom: freudDarkTheme.spacing[6],
   },
   homeIndicator: {

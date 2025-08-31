@@ -24,7 +24,7 @@ const DarkStressManagementScreen = ({ navigation }) => {
   const [selectedStressors, setSelectedStressors] = useState([]);
   const [recordingExpression, setRecordingExpression] = useState(false);
   const [showingStats, setShowingStats] = useState(false);
-  
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
@@ -34,7 +34,7 @@ const DarkStressManagementScreen = ({ navigation }) => {
     { id: "stress_level", title: "Stress Level", step: 1 },
     { id: "stressors", title: "Select Stressors", step: 2 },
     { id: "expression", title: "Record Expression", step: 3 },
-    { id: "stats", title: "Stress Level Stats", step: 4 }
+    { id: "stats", title: "Stress Level Stats", step: 4 },
   ];
 
   const stressLevels = [
@@ -44,23 +44,23 @@ const DarkStressManagementScreen = ({ navigation }) => {
       description: "Feeling peaceful and relaxed",
       color: "#10B981",
       emoji: "😌",
-      bgColor: "rgba(16, 185, 129, 0.1)"
+      bgColor: "rgba(16, 185, 129, 0.1)",
     },
     {
       level: 2,
-      label: "Mild", 
+      label: "Mild",
       description: "Slightly tense but manageable",
       color: "#84CC16",
       emoji: "🙂",
-      bgColor: "rgba(132, 204, 22, 0.1)"
+      bgColor: "rgba(132, 204, 22, 0.1)",
     },
     {
       level: 3,
       label: "Moderate",
       description: "Noticeable stress affecting focus",
-      color: "#F59E0B", 
+      color: "#F59E0B",
       emoji: "😐",
-      bgColor: "rgba(245, 158, 11, 0.1)"
+      bgColor: "rgba(245, 158, 11, 0.1)",
     },
     {
       level: 4,
@@ -68,7 +68,7 @@ const DarkStressManagementScreen = ({ navigation }) => {
       description: "Significant stress impacting daily activities",
       color: "#EF4444",
       emoji: "😟",
-      bgColor: "rgba(239, 68, 68, 0.1)"
+      bgColor: "rgba(239, 68, 68, 0.1)",
     },
     {
       level: 5,
@@ -76,8 +76,8 @@ const DarkStressManagementScreen = ({ navigation }) => {
       description: "Overwhelming stress requiring immediate attention",
       color: "#DC2626",
       emoji: "😰",
-      bgColor: "rgba(220, 38, 38, 0.1)"
-    }
+      bgColor: "rgba(220, 38, 38, 0.1)",
+    },
   ];
 
   const stressorCategories = [
@@ -85,51 +85,72 @@ const DarkStressManagementScreen = ({ navigation }) => {
       id: "work",
       label: "Work",
       color: "#EF4444",
-      stressors: ["Deadline pressure", "Workload", "Colleagues", "Meetings", "Performance"]
+      stressors: [
+        "Deadline pressure",
+        "Workload",
+        "Colleagues",
+        "Meetings",
+        "Performance",
+      ],
     },
     {
       id: "life",
       label: "Life",
-      color: "#F59E0B", 
-      stressors: ["Relationships", "Family", "Health", "Money", "Future"]
+      color: "#F59E0B",
+      stressors: ["Relationships", "Family", "Health", "Money", "Future"],
     },
     {
       id: "relationships",
       label: "Relationship",
       color: "#8B5CF6",
-      stressors: ["Communication", "Trust", "Intimacy", "Boundaries", "Conflict"]
+      stressors: [
+        "Communication",
+        "Trust",
+        "Intimacy",
+        "Boundaries",
+        "Conflict",
+      ],
     },
     {
       id: "kids",
       label: "Kids",
       color: "#06B6D4",
-      stressors: ["Behavior", "School", "Health", "Activities", "Development"]
+      stressors: ["Behavior", "School", "Health", "Activities", "Development"],
     },
     {
-      id: "loneliness", 
+      id: "loneliness",
       label: "Loneliness",
       color: "#10B981",
-      stressors: ["Social isolation", "Connection", "Support", "Belonging", "Community"]
+      stressors: [
+        "Social isolation",
+        "Connection",
+        "Support",
+        "Belonging",
+        "Community",
+      ],
     },
     {
       id: "other",
       label: "Other",
       color: "#6B7280",
-      stressors: ["Technology", "News", "Weather", "Travel", "Unknown"]
-    }
+      stressors: ["Technology", "News", "Weather", "Travel", "Unknown"],
+    },
   ];
 
   const stressStats = {
     current: selectedStressLevel,
     trend: "improving", // improving, stable, worsening
     weeklyAverage: 2.8,
-    monthlyData: [3, 2, 4, 2, 3, 1, 2, 3, 4, 2, 3, 2, 4, 3, 2, 1, 3, 2, 4, 3, 2, 3, 2, 3, 2, 1, 3, 2, 4, 3, 2],
+    monthlyData: [
+      3, 2, 4, 2, 3, 1, 2, 3, 4, 2, 3, 2, 4, 3, 2, 1, 3, 2, 4, 3, 2, 3, 2, 3, 2,
+      1, 3, 2, 4, 3, 2,
+    ],
     insights: [
       "Your stress levels have improved by 23% this month",
-      "Weekday stress is 40% higher than weekends", 
+      "Weekday stress is 40% higher than weekends",
       "Most common stressor: Work deadlines",
-      "Best coping technique: Deep breathing"
-    ]
+      "Best coping technique: Deep breathing",
+    ],
   };
 
   useEffect(() => {
@@ -166,7 +187,7 @@ const DarkStressManagementScreen = ({ navigation }) => {
           duration: 1000,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     );
     pulseLoop.start();
 
@@ -174,25 +195,28 @@ const DarkStressManagementScreen = ({ navigation }) => {
   }, []);
 
   const getCurrentScreen = () => {
-    return screens.find(s => s.id === currentScreen) || screens[0];
+    return screens.find((s) => s.id === currentScreen) || screens[0];
   };
 
   const renderStressLevelScreen = () => (
-    <ScrollView style={styles.screenContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.screenContainer}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Main Stress Level Display */}
       <Animated.View
         style={[
           styles.stressLevelDisplay,
           {
             transform: [{ scale: scaleAnim }],
-            opacity: fadeAnim
-          }
+            opacity: fadeAnim,
+          },
         ]}
       >
         <LinearGradient
           colors={[
-            stressLevels[selectedStressLevel - 1]?.color || '#FF8C42',
-            `${stressLevels[selectedStressLevel - 1]?.color}CC` || '#F97316'
+            stressLevels[selectedStressLevel - 1]?.color || "#FF8C42",
+            `${stressLevels[selectedStressLevel - 1]?.color}CC` || "#F97316",
           ]}
           style={styles.stressLevelGradient}
           start={{ x: 0, y: 0 }}
@@ -200,14 +224,49 @@ const DarkStressManagementScreen = ({ navigation }) => {
         >
           {/* Decorative Background Elements */}
           <View style={styles.backgroundElements}>
-            <View style={[styles.floatingCircle, { top: 20, right: 30, opacity: 0.1 }]} />
-            <View style={[styles.floatingCircle, { bottom: 40, left: 25, opacity: 0.08, transform: [{ scale: 1.5 }] }]} />
-            <View style={[styles.floatingCircle, { top: 60, left: 40, opacity: 0.06, transform: [{ scale: 0.8 }] }]} />
+            <View
+              style={[
+                styles.floatingCircle,
+                { top: 20, right: 30, opacity: 0.1 },
+              ]}
+            />
+            <View
+              style={[
+                styles.floatingCircle,
+                {
+                  bottom: 40,
+                  left: 25,
+                  opacity: 0.08,
+                  transform: [{ scale: 1.5 }],
+                },
+              ]}
+            />
+            <View
+              style={[
+                styles.floatingCircle,
+                {
+                  top: 60,
+                  left: 40,
+                  opacity: 0.06,
+                  transform: [{ scale: 0.8 }],
+                },
+              ]}
+            />
           </View>
-          
+
           <View style={styles.stressLevelContent}>
-            <Animated.View style={[styles.stressLevelNumber, { transform: [{ scale: pulseAnim }] }]}>
-              <Text style={[styles.stressLevelValue, { color: theme.colors.text.inverse }]}>
+            <Animated.View
+              style={[
+                styles.stressLevelNumber,
+                { transform: [{ scale: pulseAnim }] },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.stressLevelValue,
+                  { color: theme.colors.text.inverse },
+                ]}
+              >
                 {selectedStressLevel}
               </Text>
               <View style={styles.levelIndicator}>
@@ -217,28 +276,44 @@ const DarkStressManagementScreen = ({ navigation }) => {
                     style={[
                       styles.levelDot,
                       {
-                        backgroundColor: index < selectedStressLevel 
-                          ? 'rgba(255,255,255,0.9)' 
-                          : 'rgba(255,255,255,0.3)'
-                      }
+                        backgroundColor:
+                          index < selectedStressLevel
+                            ? "rgba(255,255,255,0.9)"
+                            : "rgba(255,255,255,0.3)",
+                      },
                     ]}
                   />
                 ))}
               </View>
             </Animated.View>
-            
-            <Text style={[styles.stressLevelLabel, { color: theme.colors.text.inverse }]}>
+
+            <Text
+              style={[
+                styles.stressLevelLabel,
+                { color: theme.colors.text.inverse },
+              ]}
+            >
               {stressLevels[selectedStressLevel - 1]?.label} Stress Level
             </Text>
-            
+
             <View style={styles.stressEmoji}>
-              <Text style={[styles.stressLevelEmoji, { color: theme.colors.text.inverse }]}>
+              <Text
+                style={[
+                  styles.stressLevelEmoji,
+                  { color: theme.colors.text.inverse },
+                ]}
+              >
                 {stressLevels[selectedStressLevel - 1]?.emoji}
               </Text>
               <View style={styles.emojiGlow} />
             </View>
-            
-            <Text style={[styles.stressDescription, { color: 'rgba(255,255,255,0.8)' }]}>
+
+            <Text
+              style={[
+                styles.stressDescription,
+                { color: "rgba(255,255,255,0.8)" },
+              ]}
+            >
               {stressLevels[selectedStressLevel - 1]?.description}
             </Text>
           </View>
@@ -246,11 +321,23 @@ const DarkStressManagementScreen = ({ navigation }) => {
       </Animated.View>
 
       {/* Question */}
-      <View style={[styles.questionCard, { backgroundColor: theme.colors.background.secondary }]}>
-        <Text style={[styles.questionTitle, { color: theme.colors.text.primary }]}>
+      <View
+        style={[
+          styles.questionCard,
+          { backgroundColor: theme.colors.background.secondary },
+        ]}
+      >
+        <Text
+          style={[styles.questionTitle, { color: theme.colors.text.primary }]}
+        >
           What's your stress level today?
         </Text>
-        <Text style={[styles.questionSubtitle, { color: theme.colors.text.secondary }]}>
+        <Text
+          style={[
+            styles.questionSubtitle,
+            { color: theme.colors.text.secondary },
+          ]}
+        >
           Our AI will decide how your stressor will impact your life in general.
         </Text>
       </View>
@@ -266,7 +353,7 @@ const DarkStressManagementScreen = ({ navigation }) => {
                 styles.stressLevelOption,
                 {
                   transform: [{ scale: isSelected ? 1.05 : 1 }],
-                  shadowColor: isSelected ? level.color : 'transparent',
+                  shadowColor: isSelected ? level.color : "transparent",
                   shadowOffset: {
                     width: 0,
                     height: isSelected ? 4 : 0,
@@ -274,7 +361,7 @@ const DarkStressManagementScreen = ({ navigation }) => {
                   shadowOpacity: isSelected ? 0.3 : 0,
                   shadowRadius: isSelected ? 8 : 0,
                   elevation: isSelected ? 8 : 0,
-                }
+                },
               ]}
               onPress={() => setSelectedStressLevel(level.level)}
             >
@@ -285,22 +372,56 @@ const DarkStressManagementScreen = ({ navigation }) => {
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
                 >
-                  <Text style={[styles.stressLevelEmoji, { marginBottom: 8 }]}>{level.emoji}</Text>
-                  <Text style={[styles.stressLevelOptionNumber, { color: theme.colors.text.inverse }]}>
+                  <Text style={[styles.stressLevelEmoji, { marginBottom: 8 }]}>
+                    {level.emoji}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.stressLevelOptionNumber,
+                      { color: theme.colors.text.inverse },
+                    ]}
+                  >
                     {level.level}
                   </Text>
-                  <Text style={[styles.stressLevelOptionLabel, { color: 'rgba(255,255,255,0.9)' }]}>
+                  <Text
+                    style={[
+                      styles.stressLevelOptionLabel,
+                      { color: "rgba(255,255,255,0.9)" },
+                    ]}
+                  >
                     {level.label}
                   </Text>
                   <View style={styles.selectionIndicator} />
                 </LinearGradient>
               ) : (
-                <View style={[styles.unselectedLevel, { backgroundColor: theme.colors.background.secondary }]}>
-                  <Text style={[styles.stressLevelEmoji, { marginBottom: 8, opacity: 0.7 }]}>{level.emoji}</Text>
-                  <Text style={[styles.stressLevelOptionNumber, { color: theme.colors.text.primary }]}>
+                <View
+                  style={[
+                    styles.unselectedLevel,
+                    { backgroundColor: theme.colors.background.secondary },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.stressLevelEmoji,
+                      { marginBottom: 8, opacity: 0.7 },
+                    ]}
+                  >
+                    {level.emoji}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.stressLevelOptionNumber,
+                      { color: theme.colors.text.primary },
+                    ]}
+                  >
                     {level.level}
                   </Text>
-                  <Text style={[styles.stressLevelOptionLabel, { color: theme.colors.text.secondary }]}>
+                  <Text
+                    style={[
+                      styles.stressLevelOptionLabel,
+                      { color: theme.colors.text.secondary },
+                    ]}
+                  >
                     {level.label}
                   </Text>
                 </View>
@@ -317,8 +438,8 @@ const DarkStressManagementScreen = ({ navigation }) => {
       >
         <LinearGradient
           colors={[
-            stressLevels[selectedStressLevel - 1]?.color || '#FF8C42',
-            `${stressLevels[selectedStressLevel - 1]?.color}CC` || '#F97316'
+            stressLevels[selectedStressLevel - 1]?.color || "#FF8C42",
+            `${stressLevels[selectedStressLevel - 1]?.color}CC` || "#F97316",
           ]}
           style={styles.continueButton}
           start={{ x: 0, y: 0 }}
@@ -330,7 +451,12 @@ const DarkStressManagementScreen = ({ navigation }) => {
             color={theme.colors.text.inverse}
             variant="filled"
           />
-          <Text style={[styles.continueButtonText, { color: theme.colors.text.inverse }]}>
+          <Text
+            style={[
+              styles.continueButtonText,
+              { color: theme.colors.text.inverse },
+            ]}
+          >
             Continue Assessment
           </Text>
           <NavigationIcon
@@ -338,7 +464,7 @@ const DarkStressManagementScreen = ({ navigation }) => {
             size={18}
             color={theme.colors.text.inverse}
             variant="outline"
-            style={{ transform: [{ rotate: '180deg' }] }}
+            style={{ transform: [{ rotate: "180deg" }] }}
           />
         </LinearGradient>
       </TouchableOpacity>
@@ -346,12 +472,27 @@ const DarkStressManagementScreen = ({ navigation }) => {
   );
 
   const renderStressorsScreen = () => (
-    <ScrollView style={styles.screenContainer} showsVerticalScrollIndicator={false}>
-      <View style={[styles.questionCard, { backgroundColor: theme.colors.background.secondary }]}>
-        <Text style={[styles.questionTitle, { color: theme.colors.text.primary }]}>
+    <ScrollView
+      style={styles.screenContainer}
+      showsVerticalScrollIndicator={false}
+    >
+      <View
+        style={[
+          styles.questionCard,
+          { backgroundColor: theme.colors.background.secondary },
+        ]}
+      >
+        <Text
+          style={[styles.questionTitle, { color: theme.colors.text.primary }]}
+        >
           Select Stressors
         </Text>
-        <Text style={[styles.questionSubtitle, { color: theme.colors.text.secondary }]}>
+        <Text
+          style={[
+            styles.questionSubtitle,
+            { color: theme.colors.text.secondary },
+          ]}
+        >
           Our AI will decide how your stressor will impact your life in general.
         </Text>
       </View>
@@ -366,14 +507,16 @@ const DarkStressManagementScreen = ({ navigation }) => {
               {
                 backgroundColor: selectedStressors.includes(category.id)
                   ? category.color
-                  : theme.colors.background.secondary
-              }
+                  : theme.colors.background.secondary,
+              },
             ]}
             onPress={() => {
               if (selectedStressors.includes(category.id)) {
-                setSelectedStressors(prev => prev.filter(id => id !== category.id));
+                setSelectedStressors((prev) =>
+                  prev.filter((id) => id !== category.id),
+                );
               } else {
-                setSelectedStressors(prev => [...prev, category.id]);
+                setSelectedStressors((prev) => [...prev, category.id]);
               }
             }}
           >
@@ -383,8 +526,8 @@ const DarkStressManagementScreen = ({ navigation }) => {
                 {
                   color: selectedStressors.includes(category.id)
                     ? theme.colors.text.inverse
-                    : theme.colors.text.primary
-                }
+                    : theme.colors.text.primary,
+                },
               ]}
             >
               {category.label}
@@ -394,14 +537,19 @@ const DarkStressManagementScreen = ({ navigation }) => {
       </View>
 
       {/* Impact Warning */}
-      <View style={[styles.warningCard, { backgroundColor: 'rgba(239, 68, 68, 0.1)' }]}>
+      <View
+        style={[
+          styles.warningCard,
+          { backgroundColor: "rgba(239, 68, 68, 0.1)" },
+        ]}
+      >
         <MentalHealthIcon
           name="Brain"
           size={20}
           color="#EF4444"
           variant="filled"
         />
-        <Text style={[styles.warningText, { color: '#EF4444' }]}>
+        <Text style={[styles.warningText, { color: "#EF4444" }]}>
           Life Impact: Very high
         </Text>
       </View>
@@ -411,15 +559,21 @@ const DarkStressManagementScreen = ({ navigation }) => {
         style={[
           styles.continueButton,
           {
-            backgroundColor: selectedStressors.length > 0
-              ? theme.colors.therapeutic.calming[600]
-              : theme.colors.gray[400]
-          }
+            backgroundColor:
+              selectedStressors.length > 0
+                ? theme.colors.therapeutic.calming[600]
+                : theme.colors.gray[400],
+          },
         ]}
         onPress={() => setCurrentScreen("expression")}
         disabled={selectedStressors.length === 0}
       >
-        <Text style={[styles.continueButtonText, { color: theme.colors.text.inverse }]}>
+        <Text
+          style={[
+            styles.continueButtonText,
+            { color: theme.colors.text.inverse },
+          ]}
+        >
           Continue
         </Text>
         <NavigationIcon
@@ -433,20 +587,36 @@ const DarkStressManagementScreen = ({ navigation }) => {
   );
 
   const renderExpressionScreen = () => (
-    <ScrollView style={styles.screenContainer} showsVerticalScrollIndicator={false}>
-      <View style={[styles.questionCard, { backgroundColor: theme.colors.background.secondary }]}>
-        <Text style={[styles.questionTitle, { color: theme.colors.text.primary }]}>
+    <ScrollView
+      style={styles.screenContainer}
+      showsVerticalScrollIndicator={false}
+    >
+      <View
+        style={[
+          styles.questionCard,
+          { backgroundColor: theme.colors.background.secondary },
+        ]}
+      >
+        <Text
+          style={[styles.questionTitle, { color: theme.colors.text.primary }]}
+        >
           Record Expression
         </Text>
-        <Text style={[styles.questionSubtitle, { color: theme.colors.text.secondary }]}>
-          Let's analyze face expression for better stress AI analysis. Ensure the following.
+        <Text
+          style={[
+            styles.questionSubtitle,
+            { color: theme.colors.text.secondary },
+          ]}
+        >
+          Let's analyze face expression for better stress AI analysis. Ensure
+          the following.
         </Text>
       </View>
 
       {/* Expression Guidelines */}
       <View style={styles.guidelinesList}>
         <View style={styles.guideline}>
-          <View style={[styles.guidelineIcon, { backgroundColor: '#10B981' }]}>
+          <View style={[styles.guidelineIcon, { backgroundColor: "#10B981" }]}>
             <MentalHealthIcon
               name="Heart"
               size={16}
@@ -454,13 +624,15 @@ const DarkStressManagementScreen = ({ navigation }) => {
               variant="filled"
             />
           </View>
-          <Text style={[styles.guidelineText, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[styles.guidelineText, { color: theme.colors.text.primary }]}
+          >
             Brightly Lit Room
           </Text>
         </View>
 
         <View style={styles.guideline}>
-          <View style={[styles.guidelineIcon, { backgroundColor: '#10B981' }]}>
+          <View style={[styles.guidelineIcon, { backgroundColor: "#10B981" }]}>
             <MentalHealthIcon
               name="Brain"
               size={16}
@@ -468,13 +640,15 @@ const DarkStressManagementScreen = ({ navigation }) => {
               variant="filled"
             />
           </View>
-          <Text style={[styles.guidelineText, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[styles.guidelineText, { color: theme.colors.text.primary }]}
+          >
             Clear Face Expression
           </Text>
         </View>
 
         <View style={styles.guideline}>
-          <View style={[styles.guidelineIcon, { backgroundColor: '#10B981' }]}>
+          <View style={[styles.guidelineIcon, { backgroundColor: "#10B981" }]}>
             <MentalHealthIcon
               name="Mindfulness"
               size={16}
@@ -482,13 +656,15 @@ const DarkStressManagementScreen = ({ navigation }) => {
               variant="filled"
             />
           </View>
-          <Text style={[styles.guidelineText, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[styles.guidelineText, { color: theme.colors.text.primary }]}
+          >
             Stay Still
           </Text>
         </View>
 
         <View style={styles.guideline}>
-          <View style={[styles.guidelineIcon, { backgroundColor: '#10B981' }]}>
+          <View style={[styles.guidelineIcon, { backgroundColor: "#10B981" }]}>
             <MentalHealthIcon
               name="Therapy"
               size={16}
@@ -496,18 +672,30 @@ const DarkStressManagementScreen = ({ navigation }) => {
               variant="filled"
             />
           </View>
-          <Text style={[styles.guidelineText, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[styles.guidelineText, { color: theme.colors.text.primary }]}
+          >
             32Ft Camera
           </Text>
         </View>
       </View>
 
       {/* Camera Preview Placeholder */}
-      <View style={[styles.cameraPreview, { backgroundColor: theme.colors.background.secondary }]}>
+      <View
+        style={[
+          styles.cameraPreview,
+          { backgroundColor: theme.colors.background.secondary },
+        ]}
+      >
         <View style={styles.faceOutline}>
           <View style={styles.faceGuide} />
         </View>
-        <Text style={[styles.cameraInstructions, { color: theme.colors.text.secondary }]}>
+        <Text
+          style={[
+            styles.cameraInstructions,
+            { color: theme.colors.text.secondary },
+          ]}
+        >
           Position your face within the guide
         </Text>
       </View>
@@ -515,7 +703,14 @@ const DarkStressManagementScreen = ({ navigation }) => {
       {/* Skip/Record Buttons */}
       <View style={styles.expressionButtons}>
         <TouchableOpacity
-          style={[styles.skipButton, { backgroundColor: 'transparent', borderColor: theme.colors.gray[400], borderWidth: 2 }]}
+          style={[
+            styles.skipButton,
+            {
+              backgroundColor: "transparent",
+              borderColor: theme.colors.gray[400],
+              borderWidth: 2,
+            },
+          ]}
           onPress={() => setCurrentScreen("stats")}
         >
           <NavigationIcon
@@ -524,13 +719,18 @@ const DarkStressManagementScreen = ({ navigation }) => {
             color={theme.colors.text.secondary}
             variant="outline"
           />
-          <Text style={[styles.skipButtonText, { color: theme.colors.text.secondary }]}>
+          <Text
+            style={[
+              styles.skipButtonText,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
             Skip This Step
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.recordButton, { backgroundColor: '#EF4444' }]}
+          style={[styles.recordButton, { backgroundColor: "#EF4444" }]}
           onPress={() => setCurrentScreen("stats")}
         >
           <MentalHealthIcon
@@ -539,7 +739,12 @@ const DarkStressManagementScreen = ({ navigation }) => {
             color={theme.colors.text.inverse}
             variant="filled"
           />
-          <Text style={[styles.recordButtonText, { color: theme.colors.text.inverse }]}>
+          <Text
+            style={[
+              styles.recordButtonText,
+              { color: theme.colors.text.inverse },
+            ]}
+          >
             Continue
           </Text>
         </TouchableOpacity>
@@ -548,17 +753,40 @@ const DarkStressManagementScreen = ({ navigation }) => {
   );
 
   const renderStatsScreen = () => (
-    <ScrollView style={styles.screenContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.screenContainer}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Stress Level Summary */}
-      <View style={[styles.summaryCard, { backgroundColor: theme.colors.background.secondary }]}>
-        <Text style={[styles.summaryTitle, { color: theme.colors.text.primary }]}>
+      <View
+        style={[
+          styles.summaryCard,
+          { backgroundColor: theme.colors.background.secondary },
+        ]}
+      >
+        <Text
+          style={[styles.summaryTitle, { color: theme.colors.text.primary }]}
+        >
           Stress Level Set to {selectedStressLevel}
         </Text>
-        <Text style={[styles.summarySubtitle, { color: theme.colors.text.secondary }]}>
-          Stress condition updated to your mental health journal. Data sent to Doctor Freud AI.
+        <Text
+          style={[
+            styles.summarySubtitle,
+            { color: theme.colors.text.secondary },
+          ]}
+        >
+          Stress condition updated to your mental health journal. Data sent to
+          Doctor Freud AI.
         </Text>
-        <TouchableOpacity style={[styles.summaryButton, { backgroundColor: '#10B981' }]}>
-          <Text style={[styles.summaryButtonText, { color: theme.colors.text.inverse }]}>
+        <TouchableOpacity
+          style={[styles.summaryButton, { backgroundColor: "#10B981" }]}
+        >
+          <Text
+            style={[
+              styles.summaryButtonText,
+              { color: theme.colors.text.inverse },
+            ]}
+          >
             Got it. Thanks!
           </Text>
           <MentalHealthIcon
@@ -573,39 +801,62 @@ const DarkStressManagementScreen = ({ navigation }) => {
       {/* Stress Level Statistics */}
       <View style={styles.statsGrid}>
         {/* Current Level */}
-        <View style={[styles.statCard, { backgroundColor: theme.colors.background.secondary }]}>
+        <View
+          style={[
+            styles.statCard,
+            { backgroundColor: theme.colors.background.secondary },
+          ]}
+        >
           <LinearGradient
-            colors={['#10B981', '#059669']}
+            colors={["#10B981", "#059669"]}
             style={styles.statGradient}
           >
-            <Text style={[styles.statNumber, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[styles.statNumber, { color: theme.colors.text.inverse }]}
+            >
               {selectedStressLevel}
             </Text>
-            <Text style={[styles.statLabel, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[styles.statLabel, { color: theme.colors.text.inverse }]}
+            >
               Current
             </Text>
           </LinearGradient>
         </View>
 
         {/* Weekly Average */}
-        <View style={[styles.statCard, { backgroundColor: theme.colors.background.secondary }]}>
+        <View
+          style={[
+            styles.statCard,
+            { backgroundColor: theme.colors.background.secondary },
+          ]}
+        >
           <LinearGradient
-            colors={['#F59E0B', '#D97706']}
+            colors={["#F59E0B", "#D97706"]}
             style={styles.statGradient}
           >
-            <Text style={[styles.statNumber, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[styles.statNumber, { color: theme.colors.text.inverse }]}
+            >
               {stressStats.weeklyAverage}
             </Text>
-            <Text style={[styles.statLabel, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[styles.statLabel, { color: theme.colors.text.inverse }]}
+            >
               Weekly Avg
             </Text>
           </LinearGradient>
         </View>
 
         {/* Trend */}
-        <View style={[styles.statCard, { backgroundColor: theme.colors.background.secondary }]}>
+        <View
+          style={[
+            styles.statCard,
+            { backgroundColor: theme.colors.background.secondary },
+          ]}
+        >
           <LinearGradient
-            colors={['#8B5CF6', '#7C3AED']}
+            colors={["#8B5CF6", "#7C3AED"]}
             style={styles.statGradient}
           >
             <MentalHealthIcon
@@ -614,22 +865,33 @@ const DarkStressManagementScreen = ({ navigation }) => {
               color={theme.colors.text.inverse}
               variant="filled"
             />
-            <Text style={[styles.statLabel, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[styles.statLabel, { color: theme.colors.text.inverse }]}
+            >
               Improving
             </Text>
           </LinearGradient>
         </View>
 
         {/* Monthly */}
-        <View style={[styles.statCard, { backgroundColor: theme.colors.background.secondary }]}>
+        <View
+          style={[
+            styles.statCard,
+            { backgroundColor: theme.colors.background.secondary },
+          ]}
+        >
           <LinearGradient
-            colors={['#EF4444', '#DC2626']}
+            colors={["#EF4444", "#DC2626"]}
             style={styles.statGradient}
           >
-            <Text style={[styles.statNumber, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[styles.statNumber, { color: theme.colors.text.inverse }]}
+            >
               91
             </Text>
-            <Text style={[styles.statLabel, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[styles.statLabel, { color: theme.colors.text.inverse }]}
+            >
               Monthly
             </Text>
           </LinearGradient>
@@ -637,7 +899,12 @@ const DarkStressManagementScreen = ({ navigation }) => {
       </View>
 
       {/* Monthly Chart */}
-      <View style={[styles.chartCard, { backgroundColor: theme.colors.background.secondary }]}>
+      <View
+        style={[
+          styles.chartCard,
+          { backgroundColor: theme.colors.background.secondary },
+        ]}
+      >
         <Text style={[styles.chartTitle, { color: theme.colors.text.primary }]}>
           Stress Level Chart
         </Text>
@@ -650,19 +917,32 @@ const DarkStressManagementScreen = ({ navigation }) => {
                     styles.chartBarFill,
                     {
                       height: `${(value / 5) * 100}%`,
-                      backgroundColor: value <= 2 ? '#10B981' : value <= 3 ? '#F59E0B' : '#EF4444'
-                    }
+                      backgroundColor:
+                        value <= 2
+                          ? "#10B981"
+                          : value <= 3
+                            ? "#F59E0B"
+                            : "#EF4444",
+                    },
                   ]}
                 />
               </View>
             ))}
           </View>
           <View style={styles.chartLabels}>
-            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
-              <Text key={index} style={[styles.chartLabel, { color: theme.colors.text.tertiary }]}>
-                {day}
-              </Text>
-            ))}
+            {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
+              (day, index) => (
+                <Text
+                  key={index}
+                  style={[
+                    styles.chartLabel,
+                    { color: theme.colors.text.tertiary },
+                  ]}
+                >
+                  {day}
+                </Text>
+              ),
+            )}
           </View>
         </View>
       </View>
@@ -677,22 +957,25 @@ const DarkStressManagementScreen = ({ navigation }) => {
             style={[
               styles.progressStepCircle,
               {
-                backgroundColor: currentScreen === screen.id
-                  ? theme.colors.therapeutic.calming[600]
-                  : screens.findIndex(s => s.id === currentScreen) > index
-                  ? '#10B981'
-                  : theme.colors.gray[300]
-              }
+                backgroundColor:
+                  currentScreen === screen.id
+                    ? theme.colors.therapeutic.calming[600]
+                    : screens.findIndex((s) => s.id === currentScreen) > index
+                      ? "#10B981"
+                      : theme.colors.gray[300],
+              },
             ]}
           >
             <Text
               style={[
                 styles.progressStepNumber,
                 {
-                  color: currentScreen === screen.id || screens.findIndex(s => s.id === currentScreen) > index
-                    ? theme.colors.text.inverse
-                    : theme.colors.text.secondary
-                }
+                  color:
+                    currentScreen === screen.id ||
+                    screens.findIndex((s) => s.id === currentScreen) > index
+                      ? theme.colors.text.inverse
+                      : theme.colors.text.secondary,
+                },
               ]}
             >
               {screen.step}
@@ -703,10 +986,11 @@ const DarkStressManagementScreen = ({ navigation }) => {
               style={[
                 styles.progressStepLine,
                 {
-                  backgroundColor: screens.findIndex(s => s.id === currentScreen) > index
-                    ? '#10B981'
-                    : theme.colors.gray[300]
-                }
+                  backgroundColor:
+                    screens.findIndex((s) => s.id === currentScreen) > index
+                      ? "#10B981"
+                      : theme.colors.gray[300],
+                },
               ]}
             />
           )}
@@ -716,7 +1000,12 @@ const DarkStressManagementScreen = ({ navigation }) => {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background.primary },
+      ]}
+    >
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -725,7 +1014,9 @@ const DarkStressManagementScreen = ({ navigation }) => {
             if (currentScreen === "stress_level") {
               navigation.goBack();
             } else {
-              const currentIndex = screens.findIndex(s => s.id === currentScreen);
+              const currentIndex = screens.findIndex(
+                (s) => s.id === currentScreen,
+              );
               if (currentIndex > 0) {
                 setCurrentScreen(screens[currentIndex - 1].id);
               }
@@ -737,11 +1028,13 @@ const DarkStressManagementScreen = ({ navigation }) => {
             size={24}
             color={theme.colors.text.primary}
             variant="outline"
-            style={{ transform: [{ rotate: '180deg' }] }}
+            style={{ transform: [{ rotate: "180deg" }] }}
           />
         </TouchableOpacity>
 
-        <Text style={[styles.headerTitle, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[styles.headerTitle, { color: theme.colors.text.primary }]}
+        >
           {getCurrentScreen().title}
         </Text>
 
@@ -764,8 +1057,8 @@ const DarkStressManagementScreen = ({ navigation }) => {
           styles.content,
           {
             opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }]
-          }
+            transform: [{ translateY: slideAnim }],
+          },
         ]}
       >
         {currentScreen === "stress_level" && renderStressLevelScreen()}
@@ -782,48 +1075,48 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
   backButton: {
     width: 40,
     height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   menuButton: {
     width: 40,
     height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   progressSteps: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
   progressStep: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   progressStepCircle: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   progressStepNumber: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   progressStepLine: {
     width: 60,
@@ -839,9 +1132,9 @@ const styles = StyleSheet.create({
   },
   stressLevelDisplay: {
     borderRadius: 24,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginBottom: 24,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 8,
@@ -852,38 +1145,38 @@ const styles = StyleSheet.create({
   },
   stressLevelGradient: {
     padding: 32,
-    alignItems: 'center',
-    position: 'relative',
+    alignItems: "center",
+    position: "relative",
   },
   backgroundElements: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
   },
   floatingCircle: {
-    position: 'absolute',
+    position: "absolute",
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   stressLevelContent: {
-    alignItems: 'center',
+    alignItems: "center",
     zIndex: 2,
   },
   stressLevelNumber: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 16,
   },
   stressLevelValue: {
     fontSize: 56,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   levelIndicator: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 4,
   },
   levelDot: {
@@ -893,94 +1186,94 @@ const styles = StyleSheet.create({
   },
   stressLevelLabel: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 12,
   },
   stressEmoji: {
-    position: 'relative',
+    position: "relative",
     marginBottom: 12,
   },
   stressLevelEmoji: {
     fontSize: 40,
   },
   emojiGlow: {
-    position: 'absolute',
+    position: "absolute",
     top: -5,
     left: -5,
     right: -5,
     bottom: -5,
     borderRadius: 25,
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: "rgba(255,255,255,0.1)",
     zIndex: -1,
   },
   stressDescription: {
     fontSize: 14,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 20,
   },
   questionCard: {
     padding: 20,
     borderRadius: 16,
     marginBottom: 24,
-    alignItems: 'center',
+    alignItems: "center",
   },
   questionTitle: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
-    textAlign: 'center',
+    textAlign: "center",
   },
   questionSubtitle: {
     fontSize: 14,
     lineHeight: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   stressLevelSelector: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 32,
     gap: 6,
   },
   stressLevelOption: {
     flex: 1,
     borderRadius: 16,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   selectedLevelGradient: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 18,
     paddingHorizontal: 8,
-    position: 'relative',
+    position: "relative",
   },
   unselectedLevel: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 18,
     paddingHorizontal: 8,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: "rgba(255,255,255,0.1)",
   },
   selectionIndicator: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 4,
     width: 20,
     height: 3,
-    backgroundColor: 'rgba(255,255,255,0.8)',
+    backgroundColor: "rgba(255,255,255,0.8)",
     borderRadius: 2,
   },
   stressLevelOptionNumber: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 4,
   },
   stressLevelOptionLabel: {
     fontSize: 10,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
   },
   continueButtonContainer: {
     borderRadius: 16,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 4,
@@ -990,22 +1283,22 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   continueButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 18,
     paddingHorizontal: 24,
     gap: 12,
   },
   continueButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     flex: 1,
-    textAlign: 'center',
+    textAlign: "center",
   },
   stressorCategories: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 12,
     marginBottom: 24,
   },
@@ -1016,11 +1309,11 @@ const styles = StyleSheet.create({
   },
   stressorCategoryText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   warningCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
     borderRadius: 12,
     marginBottom: 24,
@@ -1028,108 +1321,108 @@ const styles = StyleSheet.create({
   },
   warningText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   guidelinesList: {
     gap: 16,
     marginBottom: 24,
   },
   guideline: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
   },
   guidelineIcon: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   guidelineText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   cameraPreview: {
     height: 200,
     borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 24,
-    position: 'relative',
+    position: "relative",
   },
   faceOutline: {
     width: 120,
     height: 150,
     borderRadius: 60,
     borderWidth: 2,
-    borderColor: '#10B981',
-    borderStyle: 'dashed',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor: "#10B981",
+    borderStyle: "dashed",
+    justifyContent: "center",
+    alignItems: "center",
   },
   faceGuide: {
     width: 80,
     height: 100,
     borderRadius: 40,
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    backgroundColor: "rgba(16, 185, 129, 0.1)",
   },
   cameraInstructions: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
     fontSize: 14,
   },
   expressionButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
   },
   skipButton: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 16,
     borderRadius: 12,
     gap: 8,
   },
   skipButtonText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   recordButton: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 16,
     borderRadius: 12,
     gap: 8,
   },
   recordButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   summaryCard: {
     padding: 20,
     borderRadius: 16,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 24,
   },
   summaryTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
-    textAlign: 'center',
+    textAlign: "center",
   },
   summarySubtitle: {
     fontSize: 14,
     lineHeight: 20,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 16,
   },
   summaryButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 12,
@@ -1137,33 +1430,33 @@ const styles = StyleSheet.create({
   },
   summaryButtonText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 12,
     marginBottom: 24,
   },
   statCard: {
     width: (width - 52) / 2,
     borderRadius: 16,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   statGradient: {
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
     minHeight: 100,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   statNumber: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 4,
   },
   statLabel: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   chartCard: {
     padding: 20,
@@ -1171,41 +1464,41 @@ const styles = StyleSheet.create({
   },
   chartTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   chartContainer: {
     height: 150,
   },
   chartBars: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'flex-end',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "flex-end",
     flex: 1,
     paddingHorizontal: 10,
   },
   chartBar: {
     width: 20,
-    height: '100%',
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(107, 114, 128, 0.2)',
+    height: "100%",
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(107, 114, 128, 0.2)",
     borderRadius: 10,
   },
   chartBarFill: {
-    width: '100%',
+    width: "100%",
     borderRadius: 10,
     minHeight: 4,
   },
   chartLabels: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     marginTop: 8,
     paddingHorizontal: 10,
   },
   chartLabel: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 });
 

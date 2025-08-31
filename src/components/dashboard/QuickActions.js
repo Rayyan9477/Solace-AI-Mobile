@@ -1,3 +1,4 @@
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import {
   View,
@@ -7,20 +8,19 @@ import {
   Animated,
   Dimensions,
 } from "react-native";
-import LinearGradient from 'expo-linear-gradient';
 
 // Icons and Theme
-import { MentalHealthIcon } from "../icons";
+import FreudDesignSystem, {
+  FreudColors,
+  FreudSpacing,
+  FreudTypography,
+  FreudShadows,
+  FreudBorderRadius,
+} from "../../shared/theme/FreudDesignSystem";
 import { useTheme } from "../../shared/theme/ThemeContext";
-import FreudDesignSystem, { 
-  FreudColors, 
-  FreudSpacing, 
-  FreudTypography, 
-  FreudShadows, 
-  FreudBorderRadius 
-} from '../../shared/theme/FreudDesignSystem';
+import { MentalHealthIcon } from "../icons";
 
-const { width: screenWidth } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get("window");
 
 // Mental health focused actions with therapeutic colors and icons
 const QUICK_ACTIONS = [
@@ -29,10 +29,14 @@ const QUICK_ACTIONS = [
     title: "AI Therapy",
     subtitle: "Talk with Dr. Freud",
     icon: "Therapy",
-    gradientColors: [FreudColors.mindfulBrown[60], FreudColors.mindfulBrown[80]],
+    gradientColors: [
+      FreudColors.mindfulBrown[60],
+      FreudColors.mindfulBrown[80],
+    ],
     shadowColor: FreudColors.mindfulBrown[70],
     accessibilityLabel: "Start AI Therapy Session",
-    accessibilityHint: "Begin a conversation with your AI therapist for guidance and support",
+    accessibilityHint:
+      "Begin a conversation with your AI therapist for guidance and support",
   },
   {
     id: "assessment",
@@ -42,14 +46,18 @@ const QUICK_ACTIONS = [
     gradientColors: [FreudColors.kindPurple[50], FreudColors.kindPurple[70]],
     shadowColor: FreudColors.kindPurple[60],
     accessibilityLabel: "Take Mental Health Assessment",
-    accessibilityHint: "Complete a brief assessment to understand your current mental health state",
+    accessibilityHint:
+      "Complete a brief assessment to understand your current mental health state",
   },
   {
     id: "mood",
     title: "Mood Tracker",
     subtitle: "Log how you feel",
     icon: "Heart",
-    gradientColors: [FreudColors.serenityGreen[50], FreudColors.serenityGreen[70]],
+    gradientColors: [
+      FreudColors.serenityGreen[50],
+      FreudColors.serenityGreen[70],
+    ],
     shadowColor: FreudColors.serenityGreen[60],
     accessibilityLabel: "Open Mood Tracker",
     accessibilityHint: "Record and track your current mood and emotional state",
@@ -79,10 +87,12 @@ const QuickActionButton = ({ action, onPress, isDarkMode }) => {
   };
 
   return (
-    <Animated.View style={[
-      styles.actionButtonContainer, 
-      { transform: [{ scale: scaleValue }] }
-    ]}>
+    <Animated.View
+      style={[
+        styles.actionButtonContainer,
+        { transform: [{ scale: scaleValue }] },
+      ]}
+    >
       <TouchableOpacity
         onPress={onPress}
         onPressIn={handlePressIn}
@@ -102,18 +112,10 @@ const QuickActionButton = ({ action, onPress, isDarkMode }) => {
         >
           <View style={styles.actionContent}>
             <View style={styles.iconContainer}>
-              <MentalHealthIcon 
-                name={action.icon} 
-                size={24} 
-                color="#FFFFFF" 
-              />
+              <MentalHealthIcon name={action.icon} size={24} color="#FFFFFF" />
             </View>
-            <Text style={styles.actionTitle}>
-              {action.title}
-            </Text>
-            <Text style={styles.actionSubtitle}>
-              {action.subtitle}
-            </Text>
+            <Text style={styles.actionTitle}>{action.title}</Text>
+            <Text style={styles.actionSubtitle}>{action.subtitle}</Text>
           </View>
         </LinearGradient>
       </TouchableOpacity>
@@ -134,21 +136,35 @@ const QuickActions = ({ onStartChat, onTakeAssessment, onMoodTracker }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <MentalHealthIcon 
-          name="Therapy" 
-          size={24} 
-          color={FreudColors.mindfulBrown[70]} 
+        <MentalHealthIcon
+          name="Therapy"
+          size={24}
+          color={FreudColors.mindfulBrown[70]}
         />
-        <Text style={[styles.title, { 
-          color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.primary : FreudDesignSystem.themes.light.colors.text.primary 
-        }]}>
+        <Text
+          style={[
+            styles.title,
+            {
+              color: isDarkMode
+                ? FreudDesignSystem.themes.dark.colors.text.primary
+                : FreudDesignSystem.themes.light.colors.text.primary,
+            },
+          ]}
+        >
           Quick Wellness Actions
         </Text>
       </View>
-      
-      <Text style={[styles.subtitle, { 
-        color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.secondary : FreudDesignSystem.themes.light.colors.text.secondary 
-      }]}>
+
+      <Text
+        style={[
+          styles.subtitle,
+          {
+            color: isDarkMode
+              ? FreudDesignSystem.themes.dark.colors.text.secondary
+              : FreudDesignSystem.themes.light.colors.text.secondary,
+          },
+        ]}
+      >
         Choose what feels right for you today
       </Text>
 
@@ -171,8 +187,8 @@ const styles = StyleSheet.create({
     paddingVertical: FreudSpacing[2],
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: FreudSpacing[2],
   },
   title: {
@@ -188,8 +204,8 @@ const styles = StyleSheet.create({
     marginBottom: FreudSpacing[4],
   },
   actionsGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     gap: FreudSpacing[3],
   },
   actionButtonContainer: {
@@ -197,44 +213,44 @@ const styles = StyleSheet.create({
     maxWidth: (screenWidth - FreudSpacing[8] - FreudSpacing[3] * 2) / 3,
   },
   actionButton: {
-    width: '100%',
+    width: "100%",
     aspectRatio: 0.9,
     borderRadius: FreudBorderRadius.xl,
-    overflow: 'hidden',
+    overflow: "hidden",
     ...FreudShadows.md,
   },
   actionGradient: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: FreudSpacing[3],
   },
   actionContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     flex: 1,
   },
   iconContainer: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: FreudSpacing[2],
   },
   actionTitle: {
     fontSize: FreudTypography.sizes.sm,
     fontWeight: FreudTypography.weights.semiBold,
-    color: '#FFFFFF',
-    textAlign: 'center',
+    color: "#FFFFFF",
+    textAlign: "center",
     marginBottom: FreudSpacing[1],
   },
   actionSubtitle: {
     fontSize: FreudTypography.sizes.xs,
     fontWeight: FreudTypography.weights.normal,
-    color: 'rgba(255, 255, 255, 0.9)',
-    textAlign: 'center',
+    color: "rgba(255, 255, 255, 0.9)",
+    textAlign: "center",
     lineHeight: FreudTypography.sizes.xs * FreudTypography.lineHeights.tight,
   },
 });

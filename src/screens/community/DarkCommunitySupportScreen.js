@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -12,102 +13,115 @@ import {
   TextInput,
   FlatList,
   Alert,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { freudDarkTheme } from '../../shared/theme/freudDarkTheme';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import { freudDarkTheme } from "../../shared/theme/freudDarkTheme";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 // Community data
 const COMMUNITY_POSTS = [
   {
     id: 1,
-    author: 'Shameera Perera',
-    username: '@shameera.perera',
-    time: '2 hours ago',
-    avatar: '👤',
-    content: 'Hey there! I had my first successful session with the AI therapy bot today. The anxiety management techniques it suggested really helped me during my presentation. Has anyone else tried the breathing exercises?',
+    author: "Shameera Perera",
+    username: "@shameera.perera",
+    time: "2 hours ago",
+    avatar: "👤",
+    content:
+      "Hey there! I had my first successful session with the AI therapy bot today. The anxiety management techniques it suggested really helped me during my presentation. Has anyone else tried the breathing exercises?",
     likes: 24,
     comments: 8,
-    category: 'Success Story',
-    mood: 'happy',
+    category: "Success Story",
+    mood: "happy",
     isLiked: false,
   },
   {
     id: 2,
-    author: 'Marcus Thompson',
-    username: '@marcus.t',
-    time: '4 hours ago',
-    avatar: '👨',
-    content: 'Feeling overwhelmed with work stress lately. The meditation reminders have been helping, but some days are just harder than others. Any tips for managing work-life balance?',
+    author: "Marcus Thompson",
+    username: "@marcus.t",
+    time: "4 hours ago",
+    avatar: "👨",
+    content:
+      "Feeling overwhelmed with work stress lately. The meditation reminders have been helping, but some days are just harder than others. Any tips for managing work-life balance?",
     likes: 15,
     comments: 12,
-    category: 'Support Needed',
-    mood: 'neutral',
+    category: "Support Needed",
+    mood: "neutral",
     isLiked: true,
   },
   {
     id: 3,
-    author: 'Sarah Kim',
-    username: '@sarah.mindful',
-    time: '6 hours ago',
-    avatar: '👩',
-    content: 'Just completed my 30-day mindfulness streak! 🎉 The daily check-ins have become such a valuable part of my routine. Thank you to this amazing community for the support.',
+    author: "Sarah Kim",
+    username: "@sarah.mindful",
+    time: "6 hours ago",
+    avatar: "👩",
+    content:
+      "Just completed my 30-day mindfulness streak! 🎉 The daily check-ins have become such a valuable part of my routine. Thank you to this amazing community for the support.",
     likes: 45,
     comments: 18,
-    category: 'Milestone',
-    mood: 'excited',
+    category: "Milestone",
+    mood: "excited",
     isLiked: true,
   },
 ];
 
 const COMMUNITY_CATEGORIES = [
-  { id: 'all', name: 'All Posts', color: freudDarkTheme.colors.accent.primary, icon: '🌟' },
-  { id: 'success', name: 'Success Stories', color: freudDarkTheme.colors.status.success, icon: '🎉' },
-  { id: 'support', name: 'Support Needed', color: '#F59E0B', icon: '🤝' },
-  { id: 'milestone', name: 'Milestones', color: '#8B5CF6', icon: '🏆' },
-  { id: 'tips', name: 'Tips & Advice', color: '#06B6D4', icon: '💡' },
+  {
+    id: "all",
+    name: "All Posts",
+    color: freudDarkTheme.colors.accent.primary,
+    icon: "🌟",
+  },
+  {
+    id: "success",
+    name: "Success Stories",
+    color: freudDarkTheme.colors.status.success,
+    icon: "🎉",
+  },
+  { id: "support", name: "Support Needed", color: "#F59E0B", icon: "🤝" },
+  { id: "milestone", name: "Milestones", color: "#8B5CF6", icon: "🏆" },
+  { id: "tips", name: "Tips & Advice", color: "#06B6D4", icon: "💡" },
 ];
 
 const NOTIFICATION_TYPES = [
   {
     id: 1,
-    type: 'like',
-    user: 'Marcus Thompson',
-    action: 'liked your post',
-    time: '5 minutes ago',
-    avatar: '👨',
+    type: "like",
+    user: "Marcus Thompson",
+    action: "liked your post",
+    time: "5 minutes ago",
+    avatar: "👨",
     isRead: false,
   },
   {
     id: 2,
-    type: 'comment',
-    user: 'Sarah Kim',
-    action: 'commented on your post',
-    time: '1 hour ago',
-    avatar: '👩',
+    type: "comment",
+    user: "Sarah Kim",
+    action: "commented on your post",
+    time: "1 hour ago",
+    avatar: "👩",
     isRead: false,
   },
   {
     id: 3,
-    type: 'follow',
-    user: 'Alex Rivera',
-    action: 'started following you',
-    time: '2 hours ago',
-    avatar: '👥',
+    type: "follow",
+    user: "Alex Rivera",
+    action: "started following you",
+    time: "2 hours ago",
+    avatar: "👥",
     isRead: true,
   },
 ];
 
 export default function DarkCommunitySupportScreen() {
-  const [currentView, setCurrentView] = useState('community'); // 'community', 'notifications', 'post'
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [currentView, setCurrentView] = useState("community"); // 'community', 'notifications', 'post'
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [posts, setPosts] = useState(COMMUNITY_POSTS);
   const [notifications, setNotifications] = useState(NOTIFICATION_TYPES);
   const [showNewPostModal, setShowNewPostModal] = useState(false);
-  const [newPostContent, setNewPostContent] = useState('');
-  const [newPostCategory, setNewPostCategory] = useState('support');
+  const [newPostContent, setNewPostContent] = useState("");
+  const [newPostCategory, setNewPostCategory] = useState("support");
   const [showNotifications, setShowNotifications] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(screenHeight)).current;
@@ -121,16 +135,16 @@ export default function DarkCommunitySupportScreen() {
   }, [currentView]);
 
   const toggleLike = (postId) => {
-    setPosts(prevPosts =>
-      prevPosts.map(post =>
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
         post.id === postId
           ? {
               ...post,
               isLiked: !post.isLiked,
-              likes: post.isLiked ? post.likes - 1 : post.likes + 1
+              likes: post.isLiked ? post.likes - 1 : post.likes + 1,
             }
-          : post
-      )
+          : post,
+      ),
     );
   };
 
@@ -152,7 +166,7 @@ export default function DarkCommunitySupportScreen() {
       useNativeDriver: true,
     }).start(() => {
       setShowNewPostModal(false);
-      setNewPostContent('');
+      setNewPostContent("");
     });
   };
 
@@ -160,36 +174,36 @@ export default function DarkCommunitySupportScreen() {
     if (newPostContent.trim()) {
       const newPost = {
         id: posts.length + 1,
-        author: 'You',
-        username: '@your.username',
-        time: 'Just now',
-        avatar: '👤',
+        author: "You",
+        username: "@your.username",
+        time: "Just now",
+        avatar: "👤",
         content: newPostContent,
         likes: 0,
         comments: 0,
         category: newPostCategory,
-        mood: 'neutral',
+        mood: "neutral",
         isLiked: false,
       };
-      setPosts(prevPosts => [newPost, ...prevPosts]);
+      setPosts((prevPosts) => [newPost, ...prevPosts]);
       closeNewPostModal();
     }
   };
 
   const markNotificationAsRead = (notificationId) => {
-    setNotifications(prevNotifications =>
-      prevNotifications.map(notification =>
+    setNotifications((prevNotifications) =>
+      prevNotifications.map((notification) =>
         notification.id === notificationId
           ? { ...notification, isRead: true }
-          : notification
-      )
+          : notification,
+      ),
     );
   };
 
   const renderWelcomeCard = () => (
     <View style={styles.welcomeCard}>
       <LinearGradient
-        colors={[freudDarkTheme.colors.status.success, '#16A34A']}
+        colors={[freudDarkTheme.colors.status.success, "#16A34A"]}
         style={styles.welcomeGradient}
       >
         <View style={styles.welcomeContent}>
@@ -197,7 +211,8 @@ export default function DarkCommunitySupportScreen() {
           <View style={styles.welcomeText}>
             <Text style={styles.welcomeTitle}>Welcome to Our Community!</Text>
             <Text style={styles.welcomeSubtitle}>
-              Our community is a place of support and encouragement. Share your journey and connect with others.
+              Our community is a place of support and encouragement. Share your
+              journey and connect with others.
             </Text>
           </View>
         </View>
@@ -209,8 +224,8 @@ export default function DarkCommunitySupportScreen() {
   );
 
   const renderCategoryFilter = () => (
-    <ScrollView 
-      horizontal 
+    <ScrollView
+      horizontal
       showsHorizontalScrollIndicator={false}
       style={styles.categoryScroll}
       contentContainerStyle={styles.categoryScrollContent}
@@ -220,15 +235,17 @@ export default function DarkCommunitySupportScreen() {
           key={category.id}
           style={[
             styles.categoryChip,
-            selectedCategory === category.id && styles.activeCategoryChip
+            selectedCategory === category.id && styles.activeCategoryChip,
           ]}
           onPress={() => setSelectedCategory(category.id)}
         >
           <Text style={styles.categoryEmoji}>{category.icon}</Text>
-          <Text style={[
-            styles.categoryText,
-            selectedCategory === category.id && styles.activeCategoryText
-          ]}>
+          <Text
+            style={[
+              styles.categoryText,
+              selectedCategory === category.id && styles.activeCategoryText,
+            ]}
+          >
             {category.name}
           </Text>
         </TouchableOpacity>
@@ -239,7 +256,10 @@ export default function DarkCommunitySupportScreen() {
   const renderPostCard = (post) => (
     <View key={post.id} style={styles.postCard}>
       <LinearGradient
-        colors={[freudDarkTheme.colors.background.secondary, freudDarkTheme.colors.background.tertiary]}
+        colors={[
+          freudDarkTheme.colors.background.secondary,
+          freudDarkTheme.colors.background.tertiary,
+        ]}
         style={styles.postGradient}
       >
         {/* Post Header */}
@@ -254,7 +274,7 @@ export default function DarkCommunitySupportScreen() {
             </View>
             <Text style={styles.postTime}>{post.time}</Text>
           </View>
-          
+
           {/* Category Badge */}
           <View style={styles.categoryBadge}>
             <Text style={styles.categoryBadgeText}>{post.category}</Text>
@@ -266,12 +286,12 @@ export default function DarkCommunitySupportScreen() {
 
         {/* Post Actions */}
         <View style={styles.postActions}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.actionButton}
             onPress={() => toggleLike(post.id)}
           >
             <Text style={[styles.actionIcon, post.isLiked && styles.likedIcon]}>
-              {post.isLiked ? '❤️' : '🤍'}
+              {post.isLiked ? "❤️" : "🤍"}
             </Text>
             <Text style={styles.actionText}>{post.likes}</Text>
           </TouchableOpacity>
@@ -291,16 +311,20 @@ export default function DarkCommunitySupportScreen() {
   );
 
   const renderCommunityView = () => (
-    <Animated.ScrollView 
+    <Animated.ScrollView
       style={[styles.container, { opacity: fadeAnim }]}
       showsVerticalScrollIndicator={false}
     >
       {renderWelcomeCard()}
       {renderCategoryFilter()}
-      
+
       <View style={styles.postsContainer}>
         {posts
-          .filter(post => selectedCategory === 'all' || post.category.toLowerCase().includes(selectedCategory))
+          .filter(
+            (post) =>
+              selectedCategory === "all" ||
+              post.category.toLowerCase().includes(selectedCategory),
+          )
           .map(renderPostCard)}
       </View>
 
@@ -313,7 +337,7 @@ export default function DarkCommunitySupportScreen() {
       key={notification.id}
       style={[
         styles.notificationItem,
-        !notification.isRead && styles.unreadNotification
+        !notification.isRead && styles.unreadNotification,
       ]}
       onPress={() => markNotificationAsRead(notification.id)}
     >
@@ -321,15 +345,13 @@ export default function DarkCommunitySupportScreen() {
         <Text style={styles.notificationAvatar}>{notification.avatar}</Text>
         <View style={styles.notificationContent}>
           <Text style={styles.notificationText}>
-            <Text style={styles.notificationUser}>{notification.user}</Text>
-            {' '}{notification.action}
+            <Text style={styles.notificationUser}>{notification.user}</Text>{" "}
+            {notification.action}
           </Text>
           <Text style={styles.notificationTime}>{notification.time}</Text>
         </View>
       </View>
-      {!notification.isRead && (
-        <View style={styles.unreadIndicator} />
-      )}
+      {!notification.isRead && <View style={styles.unreadIndicator} />}
     </TouchableOpacity>
   );
 
@@ -342,7 +364,10 @@ export default function DarkCommunitySupportScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.notificationsScroll} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.notificationsScroll}
+        showsVerticalScrollIndicator={false}
+      >
         {notifications.map(renderNotificationItem)}
       </ScrollView>
     </Animated.View>
@@ -351,19 +376,22 @@ export default function DarkCommunitySupportScreen() {
   const renderNewPostModal = () => (
     <Modal
       visible={showNewPostModal}
-      transparent={true}
+      transparent
       animationType="none"
       onRequestClose={closeNewPostModal}
     >
       <View style={styles.modalOverlay}>
-        <Animated.View 
+        <Animated.View
           style={[
             styles.modalContainer,
-            { transform: [{ translateY: slideAnim }] }
+            { transform: [{ translateY: slideAnim }] },
           ]}
         >
           <LinearGradient
-            colors={[freudDarkTheme.colors.background.secondary, freudDarkTheme.colors.background.tertiary]}
+            colors={[
+              freudDarkTheme.colors.background.secondary,
+              freudDarkTheme.colors.background.tertiary,
+            ]}
             style={styles.modalGradient}
           >
             <View style={styles.modalHeader}>
@@ -376,8 +404,8 @@ export default function DarkCommunitySupportScreen() {
             {/* Category Selection */}
             <View style={styles.categorySelection}>
               <Text style={styles.categorySelectionTitle}>Category:</Text>
-              <ScrollView 
-                horizontal 
+              <ScrollView
+                horizontal
                 showsHorizontalScrollIndicator={false}
                 style={styles.modalCategoryScroll}
               >
@@ -386,15 +414,21 @@ export default function DarkCommunitySupportScreen() {
                     key={category.id}
                     style={[
                       styles.modalCategoryChip,
-                      newPostCategory === category.id && styles.activeModalCategoryChip
+                      newPostCategory === category.id &&
+                        styles.activeModalCategoryChip,
                     ]}
                     onPress={() => setNewPostCategory(category.id)}
                   >
-                    <Text style={styles.modalCategoryEmoji}>{category.icon}</Text>
-                    <Text style={[
-                      styles.modalCategoryText,
-                      newPostCategory === category.id && styles.activeModalCategoryText
-                    ]}>
+                    <Text style={styles.modalCategoryEmoji}>
+                      {category.icon}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.modalCategoryText,
+                        newPostCategory === category.id &&
+                          styles.activeModalCategoryText,
+                      ]}
+                    >
                       {category.name}
                     </Text>
                   </TouchableOpacity>
@@ -407,7 +441,7 @@ export default function DarkCommunitySupportScreen() {
               <Text style={styles.contentInputTitle}>Share your thoughts:</Text>
               <TextInput
                 style={styles.textInput}
-                multiline={true}
+                multiline
                 numberOfLines={6}
                 value={newPostContent}
                 onChangeText={setNewPostContent}
@@ -419,18 +453,25 @@ export default function DarkCommunitySupportScreen() {
 
             {/* Action Buttons */}
             <View style={styles.modalActions}>
-              <TouchableOpacity style={styles.cancelButton} onPress={closeNewPostModal}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={closeNewPostModal}
+              >
                 <Text style={styles.cancelButtonText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity 
-                style={[styles.submitButton, !newPostContent.trim() && styles.disabledSubmitButton]} 
+              <TouchableOpacity
+                style={[
+                  styles.submitButton,
+                  !newPostContent.trim() && styles.disabledSubmitButton,
+                ]}
                 onPress={submitNewPost}
                 disabled={!newPostContent.trim()}
               >
                 <LinearGradient
-                  colors={newPostContent.trim() ? 
-                    [freudDarkTheme.colors.accent.primary, '#F97316'] : 
-                    ['#666', '#555']
+                  colors={
+                    newPostContent.trim()
+                      ? [freudDarkTheme.colors.accent.primary, "#F97316"]
+                      : ["#666", "#555"]
                   }
                   style={styles.submitButtonGradient}
                 >
@@ -446,23 +487,29 @@ export default function DarkCommunitySupportScreen() {
 
   return (
     <LinearGradient
-      colors={[freudDarkTheme.colors.background.primary, freudDarkTheme.colors.background.secondary]}
+      colors={[
+        freudDarkTheme.colors.background.primary,
+        freudDarkTheme.colors.background.secondary,
+      ]}
       style={styles.screenContainer}
     >
-      <StatusBar barStyle="light-content" backgroundColor={freudDarkTheme.colors.background.primary} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={freudDarkTheme.colors.background.primary}
+      />
       <SafeAreaView style={styles.safeArea}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Community Support</Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.notificationButton}
             onPress={() => setShowNotifications(!showNotifications)}
           >
             <Text style={styles.notificationIcon}>🔔</Text>
-            {notifications.some(n => !n.isRead) && (
+            {notifications.some((n) => !n.isRead) && (
               <View style={styles.notificationBadge}>
                 <Text style={styles.notificationBadgeText}>
-                  {notifications.filter(n => !n.isRead).length}
+                  {notifications.filter((n) => !n.isRead).length}
                 </Text>
               </View>
             )}
@@ -476,7 +523,7 @@ export default function DarkCommunitySupportScreen() {
         {!showNotifications && (
           <TouchableOpacity style={styles.fab} onPress={openNewPostModal}>
             <LinearGradient
-              colors={[freudDarkTheme.colors.accent.primary, '#F97316']}
+              colors={[freudDarkTheme.colors.accent.primary, "#F97316"]}
               style={styles.fabGradient}
             >
               <Text style={styles.fabText}>+</Text>
@@ -502,40 +549,40 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 10,
   },
   headerTitle: {
     fontSize: 28,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
   },
   notificationButton: {
-    position: 'relative',
+    position: "relative",
     padding: 8,
   },
   notificationIcon: {
     fontSize: 24,
   },
   notificationBadge: {
-    position: 'absolute',
+    position: "absolute",
     top: 4,
     right: 4,
-    backgroundColor: '#DC2626',
+    backgroundColor: "#DC2626",
     borderRadius: 8,
     minWidth: 16,
     height: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   notificationBadgeText: {
     fontSize: 10,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    fontWeight: "700",
+    color: "#FFFFFF",
   },
   welcomeCard: {
     marginBottom: 20,
@@ -546,8 +593,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   welcomeContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 15,
   },
   welcomeEmoji: {
@@ -559,29 +606,29 @@ const styles = StyleSheet.create({
   },
   welcomeTitle: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    fontWeight: "700",
+    color: "#FFFFFF",
     marginBottom: 8,
   },
   welcomeSubtitle: {
     fontSize: 14,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     opacity: 0.9,
     lineHeight: 20,
   },
   startButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 12,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: "rgba(255, 255, 255, 0.3)",
   },
   startButtonText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
   categoryScroll: {
     marginBottom: 20,
@@ -590,15 +637,15 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   categoryChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: freudDarkTheme.colors.background.tertiary,
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 20,
     marginRight: 12,
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: "transparent",
   },
   activeCategoryChip: {
     backgroundColor: freudDarkTheme.colors.accent.primary,
@@ -610,11 +657,11 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.secondary,
   },
   activeCategoryText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   postsContainer: {
     flex: 1,
@@ -630,8 +677,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   postAuthorSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 10,
   },
   avatarContainer: {
@@ -639,20 +686,20 @@ const styles = StyleSheet.create({
     height: 44,
     borderRadius: 22,
     backgroundColor: freudDarkTheme.colors.accent.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 12,
   },
   avatarEmoji: {
     fontSize: 20,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   authorInfo: {
     flex: 1,
   },
   authorName: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
     marginBottom: 2,
   },
@@ -671,12 +718,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 4,
     borderRadius: 12,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   categoryBadgeText: {
     fontSize: 12,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
   postContent: {
     fontSize: 16,
@@ -685,12 +732,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   postActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginRight: 24,
   },
   actionIcon: {
@@ -698,22 +745,22 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   likedIcon: {
-    color: '#DC2626',
+    color: "#DC2626",
   },
   actionText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.secondary,
   },
   fab: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 30,
     right: 30,
     width: 56,
     height: 56,
     borderRadius: 28,
     elevation: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -722,29 +769,29 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   fabText: {
     fontSize: 24,
-    fontWeight: '300',
-    color: '#FFFFFF',
+    fontWeight: "300",
+    color: "#FFFFFF",
   },
   bottomSpacer: {
     height: 100,
   },
-  
+
   // Notifications styles
   notificationsHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 20,
     marginTop: 10,
   },
   notificationsTitle: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
   },
   markAllReadButton: {
@@ -755,16 +802,16 @@ const styles = StyleSheet.create({
   },
   markAllReadText: {
     fontSize: 12,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
   notificationsScroll: {
     flex: 1,
   },
   notificationItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: freudDarkTheme.colors.background.tertiary,
     borderRadius: 16,
     padding: 16,
@@ -775,8 +822,8 @@ const styles = StyleSheet.create({
     borderLeftColor: freudDarkTheme.colors.accent.primary,
   },
   notificationLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   notificationAvatar: {
@@ -792,7 +839,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   notificationUser: {
-    fontWeight: '700',
+    fontWeight: "700",
   },
   notificationTime: {
     fontSize: 12,
@@ -805,12 +852,12 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: freudDarkTheme.colors.accent.primary,
   },
-  
+
   // Modal styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    justifyContent: 'flex-end',
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    justifyContent: "flex-end",
   },
   modalContainer: {
     height: screenHeight * 0.85,
@@ -823,21 +870,21 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 25,
     paddingTop: 10,
   },
   modalTitle: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
   },
   modalCloseText: {
     fontSize: 24,
     color: freudDarkTheme.colors.text.secondary,
-    fontWeight: '300',
+    fontWeight: "300",
     padding: 5,
   },
   categorySelection: {
@@ -845,23 +892,23 @@ const styles = StyleSheet.create({
   },
   categorySelectionTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.primary,
     marginBottom: 12,
   },
   modalCategoryScroll: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   modalCategoryChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: freudDarkTheme.colors.background.primary,
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 16,
     marginRight: 10,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: "rgba(255, 255, 255, 0.1)",
   },
   activeModalCategoryChip: {
     backgroundColor: freudDarkTheme.colors.accent.primary,
@@ -873,11 +920,11 @@ const styles = StyleSheet.create({
   },
   modalCategoryText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.secondary,
   },
   activeModalCategoryText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   contentInput: {
     flex: 1,
@@ -885,7 +932,7 @@ const styles = StyleSheet.create({
   },
   contentInputTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.primary,
     marginBottom: 12,
   },
@@ -896,26 +943,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: freudDarkTheme.colors.text.primary,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: "rgba(255, 255, 255, 0.1)",
     minHeight: 120,
   },
   modalActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   cancelButton: {
     flex: 0.4,
     backgroundColor: freudDarkTheme.colors.background.primary,
     paddingVertical: 16,
     borderRadius: 16,
-    alignItems: 'center',
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: "rgba(255, 255, 255, 0.1)",
   },
   cancelButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.secondary,
   },
   submitButton: {
@@ -928,11 +975,11 @@ const styles = StyleSheet.create({
   submitButtonGradient: {
     paddingVertical: 16,
     borderRadius: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   submitButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
 });

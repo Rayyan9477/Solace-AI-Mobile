@@ -4,84 +4,88 @@
  * Provides accessibility, therapeutic design patterns, and touch-optimized interactions
  */
 
-import React, { useRef, useCallback } from 'react';
-import { 
-  TouchableOpacity, 
-  Text, 
-  StyleSheet, 
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useRef, useCallback } from "react";
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
   Platform,
   Animated,
   ActivityIndicator,
-  View
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { MentalHealthContrastValidators } from '../../utils/colorContrast';
-import { TouchTargetHelpers, WCAG_CONSTANTS } from '../../shared/utils/accessibility';
-import { spacing, borderRadius, typography } from '../../shared/theme/theme';
+  View,
+} from "react-native";
+
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { spacing, borderRadius, typography } from "../../shared/theme/theme";
+import {
+  TouchTargetHelpers,
+  WCAG_CONSTANTS,
+} from "../../shared/utils/accessibility";
+import { MentalHealthContrastValidators } from "../../utils/colorContrast";
 
 // Button variants for different therapeutic contexts
 const BUTTON_VARIANTS = {
   primary: {
-    background: 'primary.500',
-    text: 'white',
-    border: 'primary.500',
-    hover: 'primary.600',
-    pressed: 'primary.700',
+    background: "primary.500",
+    text: "white",
+    border: "primary.500",
+    hover: "primary.600",
+    pressed: "primary.700",
   },
   secondary: {
-    background: 'transparent',
-    text: 'primary.500',
-    border: 'primary.500',
-    hover: 'primary.50',
-    pressed: 'primary.100',
+    background: "transparent",
+    text: "primary.500",
+    border: "primary.500",
+    hover: "primary.50",
+    pressed: "primary.100",
   },
   therapeutic: {
-    background: 'therapeutic.nurturing.500',
-    text: 'white',
-    border: 'therapeutic.nurturing.500',
-    hover: 'therapeutic.nurturing.600',
-    pressed: 'therapeutic.nurturing.700',
-    gradient: ['therapeutic.nurturing.500', 'therapeutic.nurturing.600'],
+    background: "therapeutic.nurturing.500",
+    text: "white",
+    border: "therapeutic.nurturing.500",
+    hover: "therapeutic.nurturing.600",
+    pressed: "therapeutic.nurturing.700",
+    gradient: ["therapeutic.nurturing.500", "therapeutic.nurturing.600"],
   },
   calming: {
-    background: 'therapeutic.calming.500',
-    text: 'white',
-    border: 'therapeutic.calming.500',
-    hover: 'therapeutic.calming.600',
-    pressed: 'therapeutic.calming.700',
-    gradient: ['therapeutic.calming.500', 'therapeutic.calming.600'],
+    background: "therapeutic.calming.500",
+    text: "white",
+    border: "therapeutic.calming.500",
+    hover: "therapeutic.calming.600",
+    pressed: "therapeutic.calming.700",
+    gradient: ["therapeutic.calming.500", "therapeutic.calming.600"],
   },
   crisis: {
-    background: 'error.500',
-    text: 'white',
-    border: 'error.500',
-    hover: 'error.600',
-    pressed: 'error.700',
-    gradient: ['error.500', 'error.600'],
+    background: "error.500",
+    text: "white",
+    border: "error.500",
+    hover: "error.600",
+    pressed: "error.700",
+    gradient: ["error.500", "error.600"],
     pulse: true, // Enable attention animation
   },
   success: {
-    background: 'success.500',
-    text: 'white',
-    border: 'success.500',
-    hover: 'success.600',
-    pressed: 'success.700',
-    gradient: ['success.500', 'success.600'],
+    background: "success.500",
+    text: "white",
+    border: "success.500",
+    hover: "success.600",
+    pressed: "success.700",
+    gradient: ["success.500", "success.600"],
   },
   ghost: {
-    background: 'transparent',
-    text: 'gray.700',
-    border: 'transparent',
-    hover: 'gray.100',
-    pressed: 'gray.200',
+    background: "transparent",
+    text: "gray.700",
+    border: "transparent",
+    hover: "gray.100",
+    pressed: "gray.200",
   },
   destructive: {
-    background: 'error.500',
-    text: 'white',
-    border: 'error.500',
-    hover: 'error.600',
-    pressed: 'error.700',
+    background: "error.500",
+    text: "white",
+    border: "error.500",
+    hover: "error.600",
+    pressed: "error.700",
   },
 };
 
@@ -113,21 +117,21 @@ const BUTTON_SIZES = {
     paddingVertical: spacing.lg,
     fontSize: typography.h2.fontSize,
     minHeight: 64, // Emergency/crisis buttons
-    borderRadius: borderRadius['2xl'],
+    borderRadius: borderRadius["2xl"],
   },
 };
 
 export const TherapeuticButton = ({
   children,
-  variant = 'primary',
-  size = 'md',
+  variant = "primary",
+  size = "md",
   disabled = false,
   loading = false,
   onPress,
   style = {},
   textStyle = {},
   icon,
-  iconPosition = 'left',
+  iconPosition = "left",
   fullWidth = false,
   animated = true,
   therapeutic = false, // Enable therapeutic-specific features
@@ -146,7 +150,7 @@ export const TherapeuticButton = ({
 
   // Get theme color helper
   const getThemeColor = (colorPath) => {
-    const path = colorPath.split('.');
+    const path = colorPath.split(".");
     let color = theme.colors;
     for (const segment of path) {
       color = color[segment];
@@ -160,18 +164,21 @@ export const TherapeuticButton = ({
   const borderColor = getThemeColor(buttonVariant.border);
 
   // Gradient colors if available
-  const gradientColors = buttonVariant.gradient 
+  const gradientColors = buttonVariant.gradient
     ? buttonVariant.gradient.map(getThemeColor)
     : null;
 
   // Accessibility validation for crisis buttons
-  if ((variant === 'crisis' || emergencyMode) && __DEV__) {
+  if ((variant === "crisis" || emergencyMode) && __DEV__) {
     const contrastResult = MentalHealthContrastValidators.validateCrisisElement(
-      textColor, 
-      backgroundColor
+      textColor,
+      backgroundColor,
     );
     if (!contrastResult.isCompliant) {
-      console.warn('Crisis button contrast issue:', contrastResult.recommendation);
+      console.warn(
+        "Crisis button contrast issue:",
+        contrastResult.recommendation,
+      );
     }
   }
 
@@ -222,8 +229,8 @@ export const TherapeuticButton = ({
     if (disabled || loading || !onPress) return;
 
     // Haptic feedback for important actions
-    if (Platform.OS !== 'web' && (variant === 'crisis' || emergencyMode)) {
-      const { HapticFeedback } = require('expo-haptics');
+    if (Platform.OS !== "web" && (variant === "crisis" || emergencyMode)) {
+      const { HapticFeedback } = require("expo-haptics");
       HapticFeedback.impactAsync(HapticFeedback.ImpactFeedbackStyle.Medium);
     }
 
@@ -234,9 +241,9 @@ export const TherapeuticButton = ({
   const buttonStyles = [
     styles.button,
     {
-      backgroundColor: gradientColors ? 'transparent' : backgroundColor,
+      backgroundColor: gradientColors ? "transparent" : backgroundColor,
       borderColor,
-      borderWidth: buttonVariant.background === 'transparent' ? 1 : 0,
+      borderWidth: buttonVariant.background === "transparent" ? 1 : 0,
       borderRadius: buttonSize.borderRadius,
       paddingHorizontal: buttonSize.paddingHorizontal,
       paddingVertical: buttonSize.paddingVertical,
@@ -253,7 +260,7 @@ export const TherapeuticButton = ({
     {
       color: textColor,
       fontSize: buttonSize.fontSize,
-      fontWeight: variant === 'crisis' ? '700' : '600',
+      fontWeight: variant === "crisis" ? "700" : "600",
     },
     textStyle,
   ];
@@ -261,15 +268,17 @@ export const TherapeuticButton = ({
   // Accessibility props
   const accessibilityProps = {
     accessible: true,
-    accessibilityRole: 'button',
-    accessibilityLabel: accessibilityLabel || (typeof children === 'string' ? children : 'Button'),
-    accessibilityHint: accessibilityHint || 'Double tap to activate',
-    accessibilityState: { 
+    accessibilityRole: "button",
+    accessibilityLabel:
+      accessibilityLabel ||
+      (typeof children === "string" ? children : "Button"),
+    accessibilityHint: accessibilityHint || "Double tap to activate",
+    accessibilityState: {
       disabled: disabled || loading,
       busy: loading,
     },
     testID,
-    ...touchTargetConfig.hitSlop && { hitSlop: touchTargetConfig.hitSlop },
+    ...(touchTargetConfig.hitSlop && { hitSlop: touchTargetConfig.hitSlop }),
     ...props,
   };
 
@@ -277,30 +286,26 @@ export const TherapeuticButton = ({
   const ButtonContent = () => (
     <>
       {loading && (
-        <ActivityIndicator 
-          size="small" 
-          color={textColor} 
+        <ActivityIndicator
+          size="small"
+          color={textColor}
           style={styles.loader}
           accessibilityLabel="Loading"
         />
       )}
-      
-      {icon && iconPosition === 'left' && !loading && (
-        <View style={styles.iconLeft}>
-          {icon}
-        </View>
+
+      {icon && iconPosition === "left" && !loading && (
+        <View style={styles.iconLeft}>{icon}</View>
       )}
-      
+
       {children && (
         <Text style={textStyles} numberOfLines={1}>
           {children}
         </Text>
       )}
-      
-      {icon && iconPosition === 'right' && !loading && (
-        <View style={styles.iconRight}>
-          {icon}
-        </View>
+
+      {icon && iconPosition === "right" && !loading && (
+        <View style={styles.iconRight}>{icon}</View>
       )}
     </>
   );
@@ -310,24 +315,23 @@ export const TherapeuticButton = ({
     if (!animated) return children;
 
     const animatedStyle = {
-      transform: [
-        { scale: pressAnim },
-      ],
+      transform: [{ scale: pressAnim }],
     };
 
-    return (
-      <Animated.View style={animatedStyle}>
-        {children}
-      </Animated.View>
-    );
+    return <Animated.View style={animatedStyle}>{children}</Animated.View>;
   };
 
   // Emergency/Crisis attention animation
   const EmergencyWrapper = ({ children }) => {
-    if (!emergencyMode && variant !== 'crisis') return children;
+    if (!emergencyMode && variant !== "crisis") return children;
 
     return (
-      <Animated.View style={[styles.emergencyWrapper, { transform: [{ scale: feedbackAnim }] }]}>
+      <Animated.View
+        style={[
+          styles.emergencyWrapper,
+          { transform: [{ scale: feedbackAnim }] },
+        ]}
+      >
         {children}
       </Animated.View>
     );
@@ -336,11 +340,7 @@ export const TherapeuticButton = ({
   // Gradient wrapper
   const GradientWrapper = ({ children }) => {
     if (!gradientColors) {
-      return (
-        <View style={buttonStyles}>
-          {children}
-        </View>
-      );
+      return <View style={buttonStyles}>{children}</View>;
     }
 
     return (
@@ -382,29 +382,21 @@ export const PrimaryButton = (props) => (
 );
 
 export const TherapeuticActionButton = (props) => (
-  <TherapeuticButton 
-    variant="therapeutic" 
-    therapeutic={true}
-    {...props} 
-  />
+  <TherapeuticButton variant="therapeutic" therapeutic {...props} />
 );
 
 export const CalmingButton = (props) => (
-  <TherapeuticButton 
-    variant="calming" 
-    therapeutic={true}
-    {...props} 
-  />
+  <TherapeuticButton variant="calming" therapeutic {...props} />
 );
 
 export const CrisisButton = (props) => (
-  <TherapeuticButton 
-    variant="crisis" 
+  <TherapeuticButton
+    variant="crisis"
     size="xl"
-    emergencyMode={true}
+    emergencyMode
     accessibilityLabel="Emergency crisis support"
     accessibilityHint="Double tap for immediate crisis support and emergency resources"
-    {...props} 
+    {...props}
   />
 );
 
@@ -421,25 +413,30 @@ export const GhostButton = (props) => (
 );
 
 // Button group for organizing multiple actions
-export const ButtonGroup = ({ 
-  children, 
-  orientation = 'horizontal',
-  spacing: buttonSpacing = 'sm',
+export const ButtonGroup = ({
+  children,
+  orientation = "horizontal",
+  spacing: buttonSpacing = "sm",
   style = {},
 }) => {
   const spacingValue = spacing[buttonSpacing] || spacing.sm;
 
   const groupStyles = [
     styles.buttonGroup,
-    orientation === 'horizontal' ? styles.horizontal : styles.vertical,
+    orientation === "horizontal" ? styles.horizontal : styles.vertical,
     style,
   ];
 
   const childrenWithSpacing = React.Children.map(children, (child, index) => {
     if (React.isValidElement(child)) {
-      const marginStyle = orientation === 'horizontal'
-        ? index > 0 ? { marginLeft: spacingValue } : {}
-        : index > 0 ? { marginTop: spacingValue } : {};
+      const marginStyle =
+        orientation === "horizontal"
+          ? index > 0
+            ? { marginLeft: spacingValue }
+            : {}
+          : index > 0
+            ? { marginTop: spacingValue }
+            : {};
 
       return React.cloneElement(child, {
         style: [child.props.style, marginStyle],
@@ -448,43 +445,39 @@ export const ButtonGroup = ({
     return child;
   });
 
-  return (
-    <View style={groupStyles}>
-      {childrenWithSpacing}
-    </View>
-  );
+  return <View style={groupStyles}>{childrenWithSpacing}</View>;
 };
 
 const styles = StyleSheet.create({
   button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     borderWidth: 0,
     ...Platform.select({
       web: {
-        cursor: 'pointer',
-        userSelect: 'none',
+        cursor: "pointer",
+        userSelect: "none",
       },
     }),
   },
   content: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   text: {
-    textAlign: 'center',
-    fontWeight: '600',
+    textAlign: "center",
+    fontWeight: "600",
   },
   fullWidth: {
-    width: '100%',
+    width: "100%",
   },
   disabled: {
     opacity: 0.6,
     ...Platform.select({
       web: {
-        cursor: 'not-allowed',
+        cursor: "not-allowed",
       },
     }),
   },
@@ -501,15 +494,15 @@ const styles = StyleSheet.create({
     // Emergency-specific styling handled by animation component
   },
   buttonGroup: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   horizontal: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   vertical: {
-    flexDirection: 'column',
-    alignItems: 'stretch',
+    flexDirection: "column",
+    alignItems: "stretch",
   },
 });
 

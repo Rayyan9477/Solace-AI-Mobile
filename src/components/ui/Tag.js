@@ -1,20 +1,21 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { getTherapeuticColor } from '../../shared/theme/ColorPalette';
-import { MentalHealthIcon } from '../icons';
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-const Tag = ({ 
-  label = '',
-  variant = 'default',
-  size = 'medium',
+import { getTherapeuticColor } from "../../shared/theme/ColorPalette";
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { MentalHealthIcon } from "../icons";
+
+const Tag = ({
+  label = "",
+  variant = "default",
+  size = "medium",
   icon,
   onPress,
   onRemove,
   selected = false,
   disabled = false,
   accessibilityLabel,
-  accessibilityHint
+  accessibilityHint,
 }) => {
   const { theme } = useTheme();
 
@@ -47,14 +48,14 @@ const Tag = ({
 
   const getSizeStyles = () => {
     switch (size) {
-      case 'small':
+      case "small":
         return {
           paddingHorizontal: 8,
           paddingVertical: 4,
           fontSize: 12,
           iconSize: 12,
         };
-      case 'large':
+      case "large":
         return {
           paddingHorizontal: 16,
           paddingVertical: 8,
@@ -76,7 +77,7 @@ const Tag = ({
   const isInteractive = onPress || onRemove;
 
   const TagContent = () => (
-    <View 
+    <View
       style={[
         styles.tag,
         {
@@ -84,7 +85,7 @@ const Tag = ({
           borderColor: colors.border,
           paddingHorizontal: sizeStyles.paddingHorizontal,
           paddingVertical: sizeStyles.paddingVertical,
-        }
+        },
       ]}
     >
       {icon && (
@@ -96,19 +97,19 @@ const Tag = ({
           style={styles.icon}
         />
       )}
-      
-      <Text 
+
+      <Text
         style={[
           styles.tagText,
           {
             color: colors.text,
             fontSize: sizeStyles.fontSize,
-          }
+          },
         ]}
       >
         {label}
       </Text>
-      
+
       {onRemove && (
         <TouchableOpacity
           onPress={onRemove}
@@ -117,9 +118,7 @@ const Tag = ({
           accessibilityRole="button"
           accessibilityLabel={`Remove ${label} tag`}
         >
-          <Text style={[styles.removeIcon, { color: colors.text }]}>
-            ×
-          </Text>
+          <Text style={[styles.removeIcon, { color: colors.text }]}>×</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -144,16 +143,16 @@ const Tag = ({
   return <TagContent />;
 };
 
-const TagGroup = ({ 
+const TagGroup = ({
   tags = [],
   onTagPress,
   onTagRemove,
   selectedTags = [],
-  variant = 'default',
-  size = 'medium',
+  variant = "default",
+  size = "medium",
   maxTags,
   showMore = false,
-  onShowMore
+  onShowMore,
 }) => {
   const { theme } = useTheme();
   const displayTags = maxTags ? tags.slice(0, maxTags) : tags;
@@ -175,7 +174,7 @@ const TagGroup = ({
           />
         </View>
       ))}
-      
+
       {remainingCount > 0 && (
         <TouchableOpacity
           style={[
@@ -184,7 +183,7 @@ const TagGroup = ({
             {
               backgroundColor: theme.colors.gray[100],
               borderColor: theme.colors.gray[200],
-            }
+            },
           ]}
           onPress={onShowMore}
           accessibilityRole="button"
@@ -201,16 +200,16 @@ const TagGroup = ({
 
 const styles = StyleSheet.create({
   tag: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderRadius: 16,
     borderWidth: 1,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     minHeight: 28,
   },
   tagText: {
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
   },
   icon: {
     marginRight: 6,
@@ -219,18 +218,18 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     width: 16,
     height: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   removeIcon: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     lineHeight: 14,
   },
   tagGroup: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
   },
   tagWrapper: {
     marginRight: 8,

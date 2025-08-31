@@ -5,10 +5,12 @@ module.exports = function (api) {
     plugins: [
       "react-native-reanimated/plugin",
       // Add web-specific transformations
-      ...(process.env.EXPO_PLATFORM === 'web' ? [
-        ["@babel/plugin-proposal-class-properties", { "loose": true }],
-        ["@babel/plugin-transform-react-jsx", { "runtime": "automatic" }]
-      ] : [])
+      ...(process.env.EXPO_PLATFORM === "web"
+        ? [
+            ["@babel/plugin-proposal-class-properties", { loose: true }],
+            ["@babel/plugin-transform-react-jsx", { runtime: "automatic" }],
+          ]
+        : []),
     ],
   };
 };

@@ -1,12 +1,18 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Haptics from 'expo-haptics';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform } from "react-native";
 
-import { MentalHealthIcon } from '../components/icons';
-import { useTheme } from '../shared/theme/UnifiedThemeProvider';
-import { colors, typography, spacing, borderRadius, shadows } from '../shared/theme/theme';
+import { MentalHealthIcon } from "../components/icons";
+import { useTheme } from "../shared/theme/UnifiedThemeProvider";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../shared/theme/theme";
 
 /**
  * Enhanced Error Boundary for Mental Health App
@@ -22,7 +28,7 @@ class ErrorBoundary extends React.Component {
       errorInfo: null,
       errorId: null,
       retryCount: 0,
-      isReporting: false
+      isReporting: false,
     };
   }
 
@@ -31,22 +37,22 @@ class ErrorBoundary extends React.Component {
     return {
       hasError: true,
       error,
-      errorId: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      errorId: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     };
   }
 
   componentDidCatch(error, errorInfo) {
     // Log error details
     this.setState({ errorInfo });
-    
+
     // Log error to storage for debugging
     this.logErrorToStorage(error, errorInfo);
-    
+
     // Report to crash analytics (if implemented)
     this.reportErrorToCrashlytics(error, errorInfo);
 
     // Provide haptic feedback for error
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     }
   }
@@ -62,34 +68,34 @@ class ErrorBoundary extends React.Component {
         error: {
           name: error.name,
           message: error.message,
-          stack: error.stack
+          stack: error.stack,
         },
         errorInfo: {
-          componentStack: errorInfo.componentStack
+          componentStack: errorInfo.componentStack,
         },
-        userAgent: navigator.userAgent || 'Unknown',
-        url: window.location?.href || 'React Native',
+        userAgent: navigator.userAgent || "Unknown",
+        url: window.location?.href || "React Native",
         userId: await this.getCurrentUserId(),
         sessionId: await this.getCurrentSessionId(),
-        appVersion: '1.0.0', // Should come from app config
-        buildNumber: '1', // Should come from app config
+        appVersion: "1.0.0", // Should come from app config
+        buildNumber: "1", // Should come from app config
       };
 
       // Get existing error logs
-      const existingLogs = await AsyncStorage.getItem('error_logs');
+      const existingLogs = await AsyncStorage.getItem("error_logs");
       const logs = existingLogs ? JSON.parse(existingLogs) : [];
-      
+
       // Add new error log
       logs.unshift(errorLog);
-      
+
       // Keep only last 50 errors
       const trimmedLogs = logs.slice(0, 50);
-      
-      await AsyncStorage.setItem('error_logs', JSON.stringify(trimmedLogs));
-      
-      console.error('Error logged to storage:', errorLog);
+
+      await AsyncStorage.setItem("error_logs", JSON.stringify(trimmedLogs));
+
+      console.error("Error logged to storage:", errorLog);
     } catch (loggingError) {
-      console.error('Failed to log error to storage:', loggingError);
+      console.error("Failed to log error to storage:", loggingError);
     }
   }
 
@@ -100,13 +106,13 @@ class ErrorBoundary extends React.Component {
     try {
       // This would integrate with services like Crashlytics, Sentry, etc.
       // For now, just log to console
-      console.error('Error reported to analytics:', {
+      console.error("Error reported to analytics:", {
         error: error.message,
         stack: error.stack,
-        componentStack: errorInfo.componentStack
+        componentStack: errorInfo.componentStack,
       });
     } catch (reportingError) {
-      console.error('Failed to report error to analytics:', reportingError);
+      console.error("Failed to report error to analytics:", reportingError);
     }
   }
 
@@ -115,14 +121,14 @@ class ErrorBoundary extends React.Component {
    */
   async getCurrentUserId() {
     try {
-      const userData = await AsyncStorage.getItem('user_profile');
+      const userData = await AsyncStorage.getItem("user_profile");
       if (userData) {
         const user = JSON.parse(userData);
-        return user.id || 'anonymous';
+        return user.id || "anonymous";
       }
-      return 'anonymous';
+      return "anonymous";
     } catch (error) {
-      return 'anonymous';
+      return "anonymous";
     }
   }
 
@@ -131,7 +137,7 @@ class ErrorBoundary extends React.Component {
    */
   async getCurrentSessionId() {
     try {
-      const sessionData = await AsyncStorage.getItem('current_therapy_session');
+      const sessionData = await AsyncStorage.getItem("current_therapy_session");
       if (sessionData) {
         const session = JSON.parse(sessionData);
         return session.id || null;
@@ -146,16 +152,16 @@ class ErrorBoundary extends React.Component {
    * Retry the component that failed
    */
   handleRetry = async () => {
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
 
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       hasError: false,
       error: null,
       errorInfo: null,
       errorId: null,
-      retryCount: prevState.retryCount + 1
+      retryCount: prevState.retryCount + 1,
     }));
   };
 
@@ -173,29 +179,31 @@ class ErrorBoundary extends React.Component {
         stack: this.state.error?.stack,
         componentStack: this.state.errorInfo?.componentStack,
         retryCount: this.state.retryCount,
-        userFeedback: '', // Could add feedback form
+        userFeedback: "", // Could add feedback form
         userId: await this.getCurrentUserId(),
-        sessionId: await this.getCurrentSessionId()
+        sessionId: await this.getCurrentSessionId(),
       };
 
       // Send to support endpoint (mock for now)
-      console.log('Error report sent:', errorReport);
-      
+      console.log("Error report sent:", errorReport);
+
       Alert.alert(
-        'Report Sent',
-        'Thank you for helping us improve the app. Our team will review this error.',
-        [{ text: 'OK' }]
+        "Report Sent",
+        "Thank you for helping us improve the app. Our team will review this error.",
+        [{ text: "OK" }],
       );
 
-      if (Platform.OS === 'ios') {
-        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      if (Platform.OS === "ios") {
+        await Haptics.notificationAsync(
+          Haptics.NotificationFeedbackType.Success,
+        );
       }
     } catch (error) {
-      console.error('Failed to send error report:', error);
+      console.error("Failed to send error report:", error);
       Alert.alert(
-        'Report Failed',
-        'We couldn\'t send the error report right now. Please try again later.',
-        [{ text: 'OK' }]
+        "Report Failed",
+        "We couldn't send the error report right now. Please try again later.",
+        [{ text: "OK" }],
       );
     } finally {
       this.setState({ isReporting: false });
@@ -206,7 +214,7 @@ class ErrorBoundary extends React.Component {
    * Navigate to safe screen
    */
   handleGoHome = async () => {
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
 
@@ -215,12 +223,12 @@ class ErrorBoundary extends React.Component {
       hasError: false,
       error: null,
       errorInfo: null,
-      errorId: null
+      errorId: null,
     });
 
     // Navigate to home screen if navigation is available
     if (this.props.navigation) {
-      this.props.navigation.navigate('Home');
+      this.props.navigation.navigate("Home");
     } else if (this.props.onGoHome) {
       this.props.onGoHome();
     }
@@ -230,11 +238,11 @@ class ErrorBoundary extends React.Component {
    * Check if error might be crisis-related
    */
   isCrisisRelatedError() {
-    const errorMessage = this.state.error?.message || '';
-    const crisisKeywords = ['crisis', 'emergency', 'suicide', 'harm'];
-    
-    return crisisKeywords.some(keyword => 
-      errorMessage.toLowerCase().includes(keyword)
+    const errorMessage = this.state.error?.message || "";
+    const crisisKeywords = ["crisis", "emergency", "suicide", "harm"];
+
+    return crisisKeywords.some((keyword) =>
+      errorMessage.toLowerCase().includes(keyword),
     );
   }
 
@@ -243,34 +251,38 @@ class ErrorBoundary extends React.Component {
    */
   getTherapeuticErrorMessage() {
     const isCrisisRelated = this.isCrisisRelatedError();
-    
+
     if (isCrisisRelated) {
       return {
         title: "We're Here for You",
-        message: "Something unexpected happened, but your safety is our priority. If you need immediate support, please use the emergency resources below.",
-        priority: 'high'
+        message:
+          "Something unexpected happened, but your safety is our priority. If you need immediate support, please use the emergency resources below.",
+        priority: "high",
       };
     }
 
     const retryCount = this.state.retryCount;
-    
+
     if (retryCount === 0) {
       return {
         title: "Something Went Wrong",
-        message: "Don't worry - this happens sometimes. Your progress is saved, and you can continue your mental health journey.",
-        priority: 'normal'
+        message:
+          "Don't worry - this happens sometimes. Your progress is saved, and you can continue your mental health journey.",
+        priority: "normal",
       };
     } else if (retryCount < 3) {
       return {
         title: "Still Having Trouble",
-        message: "We're working to fix this. Your wellbeing matters to us, and we want to get you back to your mental health tools.",
-        priority: 'normal'
+        message:
+          "We're working to fix this. Your wellbeing matters to us, and we want to get you back to your mental health tools.",
+        priority: "normal",
       };
     } else {
       return {
         title: "Persistent Issue",
-        message: "This seems to be a recurring problem. Let's get you to a safe place and report this to our team.",
-        priority: 'high'
+        message:
+          "This seems to be a recurring problem. Let's get you to a safe place and report this to our team.",
+        priority: "high",
       };
     }
   }
@@ -313,7 +325,7 @@ const ErrorFallbackComponent = ({
   onRetry,
   onSendReport,
   onGoHome,
-  customFallback
+  customFallback,
 }) => {
   // Use custom fallback if provided
   if (customFallback) {
@@ -321,8 +333,8 @@ const ErrorFallbackComponent = ({
   }
 
   const theme = {
-    colors: colors,
-    isDark: false // Default to light theme for error screen
+    colors,
+    isDark: false, // Default to light theme for error screen
   };
 
   return (
@@ -330,24 +342,26 @@ const ErrorFallbackComponent = ({
       {/* Background gradient */}
       <LinearGradient
         colors={[
-          isCrisisRelated ? '#FEF2F2' : '#F8FAFC', // Red tint for crisis, blue for normal
-          '#FFFFFF'
+          isCrisisRelated ? "#FEF2F2" : "#F8FAFC", // Red tint for crisis, blue for normal
+          "#FFFFFF",
         ]}
         style={styles.backgroundGradient}
       />
 
       <View style={styles.contentContainer}>
         {/* Error icon */}
-        <View style={[
-          styles.iconContainer,
-          {
-            backgroundColor: isCrisisRelated ? '#FEE2E2' : '#EFF6FF'
-          }
-        ]}>
+        <View
+          style={[
+            styles.iconContainer,
+            {
+              backgroundColor: isCrisisRelated ? "#FEE2E2" : "#EFF6FF",
+            },
+          ]}
+        >
           <MentalHealthIcon
             name="Heart"
             size="xl"
-            color={isCrisisRelated ? '#DC2626' : '#3B82F6'}
+            color={isCrisisRelated ? "#DC2626" : "#3B82F6"}
             variant="filled"
           />
         </View>
@@ -356,7 +370,7 @@ const ErrorFallbackComponent = ({
         <Text style={[styles.title, { color: colors.text.primary }]}>
           {therapeuticMessage.title}
         </Text>
-        
+
         <Text style={[styles.message, { color: colors.text.secondary }]}>
           {therapeuticMessage.message}
         </Text>
@@ -365,15 +379,14 @@ const ErrorFallbackComponent = ({
         {isCrisisRelated && (
           <View style={[styles.crisisContainer, shadows.md]}>
             <LinearGradient
-              colors={['#FECACA', '#FEE2E2']}
+              colors={["#FECACA", "#FEE2E2"]}
               style={styles.crisisCard}
             >
-              <Text style={[styles.crisisTitle, { color: '#991B1B' }]}>
+              <Text style={[styles.crisisTitle, { color: "#991B1B" }]}>
                 Emergency Support
               </Text>
-              <Text style={[styles.crisisText, { color: '#7F1D1D' }]}>
-                • Crisis Line: Call or text 988{'\n'}
-                • Emergency: Call 911{'\n'}
+              <Text style={[styles.crisisText, { color: "#7F1D1D" }]}>
+                • Crisis Line: Call or text 988{"\n"}• Emergency: Call 911{"\n"}
                 • Crisis Text: Text HOME to 741741
               </Text>
             </LinearGradient>
@@ -383,7 +396,7 @@ const ErrorFallbackComponent = ({
         {/* Error details (collapsed by default) */}
         <View style={styles.errorDetailsContainer}>
           <Text style={[styles.errorId, { color: colors.text.tertiary }]}>
-            Error ID: {error?.name || 'Unknown'} (Attempt {retryCount + 1})
+            Error ID: {error?.name || "Unknown"} (Attempt {retryCount + 1})
           </Text>
         </View>
 
@@ -398,7 +411,10 @@ const ErrorFallbackComponent = ({
             accessibilityLabel="Try again"
           >
             <LinearGradient
-              colors={[colors.therapeutic.calming[500], colors.therapeutic.peaceful[500]]}
+              colors={[
+                colors.therapeutic.calming[500],
+                colors.therapeutic.peaceful[500],
+              ]}
               style={styles.buttonGradient}
             >
               <MentalHealthIcon
@@ -407,9 +423,7 @@ const ErrorFallbackComponent = ({
                 color={colors.text.inverse}
                 style={styles.buttonIcon}
               />
-              <Text style={styles.primaryButtonText}>
-                Try Again
-              </Text>
+              <Text style={styles.primaryButtonText}>Try Again</Text>
             </LinearGradient>
           </TouchableOpacity>
 
@@ -421,7 +435,12 @@ const ErrorFallbackComponent = ({
             accessibilityRole="button"
             accessibilityLabel="Go to home screen"
           >
-            <Text style={[styles.secondaryButtonText, { color: colors.text.primary }]}>
+            <Text
+              style={[
+                styles.secondaryButtonText,
+                { color: colors.text.primary },
+              ]}
+            >
               Go to Home
             </Text>
           </TouchableOpacity>
@@ -437,16 +456,21 @@ const ErrorFallbackComponent = ({
             accessibilityRole="button"
             accessibilityLabel="Report this error"
           >
-            <Text style={[styles.reportButtonText, { color: colors.text.tertiary }]}>
-              {isReporting ? 'Sending Report...' : 'Report This Error'}
+            <Text
+              style={[styles.reportButtonText, { color: colors.text.tertiary }]}
+            >
+              {isReporting ? "Sending Report..." : "Report This Error"}
             </Text>
           </TouchableOpacity>
         )}
 
         {/* Encouraging message */}
         <View style={styles.encouragementContainer}>
-          <Text style={[styles.encouragementText, { color: colors.text.secondary }]}>
-            Your mental health journey matters. We're here to support you through any challenges.
+          <Text
+            style={[styles.encouragementText, { color: colors.text.secondary }]}
+          >
+            Your mental health journey matters. We're here to support you
+            through any challenges.
           </Text>
         </View>
       </View>
@@ -459,7 +483,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backgroundGradient: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -467,8 +491,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: spacing[6],
     paddingVertical: spacing[8],
   },
@@ -476,66 +500,66 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: spacing[6],
     ...shadows.lg,
   },
   title: {
-    fontSize: typography.sizes['2xl'],
+    fontSize: typography.sizes["2xl"],
     fontWeight: typography.weights.bold,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: spacing[4],
-    lineHeight: typography.lineHeights['2xl'],
+    lineHeight: typography.lineHeights["2xl"],
   },
   message: {
     fontSize: typography.sizes.base,
     fontWeight: typography.weights.normal,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: typography.lineHeights.relaxed,
     marginBottom: spacing[8],
     maxWidth: 300,
   },
   crisisContainer: {
-    width: '100%',
+    width: "100%",
     marginBottom: spacing[6],
   },
   crisisCard: {
     padding: spacing[4],
     borderRadius: borderRadius.lg,
     borderWidth: 1,
-    borderColor: '#FCA5A5',
+    borderColor: "#FCA5A5",
   },
   crisisTitle: {
     fontSize: typography.sizes.lg,
     fontWeight: typography.weights.semiBold,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: spacing[2],
   },
   crisisText: {
     fontSize: typography.sizes.sm,
     fontWeight: typography.weights.normal,
     lineHeight: typography.lineHeights.relaxed,
-    textAlign: 'center',
+    textAlign: "center",
   },
   errorDetailsContainer: {
     marginBottom: spacing[8],
-    alignItems: 'center',
+    alignItems: "center",
   },
   errorId: {
     fontSize: typography.sizes.xs,
     fontWeight: typography.weights.normal,
-    textAlign: 'center',
-    fontFamily: 'monospace',
+    textAlign: "center",
+    fontFamily: "monospace",
   },
   actionsContainer: {
-    width: '100%',
+    width: "100%",
     gap: spacing[3],
   },
   actionButton: {
-    width: '100%',
+    width: "100%",
     borderRadius: borderRadius.lg,
-    overflow: 'hidden',
+    overflow: "hidden",
     ...shadows.md,
   },
   primaryButton: {
@@ -549,9 +573,9 @@ const styles = StyleSheet.create({
   buttonGradient: {
     paddingVertical: spacing[4],
     paddingHorizontal: spacing[6],
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonIcon: {
     marginRight: spacing[2],
@@ -560,12 +584,12 @@ const styles = StyleSheet.create({
     color: colors.text.inverse,
     fontSize: typography.sizes.base,
     fontWeight: typography.weights.semiBold,
-    textAlign: 'center',
+    textAlign: "center",
   },
   secondaryButtonText: {
     fontSize: typography.sizes.base,
     fontWeight: typography.weights.medium,
-    textAlign: 'center',
+    textAlign: "center",
     paddingVertical: spacing[4],
     paddingHorizontal: spacing[6],
   },
@@ -576,8 +600,8 @@ const styles = StyleSheet.create({
   reportButtonText: {
     fontSize: typography.sizes.sm,
     fontWeight: typography.weights.medium,
-    textAlign: 'center',
-    textDecorationLine: 'underline',
+    textAlign: "center",
+    textDecorationLine: "underline",
   },
   encouragementContainer: {
     marginTop: spacing[8],
@@ -586,9 +610,9 @@ const styles = StyleSheet.create({
   encouragementText: {
     fontSize: typography.sizes.sm,
     fontWeight: typography.weights.normal,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: typography.lineHeights.relaxed,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
 });
 
@@ -599,9 +623,9 @@ export const withErrorBoundary = (Component, errorBoundaryProps = {}) => {
       <Component {...props} />
     </ErrorBoundary>
   );
-  
+
   WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
-  
+
   return WrappedComponent;
 };
 

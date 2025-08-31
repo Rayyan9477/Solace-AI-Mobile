@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useRef, useState, useMemo } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import {
   View,
   Text,
@@ -13,10 +13,15 @@ import {
   StatusBar,
 } from "react-native";
 
-import { useTheme } from "../shared/theme/ThemeContext";
-import { MentalHealthAccessibility } from "../shared/utils/accessibility";
-import { spacing, typography, borderRadius, shadows } from "../shared/theme/theme";
 import ThemeToggle from "../components/common/ThemeToggle";
+import { useTheme } from "../shared/theme/ThemeContext";
+import {
+  spacing,
+  typography,
+  borderRadius,
+  shadows,
+} from "../shared/theme/theme";
+import { MentalHealthAccessibility } from "../shared/utils/accessibility";
 
 const { width, height } = Dimensions.get("window");
 
@@ -146,7 +151,7 @@ const CoverPageScreen = () => {
         backgroundColor="transparent"
         translucent
       />
-      
+
       {/* Theme Toggle */}
       <View style={styles.themeToggleContainer}>
         <ThemeToggle showLabel={false} />
@@ -367,7 +372,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   themeToggleContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 50,
     right: 20,
     zIndex: 1000,

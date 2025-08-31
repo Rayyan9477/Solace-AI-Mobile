@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as SecureStore from "expo-secure-store";
-import * as Crypto from "expo-crypto";
 import axios from "axios";
+import * as Crypto from "expo-crypto";
+import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 
 // Environment configurations
@@ -58,12 +58,14 @@ const secureTokenManager = {
         // Generate a new encryption key
         key = await Crypto.digestStringAsync(
           Crypto.CryptoDigestAlgorithm.SHA256,
-          await Crypto.getRandomBytesAsync(32).then(bytes => 
-            Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('')
-          )
+          await Crypto.getRandomBytesAsync(32).then((bytes) =>
+            Array.from(bytes)
+              .map((b) => b.toString(16).padStart(2, "0"))
+              .join(""),
+          ),
         );
         await SecureStore.setItemAsync(ENCRYPTION_KEY, key, {
-          requireAuthentication: false // Don't require biometric for encryption key
+          requireAuthentication: false, // Don't require biometric for encryption key
         });
       }
       return key;
@@ -78,13 +80,13 @@ const secureTokenManager = {
       const key = await this.getEncryptionKey();
       // Use simple base64 encoding with key mixing for Expo compatibility
       const dataStr = JSON.stringify(data);
-      const keyBytes = key.split('').map(c => c.charCodeAt(0));
-      const dataBytes = dataStr.split('').map(c => c.charCodeAt(0));
-      
-      const encrypted = dataBytes.map((byte, i) => 
-        byte ^ keyBytes[i % keyBytes.length]
+      const keyBytes = key.split("").map((c) => c.charCodeAt(0));
+      const dataBytes = dataStr.split("").map((c) => c.charCodeAt(0));
+
+      const encrypted = dataBytes.map(
+        (byte, i) => byte ^ keyBytes[i % keyBytes.length],
       );
-      
+
       return btoa(String.fromCharCode(...encrypted));
     } catch (error) {
       if (__DEV__) console.error("Encryption error:", error);
@@ -95,13 +97,15 @@ const secureTokenManager = {
   async decryptData(encryptedData) {
     try {
       const key = await this.getEncryptionKey();
-      const keyBytes = key.split('').map(c => c.charCodeAt(0));
-      const encryptedBytes = Array.from(atob(encryptedData)).map(c => c.charCodeAt(0));
-      
-      const decrypted = encryptedBytes.map((byte, i) => 
-        byte ^ keyBytes[i % keyBytes.length]
+      const keyBytes = key.split("").map((c) => c.charCodeAt(0));
+      const encryptedBytes = Array.from(atob(encryptedData)).map((c) =>
+        c.charCodeAt(0),
       );
-      
+
+      const decrypted = encryptedBytes.map(
+        (byte, i) => byte ^ keyBytes[i % keyBytes.length],
+      );
+
       const decryptedStr = String.fromCharCode(...decrypted);
       return JSON.parse(decryptedStr);
     } catch (error) {
@@ -112,7 +116,7 @@ const secureTokenManager = {
 
   async getToken() {
     try {
-      if (Platform.OS === 'web') {
+      if (Platform.OS === "web") {
         // Use AsyncStorage for web with encryption
         const encryptedToken = await AsyncStorage.getItem(TOKEN_KEY);
         if (!encryptedToken) return null;
@@ -132,11 +136,11 @@ const secureTokenManager = {
   async setToken(token) {
     try {
       const encryptedToken = await this.encryptData(token);
-      if (Platform.OS === 'web') {
+      if (Platform.OS === "web") {
         await AsyncStorage.setItem(TOKEN_KEY, encryptedToken);
       } else {
         await SecureStore.setItemAsync(TOKEN_KEY, encryptedToken, {
-          requireAuthentication: false
+          requireAuthentication: false,
         });
       }
     } catch (error) {
@@ -147,12 +151,13 @@ const secureTokenManager = {
 
   async getRefreshToken() {
     try {
-      if (Platform.OS === 'web') {
+      if (Platform.OS === "web") {
         const encryptedToken = await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
         if (!encryptedToken) return null;
         return await this.decryptData(encryptedToken);
       } else {
-        const encryptedToken = await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+        const encryptedToken =
+          await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
         if (!encryptedToken) return null;
         return await this.decryptData(encryptedToken);
       }
@@ -165,11 +170,11 @@ const secureTokenManager = {
   async setRefreshToken(refreshToken) {
     try {
       const encryptedToken = await this.encryptData(refreshToken);
-      if (Platform.OS === 'web') {
+      if (Platform.OS === "web") {
         await AsyncStorage.setItem(REFRESH_TOKEN_KEY, encryptedToken);
       } else {
         await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, encryptedToken, {
-          requireAuthentication: false
+          requireAuthentication: false,
         });
       }
     } catch (error) {
@@ -180,7 +185,7 @@ const secureTokenManager = {
 
   async clearTokens() {
     try {
-      if (Platform.OS === 'web') {
+      if (Platform.OS === "web") {
         await AsyncStorage.multiRemove([TOKEN_KEY, REFRESH_TOKEN_KEY]);
       } else {
         await SecureStore.deleteItemAsync(TOKEN_KEY);

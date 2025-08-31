@@ -4,26 +4,85 @@
  * Separated from components for better performance and maintainability
  */
 
-import { getExercisesForConcern, getExerciseById } from '../constants/therapyExercises';
+import {
+  getExercisesForConcern,
+  getExerciseById,
+} from "../constants/therapyExercises";
 
 // Crisis keywords that require immediate attention
 const CRISIS_KEYWORDS = [
-  'harm', 'suicide', 'kill', 'end it', 'hurt myself', 'die', 'death',
-  'overdose', 'pills', 'knife', 'gun', 'bridge', 'rope'
+  "harm",
+  "suicide",
+  "kill",
+  "end it",
+  "hurt myself",
+  "die",
+  "death",
+  "overdose",
+  "pills",
+  "knife",
+  "gun",
+  "bridge",
+  "rope",
 ];
 
 // Emotional state detection patterns
 const EMOTION_PATTERNS = {
-  anxiety: ['anxious', 'anxiety', 'worried', 'panic', 'scared', 'nervous', 'stressed'],
-  depression: ['sad', 'depressed', 'down', 'hopeless', 'empty', 'numb', 'lonely'],
-  anger: ['angry', 'mad', 'furious', 'rage', 'frustrated', 'irritated', 'pissed'],
-  stress: ['stress', 'overwhelmed', 'too much', 'pressure', 'burden', 'exhausted'],
-  grief: ['loss', 'died', 'death', 'grief', 'mourning', 'miss', 'passed away'],
-  trauma: ['trauma', 'ptsd', 'flashback', 'nightmare', 'triggered', 'assault'],
-  relationships: ['relationship', 'partner', 'family', 'friend', 'divorce', 'breakup'],
-  work: ['job', 'work', 'career', 'boss', 'colleague', 'unemployed', 'fired'],
-  sleep: ['sleep', 'insomnia', 'tired', 'exhausted', 'nightmare', 'dream'],
-  self_esteem: ['worthless', 'failure', 'stupid', 'ugly', 'useless', 'hate myself']
+  anxiety: [
+    "anxious",
+    "anxiety",
+    "worried",
+    "panic",
+    "scared",
+    "nervous",
+    "stressed",
+  ],
+  depression: [
+    "sad",
+    "depressed",
+    "down",
+    "hopeless",
+    "empty",
+    "numb",
+    "lonely",
+  ],
+  anger: [
+    "angry",
+    "mad",
+    "furious",
+    "rage",
+    "frustrated",
+    "irritated",
+    "pissed",
+  ],
+  stress: [
+    "stress",
+    "overwhelmed",
+    "too much",
+    "pressure",
+    "burden",
+    "exhausted",
+  ],
+  grief: ["loss", "died", "death", "grief", "mourning", "miss", "passed away"],
+  trauma: ["trauma", "ptsd", "flashback", "nightmare", "triggered", "assault"],
+  relationships: [
+    "relationship",
+    "partner",
+    "family",
+    "friend",
+    "divorce",
+    "breakup",
+  ],
+  work: ["job", "work", "career", "boss", "colleague", "unemployed", "fired"],
+  sleep: ["sleep", "insomnia", "tired", "exhausted", "nightmare", "dream"],
+  self_esteem: [
+    "worthless",
+    "failure",
+    "stupid",
+    "ugly",
+    "useless",
+    "hate myself",
+  ],
 };
 
 // Therapeutic response templates
@@ -57,7 +116,7 @@ const RESPONSE_TEMPLATES = {
     "You've been dealing with a lot, and yet you're still here seeking support. That's admirable.",
     "It sounds like you've been trying hard to manage this on your own. You don't have to do it alone.",
     "Your insight into your own experience is really valuable. That awareness is a strength.",
-  ]
+  ],
 };
 
 /**
@@ -65,26 +124,26 @@ const RESPONSE_TEMPLATES = {
  */
 export const detectCrisis = (input) => {
   const lowercaseInput = input.toLowerCase();
-  
+
   for (const keyword of CRISIS_KEYWORDS) {
     if (lowercaseInput.includes(keyword)) {
       return {
         isCrisis: true,
-        urgency: 'high',
+        urgency: "high",
         response: {
           text: "I'm very concerned about what you're sharing with me. If you're having thoughts of hurting yourself, please reach out for immediate help. You can contact the 988 Suicide & Crisis Lifeline (call or text 988) or go to your nearest emergency room. Your life has value, and there are people who want to help you.",
           urgent: true,
           suggestions: [
             "I need immediate help",
             "I'm safe for now",
-            "Tell me about other resources"
+            "Tell me about other resources",
           ],
-          actions: ['call_crisis_line', 'emergency_contact', 'safety_plan']
-        }
+          actions: ["call_crisis_line", "emergency_contact", "safety_plan"],
+        },
       };
     }
   }
-  
+
   return { isCrisis: false };
 };
 
@@ -94,7 +153,7 @@ export const detectCrisis = (input) => {
 export const detectEmotions = (input) => {
   const lowercaseInput = input.toLowerCase();
   const detectedEmotions = [];
-  
+
   for (const [emotion, patterns] of Object.entries(EMOTION_PATTERNS)) {
     for (const pattern of patterns) {
       if (lowercaseInput.includes(pattern)) {
@@ -103,7 +162,7 @@ export const detectEmotions = (input) => {
       }
     }
   }
-  
+
   return detectedEmotions;
 };
 
@@ -112,49 +171,63 @@ export const detectEmotions = (input) => {
  */
 export const generateTherapeuticResponse = (input, context = {}) => {
   const lowercaseInput = input.toLowerCase();
-  
+
   // Check for crisis first
   const crisisCheck = detectCrisis(input);
   if (crisisCheck.isCrisis) {
     return crisisCheck.response;
   }
-  
+
   // Handle exercise completion
   if (context.currentExercise && context.exerciseStep !== undefined) {
     return handleExerciseProgress(context);
   }
-  
+
   // Detect emotions
   const emotions = detectEmotions(input);
-  
+
   // Generate response based on detected emotions
   if (emotions.length > 0) {
     return generateEmotionalResponse(emotions[0], input);
   }
-  
+
   // Handle specific therapeutic topics
-  if (lowercaseInput.includes('therapy') || lowercaseInput.includes('counseling')) {
+  if (
+    lowercaseInput.includes("therapy") ||
+    lowercaseInput.includes("counseling")
+  ) {
     return {
       text: "I'm glad you're open to therapeutic support. Therapy can be a powerful tool for healing and growth. What draws you to therapy right now?",
-      suggestions: ["I want to understand myself better", "I'm struggling with specific issues", "I want to develop coping skills"]
+      suggestions: [
+        "I want to understand myself better",
+        "I'm struggling with specific issues",
+        "I want to develop coping skills",
+      ],
     };
   }
-  
-  if (lowercaseInput.includes('medication') || lowercaseInput.includes('pills')) {
+
+  if (
+    lowercaseInput.includes("medication") ||
+    lowercaseInput.includes("pills")
+  ) {
     return {
       text: "Medication can be an important part of mental health treatment for some people. While I can't provide medical advice, I'd encourage you to discuss this with a healthcare provider or psychiatrist who can properly evaluate your needs.",
-      suggestions: ["Tell me about therapy options", "I want to try non-medication approaches", "How do I find a psychiatrist?"]
+      suggestions: [
+        "Tell me about therapy options",
+        "I want to try non-medication approaches",
+        "How do I find a psychiatrist?",
+      ],
     };
   }
-  
+
   // Default supportive responses
   const responseType = getRandomResponseType();
   const template = getRandomTemplate(responseType);
-  
+
   return {
     text: template,
     suggestions: generateContextualSuggestions(emotions),
-    type: responseType
+    type: responseType,
   };
 };
 
@@ -164,25 +237,31 @@ export const generateTherapeuticResponse = (input, context = {}) => {
 const handleExerciseProgress = (context) => {
   const { currentExercise, exerciseStep } = context;
   const exercise = getExerciseById(currentExercise);
-  
+
   if (!exercise) {
     return {
       text: "I'm sorry, there seems to be an issue with the exercise. Let's continue our conversation instead. How are you feeling right now?",
-      type: 'error'
+      type: "error",
     };
   }
-  
+
   if (exerciseStep < exercise.prompts.length - 1) {
     return {
       text: exercise.prompts[exerciseStep + 1],
-      type: 'exercise_prompt',
-      exerciseStep: exerciseStep + 1
+      type: "exercise_prompt",
+      exerciseStep: exerciseStep + 1,
     };
   } else {
     return {
-      text: exercise.completionMessage || "That was wonderful work on this exercise. How are you feeling now? Would you like to continue our conversation or try another exercise?",
-      type: 'exercise_complete',
-      suggestions: ["How do I feel now", "Try another exercise", "Continue talking"]
+      text:
+        exercise.completionMessage ||
+        "That was wonderful work on this exercise. How are you feeling now? Would you like to continue our conversation or try another exercise?",
+      type: "exercise_complete",
+      suggestions: [
+        "How do I feel now",
+        "Try another exercise",
+        "Continue talking",
+      ],
     };
   }
 };
@@ -197,39 +276,39 @@ const generateEmotionalResponse = (emotion, input) => {
       suggestions: [
         "Let's try grounding exercise",
         "I want to talk about it",
-        "What helps with anxiety?"
+        "What helps with anxiety?",
       ],
-      exercises: getExercisesForConcern('anxiety').slice(0, 2)
+      exercises: getExercisesForConcern("anxiety").slice(0, 2),
     },
     depression: {
       text: "Thank you for sharing that you're feeling down. It takes courage to reach out when we're struggling. These feelings are real and important, and you don't have to go through this alone. Sometimes when we're feeling this way, it can help to talk through what's contributing to these feelings. What's been weighing on you lately?",
       suggestions: [
         "Work/school stress",
-        "Relationship issues", 
-        "I don't know why"
+        "Relationship issues",
+        "I don't know why",
       ],
-      exercises: getExercisesForConcern('depression').slice(0, 2)
+      exercises: getExercisesForConcern("depression").slice(0, 2),
     },
     anger: {
       text: "Anger and frustration are normal emotions, though they can feel overwhelming sometimes. It sounds like something has really upset you. Anger often signals that something important to us has been threatened or violated. What's been triggering these feelings for you?",
       suggestions: [
         "Someone hurt me",
         "Things aren't fair",
-        "I can't control things"
+        "I can't control things",
       ],
-      exercises: getExercisesForConcern('stress').slice(0, 2)
+      exercises: getExercisesForConcern("stress").slice(0, 2),
     },
     stress: {
       text: "Feeling overwhelmed is so common, especially when life feels like it's moving too fast or there's too much on your plate. Sometimes breaking things down into smaller, manageable pieces can help. What feels most overwhelming to you right now?",
       suggestions: [
         "Too many responsibilities",
         "Emotional stress",
-        "Everything feels chaotic"
+        "Everything feels chaotic",
       ],
-      exercises: getExercisesForConcern('stress').slice(0, 2)
-    }
+      exercises: getExercisesForConcern("stress").slice(0, 2),
+    },
   };
-  
+
   return responses[emotion] || generateGenericResponse();
 };
 
@@ -241,16 +320,18 @@ const generateGenericResponse = () => {
     "Thank you for sharing that with me. I can hear that this is important to you. Can you tell me more about how this is affecting you?",
     "I appreciate you opening up. It's not always easy to put our feelings into words. What would feel most helpful for you right now?",
     "That sounds really significant. I'm here to listen and support you through this. How long have you been dealing with this?",
-    "I hear what you're saying, and I want you to know that your feelings matter. What's been the hardest part about this for you?"
+    "I hear what you're saying, and I want you to know that your feelings matter. What's been the hardest part about this for you?",
   ];
-  
+
   return {
-    text: supportiveResponses[Math.floor(Math.random() * supportiveResponses.length)],
+    text: supportiveResponses[
+      Math.floor(Math.random() * supportiveResponses.length)
+    ],
     suggestions: [
       "Tell me more",
-      "I need coping strategies", 
-      "How can I feel better?"
-    ]
+      "I need coping strategies",
+      "How can I feel better?",
+    ],
   };
 };
 
@@ -258,7 +339,7 @@ const generateGenericResponse = () => {
  * Get random response type for variety
  */
 const getRandomResponseType = () => {
-  const types = ['validation', 'empathy', 'exploration', 'coping', 'strengths'];
+  const types = ["validation", "empathy", "exploration", "coping", "strengths"];
   return types[Math.floor(Math.random() * types.length)];
 };
 
@@ -274,23 +355,23 @@ const getRandomTemplate = (type) => {
  * Generate contextual suggestions
  */
 const generateContextualSuggestions = (emotions) => {
-  if (emotions.includes('anxiety')) {
-    return ["I'm feeling anxious", "I need grounding techniques", "What helps with worry?"];
+  if (emotions.includes("anxiety")) {
+    return [
+      "I'm feeling anxious",
+      "I need grounding techniques",
+      "What helps with worry?",
+    ];
   }
-  
-  if (emotions.includes('depression')) {
+
+  if (emotions.includes("depression")) {
     return ["I'm feeling sad", "I need motivation", "How do I feel better?"];
   }
-  
-  if (emotions.includes('stress')) {
+
+  if (emotions.includes("stress")) {
     return ["I'm overwhelmed", "I need relaxation", "How do I manage stress?"];
   }
-  
-  return [
-    "Tell me more",
-    "I need support",
-    "What should I do?"
-  ];
+
+  return ["Tell me more", "I need support", "What should I do?"];
 };
 
 /**
@@ -302,22 +383,22 @@ export const getFollowUpQuestions = (emotion, context) => {
       "When did you first notice these anxious feelings?",
       "What situations tend to trigger your anxiety?",
       "How does anxiety show up in your body?",
-      "What thoughts go through your mind when you're anxious?"
+      "What thoughts go through your mind when you're anxious?",
     ],
     depression: [
       "What does a typical day look like for you when you're feeling this way?",
       "Are there times when you feel a little better, even briefly?",
       "What activities used to bring you joy?",
-      "How is this affecting your sleep and energy levels?"
+      "How is this affecting your sleep and energy levels?",
     ],
     stress: [
       "What are the main sources of stress in your life right now?",
       "How do you usually try to manage stress?",
       "What would need to change for you to feel less overwhelmed?",
-      "Are you taking care of your basic needs - sleep, food, movement?"
-    ]
+      "Are you taking care of your basic needs - sleep, food, movement?",
+    ],
   };
-  
+
   const emotionQuestions = questions[emotion] || [];
   return emotionQuestions[Math.floor(Math.random() * emotionQuestions.length)];
 };

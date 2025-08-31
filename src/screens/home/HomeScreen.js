@@ -230,19 +230,13 @@ const HomeScreen = ({ navigation }) => {
           ]}
         >
           <View style={styles.greetingSection}>
-            <Text
-              style={[styles.greeting, { color: 'rgba(255,255,255,0.8)' }]}
-            >
+            <Text style={[styles.greeting, { color: "rgba(255,255,255,0.8)" }]}>
               {getTimeBasedGreeting()}
             </Text>
-            <Text
-              style={[styles.username, { color: '#FFFFFF' }]}
-            >
+            <Text style={[styles.username, { color: "#FFFFFF" }]}>
               Hi, {userName}!
             </Text>
-            <Text
-              style={[styles.subtitle, { color: 'rgba(255,255,255,0.7)' }]}
-            >
+            <Text style={[styles.subtitle, { color: "rgba(255,255,255,0.7)" }]}>
               How are you feeling today?
             </Text>
           </View>
@@ -251,15 +245,11 @@ const HomeScreen = ({ navigation }) => {
             <TouchableOpacity
               style={[
                 styles.headerButton,
-                { backgroundColor: 'rgba(255,255,255,0.2)' },
+                { backgroundColor: "rgba(255,255,255,0.2)" },
               ]}
               onPress={() => navigation.navigate("Search")}
             >
-              <ThemedFreudIcon
-                name="search"
-                size={20}
-                color="#FFFFFF"
-              />
+              <ThemedFreudIcon name="search" size={20} color="#FFFFFF" />
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -271,11 +261,7 @@ const HomeScreen = ({ navigation }) => {
                 /* Emergency support */
               }}
             >
-              <ThemedFreudIcon
-                name="settings"
-                size={20}
-                color="#FFFFFF"
-              />
+              <ThemedFreudIcon name="settings" size={20} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
         </Animated.View>

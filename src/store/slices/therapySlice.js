@@ -1,19 +1,19 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Async thunks for therapy session management
 export const saveTherapySession = createAsyncThunk(
-  'therapy/saveSession',
+  "therapy/saveSession",
   async (sessionData, { rejectWithValue }) => {
     try {
       const sessionKey = `therapy_session_${sessionData.sessionId}`;
       await AsyncStorage.setItem(sessionKey, JSON.stringify(sessionData));
-      
+
       // Also update session history
-      const historyKey = 'therapy_session_history';
+      const historyKey = "therapy_session_history";
       const existingHistory = await AsyncStorage.getItem(historyKey);
       const history = existingHistory ? JSON.parse(existingHistory) : [];
-      
+
       const sessionSummary = {
         sessionId: sessionData.sessionId,
         startTime: sessionData.startTime,
@@ -24,21 +24,21 @@ export const saveTherapySession = createAsyncThunk(
         mood: sessionData.mood,
         tags: sessionData.tags || [],
       };
-      
+
       history.unshift(sessionSummary);
       // Keep only last 50 sessions
       const trimmedHistory = history.slice(0, 50);
       await AsyncStorage.setItem(historyKey, JSON.stringify(trimmedHistory));
-      
+
       return { sessionData, sessionSummary };
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const loadTherapySession = createAsyncThunk(
-  'therapy/loadSession',
+  "therapy/loadSession",
   async (sessionId, { rejectWithValue }) => {
     try {
       const sessionKey = `therapy_session_${sessionId}`;
@@ -47,46 +47,46 @@ export const loadTherapySession = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const loadTherapyHistory = createAsyncThunk(
-  'therapy/loadHistory',
+  "therapy/loadHistory",
   async (_, { rejectWithValue }) => {
     try {
-      const historyKey = 'therapy_session_history';
+      const historyKey = "therapy_session_history";
       const historyData = await AsyncStorage.getItem(historyKey);
       return historyData ? JSON.parse(historyData) : [];
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const saveTherapyPreferences = createAsyncThunk(
-  'therapy/savePreferences',
+  "therapy/savePreferences",
   async (preferences, { rejectWithValue }) => {
     try {
-      const preferencesKey = 'therapy_preferences';
+      const preferencesKey = "therapy_preferences";
       await AsyncStorage.setItem(preferencesKey, JSON.stringify(preferences));
       return preferences;
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const loadTherapyPreferences = createAsyncThunk(
-  'therapy/loadPreferences',
+  "therapy/loadPreferences",
   async (_, { rejectWithValue }) => {
     try {
-      const preferencesKey = 'therapy_preferences';
+      const preferencesKey = "therapy_preferences";
       const preferencesData = await AsyncStorage.getItem(preferencesKey);
       return preferencesData ? JSON.parse(preferencesData) : null;
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 // Initial state
@@ -101,40 +101,40 @@ const initialState = {
     messages: [],
     exercisesCompleted: [],
     currentExercise: null,
-    interactionMode: 'text', // 'text', 'voice', 'guided'
+    interactionMode: "text", // 'text', 'voice', 'guided'
     mood: null,
     tags: [],
-    notes: '',
+    notes: "",
   },
-  
+
   // Session history
   sessionHistory: [],
-  
+
   // User preferences
   preferences: {
-    preferredInteractionMode: 'text',
+    preferredInteractionMode: "text",
     enableVoiceRecording: true,
     sessionReminders: true,
-    reminderTime: '19:00', // 7 PM default
+    reminderTime: "19:00", // 7 PM default
     emergencyContacts: [],
     crisisResources: [
       {
-        name: '988 Suicide & Crisis Lifeline',
-        number: '988',
-        description: '24/7 suicide prevention and crisis support',
-        type: 'crisis'
+        name: "988 Suicide & Crisis Lifeline",
+        number: "988",
+        description: "24/7 suicide prevention and crisis support",
+        type: "crisis",
       },
       {
-        name: 'Crisis Text Line',
-        number: '741741',
-        description: 'Text HOME to 741741 for crisis support',
-        type: 'text'
-      }
+        name: "Crisis Text Line",
+        number: "741741",
+        description: "Text HOME to 741741 for crisis support",
+        type: "text",
+      },
     ],
     dataRetention: 90, // days
     shareDataForResearch: false,
   },
-  
+
   // Therapy insights and progress
   insights: {
     totalSessions: 0,
@@ -145,7 +145,7 @@ const initialState = {
     progressNotes: [],
     achievements: [],
   },
-  
+
   // App state
   loading: false,
   error: null,
@@ -155,7 +155,7 @@ const initialState = {
 
 // Therapy slice
 const therapySlice = createSlice({
-  name: 'therapy',
+  name: "therapy",
   initialState,
   reducers: {
     // Session management
@@ -171,30 +171,32 @@ const therapySlice = createSlice({
       };
       state.error = null;
     },
-    
+
     endSession: (state, action) => {
       const { endTime, mood, notes } = action.payload || {};
       if (state.currentSession.isActive) {
         state.currentSession.isActive = false;
         state.currentSession.endTime = endTime || new Date().toISOString();
         state.currentSession.duration = Math.floor(
-          (new Date(state.currentSession.endTime) - new Date(state.currentSession.startTime)) / 1000
+          (new Date(state.currentSession.endTime) -
+            new Date(state.currentSession.startTime)) /
+            1000,
         );
         if (mood) state.currentSession.mood = mood;
         if (notes) state.currentSession.notes = notes;
       }
     },
-    
+
     pauseSession: (state) => {
       // For future implementation
       state.currentSession.isPaused = true;
     },
-    
+
     resumeSession: (state) => {
       // For future implementation
       state.currentSession.isPaused = false;
     },
-    
+
     // Message management
     addMessage: (state, action) => {
       const message = action.payload;
@@ -203,10 +205,12 @@ const therapySlice = createSlice({
         timestamp: message.timestamp || new Date().toISOString(),
       });
     },
-    
+
     updateMessage: (state, action) => {
       const { messageId, updates } = action.payload;
-      const messageIndex = state.currentSession.messages.findIndex(m => m.id === messageId);
+      const messageIndex = state.currentSession.messages.findIndex(
+        (m) => m.id === messageId,
+      );
       if (messageIndex !== -1) {
         state.currentSession.messages[messageIndex] = {
           ...state.currentSession.messages[messageIndex],
@@ -214,13 +218,13 @@ const therapySlice = createSlice({
         };
       }
     },
-    
+
     // Exercise management
     startExercise: (state, action) => {
       const exerciseId = action.payload;
       state.currentSession.currentExercise = exerciseId;
     },
-    
+
     completeExercise: (state, action) => {
       const { exerciseId, completedAt, reflection } = action.payload;
       state.currentSession.exercisesCompleted.push({
@@ -230,12 +234,12 @@ const therapySlice = createSlice({
       });
       state.currentSession.currentExercise = null;
     },
-    
+
     // Interaction mode
     setInteractionMode: (state, action) => {
       state.currentSession.interactionMode = action.payload;
     },
-    
+
     // Session metadata
     addSessionTag: (state, action) => {
       const tag = action.payload;
@@ -243,20 +247,22 @@ const therapySlice = createSlice({
         state.currentSession.tags.push(tag);
       }
     },
-    
+
     removeSessionTag: (state, action) => {
       const tag = action.payload;
-      state.currentSession.tags = state.currentSession.tags.filter(t => t !== tag);
+      state.currentSession.tags = state.currentSession.tags.filter(
+        (t) => t !== tag,
+      );
     },
-    
+
     setSessionMood: (state, action) => {
       state.currentSession.mood = action.payload;
     },
-    
+
     updateSessionNotes: (state, action) => {
       state.currentSession.notes = action.payload;
     },
-    
+
     // Preferences
     updatePreferences: (state, action) => {
       state.preferences = {
@@ -264,18 +270,19 @@ const therapySlice = createSlice({
         ...action.payload,
       };
     },
-    
+
     addEmergencyContact: (state, action) => {
       state.preferences.emergencyContacts.push(action.payload);
     },
-    
+
     removeEmergencyContact: (state, action) => {
       const contactId = action.payload;
-      state.preferences.emergencyContacts = state.preferences.emergencyContacts.filter(
-        contact => contact.id !== contactId
-      );
+      state.preferences.emergencyContacts =
+        state.preferences.emergencyContacts.filter(
+          (contact) => contact.id !== contactId,
+        );
     },
-    
+
     // Insights and progress
     updateInsights: (state, action) => {
       state.insights = {
@@ -283,31 +290,31 @@ const therapySlice = createSlice({
         ...action.payload,
       };
     },
-    
+
     addProgressNote: (state, action) => {
       state.insights.progressNotes.push({
         ...action.payload,
         timestamp: new Date().toISOString(),
       });
     },
-    
+
     addAchievement: (state, action) => {
       state.insights.achievements.push({
         ...action.payload,
         unlockedAt: new Date().toISOString(),
       });
     },
-    
+
     // Error handling
     clearError: (state) => {
       state.error = null;
     },
-    
+
     setError: (state, action) => {
       state.error = action.payload;
     },
   },
-  
+
   extraReducers: (builder) => {
     builder
       // Save session
@@ -319,7 +326,9 @@ const therapySlice = createSlice({
         state.sessionSaving = false;
         const { sessionSummary } = action.payload;
         // Add to history if not already there
-        const existingIndex = state.sessionHistory.findIndex(s => s.sessionId === sessionSummary.sessionId);
+        const existingIndex = state.sessionHistory.findIndex(
+          (s) => s.sessionId === sessionSummary.sessionId,
+        );
         if (existingIndex === -1) {
           state.sessionHistory.unshift(sessionSummary);
         } else {
@@ -327,14 +336,18 @@ const therapySlice = createSlice({
         }
         // Update insights
         state.insights.totalSessions = state.sessionHistory.length;
-        state.insights.totalDuration = state.sessionHistory.reduce((total, session) => total + (session.duration || 0), 0);
-        state.insights.averageSessionLength = state.insights.totalDuration / state.insights.totalSessions;
+        state.insights.totalDuration = state.sessionHistory.reduce(
+          (total, session) => total + (session.duration || 0),
+          0,
+        );
+        state.insights.averageSessionLength =
+          state.insights.totalDuration / state.insights.totalSessions;
       })
       .addCase(saveTherapySession.rejected, (state, action) => {
         state.sessionSaving = false;
         state.error = action.payload;
       })
-      
+
       // Load session
       .addCase(loadTherapySession.pending, (state) => {
         state.loading = true;
@@ -350,7 +363,7 @@ const therapySlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      
+
       // Load history
       .addCase(loadTherapyHistory.pending, (state) => {
         state.loading = true;
@@ -361,16 +374,20 @@ const therapySlice = createSlice({
         state.sessionHistory = action.payload;
         // Update insights
         state.insights.totalSessions = state.sessionHistory.length;
-        state.insights.totalDuration = state.sessionHistory.reduce((total, session) => total + (session.duration || 0), 0);
+        state.insights.totalDuration = state.sessionHistory.reduce(
+          (total, session) => total + (session.duration || 0),
+          0,
+        );
         if (state.insights.totalSessions > 0) {
-          state.insights.averageSessionLength = state.insights.totalDuration / state.insights.totalSessions;
+          state.insights.averageSessionLength =
+            state.insights.totalDuration / state.insights.totalSessions;
         }
       })
       .addCase(loadTherapyHistory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      
+
       // Preferences
       .addCase(saveTherapyPreferences.pending, (state) => {
         state.preferencesLoading = true;
@@ -384,7 +401,7 @@ const therapySlice = createSlice({
         state.preferencesLoading = false;
         state.error = action.payload;
       })
-      
+
       .addCase(loadTherapyPreferences.pending, (state) => {
         state.preferencesLoading = true;
         state.error = null;
@@ -438,13 +455,18 @@ export const selectTherapyInsights = (state) => state.therapy.insights;
 export const selectTherapyLoading = (state) => state.therapy.loading;
 export const selectTherapyError = (state) => state.therapy.error;
 export const selectSessionSaving = (state) => state.therapy.sessionSaving;
-export const selectPreferencesLoading = (state) => state.therapy.preferencesLoading;
+export const selectPreferencesLoading = (state) =>
+  state.therapy.preferencesLoading;
 
 // Computed selectors
-export const selectIsSessionActive = (state) => state.therapy.currentSession.isActive;
-export const selectCurrentExercise = (state) => state.therapy.currentSession.currentExercise;
-export const selectInteractionMode = (state) => state.therapy.currentSession.interactionMode;
-export const selectSessionMessages = (state) => state.therapy.currentSession.messages;
+export const selectIsSessionActive = (state) =>
+  state.therapy.currentSession.isActive;
+export const selectCurrentExercise = (state) =>
+  state.therapy.currentSession.currentExercise;
+export const selectInteractionMode = (state) =>
+  state.therapy.currentSession.interactionMode;
+export const selectSessionMessages = (state) =>
+  state.therapy.currentSession.messages;
 export const selectSessionDuration = (state) => {
   const session = state.therapy.currentSession;
   if (!session.isActive || !session.startTime) return 0;

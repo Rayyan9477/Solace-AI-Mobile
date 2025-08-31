@@ -4,14 +4,14 @@ import { View, Text, StyleSheet } from "react-native";
 import { useFixedTheme } from "./FixedThemeProvider";
 import Card from "./common/Card";
 
-const FeatureCard = ({ 
-  icon, 
-  title, 
-  description, 
-  color, 
+const FeatureCard = ({
+  icon,
+  title,
+  description,
+  color,
   onPress,
   style = {},
-  ...props 
+  ...props
 }) => {
   const { theme } = useFixedTheme();
 
@@ -25,8 +25,8 @@ const FeatureCard = ({
       <View
         style={[
           styles.iconContainer,
-          { 
-            backgroundColor: (color || theme.colors.primary) + "20" 
+          {
+            backgroundColor: (color || theme.colors.primary) + "20",
           },
         ]}
       >

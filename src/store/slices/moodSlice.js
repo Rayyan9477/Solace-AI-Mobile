@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 import apiService from "../../services/api";
 
 // Async thunk for logging mood
@@ -17,11 +18,11 @@ export const logMood = createAsyncThunk(
 
       return moodEntry;
     } catch (error) {
-      console.error('Mood logging error:', error);
+      console.error("Mood logging error:", error);
       return rejectWithValue(
-        error.response?.data?.message || 
-        error.message || 
-        'Failed to log mood. Please try again.'
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to log mood. Please try again.",
       );
     }
   },
@@ -33,14 +34,17 @@ export const fetchMoodHistory = createAsyncThunk(
   async ({ startDate, endDate } = {}, { rejectWithValue }) => {
     try {
       // Real API call using the mood service
-      const moodHistory = await apiService.mood.getMoodHistory(startDate, endDate);
+      const moodHistory = await apiService.mood.getMoodHistory(
+        startDate,
+        endDate,
+      );
       return moodHistory;
     } catch (error) {
-      console.error('Mood history fetch error:', error);
+      console.error("Mood history fetch error:", error);
       return rejectWithValue(
-        error.response?.data?.message || 
-        error.message || 
-        'Failed to fetch mood history. Please try again.'
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to fetch mood history. Please try again.",
       );
     }
   },

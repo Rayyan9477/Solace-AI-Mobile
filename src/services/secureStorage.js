@@ -3,17 +3,17 @@
  * Implements HIPAA-compliant encryption and secure storage for sensitive mental health data
  */
 
-import * as SecureStore from 'expo-secure-store';
-import * as Crypto from 'expo-crypto';
-import CryptoJS from 'crypto-js';
-import { Platform } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import CryptoJS from "crypto-js";
+import * as Crypto from "expo-crypto";
+import * as SecureStore from "expo-secure-store";
+import { Platform } from "react-native";
 
 class SecureStorageService {
   constructor() {
     this.encryptionKey = null;
     this.keyInitialized = false;
-    this.serviceName = 'SolaceAI_SecureStorage';
+    this.serviceName = "SolaceAI_SecureStorage";
   }
 
   /**
@@ -26,20 +26,23 @@ class SecureStorageService {
       }
 
       // For React Native platforms with SecureStore support
-      if (Platform.OS !== 'web') {
-        let storedKey = await SecureStore.getItemAsync('__secure_master_key__', {
-          requireAuthentication: false, // Can be enabled for biometric protection
-          keychainService: this.serviceName,
-        });
+      if (Platform.OS !== "web") {
+        let storedKey = await SecureStore.getItemAsync(
+          "__secure_master_key__",
+          {
+            requireAuthentication: false, // Can be enabled for biometric protection
+            keychainService: this.serviceName,
+          },
+        );
 
         if (!storedKey) {
           // Generate cryptographically secure 256-bit key
           const keyBytes = await Crypto.getRandomBytesAsync(32);
           storedKey = Array.from(keyBytes)
-            .map(b => b.toString(16).padStart(2, '0'))
-            .join('');
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
 
-          await SecureStore.setItemAsync('__secure_master_key__', storedKey, {
+          await SecureStore.setItemAsync("__secure_master_key__", storedKey, {
             requireAuthentication: false,
             keychainService: this.serviceName,
           });
@@ -48,27 +51,30 @@ class SecureStorageService {
         this.encryptionKey = storedKey;
       } else {
         // Web fallback - use secure session storage with warning
-        console.warn('Web platform: Using session storage for encryption key. Consider additional security measures.');
-        
-        let storedKey = sessionStorage.getItem('__secure_session_key__');
+        if (Platform.OS === "web" && typeof window !== "undefined" && typeof sessionStorage !== "undefined") {
+          console.warn(
+            "Web platform: Using session storage for encryption key. Consider additional security measures.",
+          );
+
+          let storedKey = sessionStorage.getItem("__secure_session_key__");
         if (!storedKey) {
           // Generate secure key for session
           const keyArray = new Uint8Array(32);
           crypto.getRandomValues(keyArray);
           storedKey = Array.from(keyArray)
-            .map(b => b.toString(16).padStart(2, '0'))
-            .join('');
-          
-          sessionStorage.setItem('__secure_session_key__', storedKey);
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
+
+          sessionStorage.setItem("__secure_session_key__", storedKey);
         }
-        
+
         this.encryptionKey = storedKey;
       }
 
       this.keyInitialized = true;
     } catch (error) {
-      console.error('Failed to initialize encryption key:', error);
-      throw new Error('Secure storage initialization failed');
+      console.error("Failed to initialize encryption key:", error);
+      throw new Error("Secure storage initialization failed");
     }
   }
 
@@ -77,31 +83,31 @@ class SecureStorageService {
    */
   async encryptData(data) {
     await this.initializeKey();
-    
+
     try {
       const dataString = JSON.stringify(data);
-      
+
       // Generate random IV (Initialization Vector)
       const iv = CryptoJS.lib.WordArray.random(16);
-      
+
       // Encrypt using AES-256-CBC (GCM not available in crypto-js for React Native)
       const encrypted = CryptoJS.AES.encrypt(dataString, this.encryptionKey, {
-        iv: iv,
+        iv,
         mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
+        padding: CryptoJS.pad.Pkcs7,
       });
 
       // Combine IV and encrypted data
       const combined = iv.concat(encrypted.ciphertext);
-      
+
       return {
         encrypted: combined.toString(CryptoJS.enc.Base64),
-        algorithm: 'AES-256-CBC',
-        timestamp: Date.now()
+        algorithm: "AES-256-CBC",
+        timestamp: Date.now(),
       };
     } catch (error) {
-      console.error('Encryption failed:', error);
-      throw new Error('Data encryption failed');
+      console.error("Encryption failed:", error);
+      throw new Error("Data encryption failed");
     }
   }
 
@@ -110,10 +116,10 @@ class SecureStorageService {
    */
   async decryptData(encryptedData) {
     await this.initializeKey();
-    
+
     try {
       if (!encryptedData || !encryptedData.encrypted) {
-        throw new Error('Invalid encrypted data format');
+        throw new Error("Invalid encrypted data format");
       }
 
       // Parse the combined IV and ciphertext
@@ -123,25 +129,25 @@ class SecureStorageService {
 
       // Decrypt
       const decrypted = CryptoJS.AES.decrypt(
-        { ciphertext: ciphertext },
+        { ciphertext },
         this.encryptionKey,
         {
-          iv: iv,
+          iv,
           mode: CryptoJS.mode.CBC,
-          padding: CryptoJS.pad.Pkcs7
-        }
+          padding: CryptoJS.pad.Pkcs7,
+        },
       );
 
       const decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
-      
+
       if (!decryptedString) {
-        throw new Error('Decryption resulted in empty data');
+        throw new Error("Decryption resulted in empty data");
       }
 
       return JSON.parse(decryptedString);
     } catch (error) {
-      console.error('Decryption failed:', error);
-      throw new Error('Data decryption failed');
+      console.error("Decryption failed:", error);
+      throw new Error("Data decryption failed");
     }
   }
 
@@ -151,33 +157,38 @@ class SecureStorageService {
   async storeSecureData(key, data, options = {}) {
     try {
       const encryptedData = await this.encryptData(data);
-      
+
       // Add metadata for audit trail
       const secureEntry = {
         ...encryptedData,
-        dataType: options.dataType || 'mental_health_data',
+        dataType: options.dataType || "mental_health_data",
         createdAt: new Date().toISOString(),
-        version: '1.0',
-        sensitive: true
+        version: "1.0",
+        sensitive: true,
       };
 
-      if (Platform.OS !== 'web') {
-        await SecureStore.setItemAsync(`secure_${key}`, JSON.stringify(secureEntry), {
-          keychainService: this.serviceName,
-          requireAuthentication: options.requireBiometric || false,
-        });
+      if (Platform.OS !== "web") {
+        await SecureStore.setItemAsync(
+          `secure_${key}`,
+          JSON.stringify(secureEntry),
+          {
+            keychainService: this.serviceName,
+            requireAuthentication: options.requireBiometric || false,
+          },
+        );
       } else {
         // Web fallback with warning
-        console.warn('Web platform: Storing encrypted data in localStorage');
-        localStorage.setItem(`secure_${key}`, JSON.stringify(secureEntry));
+        if (Platform.OS === "web" && typeof window !== "undefined" && typeof localStorage !== "undefined") {
+          console.warn("Web platform: Storing encrypted data in localStorage");
+          localStorage.setItem(`secure_${key}`, JSON.stringify(secureEntry));
+        }
       }
 
       // Log access for audit trail (without sensitive data)
-      this.logDataAccess('STORE', key, options.dataType);
-      
+      this.logDataAccess("STORE", key, options.dataType);
     } catch (error) {
-      console.error('Secure storage failed:', error);
-      throw new Error('Failed to store sensitive data');
+      console.error("Secure storage failed:", error);
+      throw new Error("Failed to store sensitive data");
     }
   }
 
@@ -187,14 +198,16 @@ class SecureStorageService {
   async getSecureData(key, options = {}) {
     try {
       let storedData;
-      
-      if (Platform.OS !== 'web') {
+
+      if (Platform.OS !== "web") {
         storedData = await SecureStore.getItemAsync(`secure_${key}`, {
           keychainService: this.serviceName,
           requireAuthentication: options.requireBiometric || false,
         });
       } else {
-        storedData = localStorage.getItem(`secure_${key}`);
+        if (Platform.OS === "web" && typeof window !== "undefined" && typeof localStorage !== "undefined") {
+          storedData = localStorage.getItem(`secure_${key}`);
+        }
       }
 
       if (!storedData) {
@@ -205,12 +218,12 @@ class SecureStorageService {
       const decryptedData = await this.decryptData(secureEntry);
 
       // Log access for audit trail
-      this.logDataAccess('RETRIEVE', key, secureEntry.dataType);
+      this.logDataAccess("RETRIEVE", key, secureEntry.dataType);
 
       return decryptedData;
     } catch (error) {
-      console.error('Secure retrieval failed:', error);
-      throw new Error('Failed to retrieve sensitive data');
+      console.error("Secure retrieval failed:", error);
+      throw new Error("Failed to retrieve sensitive data");
     }
   }
 
@@ -219,20 +232,21 @@ class SecureStorageService {
    */
   async removeSecureData(key, options = {}) {
     try {
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         await SecureStore.deleteItemAsync(`secure_${key}`, {
           keychainService: this.serviceName,
         });
       } else {
-        localStorage.removeItem(`secure_${key}`);
+        if (Platform.OS === "web" && typeof window !== "undefined" && typeof localStorage !== "undefined") {
+          localStorage.removeItem(`secure_${key}`);
+        }
       }
 
       // Log access for audit trail
-      this.logDataAccess('DELETE', key, options.dataType);
-      
+      this.logDataAccess("DELETE", key, options.dataType);
     } catch (error) {
-      console.error('Secure deletion failed:', error);
-      throw new Error('Failed to delete sensitive data');
+      console.error("Secure deletion failed:", error);
+      throw new Error("Failed to delete sensitive data");
     }
   }
 
@@ -244,18 +258,18 @@ class SecureStorageService {
       // Double encryption for crisis data
       const firstEncryption = await this.encryptData(data);
       const secondEncryption = await this.encryptData(firstEncryption);
-      
+
       const crisisKey = `crisis_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
+
       await this.storeSecureData(crisisKey, secondEncryption, {
-        dataType: 'crisis_data',
-        requireBiometric: true
+        dataType: "crisis_data",
+        requireBiometric: true,
       });
 
       return crisisKey;
     } catch (error) {
-      console.error('Crisis data storage failed:', error);
-      throw new Error('Failed to store crisis data');
+      console.error("Crisis data storage failed:", error);
+      throw new Error("Failed to store crisis data");
     }
   }
 
@@ -270,13 +284,13 @@ class SecureStorageService {
         dataKey: this.hashKey(dataKey), // Hash the key for privacy
         dataType,
         platform: Platform.OS,
-        version: '1.0'
+        version: "1.0",
       };
 
       // Store audit log in non-sensitive storage
       this.storeAuditLog(auditEntry);
     } catch (error) {
-      console.warn('Audit logging failed:', error);
+      console.warn("Audit logging failed:", error);
     }
   }
 
@@ -285,19 +299,19 @@ class SecureStorageService {
    */
   async storeAuditLog(auditEntry) {
     try {
-      const auditLogs = await AsyncStorage.getItem('audit_logs');
+      const auditLogs = await AsyncStorage.getItem("audit_logs");
       const logs = auditLogs ? JSON.parse(auditLogs) : [];
-      
+
       logs.push(auditEntry);
-      
+
       // Keep only last 1000 entries
       if (logs.length > 1000) {
         logs.splice(0, logs.length - 1000);
       }
-      
-      await AsyncStorage.setItem('audit_logs', JSON.stringify(logs));
+
+      await AsyncStorage.setItem("audit_logs", JSON.stringify(logs));
     } catch (error) {
-      console.warn('Audit log storage failed:', error);
+      console.warn("Audit log storage failed:", error);
     }
   }
 
@@ -313,16 +327,18 @@ class SecureStorageService {
    */
   async clearAllSecureData() {
     try {
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         // Note: SecureStore doesn't have a clear all method
         // This would need to be implemented by tracking stored keys
-        console.warn('Clear all secure data: Individual key deletion required');
+        console.warn("Clear all secure data: Individual key deletion required");
       } else {
-        // Clear all secure items from localStorage
-        const keys = Object.keys(localStorage);
-        for (const key of keys) {
-          if (key.startsWith('secure_')) {
-            localStorage.removeItem(key);
+        if (Platform.OS === "web" && typeof window !== "undefined" && typeof localStorage !== "undefined") {
+          // Clear all secure items from localStorage
+          const keys = Object.keys(localStorage);
+          for (const key of keys) {
+            if (key.startsWith("secure_")) {
+              localStorage.removeItem(key);
+            }
           }
         }
       }
@@ -332,11 +348,10 @@ class SecureStorageService {
       this.keyInitialized = false;
 
       // Log the clear action
-      this.logDataAccess('CLEAR_ALL', 'all_data', 'all_types');
-      
+      this.logDataAccess("CLEAR_ALL", "all_data", "all_types");
     } catch (error) {
-      console.error('Failed to clear secure data:', error);
-      throw new Error('Failed to clear sensitive data');
+      console.error("Failed to clear secure data:", error);
+      throw new Error("Failed to clear sensitive data");
     }
   }
 
@@ -357,10 +372,10 @@ class SecureStorageService {
    */
   async getAuditLogs() {
     try {
-      const auditLogs = await AsyncStorage.getItem('audit_logs');
+      const auditLogs = await AsyncStorage.getItem("audit_logs");
       return auditLogs ? JSON.parse(auditLogs) : [];
     } catch (error) {
-      console.error('Failed to retrieve audit logs:', error);
+      console.error("Failed to retrieve audit logs:", error);
       return [];
     }
   }
@@ -372,9 +387,12 @@ const secureStorage = new SecureStorageService();
 export default secureStorage;
 
 // Export helper functions for easy use
-export const storeSecureData = (key, data, options) => secureStorage.storeSecureData(key, data, options);
-export const getSecureData = (key, options) => secureStorage.getSecureData(key, options);
-export const removeSecureData = (key, options) => secureStorage.removeSecureData(key, options);
+export const storeSecureData = (key, data, options) =>
+  secureStorage.storeSecureData(key, data, options);
+export const getSecureData = (key, options) =>
+  secureStorage.getSecureData(key, options);
+export const removeSecureData = (key, options) =>
+  secureStorage.removeSecureData(key, options);
 export const storeCrisisData = (data) => secureStorage.storeCrisisData(data);
 export const clearAllSecureData = () => secureStorage.clearAllSecureData();
 export const getAuditLogs = () => secureStorage.getAuditLogs();

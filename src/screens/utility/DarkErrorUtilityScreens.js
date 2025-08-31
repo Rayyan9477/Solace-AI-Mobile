@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -8,75 +9,77 @@ import {
   Animated,
   Dimensions,
   BackHandler,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { freudDarkTheme } from '../../shared/theme/freudDarkTheme';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import { freudDarkTheme } from "../../shared/theme/freudDarkTheme";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 // Error types and their configurations
 const ERROR_TYPES = {
   NOT_FOUND: {
-    id: 'not_found',
-    title: 'Not Found',
-    description: 'Whoops! Dr. F can\'t find this page :(',
-    illustration: '🔍',
-    statusCode: '404',
-    statusText: 'Status Code: 404',
-    primaryAction: 'Take Me Home',
-    illustrationBg: ['#22C55E', '#16A34A'], // Green gradient
+    id: "not_found",
+    title: "Not Found",
+    description: "Whoops! Dr. F can't find this page :(",
+    illustration: "🔍",
+    statusCode: "404",
+    statusText: "Status Code: 404",
+    primaryAction: "Take Me Home",
+    illustrationBg: ["#22C55E", "#16A34A"], // Green gradient
   },
   NO_INTERNET: {
-    id: 'no_internet',
-    title: 'No Internet!',
-    description: 'It seems you don\'t have active internet',
-    illustration: '📶',
+    id: "no_internet",
+    title: "No Internet!",
+    description: "It seems you don't have active internet",
+    illustration: "📶",
     statusCode: null,
     statusText: null,
-    primaryAction: 'Refresh or Try Again',
-    illustrationBg: ['#3B82F6', '#2563EB'], // Blue gradient
+    primaryAction: "Refresh or Try Again",
+    illustrationBg: ["#3B82F6", "#2563EB"], // Blue gradient
   },
   INTERNAL_ERROR: {
-    id: 'internal_error',
-    title: 'Internal Error',
-    description: 'Whoops! Our server seems in error :(',
-    illustration: '⚠️',
-    statusCode: '500',
-    statusText: 'Status Code: 500',
-    primaryAction: 'Take Me Home',
-    illustrationBg: ['#F59E0B', '#D97706'], // Orange gradient
+    id: "internal_error",
+    title: "Internal Error",
+    description: "Whoops! Our server seems in error :(",
+    illustration: "⚠️",
+    statusCode: "500",
+    statusText: "Status Code: 500",
+    primaryAction: "Take Me Home",
+    illustrationBg: ["#F59E0B", "#D97706"], // Orange gradient
   },
   MAINTENANCE: {
-    id: 'maintenance',
-    title: 'Maintenance',
-    description: 'We\'re undergoing maintenance',
-    illustration: '🔧',
+    id: "maintenance",
+    title: "Maintenance",
+    description: "We're undergoing maintenance",
+    illustration: "🔧",
     statusCode: null,
-    statusText: 'Come back in 9h 12m',
-    primaryAction: 'Take Me Home',
-    illustrationBg: ['#8B5CF6', '#7C3AED'], // Purple gradient
+    statusText: "Come back in 9h 12m",
+    primaryAction: "Take Me Home",
+    illustrationBg: ["#8B5CF6", "#7C3AED"], // Purple gradient
   },
   NOT_ALLOWED: {
-    id: 'not_allowed',
-    title: 'Not Allowed',
-    description: 'Hey, you don\'t have permission',
-    illustration: '🛑',
+    id: "not_allowed",
+    title: "Not Allowed",
+    description: "Hey, you don't have permission",
+    illustration: "🛑",
     statusCode: null,
-    statusText: 'Contact Admin',
-    primaryAction: 'Take Me Home',
-    illustrationBg: ['#EF4444', '#DC2626'], // Red gradient
+    statusText: "Contact Admin",
+    primaryAction: "Take Me Home",
+    illustrationBg: ["#EF4444", "#DC2626"], // Red gradient
   },
 };
 
-export default function DarkErrorUtilityScreens({ 
-  errorType = 'NOT_FOUND', 
-  onHomePress, 
+export default function DarkErrorUtilityScreens({
+  errorType = "NOT_FOUND",
+  onHomePress,
   onRetry,
   customMessage,
   customTitle,
 }) {
-  const [currentError, setCurrentError] = useState(ERROR_TYPES[errorType] || ERROR_TYPES.NOT_FOUND);
+  const [currentError, setCurrentError] = useState(
+    ERROR_TYPES[errorType] || ERROR_TYPES.NOT_FOUND,
+  );
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const bounceAnim = useRef(new Animated.Value(0.8)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
@@ -115,15 +118,18 @@ export default function DarkErrorUtilityScreens({
           duration: 2000,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     );
     pulseAnimation.start();
 
     // Handle hardware back button
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      handleHomePress();
-      return true;
-    });
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        handleHomePress();
+        return true;
+      },
+    );
 
     return () => {
       pulseAnimation.stop();
@@ -136,16 +142,16 @@ export default function DarkErrorUtilityScreens({
       onHomePress();
     } else {
       // Default navigation to home
-      console.log('Navigate to home');
+      console.log("Navigate to home");
     }
   };
 
   const handleRetry = () => {
     if (onRetry) {
       onRetry();
-    } else if (currentError.id === 'no_internet') {
+    } else if (currentError.id === "no_internet") {
       // Default retry logic for no internet
-      console.log('Retry connection');
+      console.log("Retry connection");
     } else {
       handleHomePress();
     }
@@ -153,21 +159,27 @@ export default function DarkErrorUtilityScreens({
 
   const renderIllustration = () => {
     let illustrationContent;
-    
+
     switch (currentError.id) {
-      case 'not_found':
+      case "not_found":
         illustrationContent = (
           <View style={styles.illustrationContent}>
             <Text style={styles.illustrationEmoji}>🕵️‍♂️</Text>
             <View style={styles.pathLines}>
-              <View style={[styles.pathLine, { transform: [{ rotate: '45deg' }] }]} />
-              <View style={[styles.pathLine, { transform: [{ rotate: '-45deg' }] }]} />
-              <View style={[styles.pathLine, { transform: [{ rotate: '0deg' }] }]} />
+              <View
+                style={[styles.pathLine, { transform: [{ rotate: "45deg" }] }]}
+              />
+              <View
+                style={[styles.pathLine, { transform: [{ rotate: "-45deg" }] }]}
+              />
+              <View
+                style={[styles.pathLine, { transform: [{ rotate: "0deg" }] }]}
+              />
             </View>
           </View>
         );
         break;
-      case 'no_internet':
+      case "no_internet":
         illustrationContent = (
           <View style={styles.illustrationContent}>
             <Text style={styles.illustrationEmoji}>📱</Text>
@@ -179,7 +191,7 @@ export default function DarkErrorUtilityScreens({
           </View>
         );
         break;
-      case 'internal_error':
+      case "internal_error":
         illustrationContent = (
           <View style={styles.illustrationContent}>
             <Text style={styles.illustrationEmoji}>👩‍⚕️</Text>
@@ -189,7 +201,7 @@ export default function DarkErrorUtilityScreens({
           </View>
         );
         break;
-      case 'maintenance':
+      case "maintenance":
         illustrationContent = (
           <View style={styles.illustrationContent}>
             <Text style={styles.illustrationEmoji}>👨‍🔧</Text>
@@ -200,7 +212,7 @@ export default function DarkErrorUtilityScreens({
           </View>
         );
         break;
-      case 'not_allowed':
+      case "not_allowed":
         illustrationContent = (
           <View style={styles.illustrationContent}>
             <Text style={styles.illustrationEmoji}>👮‍♀️</Text>
@@ -211,21 +223,16 @@ export default function DarkErrorUtilityScreens({
         );
         break;
       default:
-        illustrationContent = (
-          <Text style={styles.illustrationEmoji}>🤖</Text>
-        );
+        illustrationContent = <Text style={styles.illustrationEmoji}>🤖</Text>;
     }
 
     return (
-      <Animated.View 
+      <Animated.View
         style={[
           styles.illustrationContainer,
-          { 
-            transform: [
-              { scale: bounceAnim },
-              { scale: pulseAnim }
-            ]
-          }
+          {
+            transform: [{ scale: bounceAnim }, { scale: pulseAnim }],
+          },
         ]}
       >
         <LinearGradient
@@ -249,9 +256,7 @@ export default function DarkErrorUtilityScreens({
       {renderIllustration()}
 
       {/* Title */}
-      <Text style={styles.title}>
-        {customTitle || currentError.title}
-      </Text>
+      <Text style={styles.title}>{customTitle || currentError.title}</Text>
 
       {/* Description */}
       <Text style={styles.description}>
@@ -262,14 +267,13 @@ export default function DarkErrorUtilityScreens({
       {(currentError.statusCode || currentError.statusText) && (
         <View style={styles.statusContainer}>
           <LinearGradient
-            colors={[freudDarkTheme.colors.accent.primary, '#F97316']}
+            colors={[freudDarkTheme.colors.accent.primary, "#F97316"]}
             style={styles.statusGradient}
           >
             <Text style={styles.statusText}>
-              {currentError.statusCode ? 
-                currentError.statusText : 
-                currentError.statusText
-              }
+              {currentError.statusCode
+                ? currentError.statusText
+                : currentError.statusText}
             </Text>
           </LinearGradient>
         </View>
@@ -288,7 +292,10 @@ export default function DarkErrorUtilityScreens({
           </LinearGradient>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.secondaryButton} onPress={handleHomePress}>
+        <TouchableOpacity
+          style={styles.secondaryButton}
+          onPress={handleHomePress}
+        >
           <Text style={styles.secondaryButtonText}>Take Me Home 🏠</Text>
         </TouchableOpacity>
       </View>
@@ -297,13 +304,17 @@ export default function DarkErrorUtilityScreens({
 
   return (
     <LinearGradient
-      colors={[freudDarkTheme.colors.background.primary, freudDarkTheme.colors.background.secondary]}
+      colors={[
+        freudDarkTheme.colors.background.primary,
+        freudDarkTheme.colors.background.secondary,
+      ]}
       style={styles.screenContainer}
     >
-      <StatusBar barStyle="light-content" backgroundColor={freudDarkTheme.colors.background.primary} />
-      <SafeAreaView style={styles.safeArea}>
-        {renderContent()}
-      </SafeAreaView>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={freudDarkTheme.colors.background.primary}
+      />
+      <SafeAreaView style={styles.safeArea}>{renderContent()}</SafeAreaView>
     </LinearGradient>
   );
 }
@@ -344,22 +355,22 @@ export function DarkErrorShowcaseScreen() {
 
   return (
     <View style={styles.showcaseContainer}>
-      <DarkErrorUtilityScreens 
+      <DarkErrorUtilityScreens
         errorType={screens[currentScreen]}
         onHomePress={nextScreen}
         onRetry={nextScreen}
       />
-      
+
       {/* Screen Navigation */}
       <View style={styles.showcaseNavigation}>
         <TouchableOpacity style={styles.navButton} onPress={prevScreen}>
           <Text style={styles.navButtonText}>← Previous</Text>
         </TouchableOpacity>
-        
+
         <Text style={styles.screenIndicator}>
           {currentScreen + 1} of {screens.length}
         </Text>
-        
+
         <TouchableOpacity style={styles.navButton} onPress={nextScreen}>
           <Text style={styles.navButtonText}>Next →</Text>
         </TouchableOpacity>
@@ -378,24 +389,24 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     paddingHorizontal: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   backButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 20,
     left: 20,
     width: 44,
     height: 44,
     borderRadius: 22,
     backgroundColor: freudDarkTheme.colors.background.tertiary,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   backButtonText: {
     fontSize: 20,
     color: freudDarkTheme.colors.text.primary,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   illustrationContainer: {
     marginBottom: 40,
@@ -404,42 +415,42 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
   },
   illustrationContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   illustrationEmoji: {
     fontSize: 60,
     marginBottom: 10,
   },
   pathLines: {
-    position: 'absolute',
+    position: "absolute",
     width: 60,
     height: 60,
   },
   pathLine: {
-    position: 'absolute',
+    position: "absolute",
     width: 40,
     height: 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: 1,
     top: 30,
     left: 10,
   },
   wifiLines: {
-    position: 'absolute',
+    position: "absolute",
     width: 40,
     height: 30,
     top: 80,
   },
   wifiLine: {
-    position: 'absolute',
+    position: "absolute",
     height: 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    backgroundColor: "rgba(255, 255, 255, 0.6)",
     borderRadius: 1,
   },
   wifiLine1: {
@@ -458,7 +469,7 @@ const styles = StyleSheet.create({
     left: 10,
   },
   errorSymbol: {
-    position: 'absolute',
+    position: "absolute",
     top: 70,
     right: -10,
   },
@@ -466,8 +477,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   toolsContainer: {
-    flexDirection: 'row',
-    position: 'absolute',
+    flexDirection: "row",
+    position: "absolute",
     top: 80,
     left: -20,
   },
@@ -476,32 +487,32 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   stopSign: {
-    position: 'absolute',
+    position: "absolute",
     top: 85,
     right: -15,
     width: 50,
     height: 20,
-    backgroundColor: '#DC2626',
+    backgroundColor: "#DC2626",
     borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   stopText: {
     fontSize: 10,
-    fontWeight: '900',
-    color: '#FFFFFF',
+    fontWeight: "900",
+    color: "#FFFFFF",
   },
   title: {
     fontSize: 32,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 15,
   },
   description: {
     fontSize: 16,
     color: freudDarkTheme.colors.text.secondary,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 24,
     marginBottom: 30,
     opacity: 0.9,
@@ -516,55 +527,55 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#FFFFFF',
-    textAlign: 'center',
+    fontWeight: "600",
+    color: "#FFFFFF",
+    textAlign: "center",
   },
   actionsContainer: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   primaryButton: {
-    width: '100%',
+    width: "100%",
     marginBottom: 15,
   },
   primaryButtonGradient: {
     paddingVertical: 16,
     borderRadius: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   primaryButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
   secondaryButton: {
     backgroundColor: freudDarkTheme.colors.background.tertiary,
     paddingVertical: 16,
     paddingHorizontal: 30,
     borderRadius: 16,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   secondaryButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.primary,
   },
-  
+
   // Showcase styles
   showcaseContainer: {
     flex: 1,
   },
   showcaseNavigation: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 40,
     left: 20,
     right: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
     borderRadius: 25,
     paddingHorizontal: 20,
     paddingVertical: 15,
@@ -577,12 +588,12 @@ const styles = StyleSheet.create({
   },
   navButtonText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
   screenIndicator: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
 });

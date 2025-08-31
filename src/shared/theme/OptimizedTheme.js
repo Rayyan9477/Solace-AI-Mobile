@@ -4,53 +4,59 @@
  */
 
 // Import base design system
-import { FreudColors, FreudTypography, FreudSpacing, FreudBorderRadius, FreudShadows } from './FreudDesignSystem';
+import {
+  FreudColors,
+  FreudTypography,
+  FreudSpacing,
+  FreudBorderRadius,
+  FreudShadows,
+} from "./FreudDesignSystem";
 
 // Figma-aligned color palette
 export const figmaAlignedColors = {
   // Primary therapeutic colors
   primary: FreudColors.mindfulBrown[80],
   primaryContainer: FreudColors.mindfulBrown[20],
-  onPrimary: '#FFFFFF',
+  onPrimary: "#FFFFFF",
   onPrimaryContainer: FreudColors.mindfulBrown[90],
-  
+
   // Secondary colors
   secondary: FreudColors.serenityGreen[60],
   secondaryContainer: FreudColors.serenityGreen[20],
-  onSecondary: '#FFFFFF',
+  onSecondary: "#FFFFFF",
   onSecondaryContainer: FreudColors.serenityGreen[90],
-  
+
   // Tertiary colors
   tertiary: FreudColors.empathyOrange[50],
   tertiaryContainer: FreudColors.empathyOrange[20],
-  onTertiary: '#FFFFFF',
+  onTertiary: "#FFFFFF",
   onTertiaryContainer: FreudColors.empathyOrange[90],
-  
+
   // Surface colors
-  surface: '#FFFFFF',
+  surface: "#FFFFFF",
   surfaceVariant: FreudColors.optimisticGray[10],
   onSurface: FreudColors.mindfulBrown[90],
   onSurfaceVariant: FreudColors.optimisticGray[70],
-  
+
   // Background
-  background: '#FFFFFF',
+  background: "#FFFFFF",
   onBackground: FreudColors.mindfulBrown[90],
-  
+
   // Error colors
   error: FreudColors.empathyOrange[70],
   errorContainer: FreudColors.empathyOrange[20],
-  onError: '#FFFFFF',
+  onError: "#FFFFFF",
   onErrorContainer: FreudColors.empathyOrange[90],
-  
+
   // Outline
   outline: FreudColors.optimisticGray[40],
   outlineVariant: FreudColors.optimisticGray[30],
-  
+
   // Status colors
   success: FreudColors.serenityGreen[60],
   warning: FreudColors.zenYellow[60],
   info: FreudColors.kindPurple[60],
-  
+
   // Therapeutic gradients
   therapeuticGradients: {
     calming: [FreudColors.serenityGreen[20], FreudColors.serenityGreen[10]],
@@ -71,7 +77,7 @@ export const optimizedLightTheme = {
       primary: FreudColors.mindfulBrown[90],
       secondary: FreudColors.optimisticGray[70],
       tertiary: FreudColors.optimisticGray[50],
-      inverse: '#FFFFFF',
+      inverse: "#FFFFFF",
       disabled: FreudColors.optimisticGray[40],
     },
     border: {
@@ -81,12 +87,12 @@ export const optimizedLightTheme = {
       error: FreudColors.empathyOrange[60],
     },
     elevation: {
-      level0: 'transparent',
-      level1: '#FFFFFF',
-      level2: '#FAFAFA',
-      level3: '#F5F5F5',
-      level4: '#F0F0F0',
-      level5: '#EEEEEE',
+      level0: "transparent",
+      level1: "#FFFFFF",
+      level2: "#FAFAFA",
+      level3: "#F5F5F5",
+      level4: "#F0F0F0",
+      level5: "#EEEEEE",
     },
   },
   typography: {
@@ -94,30 +100,34 @@ export const optimizedLightTheme = {
     // Pre-calculated font styles for performance
     h1: {
       fontFamily: FreudTypography.fontFamily.primary,
-      fontSize: FreudTypography.sizes['4xl'],
+      fontSize: FreudTypography.sizes["4xl"],
       fontWeight: FreudTypography.weights.bold,
-      lineHeight: FreudTypography.sizes['4xl'] * FreudTypography.lineHeights.tight,
+      lineHeight:
+        FreudTypography.sizes["4xl"] * FreudTypography.lineHeights.tight,
       color: FreudColors.mindfulBrown[90],
     },
     h2: {
       fontFamily: FreudTypography.fontFamily.primary,
-      fontSize: FreudTypography.sizes['3xl'],
+      fontSize: FreudTypography.sizes["3xl"],
       fontWeight: FreudTypography.weights.bold,
-      lineHeight: FreudTypography.sizes['3xl'] * FreudTypography.lineHeights.tight,
+      lineHeight:
+        FreudTypography.sizes["3xl"] * FreudTypography.lineHeights.tight,
       color: FreudColors.mindfulBrown[90],
     },
     h3: {
       fontFamily: FreudTypography.fontFamily.primary,
-      fontSize: FreudTypography.sizes['2xl'],
+      fontSize: FreudTypography.sizes["2xl"],
       fontWeight: FreudTypography.weights.semiBold,
-      lineHeight: FreudTypography.sizes['2xl'] * FreudTypography.lineHeights.normal,
+      lineHeight:
+        FreudTypography.sizes["2xl"] * FreudTypography.lineHeights.normal,
       color: FreudColors.mindfulBrown[90],
     },
     body1: {
       fontFamily: FreudTypography.fontFamily.secondary,
       fontSize: FreudTypography.sizes.base,
       fontWeight: FreudTypography.weights.normal,
-      lineHeight: FreudTypography.sizes.base * FreudTypography.lineHeights.relaxed,
+      lineHeight:
+        FreudTypography.sizes.base * FreudTypography.lineHeights.relaxed,
       color: FreudColors.mindfulBrown[90],
     },
     body2: {
@@ -143,10 +153,10 @@ export const optimizedLightTheme = {
     button: {
       primary: {
         backgroundColor: FreudColors.mindfulBrown[90],
-        color: '#FFFFFF',
+        color: "#FFFFFF",
         paddingVertical: FreudSpacing[3],
         paddingHorizontal: FreudSpacing[6],
-        borderRadius: FreudBorderRadius['2xl'],
+        borderRadius: FreudBorderRadius["2xl"],
         ...FreudShadows.md,
       },
       secondary: {
@@ -154,13 +164,13 @@ export const optimizedLightTheme = {
         color: FreudColors.serenityGreen[90],
         paddingVertical: FreudSpacing[3],
         paddingHorizontal: FreudSpacing[6],
-        borderRadius: FreudBorderRadius['2xl'],
+        borderRadius: FreudBorderRadius["2xl"],
         ...FreudShadows.sm,
       },
     },
     card: {
       default: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: "#FFFFFF",
         borderRadius: FreudBorderRadius.xl,
         padding: FreudSpacing[4],
         ...FreudShadows.sm,
@@ -178,23 +188,23 @@ export const optimizedDarkTheme = {
     onPrimary: FreudColors.mindfulBrown[90],
     primaryContainer: FreudColors.mindfulBrown[80],
     onPrimaryContainer: FreudColors.mindfulBrown[10],
-    
+
     secondary: FreudColors.serenityGreen[50],
     onSecondary: FreudColors.serenityGreen[90],
     secondaryContainer: FreudColors.serenityGreen[80],
     onSecondaryContainer: FreudColors.serenityGreen[10],
-    
+
     surface: FreudColors.optimisticGray[90],
     surfaceVariant: FreudColors.optimisticGray[80],
     onSurface: FreudColors.optimisticGray[10],
     onSurfaceVariant: FreudColors.optimisticGray[30],
-    
+
     background: FreudColors.optimisticGray[100],
     onBackground: FreudColors.optimisticGray[10],
-    
+
     outline: FreudColors.optimisticGray[70],
     outlineVariant: FreudColors.optimisticGray[80],
-    
+
     text: {
       primary: FreudColors.optimisticGray[10],
       secondary: FreudColors.optimisticGray[30],
@@ -209,7 +219,7 @@ export const optimizedDarkTheme = {
       error: FreudColors.empathyOrange[50],
     },
     elevation: {
-      level0: 'transparent',
+      level0: "transparent",
       level1: FreudColors.optimisticGray[90],
       level2: FreudColors.optimisticGray[85],
       level3: FreudColors.optimisticGray[80],
@@ -255,7 +265,7 @@ export const optimizedDarkTheme = {
         color: FreudColors.mindfulBrown[90],
         paddingVertical: FreudSpacing[3],
         paddingHorizontal: FreudSpacing[6],
-        borderRadius: FreudBorderRadius['2xl'],
+        borderRadius: FreudBorderRadius["2xl"],
         ...FreudShadows.md,
       },
       secondary: {
@@ -263,7 +273,7 @@ export const optimizedDarkTheme = {
         color: FreudColors.serenityGreen[10],
         paddingVertical: FreudSpacing[3],
         paddingHorizontal: FreudSpacing[6],
-        borderRadius: FreudBorderRadius['2xl'],
+        borderRadius: FreudBorderRadius["2xl"],
         ...FreudShadows.sm,
       },
     },
@@ -286,7 +296,7 @@ export const createAccessibleTheme = (baseTheme, options = {}) => {
     fontScale = 1,
   } = options;
 
-  let enhancedTheme = { ...baseTheme };
+  const enhancedTheme = { ...baseTheme };
 
   // High contrast adjustments
   if (isHighContrastEnabled) {
@@ -294,9 +304,9 @@ export const createAccessibleTheme = (baseTheme, options = {}) => {
       ...enhancedTheme.colors,
       text: {
         ...enhancedTheme.colors.text,
-        primary: baseTheme === optimizedLightTheme ? '#000000' : '#FFFFFF',
+        primary: baseTheme === optimizedLightTheme ? "#000000" : "#FFFFFF",
       },
-      outline: baseTheme === optimizedLightTheme ? '#000000' : '#FFFFFF',
+      outline: baseTheme === optimizedLightTheme ? "#000000" : "#FFFFFF",
     };
   }
 
@@ -304,8 +314,8 @@ export const createAccessibleTheme = (baseTheme, options = {}) => {
   if (fontScale !== 1) {
     const scaleTypography = (typography) => {
       const scaled = {};
-      Object.keys(typography).forEach(key => {
-        if (typeof typography[key] === 'object' && typography[key].fontSize) {
+      Object.keys(typography).forEach((key) => {
+        if (typeof typography[key] === "object" && typography[key].fontSize) {
           scaled[key] = {
             ...typography[key],
             fontSize: typography[key].fontSize * fontScale,

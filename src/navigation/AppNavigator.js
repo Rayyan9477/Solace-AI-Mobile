@@ -1,29 +1,43 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
 import { useSelector } from "react-redux";
-import { View, Text, StyleSheet, Platform, TouchableOpacity } from "react-native";
 
 // import { NavigationIcon, IconPresets } from "../components/icons";
-import { useTheme } from "../shared/theme/ThemeContext";
 // import { TouchOptimizations } from "../utils/mobileOptimizations";
 // import { useMotionAccessibility } from "../utils/motionAccessibility";
 // import { MentalHealthAccessibility } from "../utils/accessibility";
 
 // Light Mode Screens
 import CoverPageScreen from "../screens/CoverPageScreen";
+import DarkModeShowcaseScreen from "../screens/DarkModeShowcaseScreen";
+import DarkSplashScreen from "../screens/DarkSplashScreen";
+import DarkWelcomeScreen from "../screens/DarkWelcomeScreen";
 import DesignSystemScreen from "../screens/DesignSystemScreen";
 import IconTestScreen from "../screens/IconTestScreen";
 import MainAppScreen from "../screens/MainAppScreen";
 import ProfessionalOnboardingScreen from "../screens/ProfessionalOnboardingScreen";
 import SplashScreen from "../screens/SplashScreen";
 import AssessmentScreen from "../screens/assessment/AssessmentScreen";
+import DarkComprehensiveAssessmentScreen from "../screens/assessment/DarkComprehensiveAssessmentScreen";
+import DarkForgotPasswordScreen from "../screens/auth/DarkForgotPasswordScreen";
+import DarkSignInScreen from "../screens/auth/DarkSignInScreen";
+import DarkSignUpScreen from "../screens/auth/DarkSignUpScreen";
 import OnboardingScreen from "../screens/auth/OnboardingScreen";
-import SimpleOnboardingScreen from "../screens/auth/SimpleOnboardingScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
 import SignInScreen from "../screens/auth/SignInScreen";
+import SimpleOnboardingScreen from "../screens/auth/SimpleOnboardingScreen";
 import ChatScreen from "../screens/chat/ChatScreen";
+import DarkAITherapyChatScreen from "../screens/chat/DarkAITherapyChatScreen";
 import EnhancedChatScreen from "../screens/chat/EnhancedChatScreen";
+import DarkCommunitySupportScreen from "../screens/community/DarkCommunitySupportScreen";
 import DashboardScreen from "../screens/dashboard/DashboardScreen";
 import EnhancedMoodTrackerScreen from "../screens/mood/EnhancedMoodTrackerScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
@@ -40,22 +54,14 @@ import SleepQualityScreen from "../screens/wellness/SleepQualityScreen";
 import StressManagementScreen from "../screens/wellness/StressManagementScreen";
 
 // Dark Mode Screens
-import DarkModeShowcaseScreen from "../screens/DarkModeShowcaseScreen";
-import DarkSplashScreen from "../screens/DarkSplashScreen";
-import DarkWelcomeScreen from "../screens/DarkWelcomeScreen";
 
 // Dark Mode Authentication
-import DarkSignInScreen from "../screens/auth/DarkSignInScreen";
-import DarkSignUpScreen from "../screens/auth/DarkSignUpScreen";
-import DarkForgotPasswordScreen from "../screens/auth/DarkForgotPasswordScreen";
 
 // Dark Mode Main Screens
 import DarkHomeScreen from "../screens/home/DarkHomeScreen";
 import DarkMentalHealthScoreScreen from "../screens/home/DarkMentalHealthScoreScreen";
-import DarkAITherapyChatScreen from "../screens/chat/DarkAITherapyChatScreen";
 import DarkMentalHealthJournalScreen from "../screens/journal/DarkMentalHealthJournalScreen";
 import DarkMoodTrackerScreen from "../screens/mood/DarkMoodTrackerScreen";
-import DarkComprehensiveAssessmentScreen from "../screens/assessment/DarkComprehensiveAssessmentScreen";
 
 // Dark Mode Profile & Settings
 import DarkProfileSettingsScreen from "../screens/profile/DarkProfileSettingsScreen";
@@ -70,7 +76,7 @@ import DarkMindfulHoursScreen from "../screens/mindfulness/DarkMindfulHoursScree
 import DarkMindfulResourcesScreen from "../screens/mindfulness/DarkMindfulResourcesScreen";
 
 // Dark Mode Community
-import DarkCommunitySupportScreen from "../screens/community/DarkCommunitySupportScreen";
+import { useTheme } from "../shared/theme/ThemeContext";
 
 // Utility Screens
 
@@ -85,17 +91,24 @@ const getThemeAwareScreen = (lightScreen, darkScreen, isDarkMode) => {
 // Error boundary component for navigation failures
 const NavigationErrorBoundary = ({ children }) => {
   const { theme } = useTheme();
-  
+
   try {
     return children;
   } catch (error) {
-    console.error('Navigation Error:', error);
+    console.error("Navigation Error:", error);
     return (
-      <View style={[styles.errorContainer, { backgroundColor: theme.colors.background.primary }]}>
+      <View
+        style={[
+          styles.errorContainer,
+          { backgroundColor: theme.colors.background.primary },
+        ]}
+      >
         <Text style={[styles.errorText, { color: theme.colors.text.primary }]}>
           Navigation Error: Unable to load screen
         </Text>
-        <Text style={[styles.errorSubtext, { color: theme.colors.text.secondary }]}>
+        <Text
+          style={[styles.errorSubtext, { color: theme.colors.text.secondary }]}
+        >
           Please restart the app or contact support
         </Text>
       </View>
@@ -106,19 +119,19 @@ const NavigationErrorBoundary = ({ children }) => {
 const styles = StyleSheet.create({
   errorContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   errorText: {
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 10,
   },
   errorSubtext: {
     fontSize: 14,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 
@@ -139,17 +152,29 @@ const AuthStack = () => {
     >
       <Stack.Screen
         name="SignIn"
-        component={getThemeAwareScreen(SignInScreen, DarkSignInScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          SignInScreen,
+          DarkSignInScreen,
+          isDarkMode,
+        )}
         options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Register"
-        component={getThemeAwareScreen(RegisterScreen, DarkSignUpScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          RegisterScreen,
+          DarkSignUpScreen,
+          isDarkMode,
+        )}
         options={{ title: "Create Account" }}
       />
       <Stack.Screen
         name="ForgotPassword"
-        component={getThemeAwareScreen(SignInScreen, DarkForgotPasswordScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          SignInScreen,
+          DarkForgotPasswordScreen,
+          isDarkMode,
+        )}
         options={{ title: "Reset Password" }}
       />
     </Stack.Navigator>
@@ -173,7 +198,11 @@ const ProfileStack = () => {
     >
       <Stack.Screen
         name="ProfileMain"
-        component={getThemeAwareScreen(ProfileScreen, DarkProfileSettingsScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          ProfileScreen,
+          DarkProfileSettingsScreen,
+          isDarkMode,
+        )}
         options={{ title: "Profile" }}
       />
       <Stack.Screen
@@ -183,12 +212,20 @@ const ProfileStack = () => {
       />
       <Stack.Screen
         name="Notifications"
-        component={getThemeAwareScreen(NotificationsScreen, DarkSmartNotificationsScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          NotificationsScreen,
+          DarkSmartNotificationsScreen,
+          isDarkMode,
+        )}
         options={{ title: "Notifications", headerShown: false }}
       />
       <Stack.Screen
         name="ProfileSetup"
-        component={getThemeAwareScreen(ProfileScreen, DarkProfileSetupScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          ProfileScreen,
+          DarkProfileSetupScreen,
+          isDarkMode,
+        )}
         options={{ title: "Complete Profile", headerShown: false }}
       />
     </Stack.Navigator>
@@ -212,22 +249,38 @@ const WellnessStack = () => {
     >
       <Stack.Screen
         name="MindfulResources"
-        component={getThemeAwareScreen(MindfulResourcesScreen, DarkMindfulResourcesScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          MindfulResourcesScreen,
+          DarkMindfulResourcesScreen,
+          isDarkMode,
+        )}
         options={{ title: "Wellness Hub", headerShown: false }}
       />
       <Stack.Screen
         name="MindfulHours"
-        component={getThemeAwareScreen(MindfulHoursScreen, DarkMindfulHoursScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          MindfulHoursScreen,
+          DarkMindfulHoursScreen,
+          isDarkMode,
+        )}
         options={{ title: "Mindful Hours", headerShown: false }}
       />
       <Stack.Screen
         name="SleepQuality"
-        component={getThemeAwareScreen(SleepQualityScreen, DarkSleepQualityScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          SleepQualityScreen,
+          DarkSleepQualityScreen,
+          isDarkMode,
+        )}
         options={{ title: "Sleep Quality", headerShown: false }}
       />
       <Stack.Screen
         name="StressManagement"
-        component={getThemeAwareScreen(StressManagementScreen, DarkStressManagementScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          StressManagementScreen,
+          DarkStressManagementScreen,
+          isDarkMode,
+        )}
         options={{ title: "Stress Management", headerShown: false }}
       />
       <Stack.Screen
@@ -242,12 +295,20 @@ const WellnessStack = () => {
       />
       <Stack.Screen
         name="Community"
-        component={getThemeAwareScreen(ChatScreen, DarkCommunitySupportScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          ChatScreen,
+          DarkCommunitySupportScreen,
+          isDarkMode,
+        )}
         options={{ title: "Community Support", headerShown: false }}
       />
       <Stack.Screen
         name="Journal"
-        component={getThemeAwareScreen(ChatScreen, DarkMentalHealthJournalScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          ChatScreen,
+          DarkMentalHealthJournalScreen,
+          isDarkMode,
+        )}
         options={{ title: "Mental Health Journal", headerShown: false }}
       />
     </Stack.Navigator>
@@ -271,7 +332,11 @@ const UtilityStack = () => {
     >
       <Stack.Screen
         name="Search"
-        component={getThemeAwareScreen(SearchScreen, DarkSearchScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          SearchScreen,
+          DarkSearchScreen,
+          isDarkMode,
+        )}
         options={{ title: "Search", headerShown: false }}
       />
       <Stack.Screen
@@ -291,7 +356,7 @@ const UtilityStack = () => {
 // Theme Toggle Button Component
 const ThemeToggleButton = () => {
   const { isDarkMode, toggleTheme } = useTheme();
-  
+
   return (
     <TouchableOpacity
       onPress={toggleTheme}
@@ -299,14 +364,14 @@ const ThemeToggleButton = () => {
         marginRight: 15,
         padding: 8,
         borderRadius: 20,
-        backgroundColor: isDarkMode ? '#374151' : '#F3F4F6',
+        backgroundColor: isDarkMode ? "#374151" : "#F3F4F6",
       }}
-      accessibilityLabel={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+      accessibilityLabel={
+        isDarkMode ? "Switch to light mode" : "Switch to dark mode"
+      }
       accessibilityRole="button"
     >
-      <Text style={{ fontSize: 16 }}>
-        {isDarkMode ? '☀️' : '🌙'}
-      </Text>
+      <Text style={{ fontSize: 16 }}>{isDarkMode ? "☀️" : "🌙"}</Text>
     </TouchableOpacity>
   );
 };
@@ -340,11 +405,7 @@ const MainTabs = () => {
             iconText = "👤";
           }
 
-          return (
-            <Text style={{ fontSize: size, color }}>
-              {iconText}
-            </Text>
-          );
+          return <Text style={{ fontSize: size, color }}>{iconText}</Text>;
         },
         tabBarActiveTintColor: theme.colors.primary[500],
         tabBarInactiveTintColor: theme.colors.gray[500],
@@ -370,61 +431,90 @@ const MainTabs = () => {
     >
       <Tab.Screen
         name="Cover"
-        component={getThemeAwareScreen(CoverPageScreen, DarkWelcomeScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          CoverPageScreen,
+          DarkWelcomeScreen,
+          isDarkMode,
+        )}
         options={{
           title: "Welcome",
           tabBarLabel: "Welcome",
           tabBarTestID: "tab-welcome",
-          tabBarAccessibilityLabel: "Welcome tab - App introduction and features",
-          tabBarAccessibilityHint: "Double tap to view app welcome and features",
+          tabBarAccessibilityLabel:
+            "Welcome tab - App introduction and features",
+          tabBarAccessibilityHint:
+            "Double tap to view app welcome and features",
           headerShown: false,
         }}
       />
       <Tab.Screen
         name="Home"
-        component={getThemeAwareScreen(MainAppScreen, DarkHomeScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          MainAppScreen,
+          DarkHomeScreen,
+          isDarkMode,
+        )}
         options={{
           title: "Dashboard",
           tabBarLabel: "Home",
           tabBarTestID: "tab-home",
-          tabBarAccessibilityLabel: "Home tab - Main dashboard with wellness overview",
-          tabBarAccessibilityHint: "Double tap to access your mental health dashboard",
+          tabBarAccessibilityLabel:
+            "Home tab - Main dashboard with wellness overview",
+          tabBarAccessibilityHint:
+            "Double tap to access your mental health dashboard",
           headerShown: false,
         }}
       />
       <Tab.Screen
         name="Chat"
-        component={getThemeAwareScreen(EnhancedChatScreen, DarkAITherapyChatScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          EnhancedChatScreen,
+          DarkAITherapyChatScreen,
+          isDarkMode,
+        )}
         options={{
           title: "Chat",
           tabBarLabel: "Chat",
           tabBarTestID: "tab-chat",
           tabBarAccessibilityLabel: "Chat tab - AI therapy conversations",
-          tabBarAccessibilityHint: "Double tap to start or continue therapy conversation",
+          tabBarAccessibilityHint:
+            "Double tap to start or continue therapy conversation",
           headerShown: false,
         }}
       />
       <Tab.Screen
         name="Mood"
-        component={getThemeAwareScreen(EnhancedMoodTrackerScreen, DarkMoodTrackerScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          EnhancedMoodTrackerScreen,
+          DarkMoodTrackerScreen,
+          isDarkMode,
+        )}
         options={{
           title: "Mood",
           tabBarLabel: "Mood",
           tabBarTestID: "tab-mood",
-          tabBarAccessibilityLabel: "Mood tab - Track and monitor your emotional state",
-          tabBarAccessibilityHint: "Double tap to record your current mood and feelings",
+          tabBarAccessibilityLabel:
+            "Mood tab - Track and monitor your emotional state",
+          tabBarAccessibilityHint:
+            "Double tap to record your current mood and feelings",
           headerShown: false,
         }}
       />
       <Tab.Screen
         name="Assessment"
-        component={getThemeAwareScreen(AssessmentScreen, DarkComprehensiveAssessmentScreen, isDarkMode)}
+        component={getThemeAwareScreen(
+          AssessmentScreen,
+          DarkComprehensiveAssessmentScreen,
+          isDarkMode,
+        )}
         options={{
           title: "Assessment",
           tabBarLabel: "Assessment",
           tabBarTestID: "tab-assessment",
-          tabBarAccessibilityLabel: "Assessment tab - Mental health evaluation and screening",
-          tabBarAccessibilityHint: "Double tap to take mental health assessments",
+          tabBarAccessibilityLabel:
+            "Assessment tab - Mental health evaluation and screening",
+          tabBarAccessibilityHint:
+            "Double tap to take mental health assessments",
           headerShown: false,
         }}
       />
@@ -435,8 +525,10 @@ const MainTabs = () => {
           title: "Wellness",
           tabBarLabel: "Wellness",
           tabBarTestID: "tab-wellness",
-          tabBarAccessibilityLabel: "Wellness tab - Mindfulness and stress management resources",
-          tabBarAccessibilityHint: "Double tap to access wellness tools and resources",
+          tabBarAccessibilityLabel:
+            "Wellness tab - Mindfulness and stress management resources",
+          tabBarAccessibilityHint:
+            "Double tap to access wellness tools and resources",
           headerShown: false,
         }}
       />
@@ -447,8 +539,10 @@ const MainTabs = () => {
           title: "Tools",
           tabBarLabel: "Utilities",
           tabBarTestID: "tab-utilities",
-          tabBarAccessibilityLabel: "Utilities tab - App tools and support features",
-          tabBarAccessibilityHint: "Double tap to access app utilities and support",
+          tabBarAccessibilityLabel:
+            "Utilities tab - App tools and support features",
+          tabBarAccessibilityHint:
+            "Double tap to access app utilities and support",
           headerShown: false,
         }}
       />
@@ -459,7 +553,8 @@ const MainTabs = () => {
           title: "Profile",
           tabBarLabel: "Profile",
           tabBarTestID: "tab-profile",
-          tabBarAccessibilityLabel: "Profile tab - Account settings and personal information",
+          tabBarAccessibilityLabel:
+            "Profile tab - Account settings and personal information",
           tabBarAccessibilityHint: "Double tap to view and edit your profile",
           headerShown: false,
         }}
@@ -475,34 +570,51 @@ const AppNavigator = () => {
 
   // Enhanced debugging for web
   React.useEffect(() => {
-    if (Platform.OS === 'web') {
-      console.log('🧭 AppNavigator: Auth state received:', authState);
-      console.log('🧭 AppNavigator: isAuthenticated:', isAuthenticated);
-      console.log('🧭 AppNavigator: onboardingCompleted:', onboardingCompleted);
-      console.log('🧭 AppNavigator: isLoading:', isLoading);
-      console.log('🧭 AppNavigator: Will render:', 
-        isLoading ? 'SplashScreen' : 
-        !onboardingCompleted ? 'OnboardingScreen' :
-        !isAuthenticated ? 'AuthStack' : 'MainTabs'
+    if (Platform.OS === "web") {
+      console.log("🧭 AppNavigator: Auth state received:", authState);
+      console.log("🧭 AppNavigator: isAuthenticated:", isAuthenticated);
+      console.log("🧭 AppNavigator: onboardingCompleted:", onboardingCompleted);
+      console.log("🧭 AppNavigator: isLoading:", isLoading);
+      console.log(
+        "🧭 AppNavigator: Will render:",
+        isLoading
+          ? "SplashScreen"
+          : !onboardingCompleted
+            ? "OnboardingScreen"
+            : !isAuthenticated
+              ? "AuthStack"
+              : "MainTabs",
       );
     }
   }, [authState, isAuthenticated, onboardingCompleted, isLoading]);
 
   // Show splash screen while loading
   if (isLoading) {
-    console.log('🧭 AppNavigator: Rendering SplashScreen (isLoading=true)');
-    const SplashComponent = getThemeAwareScreen(SplashScreen, DarkSplashScreen, isDarkMode);
+    console.log("🧭 AppNavigator: Rendering SplashScreen (isLoading=true)");
+    const SplashComponent = getThemeAwareScreen(
+      SplashScreen,
+      DarkSplashScreen,
+      isDarkMode,
+    );
     return <SplashComponent />;
   }
 
   // Show onboarding if not completed (handle undefined/null as false)
   if (onboardingCompleted !== true) {
-    console.log('🧭 AppNavigator: Rendering OnboardingScreen (onboardingCompleted=', onboardingCompleted, ')');
-    
+    console.log(
+      "🧭 AppNavigator: Rendering OnboardingScreen (onboardingCompleted=",
+      onboardingCompleted,
+      ")",
+    );
+
     // Use theme-aware onboarding screens - Professional onboarding for all platforms
     const lightOnboardingComponent = ProfessionalOnboardingScreen;
-    const OnboardingComponent = getThemeAwareScreen(lightOnboardingComponent, DarkWelcomeScreen, isDarkMode);
-    
+    const OnboardingComponent = getThemeAwareScreen(
+      lightOnboardingComponent,
+      DarkWelcomeScreen,
+      isDarkMode,
+    );
+
     return (
       <NavigationErrorBoundary>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -514,7 +626,11 @@ const AppNavigator = () => {
 
   // Show authentication screens if not authenticated (handle undefined/null as false)
   if (isAuthenticated !== true) {
-    console.log('🧭 AppNavigator: Rendering AuthStack (isAuthenticated=', isAuthenticated, ')');
+    console.log(
+      "🧭 AppNavigator: Rendering AuthStack (isAuthenticated=",
+      isAuthenticated,
+      ")",
+    );
     return (
       <NavigationErrorBoundary>
         <AuthStack />
@@ -523,7 +639,7 @@ const AppNavigator = () => {
   }
 
   // Show main app if authenticated and onboarding completed
-  console.log('🧭 AppNavigator: Rendering MainTabs (fully authenticated)');
+  console.log("🧭 AppNavigator: Rendering MainTabs (fully authenticated)");
   return (
     <NavigationErrorBoundary>
       <MainTabs />

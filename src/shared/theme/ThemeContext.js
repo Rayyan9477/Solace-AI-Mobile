@@ -1,11 +1,18 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { View, Platform } from "react-native";
-import { useColorScheme } from "react-native";
+import { View, Platform, useColorScheme } from "react-native";
+
+import { freudDarkTheme } from "./freudDarkTheme";
+import {
+  lightTheme,
+  darkTheme,
+  highContrastLightTheme,
+  highContrastDarkTheme,
+} from "./theme";
 
 // Web-safe AccessibilityInfo import
 let AccessibilityInfo;
-if (Platform.OS === 'web') {
+if (Platform.OS === "web") {
   // Web fallback for AccessibilityInfo
   AccessibilityInfo = {
     isReduceMotionEnabled: () => Promise.resolve(false),
@@ -14,16 +21,8 @@ if (Platform.OS === 'web') {
     addEventListener: () => ({ remove: () => {} }),
   };
 } else {
-  AccessibilityInfo = require('react-native').AccessibilityInfo;
+  AccessibilityInfo = require("react-native").AccessibilityInfo;
 }
-
-import {
-  lightTheme,
-  darkTheme,
-  highContrastLightTheme,
-  highContrastDarkTheme,
-} from "./theme";
-import { freudDarkTheme } from "./freudDarkTheme";
 
 const ThemeContext = createContext({
   theme: lightTheme,
@@ -253,17 +252,22 @@ export const ThemeProvider = ({ children }) => {
     return adjustedTheme;
   };
 
-  const currentTheme = getAccessibleTheme(isDarkMode ? freudDarkTheme : lightTheme);
+  const currentTheme = getAccessibleTheme(
+    isDarkMode ? freudDarkTheme : lightTheme,
+  );
 
   // Enhanced debugging for web
   React.useEffect(() => {
-    if (Platform.OS === 'web') {
-      console.log('🎨 ThemeProvider: Initializing...');
-      console.log('🎨 ThemeProvider: System color scheme:', systemColorScheme);
-      console.log('🎨 ThemeProvider: isDarkMode:', isDarkMode);
-      console.log('🎨 ThemeProvider: currentTheme available:', !!currentTheme);
-      console.log('🎨 ThemeProvider: Theme colors available:', !!currentTheme?.colors);
-      console.log('🎨 ThemeProvider: Theme loaded successfully');
+    if (Platform.OS === "web") {
+      console.log("🎨 ThemeProvider: Initializing...");
+      console.log("🎨 ThemeProvider: System color scheme:", systemColorScheme);
+      console.log("🎨 ThemeProvider: isDarkMode:", isDarkMode);
+      console.log("🎨 ThemeProvider: currentTheme available:", !!currentTheme);
+      console.log(
+        "🎨 ThemeProvider: Theme colors available:",
+        !!currentTheme?.colors,
+      );
+      console.log("🎨 ThemeProvider: Theme loaded successfully");
     }
   }, [systemColorScheme, isDarkMode, currentTheme]);
 

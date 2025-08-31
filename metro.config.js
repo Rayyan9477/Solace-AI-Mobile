@@ -1,4 +1,4 @@
-const { getDefaultConfig } = require('expo/metro-config');
+const { getDefaultConfig } = require("expo/metro-config");
 
 /** @type {import('expo/metro-config').MetroConfig} */
 const config = getDefaultConfig(__dirname, {
@@ -9,24 +9,24 @@ const config = getDefaultConfig(__dirname, {
 // Enhance resolver configuration for hot reload stability
 config.resolver = {
   ...config.resolver,
-  platforms: ['ios', 'android', 'native', 'web'],
+  platforms: ["ios", "android", "native", "web"],
   alias: {
     // Ensure consistent module resolution for hot reload
-    'react-native$': 'react-native-web',
+    "react-native$": "react-native-web",
     // Add web-specific aliases for better compatibility
-    'react-native-svg$': 'react-native-svg/lib/commonjs/ReactNativeSVG.web.js',
+    "react-native-svg$": "react-native-svg/lib/commonjs/ReactNativeSVG.web.js",
   },
-  resolverMainFields: ['react-native', 'browser', 'main'],
+  resolverMainFields: ["react-native", "browser", "main"],
   extensions: [
-    '.web.tsx',
-    '.web.ts',
-    '.web.jsx',
-    '.web.js',
-    '.tsx',
-    '.ts',
-    '.jsx',
-    '.js',
-    '.json',
+    ".web.tsx",
+    ".web.ts",
+    ".web.jsx",
+    ".web.js",
+    ".tsx",
+    ".ts",
+    ".jsx",
+    ".js",
+    ".json",
   ],
   // Prevent resolver issues that can break hot reload
   unstable_enableSymlinks: false,
@@ -60,10 +60,16 @@ config.server = {
   enhanceMiddleware: (middleware) => {
     return (req, res, next) => {
       // Add CORS headers for web development
-      if (req.url && req.url.includes('hot-update')) {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      if (req.url && req.url.includes("hot-update")) {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader(
+          "Access-Control-Allow-Methods",
+          "GET, POST, PUT, DELETE, OPTIONS",
+        );
+        res.setHeader(
+          "Access-Control-Allow-Headers",
+          "Content-Type, Authorization",
+        );
       }
       return middleware(req, res, next);
     };

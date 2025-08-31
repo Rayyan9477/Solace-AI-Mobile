@@ -1,14 +1,11 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { InteractionManager } from 'react-native';
+import { useState, useEffect, useCallback, useRef } from "react";
+import { InteractionManager } from "react-native";
 
 /**
  * Hook for implementing lazy loading with visibility-based loading
  * Optimizes performance by only loading components when they're needed
  */
-export const useLazyComponent = (
-  importFunc,
-  options = {}
-) => {
+export const useLazyComponent = (importFunc, options = {}) => {
   const {
     preload = false,
     delay = 0,
@@ -38,14 +35,14 @@ export const useLazyComponent = (
       try {
         // Wait for interactions to complete for better UX
         await InteractionManager.runAfterInteractions();
-        
+
         if (delay > 0) {
-          await new Promise(resolve => setTimeout(resolve, delay));
+          await new Promise((resolve) => setTimeout(resolve, delay));
         }
 
         const module = await importFunc();
         const LoadedComponent = module.default || module;
-        
+
         setComponent(() => LoadedComponent);
         setLoading(false);
         onLoadComplete?.(LoadedComponent);
@@ -61,7 +58,15 @@ export const useLazyComponent = (
     });
 
     return loadPromiseRef.current;
-  }, [Component, loading, importFunc, delay, onLoadStart, onLoadComplete, onLoadError]);
+  }, [
+    Component,
+    loading,
+    importFunc,
+    delay,
+    onLoadStart,
+    onLoadComplete,
+    onLoadError,
+  ]);
 
   useEffect(() => {
     if (preload) {
@@ -82,15 +87,8 @@ export const useLazyComponent = (
  * Hook for intersection-based lazy loading
  * Loads components when they become visible
  */
-export const useIntersectionLazyLoad = (
-  importFunc,
-  options = {}
-) => {
-  const {
-    rootMargin = '50px',
-    threshold = 0.1,
-    ...lazyOptions
-  } = options;
+export const useIntersectionLazyLoad = (importFunc, options = {}) => {
+  const { rootMargin = "50px", threshold = 0.1, ...lazyOptions } = options;
 
   const [isVisible, setIsVisible] = useState(false);
   const observerRef = useRef(null);
@@ -98,7 +96,7 @@ export const useIntersectionLazyLoad = (
 
   const { Component, loading, error, loadComponent } = useLazyComponent(
     importFunc,
-    lazyOptions
+    lazyOptions,
   );
 
   useEffect(() => {
@@ -115,7 +113,7 @@ export const useIntersectionLazyLoad = (
       {
         rootMargin,
         threshold,
-      }
+      },
     );
 
     observer.observe(element);
@@ -142,10 +140,7 @@ export const useIntersectionLazyLoad = (
  * Hook for priority-based lazy loading
  * Implements different loading strategies based on component priority
  */
-export const usePriorityLazyLoad = (
-  components = [],
-  options = {}
-) => {
+export const usePriorityLazyLoad = (components = [], options = {}) => {
   const {
     highPriorityDelay = 0,
     mediumPriorityDelay = 100,
@@ -155,71 +150,90 @@ export const usePriorityLazyLoad = (
   const [loadedComponents, setLoadedComponents] = useState(new Map());
   const [loading, setLoading] = useState(new Set());
 
-  const getDelayForPriority = useCallback((priority) => {
-    switch (priority) {
-      case 'high': return highPriorityDelay;
-      case 'medium': return mediumPriorityDelay;
-      case 'low': return lowPriorityDelay;
-      default: return mediumPriorityDelay;
-    }
-  }, [highPriorityDelay, mediumPriorityDelay, lowPriorityDelay]);
+  const getDelayForPriority = useCallback(
+    (priority) => {
+      switch (priority) {
+        case "high":
+          return highPriorityDelay;
+        case "medium":
+          return mediumPriorityDelay;
+        case "low":
+          return lowPriorityDelay;
+        default:
+          return mediumPriorityDelay;
+      }
+    },
+    [highPriorityDelay, mediumPriorityDelay, lowPriorityDelay],
+  );
 
-  const loadComponent = useCallback(async (componentConfig) => {
-    const { key, importFunc, priority = 'medium' } = componentConfig;
-    
-    if (loadedComponents.has(key) || loading.has(key)) {
-      return loadedComponents.get(key);
-    }
+  const loadComponent = useCallback(
+    async (componentConfig) => {
+      const { key, importFunc, priority = "medium" } = componentConfig;
 
-    setLoading(prev => new Set([...prev, key]));
-    
-    try {
-      const delay = getDelayForPriority(priority);
-      
-      await InteractionManager.runAfterInteractions();
-      
-      if (delay > 0) {
-        await new Promise(resolve => setTimeout(resolve, delay));
+      if (loadedComponents.has(key) || loading.has(key)) {
+        return loadedComponents.get(key);
       }
 
-      const module = await importFunc();
-      const Component = module.default || module;
-      
-      setLoadedComponents(prev => new Map([...prev, [key, Component]]));
-      setLoading(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(key);
-        return newSet;
-      });
-      
-      return Component;
-    } catch (error) {
-      setLoading(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(key);
-        return newSet;
-      });
-      throw error;
-    }
-  }, [loadedComponents, loading, getDelayForPriority]);
+      setLoading((prev) => new Set([...prev, key]));
+
+      try {
+        const delay = getDelayForPriority(priority);
+
+        await InteractionManager.runAfterInteractions();
+
+        if (delay > 0) {
+          await new Promise((resolve) => setTimeout(resolve, delay));
+        }
+
+        const module = await importFunc();
+        const Component = module.default || module;
+
+        setLoadedComponents((prev) => new Map([...prev, [key, Component]]));
+        setLoading((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(key);
+          return newSet;
+        });
+
+        return Component;
+      } catch (error) {
+        setLoading((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(key);
+          return newSet;
+        });
+        throw error;
+      }
+    },
+    [loadedComponents, loading, getDelayForPriority],
+  );
 
   const loadAllComponents = useCallback(async () => {
     // Sort by priority: high -> medium -> low
     const sortedComponents = [...components].sort((a, b) => {
       const priorityOrder = { high: 0, medium: 1, low: 2 };
-      return priorityOrder[a.priority || 'medium'] - priorityOrder[b.priority || 'medium'];
+      return (
+        priorityOrder[a.priority || "medium"] -
+        priorityOrder[b.priority || "medium"]
+      );
     });
 
     // Load high priority components first
-    const highPriority = sortedComponents.filter(c => (c.priority || 'medium') === 'high');
+    const highPriority = sortedComponents.filter(
+      (c) => (c.priority || "medium") === "high",
+    );
     await Promise.allSettled(highPriority.map(loadComponent));
 
     // Load medium priority components
-    const mediumPriority = sortedComponents.filter(c => (c.priority || 'medium') === 'medium');
+    const mediumPriority = sortedComponents.filter(
+      (c) => (c.priority || "medium") === "medium",
+    );
     await Promise.allSettled(mediumPriority.map(loadComponent));
 
     // Load low priority components
-    const lowPriority = sortedComponents.filter(c => (c.priority || 'medium') === 'low');
+    const lowPriority = sortedComponents.filter(
+      (c) => (c.priority || "medium") === "low",
+    );
     await Promise.allSettled(lowPriority.map(loadComponent));
   }, [components, loadComponent]);
 
@@ -242,27 +256,33 @@ export const useRoutePreloader = (navigationState, preloadConfig = {}) => {
   const [preloadedRoutes, setPreloadedRoutes] = useState(new Set());
   const preloadingRef = useRef(new Set());
 
-  const preloadRoute = useCallback(async (routeName) => {
-    if (preloadedRoutes.has(routeName) || preloadingRef.current.has(routeName)) {
-      return;
-    }
+  const preloadRoute = useCallback(
+    async (routeName) => {
+      if (
+        preloadedRoutes.has(routeName) ||
+        preloadingRef.current.has(routeName)
+      ) {
+        return;
+      }
 
-    const config = preloadConfig[routeName];
-    if (!config) return;
+      const config = preloadConfig[routeName];
+      if (!config) return;
 
-    preloadingRef.current.add(routeName);
+      preloadingRef.current.add(routeName);
 
-    try {
-      await InteractionManager.runAfterInteractions();
-      await config.importFunc();
-      
-      setPreloadedRoutes(prev => new Set([...prev, routeName]));
-    } catch (error) {
-      console.warn(`Failed to preload route ${routeName}:`, error);
-    } finally {
-      preloadingRef.current.delete(routeName);
-    }
-  }, [preloadedRoutes, preloadConfig]);
+      try {
+        await InteractionManager.runAfterInteractions();
+        await config.importFunc();
+
+        setPreloadedRoutes((prev) => new Set([...prev, routeName]));
+      } catch (error) {
+        console.warn(`Failed to preload route ${routeName}:`, error);
+      } finally {
+        preloadingRef.current.delete(routeName);
+      }
+    },
+    [preloadedRoutes, preloadConfig],
+  );
 
   useEffect(() => {
     if (!navigationState) return;
@@ -272,8 +292,8 @@ export const useRoutePreloader = (navigationState, preloadConfig = {}) => {
 
     // Preload likely next routes based on current route
     const likelyRoutes = preloadConfig[currentRouteName]?.preloadRoutes || [];
-    
-    likelyRoutes.forEach(routeName => {
+
+    likelyRoutes.forEach((routeName) => {
       setTimeout(() => preloadRoute(routeName), 1000); // Delay to not interfere with current navigation
     });
   }, [navigationState, preloadRoute, preloadConfig]);

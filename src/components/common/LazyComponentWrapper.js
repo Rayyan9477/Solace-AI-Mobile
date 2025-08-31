@@ -1,4 +1,5 @@
-import React, { Suspense, useState, useEffect, useRef } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { Suspense, useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -6,20 +7,20 @@ import {
   StyleSheet,
   Animated,
   Dimensions,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../shared/theme/ThemeContext';
+} from "react-native";
 
-const { width: screenWidth } = Dimensions.get('window');
+import { useTheme } from "../../shared/theme/ThemeContext";
+
+const { width: screenWidth } = Dimensions.get("window");
 
 /**
  * Enhanced loading skeleton component with therapeutic design
  */
-const LoadingSkeleton = ({ 
-  width = '100%', 
-  height = 60, 
+const LoadingSkeleton = ({
+  width = "100%",
+  height = 60,
   borderRadius = 8,
-  showPulse = true 
+  showPulse = true,
 }) => {
   const { theme } = useTheme();
   const pulseAnim = useRef(new Animated.Value(0.3)).current;
@@ -36,10 +37,10 @@ const LoadingSkeleton = ({
         }),
         Animated.timing(pulseAnim, {
           toValue: 0.3,
-          duration: 1000, 
+          duration: 1000,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     );
 
     pulse.start();
@@ -66,18 +67,18 @@ const LoadingSkeleton = ({
 /**
  * Intelligent loading component that adapts to content type
  */
-const IntelligentLoader = ({ 
-  componentType = 'default',
-  size = 'medium',
+const IntelligentLoader = ({
+  componentType = "default",
+  size = "medium",
   message,
   showProgress = false,
   progress = 0,
 }) => {
   const { theme } = useTheme();
-  
+
   const getSkeletonConfig = () => {
     switch (componentType) {
-      case 'chat':
+      case "chat":
         return (
           <View style={styles.chatSkeleton}>
             <LoadingSkeleton width={60} height={60} borderRadius={30} />
@@ -87,8 +88,8 @@ const IntelligentLoader = ({
             </View>
           </View>
         );
-      
-      case 'card':
+
+      case "card":
         return (
           <View style={styles.cardSkeleton}>
             <LoadingSkeleton width="100%" height={120} />
@@ -96,8 +97,8 @@ const IntelligentLoader = ({
             <LoadingSkeleton width="50%" height={16} />
           </View>
         );
-      
-      case 'list':
+
+      case "list":
         return (
           <View style={styles.listSkeleton}>
             {Array.from({ length: 3 }).map((_, index) => (
@@ -111,8 +112,8 @@ const IntelligentLoader = ({
             ))}
           </View>
         );
-      
-      case 'dashboard':
+
+      case "dashboard":
         return (
           <View style={styles.dashboardSkeleton}>
             <LoadingSkeleton width="100%" height={80} />
@@ -123,7 +124,7 @@ const IntelligentLoader = ({
             <LoadingSkeleton width="100%" height={120} />
           </View>
         );
-      
+
       default:
         return <LoadingSkeleton />;
     }
@@ -146,22 +147,22 @@ const IntelligentLoader = ({
         ]}
         style={styles.loaderGradient}
       >
-        {componentType !== 'default' ? (
+        {componentType !== "default" ? (
           getSkeletonConfig()
         ) : (
           <View style={styles.defaultLoader}>
-            <ActivityIndicator 
-              size={config.indicator} 
-              color={theme.colors.therapeutic.calming[500]} 
+            <ActivityIndicator
+              size={config.indicator}
+              color={theme.colors.therapeutic.calming[500]}
             />
             {message && (
-              <Text 
+              <Text
                 style={[
                   styles.loaderText,
-                  { 
+                  {
                     color: theme.colors.text.secondary,
                     fontSize: config.text,
-                  }
+                  },
                 ]}
               >
                 {message}
@@ -169,23 +170,28 @@ const IntelligentLoader = ({
             )}
             {showProgress && (
               <View style={styles.progressContainer}>
-                <View 
+                <View
                   style={[
                     styles.progressBar,
-                    { backgroundColor: theme.colors.gray[200] }
+                    { backgroundColor: theme.colors.gray[200] },
                   ]}
                 >
                   <View
                     style={[
                       styles.progressFill,
-                      { 
+                      {
                         width: `${progress}%`,
-                        backgroundColor: theme.colors.therapeutic.calming[500]
-                      }
+                        backgroundColor: theme.colors.therapeutic.calming[500],
+                      },
                     ]}
                   />
                 </View>
-                <Text style={[styles.progressText, { color: theme.colors.text.tertiary }]}>
+                <Text
+                  style={[
+                    styles.progressText,
+                    { color: theme.colors.text.tertiary },
+                  ]}
+                >
                   {Math.round(progress)}%
                 </Text>
               </View>
@@ -211,18 +217,20 @@ class LazyComponentErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.warn('LazyComponent Error:', error, errorInfo);
+    console.warn("LazyComponent Error:", error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
-      return this.props.fallback || (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorTitle}>Failed to load component</Text>
-          <Text style={styles.errorMessage}>
-            {this.state.error?.message || 'Unknown error occurred'}
-          </Text>
-        </View>
+      return (
+        this.props.fallback || (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorTitle}>Failed to load component</Text>
+            <Text style={styles.errorMessage}>
+              {this.state.error?.message || "Unknown error occurred"}
+            </Text>
+          </View>
+        )
       );
     }
 
@@ -236,8 +244,8 @@ class LazyComponentErrorBoundary extends React.Component {
 const LazyComponentWrapper = ({
   children,
   fallback,
-  componentType = 'default',
-  size = 'medium',
+  componentType = "default",
+  size = "medium",
   loadingMessage,
   showProgress = false,
   progress = 0,
@@ -252,11 +260,11 @@ const LazyComponentWrapper = ({
 
   useEffect(() => {
     onLoadStart?.();
-    
+
     // Set timeout for loading
     timeoutRef.current = setTimeout(() => {
       setIsTimeout(true);
-      onError?.(new Error('Component loading timeout'));
+      onError?.(new Error("Component loading timeout"));
     }, timeout);
 
     return () => {
@@ -305,9 +313,7 @@ const LazyComponentWrapper = ({
 
   return (
     <LazyComponentErrorBoundary fallback={errorFallback}>
-      <Suspense fallback={fallback || defaultFallback}>
-        {children}
-      </Suspense>
+      <Suspense fallback={fallback || defaultFallback}>{children}</Suspense>
     </LazyComponentErrorBoundary>
   );
 };
@@ -315,12 +321,9 @@ const LazyComponentWrapper = ({
 /**
  * Higher-order component for creating lazy-loaded components
  */
-export const withLazyWrapper = (
-  importFunc,
-  wrapperProps = {}
-) => {
+export const withLazyWrapper = (importFunc, wrapperProps = {}) => {
   const LazyComponent = React.lazy(importFunc);
-  
+
   return React.forwardRef((props, ref) => (
     <LazyComponentWrapper {...wrapperProps}>
       <LazyComponent {...props} ref={ref} />
@@ -337,20 +340,20 @@ export const useLazyComponents = (componentConfigs = []) => {
   const [errors, setErrors] = useState(new Map());
 
   const loadComponent = async (key) => {
-    const config = componentConfigs.find(c => c.key === key);
+    const config = componentConfigs.find((c) => c.key === key);
     if (!config || loadedComponents.has(key)) return;
 
-    setLoadingStates(prev => new Map([...prev, [key, true]]));
-    
+    setLoadingStates((prev) => new Map([...prev, [key, true]]));
+
     try {
       const module = await config.importFunc();
       const Component = module.default || module;
-      
-      setLoadedComponents(prev => new Map([...prev, [key, Component]]));
-      setLoadingStates(prev => new Map([...prev, [key, false]]));
+
+      setLoadedComponents((prev) => new Map([...prev, [key, Component]]));
+      setLoadingStates((prev) => new Map([...prev, [key, false]]));
     } catch (error) {
-      setErrors(prev => new Map([...prev, [key, error]]));
-      setLoadingStates(prev => new Map([...prev, [key, false]]));
+      setErrors((prev) => new Map([...prev, [key, error]]));
+      setLoadingStates((prev) => new Map([...prev, [key, false]]));
     }
   };
 
@@ -366,39 +369,39 @@ export const useLazyComponents = (componentConfigs = []) => {
 const styles = StyleSheet.create({
   loaderContainer: {
     minHeight: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   loaderGradient: {
-    width: '100%',
+    width: "100%",
     minHeight: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 16,
     padding: 20,
   },
   defaultLoader: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   loaderText: {
     marginTop: 12,
-    textAlign: 'center',
-    fontWeight: '500',
+    textAlign: "center",
+    fontWeight: "500",
   },
   progressContainer: {
-    width: '100%',
+    width: "100%",
     marginTop: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   progressBar: {
-    width: '100%',
+    width: "100%",
     height: 4,
     borderRadius: 2,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   progressFill: {
-    height: '100%',
+    height: "100%",
     borderRadius: 2,
   },
   progressText: {
@@ -409,9 +412,9 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   chatSkeleton: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    width: '100%',
+    flexDirection: "row",
+    alignItems: "flex-start",
+    width: "100%",
     padding: 12,
   },
   chatBubbleSkeleton: {
@@ -419,15 +422,15 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   cardSkeleton: {
-    width: '100%',
+    width: "100%",
     padding: 16,
   },
   listSkeleton: {
-    width: '100%',
+    width: "100%",
   },
   listItemSkeleton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 12,
     marginBottom: 8,
   },
@@ -436,47 +439,47 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   dashboardSkeleton: {
-    width: '100%',
+    width: "100%",
     padding: 16,
   },
   dashboardRowSkeleton: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginVertical: 12,
   },
   errorContainer: {
     padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     minHeight: 100,
   },
   errorTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#EF4444',
+    fontWeight: "600",
+    color: "#EF4444",
     marginBottom: 8,
   },
   errorMessage: {
     fontSize: 14,
-    color: '#6B7280',
-    textAlign: 'center',
+    color: "#6B7280",
+    textAlign: "center",
   },
   timeoutContainer: {
     padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     minHeight: 100,
   },
   timeoutTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#F59E0B',
+    fontWeight: "600",
+    color: "#F59E0B",
     marginBottom: 8,
   },
   timeoutMessage: {
     fontSize: 14,
-    color: '#6B7280',
-    textAlign: 'center',
+    color: "#6B7280",
+    textAlign: "center",
   },
 });
 

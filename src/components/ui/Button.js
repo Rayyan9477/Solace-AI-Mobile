@@ -1,27 +1,35 @@
-import React, { useState } from 'react';
-import { 
-  TouchableOpacity, 
-  Text, 
-  StyleSheet, 
-  Animated, 
+import { BlurView } from "@react-native-community/blur";
+import React, { useState } from "react";
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Animated,
   ActivityIndicator,
-  View
-} from 'react-native';
-import { BlurView } from '@react-native-community/blur';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import FreudDesignSystem, { FreudColors, FreudComponents, FreudShadows, FreudBorderRadius, FreudSpacing, FreudTypography } from '../../shared/theme/FreudDesignSystem';
-import { MentalHealthIcon } from '../icons';
+  View,
+} from "react-native";
+
+import FreudDesignSystem, {
+  FreudColors,
+  FreudComponents,
+  FreudShadows,
+  FreudBorderRadius,
+  FreudSpacing,
+  FreudTypography,
+} from "../../shared/theme/FreudDesignSystem";
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { MentalHealthIcon } from "../icons";
 
 const Button = ({
-  title = '',
+  title = "",
   onPress = () => {},
-  variant = 'primary',
-  size = 'medium',
-  therapeuticColor = 'calming',
+  variant = "primary",
+  size = "medium",
+  therapeuticColor = "calming",
   disabled = false,
   loading = false,
   icon = null,
-  iconPosition = 'left',
+  iconPosition = "left",
   fullWidth = false,
   style = {},
   textStyle = {},
@@ -58,7 +66,7 @@ const Button = ({
     };
 
     if (fullWidth) {
-      baseStyle.width = '100%';
+      baseStyle.width = "100%";
     }
 
     if (disabled || loading) {
@@ -69,59 +77,61 @@ const Button = ({
   };
 
   const getVariantStyles = () => {
-    const currentTheme = isDarkMode ? FreudDesignSystem.themes.dark : FreudDesignSystem.themes.light;
-    
+    const currentTheme = isDarkMode
+      ? FreudDesignSystem.themes.dark
+      : FreudDesignSystem.themes.light;
+
     switch (variant) {
-      case 'primary':
+      case "primary":
         return {
           ...FreudComponents.button.primary,
           backgroundColor: FreudColors.mindfulBrown[90],
         };
-      
-      case 'secondary':
+
+      case "secondary":
         return {
           ...FreudComponents.button.secondary,
           backgroundColor: FreudColors.serenityGreen[40],
         };
-      
-      case 'outline':
+
+      case "outline":
         return {
           ...FreudComponents.button.outline,
           borderColor: FreudColors.mindfulBrown[50],
         };
-      
-      case 'ghost':
+
+      case "ghost":
         return {
           ...FreudComponents.button.ghost,
         };
-      
-      case 'link':
+
+      case "link":
         return {
-          backgroundColor: 'transparent',
+          backgroundColor: "transparent",
           borderWidth: 0,
           paddingVertical: 0,
           paddingHorizontal: 0,
           borderRadius: FreudBorderRadius.md,
         };
-      
-      case 'destructive':
+
+      case "destructive":
         return {
           ...FreudComponents.button.primary,
           backgroundColor: FreudColors.empathyOrange[60],
         };
-      
-      case 'glassmorphism':
+
+      case "glassmorphism":
         return {
-          backgroundColor: 'rgba(255, 255, 255, 0.25)',
+          backgroundColor: "rgba(255, 255, 255, 0.25)",
           borderWidth: 1,
-          borderColor: 'rgba(255, 255, 255, 0.3)',
-          borderRadius: FreudBorderRadius['2xl'],
+          borderColor: "rgba(255, 255, 255, 0.3)",
+          borderRadius: FreudBorderRadius["2xl"],
           paddingVertical: FreudSpacing[3],
           paddingHorizontal: FreudSpacing[6],
           minHeight: 44,
-          backdropFilter: 'blur(10px)',
+          backdropFilter: "blur(10px)",
         };
-      
+
       default:
         return {
           ...FreudComponents.button.primary,
@@ -132,30 +142,30 @@ const Button = ({
 
   const getSizeStyles = () => {
     switch (size) {
-      case 'small':
+      case "small":
         return {
           paddingVertical: FreudSpacing[2],
           paddingHorizontal: FreudSpacing[4],
           borderRadius: FreudBorderRadius.lg,
           minHeight: 36,
         };
-      
-      case 'large':
+
+      case "large":
         return {
           paddingVertical: FreudSpacing[4],
           paddingHorizontal: FreudSpacing[6],
           borderRadius: FreudBorderRadius.xl,
           minHeight: 56,
         };
-      
-      case 'xl':
+
+      case "xl":
         return {
           paddingVertical: FreudSpacing[5],
           paddingHorizontal: FreudSpacing[8],
-          borderRadius: FreudBorderRadius['2xl'],
+          borderRadius: FreudBorderRadius["2xl"],
           minHeight: 64,
         };
-      
+
       default: // medium
         return {
           paddingVertical: FreudSpacing[3],
@@ -167,47 +177,49 @@ const Button = ({
   };
 
   const getTextStyles = () => {
-    const currentTheme = isDarkMode ? FreudDesignSystem.themes.dark : FreudDesignSystem.themes.light;
+    const currentTheme = isDarkMode
+      ? FreudDesignSystem.themes.dark
+      : FreudDesignSystem.themes.light;
     const baseTextStyle = {
       ...getTextSizeStyles(),
       fontWeight: FreudTypography.weights.semiBold,
-      textAlign: 'center',
+      textAlign: "center",
       fontFamily: FreudTypography.fontFamily.primary,
     };
 
     switch (variant) {
-      case 'primary':
-        baseTextStyle.color = '#FFFFFF';
+      case "primary":
+        baseTextStyle.color = "#FFFFFF";
         break;
-      
-      case 'secondary':
-        baseTextStyle.color = '#FFFFFF';
+
+      case "secondary":
+        baseTextStyle.color = "#FFFFFF";
         break;
-      
-      case 'outline':
+
+      case "outline":
         baseTextStyle.color = FreudColors.mindfulBrown[90];
         break;
-      
-      case 'ghost':
+
+      case "ghost":
         baseTextStyle.color = currentTheme.colors.text.primary;
         break;
-      
-      case 'link':
+
+      case "link":
         baseTextStyle.color = FreudColors.serenityGreen[60];
-        baseTextStyle.textDecorationLine = 'underline';
+        baseTextStyle.textDecorationLine = "underline";
         break;
-      
-      case 'destructive':
-        baseTextStyle.color = '#FFFFFF';
+
+      case "destructive":
+        baseTextStyle.color = "#FFFFFF";
         break;
-      
-      case 'glassmorphism':
-        baseTextStyle.color = '#FFFFFF';
+
+      case "glassmorphism":
+        baseTextStyle.color = "#FFFFFF";
         baseTextStyle.fontWeight = FreudTypography.weights.bold;
         break;
-      
+
       default:
-        baseTextStyle.color = '#FFFFFF';
+        baseTextStyle.color = "#FFFFFF";
     }
 
     return [baseTextStyle, textStyle];
@@ -215,62 +227,69 @@ const Button = ({
 
   const getTextSizeStyles = () => {
     switch (size) {
-      case 'small':
-        return { 
-          fontSize: FreudTypography.sizes.sm, 
-          lineHeight: FreudTypography.sizes.sm * FreudTypography.lineHeights.normal 
+      case "small":
+        return {
+          fontSize: FreudTypography.sizes.sm,
+          lineHeight:
+            FreudTypography.sizes.sm * FreudTypography.lineHeights.normal,
         };
-      case 'large':
-        return { 
-          fontSize: FreudTypography.sizes.lg, 
-          lineHeight: FreudTypography.sizes.lg * FreudTypography.lineHeights.normal 
+      case "large":
+        return {
+          fontSize: FreudTypography.sizes.lg,
+          lineHeight:
+            FreudTypography.sizes.lg * FreudTypography.lineHeights.normal,
         };
-      case 'xl':
-        return { 
-          fontSize: FreudTypography.sizes.xl, 
-          lineHeight: FreudTypography.sizes.xl * FreudTypography.lineHeights.normal 
+      case "xl":
+        return {
+          fontSize: FreudTypography.sizes.xl,
+          lineHeight:
+            FreudTypography.sizes.xl * FreudTypography.lineHeights.normal,
         };
       default:
-        return { 
-          fontSize: FreudTypography.sizes.base, 
-          lineHeight: FreudTypography.sizes.base * FreudTypography.lineHeights.normal 
+        return {
+          fontSize: FreudTypography.sizes.base,
+          lineHeight:
+            FreudTypography.sizes.base * FreudTypography.lineHeights.normal,
         };
     }
   };
 
   const renderIcon = () => {
     if (!icon || loading) return null;
-    
-    const iconSize = size === 'small' ? 16 : size === 'large' ? 20 : size === 'xl' ? 24 : 18;
+
+    const iconSize =
+      size === "small" ? 16 : size === "large" ? 20 : size === "xl" ? 24 : 18;
     const iconColor = getTextStyles()[0].color;
-    
-    if (typeof icon === 'string') {
+
+    if (typeof icon === "string") {
       return (
         <MentalHealthIcon
           name={icon}
           size={iconSize}
           color={iconColor}
-          style={iconPosition === 'right' ? { marginLeft: 8 } : { marginRight: 8 }}
+          style={
+            iconPosition === "right" ? { marginLeft: 8 } : { marginRight: 8 }
+          }
         />
       );
     }
-    
+
     return React.cloneElement(icon, {
       size: iconSize,
       color: iconColor,
       style: [
         icon.props.style,
-        iconPosition === 'right' ? { marginLeft: 8 } : { marginRight: 8 }
-      ]
+        iconPosition === "right" ? { marginLeft: 8 } : { marginRight: 8 },
+      ],
     });
   };
 
   const renderLoading = () => {
     if (!loading) return null;
-    
-    const spinnerSize = size === 'small' ? 16 : size === 'large' ? 20 : 18;
+
+    const spinnerSize = size === "small" ? 16 : size === "large" ? 20 : 18;
     const spinnerColor = getTextStyles()[0].color;
-    
+
     return (
       <ActivityIndicator
         size={spinnerSize}
@@ -287,20 +306,20 @@ const Button = ({
 
     return (
       <View style={styles.content}>
-        {iconPosition === 'left' && renderIcon()}
+        {iconPosition === "left" && renderIcon()}
         {renderLoading()}
         {title && (
           <Text style={getTextStyles()} numberOfLines={1}>
             {title}
           </Text>
         )}
-        {iconPosition === 'right' && renderIcon()}
+        {iconPosition === "right" && renderIcon()}
       </View>
     );
   };
 
   const ButtonWrapper = ({ children }) => {
-    if (variant === 'glassmorphism') {
+    if (variant === "glassmorphism") {
       return (
         <BlurView
           style={getButtonStyles()}
@@ -312,11 +331,7 @@ const Button = ({
         </BlurView>
       );
     }
-    return (
-      <View style={getButtonStyles()}>
-        {children}
-      </View>
-    );
+    return <View style={getButtonStyles()}>{children}</View>;
   };
 
   return (
@@ -332,13 +347,11 @@ const Button = ({
         accessibilityHint={accessibilityHint}
         accessibilityState={{
           disabled: disabled || loading,
-          busy: loading
+          busy: loading,
         }}
         {...props}
       >
-        <ButtonWrapper>
-          {buttonContent()}
-        </ButtonWrapper>
+        <ButtonWrapper>{buttonContent()}</ButtonWrapper>
       </TouchableOpacity>
     </Animated.View>
   );
@@ -347,7 +360,7 @@ const Button = ({
 // Button Group Component for related actions
 export const ButtonGroup = ({
   children,
-  orientation = 'horizontal',
+  orientation = "horizontal",
   spacing = 8,
   style = {},
 }) => {
@@ -356,7 +369,7 @@ export const ButtonGroup = ({
       style={[
         styles.buttonGroup,
         {
-          flexDirection: orientation === 'horizontal' ? 'row' : 'column',
+          flexDirection: orientation === "horizontal" ? "row" : "column",
           gap: spacing,
         },
         style,
@@ -369,7 +382,7 @@ export const ButtonGroup = ({
 
 // Therapeutic Button Variants
 export const TherapeuticButton = (props) => (
-  <Button {...props} therapeuticColor={props.therapeuticColor || 'calming'} />
+  <Button {...props} therapeuticColor={props.therapeuticColor || "calming"} />
 );
 
 export const CalmingButton = (props) => (
@@ -394,18 +407,18 @@ export const EnergizingButton = (props) => (
 
 const styles = StyleSheet.create({
   button: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    overflow: 'hidden', // For glassmorphism effects
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    overflow: "hidden", // For glassmorphism effects
   },
   content: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonGroup: {
-    alignItems: 'center',
+    alignItems: "center",
   },
 });
 

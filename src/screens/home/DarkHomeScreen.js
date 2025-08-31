@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,9 +12,9 @@ import {
   Alert,
 } from "react-native";
 
+import { FreudLogo } from "../../components/icons/FreudIcons";
 import { useTheme } from "../../shared/theme/ThemeContext";
 import { freudDarkTheme } from "../../shared/theme/freudDarkTheme";
-import { FreudLogo } from "../../components/icons/FreudIcons";
 
 const { width, height } = Dimensions.get("window");
 
@@ -123,15 +123,21 @@ const DarkHomeScreen = ({ navigation }) => {
       subtitle: "Will meditation help you get out from the rut now?",
       readTime: "5-8 min",
       icon: "🧘",
-      bgGradient: [freudDarkTheme.colors.header.primary, freudDarkTheme.colors.header.secondary],
+      bgGradient: [
+        freudDarkTheme.colors.header.primary,
+        freudDarkTheme.colors.header.secondary,
+      ],
     },
     {
       id: 2,
       title: "Mental Health",
       subtitle: "Will meditation helps you get out from the rut?",
-      readTime: "8-10 min", 
+      readTime: "8-10 min",
       icon: "🧘",
-      bgGradient: [freudDarkTheme.colors.header.primary, freudDarkTheme.colors.header.secondary],
+      bgGradient: [
+        freudDarkTheme.colors.header.primary,
+        freudDarkTheme.colors.header.secondary,
+      ],
     },
   ];
 
@@ -154,22 +160,18 @@ const DarkHomeScreen = ({ navigation }) => {
     <View style={styles.header}>
       <View style={styles.headerContent}>
         <View>
-          <Text style={styles.greeting}>
-            Good {currentTime}
-          </Text>
-          <Text style={styles.userName}>
-            Hi, {userName}! 👋
-          </Text>
+          <Text style={styles.greeting}>Good {currentTime}</Text>
+          <Text style={styles.userName}>Hi, {userName}! 👋</Text>
         </View>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={styles.searchButton}
-          onPress={() => navigation.navigate('Search')}
+          onPress={() => navigation.navigate("Search")}
         >
           <Text style={styles.searchIcon}>🔍</Text>
         </TouchableOpacity>
       </View>
-      
+
       <Text style={styles.statusText}>Search anything...</Text>
     </View>
   );
@@ -177,7 +179,10 @@ const DarkHomeScreen = ({ navigation }) => {
   const renderMentalHealthScore = () => (
     <View style={styles.scoreCard}>
       <LinearGradient
-        colors={[freudDarkTheme.colors.header.primary, freudDarkTheme.colors.header.secondary]}
+        colors={[
+          freudDarkTheme.colors.header.primary,
+          freudDarkTheme.colors.header.secondary,
+        ]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.scoreGradient}
@@ -190,7 +195,7 @@ const DarkHomeScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-        
+
         <View style={styles.scoreDisplay}>
           <Text style={styles.scoreValue}>{mentalHealthScore.current}</Text>
           <Text style={styles.scoreStatus}>{mentalHealthScore.status}</Text>
@@ -229,24 +234,28 @@ const DarkHomeScreen = ({ navigation }) => {
   );
 
   const renderAITherapySection = () => (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.therapyCard}
-      onPress={() => navigation.navigate('Chat')}
+      onPress={() => navigation.navigate("Chat")}
     >
       <View style={styles.therapyHeader}>
         <Text style={styles.therapyTitle}>AI Therapy Chatbot</Text>
         <View style={styles.therapyStats}>
-          <Text style={styles.therapyConversations}>{aiTherapyStats.conversations}</Text>
+          <Text style={styles.therapyConversations}>
+            {aiTherapyStats.conversations}
+          </Text>
           <Text style={styles.therapyLabel}>Conversations</Text>
         </View>
       </View>
-      
+
       <View style={styles.therapyContent}>
         <View style={styles.therapyAvatar}>
           <Text style={styles.avatarEmoji}>🤖</Text>
         </View>
         <View style={styles.therapyInfo}>
-          <Text style={styles.therapyTime}>{aiTherapyStats.todayMinutes} Min This Session</Text>
+          <Text style={styles.therapyTime}>
+            {aiTherapyStats.todayMinutes} Min This Session
+          </Text>
           <Text style={styles.therapyWeek}>{aiTherapyStats.thisWeek}</Text>
         </View>
         <TouchableOpacity style={styles.therapyButton}>
@@ -264,7 +273,7 @@ const DarkHomeScreen = ({ navigation }) => {
           <Text style={styles.seeAllText}>See All</Text>
         </TouchableOpacity>
       </View>
-      
+
       <View style={styles.articlesGrid}>
         {mindfulArticles.map((article) => (
           <TouchableOpacity
@@ -282,7 +291,9 @@ const DarkHomeScreen = ({ navigation }) => {
               <View style={styles.articleContent}>
                 <Text style={styles.articleTitle}>{article.title}</Text>
                 <Text style={styles.articleSubtitle}>{article.subtitle}</Text>
-                <Text style={styles.articleReadTime}>📖 {article.readTime}</Text>
+                <Text style={styles.articleReadTime}>
+                  📖 {article.readTime}
+                </Text>
               </View>
             </LinearGradient>
           </TouchableOpacity>
@@ -294,25 +305,28 @@ const DarkHomeScreen = ({ navigation }) => {
   const handleMetricPress = (metric) => {
     switch (metric.id) {
       case "freud-score":
-        navigation.navigate('MentalHealthScore');
+        navigation.navigate("MentalHealthScore");
         break;
       case "mood-tracker":
-        navigation.navigate('Mood');
+        navigation.navigate("Mood");
         break;
       case "mindful-hours":
-        navigation.navigate('MindfulHours');
+        navigation.navigate("MindfulHours");
         break;
       case "sleep-quality":
-        navigation.navigate('SleepQuality');
+        navigation.navigate("SleepQuality");
         break;
       case "mindful-journal":
-        navigation.navigate('MentalHealthJournal');
+        navigation.navigate("MentalHealthJournal");
         break;
       case "stress-level":
-        navigation.navigate('StressManagement');
+        navigation.navigate("StressManagement");
         break;
       default:
-        Alert.alert("Coming Soon", `${metric.title} feature is under development`);
+        Alert.alert(
+          "Coming Soon",
+          `${metric.title} feature is under development`,
+        );
     }
   };
 
@@ -383,9 +397,9 @@ const styles = StyleSheet.create({
     marginBottom: freudDarkTheme.spacing[6],
   },
   headerContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: freudDarkTheme.spacing[2],
   },
   greeting: {
@@ -404,8 +418,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: freudDarkTheme.colors.card.background,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     ...freudDarkTheme.shadows.sm,
   },
   searchIcon: {
@@ -421,7 +435,7 @@ const styles = StyleSheet.create({
   scoreCard: {
     marginBottom: freudDarkTheme.spacing[6],
     borderRadius: freudDarkTheme.borderRadius.xl,
-    overflow: 'hidden',
+    overflow: "hidden",
     ...freudDarkTheme.shadows.md,
   },
   scoreGradient: {
@@ -431,13 +445,13 @@ const styles = StyleSheet.create({
     marginBottom: freudDarkTheme.spacing[4],
   },
   scoreInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   scoreTitle: {
     fontSize: freudDarkTheme.typography.sizes.lg,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontWeight: freudDarkTheme.typography.weights.semibold,
   },
   scoreMenuButton: {
@@ -445,38 +459,38 @@ const styles = StyleSheet.create({
   },
   scoreMenuText: {
     fontSize: 20,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontWeight: freudDarkTheme.typography.weights.bold,
   },
   scoreDisplay: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: freudDarkTheme.spacing[6],
   },
   scoreValue: {
     fontSize: freudDarkTheme.typography.sizes["6xl"],
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontWeight: freudDarkTheme.typography.weights.bold,
     marginBottom: freudDarkTheme.spacing[2],
   },
   scoreStatus: {
     fontSize: freudDarkTheme.typography.sizes.lg,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontWeight: freudDarkTheme.typography.weights.medium,
     opacity: 0.9,
   },
   scoreHistoryButton: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   scoreHistoryText: {
     fontSize: freudDarkTheme.typography.sizes.base,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontWeight: freudDarkTheme.typography.weights.medium,
   },
   seeAllText: {
     fontSize: freudDarkTheme.typography.sizes.sm,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     opacity: 0.8,
     fontWeight: freudDarkTheme.typography.weights.medium,
   },
@@ -492,20 +506,21 @@ const styles = StyleSheet.create({
     marginBottom: freudDarkTheme.spacing[4],
   },
   metricsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: freudDarkTheme.spacing[3],
   },
   metricCard: {
-    width: (width - (freudDarkTheme.spacing[6] * 2) - freudDarkTheme.spacing[3]) / 2,
+    width:
+      (width - freudDarkTheme.spacing[6] * 2 - freudDarkTheme.spacing[3]) / 2,
     padding: freudDarkTheme.spacing[4],
     borderRadius: freudDarkTheme.borderRadius.lg,
     ...freudDarkTheme.shadows.sm,
   },
   metricHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: freudDarkTheme.spacing[2],
   },
   metricIcon: {
@@ -536,9 +551,9 @@ const styles = StyleSheet.create({
     ...freudDarkTheme.shadows.md,
   },
   therapyHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: freudDarkTheme.spacing[4],
   },
   therapyTitle: {
@@ -547,7 +562,7 @@ const styles = StyleSheet.create({
     fontWeight: freudDarkTheme.typography.weights.semibold,
   },
   therapyStats: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   therapyConversations: {
     fontSize: freudDarkTheme.typography.sizes.xl,
@@ -559,16 +574,16 @@ const styles = StyleSheet.create({
     color: freudDarkTheme.colors.text.tertiary,
   },
   therapyContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   therapyAvatar: {
     width: 50,
     height: 50,
     borderRadius: 25,
     backgroundColor: freudDarkTheme.colors.accent.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: freudDarkTheme.spacing[4],
   },
   avatarEmoji: {
@@ -592,8 +607,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: freudDarkTheme.colors.accent.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   therapyButtonIcon: {
     fontSize: 18,
@@ -604,9 +619,9 @@ const styles = StyleSheet.create({
     marginBottom: freudDarkTheme.spacing[6],
   },
   articlesHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: freudDarkTheme.spacing[4],
   },
   articlesTitle: {
@@ -619,13 +634,13 @@ const styles = StyleSheet.create({
   },
   articleCard: {
     borderRadius: freudDarkTheme.borderRadius.lg,
-    overflow: 'hidden',
+    overflow: "hidden",
     ...freudDarkTheme.shadows.sm,
   },
   articleGradient: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: freudDarkTheme.spacing[4],
-    alignItems: 'center',
+    alignItems: "center",
   },
   articleIcon: {
     fontSize: 32,
@@ -636,20 +651,20 @@ const styles = StyleSheet.create({
   },
   articleTitle: {
     fontSize: freudDarkTheme.typography.sizes.base,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontWeight: freudDarkTheme.typography.weights.semibold,
     marginBottom: freudDarkTheme.spacing[1],
   },
   articleSubtitle: {
     fontSize: freudDarkTheme.typography.sizes.sm,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     opacity: 0.9,
     marginBottom: freudDarkTheme.spacing[2],
     lineHeight: freudDarkTheme.typography.sizes.sm * 1.4,
   },
   articleReadTime: {
     fontSize: freudDarkTheme.typography.sizes.xs,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     opacity: 0.8,
     fontWeight: freudDarkTheme.typography.weights.medium,
   },

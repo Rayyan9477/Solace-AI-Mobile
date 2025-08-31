@@ -1,4 +1,5 @@
-import { Platform, InteractionManager, DeviceEventEmitter } from 'react-native';
+import React from "react";
+import { Platform, InteractionManager, DeviceEventEmitter } from "react-native";
 
 /**
  * Comprehensive Performance Profiler for React Native Mental Health App
@@ -18,7 +19,7 @@ class PerformanceProfiler {
     this.listeners = [];
     this.memoryWarningCount = 0;
     this.startTime = Date.now();
-    
+
     if (this.isEnabled) {
       this.initialize();
     }
@@ -33,15 +34,18 @@ class PerformanceProfiler {
 
   setupMemoryMonitoring() {
     // Memory warning listener
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       const memoryWarningListener = () => {
         this.memoryWarningCount++;
         this.recordMemoryWarning();
       };
-      
-      DeviceEventEmitter.addListener('memoryWarning', memoryWarningListener);
-      this.listeners.push(() => 
-        DeviceEventEmitter.removeListener('memoryWarning', memoryWarningListener)
+
+      DeviceEventEmitter.addListener("memoryWarning", memoryWarningListener);
+      this.listeners.push(() =>
+        DeviceEventEmitter.removeListener(
+          "memoryWarning",
+          memoryWarningListener,
+        ),
       );
     }
 
@@ -52,18 +56,19 @@ class PerformanceProfiler {
   }
 
   setupInteractionTracking() {
-    const originalRunAfterInteractions = InteractionManager.runAfterInteractions;
-    
+    const originalRunAfterInteractions =
+      InteractionManager.runAfterInteractions;
+
     InteractionManager.runAfterInteractions = (callback) => {
       const startTime = Date.now();
-      
+
       return originalRunAfterInteractions(() => {
         const endTime = Date.now();
         this.recordInteraction({
           duration: endTime - startTime,
           timestamp: startTime,
         });
-        
+
         if (callback) {
           callback();
         }
@@ -105,7 +110,7 @@ class PerformanceProfiler {
       props: Object.keys(props).length,
       renderTime,
     });
-    
+
     if (renderData.props.length > 5) {
       renderData.props = renderData.props.slice(-5);
     }
@@ -114,7 +119,9 @@ class PerformanceProfiler {
 
     // Warn about performance issues
     if (renderData.avgTime > 16 && renderData.count > 10) {
-      console.warn(`Performance Warning: ${componentName} average render time is ${renderData.avgTime.toFixed(2)}ms`);
+      console.warn(
+        `Performance Warning: ${componentName} average render time is ${renderData.avgTime.toFixed(2)}ms`,
+      );
     }
   }
 
@@ -145,18 +152,20 @@ class PerformanceProfiler {
 
     // Check for memory pressure
     if (memoryInfo.jsHeapSizeUsed > memoryInfo.jsHeapSizeLimit * 0.8) {
-      console.warn('Memory Warning: High memory usage detected');
+      console.warn("Memory Warning: High memory usage detected");
     }
   }
 
   recordMemoryWarning() {
     this.metrics.memory.push({
       timestamp: Date.now(),
-      type: 'warning',
+      type: "warning",
       jsHeapSizeUsed: global.performance?.memory?.usedJSHeapSize || 0,
     });
 
-    console.warn(`Memory Warning #${this.memoryWarningCount}: Consider optimizing memory usage`);
+    console.warn(
+      `Memory Warning #${this.memoryWarningCount}: Consider optimizing memory usage`,
+    );
   }
 
   recordInteraction(interactionData) {
@@ -202,17 +211,18 @@ class PerformanceProfiler {
     const uptimeMinutes = (now - this.startTime) / 1000 / 60;
 
     return {
-      uptime: uptimeMinutes.toFixed(2) + ' minutes',
+      uptime: uptimeMinutes.toFixed(2) + " minutes",
       memoryWarnings: this.memoryWarningCount,
-      
+
       renders: {
         totalComponents: this.metrics.renders.size,
         slowComponents: Array.from(this.metrics.renders.entries())
           .filter(([, data]) => data.avgTime > 16)
           .map(([name, data]) => ({
             name,
-            avgTime: data.avgTime.toFixed(2) + 'ms',
-            slowRenderPercent: ((data.slowRenders / data.count) * 100).toFixed(1) + '%',
+            avgTime: data.avgTime.toFixed(2) + "ms",
+            slowRenderPercent:
+              ((data.slowRenders / data.count) * 100).toFixed(1) + "%",
           })),
       },
 
@@ -220,76 +230,87 @@ class PerformanceProfiler {
         samples: this.metrics.memory.length,
         current: this.getCurrentMemoryUsage(),
         peak: this.getPeakMemoryUsage(),
-        warnings: this.metrics.memory.filter(m => m.type === 'warning').length,
+        warnings: this.metrics.memory.filter((m) => m.type === "warning")
+          .length,
       },
 
       interactions: {
         total: this.metrics.interactions.length,
         avgDuration: this.getAverageInteractionDuration(),
-        slowInteractions: this.metrics.interactions
-          .filter(i => i.duration > 100)
-          .length,
+        slowInteractions: this.metrics.interactions.filter(
+          (i) => i.duration > 100,
+        ).length,
       },
 
       navigation: {
         total: this.metrics.navigation.length,
         avgDuration: this.getAverageNavigationDuration(),
         slowNavigations: this.metrics.navigation
-          .filter(n => n.duration > 300)
-          .map(n => ({ from: n.from, to: n.to, duration: n.duration + 'ms' })),
+          .filter((n) => n.duration > 300)
+          .map((n) => ({
+            from: n.from,
+            to: n.to,
+            duration: n.duration + "ms",
+          })),
       },
 
       bundles: {
         loaded: this.metrics.bundleLoads.length,
-        totalLoadTime: this.metrics.bundleLoads
-          .reduce((sum, b) => sum + b.loadTime, 0) + 'ms',
+        totalLoadTime:
+          this.metrics.bundleLoads.reduce((sum, b) => sum + b.loadTime, 0) +
+          "ms",
         slowLoads: this.metrics.bundleLoads
-          .filter(b => b.loadTime > 1000)
-          .map(b => ({ name: b.bundleName, time: b.loadTime + 'ms' })),
+          .filter((b) => b.loadTime > 1000)
+          .map((b) => ({ name: b.bundleName, time: b.loadTime + "ms" })),
       },
     };
   }
 
   getCurrentMemoryUsage() {
     const latest = this.metrics.memory[this.metrics.memory.length - 1];
-    return latest ? (latest.jsHeapSizeUsed / 1024 / 1024).toFixed(2) + ' MB' : 'N/A';
+    return latest
+      ? (latest.jsHeapSizeUsed / 1024 / 1024).toFixed(2) + " MB"
+      : "N/A";
   }
 
   getPeakMemoryUsage() {
     const peak = Math.max(
-      ...this.metrics.memory.map(m => m.jsHeapSizeUsed || 0)
+      ...this.metrics.memory.map((m) => m.jsHeapSizeUsed || 0),
     );
-    return peak ? (peak / 1024 / 1024).toFixed(2) + ' MB' : 'N/A';
+    return peak ? (peak / 1024 / 1024).toFixed(2) + " MB" : "N/A";
   }
 
   getAverageInteractionDuration() {
-    if (this.metrics.interactions.length === 0) return 'N/A';
-    
-    const avg = this.metrics.interactions.reduce((sum, i) => sum + i.duration, 0) 
-      / this.metrics.interactions.length;
-    return avg.toFixed(2) + 'ms';
+    if (this.metrics.interactions.length === 0) return "N/A";
+
+    const avg =
+      this.metrics.interactions.reduce((sum, i) => sum + i.duration, 0) /
+      this.metrics.interactions.length;
+    return avg.toFixed(2) + "ms";
   }
 
   getAverageNavigationDuration() {
-    if (this.metrics.navigation.length === 0) return 'N/A';
-    
-    const avg = this.metrics.navigation.reduce((sum, n) => sum + n.duration, 0) 
-      / this.metrics.navigation.length;
-    return avg.toFixed(2) + 'ms';
+    if (this.metrics.navigation.length === 0) return "N/A";
+
+    const avg =
+      this.metrics.navigation.reduce((sum, n) => sum + n.duration, 0) /
+      this.metrics.navigation.length;
+    return avg.toFixed(2) + "ms";
   }
 
   // Performance optimization suggestions
   getOptimizationSuggestions() {
     const suggestions = [];
-    
+
     // Render performance suggestions
-    const slowComponents = Array.from(this.metrics.renders.entries())
-      .filter(([, data]) => data.avgTime > 16);
-    
+    const slowComponents = Array.from(this.metrics.renders.entries()).filter(
+      ([, data]) => data.avgTime > 16,
+    );
+
     if (slowComponents.length > 0) {
       suggestions.push({
-        type: 'render',
-        priority: 'high',
+        type: "render",
+        priority: "high",
         message: `${slowComponents.length} components have slow render times. Consider using React.memo or optimizing render logic.`,
         components: slowComponents.map(([name]) => name),
       });
@@ -298,20 +319,22 @@ class PerformanceProfiler {
     // Memory suggestions
     if (this.memoryWarningCount > 0) {
       suggestions.push({
-        type: 'memory',
-        priority: 'high',
+        type: "memory",
+        priority: "high",
         message: `${this.memoryWarningCount} memory warnings detected. Implement memory cleanup and lazy loading.`,
       });
     }
 
     // Bundle size suggestions
-    const largeBundles = this.metrics.bundleLoads.filter(b => b.loadTime > 1000);
+    const largeBundles = this.metrics.bundleLoads.filter(
+      (b) => b.loadTime > 1000,
+    );
     if (largeBundles.length > 0) {
       suggestions.push({
-        type: 'bundle',
-        priority: 'medium',
+        type: "bundle",
+        priority: "medium",
         message: `${largeBundles.length} bundles have slow load times. Consider code splitting.`,
-        bundles: largeBundles.map(b => b.bundleName),
+        bundles: largeBundles.map((b) => b.bundleName),
       });
     }
 
@@ -324,16 +347,16 @@ class PerformanceProfiler {
       if (this.isEnabled) {
         const report = this.getPerformanceReport();
         const suggestions = this.getOptimizationSuggestions();
-        
-        console.group('🚀 Performance Report');
-        console.log('📊 Metrics:', report);
-        
+
+        console.group("🚀 Performance Report");
+        console.log("📊 Metrics:", report);
+
         if (suggestions.length > 0) {
-          console.warn('⚠️ Optimization Suggestions:', suggestions);
+          console.warn("⚠️ Optimization Suggestions:", suggestions);
         } else {
-          console.log('✅ No performance issues detected');
+          console.log("✅ No performance issues detected");
         }
-        
+
         console.groupEnd();
       }
     }, 60000); // Report every minute in development
@@ -346,23 +369,32 @@ class PerformanceProfiler {
     return class TrackedComponent extends React.Component {
       constructor(props) {
         super(props);
-        this.componentName = Component.displayName || Component.name || 'Unknown';
+        this.componentName =
+          Component.displayName || Component.name || "Unknown";
         this.renderStartTime = 0;
       }
 
       componentDidMount() {
         // Track mount time
         const mountTime = Date.now() - this.renderStartTime;
-        profiler.trackComponentRender(this.componentName + '.mount', mountTime, this.props);
+        profiler.trackComponentRender(
+          this.componentName + ".mount",
+          mountTime,
+          this.props,
+        );
       }
 
       render() {
         this.renderStartTime = Date.now();
         const result = React.createElement(Component, this.props);
         const renderTime = Date.now() - this.renderStartTime;
-        
-        profiler.trackComponentRender(this.componentName, renderTime, this.props);
-        
+
+        profiler.trackComponentRender(
+          this.componentName,
+          renderTime,
+          this.props,
+        );
+
         return result;
       }
     };
@@ -370,12 +402,12 @@ class PerformanceProfiler {
 
   // Cleanup
   destroy() {
-    this.listeners.forEach(removeListener => removeListener());
-    
+    this.listeners.forEach((removeListener) => removeListener());
+
     if (this.memoryInterval) {
       clearInterval(this.memoryInterval);
     }
-    
+
     if (this.reportingInterval) {
       clearInterval(this.reportingInterval);
     }

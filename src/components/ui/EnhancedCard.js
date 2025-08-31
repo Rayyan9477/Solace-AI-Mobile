@@ -1,20 +1,21 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Animated,
   TouchableOpacity,
-} from 'react-native';
-import { WebSafeLinearGradient as LinearGradient } from '../common/WebSafeLinearGradient';
-import EnhancedShadersContainer from '../enhanced/EnhancedShadersContainer';
-import { useTheme } from '../../shared/theme/ThemeContext';
+} from "react-native";
+
+import { useTheme } from "../../shared/theme/ThemeContext";
 import {
   typography,
   spacing,
   borderRadius,
   shadows,
-} from '../../shared/theme/theme';
+} from "../../shared/theme/theme";
+import { WebSafeLinearGradient as LinearGradient } from "../common/WebSafeLinearGradient";
+import EnhancedShadersContainer from "../enhanced/EnhancedShadersContainer";
 
 // Enhanced Card component following shadcn/ui design principles
 // Featuring modern glassmorphism, shader effects, and therapeutic design
@@ -23,11 +24,11 @@ const EnhancedCard = ({
   title,
   subtitle,
   description,
-  variant = 'default', // 'default', 'therapeutic', 'glass', 'gradient', 'minimal'
-  size = 'medium', // 'small', 'medium', 'large'
+  variant = "default", // 'default', 'therapeutic', 'glass', 'gradient', 'minimal'
+  size = "medium", // 'small', 'medium', 'large'
   interactive = false,
   animated = true,
-  shaderVariant = 'glass',
+  shaderVariant = "glass",
   shaderIntensity = 0.3,
   onPress,
   style,
@@ -88,59 +89,59 @@ const EnhancedCard = ({
   // Get variant-specific styling
   const getVariantStyles = () => {
     switch (variant) {
-      case 'therapeutic':
+      case "therapeutic":
         return {
           gradientColors: [
-            theme.colors.therapeutic.calming[100] + '90',
-            theme.colors.therapeutic.peaceful[100] + '80',
-            theme.colors.therapeutic.nurturing[100] + '70',
+            theme.colors.therapeutic.calming[100] + "90",
+            theme.colors.therapeutic.peaceful[100] + "80",
+            theme.colors.therapeutic.nurturing[100] + "70",
           ],
           borderColor: theme.colors.therapeutic.calming[200],
           shadowColor: theme.colors.therapeutic.calming[400],
           textColor: theme.colors.text.primary,
         };
-      
-      case 'glass':
+
+      case "glass":
         return {
           gradientColors: [
-            'rgba(255, 255, 255, 0.1)',
-            'rgba(255, 255, 255, 0.05)',
+            "rgba(255, 255, 255, 0.1)",
+            "rgba(255, 255, 255, 0.05)",
           ],
-          borderColor: 'rgba(255, 255, 255, 0.2)',
-          shadowColor: 'rgba(0, 0, 0, 0.1)',
+          borderColor: "rgba(255, 255, 255, 0.2)",
+          shadowColor: "rgba(0, 0, 0, 0.1)",
           textColor: theme.colors.text.primary,
         };
-      
-      case 'gradient':
+
+      case "gradient":
         return {
           gradientColors: [
-            theme.colors.primary[400] + '20',
-            theme.colors.secondary[400] + '15',
+            theme.colors.primary[400] + "20",
+            theme.colors.secondary[400] + "15",
           ],
           borderColor: theme.colors.primary[300],
           shadowColor: theme.colors.primary[500],
           textColor: theme.colors.text.primary,
         };
-      
-      case 'minimal':
+
+      case "minimal":
         return {
           gradientColors: [
             theme.colors.background.surface,
             theme.colors.background.surface,
           ],
           borderColor: theme.colors.border.light,
-          shadowColor: 'rgba(0, 0, 0, 0.05)',
+          shadowColor: "rgba(0, 0, 0, 0.05)",
           textColor: theme.colors.text.primary,
         };
-      
+
       default:
         return {
           gradientColors: [
-            theme.colors.background.surface + '95',
-            theme.colors.background.secondary + '90',
+            theme.colors.background.surface + "95",
+            theme.colors.background.secondary + "90",
           ],
           borderColor: theme.colors.border.light,
-          shadowColor: 'rgba(0, 0, 0, 0.1)',
+          shadowColor: "rgba(0, 0, 0, 0.1)",
           textColor: theme.colors.text.primary,
         };
     }
@@ -149,22 +150,22 @@ const EnhancedCard = ({
   // Get size-specific styling
   const getSizeStyles = () => {
     switch (size) {
-      case 'small':
+      case "small":
         return {
           padding: spacing[3],
           borderRadius: borderRadius.md,
           titleSize: typography.sizes.base,
           subtitleSize: typography.sizes.sm,
         };
-      
-      case 'large':
+
+      case "large":
         return {
           padding: spacing[6],
-          borderRadius: borderRadius['2xl'],
-          titleSize: typography.sizes['2xl'],
+          borderRadius: borderRadius["2xl"],
+          titleSize: typography.sizes["2xl"],
           subtitleSize: typography.sizes.base,
         };
-      
+
       default: // medium
         return {
           padding: spacing[4],
@@ -192,10 +193,7 @@ const EnhancedCard = ({
           styles.cardContainer,
           {
             opacity: fadeAnim,
-            transform: [
-              { scale: scaleAnim },
-              { scale: pressAnim },
-            ],
+            transform: [{ scale: scaleAnim }, { scale: pressAnim }],
           },
         ]}
       >
@@ -221,7 +219,7 @@ const EnhancedCard = ({
                 borderColor: variantStyles.borderColor,
                 shadowColor: variantStyles.shadowColor,
               },
-              variant === 'glass' && styles.glassEffect,
+              variant === "glass" && styles.glassEffect,
             ]}
           >
             {/* Header Section */}
@@ -272,16 +270,12 @@ const EnhancedCard = ({
 
             {/* Content Section */}
             {children && (
-              <View style={[styles.content, contentStyle]}>
-                {children}
-              </View>
+              <View style={[styles.content, contentStyle]}>{children}</View>
             )}
 
             {/* Footer Actions */}
             {footerActions && (
-              <View style={styles.footer}>
-                {footerActions}
-              </View>
+              <View style={styles.footer}>{footerActions}</View>
             )}
           </LinearGradient>
         </ComponentWrapper>
@@ -308,8 +302,8 @@ const styles = StyleSheet.create({
     ...shadows.lg,
   },
   glassEffect: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    backdropFilter: 'blur(10px)',
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backdropFilter: "blur(10px)",
   },
   header: {
     marginBottom: spacing[3],
@@ -335,13 +329,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   footer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
     marginTop: spacing[4],
     paddingTop: spacing[3],
     borderTopWidth: 1,
-    borderTopColor: 'rgba(0, 0, 0, 0.05)',
+    borderTopColor: "rgba(0, 0, 0, 0.05)",
   },
 });
 

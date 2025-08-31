@@ -1,36 +1,37 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from "react";
 import {
   TouchableOpacity,
   Text,
   StyleSheet,
   Animated,
   View,
-} from 'react-native';
-import { WebSafeLinearGradient as LinearGradient } from '../common/WebSafeLinearGradient';
-import EnhancedShadersContainer from '../enhanced/EnhancedShadersContainer';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { MentalHealthIcon, ActionIcon } from '../icons';
+} from "react-native";
+
+import { useTheme } from "../../shared/theme/ThemeContext";
 import {
   typography,
   spacing,
   borderRadius,
   shadows,
-} from '../../shared/theme/theme';
+} from "../../shared/theme/theme";
+import { WebSafeLinearGradient as LinearGradient } from "../common/WebSafeLinearGradient";
+import EnhancedShadersContainer from "../enhanced/EnhancedShadersContainer";
+import { MentalHealthIcon, ActionIcon } from "../icons";
 
 // Enhanced Button component following shadcn/ui design principles
 // Features shader effects, therapeutic design, and comprehensive variants
 const EnhancedButton = ({
   title,
   onPress,
-  variant = 'primary', // 'primary', 'secondary', 'therapeutic', 'glass', 'outline', 'ghost'
-  size = 'medium', // 'small', 'medium', 'large'
+  variant = "primary", // 'primary', 'secondary', 'therapeutic', 'glass', 'outline', 'ghost'
+  size = "medium", // 'small', 'medium', 'large'
   loading = false,
   disabled = false,
   animated = true,
   icon,
-  iconPosition = 'left', // 'left', 'right', 'only'
+  iconPosition = "left", // 'left', 'right', 'only'
   shaderEffect = false,
-  shaderVariant = 'mesh',
+  shaderVariant = "mesh",
   fullWidth = false,
   style,
   textStyle,
@@ -52,7 +53,7 @@ const EnhancedButton = ({
       }).start();
 
       // Pulse animation for primary therapeutic buttons
-      if (variant === 'therapeutic' || variant === 'primary') {
+      if (variant === "therapeutic" || variant === "primary") {
         const pulseAnimation = Animated.loop(
           Animated.sequence([
             Animated.timing(pulseAnim, {
@@ -65,7 +66,7 @@ const EnhancedButton = ({
               duration: 2000,
               useNativeDriver: true,
             }),
-          ])
+          ]),
         );
         pulseAnimation.start();
         return () => pulseAnimation.stop();
@@ -82,7 +83,7 @@ const EnhancedButton = ({
           toValue: 1,
           duration: 1000,
           useNativeDriver: true,
-        })
+        }),
       );
       rotateAnimation.start();
       return () => rotateAnimation.stop();
@@ -123,7 +124,7 @@ const EnhancedButton = ({
     const opacity = isDisabled ? 0.6 : 1;
 
     switch (variant) {
-      case 'primary':
+      case "primary":
         return {
           gradientColors: [
             theme.colors.primary[500],
@@ -135,7 +136,7 @@ const EnhancedButton = ({
           opacity,
         };
 
-      case 'therapeutic':
+      case "therapeutic":
         return {
           gradientColors: [
             theme.colors.therapeutic.calming[500],
@@ -147,7 +148,7 @@ const EnhancedButton = ({
           opacity,
         };
 
-      case 'secondary':
+      case "secondary":
         return {
           gradientColors: [
             theme.colors.secondary[100],
@@ -159,39 +160,33 @@ const EnhancedButton = ({
           opacity,
         };
 
-      case 'glass':
+      case "glass":
         return {
           gradientColors: [
-            'rgba(255, 255, 255, 0.15)',
-            'rgba(255, 255, 255, 0.05)',
+            "rgba(255, 255, 255, 0.15)",
+            "rgba(255, 255, 255, 0.05)",
           ],
           textColor: theme.colors.text.primary,
-          borderColor: 'rgba(255, 255, 255, 0.3)',
-          shadowColor: 'rgba(0, 0, 0, 0.1)',
+          borderColor: "rgba(255, 255, 255, 0.3)",
+          shadowColor: "rgba(0, 0, 0, 0.1)",
           opacity,
         };
 
-      case 'outline':
+      case "outline":
         return {
-          gradientColors: [
-            'transparent',
-            'transparent',
-          ],
+          gradientColors: ["transparent", "transparent"],
           textColor: theme.colors.primary[600],
           borderColor: theme.colors.primary[400],
-          shadowColor: 'rgba(0, 0, 0, 0.1)',
+          shadowColor: "rgba(0, 0, 0, 0.1)",
           opacity,
         };
 
-      case 'ghost':
+      case "ghost":
         return {
-          gradientColors: [
-            'transparent',
-            'transparent',
-          ],
+          gradientColors: ["transparent", "transparent"],
           textColor: theme.colors.text.primary,
-          borderColor: 'transparent',
-          shadowColor: 'transparent',
+          borderColor: "transparent",
+          shadowColor: "transparent",
           opacity,
         };
 
@@ -203,7 +198,7 @@ const EnhancedButton = ({
           ],
           textColor: theme.colors.text.primary,
           borderColor: theme.colors.border.light,
-          shadowColor: 'rgba(0, 0, 0, 0.1)',
+          shadowColor: "rgba(0, 0, 0, 0.1)",
           opacity,
         };
     }
@@ -212,7 +207,7 @@ const EnhancedButton = ({
   // Get size-specific styling
   const getSizeStyles = () => {
     switch (size) {
-      case 'small':
+      case "small":
         return {
           paddingHorizontal: spacing[3],
           paddingVertical: spacing[2],
@@ -222,7 +217,7 @@ const EnhancedButton = ({
           minHeight: 36,
         };
 
-      case 'large':
+      case "large":
         return {
           paddingHorizontal: spacing[6],
           paddingVertical: spacing[4],
@@ -249,7 +244,7 @@ const EnhancedButton = ({
 
   const loadingRotation = loadingRotateAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
+    outputRange: ["0deg", "360deg"],
   });
 
   const renderContent = () => {
@@ -261,17 +256,19 @@ const EnhancedButton = ({
             { transform: [{ rotate: loadingRotation }] },
           ]}
         >
-          <Text style={[styles.loadingText, { color: variantStyles.textColor }]}>
+          <Text
+            style={[styles.loadingText, { color: variantStyles.textColor }]}
+          >
             ⟳
           </Text>
         </Animated.View>
       );
     }
 
-    if (iconPosition === 'only' && icon) {
+    if (iconPosition === "only" && icon) {
       return (
         <View style={styles.iconOnlyContainer}>
-          {typeof icon === 'string' ? (
+          {typeof icon === "string" ? (
             <MentalHealthIcon
               name={icon}
               size={sizeStyles.iconSize}
@@ -287,9 +284,9 @@ const EnhancedButton = ({
 
     return (
       <View style={styles.contentContainer}>
-        {icon && iconPosition === 'left' && (
+        {icon && iconPosition === "left" && (
           <View style={styles.iconLeft}>
-            {typeof icon === 'string' ? (
+            {typeof icon === "string" ? (
               <MentalHealthIcon
                 name={icon}
                 size={sizeStyles.iconSize}
@@ -301,7 +298,7 @@ const EnhancedButton = ({
             )}
           </View>
         )}
-        
+
         <Text
           style={[
             styles.buttonText,
@@ -314,10 +311,10 @@ const EnhancedButton = ({
         >
           {title}
         </Text>
-        
-        {icon && iconPosition === 'right' && (
+
+        {icon && iconPosition === "right" && (
           <View style={styles.iconRight}>
-            {typeof icon === 'string' ? (
+            {typeof icon === "string" ? (
               <MentalHealthIcon
                 name={icon}
                 size={sizeStyles.iconSize}
@@ -339,10 +336,7 @@ const EnhancedButton = ({
         styles.buttonContainer,
         {
           opacity: fadeAnim,
-          transform: [
-            { scale: pressAnim },
-            { scale: pulseAnim },
-          ],
+          transform: [{ scale: pressAnim }, { scale: pulseAnim }],
         },
       ]}
     >
@@ -350,7 +344,7 @@ const EnhancedButton = ({
         style={[
           styles.button,
           {
-            width: fullWidth ? '100%' : undefined,
+            width: fullWidth ? "100%" : undefined,
             opacity: variantStyles.opacity,
           },
           style,
@@ -378,8 +372,8 @@ const EnhancedButton = ({
               shadowColor: variantStyles.shadowColor,
               minHeight: sizeStyles.minHeight,
             },
-            variant === 'glass' && styles.glassEffect,
-            variant === 'outline' && styles.outlineEffect,
+            variant === "glass" && styles.glassEffect,
+            variant === "outline" && styles.outlineEffect,
           ]}
         >
           {renderContent()}
@@ -418,27 +412,27 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.lg,
   },
   buttonGradient: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderWidth: 1,
     ...shadows.md,
   },
   glassEffect: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    backdropFilter: 'blur(10px)',
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backdropFilter: "blur(10px)",
   },
   outlineEffect: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderWidth: 2,
   },
   contentContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   iconOnlyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   iconLeft: {
     marginRight: spacing[2],
@@ -448,11 +442,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: typography.weights.semiBold,
-    textAlign: 'center',
+    textAlign: "center",
   },
   loadingContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   loadingText: {
     fontSize: typography.sizes.lg,

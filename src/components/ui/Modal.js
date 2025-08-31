@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Modal as RNModal,
   View,
@@ -10,29 +10,30 @@ import {
   KeyboardAvoidingView,
   Platform,
   Animated,
-  BackHandler
-} from 'react-native';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { getTherapeuticColor } from '../../shared/theme/ColorPalette';
-import { MentalHealthIcon } from '../icons';
-import Button from './Button';
+  BackHandler,
+} from "react-native";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import { getTherapeuticColor } from "../../shared/theme/ColorPalette";
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { MentalHealthIcon } from "../icons";
+import Button from "./Button";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 const Modal = ({
   visible = false,
   onClose = () => {},
-  title = '',
-  subtitle = '',
+  title = "",
+  subtitle = "",
   children,
-  size = 'medium',
-  variant = 'default',
-  therapeuticColor = 'calming',
+  size = "medium",
+  variant = "default",
+  therapeuticColor = "calming",
   showCloseButton = true,
   closeOnOverlayPress = true,
   closeOnBackPress = true,
-  animationType = 'fade',
-  position = 'center',
+  animationType = "fade",
+  position = "center",
   style = {},
   overlayStyle = {},
   contentStyle = {},
@@ -82,33 +83,40 @@ const Modal = ({
 
   useEffect(() => {
     if (closeOnBackPress && visible) {
-      const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-        onClose();
-        return true;
-      });
-      
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        () => {
+          onClose();
+          return true;
+        },
+      );
+
       return () => backHandler.remove();
     }
   }, [visible, closeOnBackPress, onClose]);
 
   const getModalStyles = () => {
-    const therapeuticColors = getTherapeuticColor(therapeuticColor, 500, isDarkMode);
+    const therapeuticColors = getTherapeuticColor(
+      therapeuticColor,
+      500,
+      isDarkMode,
+    );
     const sizeStyles = getSizeStyles();
-    
+
     let backgroundColor = theme.colors.background.card;
-    let borderColor = 'transparent';
-    
+    let borderColor = "transparent";
+
     switch (variant) {
-      case 'therapeutic':
+      case "therapeutic":
         borderColor = therapeuticColors;
-        backgroundColor = isDarkMode 
-          ? `${therapeuticColors}10` 
+        backgroundColor = isDarkMode
+          ? `${therapeuticColors}10`
           : theme.colors.background.card;
         break;
-      case 'filled':
+      case "filled":
         backgroundColor = theme.colors.background.secondary;
         break;
-      case 'bordered':
+      case "bordered":
         borderColor = theme.colors.border.primary;
         break;
     }
@@ -116,9 +124,9 @@ const Modal = ({
     return {
       backgroundColor,
       borderColor,
-      borderWidth: borderColor !== 'transparent' ? 1 : 0,
+      borderWidth: borderColor !== "transparent" ? 1 : 0,
       ...sizeStyles,
-      shadowColor: '#000',
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.15,
       shadowRadius: 12,
@@ -128,61 +136,61 @@ const Modal = ({
 
   const getSizeStyles = () => {
     const padding = 24;
-    
+
     switch (size) {
-      case 'small':
+      case "small":
         return {
           width: Math.min(screenWidth * 0.8, 320),
           maxHeight: screenHeight * 0.6,
           borderRadius: 12,
           padding: 16,
         };
-      
-      case 'large':
+
+      case "large":
         return {
           width: Math.min(screenWidth * 0.95, 600),
           maxHeight: screenHeight * 0.9,
           borderRadius: 16,
           padding: 32,
         };
-      
-      case 'fullscreen':
+
+      case "fullscreen":
         return {
           width: screenWidth,
           height: screenHeight,
           borderRadius: 0,
-          padding: padding,
+          padding,
           maxHeight: screenHeight,
         };
-      
+
       default: // medium
         return {
           width: Math.min(screenWidth * 0.9, 400),
           maxHeight: screenHeight * 0.8,
           borderRadius: 14,
-          padding: padding,
+          padding,
         };
     }
   };
 
   const getContainerStyles = () => {
     switch (position) {
-      case 'top':
+      case "top":
         return {
-          justifyContent: 'flex-start',
+          justifyContent: "flex-start",
           paddingTop: 60,
         };
-      
-      case 'bottom':
+
+      case "bottom":
         return {
-          justifyContent: 'flex-end',
+          justifyContent: "flex-end",
           paddingBottom: 60,
         };
-      
+
       default: // center
         return {
-          justifyContent: 'center',
-          alignItems: 'center',
+          justifyContent: "center",
+          alignItems: "center",
         };
     }
   };
@@ -190,38 +198,47 @@ const Modal = ({
   const renderHeader = () => {
     if (!title && !showCloseButton) return null;
 
-    const therapeuticColors = getTherapeuticColor(therapeuticColor, 500, isDarkMode);
+    const therapeuticColors = getTherapeuticColor(
+      therapeuticColor,
+      500,
+      isDarkMode,
+    );
 
     return (
       <View style={[styles.header, headerStyle]}>
         <View style={styles.headerLeft}>
           {title && (
-            <Text style={[
-              styles.title,
-              {
-                color: variant === 'therapeutic' 
-                  ? therapeuticColors 
-                  : theme.colors.text.primary,
-                fontSize: size === 'small' ? 18 : size === 'large' ? 24 : 20,
-              },
-            ]}>
+            <Text
+              style={[
+                styles.title,
+                {
+                  color:
+                    variant === "therapeutic"
+                      ? therapeuticColors
+                      : theme.colors.text.primary,
+                  fontSize: size === "small" ? 18 : size === "large" ? 24 : 20,
+                },
+              ]}
+            >
               {title}
             </Text>
           )}
-          
+
           {subtitle && (
-            <Text style={[
-              styles.subtitle,
-              {
-                color: theme.colors.text.secondary,
-                fontSize: size === 'small' ? 14 : size === 'large' ? 16 : 15,
-              },
-            ]}>
+            <Text
+              style={[
+                styles.subtitle,
+                {
+                  color: theme.colors.text.secondary,
+                  fontSize: size === "small" ? 14 : size === "large" ? 16 : 15,
+                },
+              ]}
+            >
               {subtitle}
             </Text>
           )}
         </View>
-        
+
         {showCloseButton && (
           <TouchableOpacity
             style={styles.closeButton}
@@ -232,7 +249,7 @@ const Modal = ({
           >
             <MentalHealthIcon
               name="Heart"
-              size={size === 'small' ? 20 : size === 'large' ? 28 : 24}
+              size={size === "small" ? 20 : size === "large" ? 28 : 24}
               color={theme.colors.text.secondary}
             />
           </TouchableOpacity>
@@ -243,17 +260,16 @@ const Modal = ({
 
   const renderContent = () => {
     const ContentWrapper = scrollable ? ScrollView : View;
-    const wrapperProps = scrollable ? {
-      showsVerticalScrollIndicator: false,
-      contentContainerStyle: { flexGrow: 1 },
-      keyboardShouldPersistTaps: 'handled',
-    } : {};
+    const wrapperProps = scrollable
+      ? {
+          showsVerticalScrollIndicator: false,
+          contentContainerStyle: { flexGrow: 1 },
+          keyboardShouldPersistTaps: "handled",
+        }
+      : {};
 
     return (
-      <ContentWrapper
-        style={[styles.body, bodyStyle]}
-        {...wrapperProps}
-      >
+      <ContentWrapper style={[styles.body, bodyStyle]} {...wrapperProps}>
         {children}
       </ContentWrapper>
     );
@@ -271,7 +287,7 @@ const Modal = ({
         style,
       ]}
       accessibilityRole="dialog"
-      accessibilityModal={true}
+      accessibilityModal
       accessibilityLabel={accessibilityLabel || title}
       accessibilityHint={accessibilityHint}
       testID={testID}
@@ -282,17 +298,19 @@ const Modal = ({
   );
 
   const KeyboardWrapper = keyboardAvoidingView ? KeyboardAvoidingView : View;
-  const keyboardProps = keyboardAvoidingView ? {
-    behavior: Platform.OS === 'ios' ? 'padding' : 'height',
-    keyboardVerticalOffset: Platform.OS === 'ios' ? 0 : 20,
-  } : {};
+  const keyboardProps = keyboardAvoidingView
+    ? {
+        behavior: Platform.OS === "ios" ? "padding" : "height",
+        keyboardVerticalOffset: Platform.OS === "ios" ? 0 : 20,
+      }
+    : {};
 
   return (
     <RNModal
       visible={visible}
-      transparent={true}
+      transparent
       animationType="none" // We handle animations manually
-      statusBarTranslucent={true}
+      statusBarTranslucent
       onRequestClose={onClose}
     >
       <KeyboardWrapper style={styles.container} {...keyboardProps}>
@@ -302,7 +320,7 @@ const Modal = ({
             getContainerStyles(),
             {
               opacity: fadeAnim,
-              backgroundColor: 'rgba(0,0,0,0.5)',
+              backgroundColor: "rgba(0,0,0,0.5)",
             },
             overlayStyle,
           ]}
@@ -312,7 +330,7 @@ const Modal = ({
             onPress={closeOnOverlayPress ? onClose : undefined}
             activeOpacity={1}
           />
-          
+
           <ModalContent />
         </Animated.View>
       </KeyboardWrapper>
@@ -327,18 +345,22 @@ export const ModalHeader = ({
   icon,
   onClose,
   showCloseButton = true,
-  therapeuticColor = 'calming',
+  therapeuticColor = "calming",
   style = {},
 }) => {
   const { theme, isDarkMode } = useTheme();
-  const therapeuticColors = getTherapeuticColor(therapeuticColor, 500, isDarkMode);
+  const therapeuticColors = getTherapeuticColor(
+    therapeuticColor,
+    500,
+    isDarkMode,
+  );
 
   return (
     <View style={[styles.modalHeader, style]}>
       <View style={styles.modalHeaderContent}>
         {icon && (
           <View style={styles.modalHeaderIcon}>
-            {typeof icon === 'string' ? (
+            {typeof icon === "string" ? (
               <MentalHealthIcon
                 name={icon}
                 size={24}
@@ -349,28 +371,29 @@ export const ModalHeader = ({
             )}
           </View>
         )}
-        
+
         <View style={styles.modalHeaderText}>
           {title && (
-            <Text style={[
-              styles.modalHeaderTitle,
-              { color: therapeuticColors },
-            ]}>
+            <Text
+              style={[styles.modalHeaderTitle, { color: therapeuticColors }]}
+            >
               {title}
             </Text>
           )}
-          
+
           {subtitle && (
-            <Text style={[
-              styles.modalHeaderSubtitle,
-              { color: theme.colors.text.secondary },
-            ]}>
+            <Text
+              style={[
+                styles.modalHeaderSubtitle,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
               {subtitle}
             </Text>
           )}
         </View>
       </View>
-      
+
       {showCloseButton && (
         <TouchableOpacity
           style={styles.modalHeaderClose}
@@ -394,7 +417,7 @@ export const ModalFooter = ({
   children,
   primaryAction,
   secondaryAction,
-  orientation = 'horizontal',
+  orientation = "horizontal",
   style = {},
 }) => {
   const renderActions = () => {
@@ -404,17 +427,17 @@ export const ModalFooter = ({
           style={[
             styles.modalFooterActions,
             {
-              flexDirection: orientation === 'horizontal' ? 'row' : 'column',
-              gap: orientation === 'horizontal' ? 12 : 8,
+              flexDirection: orientation === "horizontal" ? "row" : "column",
+              gap: orientation === "horizontal" ? 12 : 8,
             },
           ]}
         >
           {secondaryAction && (
             <Button
               {...secondaryAction}
-              variant={secondaryAction.variant || 'outline'}
+              variant={secondaryAction.variant || "outline"}
               style={[
-                orientation === 'vertical' && { width: '100%' },
+                orientation === "vertical" && { width: "100%" },
                 secondaryAction.style,
               ]}
             />
@@ -422,9 +445,9 @@ export const ModalFooter = ({
           {primaryAction && (
             <Button
               {...primaryAction}
-              variant={primaryAction.variant || 'primary'}
+              variant={primaryAction.variant || "primary"}
               style={[
-                orientation === 'vertical' && { width: '100%' },
+                orientation === "vertical" && { width: "100%" },
                 primaryAction.style,
               ]}
             />
@@ -432,15 +455,11 @@ export const ModalFooter = ({
         </View>
       );
     }
-    
+
     return children;
   };
 
-  return (
-    <View style={[styles.modalFooter, style]}>
-      {renderActions()}
-    </View>
-  );
+  return <View style={[styles.modalFooter, style]}>{renderActions()}</View>;
 };
 
 // Specialized Modal Components
@@ -450,11 +469,11 @@ export const ConfirmModal = ({
   visible,
   onConfirm,
   onCancel,
-  title = 'Confirm Action',
-  message = 'Are you sure you want to proceed?',
-  confirmText = 'Confirm',
-  cancelText = 'Cancel',
-  therapeuticColor = 'energizing',
+  title = "Confirm Action",
+  message = "Are you sure you want to proceed?",
+  confirmText = "Confirm",
+  cancelText = "Cancel",
+  therapeuticColor = "energizing",
   ...props
 }) => (
   <Modal
@@ -465,20 +484,22 @@ export const ConfirmModal = ({
     size="small"
     {...props}
   >
-    <Text style={{ 
-      fontSize: 16, 
-      lineHeight: 24, 
-      textAlign: 'center',
-      marginVertical: 16,
-    }}>
+    <Text
+      style={{
+        fontSize: 16,
+        lineHeight: 24,
+        textAlign: "center",
+        marginVertical: 16,
+      }}
+    >
       {message}
     </Text>
-    
+
     <ModalFooter
       primaryAction={{
         title: confirmText,
         onPress: onConfirm,
-        therapeuticColor: therapeuticColor,
+        therapeuticColor,
       }}
       secondaryAction={{
         title: cancelText,
@@ -493,10 +514,10 @@ export const ConfirmModal = ({
 export const InfoModal = ({
   visible,
   onClose,
-  title = 'Information',
+  title = "Information",
   message,
-  buttonText = 'Got it',
-  therapeuticColor = 'calming',
+  buttonText = "Got it",
+  therapeuticColor = "calming",
   ...props
 }) => (
   <Modal
@@ -507,20 +528,22 @@ export const InfoModal = ({
     size="small"
     {...props}
   >
-    <Text style={{ 
-      fontSize: 16, 
-      lineHeight: 24, 
-      textAlign: 'center',
-      marginVertical: 16,
-    }}>
+    <Text
+      style={{
+        fontSize: 16,
+        lineHeight: 24,
+        textAlign: "center",
+        marginVertical: 16,
+      }}
+    >
       {message}
     </Text>
-    
+
     <ModalFooter
       primaryAction={{
         title: buttonText,
         onPress: onClose,
-        therapeuticColor: therapeuticColor,
+        therapeuticColor,
         fullWidth: true,
       }}
     />
@@ -533,30 +556,30 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 16,
   },
   modal: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
+    borderBottomColor: "rgba(0,0,0,0.1)",
   },
   headerLeft: {
     flex: 1,
   },
   title: {
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 4,
   },
   subtitle: {
-    fontWeight: '400',
+    fontWeight: "400",
     lineHeight: 20,
   },
   closeButton: {
@@ -568,19 +591,19 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 16,
   },
-  
+
   // Modal Header Component Styles
   modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
+    borderBottomColor: "rgba(0,0,0,0.1)",
   },
   modalHeaderContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   modalHeaderIcon: {
@@ -591,27 +614,27 @@ const styles = StyleSheet.create({
   },
   modalHeaderTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 2,
   },
   modalHeaderSubtitle: {
     fontSize: 14,
-    fontWeight: '400',
+    fontWeight: "400",
   },
   modalHeaderClose: {
     padding: 4,
     marginLeft: 12,
   },
-  
+
   // Modal Footer Component Styles
   modalFooter: {
     paddingTop: 16,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.1)',
+    borderTopColor: "rgba(0,0,0,0.1)",
   },
   modalFooterActions: {
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    alignItems: "center",
+    justifyContent: "flex-end",
   },
 });
 

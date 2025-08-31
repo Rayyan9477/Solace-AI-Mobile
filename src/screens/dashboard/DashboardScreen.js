@@ -19,8 +19,6 @@ import QuickActions from "../../components/dashboard/QuickActions";
 import RecentActivity from "../../components/dashboard/RecentActivity";
 import WelcomeHeader from "../../components/dashboard/WelcomeHeader";
 import { useTheme } from "../../shared/theme/ThemeContext";
-import { fetchMoodHistory } from "../../store/slices/moodSlice";
-import { fetchUserStats } from "../../store/slices/userSlice";
 import {
   colors,
   typography,
@@ -28,6 +26,8 @@ import {
   borderRadius,
   shadows,
 } from "../../shared/theme/theme";
+import { fetchMoodHistory } from "../../store/slices/moodSlice";
+import { fetchUserStats } from "../../store/slices/userSlice";
 import { MentalHealthAccessibility } from "../../utils/accessibility";
 
 // Dashboard components

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -8,35 +8,87 @@ import {
   Dimensions,
   AccessibilityInfo,
   Platform,
-} from 'react-native';
-import Svg, { Circle, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { MentalHealthIcon } from '../icons';
-import { spacing, typography, borderRadius, shadows } from '../../shared/theme/theme';
+} from "react-native";
+import Svg, {
+  Circle,
+  Defs,
+  LinearGradient as SvgGradient,
+  Stop,
+} from "react-native-svg";
 
-const { width } = Dimensions.get('window');
+import { useTheme } from "../../shared/theme/ThemeContext";
+import {
+  spacing,
+  typography,
+  borderRadius,
+  shadows,
+} from "../../shared/theme/theme";
+import { MentalHealthIcon } from "../icons";
+
+const { width } = Dimensions.get("window");
 
 // Score range mapping for emotional states
 const getScoreState = (score) => {
-  if (score >= 90) return { state: 'Excellent', emoji: '🌟', description: 'Thriving mentally', color: '#00C896' };
-  if (score >= 80) return { state: 'Mentally Stable', emoji: '😌', description: 'In good mental health', color: '#00A878' };
-  if (score >= 70) return { state: 'Good', emoji: '🙂', description: 'Generally positive', color: '#28A745' };
-  if (score >= 60) return { state: 'Fair', emoji: '😐', description: 'Room for improvement', color: '#FFC107' };
-  if (score >= 50) return { state: 'Concerning', emoji: '😟', description: 'Needs attention', color: '#FF9800' };
-  if (score >= 40) return { state: 'At Risk', emoji: '😰', description: 'Requires support', color: '#FF5722' };
-  return { state: 'Critical', emoji: '🆘', description: 'Immediate help needed', color: '#F44336' };
+  if (score >= 90)
+    return {
+      state: "Excellent",
+      emoji: "🌟",
+      description: "Thriving mentally",
+      color: "#00C896",
+    };
+  if (score >= 80)
+    return {
+      state: "Mentally Stable",
+      emoji: "😌",
+      description: "In good mental health",
+      color: "#00A878",
+    };
+  if (score >= 70)
+    return {
+      state: "Good",
+      emoji: "🙂",
+      description: "Generally positive",
+      color: "#28A745",
+    };
+  if (score >= 60)
+    return {
+      state: "Fair",
+      emoji: "😐",
+      description: "Room for improvement",
+      color: "#FFC107",
+    };
+  if (score >= 50)
+    return {
+      state: "Concerning",
+      emoji: "😟",
+      description: "Needs attention",
+      color: "#FF9800",
+    };
+  if (score >= 40)
+    return {
+      state: "At Risk",
+      emoji: "😰",
+      description: "Requires support",
+      color: "#FF5722",
+    };
+  return {
+    state: "Critical",
+    emoji: "🆘",
+    description: "Immediate help needed",
+    color: "#F44336",
+  };
 };
 
 const MentalHealthScoreWidget = ({
   score = 80,
   size = 160,
-  variant = 'default', // default, compact, minimal, detailed
+  variant = "default", // default, compact, minimal, detailed
   animated = true,
   onPress,
   showDescription = true,
   showTrend = false,
-  trend = 'stable', // up, down, stable
-  testID = 'mental-health-score-widget',
+  trend = "stable", // up, down, stable
+  testID = "mental-health-score-widget",
   accessibilityLabel,
   accessibilityHint,
   style,
@@ -46,7 +98,7 @@ const MentalHealthScoreWidget = ({
   const animatedValue = useRef(new Animated.Value(0)).current;
   const scaleValue = useRef(new Animated.Value(1)).current;
   const [isPressed, setIsPressed] = useState(false);
-  
+
   const scoreState = getScoreState(score);
   const circumference = 2 * Math.PI * (size / 2 - 10);
   const strokeDasharray = circumference;
@@ -67,8 +119,8 @@ const MentalHealthScoreWidget = ({
   const handlePress = () => {
     if (onPress) {
       // Haptic feedback
-      if (Platform.OS === 'ios') {
-        const { HapticFeedback } = require('expo-haptics');
+      if (Platform.OS === "ios") {
+        const { HapticFeedback } = require("expo-haptics");
         HapticFeedback?.impactAsync(HapticFeedback.ImpactFeedbackStyle.Light);
       }
 
@@ -94,20 +146,21 @@ const MentalHealthScoreWidget = ({
   const handlePressOut = () => setIsPressed(false);
 
   // Accessibility label
-  const defaultAccessibilityLabel = accessibilityLabel || 
+  const defaultAccessibilityLabel =
+    accessibilityLabel ||
     `Mental health score ${score} out of 100, ${scoreState.state}`;
-  const defaultAccessibilityHint = accessibilityHint || 
-    'Double tap to view detailed mental health analytics';
+  const defaultAccessibilityHint =
+    accessibilityHint || "Double tap to view detailed mental health analytics";
 
   // Component variants
   const getVariantStyles = () => {
     switch (variant) {
-      case 'compact':
+      case "compact":
         return { size: size * 0.75, fontSize: typography.sizes.lg };
-      case 'minimal':
+      case "minimal":
         return { size: size * 0.6, fontSize: typography.sizes.base };
-      case 'detailed':
-        return { size: size * 1.25, fontSize: typography.sizes['2xl'] };
+      case "detailed":
+        return { size: size * 1.25, fontSize: typography.sizes["2xl"] };
       default:
         return { size, fontSize: typography.sizes.xl };
     }
@@ -123,7 +176,7 @@ const MentalHealthScoreWidget = ({
           <Stop offset="100%" stopColor={scoreState.color} stopOpacity="1" />
         </SvgGradient>
       </Defs>
-      
+
       {/* Background circle */}
       <Circle
         cx={variantStyles.size / 2}
@@ -133,7 +186,7 @@ const MentalHealthScoreWidget = ({
         strokeWidth="8"
         fill="transparent"
       />
-      
+
       {/* Progress circle */}
       <Circle
         cx={variantStyles.size / 2}
@@ -152,11 +205,11 @@ const MentalHealthScoreWidget = ({
 
   const TrendIndicator = () => {
     if (!showTrend) return null;
-    
+
     const trendIcons = {
-      up: 'chevron-up',
-      down: 'chevron-down', 
-      stable: 'minus',
+      up: "chevron-up",
+      down: "chevron-down",
+      stable: "minus",
     };
 
     const trendColors = {
@@ -196,7 +249,8 @@ const MentalHealthScoreWidget = ({
           styles.touchable,
           {
             width: variantStyles.size + spacing[8],
-            height: variantStyles.size + (showDescription ? spacing[16] : spacing[8]),
+            height:
+              variantStyles.size + (showDescription ? spacing[16] : spacing[8]),
           },
           shadows.md,
         ]}
@@ -204,13 +258,18 @@ const MentalHealthScoreWidget = ({
         accessibilityLabel={defaultAccessibilityLabel}
         accessibilityHint={defaultAccessibilityHint}
         accessibilityRole="button"
-        accessible={true}
+        accessible
         {...props}
       >
-        <View style={[styles.content, { width: variantStyles.size, height: variantStyles.size }]}>
+        <View
+          style={[
+            styles.content,
+            { width: variantStyles.size, height: variantStyles.size },
+          ]}
+        >
           <View style={styles.progressContainer}>
             <CircularProgress />
-            
+
             {/* Score display */}
             <View style={styles.scoreContainer}>
               <Animated.Text
@@ -224,9 +283,14 @@ const MentalHealthScoreWidget = ({
               >
                 {Math.round(score)}
               </Animated.Text>
-              
-              {variant !== 'minimal' && (
-                <Text style={[styles.scoreLabel, { color: theme.colors.text.secondary }]}>
+
+              {variant !== "minimal" && (
+                <Text
+                  style={[
+                    styles.scoreLabel,
+                    { color: theme.colors.text.secondary },
+                  ]}
+                >
                   Score
                 </Text>
               )}
@@ -236,28 +300,36 @@ const MentalHealthScoreWidget = ({
           </View>
 
           {/* State description */}
-          {showDescription && variant !== 'minimal' && (
+          {showDescription && variant !== "minimal" && (
             <View style={styles.descriptionContainer}>
-              {variant === 'detailed' && (
+              {variant === "detailed" && (
                 <Text style={[styles.emoji, { fontSize: typography.sizes.xl }]}>
                   {scoreState.emoji}
                 </Text>
               )}
-              
+
               <Text
                 style={[
                   styles.stateText,
                   {
                     color: theme.colors.text.primary,
-                    fontSize: variant === 'compact' ? typography.sizes.sm : typography.sizes.base,
+                    fontSize:
+                      variant === "compact"
+                        ? typography.sizes.sm
+                        : typography.sizes.base,
                   },
                 ]}
               >
                 {scoreState.state}
               </Text>
-              
-              {variant === 'detailed' && (
-                <Text style={[styles.descriptionText, { color: theme.colors.text.secondary }]}>
+
+              {variant === "detailed" && (
+                <Text
+                  style={[
+                    styles.descriptionText,
+                    { color: theme.colors.text.secondary },
+                  ]}
+                >
                   {scoreState.description}
                 </Text>
               )}
@@ -271,29 +343,29 @@ const MentalHealthScoreWidget = ({
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   touchable: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: borderRadius.xl,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: spacing[4],
   },
   content: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   progressContainer: {
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
   },
   scoreContainer: {
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: "absolute",
+    alignItems: "center",
+    justifyContent: "center",
   },
   scoreText: {
     fontWeight: typography.weights.bold,
@@ -305,16 +377,16 @@ const styles = StyleSheet.create({
     marginTop: spacing[1],
   },
   trendContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: -spacing[2],
     right: -spacing[2],
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: borderRadius.full,
     padding: spacing[1],
     ...shadows.sm,
   },
   descriptionContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: spacing[4],
   },
   emoji: {
@@ -322,11 +394,11 @@ const styles = StyleSheet.create({
   },
   stateText: {
     fontWeight: typography.weights.semiBold,
-    textAlign: 'center',
+    textAlign: "center",
   },
   descriptionText: {
     fontSize: typography.sizes.xs,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: spacing[1],
     maxWidth: width * 0.6,
   },
@@ -338,11 +410,16 @@ export const CompactMentalHealthScoreWidget = (props) => (
 );
 
 export const MinimalMentalHealthScoreWidget = (props) => (
-  <MentalHealthScoreWidget {...props} variant="minimal" size={100} showDescription={false} />
+  <MentalHealthScoreWidget
+    {...props}
+    variant="minimal"
+    size={100}
+    showDescription={false}
+  />
 );
 
 export const DetailedMentalHealthScoreWidget = (props) => (
-  <MentalHealthScoreWidget {...props} variant="detailed" size={200} showTrend={true} />
+  <MentalHealthScoreWidget {...props} variant="detailed" size={200} showTrend />
 );
 
 export default MentalHealthScoreWidget;

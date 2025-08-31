@@ -3,64 +3,69 @@
  * Matches design references exactly with Material UI, animations, and therapeutic theming
  */
 
-import React, { useEffect, useState, useCallback } from 'react';
-import { 
-  Platform, 
-  View, 
-  Text, 
-  StyleSheet, 
-  Animated, 
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  Platform,
+  View,
+  Text,
+  StyleSheet,
+  Animated,
   TouchableOpacity,
   StatusBar,
-  SafeAreaView 
-} from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import { useSelector } from 'react-redux';
-import { Provider as PaperProvider, Portal, Button } from 'react-native-paper';
-import LinearGradient from 'expo-linear-gradient';
+  SafeAreaView,
+} from "react-native";
+import { Provider as PaperProvider, Portal, Button } from "react-native-paper";
+import { useSelector } from "react-redux";
 // Removed web-specific animation libraries (framer-motion, animejs)
 // Using React Native's built-in Animated API instead
 
 // Enhanced UI Components (simplified imports to avoid complex dependencies)
-import { FreudThemeProvider } from '../components/ui/FreudThemeProvider';
-import { PageShaderBackground } from '../components/ui/PageShaderBackground';
+import SimpleFallbackScreen from "../components/SimpleFallbackScreen";
+import { NavigationIcon, MentalHealthIcon } from "../components/icons";
+import { FreudThemeProvider } from "../components/ui/FreudThemeProvider";
+import { PageShaderBackground } from "../components/ui/PageShaderBackground";
 // Temporarily commented out complex components to fix blank screen
 // import { EnhancedDashboard } from '../components/ui/EnhancedDashboard';
-// import { EnhancedMoodTracker } from '../components/ui/EnhancedMoodTracker'; 
+// import { EnhancedMoodTracker } from '../components/ui/EnhancedMoodTracker';
 // import { FreudUIShowcase } from '../components/ui/FreudUIShowcase';
 
 // Design System
-import { FreudColors, FreudSpacing, FreudBorderRadius, FreudShadows } from '../shared/theme/FreudDesignSystem';
-import { useTheme } from '../shared/theme/UnifiedThemeProvider';
+import CoverPageScreen from "../screens/CoverPageScreen";
+import DarkSplashScreen from "../screens/DarkSplashScreen";
+import DarkWelcomeScreen from "../screens/DarkWelcomeScreen";
+import MainAppScreen from "../screens/MainAppScreen";
 
 // Icons with Freud design
-import { NavigationIcon, MentalHealthIcon } from '../components/icons';
 
 // Existing Screens (using working screens)
-import CoverPageScreen from '../screens/CoverPageScreen';
-import MainAppScreen from '../screens/MainAppScreen';
-import EnhancedChatScreen from '../screens/chat/EnhancedChatScreen';
-import EnhancedMoodTrackerScreen from '../screens/mood/EnhancedMoodTrackerScreen';
-import AssessmentScreen from '../screens/assessment/AssessmentScreen';
-import ProfileScreen from '../screens/profile/ProfileScreen';
-import SplashScreen from '../screens/SplashScreen';
+import SplashScreen from "../screens/SplashScreen";
+import AssessmentScreen from "../screens/assessment/AssessmentScreen";
+import EnhancedChatScreen from "../screens/chat/EnhancedChatScreen";
+import EnhancedMoodTrackerScreen from "../screens/mood/EnhancedMoodTrackerScreen";
+import ProfileScreen from "../screens/profile/ProfileScreen";
 // Fallback component for debugging
-import SimpleFallbackScreen from '../components/SimpleFallbackScreen';
 
 // Auth Screens
-import SignInScreen from '../screens/auth/SignInScreen';
-import RegisterScreen from '../screens/auth/RegisterScreen';
-import ProfessionalOnboardingScreen from '../screens/ProfessionalOnboardingScreen';
+import SignInScreen from "../screens/auth/SignInScreen";
+import RegisterScreen from "../screens/auth/RegisterScreen";
+import ProfessionalOnboardingScreen from "../screens/ProfessionalOnboardingScreen";
 
 // Dark Mode Screens
-import DarkHomeScreen from '../screens/home/DarkHomeScreen';
-import DarkAITherapyChatScreen from '../screens/chat/DarkAITherapyChatScreen';
-import DarkMoodTrackerScreen from '../screens/mood/DarkMoodTrackerScreen';
-import DarkComprehensiveAssessmentScreen from '../screens/assessment/DarkComprehensiveAssessmentScreen';
-import DarkProfileSettingsScreen from '../screens/profile/DarkProfileSettingsScreen';
-import DarkWelcomeScreen from '../screens/DarkWelcomeScreen';
-import DarkSplashScreen from '../screens/DarkSplashScreen';
+import DarkHomeScreen from "../screens/home/DarkHomeScreen";
+import DarkAITherapyChatScreen from "../screens/chat/DarkAITherapyChatScreen";
+import DarkMoodTrackerScreen from "../screens/mood/DarkMoodTrackerScreen";
+import DarkComprehensiveAssessmentScreen from "../screens/assessment/DarkComprehensiveAssessmentScreen";
+import DarkProfileSettingsScreen from "../screens/profile/DarkProfileSettingsScreen";
+import {
+  FreudColors,
+  FreudSpacing,
+  FreudBorderRadius,
+  FreudShadows,
+} from "../shared/theme/FreudDesignSystem";
+import { useTheme } from "../shared/theme/UnifiedThemeProvider";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -85,72 +90,91 @@ const FreudAnimatedTabBar = ({ state, descriptors, navigation }) => {
 
   // Tab configuration matching Freud UI Kit
   const tabConfig = {
-    Cover: { 
-      icon: 'explore', 
-      color: FreudColors.zenYellow[60], 
+    Cover: {
+      icon: "explore",
+      color: FreudColors.zenYellow[60],
       gradient: [FreudColors.zenYellow[20], FreudColors.zenYellow[10]],
-      label: 'Welcome'
+      label: "Welcome",
     },
-    Home: { 
-      icon: 'home', 
-      color: FreudColors.serenityGreen[60], 
+    Home: {
+      icon: "home",
+      color: FreudColors.serenityGreen[60],
       gradient: [FreudColors.serenityGreen[20], FreudColors.serenityGreen[10]],
-      label: 'Dashboard'
+      label: "Dashboard",
     },
-    Chat: { 
-      icon: 'chat', 
-      color: FreudColors.empathyOrange[60], 
+    Chat: {
+      icon: "chat",
+      color: FreudColors.empathyOrange[60],
       gradient: [FreudColors.empathyOrange[20], FreudColors.empathyOrange[10]],
-      label: 'Therapy'
+      label: "Therapy",
     },
-    Mood: { 
-      icon: 'dashboard', 
-      color: FreudColors.kindPurple[60], 
+    Mood: {
+      icon: "dashboard",
+      color: FreudColors.kindPurple[60],
       gradient: [FreudColors.kindPurple[20], FreudColors.kindPurple[10]],
-      label: 'Mood'
+      label: "Mood",
     },
-    Assessment: { 
-      icon: 'discover', 
-      color: FreudColors.mindfulBrown[60], 
+    Assessment: {
+      icon: "discover",
+      color: FreudColors.mindfulBrown[60],
       gradient: [FreudColors.mindfulBrown[20], FreudColors.mindfulBrown[10]],
-      label: 'Assessment'
+      label: "Assessment",
     },
-    Profile: { 
-      icon: 'profile', 
-      color: FreudColors.optimisticGray[60], 
-      gradient: [FreudColors.optimisticGray[20], FreudColors.optimisticGray[10]],
-      label: 'Profile'
+    Profile: {
+      icon: "profile",
+      color: FreudColors.optimisticGray[60],
+      gradient: [
+        FreudColors.optimisticGray[20],
+        FreudColors.optimisticGray[10],
+      ],
+      label: "Profile",
     },
   };
 
   const tabWidth = 100 / state.routes.length;
 
   return (
-    <View style={[
-      styles.tabBarContainer, 
-      { 
-        backgroundColor: isDarkMode ? FreudColors.optimisticGray[100] : '#FFFFFF',
-        borderTopColor: isDarkMode ? FreudColors.optimisticGray[80] : FreudColors.optimisticGray[20]
-      }
-    ]}>
+    <View
+      style={[
+        styles.tabBarContainer,
+        {
+          backgroundColor: isDarkMode
+            ? FreudColors.optimisticGray[100]
+            : "#FFFFFF",
+          borderTopColor: isDarkMode
+            ? FreudColors.optimisticGray[80]
+            : FreudColors.optimisticGray[20],
+        },
+      ]}
+    >
       {/* Animated Indicator */}
       <Animated.View
         style={[
           styles.tabIndicator,
           {
             width: `${tabWidth}%`,
-            transform: [{
-              translateX: indicatorAnimation.interpolate({
-                inputRange: [0, state.routes.length - 1],
-                outputRange: [0, (state.routes.length - 1) * (100 / state.routes.length)],
-                extrapolate: 'clamp',
-              })
-            }]
-          }
+            transform: [
+              {
+                translateX: indicatorAnimation.interpolate({
+                  inputRange: [0, state.routes.length - 1],
+                  outputRange: [
+                    0,
+                    (state.routes.length - 1) * (100 / state.routes.length),
+                  ],
+                  extrapolate: "clamp",
+                }),
+              },
+            ],
+          },
         ]}
       >
         <LinearGradient
-          colors={tabConfig[state.routes[state.index]?.name]?.gradient || [FreudColors.serenityGreen[20], FreudColors.serenityGreen[10]]}
+          colors={
+            tabConfig[state.routes[state.index]?.name]?.gradient || [
+              FreudColors.serenityGreen[20],
+              FreudColors.serenityGreen[10],
+            ]
+          }
           style={styles.indicatorGradient}
         />
       </Animated.View>
@@ -163,7 +187,7 @@ const FreudAnimatedTabBar = ({ state, descriptors, navigation }) => {
 
         const onPress = () => {
           const event = navigation.emit({
-            type: 'tabPress',
+            type: "tabPress",
             target: route.key,
             canPreventDefault: true,
           });
@@ -188,7 +212,7 @@ const FreudAnimatedTabBar = ({ state, descriptors, navigation }) => {
                 useNativeDriver: true,
               }),
             ]).start();
-            
+
             navigation.navigate(route.name);
           }
         };
@@ -200,11 +224,11 @@ const FreudAnimatedTabBar = ({ state, descriptors, navigation }) => {
             onPress={onPress}
             style={[
               styles.tabButton,
-              { 
-                backgroundColor: isFocused 
-                  ? `${config.color}15` 
-                  : 'transparent' 
-              }
+              {
+                backgroundColor: isFocused
+                  ? `${config.color}15`
+                  : "transparent",
+              },
             ]}
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
@@ -214,17 +238,29 @@ const FreudAnimatedTabBar = ({ state, descriptors, navigation }) => {
               <NavigationIcon
                 name={config.icon}
                 size={isFocused ? 26 : 22}
-                color={isFocused ? config.color : (isDarkMode ? FreudColors.optimisticGray[50] : FreudColors.optimisticGray[70])}
+                color={
+                  isFocused
+                    ? config.color
+                    : isDarkMode
+                      ? FreudColors.optimisticGray[50]
+                      : FreudColors.optimisticGray[70]
+                }
                 variant={isFocused ? "filled" : "outline"}
               />
-              <Text style={[
-                styles.tabLabel,
-                {
-                  color: isFocused ? config.color : (isDarkMode ? FreudColors.optimisticGray[50] : FreudColors.optimisticGray[70]),
-                  fontSize: isFocused ? 11 : 10,
-                  fontWeight: isFocused ? '600' : '500'
-                }
-              ]}>
+              <Text
+                style={[
+                  styles.tabLabel,
+                  {
+                    color: isFocused
+                      ? config.color
+                      : isDarkMode
+                        ? FreudColors.optimisticGray[50]
+                        : FreudColors.optimisticGray[70],
+                    fontSize: isFocused ? 11 : 10,
+                    fontWeight: isFocused ? "600" : "500",
+                  },
+                ]}
+              >
                 {config.label}
               </Text>
             </View>
@@ -244,11 +280,11 @@ const ThemeToggleFAB = () => {
 
   const handleToggle = useCallback(() => {
     setIsAnimating(true);
-    
+
     // Native animation for theme toggle
     const rotateValue = new Animated.Value(0);
     const scaleValue = new Animated.Value(1);
-    
+
     Animated.parallel([
       Animated.timing(rotateValue, {
         toValue: 1,
@@ -275,7 +311,7 @@ const ThemeToggleFAB = () => {
     ]).start(() => {
       setIsAnimating(false);
     });
-    
+
     toggleTheme();
   }, [toggleTheme]);
 
@@ -286,17 +322,19 @@ const ThemeToggleFAB = () => {
       style={[
         styles.themeFab,
         {
-          backgroundColor: isDarkMode ? FreudColors.zenYellow[50] : FreudColors.kindPurple[60],
-          ...FreudShadows.lg
-        }
+          backgroundColor: isDarkMode
+            ? FreudColors.zenYellow[50]
+            : FreudColors.kindPurple[60],
+          ...FreudShadows.lg,
+        },
       ]}
-      accessibilityLabel={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+      accessibilityLabel={
+        isDarkMode ? "Switch to light mode" : "Switch to dark mode"
+      }
       accessibilityRole="button"
       disabled={isAnimating}
     >
-      <Text style={styles.themeFabText}>
-        {isDarkMode ? '☀️' : '🌙'}
-      </Text>
+      <Text style={styles.themeFabText}>{isDarkMode ? "☀️" : "🌙"}</Text>
     </TouchableOpacity>
   );
 };
@@ -306,7 +344,7 @@ const ThemeToggleFAB = () => {
  */
 const EnhancedMainTabs = () => {
   const { isDarkMode } = useTheme();
-  
+
   return (
     <>
       <Tab.Navigator
@@ -339,14 +377,19 @@ const EnhancedMainTabs = () => {
         />
         <Tab.Screen
           name="Mood"
-          component={isDarkMode ? DarkMoodTrackerScreen : EnhancedMoodTrackerScreen}
+          component={
+            isDarkMode ? DarkMoodTrackerScreen : EnhancedMoodTrackerScreen
+          }
           options={{
-            tabBarAccessibilityLabel: "Mood Tracker - Monitor emotional wellbeing",
+            tabBarAccessibilityLabel:
+              "Mood Tracker - Monitor emotional wellbeing",
           }}
         />
         <Tab.Screen
           name="Assessment"
-          component={isDarkMode ? DarkComprehensiveAssessmentScreen : AssessmentScreen}
+          component={
+            isDarkMode ? DarkComprehensiveAssessmentScreen : AssessmentScreen
+          }
           options={{
             tabBarAccessibilityLabel: "Assessment - Mental health evaluation",
           }}
@@ -359,7 +402,7 @@ const EnhancedMainTabs = () => {
           }}
         />
       </Tab.Navigator>
-      
+
       <ThemeToggleFAB />
     </>
   );
@@ -376,7 +419,9 @@ const AuthStack = () => {
       screenOptions={{
         headerShown: false,
         cardStyle: {
-          backgroundColor: isDarkMode ? FreudColors.optimisticGray[100] : '#FFFFFF',
+          backgroundColor: isDarkMode
+            ? FreudColors.optimisticGray[100]
+            : "#FFFFFF",
         },
         cardStyleInterpolator: ({ current, layouts }) => ({
           cardStyle: {
@@ -419,7 +464,7 @@ const EnhancedLoadingScreen = () => {
           duration: 2000,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     );
 
     breatheAnimation.start();
@@ -428,8 +473,8 @@ const EnhancedLoadingScreen = () => {
   }, []);
 
   return (
-    <PageShaderBackground 
-      shader="therapeutic" 
+    <PageShaderBackground
+      shader="therapeutic"
       variant="calming"
       style={styles.loadingContainer}
     >
@@ -438,39 +483,55 @@ const EnhancedLoadingScreen = () => {
         backgroundColor="transparent"
         translucent
       />
-      
-      <Animated.View style={[
-        styles.loadingContent,
-        {
-          transform: [{
-            scale: loadingProgress.interpolate({
+
+      <Animated.View
+        style={[
+          styles.loadingContent,
+          {
+            transform: [
+              {
+                scale: loadingProgress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.95, 1.05],
+                }),
+              },
+            ],
+            opacity: loadingProgress.interpolate({
               inputRange: [0, 1],
-              outputRange: [0.95, 1.05],
-            })
-          }],
-          opacity: loadingProgress.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0.7, 1],
-          })
-        }
-      ]}>
-        <MentalHealthIcon 
-          name="Brain" 
-          size={80} 
-          color={FreudColors.serenityGreen[60]} 
+              outputRange: [0.7, 1],
+            }),
+          },
+        ]}
+      >
+        <MentalHealthIcon
+          name="Brain"
+          size={80}
+          color={FreudColors.serenityGreen[60]}
         />
-        
-        <Text style={[
-          styles.loadingTitle,
-          { color: isDarkMode ? FreudColors.optimisticGray[10] : FreudColors.mindfulBrown[90] }
-        ]}>
+
+        <Text
+          style={[
+            styles.loadingTitle,
+            {
+              color: isDarkMode
+                ? FreudColors.optimisticGray[10]
+                : FreudColors.mindfulBrown[90],
+            },
+          ]}
+        >
           Solace AI
         </Text>
-        
-        <Text style={[
-          styles.loadingSubtitle,
-          { color: isDarkMode ? FreudColors.optimisticGray[30] : FreudColors.optimisticGray[70] }
-        ]}>
+
+        <Text
+          style={[
+            styles.loadingSubtitle,
+            {
+              color: isDarkMode
+                ? FreudColors.optimisticGray[30]
+                : FreudColors.optimisticGray[70],
+            },
+          ]}
+        >
           Your empathetic digital confidant
         </Text>
       </Animated.View>
@@ -484,14 +545,14 @@ const EnhancedLoadingScreen = () => {
 const EnhancedAppNavigator = () => {
   const authState = useSelector((state) => state.auth);
   const { isAuthenticated, onboardingCompleted, isLoading } = authState || {};
-  
+
   // Add error handling for useTheme hook
   let isDarkMode = false;
   try {
     const theme = useTheme();
     isDarkMode = theme?.isDarkMode || false;
   } catch (error) {
-    console.warn('Theme hook error:', error);
+    console.warn("Theme hook error:", error);
   }
 
   // Loading state with therapeutic animation
@@ -501,7 +562,9 @@ const EnhancedAppNavigator = () => {
 
   // Onboarding flow
   if (onboardingCompleted !== true) {
-    const OnboardingComponent = isDarkMode ? DarkWelcomeScreen : ProfessionalOnboardingScreen;
+    const OnboardingComponent = isDarkMode
+      ? DarkWelcomeScreen
+      : ProfessionalOnboardingScreen;
     return (
       <FreudThemeProvider>
         <PageShaderBackground shader="therapeutic" variant="welcoming">
@@ -543,18 +606,18 @@ const styles = StyleSheet.create({
 
   // Tab Bar Styles
   tabBarContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     height: 85,
-    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
+    paddingBottom: Platform.OS === "ios" ? 20 : 10,
     paddingTop: 8,
     paddingHorizontal: 8,
     borderTopWidth: 1,
-    position: 'relative',
+    position: "relative",
     ...FreudShadows.sm,
   },
 
   tabIndicator: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     height: 3,
     borderRadius: FreudBorderRadius.sm,
@@ -567,34 +630,34 @@ const styles = StyleSheet.create({
 
   tabButton: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginHorizontal: 2,
     borderRadius: FreudBorderRadius.lg,
     paddingVertical: 8,
   },
 
   tabContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   tabLabel: {
     marginTop: 4,
     fontSize: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   // Theme FAB
   themeFab: {
-    position: 'absolute',
+    position: "absolute",
     right: 20,
     bottom: 100,
     width: 56,
     height: 56,
     borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     zIndex: 1000,
   },
 
@@ -605,26 +668,26 @@ const styles = StyleSheet.create({
   // Loading Screen
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   loadingContent: {
-    alignItems: 'center',
+    alignItems: "center",
     padding: FreudSpacing[8],
   },
 
   loadingTitle: {
     fontSize: 32,
-    fontWeight: '700',
+    fontWeight: "700",
     marginTop: FreudSpacing[6],
     marginBottom: FreudSpacing[2],
   },
 
   loadingSubtitle: {
     fontSize: 16,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
   },
 });
 

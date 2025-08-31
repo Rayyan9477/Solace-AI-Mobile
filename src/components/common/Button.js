@@ -10,7 +10,11 @@ import {
 } from "react-native";
 
 import { useTheme } from "../../shared/theme/ThemeContext";
-import { TouchTargetHelpers, WCAG_CONSTANTS, FocusManagement } from "../../shared/utils/accessibility";
+import {
+  TouchTargetHelpers,
+  WCAG_CONSTANTS,
+  FocusManagement,
+} from "../../shared/utils/accessibility";
 
 const Button = ({
   onPress,
@@ -34,12 +38,13 @@ const Button = ({
   const { theme, isReducedMotionEnabled } = useTheme();
   const [scaleValue] = React.useState(new Animated.Value(1));
   const [isFocused, setIsFocused] = React.useState(false);
-  
+
   // Ensure minimum touch target size with enhanced WCAG compliance
-  const { style: touchTargetStyle, hitSlop } = TouchTargetHelpers.ensureMinimumTouchTarget({
-    minWidth: WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
-    minHeight: WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
-  });
+  const { style: touchTargetStyle, hitSlop } =
+    TouchTargetHelpers.ensureMinimumTouchTarget({
+      minWidth: WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
+      minHeight: WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
+    });
 
   const handlePressIn = () => {
     if (!isReducedMotionEnabled) {
@@ -67,26 +72,26 @@ const Button = ({
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       }
       onPress?.();
-      
+
       // Announce action for screen readers
       FocusManagement.announceForScreenReader(
         `${title} button activated`,
-        'polite'
+        "polite",
       );
     }
   };
-  
+
   const handleFocus = (event) => {
     setIsFocused(true);
     onFocus?.(event);
-    
+
     // Announce focus for screen readers
     FocusManagement.announceForScreenReader(
       `Focused on ${title} button`,
-      'polite'
+      "polite",
     );
   };
-  
+
   const handleBlur = (event) => {
     setIsFocused(false);
     onBlur?.(event);
@@ -219,9 +224,9 @@ const styles = StyleSheet.create({
   },
   focused: {
     borderWidth: WCAG_CONSTANTS.FOCUS_OUTLINE_WIDTH,
-    borderColor: '#0066cc',
+    borderColor: "#0066cc",
     // Enhanced focus indicator for better visibility
-    shadowColor: '#0066cc',
+    shadowColor: "#0066cc",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 4,

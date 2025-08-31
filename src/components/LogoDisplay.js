@@ -1,15 +1,15 @@
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 
 import { useFixedTheme } from "./FixedThemeProvider";
 
-const LogoDisplay = ({ 
-  size = "large", 
-  showText = true, 
+const LogoDisplay = ({
+  size = "large",
+  showText = true,
   style = {},
   logoStyle = {},
-  textStyle = {} 
+  textStyle = {},
 }) => {
   const { theme } = useFixedTheme();
 
@@ -30,37 +30,54 @@ const LogoDisplay = ({
   return (
     <View style={[styles.container, style]}>
       {/* Logo - 4 circles in grid pattern */}
-      <View style={[styles.logoContainer, { marginBottom: spacing }, logoStyle]}>
+      <View
+        style={[styles.logoContainer, { marginBottom: spacing }, logoStyle]}
+      >
         <LinearGradient
           colors={[
             theme.colors.background?.primary || "#FFFFFF",
             theme.colors.background?.secondary || "#F9FAFB",
           ]}
-          style={[styles.logoCircle, { width: logoSize, height: logoSize, borderRadius: logoSize / 2 }]}
+          style={[
+            styles.logoCircle,
+            { width: logoSize, height: logoSize, borderRadius: logoSize / 2 },
+          ]}
         >
           <View style={styles.logoGrid}>
             <View
               style={[
                 styles.gridCircle,
-                { backgroundColor: theme.colors.therapeutic?.empathy?.[600] || "#C96100" },
+                {
+                  backgroundColor:
+                    theme.colors.therapeutic?.empathy?.[600] || "#C96100",
+                },
               ]}
             />
             <View
               style={[
                 styles.gridCircle,
-                { backgroundColor: theme.colors.therapeutic?.zen?.[500] || "#EDA600" },
+                {
+                  backgroundColor:
+                    theme.colors.therapeutic?.zen?.[500] || "#EDA600",
+                },
               ]}
             />
             <View
               style={[
                 styles.gridCircle,
-                { backgroundColor: theme.colors.therapeutic?.zen?.[500] || "#EDA600" },
+                {
+                  backgroundColor:
+                    theme.colors.therapeutic?.zen?.[500] || "#EDA600",
+                },
               ]}
             />
             <View
               style={[
                 styles.gridCircle,
-                { backgroundColor: theme.colors.therapeutic?.empathy?.[600] || "#C96100" },
+                {
+                  backgroundColor:
+                    theme.colors.therapeutic?.empathy?.[600] || "#C96100",
+                },
               ]}
             />
           </View>
@@ -71,9 +88,9 @@ const LogoDisplay = ({
         <Text
           style={[
             styles.logoText,
-            { 
+            {
               fontSize,
-              color: theme.colors.text?.primary || "#111827" 
+              color: theme.colors.text?.primary || "#111827",
             },
             textStyle,
           ]}

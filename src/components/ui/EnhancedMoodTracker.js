@@ -4,7 +4,8 @@
  * Features step-by-step mood tracking with therapeutic design principles
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -14,59 +15,73 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Card, Button, Chip, TextInput, ProgressBar } from 'react-native-paper';
-import { EnhancedMoodCard, MoodCardGrid } from './EnhancedMoodCard';
-import { TherapeuticButton, TherapeuticText, FreudColors } from './FreudUISystem';
-import { PageShaderBackground, MoodBasedShaderBackground } from './PageShaderBackground';
-import { colors, spacing, borderRadius, shadows, typography } from '../../shared/theme/theme';
+} from "react-native";
+import { Card, Button, Chip, TextInput, ProgressBar } from "react-native-paper";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import { EnhancedMoodCard, MoodCardGrid } from "./EnhancedMoodCard";
+import {
+  TherapeuticButton,
+  TherapeuticText,
+  FreudColors,
+} from "./FreudUISystem";
+import {
+  PageShaderBackground,
+  MoodBasedShaderBackground,
+} from "./PageShaderBackground";
+import {
+  colors,
+  spacing,
+  borderRadius,
+  shadows,
+  typography,
+} from "../../shared/theme/theme";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 /**
  * Enhanced Mood Tracking Steps Configuration
  */
 const MoodTrackingSteps = {
   mood: {
-    title: 'How are you feeling?',
-    subtitle: 'Select your current mood',
-    description: 'Choose the emotion that best represents how you feel right now',
-    therapeutic: 'kind',
+    title: "How are you feeling?",
+    subtitle: "Select your current mood",
+    description:
+      "Choose the emotion that best represents how you feel right now",
+    therapeutic: "kind",
     gradient: FreudColors.kind.gradient,
-    component: 'MoodSelection',
+    component: "MoodSelection",
   },
   intensity: {
-    title: 'How intense is this feeling?',
-    subtitle: 'Rate the intensity from 1 to 5',
-    description: '1 is very mild, 5 is very intense',
-    therapeutic: 'zen',
+    title: "How intense is this feeling?",
+    subtitle: "Rate the intensity from 1 to 5",
+    description: "1 is very mild, 5 is very intense",
+    therapeutic: "zen",
     gradient: FreudColors.zen.gradient,
-    component: 'IntensityScale',
+    component: "IntensityScale",
   },
   activities: {
-    title: 'What activities affected your mood?',
-    subtitle: 'Select relevant activities',
-    description: 'Choose activities that may have influenced how you feel',
-    therapeutic: 'empathy',
+    title: "What activities affected your mood?",
+    subtitle: "Select relevant activities",
+    description: "Choose activities that may have influenced how you feel",
+    therapeutic: "empathy",
     gradient: FreudColors.empathy.gradient,
-    component: 'ActivitySelection',
+    component: "ActivitySelection",
   },
   notes: {
-    title: 'Additional thoughts or triggers?',
-    subtitle: 'Optional notes and reflections',
-    description: 'Share any thoughts, triggers, or context about your mood',
-    therapeutic: 'serenity',
+    title: "Additional thoughts or triggers?",
+    subtitle: "Optional notes and reflections",
+    description: "Share any thoughts, triggers, or context about your mood",
+    therapeutic: "serenity",
     gradient: FreudColors.serenity.gradient,
-    component: 'NotesAndTriggers',
+    component: "NotesAndTriggers",
   },
   summary: {
-    title: 'Mood Entry Complete',
-    subtitle: 'Review your mood entry',
-    description: 'Your mood has been recorded. Here\'s a summary of your entry',
-    therapeutic: 'mindful',
+    title: "Mood Entry Complete",
+    subtitle: "Review your mood entry",
+    description: "Your mood has been recorded. Here's a summary of your entry",
+    therapeutic: "mindful",
     gradient: FreudColors.mindful.gradient,
-    component: 'MoodSummary',
+    component: "MoodSummary",
   },
 };
 
@@ -76,43 +91,43 @@ const MoodTrackingSteps = {
 const IntensityLevels = [
   {
     level: 1,
-    label: 'Very Mild',
-    description: 'Barely noticeable',
+    label: "Very Mild",
+    description: "Barely noticeable",
     color: FreudColors.serenity.light,
     gradient: [FreudColors.serenity.light, FreudColors.serenity.medium],
-    emoji: '😐',
+    emoji: "😐",
   },
   {
     level: 2,
-    label: 'Mild',
-    description: 'Slightly noticeable',
+    label: "Mild",
+    description: "Slightly noticeable",
     color: FreudColors.zen.light,
     gradient: [FreudColors.zen.light, FreudColors.zen.medium],
-    emoji: '🙂',
+    emoji: "🙂",
   },
   {
     level: 3,
-    label: 'Moderate',
-    description: 'Clearly present',
+    label: "Moderate",
+    description: "Clearly present",
     color: FreudColors.empathy.light,
     gradient: [FreudColors.empathy.light, FreudColors.empathy.medium],
-    emoji: '😊',
+    emoji: "😊",
   },
   {
     level: 4,
-    label: 'Strong',
-    description: 'Very noticeable',
+    label: "Strong",
+    description: "Very noticeable",
     color: FreudColors.kind.light,
     gradient: [FreudColors.kind.light, FreudColors.kind.medium],
-    emoji: '😄',
+    emoji: "😄",
   },
   {
     level: 5,
-    label: 'Very Strong',
-    description: 'Overwhelming',
+    label: "Very Strong",
+    description: "Overwhelming",
     color: FreudColors.mindful.light,
     gradient: [FreudColors.mindful.light, FreudColors.mindful.medium],
-    emoji: '🤩',
+    emoji: "🤩",
   },
 ];
 
@@ -121,34 +136,130 @@ const IntensityLevels = [
  */
 const MoodActivities = [
   // Positive activities
-  { id: 'exercise', label: 'Exercise', type: 'positive', emoji: '🏃‍♀️', color: FreudColors.serenity },
-  { id: 'meditation', label: 'Meditation', type: 'positive', emoji: '🧘‍♀️', color: FreudColors.mindful },
-  { id: 'socializing', label: 'Socializing', type: 'positive', emoji: '👥', color: FreudColors.empathy },
-  { id: 'nature', label: 'Nature', type: 'positive', emoji: '🌿', color: FreudColors.serenity },
-  { id: 'music', label: 'Music', type: 'positive', emoji: '🎵', color: FreudColors.zen },
-  { id: 'reading', label: 'Reading', type: 'positive', emoji: '📚', color: FreudColors.kind },
-  
+  {
+    id: "exercise",
+    label: "Exercise",
+    type: "positive",
+    emoji: "🏃‍♀️",
+    color: FreudColors.serenity,
+  },
+  {
+    id: "meditation",
+    label: "Meditation",
+    type: "positive",
+    emoji: "🧘‍♀️",
+    color: FreudColors.mindful,
+  },
+  {
+    id: "socializing",
+    label: "Socializing",
+    type: "positive",
+    emoji: "👥",
+    color: FreudColors.empathy,
+  },
+  {
+    id: "nature",
+    label: "Nature",
+    type: "positive",
+    emoji: "🌿",
+    color: FreudColors.serenity,
+  },
+  {
+    id: "music",
+    label: "Music",
+    type: "positive",
+    emoji: "🎵",
+    color: FreudColors.zen,
+  },
+  {
+    id: "reading",
+    label: "Reading",
+    type: "positive",
+    emoji: "📚",
+    color: FreudColors.kind,
+  },
+
   // Neutral activities
-  { id: 'work', label: 'Work', type: 'neutral', emoji: '💼', color: FreudColors.optimistic },
-  { id: 'commute', label: 'Commute', type: 'neutral', emoji: '🚗', color: FreudColors.optimistic },
-  { id: 'household', label: 'Household Tasks', type: 'neutral', emoji: '🏠', color: FreudColors.optimistic },
-  { id: 'technology', label: 'Screen Time', type: 'neutral', emoji: '📱', color: FreudColors.optimistic },
-  
+  {
+    id: "work",
+    label: "Work",
+    type: "neutral",
+    emoji: "💼",
+    color: FreudColors.optimistic,
+  },
+  {
+    id: "commute",
+    label: "Commute",
+    type: "neutral",
+    emoji: "🚗",
+    color: FreudColors.optimistic,
+  },
+  {
+    id: "household",
+    label: "Household Tasks",
+    type: "neutral",
+    emoji: "🏠",
+    color: FreudColors.optimistic,
+  },
+  {
+    id: "technology",
+    label: "Screen Time",
+    type: "neutral",
+    emoji: "📱",
+    color: FreudColors.optimistic,
+  },
+
   // Potentially challenging activities
-  { id: 'conflict', label: 'Conflict', type: 'challenging', emoji: '⚡', color: FreudColors.empathy },
-  { id: 'stress', label: 'Stressful Event', type: 'challenging', emoji: '😰', color: FreudColors.empathy },
-  { id: 'isolation', label: 'Being Alone', type: 'challenging', emoji: '🚪', color: FreudColors.kind },
-  { id: 'health', label: 'Health Issues', type: 'challenging', emoji: '🏥', color: FreudColors.mindful },
+  {
+    id: "conflict",
+    label: "Conflict",
+    type: "challenging",
+    emoji: "⚡",
+    color: FreudColors.empathy,
+  },
+  {
+    id: "stress",
+    label: "Stressful Event",
+    type: "challenging",
+    emoji: "😰",
+    color: FreudColors.empathy,
+  },
+  {
+    id: "isolation",
+    label: "Being Alone",
+    type: "challenging",
+    emoji: "🚪",
+    color: FreudColors.kind,
+  },
+  {
+    id: "health",
+    label: "Health Issues",
+    type: "challenging",
+    emoji: "🏥",
+    color: FreudColors.mindful,
+  },
 ];
 
 /**
  * Common mood triggers
  */
 const MoodTriggers = [
-  'Relationship issues', 'Work stress', 'Financial concerns', 'Health problems',
-  'Family dynamics', 'Social pressure', 'Sleep issues', 'Weather changes',
-  'Hormonal changes', 'News/media', 'Past memories', 'Future uncertainty',
-  'Achievement pressure', 'Social comparison', 'Physical discomfort', 'Other',
+  "Relationship issues",
+  "Work stress",
+  "Financial concerns",
+  "Health problems",
+  "Family dynamics",
+  "Social pressure",
+  "Sleep issues",
+  "Weather changes",
+  "Hormonal changes",
+  "News/media",
+  "Past memories",
+  "Future uncertainty",
+  "Achievement pressure",
+  "Social comparison",
+  "Physical discomfort",
+  "Other",
 ];
 
 /**
@@ -157,7 +268,7 @@ const MoodTriggers = [
 export const EnhancedMoodTracker = ({
   onComplete,
   onCancel,
-  initialStep = 'mood',
+  initialStep = "mood",
   showProgress = true,
   animated = true,
   therapeutic = true,
@@ -169,7 +280,7 @@ export const EnhancedMoodTracker = ({
     mood: null,
     intensity: null,
     activities: [],
-    notes: '',
+    notes: "",
     triggers: [],
     timestamp: new Date(),
   });
@@ -236,21 +347,21 @@ export const EnhancedMoodTracker = ({
 
   // Update mood data
   const updateMoodData = (updates) => {
-    setMoodData(prev => ({ ...prev, ...updates }));
+    setMoodData((prev) => ({ ...prev, ...updates }));
   };
 
   // Validation for each step
   const isStepValid = () => {
     switch (currentStep) {
-      case 'mood':
+      case "mood":
         return moodData.mood !== null;
-      case 'intensity':
+      case "intensity":
         return moodData.intensity !== null;
-      case 'activities':
+      case "activities":
         return true; // Optional step
-      case 'notes':
+      case "notes":
         return true; // Optional step
-      case 'summary':
+      case "summary":
         return true;
       default:
         return false;
@@ -268,7 +379,11 @@ export const EnhancedMoodTracker = ({
       {showProgress && (
         <View style={styles.progressContainer}>
           <View style={styles.progressHeader}>
-            <TherapeuticText variant="caption" weight="medium" style={styles.progressLabel}>
+            <TherapeuticText
+              variant="caption"
+              weight="medium"
+              style={styles.progressLabel}
+            >
               Step {currentStepIndex + 1} of {stepKeys.length}
             </TherapeuticText>
             <TherapeuticText variant="caption" style={styles.progressPercent}>
@@ -327,9 +442,7 @@ export const EnhancedMoodTracker = ({
           </View>
 
           {/* Step Content */}
-          <View style={styles.stepContent}>
-            {renderStepComponent()}
-          </View>
+          <View style={styles.stepContent}>{renderStepComponent()}</View>
         </ScrollView>
       </Animated.View>
 
@@ -347,7 +460,7 @@ export const EnhancedMoodTracker = ({
               Previous
             </TherapeuticButton>
           )}
-          
+
           <TherapeuticButton
             therapeutic={stepConfig.therapeutic}
             variant="contained"
@@ -356,7 +469,7 @@ export const EnhancedMoodTracker = ({
             disabled={!isStepValid()}
             style={[styles.navButton, styles.nextButton]}
           >
-            {currentStep === 'summary' ? 'Complete' : 'Next'}
+            {currentStep === "summary" ? "Complete" : "Next"}
           </TherapeuticButton>
         </View>
       </View>
@@ -366,7 +479,7 @@ export const EnhancedMoodTracker = ({
   // Render step-specific components
   function renderStepComponent() {
     switch (currentStep) {
-      case 'mood':
+      case "mood":
         return (
           <MoodSelection
             selectedMood={moodData.mood}
@@ -374,7 +487,7 @@ export const EnhancedMoodTracker = ({
             animated={animated}
           />
         );
-      case 'intensity':
+      case "intensity":
         return (
           <IntensityScale
             selectedIntensity={moodData.intensity}
@@ -383,7 +496,7 @@ export const EnhancedMoodTracker = ({
             animated={animated}
           />
         );
-      case 'activities':
+      case "activities":
         return (
           <ActivitySelection
             selectedActivities={moodData.activities}
@@ -391,7 +504,7 @@ export const EnhancedMoodTracker = ({
             animated={animated}
           />
         );
-      case 'notes':
+      case "notes":
         return (
           <NotesAndTriggers
             notes={moodData.notes}
@@ -401,7 +514,7 @@ export const EnhancedMoodTracker = ({
             animated={animated}
           />
         );
-      case 'summary':
+      case "summary":
         return (
           <MoodSummary
             moodData={moodData}
@@ -419,7 +532,17 @@ export const EnhancedMoodTracker = ({
  * Mood Selection Component
  */
 const MoodSelection = ({ selectedMood, onMoodSelect, animated = true }) => {
-  const moods = ['happy', 'sad', 'stressed', 'calm', 'anxious', 'neutral', 'excited', 'tired', 'content'];
+  const moods = [
+    "happy",
+    "sad",
+    "stressed",
+    "calm",
+    "anxious",
+    "neutral",
+    "excited",
+    "tired",
+    "content",
+  ];
 
   return (
     <View style={styles.moodSelectionContainer}>
@@ -440,7 +563,12 @@ const MoodSelection = ({ selectedMood, onMoodSelect, animated = true }) => {
 /**
  * Intensity Scale Component
  */
-const IntensityScale = ({ selectedIntensity, onIntensitySelect, mood, animated = true }) => {
+const IntensityScale = ({
+  selectedIntensity,
+  onIntensitySelect,
+  mood,
+  animated = true,
+}) => {
   return (
     <View style={styles.intensityContainer}>
       {IntensityLevels.map((level) => (
@@ -462,10 +590,17 @@ const IntensityScale = ({ selectedIntensity, onIntensitySelect, mood, animated =
             ]}
           >
             <Text style={styles.intensityEmoji}>{level.emoji}</Text>
-            <TherapeuticText variant="body" weight="medium" style={styles.intensityLabel}>
+            <TherapeuticText
+              variant="body"
+              weight="medium"
+              style={styles.intensityLabel}
+            >
               {level.label}
             </TherapeuticText>
-            <TherapeuticText variant="caption" style={styles.intensityDescription}>
+            <TherapeuticText
+              variant="caption"
+              style={styles.intensityDescription}
+            >
               {level.description}
             </TherapeuticText>
           </LinearGradient>
@@ -478,10 +613,14 @@ const IntensityScale = ({ selectedIntensity, onIntensitySelect, mood, animated =
 /**
  * Activity Selection Component
  */
-const ActivitySelection = ({ selectedActivities, onActivitiesChange, animated = true }) => {
+const ActivitySelection = ({
+  selectedActivities,
+  onActivitiesChange,
+  animated = true,
+}) => {
   const toggleActivity = (activityId) => {
     const newActivities = selectedActivities.includes(activityId)
-      ? selectedActivities.filter(id => id !== activityId)
+      ? selectedActivities.filter((id) => id !== activityId)
       : [...selectedActivities, activityId];
     onActivitiesChange(newActivities);
   };
@@ -511,10 +650,16 @@ const ActivitySelection = ({ selectedActivities, onActivitiesChange, animated = 
 /**
  * Notes and Triggers Component
  */
-const NotesAndTriggers = ({ notes, triggers, onNotesChange, onTriggersChange, animated = true }) => {
+const NotesAndTriggers = ({
+  notes,
+  triggers,
+  onNotesChange,
+  onTriggersChange,
+  animated = true,
+}) => {
   const toggleTrigger = (trigger) => {
     const newTriggers = triggers.includes(trigger)
-      ? triggers.filter(t => t !== trigger)
+      ? triggers.filter((t) => t !== trigger)
       : [...triggers, trigger];
     onTriggersChange(newTriggers);
   };
@@ -531,11 +676,15 @@ const NotesAndTriggers = ({ notes, triggers, onNotesChange, onTriggersChange, an
         placeholder="Share your thoughts, feelings, or any context about your mood..."
         style={styles.notesInput}
       />
-      
-      <TherapeuticText variant="subtitle" weight="medium" style={styles.triggersTitle}>
+
+      <TherapeuticText
+        variant="subtitle"
+        weight="medium"
+        style={styles.triggersTitle}
+      >
         Possible Triggers (optional)
       </TherapeuticText>
-      
+
       <View style={styles.triggersContainer}>
         {MoodTriggers.map((trigger) => (
           <Chip
@@ -561,53 +710,68 @@ const NotesAndTriggers = ({ notes, triggers, onNotesChange, onTriggersChange, an
  */
 const MoodSummary = ({ moodData, onEdit, animated = true }) => {
   const formatDateTime = (date) => {
-    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    return date.toLocaleDateString() + " " + date.toLocaleTimeString();
   };
 
   return (
     <View style={styles.summaryContainer}>
       <Card style={styles.summaryCard}>
         <Card.Content>
-          <TherapeuticText variant="title" weight="bold" style={styles.summaryTitle}>
+          <TherapeuticText
+            variant="title"
+            weight="bold"
+            style={styles.summaryTitle}
+          >
             Mood Entry Summary
           </TherapeuticText>
-          
+
           <View style={styles.summaryRow}>
-            <TherapeuticText variant="body" weight="medium">Mood:</TherapeuticText>
+            <TherapeuticText variant="body" weight="medium">
+              Mood:
+            </TherapeuticText>
             <TherapeuticText variant="body" style={styles.summaryValue}>
-              {moodData.mood} {moodData.intensity ? `(${moodData.intensity}/5)` : ''}
+              {moodData.mood}{" "}
+              {moodData.intensity ? `(${moodData.intensity}/5)` : ""}
             </TherapeuticText>
           </View>
-          
+
           {moodData.activities.length > 0 && (
             <View style={styles.summaryRow}>
-              <TherapeuticText variant="body" weight="medium">Activities:</TherapeuticText>
+              <TherapeuticText variant="body" weight="medium">
+                Activities:
+              </TherapeuticText>
               <TherapeuticText variant="body" style={styles.summaryValue}>
-                {moodData.activities.join(', ')}
+                {moodData.activities.join(", ")}
               </TherapeuticText>
             </View>
           )}
-          
+
           {moodData.triggers.length > 0 && (
             <View style={styles.summaryRow}>
-              <TherapeuticText variant="body" weight="medium">Triggers:</TherapeuticText>
+              <TherapeuticText variant="body" weight="medium">
+                Triggers:
+              </TherapeuticText>
               <TherapeuticText variant="body" style={styles.summaryValue}>
-                {moodData.triggers.join(', ')}
+                {moodData.triggers.join(", ")}
               </TherapeuticText>
             </View>
           )}
-          
+
           {moodData.notes && (
             <View style={styles.summaryRow}>
-              <TherapeuticText variant="body" weight="medium">Notes:</TherapeuticText>
+              <TherapeuticText variant="body" weight="medium">
+                Notes:
+              </TherapeuticText>
               <TherapeuticText variant="body" style={styles.summaryValue}>
                 {moodData.notes}
               </TherapeuticText>
             </View>
           )}
-          
+
           <View style={styles.summaryRow}>
-            <TherapeuticText variant="body" weight="medium">Time:</TherapeuticText>
+            <TherapeuticText variant="body" weight="medium">
+              Time:
+            </TherapeuticText>
             <TherapeuticText variant="body" style={styles.summaryValue}>
               {formatDateTime(moodData.timestamp)}
             </TherapeuticText>
@@ -628,9 +792,9 @@ const styles = StyleSheet.create({
     paddingBottom: spacing[2],
   },
   progressHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: spacing[2],
   },
   progressLabel: {
@@ -655,19 +819,19 @@ const styles = StyleSheet.create({
   stepHeader: {
     paddingHorizontal: spacing[6],
     paddingVertical: spacing[6],
-    alignItems: 'center',
+    alignItems: "center",
   },
   stepTitle: {
     marginBottom: spacing[2],
-    textAlign: 'center',
+    textAlign: "center",
   },
   stepSubtitle: {
     marginBottom: spacing[3],
-    textAlign: 'center',
+    textAlign: "center",
     opacity: 0.8,
   },
   stepDescription: {
-    textAlign: 'center',
+    textAlign: "center",
     opacity: 0.7,
     lineHeight: 20,
   },
@@ -676,36 +840,36 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing[4],
   },
   navigationContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    backdropFilter: 'blur(10px)',
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    backdropFilter: "blur(10px)",
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[4],
-    paddingBottom: Platform.OS === 'ios' ? spacing[8] : spacing[4],
+    paddingBottom: Platform.OS === "ios" ? spacing[8] : spacing[4],
   },
   navigationButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   navButton: {
     minWidth: 100,
   },
   nextButton: {
-    marginLeft: 'auto',
+    marginLeft: "auto",
   },
-  
+
   // Mood Selection Styles
   moodSelectionContainer: {
     flex: 1,
   },
   moodGrid: {
-    justifyContent: 'center',
+    justifyContent: "center",
   },
-  
+
   // Intensity Scale Styles
   intensityContainer: {
     flex: 1,
@@ -714,7 +878,7 @@ const styles = StyleSheet.create({
   intensityOption: {
     marginBottom: spacing[3],
     borderRadius: borderRadius.lg,
-    overflow: 'hidden',
+    overflow: "hidden",
     ...shadows.sm,
   },
   selectedIntensity: {
@@ -723,7 +887,7 @@ const styles = StyleSheet.create({
   },
   intensityGradient: {
     padding: spacing[4],
-    alignItems: 'center',
+    alignItems: "center",
   },
   selectedGradient: {
     // Additional styling for selected intensity
@@ -734,18 +898,18 @@ const styles = StyleSheet.create({
   },
   intensityLabel: {
     marginBottom: spacing[1],
-    textAlign: 'center',
+    textAlign: "center",
   },
   intensityDescription: {
-    textAlign: 'center',
+    textAlign: "center",
     opacity: 0.8,
   },
-  
+
   // Activity Selection Styles
   activitiesContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
     paddingVertical: spacing[2],
   },
   activityChip: {
@@ -754,7 +918,7 @@ const styles = StyleSheet.create({
   activityChipText: {
     fontSize: typography.sizes.sm,
   },
-  
+
   // Notes and Triggers Styles
   notesContainer: {
     flex: 1,
@@ -767,9 +931,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing[3],
   },
   triggersContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
   },
   triggerChip: {
     margin: spacing[1],
@@ -781,7 +945,7 @@ const styles = StyleSheet.create({
   triggerChipText: {
     fontSize: typography.sizes.xs,
   },
-  
+
   // Summary Styles
   summaryContainer: {
     flex: 1,
@@ -793,17 +957,17 @@ const styles = StyleSheet.create({
   },
   summaryTitle: {
     marginBottom: spacing[4],
-    textAlign: 'center',
+    textAlign: "center",
   },
   summaryRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: spacing[3],
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
   },
   summaryValue: {
     flex: 1,
     marginLeft: spacing[3],
-    textAlign: 'right',
+    textAlign: "right",
   },
 });
 

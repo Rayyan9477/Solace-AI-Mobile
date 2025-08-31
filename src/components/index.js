@@ -5,7 +5,7 @@
  */
 
 // Core UI Components (Enhanced with therapeutic design)
-export { 
+export {
   TherapeuticButton as Button,
   PrimaryButton,
   TherapeuticActionButton,
@@ -14,8 +14,8 @@ export {
   SuccessButton,
   SecondaryButton,
   GhostButton,
-  ButtonGroup
-} from './ui/TherapeuticButton';
+  ButtonGroup,
+} from "./ui/TherapeuticButton";
 
 export {
   MentalHealthCard as Card,
@@ -25,8 +25,8 @@ export {
   SuccessCard,
   InsightCard,
   CardGroup,
-  ProgressCard
-} from './ui/MentalHealthCard';
+  ProgressCard,
+} from "./ui/MentalHealthCard";
 
 // Layout Components
 export {
@@ -35,15 +35,15 @@ export {
   DashboardLayout,
   MoodTrackingLayout,
   TherapySessionLayout,
-  useResponsiveLayout
-} from './layout/ResponsiveLayout';
+  useResponsiveLayout,
+} from "./layout/ResponsiveLayout";
 
 // Animation Components
 export {
   TherapeuticAnimatedComponents,
   useTherapeuticPageTransition,
-  therapeuticGestures
-} from './animations/TherapeuticAnimations';
+  therapeuticGestures,
+} from "./animations/TherapeuticAnimations";
 
 // Accessibility Components
 export {
@@ -51,21 +51,21 @@ export {
   MoodEmoji,
   WellnessTipEmoji,
   EmergencyEmoji,
-  useEmojiAccessibility
-} from '../utils/emojiAccessibility';
+  useEmojiAccessibility,
+} from "../utils/emojiAccessibility";
 
 export {
   useMotionAccessibility,
-  MentalHealthAnimations
-} from '../utils/motionAccessibility';
+  MentalHealthAnimations,
+} from "../utils/motionAccessibility";
 
 // Dashboard Components
-export { default as MoodCheckIn } from './dashboard/MoodCheckIn';
-export { default as QuickActions } from './dashboard/QuickActions';
-export { default as WelcomeHeader } from './dashboard/WelcomeHeader';
-export { default as DailyInsights } from './dashboard/DailyInsights';
-export { default as ProgressOverview } from './dashboard/ProgressOverview';
-export { default as RecentActivity } from './dashboard/RecentActivity';
+export { default as MoodCheckIn } from "./dashboard/MoodCheckIn";
+export { default as QuickActions } from "./dashboard/QuickActions";
+export { default as WelcomeHeader } from "./dashboard/WelcomeHeader";
+export { default as DailyInsights } from "./dashboard/DailyInsights";
+export { default as ProgressOverview } from "./dashboard/ProgressOverview";
+export { default as RecentActivity } from "./dashboard/RecentActivity";
 
 // Icon System
 export {
@@ -73,15 +73,15 @@ export {
   NavigationIcon,
   ActionIcon,
   StatusIcon,
-  IconPresets
-} from './icons';
+  IconPresets,
+} from "./icons";
 
 // Common Components (consolidated)
-export { default as LoadingScreen } from './LoadingScreen';
+export { default as LoadingScreen } from "./LoadingScreen";
 
 // Deprecated component mappings for backward compatibility
 // TODO: Remove these after full migration
-export { TherapeuticButton as AccessibleButton } from './ui/TherapeuticButton';
-export { MentalHealthCard as FeatureCard } from './ui/MentalHealthCard';
-export { LoadingScreen as FixedLoadingScreen } from './LoadingScreen';
-export { LoadingScreen as FixedSplashScreen } from './LoadingScreen';
+export { TherapeuticButton as AccessibleButton } from "./ui/TherapeuticButton";
+export { MentalHealthCard as FeatureCard } from "./ui/MentalHealthCard";
+export { LoadingScreen as FixedLoadingScreen } from "./LoadingScreen";
+export { LoadingScreen as FixedSplashScreen } from "./LoadingScreen";

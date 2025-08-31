@@ -4,7 +4,8 @@
  * Implementing state-of-the-art animations for mental health app
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import LottieView from "lottie-react-native";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -12,21 +13,25 @@ import {
   Easing,
   Dimensions,
   Platform,
-} from 'react-native';
-import * as Animatable from 'react-native-animatable';
-import LottieView from 'lottie-react-native';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { FreudColors, FreudSpacing, FreudBorderRadius } from '../../shared/theme/FreudDesignSystem';
+} from "react-native";
+import * as Animatable from "react-native-animatable";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import {
+  FreudColors,
+  FreudSpacing,
+  FreudBorderRadius,
+} from "../../shared/theme/FreudDesignSystem";
+import { useTheme } from "../../shared/theme/ThemeContext";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 // Therapeutic Breathing Animation Component
-export const TherapeuticBreathingAnimation = ({ 
-  isActive = false, 
+export const TherapeuticBreathingAnimation = ({
+  isActive = false,
   duration = 4000,
   onCycleComplete,
   size = 200,
-  style = {} 
+  style = {},
 }) => {
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
   const opacityAnim = useRef(new Animated.Value(0.3)).current;
@@ -88,11 +93,13 @@ export const TherapeuticBreathingAnimation = ({
 
   const rotate = rotateAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
+    outputRange: ["0deg", "360deg"],
   });
 
   return (
-    <View style={[styles.breathingContainer, { width: size, height: size }, style]}>
+    <View
+      style={[styles.breathingContainer, { width: size, height: size }, style]}
+    >
       <Animated.View
         style={[
           styles.breathingCircle,
@@ -138,14 +145,17 @@ export const FloatingActionButton = ({
 
   const handlePress = (event) => {
     const { locationX, locationY } = event.nativeEvent;
-    
+
     // Create ripple effect
     const rippleId = Date.now();
-    setRipples(prev => [...prev, { id: rippleId, x: locationX, y: locationY }]);
-    
+    setRipples((prev) => [
+      ...prev,
+      { id: rippleId, x: locationX, y: locationY },
+    ]);
+
     // Remove ripple after animation
     setTimeout(() => {
-      setRipples(prev => prev.filter(r => r.id !== rippleId));
+      setRipples((prev) => prev.filter((r) => r.id !== rippleId));
     }, 600);
 
     // Scale animation
@@ -187,9 +197,12 @@ export const FloatingActionButton = ({
       >
         <Animatable.View
           onTouchStart={handlePress}
-          style={[styles.fabButton, { width: size, height: size, borderRadius: size / 2 }]}
+          style={[
+            styles.fabButton,
+            { width: size, height: size, borderRadius: size / 2 },
+          ]}
         >
-          {ripples.map(ripple => (
+          {ripples.map((ripple) => (
             <Animated.View
               key={ripple.id}
               style={[
@@ -213,7 +226,7 @@ export const FloatingActionButton = ({
 export const StaggeredListAnimation = ({
   children,
   stagger = 100,
-  animation = 'slideInUp',
+  animation = "slideInUp",
   duration = 800,
   style = {},
 }) => {
@@ -227,7 +240,7 @@ export const StaggeredListAnimation = ({
           animation={animation}
           delay={index * stagger}
           duration={duration}
-          useNativeDriver={true}
+          useNativeDriver
         >
           {child}
         </Animatable.View>
@@ -268,7 +281,7 @@ export const MorphingCard = ({
 
   const rotate = rotateAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '180deg'],
+    outputRange: ["0deg", "180deg"],
   });
 
   return (
@@ -292,9 +305,7 @@ export const MorphingCard = ({
           ]}
         />
       </View>
-      <View style={styles.morphingCardContent}>
-        {children}
-      </View>
+      <View style={styles.morphingCardContent}>{children}</View>
     </Animated.View>
   );
 };
@@ -312,7 +323,7 @@ export const ParallaxBackground = ({
   const backgroundTranslateY = scrollY.interpolate({
     inputRange: [-height, 0, height],
     outputRange: [height * parallaxSpeed, 0, -height * parallaxSpeed],
-    extrapolate: 'clamp',
+    extrapolate: "clamp",
   });
 
   return (
@@ -333,7 +344,7 @@ export const ParallaxBackground = ({
         scrollEventThrottle={16}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: true }
+          { useNativeDriver: true },
         )}
       >
         {children}
@@ -344,7 +355,7 @@ export const ParallaxBackground = ({
 
 // Lottie Mental Health Animations
 export const MentalHealthLottie = ({
-  animation = 'meditation',
+  animation = "meditation",
   autoPlay = true,
   loop = true,
   speed = 1,
@@ -355,11 +366,11 @@ export const MentalHealthLottie = ({
 
   // Animation sources (you would need to add these Lottie files to your assets)
   const animationSources = {
-    meditation: require('../../assets/lottie/meditation.json'),
-    breathing: require('../../assets/lottie/breathing.json'),
-    healing: require('../../assets/lottie/healing.json'),
-    progress: require('../../assets/lottie/progress.json'),
-    mindfulness: require('../../assets/lottie/mindfulness.json'),
+    meditation: require("../../assets/lottie/meditation.json"),
+    breathing: require("../../assets/lottie/breathing.json"),
+    healing: require("../../assets/lottie/healing.json"),
+    progress: require("../../assets/lottie/progress.json"),
+    mindfulness: require("../../assets/lottie/mindfulness.json"),
   };
 
   return (
@@ -399,7 +410,7 @@ export const TherapeuticWave = ({
           duration: speed,
           easing: Easing.inOut(Easing.sin),
           useNativeDriver: true,
-        })
+        }),
       ).start();
     };
     startAnimation();
@@ -511,27 +522,27 @@ export const MicroInteractionButton = ({
 const styles = StyleSheet.create({
   // Therapeutic Breathing Animation
   breathingContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
   },
   breathingCircle: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
   },
   breathingInnerCircle: {
-    position: 'absolute',
+    position: "absolute",
   },
 
   // Floating Action Button
   fab: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 8,
@@ -542,17 +553,17 @@ const styles = StyleSheet.create({
     }),
   },
   fabPulse: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   fabButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-    position: 'relative',
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+    position: "relative",
   },
   ripple: {
-    position: 'absolute',
+    position: "absolute",
     width: 50,
     height: 50,
     borderRadius: 25,
@@ -561,14 +572,14 @@ const styles = StyleSheet.create({
 
   // Morphing Card
   morphingCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: FreudBorderRadius.xl,
     padding: FreudSpacing[4],
     margin: FreudSpacing[2],
-    overflow: 'hidden',
+    overflow: "hidden",
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -579,9 +590,9 @@ const styles = StyleSheet.create({
     }),
   },
   morphingCardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: FreudSpacing[2],
   },
   morphingCardChevron: {
@@ -598,23 +609,23 @@ const styles = StyleSheet.create({
   // Parallax Background
   parallaxContainer: {
     flex: 1,
-    position: 'relative',
+    position: "relative",
   },
   parallaxBackground: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
   },
   parallaxContent: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
 
   // Wave Animation
   waveContainer: {
-    overflow: 'hidden',
-    backgroundColor: 'transparent',
+    overflow: "hidden",
+    backgroundColor: "transparent",
   },
   wave: {
     borderTopLeftRadius: 50,
@@ -625,21 +636,21 @@ const styles = StyleSheet.create({
 
   // Micro-interaction Button
   microInteractionContainer: {
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
   },
   microInteractionGlow: {
-    position: 'absolute',
-    width: '120%',
-    height: '120%',
+    position: "absolute",
+    width: "120%",
+    height: "120%",
     backgroundColor: FreudColors.serenityGreen[40],
     borderRadius: FreudBorderRadius.full,
     opacity: 0,
   },
   microInteractionButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: FreudColors.mindfulBrown[90],
     borderRadius: FreudBorderRadius.xl,
     padding: FreudSpacing[4],

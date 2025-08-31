@@ -1,11 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  Animated,
-  Dimensions,
-  Platform,
-} from 'react-native';
+import React, { useRef, useEffect, useState } from "react";
+import { View, StyleSheet, Animated, Dimensions, Platform } from "react-native";
 import Svg, {
   Defs,
   LinearGradient as SvgLinearGradient,
@@ -26,29 +20,30 @@ import Svg, {
   FeMorphology,
   FeDropShadow,
   ClipPath,
-} from 'react-native-svg';
-import { WebSafeLinearGradient as LinearGradient } from '../common/WebSafeLinearGradient';
-import { modernDarkColors, modernSpacing } from '../../shared/theme/darkTheme';
+} from "react-native-svg";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import { modernDarkColors, modernSpacing } from "../../shared/theme/darkTheme";
+import { WebSafeLinearGradient as LinearGradient } from "../common/WebSafeLinearGradient";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 // Atmospheric Background System - Premium immersive environments
 // Features dynamic weather, time-based themes, and contextual atmospheres
 const AtmosphericBackground = ({
-  variant = 'twilight', // 'twilight', 'storm', 'aurora', 'cosmos', 'ocean', 'forest', 'zen'
+  variant = "twilight", // 'twilight', 'storm', 'aurora', 'cosmos', 'ocean', 'forest', 'zen'
   intensity = 0.7,
   animated = true,
   interactive = false,
-  timeOfDay = 'evening', // 'morning', 'afternoon', 'evening', 'night'
-  weather = 'clear', // 'clear', 'rain', 'snow', 'fog', 'wind'
+  timeOfDay = "evening", // 'morning', 'afternoon', 'evening', 'night'
+  weather = "clear", // 'clear', 'rain', 'snow', 'fog', 'wind'
   particleCount = 50,
   style,
   children,
   ...props
 }) => {
-  const [dimensions, setDimensions] = useState({ 
-    width: screenWidth, 
-    height: screenHeight 
+  const [dimensions, setDimensions] = useState({
+    width: screenWidth,
+    height: screenHeight,
   });
 
   // Advanced animation refs for atmospheric effects
@@ -83,7 +78,7 @@ const AtmosphericBackground = ({
             duration: 8000,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       );
 
       // Cloud drift animation
@@ -92,7 +87,7 @@ const AtmosphericBackground = ({
           toValue: 1,
           duration: 20000,
           useNativeDriver: true,
-        })
+        }),
       );
 
       // Particle system animation
@@ -101,7 +96,7 @@ const AtmosphericBackground = ({
           toValue: 1,
           duration: 15000,
           useNativeDriver: true,
-        })
+        }),
       );
 
       // Wave motion for water effects
@@ -117,7 +112,7 @@ const AtmosphericBackground = ({
             duration: 4000,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       );
 
       // Cosmic pulsing for space themes
@@ -133,7 +128,7 @@ const AtmosphericBackground = ({
             duration: 3000,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       );
 
       // Slow rotation for cosmic elements
@@ -142,7 +137,7 @@ const AtmosphericBackground = ({
           toValue: 1,
           duration: 60000,
           useNativeDriver: true,
-        })
+        }),
       );
 
       // Floating motion for ambient elements
@@ -158,7 +153,7 @@ const AtmosphericBackground = ({
             duration: 6000,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       );
 
       windLoop.start();
@@ -179,83 +174,93 @@ const AtmosphericBackground = ({
         floatLoop.stop();
       };
     }
-  }, [animated, fadeAnim, windAnim, cloudAnim, particleAnim, waveAnim, pulseAnim, rotateAnim, floatAnim]);
+  }, [
+    animated,
+    fadeAnim,
+    windAnim,
+    cloudAnim,
+    particleAnim,
+    waveAnim,
+    pulseAnim,
+    rotateAnim,
+    floatAnim,
+  ]);
 
   // Get variant-specific color schemes and effects
   const getVariantConfig = () => {
     const base = modernDarkColors;
-    
+
     switch (variant) {
-      case 'twilight':
+      case "twilight":
         return {
-          colors: ['#0A0A0F', '#1A1A2E', '#16213E', '#0F3460'],
+          colors: ["#0A0A0F", "#1A1A2E", "#16213E", "#0F3460"],
           accent: base.therapeutic.peaceful.primary,
           particles: base.accent.primary,
-          atmosphere: 'gradient',
-          effects: ['stars', 'clouds', 'aurora'],
+          atmosphere: "gradient",
+          effects: ["stars", "clouds", "aurora"],
         };
-      
-      case 'storm':
+
+      case "storm":
         return {
-          colors: ['#0D1117', '#161B22', '#21262D', '#30363D'],
+          colors: ["#0D1117", "#161B22", "#21262D", "#30363D"],
           accent: base.therapeutic.calming.primary,
-          particles: '#4FC3F7',
-          atmosphere: 'turbulent',
-          effects: ['lightning', 'rain', 'wind'],
+          particles: "#4FC3F7",
+          atmosphere: "turbulent",
+          effects: ["lightning", "rain", "wind"],
         };
-      
-      case 'aurora':
+
+      case "aurora":
         return {
-          colors: ['#0A0A0F', '#1A1A2E', '#0F2027', '#203A43'],
+          colors: ["#0A0A0F", "#1A1A2E", "#0F2027", "#203A43"],
           accent: base.therapeutic.nurturing.primary,
           particles: base.accent.tertiary,
-          atmosphere: 'flowing',
-          effects: ['aurora', 'particles', 'glow'],
+          atmosphere: "flowing",
+          effects: ["aurora", "particles", "glow"],
         };
-      
-      case 'cosmos':
+
+      case "cosmos":
         return {
-          colors: ['#000000', '#0F0F23', '#1A1A3A', '#2D2D5F'],
+          colors: ["#000000", "#0F0F23", "#1A1A3A", "#2D2D5F"],
           accent: base.accent.primary,
-          particles: '#FFD700',
-          atmosphere: 'space',
-          effects: ['stars', 'nebula', 'planets'],
+          particles: "#FFD700",
+          atmosphere: "space",
+          effects: ["stars", "nebula", "planets"],
         };
-      
-      case 'ocean':
+
+      case "ocean":
         return {
-          colors: ['#0A1128', '#001845', '#002855', '#003d82'],
+          colors: ["#0A1128", "#001845", "#002855", "#003d82"],
           accent: base.therapeutic.calming.primary,
-          particles: '#4DD0E1',
-          atmosphere: 'fluid',
-          effects: ['waves', 'bubbles', 'currents'],
+          particles: "#4DD0E1",
+          atmosphere: "fluid",
+          effects: ["waves", "bubbles", "currents"],
         };
-      
-      case 'forest':
+
+      case "forest":
         return {
-          colors: ['#0D1B0F', '#1A2B1D', '#2D4A32', '#4A6741'],
+          colors: ["#0D1B0F", "#1A2B1D", "#2D4A32", "#4A6741"],
           accent: base.therapeutic.nurturing.primary,
-          particles: '#81C784',
-          atmosphere: 'organic',
-          effects: ['leaves', 'fireflies', 'wind'],
+          particles: "#81C784",
+          atmosphere: "organic",
+          effects: ["leaves", "fireflies", "wind"],
         };
-      
-      case 'zen':
+
+      case "zen":
         return {
-          colors: ['#0A0A0A', '#1A1A1A', '#2A2A2A', '#3A3A3A'],
+          colors: ["#0A0A0A", "#1A1A1A", "#2A2A2A", "#3A3A3A"],
           accent: base.therapeutic.peaceful.primary,
           particles: base.text.secondary,
-          atmosphere: 'minimal',
-          effects: ['ripples', 'breath', 'meditation'],
+          atmosphere: "minimal",
+          effects: ["ripples", "breath", "meditation"],
         };
-      
+
       default:
         return {
-          colors: ['#0A0A0F', '#1A1A2E', '#16213E', '#0F3460'],
+          colors: ["#0A0A0F", "#1A1A2E", "#16213E", "#0F3460"],
           accent: base.accent.primary,
           particles: base.accent.secondary,
-          atmosphere: 'gradient',
-          effects: ['ambient'],
+          atmosphere: "gradient",
+          effects: ["ambient"],
         };
     }
   };
@@ -271,35 +276,47 @@ const AtmosphericBackground = ({
       <Svg width={svgWidth} height={svgHeight} style={styles.effectsLayer}>
         <Defs>
           {/* Advanced filters for atmospheric effects */}
-          <Filter id="atmosphericGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <FeGaussianBlur stdDeviation="8" result="coloredBlur"/>
-            <FeFlood floodColor={config.accent} floodOpacity="0.3"/>
-            <FeComposite in="SourceGraphic" operator="over"/>
+          <Filter
+            id="atmosphericGlow"
+            x="-50%"
+            y="-50%"
+            width="200%"
+            height="200%"
+          >
+            <FeGaussianBlur stdDeviation="8" result="coloredBlur" />
+            <FeFlood floodColor={config.accent} floodOpacity="0.3" />
+            <FeComposite in="SourceGraphic" operator="over" />
           </Filter>
-          
+
           <Filter id="turbulence" x="-50%" y="-50%" width="200%" height="200%">
-            <FeTurbulence 
-              baseFrequency={weather === 'storm' ? "0.02" : "0.01"} 
-              numOctaves="4" 
-              result="turbulence" 
+            <FeTurbulence
+              baseFrequency={weather === "storm" ? "0.02" : "0.01"}
+              numOctaves="4"
+              result="turbulence"
             />
-            <FeColorMatrix 
-              in="turbulence" 
-              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" 
+            <FeColorMatrix
+              in="turbulence"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"
             />
           </Filter>
 
           <Filter id="softGlow">
-            <FeMorphology operator="dilate" radius="2"/>
-            <FeGaussianBlur stdDeviation="3" result="coloredBlur"/>
-            <FeFlood floodColor={config.particles} floodOpacity="0.6"/>
-            <FeComposite in="SourceGraphic" operator="over"/>
+            <FeMorphology operator="dilate" radius="2" />
+            <FeGaussianBlur stdDeviation="3" result="coloredBlur" />
+            <FeFlood floodColor={config.particles} floodOpacity="0.6" />
+            <FeComposite in="SourceGraphic" operator="over" />
           </Filter>
 
           {/* Gradient definitions */}
-          <SvgLinearGradient id="atmosphericGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <SvgLinearGradient
+            id="atmosphericGradient"
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="100%"
+          >
             {config.colors.map((color, index) => (
-              <Stop 
+              <Stop
                 key={index}
                 offset={`${(index / (config.colors.length - 1)) * 100}%`}
                 stopColor={color}
@@ -309,8 +326,16 @@ const AtmosphericBackground = ({
           </SvgLinearGradient>
 
           <SvgRadialGradient id="cosmicCore" cx="50%" cy="50%" r="60%">
-            <Stop offset="0%" stopColor={config.accent} stopOpacity={intensity * 0.8} />
-            <Stop offset="50%" stopColor={config.particles} stopOpacity={intensity * 0.4} />
+            <Stop
+              offset="0%"
+              stopColor={config.accent}
+              stopOpacity={intensity * 0.8}
+            />
+            <Stop
+              offset="50%"
+              stopColor={config.particles}
+              stopOpacity={intensity * 0.4}
+            />
             <Stop offset="100%" stopColor="transparent" stopOpacity="0" />
           </SvgRadialGradient>
 
@@ -320,22 +345,22 @@ const AtmosphericBackground = ({
         </Defs>
 
         {/* Base atmospheric layer */}
-        <Rect 
-          width={svgWidth} 
-          height={svgHeight} 
+        <Rect
+          width={svgWidth}
+          height={svgHeight}
           fill="url(#atmosphericGradient)"
           opacity={intensity * 0.9}
         />
 
         {/* Render variant-specific effects */}
-        {variant === 'twilight' && renderTwilightEffects(svgWidth, svgHeight)}
-        {variant === 'storm' && renderStormEffects(svgWidth, svgHeight)}
-        {variant === 'aurora' && renderAuroraEffects(svgWidth, svgHeight)}
-        {variant === 'cosmos' && renderCosmosEffects(svgWidth, svgHeight)}
-        {variant === 'ocean' && renderOceanEffects(svgWidth, svgHeight)}
-        {variant === 'forest' && renderForestEffects(svgWidth, svgHeight)}
-        {variant === 'zen' && renderZenEffects(svgWidth, svgHeight)}
-        
+        {variant === "twilight" && renderTwilightEffects(svgWidth, svgHeight)}
+        {variant === "storm" && renderStormEffects(svgWidth, svgHeight)}
+        {variant === "aurora" && renderAuroraEffects(svgWidth, svgHeight)}
+        {variant === "cosmos" && renderCosmosEffects(svgWidth, svgHeight)}
+        {variant === "ocean" && renderOceanEffects(svgWidth, svgHeight)}
+        {variant === "forest" && renderForestEffects(svgWidth, svgHeight)}
+        {variant === "zen" && renderZenEffects(svgWidth, svgHeight)}
+
         {/* Universal particle system */}
         {renderParticleSystem(svgWidth, svgHeight)}
       </Svg>
@@ -350,8 +375,9 @@ const AtmosphericBackground = ({
         const x = Math.random() * width;
         const y = Math.random() * height * 0.6; // Upper portion
         const size = 1 + Math.random() * 2;
-        const twinkle = Math.sin(particleAnim._value * Math.PI * 2 + index) * 0.5 + 0.5;
-        
+        const twinkle =
+          Math.sin(particleAnim._value * Math.PI * 2 + index) * 0.5 + 0.5;
+
         return (
           <Circle
             key={`star-${index}`}
@@ -367,9 +393,10 @@ const AtmosphericBackground = ({
 
       {/* Soft clouds */}
       {Array.from({ length: 5 }).map((_, index) => {
-        const cloudX = (cloudAnim._value * width * 0.3) + (index * width * 0.25) - (width * 0.1);
-        const cloudY = height * 0.2 + (Math.sin(index * 0.5) * 50);
-        
+        const cloudX =
+          cloudAnim._value * width * 0.3 + index * width * 0.25 - width * 0.1;
+        const cloudY = height * 0.2 + Math.sin(index * 0.5) * 50;
+
         return (
           <Ellipse
             key={`cloud-${index}`}
@@ -391,9 +418,10 @@ const AtmosphericBackground = ({
     <G clipPath="url(#atmosphericClip)">
       {/* Lightning bolts */}
       {Array.from({ length: 3 }).map((_, index) => {
-        const flash = Math.sin(windAnim._value * Math.PI * 4 + index * 2) > 0.95;
+        const flash =
+          Math.sin(windAnim._value * Math.PI * 4 + index * 2) > 0.95;
         const x = width * (0.2 + index * 0.3);
-        
+
         if (flash) {
           return (
             <Path
@@ -414,7 +442,7 @@ const AtmosphericBackground = ({
       {Array.from({ length: 100 }).map((_, index) => {
         const rainX = (index * 15 + windAnim._value * 50) % width;
         const rainY = (particleAnim._value * height * 2) % height;
-        
+
         return (
           <Path
             key={`rain-${index}`}
@@ -444,12 +472,14 @@ const AtmosphericBackground = ({
         const wavePhase = waveAnim._value + index * 0.25;
         const amplitude = 100 + index * 30;
         const frequency = 0.008 + index * 0.002;
-        
+
         const pathData = Array.from({ length: 50 }, (_, i) => {
           const x = (i / 49) * width;
-          const y = height * 0.3 + Math.sin(x * frequency + wavePhase * Math.PI * 2) * amplitude;
+          const y =
+            height * 0.3 +
+            Math.sin(x * frequency + wavePhase * Math.PI * 2) * amplitude;
           return i === 0 ? `M${x},${y}` : `L${x},${y}`;
-        }).join(' ');
+        }).join(" ");
 
         return (
           <Path
@@ -484,8 +514,9 @@ const AtmosphericBackground = ({
         const x = Math.random() * width;
         const y = Math.random() * height;
         const size = 0.5 + Math.random() * 1.5;
-        const twinkle = Math.sin(particleAnim._value * Math.PI * 3 + index * 0.1) * 0.3 + 0.7;
-        
+        const twinkle =
+          Math.sin(particleAnim._value * Math.PI * 3 + index * 0.1) * 0.3 + 0.7;
+
         return (
           <Circle
             key={`cosmic-star-${index}`}
@@ -516,12 +547,13 @@ const AtmosphericBackground = ({
         const wavePhase = waveAnim._value + index * 0.2;
         const amplitude = 40 + index * 15;
         const waveY = height * 0.7 + index * 20;
-        
+
         const pathData = Array.from({ length: 30 }, (_, i) => {
           const x = (i / 29) * width;
-          const y = waveY + Math.sin(x * 0.01 + wavePhase * Math.PI * 2) * amplitude;
+          const y =
+            waveY + Math.sin(x * 0.01 + wavePhase * Math.PI * 2) * amplitude;
           return i === 0 ? `M${x},${y}` : `L${x},${y}`;
-        }).join(' ');
+        }).join(" ");
 
         return (
           <Path
@@ -535,10 +567,12 @@ const AtmosphericBackground = ({
 
       {/* Floating bubbles */}
       {Array.from({ length: 15 }).map((_, index) => {
-        const bubbleX = Math.sin(floatAnim._value * Math.PI * 2 + index) * 30 + (index * width / 15);
-        const bubbleY = height - (floatAnim._value * height * 0.8) - (index * 20);
+        const bubbleX =
+          Math.sin(floatAnim._value * Math.PI * 2 + index) * 30 +
+          (index * width) / 15;
+        const bubbleY = height - floatAnim._value * height * 0.8 - index * 20;
         const size = 3 + Math.random() * 8;
-        
+
         return (
           <Circle
             key={`bubble-${index}`}
@@ -561,9 +595,10 @@ const AtmosphericBackground = ({
       {/* Floating leaves */}
       {Array.from({ length: 25 }).map((_, index) => {
         const leafX = (windAnim._value * width * 0.5 + index * 30) % width;
-        const leafY = height * 0.2 + Math.sin(windAnim._value * Math.PI + index) * 100;
+        const leafY =
+          height * 0.2 + Math.sin(windAnim._value * Math.PI + index) * 100;
         const rotation = windAnim._value * 360 + index * 45;
-        
+
         return (
           <Ellipse
             key={`leaf-${index}`}
@@ -580,10 +615,19 @@ const AtmosphericBackground = ({
 
       {/* Fireflies */}
       {Array.from({ length: 12 }).map((_, index) => {
-        const fireflyX = Math.sin(particleAnim._value * Math.PI * 2 + index * 0.5) * width * 0.3 + width * 0.5;
-        const fireflyY = Math.cos(particleAnim._value * Math.PI * 1.5 + index * 0.3) * height * 0.2 + height * 0.6;
-        const glow = Math.sin(pulseAnim._value * Math.PI * 4 + index) * 0.4 + 0.6;
-        
+        const fireflyX =
+          Math.sin(particleAnim._value * Math.PI * 2 + index * 0.5) *
+            width *
+            0.3 +
+          width * 0.5;
+        const fireflyY =
+          Math.cos(particleAnim._value * Math.PI * 1.5 + index * 0.3) *
+            height *
+            0.2 +
+          height * 0.6;
+        const glow =
+          Math.sin(pulseAnim._value * Math.PI * 4 + index) * 0.4 + 0.6;
+
         return (
           <Circle
             key={`firefly-${index}`}
@@ -604,8 +648,8 @@ const AtmosphericBackground = ({
     <G clipPath="url(#atmosphericClip)">
       {/* Meditation ripples */}
       {Array.from({ length: 3 }).map((_, index) => {
-        const rippleRadius = 50 + (pulseAnim._value * 100) + (index * 40);
-        
+        const rippleRadius = 50 + pulseAnim._value * 100 + index * 40;
+
         return (
           <Circle
             key={`ripple-${index}`}
@@ -636,11 +680,21 @@ const AtmosphericBackground = ({
   const renderParticleSystem = (width, height) => (
     <G clipPath="url(#atmosphericClip)">
       {Array.from({ length: particleCount }).map((_, index) => {
-        const particleX = (Math.sin(particleAnim._value * Math.PI * 2 + index * 0.1) * width * 0.4) + (width * 0.5);
-        const particleY = (Math.cos(particleAnim._value * Math.PI * 1.5 + index * 0.15) * height * 0.3) + (height * 0.5);
-        const size = 0.5 + Math.sin(particleAnim._value * Math.PI * 4 + index) * 0.5;
-        const opacity = Math.sin(particleAnim._value * Math.PI * 3 + index * 0.2) * 0.3 + 0.3;
-        
+        const particleX =
+          Math.sin(particleAnim._value * Math.PI * 2 + index * 0.1) *
+            width *
+            0.4 +
+          width * 0.5;
+        const particleY =
+          Math.cos(particleAnim._value * Math.PI * 1.5 + index * 0.15) *
+            height *
+            0.3 +
+          height * 0.5;
+        const size =
+          0.5 + Math.sin(particleAnim._value * Math.PI * 4 + index) * 0.5;
+        const opacity =
+          Math.sin(particleAnim._value * Math.PI * 3 + index * 0.2) * 0.3 + 0.3;
+
         return (
           <Circle
             key={`particle-${index}`}
@@ -679,16 +733,10 @@ const AtmosphericBackground = ({
       />
 
       {/* Atmospheric effects layer */}
-      <View style={styles.effectsContainer}>
-        {renderAtmosphericEffects()}
-      </View>
+      <View style={styles.effectsContainer}>{renderAtmosphericEffects()}</View>
 
       {/* Content layer */}
-      {children && (
-        <View style={styles.contentLayer}>
-          {children}
-        </View>
-      )}
+      {children && <View style={styles.contentLayer}>{children}</View>}
     </Animated.View>
   );
 };
@@ -696,10 +744,10 @@ const AtmosphericBackground = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative',
+    position: "relative",
   },
   baseGradient: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -707,7 +755,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   effectsContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -715,7 +763,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   effectsLayer: {
-    position: 'absolute',
+    position: "absolute",
     top: -50,
     left: -50,
   },

@@ -1,6 +1,6 @@
 /**
  * Mental Health Specific Form Components
- * 
+ *
  * Provides specialized form patterns for mental health applications:
  * - Therapy session forms with supportive validation
  * - Mood tracking forms with emotional sensitivity
@@ -9,7 +9,7 @@
  * - Journal forms with therapeutic encouragement
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -18,19 +18,19 @@ import {
   Pressable,
   Animated,
   Alert,
-} from 'react-native';
+} from "react-native";
 
-import { useTheme } from '../../shared/theme/ThemeContext';
-import KeyboardAwareScrollView from '../common/KeyboardAwareScrollView';
-import EnhancedInput from './EnhancedInput';
-import AccessibleButton from '../common/AccessibleButton';
-import { 
+import EnhancedInput from "./EnhancedInput";
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { FocusManagement } from "../../utils/accessibility";
+import {
   createValidator,
   FORM_CONTEXTS,
   VALIDATION_SCHEMAS,
   VALIDATION_TYPES,
-} from '../../utils/formValidation';
-import { FocusManagement } from '../../utils/accessibility';
+} from "../../utils/formValidation";
+import AccessibleButton from "../common/AccessibleButton";
+import KeyboardAwareScrollView from "../common/KeyboardAwareScrollView";
 
 // Therapy Session Form
 export const TherapySessionForm = ({
@@ -41,50 +41,53 @@ export const TherapySessionForm = ({
 }) => {
   const { theme } = useTheme();
   const [formData, setFormData] = useState({
-    sessionGoals: '',
-    currentMood: '',
-    moodIntensity: '',
-    sessionNotes: '',
-    progressReflection: '',
-    nextSessionGoals: '',
+    sessionGoals: "",
+    currentMood: "",
+    moodIntensity: "",
+    sessionNotes: "",
+    progressReflection: "",
+    nextSessionGoals: "",
     ...initialValues,
   });
   const [errors, setErrors] = useState({});
-  
+
   const validator = useRef(
     createValidator(FORM_CONTEXTS.THERAPY, {
       useTherapeuticLanguage: true,
       gentleValidation: true,
-    })
+    }),
   ).current;
 
   const handleFieldChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
     // Clear field error when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: null }));
+      setErrors((prev) => ({ ...prev, [field]: null }));
     }
   };
 
   const handleSubmit = () => {
-    const validation = validator.validateForm(formData, VALIDATION_SCHEMAS.THERAPY_SESSION);
-    
+    const validation = validator.validateForm(
+      formData,
+      VALIDATION_SCHEMAS.THERAPY_SESSION,
+    );
+
     if (!validation.isValid) {
       setErrors(validation.errors);
-      
+
       // Announce validation errors
       FocusManagement.announceForScreenReader(
-        'Please review the form. Some fields need your attention.',
-        'assertive'
+        "Please review the form. Some fields need your attention.",
+        "assertive",
       );
       return;
     }
 
     // Success announcement
     FocusManagement.announceForScreenReader(
-      'Therapy session saved successfully. Great work on reflecting on your progress.',
-      'polite'
+      "Therapy session saved successfully. Great work on reflecting on your progress.",
+      "polite",
     );
 
     onSubmit(formData);
@@ -92,27 +95,35 @@ export const TherapySessionForm = ({
 
   return (
     <KeyboardAwareScrollView
-      isTherapyForm={true}
+      isTherapyForm
       extraHeight={100}
       contentContainerStyle={styles.container}
     >
-      <View style={[styles.formCard, { backgroundColor: theme.colors.therapeutic?.calm }]}>
+      <View
+        style={[
+          styles.formCard,
+          { backgroundColor: theme.colors.therapeutic?.calm },
+        ]}
+      >
         <Text style={[styles.formTitle, { color: theme.colors.text.primary }]}>
           Therapy Session Reflection
         </Text>
-        <Text style={[styles.formSubtitle, { color: theme.colors.text.secondary }]}>
-          Take your time to reflect on your thoughts and feelings. There's no pressure to fill out every field.
+        <Text
+          style={[styles.formSubtitle, { color: theme.colors.text.secondary }]}
+        >
+          Take your time to reflect on your thoughts and feelings. There's no
+          pressure to fill out every field.
         </Text>
 
         <EnhancedInput
           label="What would you like to work on today?"
           value={formData.sessionGoals}
-          onChangeText={(value) => handleFieldChange('sessionGoals', value)}
+          onChangeText={(value) => handleFieldChange("sessionGoals", value)}
           placeholder="Your therapy goals for this session..."
-          multiline={true}
+          multiline
           numberOfLines={3}
           maxLength={500}
-          isTherapyInput={true}
+          isTherapyInput
           formContext={FORM_CONTEXTS.THERAPY}
           validationRules={VALIDATION_SCHEMAS.THERAPY_SESSION.sessionGoals}
           error={errors.sessionGoals?.[0]?.message}
@@ -121,16 +132,18 @@ export const TherapySessionForm = ({
         />
 
         <View style={styles.moodSection}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+          >
             How are you feeling right now?
           </Text>
-          
+
           <EnhancedInput
             label="Current Mood"
             value={formData.currentMood}
-            onChangeText={(value) => handleFieldChange('currentMood', value)}
+            onChangeText={(value) => handleFieldChange("currentMood", value)}
             placeholder="Describe your current emotional state..."
-            isMoodInput={true}
+            isMoodInput
             formContext={FORM_CONTEXTS.THERAPY}
             validationRules={VALIDATION_SCHEMAS.THERAPY_SESSION.currentMood}
             error={errors.currentMood?.[0]?.message}
@@ -140,11 +153,11 @@ export const TherapySessionForm = ({
           <EnhancedInput
             label="Mood Intensity (1-10)"
             value={formData.moodIntensity}
-            onChangeText={(value) => handleFieldChange('moodIntensity', value)}
+            onChangeText={(value) => handleFieldChange("moodIntensity", value)}
             placeholder="1 = Very Low, 10 = Very High"
             keyboardType="numeric"
             maxLength={2}
-            isMoodInput={true}
+            isMoodInput
             formContext={FORM_CONTEXTS.THERAPY}
             validationRules={[
               { type: VALIDATION_TYPES.REQUIRED },
@@ -159,12 +172,12 @@ export const TherapySessionForm = ({
         <EnhancedInput
           label="Session Notes (Optional)"
           value={formData.sessionNotes}
-          onChangeText={(value) => handleFieldChange('sessionNotes', value)}
+          onChangeText={(value) => handleFieldChange("sessionNotes", value)}
           placeholder="Any thoughts, insights, or reflections you'd like to record..."
-          multiline={true}
+          multiline
           numberOfLines={4}
           maxLength={2000}
-          isTherapyInput={true}
+          isTherapyInput
           formContext={FORM_CONTEXTS.THERAPY}
           validationRules={VALIDATION_SCHEMAS.THERAPY_SESSION.sessionNotes}
           error={errors.sessionNotes?.[0]?.message}
@@ -183,7 +196,7 @@ export const TherapySessionForm = ({
             accessibilityLabel="Save therapy session"
             accessibilityHint="Save your therapy session reflection"
           />
-          
+
           {onCancel && (
             <AccessibleButton
               title="Cancel"
@@ -208,11 +221,11 @@ export const MoodTrackingForm = ({
 }) => {
   const { theme } = useTheme();
   const [formData, setFormData] = useState({
-    mood: '',
-    intensity: '',
+    mood: "",
+    intensity: "",
     activities: [],
-    triggers: '',
-    notes: '',
+    triggers: "",
+    notes: "",
     ...initialValues,
   });
   const [errors, setErrors] = useState({});
@@ -221,41 +234,44 @@ export const MoodTrackingForm = ({
     createValidator(FORM_CONTEXTS.MOOD_TRACKER, {
       useTherapeuticLanguage: true,
       gentleValidation: true,
-    })
+    }),
   ).current;
 
   const moodOptions = [
-    { label: 'Happy', emoji: '😊', color: theme.colors.mood?.happy },
-    { label: 'Calm', emoji: '😌', color: theme.colors.mood?.calm },
-    { label: 'Anxious', emoji: '😰', color: theme.colors.mood?.anxious },
-    { label: 'Sad', emoji: '😢', color: theme.colors.mood?.sad },
-    { label: 'Angry', emoji: '😠', color: theme.colors.mood?.angry },
-    { label: 'Neutral', emoji: '😐', color: theme.colors.mood?.neutral },
-    { label: 'Excited', emoji: '🤩', color: theme.colors.mood?.excited },
-    { label: 'Tired', emoji: '😴', color: theme.colors.mood?.tired },
+    { label: "Happy", emoji: "😊", color: theme.colors.mood?.happy },
+    { label: "Calm", emoji: "😌", color: theme.colors.mood?.calm },
+    { label: "Anxious", emoji: "😰", color: theme.colors.mood?.anxious },
+    { label: "Sad", emoji: "😢", color: theme.colors.mood?.sad },
+    { label: "Angry", emoji: "😠", color: theme.colors.mood?.angry },
+    { label: "Neutral", emoji: "😐", color: theme.colors.mood?.neutral },
+    { label: "Excited", emoji: "🤩", color: theme.colors.mood?.excited },
+    { label: "Tired", emoji: "😴", color: theme.colors.mood?.tired },
   ];
 
   const handleMoodSelect = (mood) => {
-    setFormData(prev => ({ ...prev, mood: mood.label }));
-    
+    setFormData((prev) => ({ ...prev, mood: mood.label }));
+
     // Positive reinforcement for mood tracking
     FocusManagement.announceForScreenReader(
       `${mood.label} mood selected. You're doing great by tracking your emotions.`,
-      'polite'
+      "polite",
     );
   };
 
   const handleSubmit = () => {
-    const validation = validator.validateForm(formData, VALIDATION_SCHEMAS.MOOD_TRACKER);
-    
+    const validation = validator.validateForm(
+      formData,
+      VALIDATION_SCHEMAS.MOOD_TRACKER,
+    );
+
     if (!validation.isValid) {
       setErrors(validation.errors);
       return;
     }
 
     FocusManagement.announceForScreenReader(
-      'Mood entry saved. Thank you for taking care of your mental health.',
-      'polite'
+      "Mood entry saved. Thank you for taking care of your mental health.",
+      "polite",
     );
 
     onSubmit(formData);
@@ -263,14 +279,21 @@ export const MoodTrackingForm = ({
 
   return (
     <KeyboardAwareScrollView
-      isMoodTracker={true}
+      isMoodTracker
       contentContainerStyle={styles.container}
     >
-      <View style={[styles.formCard, { backgroundColor: theme.colors.therapeutic?.nurturing }]}>
+      <View
+        style={[
+          styles.formCard,
+          { backgroundColor: theme.colors.therapeutic?.nurturing },
+        ]}
+      >
         <Text style={[styles.formTitle, { color: theme.colors.text.primary }]}>
           How Are You Feeling?
         </Text>
-        <Text style={[styles.formSubtitle, { color: theme.colors.text.secondary }]}>
+        <Text
+          style={[styles.formSubtitle, { color: theme.colors.text.secondary }]}
+        >
           Take a moment to check in with yourself. All feelings are valid.
         </Text>
 
@@ -281,18 +304,23 @@ export const MoodTrackingForm = ({
               key={mood.label}
               style={[
                 styles.moodOption,
-                { backgroundColor: mood.color || theme.colors.background.secondary },
+                {
+                  backgroundColor:
+                    mood.color || theme.colors.background.secondary,
+                },
                 formData.mood === mood.label && styles.selectedMood,
               ]}
               onPress={() => handleMoodSelect(mood)}
-              accessible={true}
+              accessible
               accessibilityRole="button"
               accessibilityLabel={`${mood.label} mood`}
               accessibilityState={{ selected: formData.mood === mood.label }}
               accessibilityHint={`Select ${mood.label} as your current mood`}
             >
               <Text style={styles.moodEmoji}>{mood.emoji}</Text>
-              <Text style={[styles.moodLabel, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[styles.moodLabel, { color: theme.colors.text.primary }]}
+              >
                 {mood.label}
               </Text>
             </Pressable>
@@ -308,11 +336,13 @@ export const MoodTrackingForm = ({
         <EnhancedInput
           label="Intensity (1-10)"
           value={formData.intensity}
-          onChangeText={(value) => setFormData(prev => ({ ...prev, intensity: value }))}
+          onChangeText={(value) =>
+            setFormData((prev) => ({ ...prev, intensity: value }))
+          }
           placeholder="How intense is this feeling?"
           keyboardType="numeric"
           maxLength={2}
-          isMoodInput={true}
+          isMoodInput
           formContext={FORM_CONTEXTS.MOOD_TRACKER}
           validationRules={[
             { type: VALIDATION_TYPES.REQUIRED },
@@ -324,12 +354,14 @@ export const MoodTrackingForm = ({
         <EnhancedInput
           label="What's happening? (Optional)"
           value={formData.notes}
-          onChangeText={(value) => setFormData(prev => ({ ...prev, notes: value }))}
+          onChangeText={(value) =>
+            setFormData((prev) => ({ ...prev, notes: value }))
+          }
           placeholder="Any thoughts about what might be influencing your mood..."
-          multiline={true}
+          multiline
           numberOfLines={3}
           maxLength={500}
-          isMoodInput={true}
+          isMoodInput
           formContext={FORM_CONTEXTS.MOOD_TRACKER}
           helperText="This helps you identify patterns over time"
         />
@@ -362,26 +394,26 @@ export const AssessmentQuestionForm = ({
   isLoading = false,
 }) => {
   const { theme } = useTheme();
-  const [selectedAnswer, setSelectedAnswer] = useState(currentAnswer || '');
-  const [error, setError] = useState('');
+  const [selectedAnswer, setSelectedAnswer] = useState(currentAnswer || "");
+  const [error, setError] = useState("");
 
   const handleAnswerSelect = (answer) => {
     setSelectedAnswer(answer);
-    setError('');
+    setError("");
     onAnswer(answer);
 
     FocusManagement.announceForScreenReader(
       `Answer selected: ${answer}`,
-      'polite'
+      "polite",
     );
   };
 
   const handleNext = () => {
     if (!selectedAnswer) {
-      setError('Please select an answer to continue.');
+      setError("Please select an answer to continue.");
       FocusManagement.announceForScreenReader(
-        'Please select an answer before continuing.',
-        'assertive'
+        "Please select an answer before continuing.",
+        "assertive",
       );
       return;
     }
@@ -391,16 +423,31 @@ export const AssessmentQuestionForm = ({
 
   return (
     <KeyboardAwareScrollView
-      isAssessment={true}
+      isAssessment
       contentContainerStyle={styles.container}
     >
-      <View style={[styles.formCard, { backgroundColor: theme.colors.therapeutic?.peaceful }]}>
+      <View
+        style={[
+          styles.formCard,
+          { backgroundColor: theme.colors.therapeutic?.peaceful },
+        ]}
+      >
         {/* Progress Indicator */}
         <View style={styles.progressContainer}>
-          <Text style={[styles.progressText, { color: theme.colors.text.secondary }]}>
+          <Text
+            style={[
+              styles.progressText,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
             Question {questionNumber} of {totalQuestions}
           </Text>
-          <View style={[styles.progressBar, { backgroundColor: theme.colors.background.secondary }]}>
+          <View
+            style={[
+              styles.progressBar,
+              { backgroundColor: theme.colors.background.secondary },
+            ]}
+          >
             <View
               style={[
                 styles.progressFill,
@@ -422,7 +469,12 @@ export const AssessmentQuestionForm = ({
         </Text>
 
         {question.description && (
-          <Text style={[styles.questionDescription, { color: theme.colors.text.secondary }]}>
+          <Text
+            style={[
+              styles.questionDescription,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
             {question.description}
           </Text>
         )}
@@ -436,32 +488,45 @@ export const AssessmentQuestionForm = ({
                 styles.answerOption,
                 {
                   backgroundColor: theme.colors.background.surface,
-                  borderColor: selectedAnswer === option.value
-                    ? theme.colors.primary[500]
-                    : theme.colors.border.primary,
+                  borderColor:
+                    selectedAnswer === option.value
+                      ? theme.colors.primary[500]
+                      : theme.colors.border.primary,
                 },
                 selectedAnswer === option.value && styles.selectedAnswer,
               ]}
               onPress={() => handleAnswerSelect(option.value)}
-              accessible={true}
+              accessible
               accessibilityRole="radio"
               accessibilityLabel={option.text}
               accessibilityState={{ checked: selectedAnswer === option.value }}
               accessibilityHint="Double tap to select this answer"
             >
-              <View style={[
-                styles.radioButton,
-                { borderColor: theme.colors.border.primary },
-                selectedAnswer === option.value && {
-                  backgroundColor: theme.colors.primary[500],
-                  borderColor: theme.colors.primary[500],
-                },
-              ]}>
+              <View
+                style={[
+                  styles.radioButton,
+                  { borderColor: theme.colors.border.primary },
+                  selectedAnswer === option.value && {
+                    backgroundColor: theme.colors.primary[500],
+                    borderColor: theme.colors.primary[500],
+                  },
+                ]}
+              >
                 {selectedAnswer === option.value && (
-                  <View style={[styles.radioButtonInner, { backgroundColor: theme.colors.background.primary }]} />
+                  <View
+                    style={[
+                      styles.radioButtonInner,
+                      { backgroundColor: theme.colors.background.primary },
+                    ]}
+                  />
                 )}
               </View>
-              <Text style={[styles.answerText, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.answerText,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 {option.text}
               </Text>
             </Pressable>
@@ -490,7 +555,7 @@ export const AssessmentQuestionForm = ({
               accessibilityLabel="Go to previous question"
             />
           )}
-          
+
           <AccessibleButton
             title={questionNumber === totalQuestions ? "Complete" : "Next"}
             onPress={handleNext}
@@ -512,37 +577,37 @@ export const AssessmentQuestionForm = ({
 };
 
 // Crisis Support Form
-export const CrisisSupportForm = ({
-  onSubmit,
-  isLoading = false,
-}) => {
+export const CrisisSupportForm = ({ onSubmit, isLoading = false }) => {
   const { theme } = useTheme();
   const [formData, setFormData] = useState({
-    emergencyContact: '',
-    relationship: '',
-    additionalContact: '',
-    currentSafety: '',
-    supportNeeded: '',
+    emergencyContact: "",
+    relationship: "",
+    additionalContact: "",
+    currentSafety: "",
+    supportNeeded: "",
   });
   const [errors, setErrors] = useState({});
 
   const validator = useRef(
     createValidator(FORM_CONTEXTS.CRISIS_SUPPORT, {
       announceErrors: true,
-      liveRegion: 'assertive',
-    })
+      liveRegion: "assertive",
+    }),
   ).current;
 
   const handleSubmit = () => {
-    const validation = validator.validateForm(formData, VALIDATION_SCHEMAS.CRISIS_SUPPORT);
-    
+    const validation = validator.validateForm(
+      formData,
+      VALIDATION_SCHEMAS.CRISIS_SUPPORT,
+    );
+
     if (!validation.isValid) {
       setErrors(validation.errors);
-      
+
       Alert.alert(
-        'Important Information Missing',
-        'Please provide the required emergency contact information so we can better support you.',
-        [{ text: 'OK' }]
+        "Important Information Missing",
+        "Please provide the required emergency contact information so we can better support you.",
+        [{ text: "OK" }],
       );
       return;
     }
@@ -552,47 +617,56 @@ export const CrisisSupportForm = ({
 
   return (
     <KeyboardAwareScrollView
-      isCrisisInput={true}
+      isCrisisInput
       contentContainerStyle={styles.container}
     >
-      <View style={[styles.formCard, { backgroundColor: theme.colors.error[50] }]}>
+      <View
+        style={[styles.formCard, { backgroundColor: theme.colors.error[50] }]}
+      >
         <Text style={[styles.formTitle, { color: theme.colors.error[700] }]}>
           Crisis Support Information
         </Text>
         <Text style={[styles.formSubtitle, { color: theme.colors.error[600] }]}>
-          This information helps us provide you with immediate support when needed.
+          This information helps us provide you with immediate support when
+          needed.
         </Text>
 
         <EnhancedInput
           label="Emergency Contact Number"
           value={formData.emergencyContact}
-          onChangeText={(value) => setFormData(prev => ({ ...prev, emergencyContact: value }))}
+          onChangeText={(value) =>
+            setFormData((prev) => ({ ...prev, emergencyContact: value }))
+          }
           placeholder="Phone number of someone who can help"
           keyboardType="phone-pad"
-          isCrisisInput={true}
+          isCrisisInput
           formContext={FORM_CONTEXTS.CRISIS_SUPPORT}
           validationRules={VALIDATION_SCHEMAS.CRISIS_SUPPORT.emergencyContact}
           error={errors.emergencyContact?.[0]?.message}
-          accessibilityRequired={true}
+          accessibilityRequired
         />
 
         <EnhancedInput
           label="Relationship to Contact"
           value={formData.relationship}
-          onChangeText={(value) => setFormData(prev => ({ ...prev, relationship: value }))}
+          onChangeText={(value) =>
+            setFormData((prev) => ({ ...prev, relationship: value }))
+          }
           placeholder="e.g., Family member, friend, therapist"
-          isCrisisInput={true}
+          isCrisisInput
           formContext={FORM_CONTEXTS.CRISIS_SUPPORT}
         />
 
         <EnhancedInput
           label="How can we best support you right now?"
           value={formData.supportNeeded}
-          onChangeText={(value) => setFormData(prev => ({ ...prev, supportNeeded: value }))}
+          onChangeText={(value) =>
+            setFormData((prev) => ({ ...prev, supportNeeded: value }))
+          }
           placeholder="Tell us what kind of support would be most helpful..."
-          multiline={true}
+          multiline
           numberOfLines={4}
-          isCrisisInput={true}
+          isCrisisInput
           formContext={FORM_CONTEXTS.CRISIS_SUPPORT}
           accessibilityHint="Describe the type of support you need most right now"
         />
@@ -626,19 +700,19 @@ const styles = StyleSheet.create({
   },
   formTitle: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 8,
-    textAlign: 'center',
+    textAlign: "center",
   },
   formSubtitle: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 24,
     lineHeight: 22,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
     marginTop: 8,
   },
@@ -646,24 +720,24 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   moodGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
     marginBottom: 16,
   },
   moodOption: {
-    width: '22%',
+    width: "22%",
     aspectRatio: 1,
     borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 12,
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: "transparent",
   },
   selectedMood: {
-    borderColor: '#0066cc',
-    shadowColor: '#0066cc',
+    borderColor: "#0066cc",
+    shadowColor: "#0066cc",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -675,30 +749,30 @@ const styles = StyleSheet.create({
   },
   moodLabel: {
     fontSize: 12,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
   },
   progressContainer: {
     marginBottom: 24,
   },
   progressText: {
     fontSize: 14,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
     marginBottom: 8,
   },
   progressBar: {
     height: 4,
     borderRadius: 2,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   progressFill: {
-    height: '100%',
+    height: "100%",
     borderRadius: 2,
   },
   questionText: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
     lineHeight: 28,
   },
@@ -711,8 +785,8 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   answerOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
     borderRadius: 12,
     borderWidth: 2,
@@ -720,7 +794,7 @@ const styles = StyleSheet.create({
     minHeight: 60,
   },
   selectedAnswer: {
-    shadowColor: '#0066cc',
+    shadowColor: "#0066cc",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
@@ -732,8 +806,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     marginRight: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   radioButtonInner: {
     width: 8,
@@ -746,8 +820,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   navigationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 16,
   },
   navButton: {
@@ -762,9 +836,9 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 8,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

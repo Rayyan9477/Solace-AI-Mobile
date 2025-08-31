@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -105,10 +105,7 @@ const SignInScreen = ({ navigation }) => {
         >
           {/* Header Curve with Freud Logo */}
           <View style={styles.headerCurve}>
-            <FreudLogo 
-              size={64} 
-              primaryColor="#FFFFFF"
-            />
+            <FreudLogo size={64} primaryColor="#FFFFFF" />
           </View>
 
           {/* Content Container */}
@@ -250,9 +247,20 @@ const SignInScreen = ({ navigation }) => {
                 loading={isLoading}
                 disabled={!email.trim() || !password.trim() || emailError}
                 onPress={handleSignIn}
-                icon={!isLoading && <ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+                icon={
+                  !isLoading && (
+                    <ThemedFreudIcon
+                      name="chevron-right"
+                      size={20}
+                      color={freudTheme.colors.text.inverse}
+                    />
+                  )
+                }
                 iconPosition="right"
-                style={{ marginTop: freudTheme.spacing.xl, marginBottom: freudTheme.spacing['2xl'] }}
+                style={{
+                  marginTop: freudTheme.spacing.xl,
+                  marginBottom: freudTheme.spacing["2xl"],
+                }}
               />
 
               {/* Social Sign In */}
@@ -359,7 +367,7 @@ const styles = StyleSheet.create({
     fontWeight: freudTheme.typography.fontWeight.bold,
     fontFamily: freudTheme.typography.fontFamily.primary,
     textAlign: "center",
-    marginBottom: freudTheme.spacing['4xl'],
+    marginBottom: freudTheme.spacing["4xl"],
     color: freudTheme.colors.text.primary,
   },
   inputContainer: {

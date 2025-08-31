@@ -5,7 +5,8 @@
  * Features page shaders, Framer Motion animations, and Anime.js micro-interactions
  */
 
-import React from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
 import {
   View,
   Text,
@@ -13,12 +14,18 @@ import {
   Dimensions,
   Platform,
   StatusBar,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Card, Surface, Button as PaperButton } from 'react-native-paper';
-import { colors, spacing, borderRadius, shadows, typography } from '../../shared/theme/theme';
+} from "react-native";
+import { Card, Surface, Button as PaperButton } from "react-native-paper";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import {
+  colors,
+  spacing,
+  borderRadius,
+  shadows,
+  typography,
+} from "../../shared/theme/theme";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 /**
  * Enhanced Freud Color Palette
@@ -27,79 +34,79 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 export const FreudColors = {
   // Exact Freud UI Kit Colors
   mindful: {
-    light: '#F7F4F2', // Mindful Brown 10
-    medium: '#C0A091', // Mindful Brown 40
-    dark: '#372315',   // Mindful Brown 90
-    gradient: ['#F7F4F2', '#C0A091', '#372315'],
+    light: "#F7F4F2", // Mindful Brown 10
+    medium: "#C0A091", // Mindful Brown 40
+    dark: "#372315", // Mindful Brown 90
+    gradient: ["#F7F4F2", "#C0A091", "#372315"],
   },
   optimistic: {
-    light: '#F5F5F5', // Optimistic Gray 10
-    medium: '#929290', // Optimistic Gray 50
-    dark: '#161515',   // Optimistic Gray 100
-    gradient: ['#F5F5F5', '#929290', '#161515'],
+    light: "#F5F5F5", // Optimistic Gray 10
+    medium: "#929290", // Optimistic Gray 50
+    dark: "#161515", // Optimistic Gray 100
+    gradient: ["#F5F5F5", "#929290", "#161515"],
   },
   serenity: {
-    light: '#F2F5EB', // Serenity Green 10
-    medium: '#98BD68', // Serenity Green 50
-    dark: '#1F1E10',   // Serenity Green 100
-    gradient: ['#F2F5EB', '#98BD68', '#1F1E10'],
+    light: "#F2F5EB", // Serenity Green 10
+    medium: "#98BD68", // Serenity Green 50
+    dark: "#1F1E10", // Serenity Green 100
+    gradient: ["#F2F5EB", "#98BD68", "#1F1E10"],
   },
   empathy: {
-    light: '#FFF6E2', // Empathy Orange 10
-    medium: '#ED7100', // Empathy Orange 50
-    dark: '#2E1D00',   // Empathy Orange 100
-    gradient: ['#FFF6E2', '#ED7100', '#2E1D00'],
+    light: "#FFF6E2", // Empathy Orange 10
+    medium: "#ED7100", // Empathy Orange 50
+    dark: "#2E1D00", // Empathy Orange 100
+    gradient: ["#FFF6E2", "#ED7100", "#2E1D00"],
   },
   zen: {
-    light: '#FFF4E0', // Zen Yellow 10
-    medium: '#FFB514', // Zen Yellow 50
-    dark: '#2E2500',   // Zen Yellow 100
-    gradient: ['#FFF4E0', '#FFB514', '#2E2500'],
+    light: "#FFF4E0", // Zen Yellow 10
+    medium: "#FFB514", // Zen Yellow 50
+    dark: "#2E2500", // Zen Yellow 100
+    gradient: ["#FFF4E0", "#FFB514", "#2E2500"],
   },
   kind: {
-    light: '#EAEFFF', // Kind Purple 10
-    medium: '#8965FF', // Kind Purple 60
-    dark: '#16135A',   // Kind Purple 100
-    gradient: ['#EAEFFF', '#8965FF', '#16135A'],
+    light: "#EAEFFF", // Kind Purple 10
+    medium: "#8965FF", // Kind Purple 60
+    dark: "#16135A", // Kind Purple 100
+    gradient: ["#EAEFFF", "#8965FF", "#16135A"],
   },
-  
+
   // Mood-specific colors matching Freud design
   moods: {
     happy: {
-      primary: '#FFB514', // Zen Yellow
-      light: '#FFF4E0',
-      dark: '#2E2500',
-      gradient: ['#FFF4E0', '#FFB514', '#2E2500'],
+      primary: "#FFB514", // Zen Yellow
+      light: "#FFF4E0",
+      dark: "#2E2500",
+      gradient: ["#FFF4E0", "#FFB514", "#2E2500"],
     },
     sad: {
-      primary: '#8965FF', // Kind Purple
-      light: '#EAEFFF',
-      dark: '#16135A',
-      gradient: ['#EAEFFF', '#8965FF', '#16135A'],
+      primary: "#8965FF", // Kind Purple
+      light: "#EAEFFF",
+      dark: "#16135A",
+      gradient: ["#EAEFFF", "#8965FF", "#16135A"],
     },
     stressed: {
-      primary: '#ED7100', // Empathy Orange
-      light: '#FFF6E2',
-      dark: '#2E1D00',
-      gradient: ['#FFF6E2', '#ED7100', '#2E1D00'],
+      primary: "#ED7100", // Empathy Orange
+      light: "#FFF6E2",
+      dark: "#2E1D00",
+      gradient: ["#FFF6E2", "#ED7100", "#2E1D00"],
     },
     calm: {
-      primary: '#98BD68', // Serenity Green
-      light: '#F2F5EB',
-      dark: '#1F1E10',
-      gradient: ['#F2F5EB', '#98BD68', '#1F1E10'],
+      primary: "#98BD68", // Serenity Green
+      light: "#F2F5EB",
+      dark: "#1F1E10",
+      gradient: ["#F2F5EB", "#98BD68", "#1F1E10"],
     },
     anxious: {
-      primary: '#C0A091', // Mindful Brown
-      light: '#F7F4F2',
-      dark: '#372315',
-      gradient: ['#F7F4F2', '#C0A091', '#372315'],
+      primary: "#C0A091", // Mindful Brown
+      light: "#F7F4F2",
+      dark: "#372315",
+      gradient: ["#F7F4F2", "#C0A091", "#372315"],
     },
     neutral: {
-      primary: '#929290', // Optimistic Gray
-      light: '#F5F5F5',
-      dark: '#161515',
-      gradient: ['#F5F5F5', '#929290', '#161515'],
+      primary: "#929290", // Optimistic Gray
+      light: "#F5F5F5",
+      dark: "#161515",
+      gradient: ["#F5F5F5", "#929290", "#161515"],
     },
   },
 };
@@ -116,19 +123,19 @@ export const FreudMaterialTheme = {
       primaryContainer: colors.primary[100],
       onPrimary: colors.background.primary,
       onPrimaryContainer: colors.primary[800],
-      
+
       // Secondary colors (Serenity Green)
       secondary: colors.secondary[500],
       secondaryContainer: colors.secondary[100],
       onSecondary: colors.background.primary,
       onSecondaryContainer: colors.secondary[800],
-      
+
       // Tertiary colors (Kind Purple for accent)
       tertiary: colors.therapeutic.kind[500],
       tertiaryContainer: colors.therapeutic.kind[100],
       onTertiary: colors.background.primary,
       onTertiaryContainer: colors.therapeutic.kind[800],
-      
+
       // Surface colors
       surface: colors.background.card,
       surfaceVariant: colors.background.secondary,
@@ -136,34 +143,34 @@ export const FreudMaterialTheme = {
       onSurfaceVariant: colors.text.secondary,
       surfaceDisabled: colors.background.disabled,
       onSurfaceDisabled: colors.text.disabled,
-      
+
       // Background colors
       background: colors.background.primary,
       onBackground: colors.text.primary,
-      
+
       // Error colors
       error: colors.error[500],
       errorContainer: colors.error[100],
       onError: colors.background.primary,
       onErrorContainer: colors.error[800],
-      
+
       // Outline and inverse colors
       outline: colors.border.primary,
       outlineVariant: colors.border.secondary,
       inverseSurface: colors.dark.background.primary,
       inverseOnSurface: colors.dark.text.primary,
       inversePrimary: colors.primary[200],
-      
+
       // Elevation and shadow
       elevation: {
-        level0: 'transparent',
+        level0: "transparent",
         level1: colors.background.card,
         level2: colors.background.secondary,
         level3: colors.background.tertiary,
         level4: colors.background.quaternary,
         level5: colors.background.accent,
       },
-      
+
       // Custom therapeutic colors
       therapeutic: {
         calming: colors.therapeutic.calming[500],
@@ -176,45 +183,45 @@ export const FreudMaterialTheme = {
     fonts: {
       displayLarge: {
         fontFamily: typography.fonts.heading,
-        fontSize: typography.sizes['8xl'],
+        fontSize: typography.sizes["8xl"],
         fontWeight: typography.weights.light,
-        lineHeight: typography.lineHeights['8xl'],
+        lineHeight: typography.lineHeights["8xl"],
       },
       displayMedium: {
         fontFamily: typography.fonts.heading,
-        fontSize: typography.sizes['7xl'],
+        fontSize: typography.sizes["7xl"],
         fontWeight: typography.weights.normal,
-        lineHeight: typography.lineHeights['7xl'],
+        lineHeight: typography.lineHeights["7xl"],
       },
       displaySmall: {
         fontFamily: typography.fonts.heading,
-        fontSize: typography.sizes['6xl'],
+        fontSize: typography.sizes["6xl"],
         fontWeight: typography.weights.normal,
-        lineHeight: typography.lineHeights['6xl'],
+        lineHeight: typography.lineHeights["6xl"],
       },
       headlineLarge: {
         fontFamily: typography.fonts.heading,
-        fontSize: typography.sizes['5xl'],
+        fontSize: typography.sizes["5xl"],
         fontWeight: typography.weights.semiBold,
-        lineHeight: typography.lineHeights['5xl'],
+        lineHeight: typography.lineHeights["5xl"],
       },
       headlineMedium: {
         fontFamily: typography.fonts.heading,
-        fontSize: typography.sizes['4xl'],
+        fontSize: typography.sizes["4xl"],
         fontWeight: typography.weights.semiBold,
-        lineHeight: typography.lineHeights['4xl'],
+        lineHeight: typography.lineHeights["4xl"],
       },
       headlineSmall: {
         fontFamily: typography.fonts.heading,
-        fontSize: typography.sizes['3xl'],
+        fontSize: typography.sizes["3xl"],
         fontWeight: typography.weights.semiBold,
-        lineHeight: typography.lineHeights['3xl'],
+        lineHeight: typography.lineHeights["3xl"],
       },
       titleLarge: {
         fontFamily: typography.fonts.heading,
-        fontSize: typography.sizes['2xl'],
+        fontSize: typography.sizes["2xl"],
         fontWeight: typography.weights.medium,
-        lineHeight: typography.lineHeights['2xl'],
+        lineHeight: typography.lineHeights["2xl"],
       },
       titleMedium: {
         fontFamily: typography.fonts.body,
@@ -273,19 +280,19 @@ export const FreudMaterialTheme = {
       primaryContainer: colors.primary[800],
       onPrimary: colors.primary[900],
       onPrimaryContainer: colors.primary[100],
-      
+
       // Secondary colors (adjusted for dark mode)
       secondary: colors.secondary[300],
       secondaryContainer: colors.secondary[800],
       onSecondary: colors.secondary[900],
       onSecondaryContainer: colors.secondary[100],
-      
+
       // Tertiary colors (adjusted for dark mode)
       tertiary: colors.therapeutic.kind[300],
       tertiaryContainer: colors.therapeutic.kind[800],
       onTertiary: colors.therapeutic.kind[900],
       onTertiaryContainer: colors.therapeutic.kind[100],
-      
+
       // Surface colors
       surface: colors.dark.background.card,
       surfaceVariant: colors.dark.background.secondary,
@@ -293,34 +300,34 @@ export const FreudMaterialTheme = {
       onSurfaceVariant: colors.dark.text.secondary,
       surfaceDisabled: colors.dark.background.disabled,
       onSurfaceDisabled: colors.dark.text.disabled,
-      
+
       // Background colors
       background: colors.dark.background.primary,
       onBackground: colors.dark.text.primary,
-      
+
       // Error colors
       error: colors.error[400],
       errorContainer: colors.error[800],
       onError: colors.error[900],
       onErrorContainer: colors.error[100],
-      
+
       // Outline and inverse colors
       outline: colors.dark.border.primary,
       outlineVariant: colors.dark.border.secondary,
       inverseSurface: colors.background.primary,
       inverseOnSurface: colors.text.primary,
       inversePrimary: colors.primary[500],
-      
+
       // Elevation and shadow
       elevation: {
-        level0: 'transparent',
+        level0: "transparent",
         level1: colors.dark.background.card,
         level2: colors.dark.background.secondary,
         level3: colors.dark.background.tertiary,
         level4: colors.dark.background.quaternary,
         level5: colors.dark.background.accent,
       },
-      
+
       // Custom therapeutic colors (adjusted for dark mode)
       therapeutic: {
         calming: colors.therapeutic.calming[400],
@@ -342,25 +349,28 @@ export const FreudMaterialTheme = {
  */
 
 // Enhanced Surface Component with therapeutic theming
-export const TherapeuticSurface = ({ 
-  children, 
+export const TherapeuticSurface = ({
+  children,
   style = {},
   elevation = 1,
-  therapeutic = 'peaceful',
-  variant = 'light',
-  ...props 
+  therapeutic = "peaceful",
+  variant = "light",
+  ...props
 }) => {
   const therapeuticColors = FreudColors[therapeutic] || FreudColors.mindful;
-  
+
   return (
     <Surface
       style={[
         {
-          backgroundColor: variant === 'light' ? therapeuticColors.light : therapeuticColors.medium,
+          backgroundColor:
+            variant === "light"
+              ? therapeuticColors.light
+              : therapeuticColors.medium,
           borderRadius: borderRadius.lg,
           padding: spacing[4],
         },
-        shadows[elevation === 1 ? 'sm' : elevation === 2 ? 'base' : 'md'],
+        shadows[elevation === 1 ? "sm" : elevation === 2 ? "base" : "md"],
         style,
       ]}
       elevation={elevation}
@@ -372,17 +382,17 @@ export const TherapeuticSurface = ({
 };
 
 // Enhanced Card Component with Freud colors and gradients
-export const FreudCard = ({ 
-  children, 
+export const FreudCard = ({
+  children,
   style = {},
-  therapeutic = 'mindful',
-  variant = 'gradient',
+  therapeutic = "mindful",
+  variant = "gradient",
   elevation = 2,
-  ...props 
+  ...props
 }) => {
   const therapeuticColors = FreudColors[therapeutic] || FreudColors.mindful;
-  
-  if (variant === 'gradient') {
+
+  if (variant === "gradient") {
     return (
       <LinearGradient
         colors={therapeuticColors.gradient}
@@ -393,7 +403,7 @@ export const FreudCard = ({
             borderRadius: borderRadius.lg,
             padding: spacing[4],
           },
-          shadows[elevation === 1 ? 'sm' : elevation === 2 ? 'base' : 'md'],
+          shadows[elevation === 1 ? "sm" : elevation === 2 ? "base" : "md"],
           style,
         ]}
         {...props}
@@ -402,7 +412,7 @@ export const FreudCard = ({
       </LinearGradient>
     );
   }
-  
+
   return (
     <Card
       style={[
@@ -411,7 +421,7 @@ export const FreudCard = ({
           borderRadius: borderRadius.lg,
           padding: spacing[4],
         },
-        shadows[elevation === 1 ? 'sm' : elevation === 2 ? 'base' : 'md'],
+        shadows[elevation === 1 ? "sm" : elevation === 2 ? "base" : "md"],
         style,
       ]}
       elevation={elevation}
@@ -423,18 +433,18 @@ export const FreudCard = ({
 };
 
 // Enhanced Button Component with therapeutic theming
-export const TherapeuticButton = ({ 
+export const TherapeuticButton = ({
   children,
   style = {},
-  therapeutic = 'kind',
-  variant = 'contained',
-  size = 'medium',
+  therapeutic = "kind",
+  variant = "contained",
+  size = "medium",
   onPress,
   disabled = false,
-  ...props 
+  ...props
 }) => {
   const therapeuticColors = FreudColors[therapeutic] || FreudColors.kind;
-  
+
   const buttonSizes = {
     small: {
       paddingVertical: spacing[2],
@@ -452,26 +462,32 @@ export const TherapeuticButton = ({
       fontSize: typography.sizes.lg,
     },
   };
-  
+
   const buttonStyles = {
     contained: {
       backgroundColor: therapeuticColors.medium,
-      borderColor: 'transparent',
+      borderColor: "transparent",
     },
     outlined: {
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
       borderColor: therapeuticColors.medium,
       borderWidth: 1,
     },
     text: {
-      backgroundColor: 'transparent',
-      borderColor: 'transparent',
+      backgroundColor: "transparent",
+      borderColor: "transparent",
     },
   };
-  
+
   return (
     <PaperButton
-      mode={variant === 'contained' ? 'contained' : variant === 'outlined' ? 'outlined' : 'text'}
+      mode={
+        variant === "contained"
+          ? "contained"
+          : variant === "outlined"
+            ? "outlined"
+            : "text"
+      }
       onPress={onPress}
       disabled={disabled}
       style={[
@@ -484,7 +500,7 @@ export const TherapeuticButton = ({
         style,
       ]}
       labelStyle={{
-        color: variant === 'contained' ? '#FFFFFF' : therapeuticColors.dark,
+        color: variant === "contained" ? "#FFFFFF" : therapeuticColors.dark,
         fontSize: buttonSizes[size].fontSize,
         fontWeight: typography.weights.medium,
       }}
@@ -496,31 +512,31 @@ export const TherapeuticButton = ({
 };
 
 // Enhanced Typography Components
-export const TherapeuticText = ({ 
-  children, 
+export const TherapeuticText = ({
+  children,
   style = {},
-  variant = 'body',
-  therapeutic = 'optimistic',
-  weight = 'normal',
-  align = 'left',
-  ...props 
+  variant = "body",
+  therapeutic = "optimistic",
+  weight = "normal",
+  align = "left",
+  ...props
 }) => {
   const therapeuticColors = FreudColors[therapeutic] || FreudColors.optimistic;
-  
+
   const textVariants = {
     display: {
-      fontSize: typography.sizes['8xl'],
-      lineHeight: typography.lineHeights['8xl'],
+      fontSize: typography.sizes["8xl"],
+      lineHeight: typography.lineHeights["8xl"],
       fontWeight: typography.weights.light,
     },
     headline: {
-      fontSize: typography.sizes['6xl'],
-      lineHeight: typography.lineHeights['6xl'],
+      fontSize: typography.sizes["6xl"],
+      lineHeight: typography.lineHeights["6xl"],
       fontWeight: typography.weights.semiBold,
     },
     title: {
-      fontSize: typography.sizes['3xl'],
-      lineHeight: typography.lineHeights['3xl'],
+      fontSize: typography.sizes["3xl"],
+      lineHeight: typography.lineHeights["3xl"],
       fontWeight: typography.weights.medium,
     },
     subtitle: {
@@ -544,7 +560,7 @@ export const TherapeuticText = ({
       fontWeight: typography.weights.medium,
     },
   };
-  
+
   return (
     <Text
       style={[
@@ -564,29 +580,36 @@ export const TherapeuticText = ({
 };
 
 // Container Component with safe area and status bar handling
-export const FreudContainer = ({ 
-  children, 
+export const FreudContainer = ({
+  children,
   style = {},
-  therapeutic = 'mindful',
-  variant = 'solid',
-  statusBarStyle = 'dark-content',
-  ...props 
+  therapeutic = "mindful",
+  variant = "solid",
+  statusBarStyle = "dark-content",
+  ...props
 }) => {
   const therapeuticColors = FreudColors[therapeutic] || FreudColors.mindful;
-  
-  const containerStyle = variant === 'gradient' ? {
-    flex: 1,
-    paddingTop: Platform.OS === 'ios' ? 44 : StatusBar.currentHeight || 0,
-  } : {
-    flex: 1,
-    backgroundColor: therapeuticColors.light,
-    paddingTop: Platform.OS === 'ios' ? 44 : StatusBar.currentHeight || 0,
-  };
-  
+
+  const containerStyle =
+    variant === "gradient"
+      ? {
+          flex: 1,
+          paddingTop: Platform.OS === "ios" ? 44 : StatusBar.currentHeight || 0,
+        }
+      : {
+          flex: 1,
+          backgroundColor: therapeuticColors.light,
+          paddingTop: Platform.OS === "ios" ? 44 : StatusBar.currentHeight || 0,
+        };
+
   return (
     <View style={[containerStyle, style]} {...props}>
-      <StatusBar barStyle={statusBarStyle} backgroundColor="transparent" translucent />
-      {variant === 'gradient' ? (
+      <StatusBar
+        barStyle={statusBarStyle}
+        backgroundColor="transparent"
+        translucent
+      />
+      {variant === "gradient" ? (
         <LinearGradient
           colors={therapeuticColors.gradient}
           start={{ x: 0, y: 0 }}
@@ -600,12 +623,12 @@ export const FreudContainer = ({
 };
 
 // Responsive Layout Components
-export const ResponsiveView = ({ 
-  children, 
+export const ResponsiveView = ({
+  children,
   style = {},
-  spacing = 'base',
-  direction = 'column',
-  ...props 
+  spacing = "base",
+  direction = "column",
+  ...props
 }) => {
   const spacingValues = {
     none: spacing[0],
@@ -615,7 +638,7 @@ export const ResponsiveView = ({
     lg: spacing[6],
     xl: spacing[8],
   };
-  
+
   return (
     <View
       style={[
@@ -644,7 +667,7 @@ export const FreudStyles = StyleSheet.create({
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[6],
   },
-  
+
   // Card styles
   card: {
     backgroundColor: colors.background.card,
@@ -658,13 +681,13 @@ export const FreudStyles = StyleSheet.create({
     padding: spacing[3],
     ...shadows.sm,
   },
-  
+
   // Text styles
   heading: {
-    fontSize: typography.sizes['3xl'],
+    fontSize: typography.sizes["3xl"],
     fontWeight: typography.weights.bold,
     color: colors.text.primary,
-    lineHeight: typography.lineHeights['3xl'],
+    lineHeight: typography.lineHeights["3xl"],
   },
   subheading: {
     fontSize: typography.sizes.xl,
@@ -684,29 +707,29 @@ export const FreudStyles = StyleSheet.create({
     color: colors.text.tertiary,
     lineHeight: typography.lineHeights.sm,
   },
-  
+
   // Layout utilities
   row: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   column: {
-    flexDirection: 'column',
+    flexDirection: "column",
   },
   center: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   spaceBetween: {
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   flex1: {
     flex: 1,
   },
-  
+
   // Therapeutic gradients
   therapeuticGradient: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     top: 0,

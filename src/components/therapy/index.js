@@ -1,1 +1,1 @@
-export { default as TherapySessionRecorder } from './TherapySessionRecorder';
+export { default as TherapySessionRecorder } from "./TherapySessionRecorder";

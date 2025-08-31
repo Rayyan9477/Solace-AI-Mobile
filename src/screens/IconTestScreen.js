@@ -12,7 +12,12 @@ import {
   IconPresets,
 } from "../components/icons";
 import { useTheme } from "../shared/theme/ThemeContext";
-import { colors, typography, spacing, borderRadius } from "../shared/theme/theme";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+} from "../shared/theme/theme";
 
 const IconTestScreen = () => {
   const { theme } = useTheme();

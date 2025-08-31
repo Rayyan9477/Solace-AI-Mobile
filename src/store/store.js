@@ -6,10 +6,10 @@ import { persistStore, persistReducer } from "redux-persist";
 import assessmentSlice from "./slices/assessmentSlice";
 import authSlice from "./slices/authSlice";
 import chatSlice from "./slices/chatSlice";
-import moodSlice from "./slices/moodSlice";
 import enhancedMoodSlice from "./slices/enhancedMoodSlice";
-import userSlice from "./slices/userSlice";
+import moodSlice from "./slices/moodSlice";
 import therapySlice from "./slices/therapySlice";
+import userSlice from "./slices/userSlice";
 
 const persistConfig = {
   key: "root",

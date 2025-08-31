@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,22 +7,22 @@ import {
   StyleSheet,
   Animated,
   Dimensions,
-} from 'react-native';
-import LinearGradient from 'expo-linear-gradient';
-import { MentalHealthIcon } from '../icons';
-import { useTheme } from '../../shared/theme/UnifiedThemeProvider';
-import FreudDesignSystem, { 
-  FreudColors, 
-  FreudSpacing, 
-  FreudTypography, 
-  FreudShadows 
-} from '../../shared/theme/FreudDesignSystem';
+} from "react-native";
 
-const { width: screenWidth } = Dimensions.get('window');
+import FreudDesignSystem, {
+  FreudColors,
+  FreudSpacing,
+  FreudTypography,
+  FreudShadows,
+} from "../../shared/theme/FreudDesignSystem";
+import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
+import { MentalHealthIcon } from "../icons";
+
+const { width: screenWidth } = Dimensions.get("window");
 
 /**
  * FloatingActionButton - A therapeutic-styled floating action button
- * 
+ *
  * Features:
  * - Therapeutic gradient backgrounds
  * - Gentle pulse animation
@@ -31,22 +32,22 @@ const { width: screenWidth } = Dimensions.get('window');
  */
 const FloatingActionButton = ({
   onPress,
-  icon = 'Therapy',
-  label = 'Dr. Freud',
+  icon = "Therapy",
+  label = "Dr. Freud",
   size = 64,
-  variant = 'primary', // 'primary', 'secondary', 'accent'
-  position = 'bottomRight', // 'bottomRight', 'bottomLeft', 'bottomCenter'
+  variant = "primary", // 'primary', 'secondary', 'accent'
+  position = "bottomRight", // 'bottomRight', 'bottomLeft', 'bottomCenter'
   customGradientColors,
   disabled = false,
-  testID = 'floating-action-button',
-  accessibilityLabel = 'Start AI Therapy Session',
-  accessibilityHint = 'Double tap to begin a private conversation with your AI therapist',
+  testID = "floating-action-button",
+  accessibilityLabel = "Start AI Therapy Session",
+  accessibilityHint = "Double tap to begin a private conversation with your AI therapist",
   showPulse = true,
   style,
   ...props
 }) => {
   const { theme, isDarkMode } = useTheme();
-  
+
   // Animation values
   const scaleValue = useRef(new Animated.Value(1)).current;
   const pulseValue = useRef(new Animated.Value(1)).current;
@@ -55,11 +56,11 @@ const FloatingActionButton = ({
   // Get gradient colors based on variant
   const getGradientColors = () => {
     if (customGradientColors) return customGradientColors;
-    
+
     switch (variant) {
-      case 'secondary':
+      case "secondary":
         return [FreudColors.serenityGreen[60], FreudColors.serenityGreen[80]];
-      case 'accent':
+      case "accent":
         return [FreudColors.kindPurple[60], FreudColors.kindPurple[80]];
       default:
         return [FreudColors.mindfulBrown[70], FreudColors.mindfulBrown[90]];
@@ -69,18 +70,18 @@ const FloatingActionButton = ({
   // Get position styles
   const getPositionStyle = () => {
     const baseStyle = {
-      position: 'absolute',
+      position: "absolute",
       zIndex: 1000,
     };
 
     switch (position) {
-      case 'bottomLeft':
+      case "bottomLeft":
         return {
           ...baseStyle,
           bottom: FreudSpacing[6],
           left: FreudSpacing[6],
         };
-      case 'bottomCenter':
+      case "bottomCenter":
         return {
           ...baseStyle,
           bottom: FreudSpacing[6],
@@ -118,7 +119,7 @@ const FloatingActionButton = ({
             duration: 2000,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       );
       pulseAnimation.start();
 
@@ -129,7 +130,7 @@ const FloatingActionButton = ({
   // Handle press interactions
   const handlePressIn = () => {
     if (disabled) return;
-    
+
     Animated.spring(scaleValue, {
       toValue: 0.95,
       useNativeDriver: true,
@@ -140,7 +141,7 @@ const FloatingActionButton = ({
 
   const handlePressOut = () => {
     if (disabled) return;
-    
+
     Animated.spring(scaleValue, {
       toValue: 1,
       useNativeDriver: true,
@@ -155,15 +156,12 @@ const FloatingActionButton = ({
   };
 
   return (
-    <Animated.View 
+    <Animated.View
       style={[
         getPositionStyle(),
         {
           opacity: opacityValue,
-          transform: [
-            { scale: scaleValue },
-            { scale: pulseValue },
-          ],
+          transform: [{ scale: scaleValue }, { scale: pulseValue }],
         },
         disabled && styles.disabled,
         style,
@@ -178,7 +176,7 @@ const FloatingActionButton = ({
         activeOpacity={0.9}
         style={[
           styles.button,
-          { width: size, height: size, borderRadius: size / 2 }
+          { width: size, height: size, borderRadius: size / 2 },
         ]}
         testID={testID}
         accessibilityLabel={accessibilityLabel}
@@ -187,24 +185,14 @@ const FloatingActionButton = ({
       >
         <LinearGradient
           colors={getGradientColors()}
-          style={[
-            styles.gradient,
-            { borderRadius: size / 2 }
-          ]}
+          style={[styles.gradient, { borderRadius: size / 2 }]}
           start={[0, 0]}
           end={[1, 1]}
         >
           <View style={styles.content}>
-            <MentalHealthIcon 
-              name={icon} 
-              size={size * 0.4} 
-              color="#FFFFFF" 
-            />
+            <MentalHealthIcon name={icon} size={size * 0.4} color="#FFFFFF" />
             {label && (
-              <Text style={[
-                styles.label,
-                { fontSize: size * 0.15 }
-              ]}>
+              <Text style={[styles.label, { fontSize: size * 0.15 }]}>
                 {label}
               </Text>
             )}
@@ -267,19 +255,19 @@ const styles = StyleSheet.create({
   },
   gradient: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   content: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   label: {
     fontWeight: FreudTypography.weights.bold,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     marginTop: FreudSpacing[1],
-    textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textAlign: "center",
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
   },

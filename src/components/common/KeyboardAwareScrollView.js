@@ -1,9 +1,9 @@
 /**
  * Universal KeyboardAwareScrollView Component
- * 
+ *
  * Provides consistent keyboard avoidance behavior across iOS and Android
  * with enhanced accessibility and mental health form support.
- * 
+ *
  * Features:
  * - Cross-platform keyboard handling
  * - Accessibility-first design
@@ -12,7 +12,7 @@
  * - Automatic scroll to focused inputs
  */
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from "react";
 import {
   Platform,
   Keyboard,
@@ -21,13 +21,13 @@ import {
   Dimensions,
   Animated,
   StatusBar,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { FocusManagement } from '../../utils/accessibility';
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { FocusManagement } from "../../utils/accessibility";
 
-const { height: screenHeight } = Dimensions.get('window');
+const { height: screenHeight } = Dimensions.get("window");
 
 const KeyboardAwareScrollView = ({
   children,
@@ -38,7 +38,7 @@ const KeyboardAwareScrollView = ({
   extraHeight = 75,
   extraScrollHeight = 0,
   keyboardOpeningTime = 250,
-  keyboardShouldPersistTaps = 'handled',
+  keyboardShouldPersistTaps = "handled",
   showsVerticalScrollIndicator = false,
   scrollEnabled = true,
   nestedScrollEnabled = false,
@@ -69,29 +69,31 @@ const KeyboardAwareScrollView = ({
 
   // Calculate keyboard avoiding behavior based on platform
   const getKeyboardVerticalOffset = () => {
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       return insets.top + StatusBar.currentHeight || 0;
     }
     return 0;
   };
 
   const getKeyboardBehavior = () => {
-    if (Platform.OS === 'ios') {
-      return 'padding';
+    if (Platform.OS === "ios") {
+      return "padding";
     }
-    return 'height';
+    return "height";
   };
 
   // Enhanced keyboard event handlers
   useEffect(() => {
-    const keyboardShowEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
-    const keyboardHideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+    const keyboardShowEvent =
+      Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
+    const keyboardHideEvent =
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
 
     const handleKeyboardShow = (event) => {
       const { height: kbHeight, duration } = event;
-      
+
       setKeyboardHeight(kbHeight);
-      
+
       // Animate keyboard appearance
       if (animateOnKeyboard && !isReducedMotionEnabled) {
         Animated.timing(keyboardAnimValue, {
@@ -104,8 +106,8 @@ const KeyboardAwareScrollView = ({
       // Announce keyboard appearance for screen readers
       if (isTherapyForm || isMoodTracker || isAssessment) {
         FocusManagement.announceForScreenReader(
-          'Keyboard opened. You can now enter your response.',
-          'polite'
+          "Keyboard opened. You can now enter your response.",
+          "polite",
         );
       }
 
@@ -114,7 +116,7 @@ const KeyboardAwareScrollView = ({
 
     const handleKeyboardHide = (event) => {
       setKeyboardHeight(0);
-      
+
       // Animate keyboard disappearance
       if (animateOnKeyboard && !isReducedMotionEnabled) {
         Animated.timing(keyboardAnimValue, {
@@ -131,17 +133,20 @@ const KeyboardAwareScrollView = ({
 
       // Announce keyboard disappearance
       if (isTherapyForm || isMoodTracker || isAssessment) {
-        FocusManagement.announceForScreenReader(
-          'Keyboard closed.',
-          'polite'
-        );
+        FocusManagement.announceForScreenReader("Keyboard closed.", "polite");
       }
 
       onKeyboardHide?.(event);
     };
 
-    const keyboardShowListener = Keyboard.addListener(keyboardShowEvent, handleKeyboardShow);
-    const keyboardHideListener = Keyboard.addListener(keyboardHideEvent, handleKeyboardHide);
+    const keyboardShowListener = Keyboard.addListener(
+      keyboardShowEvent,
+      handleKeyboardShow,
+    );
+    const keyboardHideListener = Keyboard.addListener(
+      keyboardHideEvent,
+      handleKeyboardHide,
+    );
 
     return () => {
       keyboardShowListener?.remove();
@@ -169,7 +174,11 @@ const KeyboardAwareScrollView = ({
       inputRef.measureInWindow((x, y, width, height) => {
         const scrollOffset = Math.max(
           0,
-          y + height + extraHeight + extraOffset - (screenHeight - keyboardHeight)
+          y +
+            height +
+            extraHeight +
+            extraOffset -
+            (screenHeight - keyboardHeight),
         );
 
         if (scrollOffset > 0) {
@@ -188,22 +197,22 @@ const KeyboardAwareScrollView = ({
     if (isFocused) {
       setCurrentFocusedInput(inputRef);
       scrollToInput(inputRef);
-      
+
       // Mental health specific announcements
       if (isTherapyForm) {
         FocusManagement.announceForScreenReader(
-          'Therapy form input focused. Take your time to share your thoughts.',
-          'polite'
+          "Therapy form input focused. Take your time to share your thoughts.",
+          "polite",
         );
       } else if (isMoodTracker) {
         FocusManagement.announceForScreenReader(
-          'Mood tracking input focused. Describe how you\'re feeling.',
-          'polite'
+          "Mood tracking input focused. Describe how you're feeling.",
+          "polite",
         );
       } else if (isAssessment) {
         FocusManagement.announceForScreenReader(
-          'Assessment question focused. Please provide your response.',
-          'polite'
+          "Assessment question focused. Please provide your response.",
+          "polite",
         );
       }
     } else {
@@ -224,23 +233,27 @@ const KeyboardAwareScrollView = ({
   const getMentalHealthStyles = () => {
     if (isTherapyForm) {
       return {
-        backgroundColor: theme.colors.therapeutic?.calm || theme.colors.background.primary,
+        backgroundColor:
+          theme.colors.therapeutic?.calm || theme.colors.background.primary,
         paddingHorizontal: 20,
         paddingVertical: 16,
       };
     }
-    
+
     if (isMoodTracker) {
       return {
-        backgroundColor: theme.colors.therapeutic?.nurturing || theme.colors.background.primary,
+        backgroundColor:
+          theme.colors.therapeutic?.nurturing ||
+          theme.colors.background.primary,
         paddingHorizontal: 16,
         paddingVertical: 12,
       };
     }
-    
+
     if (isAssessment) {
       return {
-        backgroundColor: theme.colors.therapeutic?.peaceful || theme.colors.background.primary,
+        backgroundColor:
+          theme.colors.therapeutic?.peaceful || theme.colors.background.primary,
         paddingHorizontal: 24,
         paddingVertical: 20,
       };
@@ -297,7 +310,7 @@ const KeyboardAwareScrollView = ({
       style={[{ flex: 1 }, style]}
       behavior={getKeyboardBehavior()}
       keyboardVerticalOffset={getKeyboardVerticalOffset()}
-      enabled={Platform.OS === 'ios'}
+      enabled={Platform.OS === "ios"}
     >
       <AnimatedContainer>
         <ScrollView
@@ -310,14 +323,14 @@ const KeyboardAwareScrollView = ({
           onScroll={handleScroll}
           scrollEventThrottle={16}
           // Accessibility props
-          accessible={true}
+          accessible
           accessibilityLabel={
-            accessibilityLabel || 
-            `${isTherapyForm ? 'Therapy' : isMoodTracker ? 'Mood tracking' : isAssessment ? 'Assessment' : ''} form container`
+            accessibilityLabel ||
+            `${isTherapyForm ? "Therapy" : isMoodTracker ? "Mood tracking" : isAssessment ? "Assessment" : ""} form container`
           }
           accessibilityHint={
-            accessibilityHint || 
-            'Scrollable container with form inputs. Swipe up or down to navigate.'
+            accessibilityHint ||
+            "Scrollable container with form inputs. Swipe up or down to navigate."
           }
           accessibilityRole="scrollview"
           testID={testID}
@@ -331,33 +344,29 @@ const KeyboardAwareScrollView = ({
 };
 
 // Enhanced Input wrapper for automatic keyboard handling
-export const KeyboardAwareInput = React.forwardRef(({
-  onFocus,
-  onBlur,
-  onFocusChange,
-  children,
-  ...props
-}, ref) => {
-  const inputRef = useRef(ref);
+export const KeyboardAwareInput = React.forwardRef(
+  ({ onFocus, onBlur, onFocusChange, children, ...props }, ref) => {
+    const inputRef = useRef(ref);
 
-  const handleFocus = (event) => {
-    onFocus?.(event);
-    onFocusChange?.(inputRef.current, true);
-  };
+    const handleFocus = (event) => {
+      onFocus?.(event);
+      onFocusChange?.(inputRef.current, true);
+    };
 
-  const handleBlur = (event) => {
-    onBlur?.(event);
-    onFocusChange?.(inputRef.current, false);
-  };
+    const handleBlur = (event) => {
+      onBlur?.(event);
+      onFocusChange?.(inputRef.current, false);
+    };
 
-  return React.cloneElement(children, {
-    ref: inputRef,
-    onFocus: handleFocus,
-    onBlur: handleBlur,
-    ...props,
-  });
-});
+    return React.cloneElement(children, {
+      ref: inputRef,
+      onFocus: handleFocus,
+      onBlur: handleBlur,
+      ...props,
+    });
+  },
+);
 
-KeyboardAwareInput.displayName = 'KeyboardAwareInput';
+KeyboardAwareInput.displayName = "KeyboardAwareInput";
 
 export default KeyboardAwareScrollView;

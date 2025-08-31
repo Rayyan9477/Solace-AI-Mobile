@@ -188,15 +188,16 @@ const onboardingData = [
     colorScheme: "empathy", // Warm orange from therapeutic palette
     features: [
       "AI-powered emotional intelligence",
-      "Personalized mental health insights", 
+      "Personalized mental health insights",
       "Private & secure conversations",
-      "Evidence-based therapeutic approaches"
-    ]
+      "Evidence-based therapeutic approaches",
+    ],
   },
   {
     id: 2,
     title: "Personalize Your Mental Health State",
-    description: "Advanced AI that understands your unique emotional patterns and provides tailored support",
+    description:
+      "Advanced AI that understands your unique emotional patterns and provides tailored support",
     subtitle: "AI that truly understands you",
     icon: "heart",
     colorScheme: "kind", // Purple from therapeutic palette
@@ -204,13 +205,14 @@ const onboardingData = [
       "Personalized AI therapy sessions",
       "Adaptive mood recognition",
       "Custom wellness recommendations",
-      "Individual care plans"
-    ]
+      "Individual care plans",
+    ],
   },
   {
     id: 3,
     title: "Intelligent Mood Tracking",
-    description: "Smart mood analytics with AI emotion insights that help you understand your mental wellness patterns",
+    description:
+      "Smart mood analytics with AI emotion insights that help you understand your mental wellness patterns",
     subtitle: "AI-powered emotional insights",
     icon: "mindfulness",
     colorScheme: "calming", // Blue from therapeutic palette
@@ -218,13 +220,14 @@ const onboardingData = [
       "Advanced mood pattern analysis",
       "AI emotion detection",
       "Predictive wellness insights",
-      "Progress tracking & trends"
-    ]
+      "Progress tracking & trends",
+    ],
   },
   {
     id: 4,
     title: "AI Mental Journaling & Therapy",
-    description: "Intelligent journaling with AI therapy chatbot for deep emotional processing and growth",
+    description:
+      "Intelligent journaling with AI therapy chatbot for deep emotional processing and growth",
     subtitle: "Your AI therapy companion",
     icon: "therapy",
     colorScheme: "nurturing", // Green from therapeutic palette
@@ -232,13 +235,14 @@ const onboardingData = [
       "AI-guided journaling prompts",
       "24/7 therapy chatbot access",
       "Emotional processing support",
-      "Therapeutic writing insights"
-    ]
+      "Therapeutic writing insights",
+    ],
   },
   {
     id: 5,
     title: "Mindful Resources for Happiness",
-    description: "Curated wellness resources and mindfulness tools that bring joy and balance to your life",
+    description:
+      "Curated wellness resources and mindfulness tools that bring joy and balance to your life",
     subtitle: "Discover your path to happiness",
     icon: "insights",
     colorScheme: "zen", // Yellow from therapeutic palette
@@ -246,13 +250,14 @@ const onboardingData = [
       "Personalized mindfulness exercises",
       "Guided meditation library",
       "Wellness activity recommendations",
-      "Happiness tracking tools"
-    ]
+      "Happiness tracking tools",
+    ],
   },
   {
     id: 6,
     title: "Loving & Supportive Community",
-    description: "Connect with others on similar journeys in a safe, supportive environment built for healing",
+    description:
+      "Connect with others on similar journeys in a safe, supportive environment built for healing",
     subtitle: "You're never alone in your journey",
     icon: "journal",
     colorScheme: "grounding", // Purple from therapeutic palette
@@ -260,21 +265,49 @@ const onboardingData = [
       "Anonymous peer support groups",
       "Moderated community discussions",
       "Shared wellness experiences",
-      "Professional community guidance"
-    ]
+      "Professional community guidance",
+    ],
   },
 ];
 
 // Therapeutic gradient mappings
 const getTherapeuticGradients = (colorScheme, colors) => {
   const gradientMap = {
-    empathy: [colors.therapeutic.empathy[50], colors.therapeutic.empathy[100], colors.therapeutic.empathy[200]],
-    kind: [colors.therapeutic.kind[50], colors.therapeutic.kind[100], colors.therapeutic.kind[200]],
-    calming: [colors.therapeutic.calming[50], colors.therapeutic.calming[100], colors.therapeutic.calming[200]],
-    nurturing: [colors.therapeutic.nurturing[50], colors.therapeutic.nurturing[100], colors.therapeutic.nurturing[200]],
-    zen: [colors.therapeutic.zen[50], colors.therapeutic.zen[100], colors.therapeutic.zen[200]],
-    grounding: [colors.therapeutic.grounding[50], colors.therapeutic.grounding[100], colors.therapeutic.grounding[200]],
-    optimistic: [colors.therapeutic.optimistic[50], colors.therapeutic.optimistic[100], colors.therapeutic.optimistic[200]],
+    empathy: [
+      colors.therapeutic.empathy[50],
+      colors.therapeutic.empathy[100],
+      colors.therapeutic.empathy[200],
+    ],
+    kind: [
+      colors.therapeutic.kind[50],
+      colors.therapeutic.kind[100],
+      colors.therapeutic.kind[200],
+    ],
+    calming: [
+      colors.therapeutic.calming[50],
+      colors.therapeutic.calming[100],
+      colors.therapeutic.calming[200],
+    ],
+    nurturing: [
+      colors.therapeutic.nurturing[50],
+      colors.therapeutic.nurturing[100],
+      colors.therapeutic.nurturing[200],
+    ],
+    zen: [
+      colors.therapeutic.zen[50],
+      colors.therapeutic.zen[100],
+      colors.therapeutic.zen[200],
+    ],
+    grounding: [
+      colors.therapeutic.grounding[50],
+      colors.therapeutic.grounding[100],
+      colors.therapeutic.grounding[200],
+    ],
+    optimistic: [
+      colors.therapeutic.optimistic[50],
+      colors.therapeutic.optimistic[100],
+      colors.therapeutic.optimistic[200],
+    ],
   };
 
   return gradientMap[colorScheme] || gradientMap.calming;
@@ -349,7 +382,7 @@ const ProfessionalOnboardingScreen = () => {
 
   const handlePrevious = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    
+
     if (currentIndex > 0) {
       const prevIndex = currentIndex - 1;
       setCurrentIndex(prevIndex);
@@ -363,7 +396,7 @@ const ProfessionalOnboardingScreen = () => {
   const handleComplete = () => {
     // Success haptic feedback
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    
+
     Animated.timing(fadeAnim, {
       toValue: 0,
       duration: 400,
@@ -382,13 +415,22 @@ const ProfessionalOnboardingScreen = () => {
   };
 
   const currentData = onboardingData[currentIndex];
-  const gradientColors = getTherapeuticGradients(currentData.colorScheme, theme.colors);
-  const iconColor = theme.colors.therapeutic[currentData.colorScheme]?.[600] || theme.colors.primary[600];
+  const gradientColors = getTherapeuticGradients(
+    currentData.colorScheme,
+    theme.colors,
+  );
+  const iconColor =
+    theme.colors.therapeutic[currentData.colorScheme]?.[600] ||
+    theme.colors.primary[600];
 
   return (
     <>
       <StatusBar
-        barStyle={theme.colors.background.primary === "#FFFFFF" ? "dark-content" : "light-content"}
+        barStyle={
+          theme.colors.background.primary === "#FFFFFF"
+            ? "dark-content"
+            : "light-content"
+        }
         backgroundColor="transparent"
         translucent
       />
@@ -404,9 +446,14 @@ const ProfessionalOnboardingScreen = () => {
             decelerationRate="fast"
           >
             {onboardingData.map((item, index) => {
-              const itemGradientColors = getTherapeuticGradients(item.colorScheme, theme.colors);
-              const itemIconColor = theme.colors.therapeutic[item.colorScheme]?.[600] || theme.colors.primary[600];
-              
+              const itemGradientColors = getTherapeuticGradients(
+                item.colorScheme,
+                theme.colors,
+              );
+              const itemIconColor =
+                theme.colors.therapeutic[item.colorScheme]?.[600] ||
+                theme.colors.primary[600];
+
               return (
                 <SlideContainer key={item.id}>
                   {/* Illustration with Gradient Background */}
@@ -419,8 +466,8 @@ const ProfessionalOnboardingScreen = () => {
                         width: 200,
                         height: 200,
                         borderRadius: 100,
-                        justifyContent: 'center',
-                        alignItems: 'center',
+                        justifyContent: "center",
+                        alignItems: "center",
                       }}
                     >
                       <MentalHealthIcon
@@ -511,7 +558,9 @@ const ProfessionalOnboardingScreen = () => {
                 active={index === currentIndex}
                 backgroundColor={
                   index === currentIndex
-                    ? theme.colors.therapeutic[currentData.colorScheme]?.[500] || theme.colors.primary[500]
+                    ? theme.colors.therapeutic[
+                        currentData.colorScheme
+                      ]?.[500] || theme.colors.primary[500]
                     : theme.colors.gray[300]
                 }
               />
@@ -538,7 +587,9 @@ const ProfessionalOnboardingScreen = () => {
               <SkipButton
                 backgroundColor={theme.colors.gray[50]}
                 onPress={() => {
-                  Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                  Haptics.notificationAsync(
+                    Haptics.NotificationFeedbackType.Success,
+                  );
                   handleComplete();
                 }}
                 accessibilityLabel="Skip onboarding"

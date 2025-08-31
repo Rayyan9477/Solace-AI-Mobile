@@ -4,16 +4,22 @@
  * Based on modern design principles and accessibility best practices
  */
 
-import React, { useState, useEffect } from 'react';
-import { View, Dimensions, StyleSheet, Platform, ScrollView, Animated } from 'react-native';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { spacing } from '../../shared/theme/theme';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Dimensions,
+  StyleSheet,
+  Platform,
+  ScrollView,
+  Animated,
+} from "react-native";
+
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { spacing } from "../../shared/theme/theme";
 
 // Simple animated wrappers to replace TherapeuticAnimatedComponents
 const SimpleAnimatedView = ({ children, delay = 0, style = {} }) => (
-  <Animated.View style={[style]}>
-    {children}
-  </Animated.View>
+  <Animated.View style={[style]}>{children}</Animated.View>
 );
 
 // Create aliases for compatibility
@@ -36,14 +42,14 @@ export const LAYOUT_CONFIGS = {
     columns: 1,
     padding: spacing.md,
     gap: spacing.md,
-    maxWidth: '100%',
+    maxWidth: "100%",
     cardPadding: spacing.md,
   },
   tablet: {
     columns: 2,
     padding: spacing.lg,
     gap: spacing.lg,
-    maxWidth: '100%',
+    maxWidth: "100%",
     cardPadding: spacing.lg,
   },
   desktop: {
@@ -64,11 +70,11 @@ export const LAYOUT_CONFIGS = {
 
 // Hook for responsive layout
 export const useResponsiveLayout = () => {
-  const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-  const [screenType, setScreenType] = useState('mobile');
+  const [dimensions, setDimensions] = useState(Dimensions.get("window"));
+  const [screenType, setScreenType] = useState("mobile");
 
   useEffect(() => {
-    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+    const subscription = Dimensions.addEventListener("change", ({ window }) => {
       setDimensions(window);
     });
 
@@ -77,22 +83,22 @@ export const useResponsiveLayout = () => {
 
   useEffect(() => {
     const { width } = dimensions;
-    
+
     if (width >= BREAKPOINTS.wide) {
-      setScreenType('wide');
+      setScreenType("wide");
     } else if (width >= BREAKPOINTS.desktop) {
-      setScreenType('desktop');
+      setScreenType("desktop");
     } else if (width >= BREAKPOINTS.tablet) {
-      setScreenType('tablet');
+      setScreenType("tablet");
     } else {
-      setScreenType('mobile');
+      setScreenType("mobile");
     }
   }, [dimensions]);
 
   const config = LAYOUT_CONFIGS[screenType];
-  const isMobile = screenType === 'mobile';
-  const isTablet = screenType === 'tablet';
-  const isDesktop = screenType === 'desktop' || screenType === 'wide';
+  const isMobile = screenType === "mobile";
+  const isTablet = screenType === "tablet";
+  const isDesktop = screenType === "desktop" || screenType === "wide";
 
   return {
     dimensions,
@@ -102,17 +108,17 @@ export const useResponsiveLayout = () => {
     isTablet,
     isDesktop,
     breakpoint: {
-      mobile: screenType === 'mobile',
-      tablet: screenType === 'tablet',
-      desktop: screenType === 'desktop',
-      wide: screenType === 'wide',
+      mobile: screenType === "mobile",
+      tablet: screenType === "tablet",
+      desktop: screenType === "desktop",
+      wide: screenType === "wide",
     },
   };
 };
 
 // Responsive container component
-export const ResponsiveContainer = ({ 
-  children, 
+export const ResponsiveContainer = ({
+  children,
   style = {},
   centerContent = false,
   maxWidth,
@@ -127,23 +133,19 @@ export const ResponsiveContainer = ({
       backgroundColor: theme.colors.background.primary,
       padding: padding || config.padding,
       maxWidth: maxWidth || config.maxWidth,
-      width: '100%',
+      width: "100%",
     },
     centerContent && styles.centered,
-    Platform.OS === 'web' && dimensions.width > 1024 && styles.webCentered,
+    Platform.OS === "web" && dimensions.width > 1024 && styles.webCentered,
     style,
   ];
 
-  return (
-    <View style={containerStyles}>
-      {children}
-    </View>
-  );
+  return <View style={containerStyles}>{children}</View>;
 };
 
 // Responsive grid layout for cards and components
-export const ResponsiveGrid = ({ 
-  children, 
+export const ResponsiveGrid = ({
+  children,
   columns,
   gap,
   style = {},
@@ -159,33 +161,33 @@ export const ResponsiveGrid = ({
     {
       gap: gridGap,
     },
-    Platform.OS === 'web' && {
-      display: 'grid',
+    Platform.OS === "web" && {
+      display: "grid",
       gridTemplateColumns: `repeat(${gridColumns}, 1fr)`,
-      gridGap: gridGap,
+      gridGap,
     },
     style,
   ];
 
   // For React Native, we need to handle grid layout manually
-  if (Platform.OS !== 'web') {
+  if (Platform.OS !== "web") {
     const rows = [];
     const childrenArray = React.Children.toArray(children);
-    
+
     for (let i = 0; i < childrenArray.length; i += gridColumns) {
       const rowChildren = childrenArray.slice(i, i + gridColumns);
-      
+
       rows.push(
         <View key={i} style={styles.gridRow}>
           {rowChildren.map((child, index) => (
-            <View 
-              key={index} 
+            <View
+              key={index}
               style={[
-                styles.gridItem, 
-                { 
+                styles.gridItem,
+                {
                   flex: 1,
                   marginRight: index < rowChildren.length - 1 ? gridGap : 0,
-                }
+                },
               ]}
             >
               {animated ? (
@@ -201,24 +203,19 @@ export const ResponsiveGrid = ({
             </View>
           ))}
           {/* Fill empty spaces in the last row */}
-          {rowChildren.length < gridColumns && 
-            Array.from({ length: gridColumns - rowChildren.length }).map((_, index) => (
-              <View key={`empty-${index}`} style={{ flex: 1 }} />
-            ))
-          }
-        </View>
+          {rowChildren.length < gridColumns &&
+            Array.from({ length: gridColumns - rowChildren.length }).map(
+              (_, index) => <View key={`empty-${index}`} style={{ flex: 1 }} />,
+            )}
+        </View>,
       );
     }
 
-    return (
-      <View style={[styles.grid, style]}>
-        {rows}
-      </View>
-    );
+    return <View style={[styles.grid, style]}>{rows}</View>;
   }
 
   // Web grid layout
-  const childrenWithAnimation = animated 
+  const childrenWithAnimation = animated
     ? React.Children.map(children, (child, index) => (
         <TherapeuticAnimatedComponents.StaggeredEntrance
           key={index}
@@ -230,20 +227,11 @@ export const ResponsiveGrid = ({
       ))
     : children;
 
-  return (
-    <div style={gridStyles}>
-      {childrenWithAnimation}
-    </div>
-  );
+  return <div style={gridStyles}>{childrenWithAnimation}</div>;
 };
 
 // Dashboard layout specifically designed for mental health app
-export const DashboardLayout = ({ 
-  children,
-  header,
-  sidebar,
-  style = {},
-}) => {
+export const DashboardLayout = ({ children, header, sidebar, style = {} }) => {
   const { theme } = useTheme();
   const { isMobile, isDesktop, config } = useResponsiveLayout();
 
@@ -251,23 +239,19 @@ export const DashboardLayout = ({
     // Mobile layout: vertical stack
     return (
       <ResponsiveContainer style={style}>
-        <ScrollView 
+        <ScrollView
           style={styles.mobileScroll}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.mobileContent}
         >
           {header && (
             <TherapeuticAnimatedComponents.MoodFadeIn delay={0}>
-              <View style={styles.mobileHeader}>
-                {header}
-              </View>
+              <View style={styles.mobileHeader}>{header}</View>
             </TherapeuticAnimatedComponents.MoodFadeIn>
           )}
-          
+
           <TherapeuticAnimatedComponents.MoodFadeIn delay={200}>
-            <View style={styles.mobileMain}>
-              {children}
-            </View>
+            <View style={styles.mobileMain}>{children}</View>
           </TherapeuticAnimatedComponents.MoodFadeIn>
         </ScrollView>
       </ResponsiveContainer>
@@ -280,22 +264,25 @@ export const DashboardLayout = ({
       <ResponsiveContainer style={[styles.desktopLayout, style]}>
         <View style={styles.desktopContainer}>
           <TherapeuticAnimatedComponents.MoodFadeIn delay={0}>
-            <View style={[styles.sidebar, { backgroundColor: theme.colors.background.secondary }]}>
+            <View
+              style={[
+                styles.sidebar,
+                { backgroundColor: theme.colors.background.secondary },
+              ]}
+            >
               {sidebar}
             </View>
           </TherapeuticAnimatedComponents.MoodFadeIn>
-          
+
           <View style={styles.desktopMain}>
             {header && (
               <TherapeuticAnimatedComponents.MoodFadeIn delay={100}>
-                <View style={styles.desktopHeader}>
-                  {header}
-                </View>
+                <View style={styles.desktopHeader}>{header}</View>
               </TherapeuticAnimatedComponents.MoodFadeIn>
             )}
-            
+
             <TherapeuticAnimatedComponents.MoodFadeIn delay={200}>
-              <ScrollView 
+              <ScrollView
                 style={styles.desktopScroll}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.desktopContent}
@@ -315,14 +302,12 @@ export const DashboardLayout = ({
       <View style={styles.tabletContainer}>
         {header && (
           <TherapeuticAnimatedComponents.MoodFadeIn delay={0}>
-            <View style={styles.tabletHeader}>
-              {header}
-            </View>
+            <View style={styles.tabletHeader}>{header}</View>
           </TherapeuticAnimatedComponents.MoodFadeIn>
         )}
-        
+
         <TherapeuticAnimatedComponents.MoodFadeIn delay={100}>
-          <ScrollView 
+          <ScrollView
             style={styles.tabletScroll}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.tabletContent}
@@ -336,7 +321,7 @@ export const DashboardLayout = ({
 };
 
 // Mood tracking specific layout
-export const MoodTrackingLayout = ({ 
+export const MoodTrackingLayout = ({
   children,
   progress,
   onNext,
@@ -351,15 +336,13 @@ export const MoodTrackingLayout = ({
         {/* Progress indicator */}
         {progress && (
           <TherapeuticAnimatedComponents.MoodFadeIn delay={0}>
-            <View style={styles.progressContainer}>
-              {progress}
-            </View>
+            <View style={styles.progressContainer}>{progress}</View>
           </TherapeuticAnimatedComponents.MoodFadeIn>
         )}
 
         {/* Main content */}
         <TherapeuticAnimatedComponents.MoodFadeIn delay={200}>
-          <ScrollView 
+          <ScrollView
             style={styles.moodTrackingScroll}
             contentContainerStyle={[
               styles.moodTrackingContent,
@@ -386,7 +369,7 @@ export const MoodTrackingLayout = ({
 };
 
 // Therapy session layout
-export const TherapySessionLayout = ({ 
+export const TherapySessionLayout = ({
   children,
   chatHeader,
   chatInput,
@@ -401,10 +384,12 @@ export const TherapySessionLayout = ({
         {/* Chat header */}
         {chatHeader && (
           <TherapeuticAnimatedComponents.MoodFadeIn delay={0}>
-            <View style={[
-              styles.therapyHeader, 
-              { backgroundColor: theme.colors.background.secondary }
-            ]}>
+            <View
+              style={[
+                styles.therapyHeader,
+                { backgroundColor: theme.colors.background.secondary },
+              ]}
+            >
               {chatHeader}
             </View>
           </TherapeuticAnimatedComponents.MoodFadeIn>
@@ -412,7 +397,7 @@ export const TherapySessionLayout = ({
 
         {/* Chat messages */}
         <TherapeuticAnimatedComponents.MoodFadeIn delay={100}>
-          <ScrollView 
+          <ScrollView
             style={styles.therapyMessages}
             contentContainerStyle={[
               styles.therapyMessagesContent,
@@ -427,10 +412,12 @@ export const TherapySessionLayout = ({
         {/* Chat input */}
         {chatInput && (
           <TherapeuticAnimatedComponents.MoodFadeIn delay={200}>
-            <View style={[
-              styles.therapyInput, 
-              { backgroundColor: theme.colors.background.primary }
-            ]}>
+            <View
+              style={[
+                styles.therapyInput,
+                { backgroundColor: theme.colors.background.primary },
+              ]}
+            >
               {chatInput}
             </View>
           </TherapeuticAnimatedComponents.MoodFadeIn>
@@ -443,34 +430,34 @@ export const TherapySessionLayout = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
+    width: "100%",
   },
   centered: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   webCentered: {
     ...Platform.select({
       web: {
-        marginLeft: 'auto',
-        marginRight: 'auto',
+        marginLeft: "auto",
+        marginRight: "auto",
       },
     }),
   },
   grid: {
-    width: '100%',
+    width: "100%",
   },
   gridRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: spacing.md,
   },
   gridItem: {
     flex: 1,
   },
   animatedGridItem: {
-    width: '100%',
+    width: "100%",
   },
-  
+
   // Mobile layouts
   mobileScroll: {
     flex: 1,
@@ -491,13 +478,13 @@ const styles = StyleSheet.create({
   },
   desktopContainer: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   sidebar: {
     width: 280,
     padding: spacing.lg,
     borderRightWidth: 1,
-    borderRightColor: '#E5E7EB',
+    borderRightColor: "#E5E7EB",
   },
   desktopMain: {
     flex: 1,
@@ -505,7 +492,7 @@ const styles = StyleSheet.create({
   desktopHeader: {
     padding: spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: "#E5E7EB",
   },
   desktopScroll: {
     flex: 1,
@@ -522,7 +509,7 @@ const styles = StyleSheet.create({
   tabletHeader: {
     padding: spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: "#E5E7EB",
   },
   tabletScroll: {
     flex: 1,
@@ -539,21 +526,21 @@ const styles = StyleSheet.create({
   progressContainer: {
     padding: spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: "#E5E7EB",
   },
   moodTrackingScroll: {
     flex: 1,
   },
   moodTrackingContent: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   moodTrackingNavigation: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     padding: spacing.md,
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: "#E5E7EB",
   },
 
   // Therapy session layout
@@ -566,7 +553,7 @@ const styles = StyleSheet.create({
   therapyHeader: {
     padding: spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: "#E5E7EB",
   },
   therapyMessages: {
     flex: 1,
@@ -577,7 +564,7 @@ const styles = StyleSheet.create({
   therapyInput: {
     padding: spacing.md,
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: "#E5E7EB",
   },
 });
 

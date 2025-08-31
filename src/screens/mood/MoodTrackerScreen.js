@@ -208,7 +208,13 @@ const MoodTrackerScreen = ({ navigation }) => {
                 variant="primary"
                 size="medium"
                 onPress={() => setShowMoodSelection(true)}
-                icon={<ThemedFreudIcon name="heart" size={16} color={freudTheme.colors.text.inverse} />}
+                icon={
+                  <ThemedFreudIcon
+                    name="heart"
+                    size={16}
+                    color={freudTheme.colors.text.inverse}
+                  />
+                }
                 iconPosition="left"
                 style={{ marginTop: freudTheme.spacing.md }}
               />
@@ -219,7 +225,13 @@ const MoodTrackerScreen = ({ navigation }) => {
               variant="primary"
               size="large"
               onPress={() => setShowMoodSelection(true)}
-              icon={<ThemedFreudIcon name="heart" size={20} color={freudTheme.colors.text.inverse} />}
+              icon={
+                <ThemedFreudIcon
+                  name="heart"
+                  size={20}
+                  color={freudTheme.colors.text.inverse}
+                />
+              }
               iconPosition="left"
             />
           )}
@@ -456,7 +468,13 @@ const MoodTrackerScreen = ({ navigation }) => {
             size="large"
             fullWidth
             onPress={saveMoodEntry}
-            icon={<ThemedFreudIcon name="heart" size={20} color={freudTheme.colors.text.inverse} />}
+            icon={
+              <ThemedFreudIcon
+                name="heart"
+                size={20}
+                color={freudTheme.colors.text.inverse}
+              />
+            }
             iconPosition="right"
             style={{ margin: freudTheme.spacing.lg }}
           />
@@ -470,10 +488,7 @@ const MoodTrackerScreen = ({ navigation }) => {
         theme.colors.dark.background.primary,
         theme.colors.dark.background.secondary,
       ]
-    : [
-        freudTheme.colors.green[20],
-        freudTheme.colors.green[10],
-      ];
+    : [freudTheme.colors.green[20], freudTheme.colors.green[10]];
 
   return (
     <SafeAreaView

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { BlurView } from "@react-native-community/blur";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,16 +7,23 @@ import {
   StyleSheet,
   Image,
   Dimensions,
-  Animated
-} from 'react-native';
-import { BlurView } from '@react-native-community/blur';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import FreudDesignSystem, { FreudColors, FreudComponents, FreudShadows, FreudBorderRadius, FreudSpacing, FreudTypography } from '../../shared/theme/FreudDesignSystem';
-import { MentalHealthIcon } from '../icons';
-import Button from './Button';
-import Tag from './Tag';
+  Animated,
+} from "react-native";
 
-const { width: screenWidth } = Dimensions.get('window');
+import FreudDesignSystem, {
+  FreudColors,
+  FreudComponents,
+  FreudShadows,
+  FreudBorderRadius,
+  FreudSpacing,
+  FreudTypography,
+} from "../../shared/theme/FreudDesignSystem";
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { MentalHealthIcon } from "../icons";
+import Button from "./Button";
+import Tag from "./Tag";
+
+const { width: screenWidth } = Dimensions.get("window");
 
 const Card = ({
   children,
@@ -25,9 +33,9 @@ const Card = ({
   image,
   icon,
   onPress,
-  therapeuticColor = 'calming',
-  variant = 'primary',
-  size = 'medium',
+  therapeuticColor = "calming",
+  variant = "primary",
+  size = "medium",
   fullWidth = false,
   style = {},
   contentStyle = {},
@@ -37,7 +45,7 @@ const Card = ({
   loading = false,
   glassmorphism = false,
   gradient = false,
-  elevation = 'sm',
+  elevation = "sm",
   accessibilityLabel,
   accessibilityHint,
   testID,
@@ -65,7 +73,9 @@ const Card = ({
   };
 
   const getCardStyles = () => {
-    const currentTheme = isDarkMode ? FreudDesignSystem.themes.dark : FreudDesignSystem.themes.light;
+    const currentTheme = isDarkMode
+      ? FreudDesignSystem.themes.dark
+      : FreudDesignSystem.themes.light;
     let baseStyle = {
       ...getSizeStyles(),
       ...styles.card,
@@ -73,21 +83,21 @@ const Card = ({
 
     // Apply Freud Design System styles
     switch (variant) {
-      case 'primary':
+      case "primary":
         baseStyle = {
           ...baseStyle,
           ...FreudComponents.card.primary,
           backgroundColor: currentTheme.colors.background.primary,
         };
         break;
-      case 'elevated':
+      case "elevated":
         baseStyle = {
           ...baseStyle,
           ...FreudComponents.card.elevated,
           backgroundColor: currentTheme.colors.background.primary,
         };
         break;
-      case 'outlined':
+      case "outlined":
         baseStyle = {
           ...baseStyle,
           ...FreudComponents.card.outlined,
@@ -95,7 +105,7 @@ const Card = ({
           borderColor: currentTheme.colors.border.primary,
         };
         break;
-      case 'therapeutic':
+      case "therapeutic":
         baseStyle = {
           ...baseStyle,
           ...FreudComponents.card.primary,
@@ -104,7 +114,7 @@ const Card = ({
           borderLeftColor: FreudColors.serenityGreen[60],
         };
         break;
-      case 'mindful':
+      case "mindful":
         baseStyle = {
           ...baseStyle,
           ...FreudComponents.card.primary,
@@ -113,7 +123,7 @@ const Card = ({
           borderLeftColor: FreudColors.mindfulBrown[60],
         };
         break;
-      case 'empathy':
+      case "empathy":
         baseStyle = {
           ...baseStyle,
           ...FreudComponents.card.primary,
@@ -133,15 +143,15 @@ const Card = ({
     if (glassmorphism) {
       baseStyle = {
         ...baseStyle,
-        backgroundColor: 'rgba(255, 255, 255, 0.25)',
+        backgroundColor: "rgba(255, 255, 255, 0.25)",
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.3)',
-        backdropFilter: 'blur(10px)',
+        borderColor: "rgba(255, 255, 255, 0.3)",
+        backdropFilter: "blur(10px)",
       };
     }
 
     if (fullWidth) {
-      baseStyle.width = '100%';
+      baseStyle.width = "100%";
     }
 
     if (disabled) {
@@ -157,20 +167,20 @@ const Card = ({
 
   const getSizeStyles = () => {
     switch (size) {
-      case 'small':
+      case "small":
         return {
           padding: FreudSpacing[3],
           borderRadius: FreudBorderRadius.lg,
           minHeight: 80,
         };
-      
-      case 'large':
+
+      case "large":
         return {
           padding: FreudSpacing[6],
-          borderRadius: FreudBorderRadius['2xl'],
+          borderRadius: FreudBorderRadius["2xl"],
           minHeight: 120,
         };
-      
+
       default: // medium
         return {
           padding: FreudSpacing[4],
@@ -184,19 +194,15 @@ const Card = ({
     if (!image) return null;
 
     const imageStyle = {
-      width: '100%',
-      height: size === 'small' ? 80 : size === 'large' ? 140 : 100,
+      width: "100%",
+      height: size === "small" ? 80 : size === "large" ? 140 : 100,
       borderRadius: getSizeStyles().borderRadius - 4,
       marginBottom: 12,
     };
 
-    if (typeof image === 'string') {
+    if (typeof image === "string") {
       return (
-        <Image
-          source={{ uri: image }}
-          style={imageStyle}
-          resizeMode="cover"
-        />
+        <Image source={{ uri: image }} style={imageStyle} resizeMode="cover" />
       );
     }
 
@@ -208,31 +214,38 @@ const Card = ({
   const renderHeader = () => {
     if (!title && !subtitle && !icon) return null;
 
-    const currentTheme = isDarkMode ? FreudDesignSystem.themes.dark : FreudDesignSystem.themes.light;
+    const currentTheme = isDarkMode
+      ? FreudDesignSystem.themes.dark
+      : FreudDesignSystem.themes.light;
 
     return (
       <View style={[styles.header, headerStyle]}>
         {icon && (
-          <View style={[styles.iconContainer, {
-            backgroundColor: FreudColors.serenityGreen[10],
-            borderRadius: FreudBorderRadius.lg,
-            padding: FreudSpacing[2],
-          }]}>
-            {typeof icon === 'string' ? (
+          <View
+            style={[
+              styles.iconContainer,
+              {
+                backgroundColor: FreudColors.serenityGreen[10],
+                borderRadius: FreudBorderRadius.lg,
+                padding: FreudSpacing[2],
+              },
+            ]}
+          >
+            {typeof icon === "string" ? (
               <MentalHealthIcon
                 name={icon}
-                size={size === 'small' ? 20 : size === 'large' ? 28 : 24}
+                size={size === "small" ? 20 : size === "large" ? 28 : 24}
                 color={FreudColors.mindfulBrown[70]}
               />
             ) : (
               React.cloneElement(icon, {
-                size: size === 'small' ? 20 : size === 'large' ? 28 : 24,
+                size: size === "small" ? 20 : size === "large" ? 28 : 24,
                 color: FreudColors.mindfulBrown[70],
               })
             )}
           </View>
         )}
-        
+
         <View style={styles.titleContainer}>
           {title && (
             <Text
@@ -240,10 +253,21 @@ const Card = ({
                 styles.title,
                 {
                   color: currentTheme.colors.text.primary,
-                  fontSize: size === 'small' ? FreudTypography.sizes.base : size === 'large' ? FreudTypography.sizes.xl : FreudTypography.sizes.lg,
+                  fontSize:
+                    size === "small"
+                      ? FreudTypography.sizes.base
+                      : size === "large"
+                        ? FreudTypography.sizes.xl
+                        : FreudTypography.sizes.lg,
                   fontFamily: FreudTypography.fontFamily.primary,
                   fontWeight: FreudTypography.weights.semiBold,
-                  lineHeight: (size === 'small' ? FreudTypography.sizes.base : size === 'large' ? FreudTypography.sizes.xl : FreudTypography.sizes.lg) * FreudTypography.lineHeights.normal,
+                  lineHeight:
+                    (size === "small"
+                      ? FreudTypography.sizes.base
+                      : size === "large"
+                        ? FreudTypography.sizes.xl
+                        : FreudTypography.sizes.lg) *
+                    FreudTypography.lineHeights.normal,
                 },
               ]}
               numberOfLines={2}
@@ -251,17 +275,28 @@ const Card = ({
               {title}
             </Text>
           )}
-          
+
           {subtitle && (
             <Text
               style={[
                 styles.subtitle,
                 {
                   color: currentTheme.colors.text.secondary,
-                  fontSize: size === 'small' ? FreudTypography.sizes.xs : size === 'large' ? FreudTypography.sizes.base : FreudTypography.sizes.sm,
+                  fontSize:
+                    size === "small"
+                      ? FreudTypography.sizes.xs
+                      : size === "large"
+                        ? FreudTypography.sizes.base
+                        : FreudTypography.sizes.sm,
                   fontFamily: FreudTypography.fontFamily.primary,
                   fontWeight: FreudTypography.weights.normal,
-                  lineHeight: (size === 'small' ? FreudTypography.sizes.xs : size === 'large' ? FreudTypography.sizes.base : FreudTypography.sizes.sm) * FreudTypography.lineHeights.normal,
+                  lineHeight:
+                    (size === "small"
+                      ? FreudTypography.sizes.xs
+                      : size === "large"
+                        ? FreudTypography.sizes.base
+                        : FreudTypography.sizes.sm) *
+                    FreudTypography.lineHeights.normal,
                   marginTop: FreudSpacing[1],
                 },
               ]}
@@ -284,10 +319,10 @@ const Card = ({
           styles.description,
           {
             color: theme.colors.text.secondary,
-            fontSize: size === 'small' ? 12 : size === 'large' ? 16 : 14,
+            fontSize: size === "small" ? 12 : size === "large" ? 16 : 14,
           },
         ]}
-        numberOfLines={size === 'small' ? 2 : size === 'large' ? 4 : 3}
+        numberOfLines={size === "small" ? 2 : size === "large" ? 4 : 3}
       >
         {description}
       </Text>
@@ -297,11 +332,7 @@ const Card = ({
   const renderContent = () => {
     if (!children) return null;
 
-    return (
-      <View style={[styles.content, contentStyle]}>
-        {children}
-      </View>
-    );
+    return <View style={[styles.content, contentStyle]}>{children}</View>;
   };
 
   const CardWrapper = ({ children }) => {
@@ -311,17 +342,15 @@ const Card = ({
           style={getCardStyles()}
           blurType={isDarkMode ? "dark" : "light"}
           blurAmount={10}
-          reducedTransparencyFallbackColor={isDarkMode ? "rgba(0, 0, 0, 0.8)" : "rgba(255, 255, 255, 0.8)"}
+          reducedTransparencyFallbackColor={
+            isDarkMode ? "rgba(0, 0, 0, 0.8)" : "rgba(255, 255, 255, 0.8)"
+          }
         >
           {children}
         </BlurView>
       );
     }
-    return (
-      <View style={getCardStyles()}>
-        {children}
-      </View>
-    );
+    return <View style={getCardStyles()}>{children}</View>;
   };
 
   const CardContent = () => (
@@ -357,13 +386,7 @@ const Card = ({
 };
 
 // Card Header Component
-export const CardHeader = ({
-  title,
-  subtitle,
-  icon,
-  action,
-  style = {},
-}) => {
+export const CardHeader = ({ title, subtitle, icon, action, style = {} }) => {
   const { theme } = useTheme();
 
   return (
@@ -371,33 +394,43 @@ export const CardHeader = ({
       <View style={styles.cardHeaderLeft}>
         {icon && (
           <View style={styles.cardHeaderIcon}>
-            {typeof icon === 'string' ? (
-              <MentalHealthIcon name={icon} size={24} color={theme.colors.text.primary} />
+            {typeof icon === "string" ? (
+              <MentalHealthIcon
+                name={icon}
+                size={24}
+                color={theme.colors.text.primary}
+              />
             ) : (
               icon
             )}
           </View>
         )}
-        
+
         <View style={styles.cardHeaderText}>
           {title && (
-            <Text style={[styles.cardHeaderTitle, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.cardHeaderTitle,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               {title}
             </Text>
           )}
           {subtitle && (
-            <Text style={[styles.cardHeaderSubtitle, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[
+                styles.cardHeaderSubtitle,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
               {subtitle}
             </Text>
           )}
         </View>
       </View>
-      
-      {action && (
-        <View style={styles.cardHeaderAction}>
-          {action}
-        </View>
-      )}
+
+      {action && <View style={styles.cardHeaderAction}>{action}</View>}
     </View>
   );
 };
@@ -406,7 +439,7 @@ export const CardHeader = ({
 export const CardFooter = ({
   children,
   actions,
-  orientation = 'horizontal',
+  orientation = "horizontal",
   style = {},
 }) => {
   const renderActions = () => {
@@ -417,8 +450,8 @@ export const CardFooter = ({
         style={[
           styles.cardFooterActions,
           {
-            flexDirection: orientation === 'horizontal' ? 'row' : 'column',
-            gap: orientation === 'horizontal' ? 12 : 8,
+            flexDirection: orientation === "horizontal" ? "row" : "column",
+            gap: orientation === "horizontal" ? 12 : 8,
           },
         ]}
       >
@@ -450,14 +483,12 @@ export const EmpathyCard = (props) => (
   <Card {...props} variant="empathy" elevation="md" />
 );
 
-export const GlassMorphCard = (props) => (
-  <Card {...props} glassmorphism={true} />
-);
+export const GlassMorphCard = (props) => <Card {...props} glassmorphism />;
 
 // Card Group for related cards
 export const CardGroup = ({
   children,
-  orientation = 'vertical',
+  orientation = "vertical",
   spacing = FreudSpacing[3],
   style = {},
 }) => {
@@ -466,7 +497,7 @@ export const CardGroup = ({
       style={[
         {
           gap: spacing,
-          flexDirection: orientation === 'horizontal' ? 'row' : 'column',
+          flexDirection: orientation === "horizontal" ? "row" : "column",
         },
         style,
       ]}
@@ -499,43 +530,36 @@ export const JournalCard = ({
       variant="therapeutic"
     >
       <View style={styles.journalHeader}>
-        <Text style={[styles.journalDate, { color: theme.colors.text.tertiary }]}>
+        <Text
+          style={[styles.journalDate, { color: theme.colors.text.tertiary }]}
+        >
           {date}
         </Text>
-        {mood && (
-          <Tag
-            label={mood}
-            therapeuticColor="calming"
-            size="small"
-          />
-        )}
+        {mood && <Tag label={mood} therapeuticColor="calming" size="small" />}
       </View>
-      
+
       <Text
         style={[styles.journalEntry, { color: theme.colors.text.primary }]}
         numberOfLines={4}
       >
         {entry}
       </Text>
-      
+
       {tags.length > 0 && (
         <View style={styles.journalTags}>
           {tags.slice(0, 3).map((tag, index) => (
-            <Tag
-              key={index}
-              label={tag}
-              variant="outline"
-              size="small"
-            />
+            <Tag key={index} label={tag} variant="outline" size="small" />
           ))}
           {tags.length > 3 && (
-            <Text style={[styles.moreTags, { color: theme.colors.text.tertiary }]}>
+            <Text
+              style={[styles.moreTags, { color: theme.colors.text.tertiary }]}
+            >
               +{tags.length - 3} more
             </Text>
           )}
         </View>
       )}
-      
+
       <CardFooter
         actions={[
           <Button
@@ -565,7 +589,7 @@ export const ProgressCard = ({
   value,
   maxValue = 100,
   change,
-  period = 'this week',
+  period = "this week",
   icon,
   ...props
 }) => {
@@ -582,42 +606,51 @@ export const ProgressCard = ({
       variant="elevated"
     >
       <View style={styles.progressValue}>
-        <Text style={[styles.progressNumber, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[styles.progressNumber, { color: theme.colors.text.primary }]}
+        >
           {value}
         </Text>
-        <Text style={[styles.progressMax, { color: theme.colors.text.tertiary }]}>
+        <Text
+          style={[styles.progressMax, { color: theme.colors.text.tertiary }]}
+        >
           / {maxValue}
         </Text>
       </View>
-      
+
       <View style={styles.progressBar}>
         <View
           style={[
             styles.progressFill,
             {
               width: `${Math.min(percentage, 100)}%`,
-              backgroundColor: getTherapeuticColor('grounding', 500),
+              backgroundColor: getTherapeuticColor("grounding", 500),
             },
           ]}
         />
       </View>
-      
+
       {change !== undefined && (
         <View style={styles.progressChange}>
           <MentalHealthIcon
             name="Heart"
             size={12}
-            color={isPositive ? theme.colors.success[500] : theme.colors.error[500]}
+            color={
+              isPositive ? theme.colors.success[500] : theme.colors.error[500]
+            }
           />
           <Text
             style={[
               styles.progressChangeText,
               {
-                color: isPositive ? theme.colors.success[500] : theme.colors.error[500],
+                color: isPositive
+                  ? theme.colors.success[500]
+                  : theme.colors.error[500],
               },
             ]}
           >
-            {isPositive ? '+' : ''}{change} {period}
+            {isPositive ? "+" : ""}
+            {change} {period}
           </Text>
         </View>
       )}
@@ -627,8 +660,8 @@ export const ProgressCard = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -638,24 +671,24 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 12,
   },
   iconContainer: {
     marginRight: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   titleContainer: {
     flex: 1,
   },
   title: {
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 2,
   },
   subtitle: {
-    fontWeight: '400',
+    fontWeight: "400",
   },
   description: {
     lineHeight: 20,
@@ -664,19 +697,19 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
   },
-  
+
   // Card Header Styles
   cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
+    borderBottomColor: "rgba(0,0,0,0.1)",
   },
   cardHeaderLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   cardHeaderIcon: {
@@ -687,7 +720,7 @@ const styles = StyleSheet.create({
   },
   cardHeaderTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   cardHeaderSubtitle: {
     fontSize: 14,
@@ -696,28 +729,28 @@ const styles = StyleSheet.create({
   cardHeaderAction: {
     marginLeft: 12,
   },
-  
+
   // Card Footer Styles
   cardFooter: {
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.1)',
+    borderTopColor: "rgba(0,0,0,0.1)",
   },
   cardFooterActions: {
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    alignItems: "center",
+    justifyContent: "flex-end",
   },
-  
+
   // Journal Card Styles
   journalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 12,
   },
   journalDate: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   journalEntry: {
     fontSize: 14,
@@ -725,25 +758,25 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   journalTags: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
     marginBottom: 12,
   },
   moreTags: {
     fontSize: 12,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
-  
+
   // Progress Card Styles
   progressValue: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
+    flexDirection: "row",
+    alignItems: "baseline",
     marginBottom: 8,
   },
   progressNumber: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   progressMax: {
     fontSize: 16,
@@ -751,21 +784,21 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 6,
-    backgroundColor: 'rgba(0,0,0,0.1)',
+    backgroundColor: "rgba(0,0,0,0.1)",
     borderRadius: 3,
     marginBottom: 8,
   },
   progressFill: {
-    height: '100%',
+    height: "100%",
     borderRadius: 3,
   },
   progressChange: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   progressChangeText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
     marginLeft: 4,
   },
 });

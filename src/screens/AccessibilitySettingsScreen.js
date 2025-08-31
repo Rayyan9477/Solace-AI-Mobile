@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import Slider from "@react-native-community/slider";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,30 +9,32 @@ import {
   TouchableOpacity,
   Alert,
   BackHandler,
-} from 'react-native';
-import Slider from '@react-native-community/slider';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { createFormInputAccessibility, createCardAccessibility } from '../../utils/accessibility';
+} from "react-native";
+
+import { useTheme } from "../../shared/theme/ThemeContext";
+import {
+  createFormInputAccessibility,
+  createCardAccessibility,
+} from "../../utils/accessibility";
 
 const AccessibilitySettingsScreen = ({ navigation }) => {
-
   // Handle hardware back button on Android
   React.useEffect(() => {
     const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
+      "hardwareBackPress",
       () => {
         if (navigation.canGoBack()) {
           navigation.goBack();
           return true;
         }
         return false;
-      }
+      },
     );
 
     return () => backHandler.remove();
   }, [navigation]);
-  const { 
-    theme, 
+  const {
+    theme,
     isReducedMotionEnabled,
     isHighContrastEnabled,
     fontSize,
@@ -52,7 +55,7 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
   });
 
   useEffect(() => {
-    setLocalSettings(prev => ({ ...prev, ...accessibilitySettings }));
+    setLocalSettings((prev) => ({ ...prev, ...accessibilitySettings }));
   }, [accessibilitySettings]);
 
   const handleSettingChange = (setting, value) => {
@@ -64,7 +67,7 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
   const handleFontSizeChange = (newSize) => {
     setFontSize(newSize);
     // TODO: Implement actual font scaling
-    Alert.alert('Font Size Changed', `Font size set to ${newSize}`);
+    Alert.alert("Font Size Changed", `Font size set to ${newSize}`);
   };
 
   const handleFontScaleChange = (scale) => {
@@ -73,13 +76,13 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
 
   const resetToDefaults = () => {
     Alert.alert(
-      'Reset Accessibility Settings',
-      'Are you sure you want to reset all accessibility settings to default values?',
+      "Reset Accessibility Settings",
+      "Are you sure you want to reset all accessibility settings to default values?",
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: "Cancel", style: "cancel" },
         {
-          text: 'Reset',
-          style: 'destructive',
+          text: "Reset",
+          style: "destructive",
           onPress: () => {
             const defaultSettings = {
               announceChanges: true,
@@ -89,38 +92,53 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
             };
             setLocalSettings(defaultSettings);
             updateAccessibilitySettings(defaultSettings);
-            setFontSize('normal');
+            setFontSize("normal");
             setFontScale(1);
           },
         },
-      ]
+      ],
     );
   };
 
   const getFontSizeLabel = (size) => {
     const labels = {
-      small: 'Small',
-      normal: 'Normal',
-      large: 'Large',
-      extraLarge: 'Extra Large',
+      small: "Small",
+      normal: "Normal",
+      large: "Large",
+      extraLarge: "Extra Large",
     };
-    return labels[size] || 'Normal';
+    return labels[size] || "Normal";
   };
 
-  const SettingCard = ({ title, description, children, accessibilityLabel }) => (
-    <View 
-      style={[styles.settingCard, { 
-        backgroundColor: theme.colors.background.secondary,
-        borderColor: theme.colors.gray[200],
-      }]}
+  const SettingCard = ({
+    title,
+    description,
+    children,
+    accessibilityLabel,
+  }) => (
+    <View
+      style={[
+        styles.settingCard,
+        {
+          backgroundColor: theme.colors.background.secondary,
+          borderColor: theme.colors.gray[200],
+        },
+      ]}
       {...createCardAccessibility(title, description)}
     >
       <View style={styles.settingHeader}>
-        <Text style={[styles.settingTitle, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[styles.settingTitle, { color: theme.colors.text.primary }]}
+        >
           {title}
         </Text>
         {description && (
-          <Text style={[styles.settingDescription, { color: theme.colors.text.secondary }]}>
+          <Text
+            style={[
+              styles.settingDescription,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
             {description}
           </Text>
         )}
@@ -130,14 +148,19 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
-      <ScrollView 
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background.primary },
+      ]}
+    >
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         accessibilityRole="scrollbar"
         accessibilityLabel="Accessibility settings"
       >
-        <Text 
+        <Text
           style={[styles.screenTitle, { color: theme.colors.text.primary }]}
           accessibilityRole="header"
           accessibilityLevel={1}
@@ -145,7 +168,7 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
           Accessibility Settings
         </Text>
 
-        <Text 
+        <Text
           style={[styles.subtitle, { color: theme.colors.text.secondary }]}
           accessibilityRole="text"
         >
@@ -159,33 +182,69 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
         >
           <View style={styles.statusContainer}>
             <View style={styles.statusItem}>
-              <Text style={[styles.statusLabel, { color: theme.colors.text.secondary }]}>
+              <Text
+                style={[
+                  styles.statusLabel,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
                 Screen Reader:
               </Text>
-              <Text style={[styles.statusValue, { 
-                color: isScreenReaderEnabled ? theme.colors.success[500] : theme.colors.text.secondary 
-              }]}>
-                {isScreenReaderEnabled ? 'Enabled' : 'Disabled'}
+              <Text
+                style={[
+                  styles.statusValue,
+                  {
+                    color: isScreenReaderEnabled
+                      ? theme.colors.success[500]
+                      : theme.colors.text.secondary,
+                  },
+                ]}
+              >
+                {isScreenReaderEnabled ? "Enabled" : "Disabled"}
               </Text>
             </View>
             <View style={styles.statusItem}>
-              <Text style={[styles.statusLabel, { color: theme.colors.text.secondary }]}>
+              <Text
+                style={[
+                  styles.statusLabel,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
                 Reduced Motion:
               </Text>
-              <Text style={[styles.statusValue, { 
-                color: isReducedMotionEnabled ? theme.colors.success[500] : theme.colors.text.secondary 
-              }]}>
-                {isReducedMotionEnabled ? 'Enabled' : 'Disabled'}
+              <Text
+                style={[
+                  styles.statusValue,
+                  {
+                    color: isReducedMotionEnabled
+                      ? theme.colors.success[500]
+                      : theme.colors.text.secondary,
+                  },
+                ]}
+              >
+                {isReducedMotionEnabled ? "Enabled" : "Disabled"}
               </Text>
             </View>
             <View style={styles.statusItem}>
-              <Text style={[styles.statusLabel, { color: theme.colors.text.secondary }]}>
+              <Text
+                style={[
+                  styles.statusLabel,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
                 High Contrast:
               </Text>
-              <Text style={[styles.statusValue, { 
-                color: isHighContrastEnabled ? theme.colors.success[500] : theme.colors.text.secondary 
-              }]}>
-                {isHighContrastEnabled ? 'Enabled' : 'Disabled'}
+              <Text
+                style={[
+                  styles.statusValue,
+                  {
+                    color: isHighContrastEnabled
+                      ? theme.colors.success[500]
+                      : theme.colors.text.secondary,
+                  },
+                ]}
+              >
+                {isHighContrastEnabled ? "Enabled" : "Disabled"}
               </Text>
             </View>
           </View>
@@ -197,21 +256,29 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
           description="Adjust font size and text display settings"
         >
           <View style={styles.settingRow}>
-            <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>Font Size Control</Text>
+            <Text
+              style={[
+                styles.settingLabel,
+                { color: theme.colors.text.primary },
+              ]}
+            >
+              Font Size Control
+            </Text>
             <View style={styles.fontSizeButtons}>
-              {['small', 'normal', 'large', 'extraLarge'].map((size) => (
+              {["small", "normal", "large", "extraLarge"].map((size) => (
                 <TouchableOpacity
                   key={size}
                   style={[
                     styles.fontSizeButton,
                     {
-                      backgroundColor: fontSize === size 
-                        ? theme.colors.primary[500] 
-                        : theme.colors.background.primary,
+                      backgroundColor:
+                        fontSize === size
+                          ? theme.colors.primary[500]
+                          : theme.colors.background.primary,
                       borderColor: theme.colors.primary[500],
                       minWidth: 44,
                       minHeight: 44,
-                    }
+                    },
                   ]}
                   onPress={() => handleFontSizeChange(size)}
                   accessible
@@ -220,15 +287,25 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
                   accessibilityState={{ checked: fontSize === size }}
                   accessibilityHint="Double tap to select this font size"
                 >
-                  <Text style={[
-                    styles.fontSizeButtonText,
-                    {
-                      color: fontSize === size 
-                        ? theme.colors.text.inverse 
-                        : theme.colors.primary[500],
-                      fontSize: size === 'small' ? 12 : size === 'large' ? 18 : size === 'extraLarge' ? 20 : 14,
-                    }
-                  ]}>
+                  <Text
+                    style={[
+                      styles.fontSizeButtonText,
+                      {
+                        color:
+                          fontSize === size
+                            ? theme.colors.text.inverse
+                            : theme.colors.primary[500],
+                        fontSize:
+                          size === "small"
+                            ? 12
+                            : size === "large"
+                              ? 18
+                              : size === "extraLarge"
+                                ? 20
+                                : 14,
+                      },
+                    ]}
+                  >
                     {getFontSizeLabel(size)}
                   </Text>
                 </TouchableOpacity>
@@ -237,7 +314,12 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
           </View>
 
           <View style={styles.settingRow}>
-            <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.settingLabel,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Font Scale Control: {fontScale.toFixed(1)}x
             </Text>
             <Slider
@@ -257,7 +339,7 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
                 min: 0.8,
                 max: 2.0,
                 now: fontScale,
-                text: `${fontScale.toFixed(1)} times normal size`
+                text: `${fontScale.toFixed(1)} times normal size`,
               }}
             />
           </View>
@@ -270,21 +352,37 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
         >
           <View style={styles.settingRow}>
             <View style={styles.settingInfo}>
-              <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.settingLabel,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 Announce Changes
               </Text>
-              <Text style={[styles.settingDescription, { color: theme.colors.text.secondary }]}>
+              <Text
+                style={[
+                  styles.settingDescription,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
                 Announce important changes for screen readers
               </Text>
             </View>
             <Switch
               value={localSettings.announceChanges}
-              onValueChange={(value) => handleSettingChange('announceChanges', value)}
+              onValueChange={(value) =>
+                handleSettingChange("announceChanges", value)
+              }
               trackColor={{
                 false: theme.colors.gray[300],
                 true: theme.colors.primary[200],
               }}
-              thumbColor={localSettings.announceChanges ? theme.colors.primary[500] : theme.colors.gray[500]}
+              thumbColor={
+                localSettings.announceChanges
+                  ? theme.colors.primary[500]
+                  : theme.colors.gray[500]
+              }
               accessibilityRole="switch"
               accessibilityLabel="Announce changes"
               accessibilityHint="Toggle to enable or disable change announcements"
@@ -293,21 +391,37 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
 
           <View style={styles.settingRow}>
             <View style={styles.settingInfo}>
-              <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.settingLabel,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 Haptic Feedback Toggle
               </Text>
-              <Text style={[styles.settingDescription, { color: theme.colors.text.secondary }]}>
+              <Text
+                style={[
+                  styles.settingDescription,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
                 Provide tactile feedback for interactions
               </Text>
             </View>
             <Switch
               value={localSettings.hapticFeedback}
-              onValueChange={(value) => handleSettingChange('hapticFeedback', value)}
+              onValueChange={(value) =>
+                handleSettingChange("hapticFeedback", value)
+              }
               trackColor={{
                 false: theme.colors.gray[300],
                 true: theme.colors.primary[200],
               }}
-              thumbColor={localSettings.hapticFeedback ? theme.colors.primary[500] : theme.colors.gray[500]}
+              thumbColor={
+                localSettings.hapticFeedback
+                  ? theme.colors.primary[500]
+                  : theme.colors.gray[500]
+              }
               accessibilityRole="switch"
               accessibilityLabel="Haptic feedback toggle"
               accessibilityHint="Toggle to enable or disable haptic feedback"
@@ -316,21 +430,35 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
 
           <View style={styles.settingRow}>
             <View style={styles.settingInfo}>
-              <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.settingLabel,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 Screen Reader Support
               </Text>
-              <Text style={[styles.settingDescription, { color: theme.colors.text.secondary }]}>
+              <Text
+                style={[
+                  styles.settingDescription,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
                 Enhanced voice navigation support
               </Text>
             </View>
             <Switch
               value={localSettings.voiceOver}
-              onValueChange={(value) => handleSettingChange('voiceOver', value)}
+              onValueChange={(value) => handleSettingChange("voiceOver", value)}
               trackColor={{
                 false: theme.colors.gray[300],
                 true: theme.colors.primary[200],
               }}
-              thumbColor={localSettings.voiceOver ? theme.colors.primary[500] : theme.colors.gray[500]}
+              thumbColor={
+                localSettings.voiceOver
+                  ? theme.colors.primary[500]
+                  : theme.colors.gray[500]
+              }
               accessibilityRole="switch"
               accessibilityLabel="Screen reader support"
               accessibilityHint="Toggle to enable or disable voice control features"
@@ -339,21 +467,37 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
 
           <View style={styles.settingRow}>
             <View style={styles.settingInfo}>
-              <Text style={[styles.settingLabel, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.settingLabel,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 High Contrast Mode
               </Text>
-              <Text style={[styles.settingDescription, { color: theme.colors.text.secondary }]}>
+              <Text
+                style={[
+                  styles.settingDescription,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
                 Increase color contrast for better visibility
               </Text>
             </View>
             <Switch
               value={isHighContrastEnabled}
-              onValueChange={(value) => handleSettingChange('highContrast', value)}
+              onValueChange={(value) =>
+                handleSettingChange("highContrast", value)
+              }
               trackColor={{
                 false: theme.colors.gray[300],
                 true: theme.colors.primary[200],
               }}
-              thumbColor={isHighContrastEnabled ? theme.colors.primary[500] : theme.colors.gray[500]}
+              thumbColor={
+                isHighContrastEnabled
+                  ? theme.colors.primary[500]
+                  : theme.colors.gray[500]
+              }
               accessibilityRole="switch"
               accessibilityLabel="High contrast mode"
               accessibilityHint="Toggle to enable or disable high contrast colors"
@@ -370,19 +514,28 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
             style={[
               styles.actionButton,
               {
-                backgroundColor: theme.colors.therapeutic?.calming?.[500] ?? theme.colors.primary[500],
-                borderColor: theme.colors.therapeutic?.calming?.[500] ?? theme.colors.primary[500],
+                backgroundColor:
+                  theme.colors.therapeutic?.calming?.[500] ??
+                  theme.colors.primary[500],
+                borderColor:
+                  theme.colors.therapeutic?.calming?.[500] ??
+                  theme.colors.primary[500],
                 minWidth: 44,
                 minHeight: 44,
-              }
+              },
             ]}
-            onPress={() => navigation.navigate('CrisisResources')}
+            onPress={() => navigation.navigate("CrisisResources")}
             accessible
             accessibilityRole="button"
             accessibilityLabel="Emergency Resources"
             accessibilityHint="Double tap to get help"
           >
-            <Text style={[styles.actionButtonText, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[
+                styles.actionButtonText,
+                { color: theme.colors.text.inverse },
+              ]}
+            >
               Emergency Resources
             </Text>
           </TouchableOpacity>
@@ -395,15 +548,20 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
                 borderColor: theme.colors.primary[500],
                 minWidth: 44,
                 minHeight: 44,
-              }
+              },
             ]}
-            onPress={() => navigation.navigate('AccessibilityGuide')}
+            onPress={() => navigation.navigate("AccessibilityGuide")}
             accessible
             accessibilityRole="button"
             accessibilityLabel="Accessibility Guide"
             accessibilityHint="Double tap to activate"
           >
-            <Text style={[styles.actionButtonText, { color: theme.colors.primary[500] }]}>
+            <Text
+              style={[
+                styles.actionButtonText,
+                { color: theme.colors.primary[500] },
+              ]}
+            >
               Accessibility Guide
             </Text>
           </TouchableOpacity>
@@ -413,19 +571,24 @@ const AccessibilitySettingsScreen = ({ navigation }) => {
         <TouchableOpacity
           style={[
             styles.resetButton,
-            { 
+            {
               backgroundColor: theme.colors.error[500],
               borderColor: theme.colors.error[500],
               minWidth: 44,
               minHeight: 44,
-            }
+            },
           ]}
           onPress={resetToDefaults}
           accessibilityRole="button"
           accessibilityLabel="Reset accessibility settings"
           accessibilityHint="Double tap to reset all accessibility settings to default values"
         >
-          <Text style={[styles.resetButtonText, { color: theme.colors.text.inverse }]}>
+          <Text
+            style={[
+              styles.resetButtonText,
+              { color: theme.colors.text.inverse },
+            ]}
+          >
             Reset to Defaults
           </Text>
         </TouchableOpacity>
@@ -446,7 +609,7 @@ const styles = StyleSheet.create({
   },
   screenTitle: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   subtitle: {
@@ -464,7 +627,7 @@ const styles = StyleSheet.create({
   },
   settingTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 4,
   },
   settingDescription: {
@@ -480,29 +643,29 @@ const styles = StyleSheet.create({
   },
   settingLabel: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 4,
   },
   statusContainer: {
     gap: 12,
   },
   statusItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   statusLabel: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   statusValue: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   fontSizeButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
-    flexWrap: 'wrap',
+    flexWrap: "wrap",
   },
   fontSizeButton: {
     paddingHorizontal: 16,
@@ -511,10 +674,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   fontSizeButtonText: {
-    fontWeight: '500',
+    fontWeight: "500",
   },
   slider: {
-    width: '100%',
+    width: "100%",
     height: 44,
     marginTop: 8,
   },
@@ -524,23 +687,23 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     marginBottom: 12,
-    alignItems: 'center',
+    alignItems: "center",
   },
   actionButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   resetButton: {
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
     borderWidth: 1,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 16,
   },
   resetButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
 

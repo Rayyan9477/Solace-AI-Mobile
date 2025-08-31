@@ -1,7 +1,7 @@
 /**
  * Enhanced Accessibility utilities for Solace AI Mobile App
  * Provides WCAG 2.1 AA compliant accessibility patterns across components
- * 
+ *
  * Features:
  * - WCAG 2.1 AA compliance utilities
  * - Screen reader optimization
@@ -371,28 +371,47 @@ export const WCAG_CONSTANTS = {
 // Enhanced accessibility validation helpers
 export const AccessibilityValidators = {
   // Validate touch target size according to WCAG 2.5.5
-  validateTouchTarget: (width, height, minSize = WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE) => ({
+  validateTouchTarget: (
+    width,
+    height,
+    minSize = WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
+  ) => ({
     isValid: width >= minSize && height >= minSize,
     width,
     height,
     minSize,
-    wcagRule: '2.5.5 Target Size',
-    level: 'AAA',
+    wcagRule: "2.5.5 Target Size",
+    level: "AAA",
   }),
 
   // Validate color contrast according to WCAG 1.4.3
-  validateColorContrast: (foreground, background, fontSize = 16, isBold = false, level = 'AA') => {
-    const isLargeText = fontSize >= WCAG_CONSTANTS.LARGE_TEXT_MIN_SIZE || 
-                      (fontSize >= WCAG_CONSTANTS.LARGE_TEXT_MIN_SIZE_BOLD && isBold);
-    
-    const requiredRatio = level === 'AAA' 
-      ? (isLargeText ? WCAG_CONSTANTS.COLOR_CONTRAST_AAA_LARGE : WCAG_CONSTANTS.COLOR_CONTRAST_AAA_NORMAL)
-      : (isLargeText ? WCAG_CONSTANTS.COLOR_CONTRAST_AA_LARGE : WCAG_CONSTANTS.COLOR_CONTRAST_AA_NORMAL);
+  validateColorContrast: (
+    foreground,
+    background,
+    fontSize = 16,
+    isBold = false,
+    level = "AA",
+  ) => {
+    const isLargeText =
+      fontSize >= WCAG_CONSTANTS.LARGE_TEXT_MIN_SIZE ||
+      (fontSize >= WCAG_CONSTANTS.LARGE_TEXT_MIN_SIZE_BOLD && isBold);
+
+    const requiredRatio =
+      level === "AAA"
+        ? isLargeText
+          ? WCAG_CONSTANTS.COLOR_CONTRAST_AAA_LARGE
+          : WCAG_CONSTANTS.COLOR_CONTRAST_AAA_NORMAL
+        : isLargeText
+          ? WCAG_CONSTANTS.COLOR_CONTRAST_AA_LARGE
+          : WCAG_CONSTANTS.COLOR_CONTRAST_AA_NORMAL;
 
     return {
       requiredRatio,
       isLargeText,
-      wcagRule: level === 'AAA' ? '1.4.6 Contrast (Enhanced)' : '1.4.3 Contrast (Minimum)',
+      wcagRule:
+        level === "AAA"
+          ? "1.4.6 Contrast (Enhanced)"
+          : "1.4.3 Contrast (Minimum)",
       level,
     };
   },
@@ -402,8 +421,8 @@ export const AccessibilityValidators = {
     isValid: duration <= WCAG_CONSTANTS.MAX_ANIMATION_DURATION,
     duration,
     maxDuration: WCAG_CONSTANTS.MAX_ANIMATION_DURATION,
-    wcagRule: '2.2.2 Pause, Stop, Hide',
-    level: 'A',
+    wcagRule: "2.2.2 Pause, Stop, Hide",
+    level: "A",
   }),
 
   // Validate accessibility label quality
@@ -412,8 +431,8 @@ export const AccessibilityValidators = {
     isDescriptive: label && label.length >= 3,
     isEmpty: !label || label.trim().length === 0,
     isTooShort: label && label.length < 3,
-    wcagRule: '4.1.2 Name, Role, Value',
-    level: 'A',
+    wcagRule: "4.1.2 Name, Role, Value",
+    level: "A",
   }),
 };
 
@@ -424,7 +443,7 @@ export const FocusManagement = {
     accessibilityViewIsModal: true,
     onAccessibilityEscape: () => {
       // Handle escape key for modal dismissal
-      console.log('Modal dismissed via accessibility escape');
+      console.log("Modal dismissed via accessibility escape");
     },
   }),
 
@@ -438,16 +457,18 @@ export const FocusManagement = {
       if (onBlur) onBlur(event);
       // Additional blur handling
     },
-    style: isFocused ? {
-      outline: `${WCAG_CONSTANTS.FOCUS_OUTLINE_WIDTH}px solid #0066cc`,
-      outlineOffset: '2px',
-    } : {},
+    style: isFocused
+      ? {
+          outline: `${WCAG_CONSTANTS.FOCUS_OUTLINE_WIDTH}px solid #0066cc`,
+          outlineOffset: "2px",
+        }
+      : {},
   }),
 
   // Screen reader announcement helper
-  announceForScreenReader: (message, priority = 'polite') => {
+  announceForScreenReader: (message, priority = "polite") => {
     // Enhanced announcement with priority levels
-    if (typeof AccessibilityInfo !== 'undefined') {
+    if (typeof AccessibilityInfo !== "undefined") {
       AccessibilityInfo.announceForAccessibility(message);
     }
     console.log(`[Screen Reader ${priority.toUpperCase()}]: ${message}`);
@@ -471,12 +492,15 @@ export const TouchTargetHelpers = {
         minWidth: Math.max(currentWidth, minSize),
         minHeight: Math.max(currentHeight, minSize),
       },
-      hitSlop: hitSlopHorizontal > 0 || hitSlopVertical > 0 ? {
-        top: hitSlopVertical,
-        bottom: hitSlopVertical,
-        left: hitSlopHorizontal,
-        right: hitSlopHorizontal,
-      } : undefined,
+      hitSlop:
+        hitSlopHorizontal > 0 || hitSlopVertical > 0
+          ? {
+              top: hitSlopVertical,
+              bottom: hitSlopVertical,
+              left: hitSlopHorizontal,
+              right: hitSlopHorizontal,
+            }
+          : undefined,
     };
   },
 

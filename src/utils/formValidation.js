@@ -1,6 +1,6 @@
 /**
  * Comprehensive Form Validation System
- * 
+ *
  * Provides accessible, mental health-focused form validation with:
  * - WCAG 2.1 AA compliant error messaging
  * - Mental health sensitive validation patterns
@@ -9,73 +9,77 @@
  * - Therapeutic language for error messages
  */
 
-import { FocusManagement } from './accessibility';
+import { FocusManagement } from "./accessibility";
 
 // Therapeutic validation messages for mental health contexts
 const THERAPEUTIC_MESSAGES = {
   // General validation messages with supportive tone
-  required: (field) => `Please share your ${field.toLowerCase()} when you're ready.`,
-  email: 'Please enter a valid email address so we can stay connected.',
-  password: 'Your password should be at least 8 characters to keep your information secure.',
-  passwordMatch: 'Please make sure both passwords match for your security.',
-  
+  required: (field) =>
+    `Please share your ${field.toLowerCase()} when you're ready.`,
+  email: "Please enter a valid email address so we can stay connected.",
+  password:
+    "Your password should be at least 8 characters to keep your information secure.",
+  passwordMatch: "Please make sure both passwords match for your security.",
+
   // Mental health specific messages
   mood: {
-    required: 'Please select how you\'re feeling right now. There are no wrong answers.',
-    intensity: 'Please rate the intensity of your mood from 1 to 10.',
+    required:
+      "Please select how you're feeling right now. There are no wrong answers.",
+    intensity: "Please rate the intensity of your mood from 1 to 10.",
   },
-  
+
   therapy: {
-    sessionNotes: 'Feel free to share your thoughts when you\'re comfortable.',
-    goals: 'What would you like to work on today? Take your time.',
-    feelings: 'Describe your feelings in your own words, at your own pace.',
+    sessionNotes: "Feel free to share your thoughts when you're comfortable.",
+    goals: "What would you like to work on today? Take your time.",
+    feelings: "Describe your feelings in your own words, at your own pace.",
   },
-  
+
   assessment: {
-    question: (questionNum) => `Please answer question ${questionNum} when you\'re ready.`,
-    scale: 'Please select a rating that best describes your experience.',
-    frequency: 'How often have you experienced this? Please select an option.',
+    question: (questionNum) =>
+      `Please answer question ${questionNum} when you\'re ready.`,
+    scale: "Please select a rating that best describes your experience.",
+    frequency: "How often have you experienced this? Please select an option.",
   },
-  
+
   journal: {
-    entry: 'Write as much or as little as feels right for you today.',
-    mood: 'How are you feeling as you write this entry?',
-    gratitude: 'What are you grateful for today? Even small things count.',
+    entry: "Write as much or as little as feels right for you today.",
+    mood: "How are you feeling as you write this entry?",
+    gratitude: "What are you grateful for today? Even small things count.",
   },
-  
+
   crisis: {
-    contact: 'Please provide emergency contact information for your safety.',
-    plan: 'Having a safety plan helps us support you better.',
+    contact: "Please provide emergency contact information for your safety.",
+    plan: "Having a safety plan helps us support you better.",
   },
 };
 
 // Validation rule types
 export const VALIDATION_TYPES = {
-  REQUIRED: 'required',
-  EMAIL: 'email',
-  PASSWORD: 'password',
-  PASSWORD_CONFIRMATION: 'passwordConfirmation',
-  PHONE: 'phone',
-  MIN_LENGTH: 'minLength',
-  MAX_LENGTH: 'maxLength',
-  PATTERN: 'pattern',
-  CUSTOM: 'custom',
+  REQUIRED: "required",
+  EMAIL: "email",
+  PASSWORD: "password",
+  PASSWORD_CONFIRMATION: "passwordConfirmation",
+  PHONE: "phone",
+  MIN_LENGTH: "minLength",
+  MAX_LENGTH: "maxLength",
+  PATTERN: "pattern",
+  CUSTOM: "custom",
   // Mental health specific
-  MOOD_SCALE: 'moodScale',
-  THERAPY_NOTES: 'therapyNotes',
-  ASSESSMENT_ANSWER: 'assessmentAnswer',
-  CRISIS_PLAN: 'crisisPlan',
+  MOOD_SCALE: "moodScale",
+  THERAPY_NOTES: "therapyNotes",
+  ASSESSMENT_ANSWER: "assessmentAnswer",
+  CRISIS_PLAN: "crisisPlan",
 };
 
 // Mental health form contexts
 export const FORM_CONTEXTS = {
-  THERAPY: 'therapy',
-  MOOD_TRACKER: 'moodTracker',
-  ASSESSMENT: 'assessment',
-  JOURNAL: 'journal',
-  CRISIS_SUPPORT: 'crisisSupport',
-  PROFILE: 'profile',
-  AUTH: 'auth',
+  THERAPY: "therapy",
+  MOOD_TRACKER: "moodTracker",
+  ASSESSMENT: "assessment",
+  JOURNAL: "journal",
+  CRISIS_SUPPORT: "crisisSupport",
+  PROFILE: "profile",
+  AUTH: "auth",
 };
 
 class FormValidator {
@@ -86,24 +90,24 @@ class FormValidator {
       validateOnChange: true,
       validateOnBlur: true,
       validateOnSubmit: true,
-      
+
       // Accessibility options
       announceErrors: true,
       announceSuccess: false,
-      liveRegion: 'polite', // 'polite' or 'assertive'
-      
+      liveRegion: "polite", // 'polite' or 'assertive'
+
       // Mental health specific options
       useTherapeuticLanguage: true,
       gentleValidation: true, // Less aggressive error messaging
       supportiveMessaging: true,
-      
+
       // Timing options
       debounceDelay: 300,
       errorDisplayDelay: 500,
-      
+
       ...options,
     };
-    
+
     this.errors = {};
     this.touched = {};
     this.isValidating = {};
@@ -114,13 +118,16 @@ class FormValidator {
   static RULES = {
     [VALIDATION_TYPES.REQUIRED]: {
       validate: (value) => {
-        if (typeof value === 'string') return value.trim().length > 0;
+        if (typeof value === "string") return value.trim().length > 0;
         if (Array.isArray(value)) return value.length > 0;
         return value !== null && value !== undefined;
       },
       message: (field, context) => {
         if (context === FORM_CONTEXTS.THERAPY) {
-          return THERAPEUTIC_MESSAGES.therapy[field] || THERAPEUTIC_MESSAGES.required(field);
+          return (
+            THERAPEUTIC_MESSAGES.therapy[field] ||
+            THERAPEUTIC_MESSAGES.required(field)
+          );
         }
         if (context === FORM_CONTEXTS.MOOD_TRACKER) {
           return THERAPEUTIC_MESSAGES.mood.required;
@@ -142,9 +149,13 @@ class FormValidator {
 
     [VALIDATION_TYPES.PASSWORD]: {
       validate: (value) => {
-        return !value || (value.length >= 8 && /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value));
+        return (
+          !value ||
+          (value.length >= 8 && /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value))
+        );
       },
-      message: () => 'Password must be at least 8 characters with uppercase, lowercase, and number.',
+      message: () =>
+        "Password must be at least 8 characters with uppercase, lowercase, and number.",
     },
 
     [VALIDATION_TYPES.PASSWORD_CONFIRMATION]: {
@@ -157,9 +168,9 @@ class FormValidator {
     [VALIDATION_TYPES.PHONE]: {
       validate: (value) => {
         const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-        return !value || phoneRegex.test(value.replace(/[\s\-\(\)]/g, ''));
+        return !value || phoneRegex.test(value.replace(/[\s\-\(\)]/g, ""));
       },
-      message: () => 'Please enter a valid phone number.',
+      message: () => "Please enter a valid phone number.",
     },
 
     [VALIDATION_TYPES.MIN_LENGTH]: {
@@ -167,7 +178,10 @@ class FormValidator {
         return !value || value.length >= params.length;
       },
       message: (field, context, params) => {
-        if (context === FORM_CONTEXTS.THERAPY || context === FORM_CONTEXTS.JOURNAL) {
+        if (
+          context === FORM_CONTEXTS.THERAPY ||
+          context === FORM_CONTEXTS.JOURNAL
+        ) {
           return `Feel free to write more when you're ready (minimum ${params.length} characters).`;
         }
         return `Please enter at least ${params.length} characters.`;
@@ -179,7 +193,10 @@ class FormValidator {
         return !value || value.length <= params.length;
       },
       message: (field, context, params) => {
-        if (context === FORM_CONTEXTS.THERAPY || context === FORM_CONTEXTS.JOURNAL) {
+        if (
+          context === FORM_CONTEXTS.THERAPY ||
+          context === FORM_CONTEXTS.JOURNAL
+        ) {
           return `You can use up to ${params.length} characters. Feel free to be concise.`;
         }
         return `Please keep to ${params.length} characters or less.`;
@@ -196,16 +213,18 @@ class FormValidator {
 
     [VALIDATION_TYPES.THERAPY_NOTES]: {
       validate: (value) => {
-        return !value || (value.trim().length >= 10 && value.trim().length <= 2000);
+        return (
+          !value || (value.trim().length >= 10 && value.trim().length <= 2000)
+        );
       },
       message: () => THERAPEUTIC_MESSAGES.therapy.sessionNotes,
     },
 
     [VALIDATION_TYPES.ASSESSMENT_ANSWER]: {
       validate: (value) => {
-        return value !== null && value !== undefined && value !== '';
+        return value !== null && value !== undefined && value !== "";
       },
-      message: (field, context, params) => 
+      message: (field, context, params) =>
         THERAPEUTIC_MESSAGES.assessment.question(params.questionNumber),
     },
 
@@ -227,7 +246,7 @@ class FormValidator {
   // Validate a single field
   validateField(fieldName, value, allValues = {}, rules = []) {
     const errors = [];
-    
+
     for (const rule of rules) {
       const ruleDefinition = FormValidator.RULES[rule.type];
       if (!ruleDefinition) {
@@ -237,13 +256,17 @@ class FormValidator {
 
       const isValid = ruleDefinition.validate(value, allValues, rule.params);
       if (!isValid) {
-        const message = ruleDefinition.message(fieldName, this.context, rule.params);
+        const message = ruleDefinition.message(
+          fieldName,
+          this.context,
+          rule.params,
+        );
         errors.push({
           type: rule.type,
           message,
-          severity: rule.severity || 'error',
+          severity: rule.severity || "error",
         });
-        
+
         // Only show first error in gentle validation mode
         if (this.options.gentleValidation) {
           break;
@@ -259,10 +282,15 @@ class FormValidator {
     const formErrors = {};
     let isValid = true;
 
-    Object.keys(schema).forEach(fieldName => {
+    Object.keys(schema).forEach((fieldName) => {
       const fieldRules = schema[fieldName];
       const fieldValue = values[fieldName];
-      const fieldErrors = this.validateField(fieldName, fieldValue, values, fieldRules);
+      const fieldErrors = this.validateField(
+        fieldName,
+        fieldValue,
+        values,
+        fieldRules,
+      );
 
       if (fieldErrors.length > 0) {
         formErrors[fieldName] = fieldErrors;
@@ -286,8 +314,13 @@ class FormValidator {
 
     // Debounce validation
     this.debounceTimers[fieldName] = setTimeout(() => {
-      const fieldErrors = this.validateField(fieldName, value, allValues, rules);
-      
+      const fieldErrors = this.validateField(
+        fieldName,
+        value,
+        allValues,
+        rules,
+      );
+
       // Update errors
       if (fieldErrors.length > 0) {
         this.errors[fieldName] = fieldErrors;
@@ -303,10 +336,9 @@ class FormValidator {
         const message = fieldErrors[0].message;
         FocusManagement.announceForScreenReader(
           `Validation error: ${message}`,
-          this.options.liveRegion
+          this.options.liveRegion,
         );
       }
-
     }, this.options.debounceDelay);
   }
 
@@ -323,7 +355,9 @@ class FormValidator {
   // Get error message for field
   getFieldError(fieldName) {
     const fieldErrors = this.errors[fieldName];
-    return fieldErrors && fieldErrors.length > 0 ? fieldErrors[0].message : null;
+    return fieldErrors && fieldErrors.length > 0
+      ? fieldErrors[0].message
+      : null;
   }
 
   // Get all errors for field
@@ -377,17 +411,17 @@ class FormValidator {
   getContextualHint(fieldName) {
     switch (this.context) {
       case FORM_CONTEXTS.THERAPY:
-        return 'Take your time and share what feels comfortable to you.';
+        return "Take your time and share what feels comfortable to you.";
       case FORM_CONTEXTS.MOOD_TRACKER:
-        return 'Choose the option that best represents how you\'re feeling.';
+        return "Choose the option that best represents how you're feeling.";
       case FORM_CONTEXTS.ASSESSMENT:
-        return 'Answer honestly - there are no right or wrong responses.';
+        return "Answer honestly - there are no right or wrong responses.";
       case FORM_CONTEXTS.JOURNAL:
-        return 'Write freely about your thoughts and experiences.';
+        return "Write freely about your thoughts and experiences.";
       case FORM_CONTEXTS.CRISIS_SUPPORT:
-        return 'This information helps us provide you with appropriate support.';
+        return "This information helps us provide you with appropriate support.";
       default:
-        return 'Enter the requested information.';
+        return "Enter the requested information.";
     }
   }
 
@@ -399,13 +433,13 @@ class FormValidator {
     if (errorCount === 0) {
       if (this.options.announceSuccess) {
         FocusManagement.announceForScreenReader(
-          'Form validation passed. All fields are complete.',
-          'polite'
+          "Form validation passed. All fields are complete.",
+          "polite",
         );
       }
     } else {
-      const message = `Form has ${errorCount} error${errorCount > 1 ? 's' : ''}. Please review the highlighted fields.`;
-      FocusManagement.announceForScreenReader(message, 'assertive');
+      const message = `Form has ${errorCount} error${errorCount > 1 ? "s" : ""}. Please review the highlighted fields.`;
+      FocusManagement.announceForScreenReader(message, "assertive");
     }
   }
 }
@@ -423,24 +457,18 @@ export const VALIDATION_SCHEMAS = {
       { type: VALIDATION_TYPES.REQUIRED },
       { type: VALIDATION_TYPES.MOOD_SCALE },
     ],
-    sessionNotes: [
-      { type: VALIDATION_TYPES.THERAPY_NOTES },
-    ],
+    sessionNotes: [{ type: VALIDATION_TYPES.THERAPY_NOTES }],
   },
 
   // Mood tracking form
   MOOD_TRACKER: {
-    mood: [
-      { type: VALIDATION_TYPES.REQUIRED },
-    ],
+    mood: [{ type: VALIDATION_TYPES.REQUIRED }],
     intensity: [
       { type: VALIDATION_TYPES.REQUIRED },
       { type: VALIDATION_TYPES.MOOD_SCALE },
     ],
     activities: [], // Optional
-    notes: [
-      { type: VALIDATION_TYPES.MAX_LENGTH, params: { length: 500 } },
-    ],
+    notes: [{ type: VALIDATION_TYPES.MAX_LENGTH, params: { length: 500 } }],
   },
 
   // Assessment form
@@ -450,16 +478,12 @@ export const VALIDATION_SCHEMAS = {
 
   // Journal entry form
   JOURNAL_ENTRY: {
-    title: [
-      { type: VALIDATION_TYPES.MAX_LENGTH, params: { length: 100 } },
-    ],
+    title: [{ type: VALIDATION_TYPES.MAX_LENGTH, params: { length: 100 } }],
     content: [
       { type: VALIDATION_TYPES.MIN_LENGTH, params: { length: 10 } },
       { type: VALIDATION_TYPES.MAX_LENGTH, params: { length: 5000 } },
     ],
-    mood: [
-      { type: VALIDATION_TYPES.MOOD_SCALE },
-    ],
+    mood: [{ type: VALIDATION_TYPES.MOOD_SCALE }],
   },
 
   // Crisis support form
@@ -480,9 +504,7 @@ export const VALIDATION_SCHEMAS = {
       { type: VALIDATION_TYPES.REQUIRED },
       { type: VALIDATION_TYPES.EMAIL },
     ],
-    password: [
-      { type: VALIDATION_TYPES.REQUIRED },
-    ],
+    password: [{ type: VALIDATION_TYPES.REQUIRED }],
   },
 
   REGISTER: {
@@ -496,23 +518,34 @@ export const VALIDATION_SCHEMAS = {
     ],
     confirmPassword: [
       { type: VALIDATION_TYPES.REQUIRED },
-      { type: VALIDATION_TYPES.PASSWORD_CONFIRMATION, params: { passwordField: 'password' } },
+      {
+        type: VALIDATION_TYPES.PASSWORD_CONFIRMATION,
+        params: { passwordField: "password" },
+      },
     ],
-    agreeToTerms: [
-      { type: VALIDATION_TYPES.REQUIRED },
-    ],
+    agreeToTerms: [{ type: VALIDATION_TYPES.REQUIRED }],
   },
 };
 
 // Export utility functions
-export const createValidator = (context, options) => new FormValidator(context, options);
+export const createValidator = (context, options) =>
+  new FormValidator(context, options);
 
-export const validateField = (fieldName, value, rules, context = FORM_CONTEXTS.PROFILE) => {
+export const validateField = (
+  fieldName,
+  value,
+  rules,
+  context = FORM_CONTEXTS.PROFILE,
+) => {
   const validator = new FormValidator(context);
   return validator.validateField(fieldName, value, {}, rules);
 };
 
-export const validateForm = (values, schema, context = FORM_CONTEXTS.PROFILE) => {
+export const validateForm = (
+  values,
+  schema,
+  context = FORM_CONTEXTS.PROFILE,
+) => {
   const validator = new FormValidator(context);
   return validator.validateForm(values, schema);
 };

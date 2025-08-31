@@ -1,8 +1,15 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import hapticFeedback from '../../utils/hapticFeedback';
-import { colors, typography, spacing, borderRadius, shadows } from '../../shared/theme/theme';
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+
+import { useTheme } from "../../shared/theme/ThemeContext";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../../shared/theme/theme";
+import hapticFeedback from "../../utils/hapticFeedback";
 
 const MoodSelector = ({ selectedMood, onMoodSelect }) => {
   const { theme, accessibilitySettings } = useTheme();
@@ -12,18 +19,37 @@ const MoodSelector = ({ selectedMood, onMoodSelect }) => {
     if (accessibilitySettings.hapticFeedback !== false) {
       hapticFeedback.moodSelected(moodId);
     }
-    
+
     onMoodSelect(moodId);
   };
-  
 
   const moods = [
-    { id: 'happy', emoji: '😊', label: 'Happy', color: theme.colors.mood.happy },
-    { id: 'calm', emoji: '😌', label: 'Calm', color: theme.colors.mood.calm },
-    { id: 'neutral', emoji: '😐', label: 'Neutral', color: theme.colors.mood.neutral },
-    { id: 'anxious', emoji: '😰', label: 'Anxious', color: theme.colors.mood.anxious },
-    { id: 'sad', emoji: '😢', label: 'Sad', color: theme.colors.mood.sad },
-    { id: 'angry', emoji: '😠', label: 'Angry', color: theme.colors.mood.angry },
+    {
+      id: "happy",
+      emoji: "😊",
+      label: "Happy",
+      color: theme.colors.mood.happy,
+    },
+    { id: "calm", emoji: "😌", label: "Calm", color: theme.colors.mood.calm },
+    {
+      id: "neutral",
+      emoji: "😐",
+      label: "Neutral",
+      color: theme.colors.mood.neutral,
+    },
+    {
+      id: "anxious",
+      emoji: "😰",
+      label: "Anxious",
+      color: theme.colors.mood.anxious,
+    },
+    { id: "sad", emoji: "😢", label: "Sad", color: theme.colors.mood.sad },
+    {
+      id: "angry",
+      emoji: "😠",
+      label: "Angry",
+      color: theme.colors.mood.angry,
+    },
   ];
 
   return (
@@ -35,10 +61,16 @@ const MoodSelector = ({ selectedMood, onMoodSelect }) => {
             style={[
               styles.moodItem,
               {
-                backgroundColor: selectedMood === mood.id ? mood.color : theme.colors.background.primary,
-                borderColor: selectedMood === mood.id ? mood.color : theme.colors.gray[300],
+                backgroundColor:
+                  selectedMood === mood.id
+                    ? mood.color
+                    : theme.colors.background.primary,
+                borderColor:
+                  selectedMood === mood.id
+                    ? mood.color
+                    : theme.colors.gray[300],
               },
-              { minWidth: 44, minHeight: 44 }
+              { minWidth: 44, minHeight: 44 },
             ]}
             onPress={() => handleMoodSelect(mood.id)}
             activeOpacity={0.7}
@@ -48,19 +80,26 @@ const MoodSelector = ({ selectedMood, onMoodSelect }) => {
             accessibilityState={{ selected: selectedMood === mood.id }}
             testID={`mood-selector-${mood.id}`}
           >
-            <Text style={[
-              styles.moodEmoji,
-              { opacity: selectedMood === mood.id ? 1 : 0.7 }
-            ]}>
+            <Text
+              style={[
+                styles.moodEmoji,
+                { opacity: selectedMood === mood.id ? 1 : 0.7 },
+              ]}
+            >
               {mood.emoji}
             </Text>
-            <Text style={[
-              styles.moodLabel,
-              {
-                color: selectedMood === mood.id ? theme.colors.text.inverse : theme.colors.text.primary,
-                fontWeight: selectedMood === mood.id ? '600' : '400',
-              }
-            ]}>
+            <Text
+              style={[
+                styles.moodLabel,
+                {
+                  color:
+                    selectedMood === mood.id
+                      ? theme.colors.text.inverse
+                      : theme.colors.text.primary,
+                  fontWeight: selectedMood === mood.id ? "600" : "400",
+                },
+              ]}
+            >
               {mood.label}
             </Text>
           </TouchableOpacity>
@@ -72,12 +111,12 @@ const MoodSelector = ({ selectedMood, onMoodSelect }) => {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   moodGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
     gap: spacing[3],
   },
   moodItem: {
@@ -85,18 +124,18 @@ const styles = StyleSheet.create({
     height: spacing[22],
     borderRadius: borderRadius.md,
     borderWidth: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     ...shadows.sm,
   },
   moodEmoji: {
-    fontSize: typography.sizes['3xl'],
+    fontSize: typography.sizes["3xl"],
     marginBottom: spacing[1],
   },
   moodLabel: {
     fontSize: typography.sizes.sm,
     lineHeight: typography.lineHeights.sm,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

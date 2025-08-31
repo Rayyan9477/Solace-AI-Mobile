@@ -2,32 +2,33 @@
 // Only exports icons that are actually used in the app to reduce bundle size by ~80%
 
 import React from "react";
+
 import { WebSafeSvg as Svg, Path, Circle, Rect, Polygon } from "./WebSafeSvg";
 import { useTheme } from "../../shared/theme/ThemeContext";
 
 // Base icon component with proper tree-shaking support
-const OptimizedIcon = ({ 
-  name, 
-  size = 24, 
-  color, 
-  variant = "outline", 
+const OptimizedIcon = ({
+  name,
+  size = 24,
+  color,
+  variant = "outline",
   strokeWidth = 2,
   colorScheme = "default",
-  ...props 
+  ...props
 }) => {
   const { theme } = useTheme();
-  
+
   // Get color from theme if not provided
   const iconColor = color || getIconColor(theme, colorScheme);
-  
+
   // Only include icons that are actually used in the app
   const IconComponent = USED_ICONS[name];
-  
+
   if (!IconComponent) {
     console.warn(`Icon "${name}" not found in optimized icon system`);
     return null;
   }
-  
+
   return (
     <IconComponent
       width={size}
@@ -60,7 +61,6 @@ const USED_ICONS = {
       />
     </Svg>
   ),
-  
 
   Chat: ({ width, height, color, variant, strokeWidth }) => (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
@@ -135,11 +135,7 @@ const USED_ICONS = {
         strokeWidth={strokeWidth}
         fill={variant === "filled" ? color : "none"}
       />
-      <Path
-        d="M21 21l-4.35-4.35"
-        stroke={color}
-        strokeWidth={strokeWidth}
-      />
+      <Path d="M21 21l-4.35-4.35" stroke={color} strokeWidth={strokeWidth} />
     </Svg>
   ),
 
@@ -273,16 +269,8 @@ const USED_ICONS = {
         strokeWidth={strokeWidth}
         fill={variant === "filled" ? color : "none"}
       />
-      <Path
-        d="M12 2v15"
-        stroke={color}
-        strokeWidth={strokeWidth}
-      />
-      <Path
-        d="M5 12h14"
-        stroke={color}
-        strokeWidth={strokeWidth}
-      />
+      <Path d="M12 2v15" stroke={color} strokeWidth={strokeWidth} />
+      <Path d="M5 12h14" stroke={color} strokeWidth={strokeWidth} />
     </Svg>
   ),
 
@@ -330,23 +318,9 @@ const USED_ICONS = {
         strokeWidth={strokeWidth}
         fill={variant === "filled" ? color : "none"}
       />
-      <Path
-        d="M8 12h8"
-        stroke={color}
-        strokeWidth={strokeWidth}
-      />
-      <Circle
-        cx="9"
-        cy="9"
-        r="1"
-        fill={color}
-      />
-      <Circle
-        cx="15"
-        cy="9"
-        r="1"
-        fill={color}
-      />
+      <Path d="M8 12h8" stroke={color} strokeWidth={strokeWidth} />
+      <Circle cx="9" cy="9" r="1" fill={color} />
+      <Circle cx="15" cy="9" r="1" fill={color} />
     </Svg>
   ),
 
@@ -360,23 +334,9 @@ const USED_ICONS = {
         strokeWidth={strokeWidth}
         fill={variant === "filled" ? color : "none"}
       />
-      <Path
-        d="M8 12h8"
-        stroke={color}
-        strokeWidth={strokeWidth}
-      />
-      <Circle
-        cx="9"
-        cy="9"
-        r="1"
-        fill={color}
-      />
-      <Circle
-        cx="15"
-        cy="9"
-        r="1"
-        fill={color}
-      />
+      <Path d="M8 12h8" stroke={color} strokeWidth={strokeWidth} />
+      <Circle cx="9" cy="9" r="1" fill={color} />
+      <Circle cx="15" cy="9" r="1" fill={color} />
     </Svg>
   ),
 
@@ -415,15 +375,10 @@ const USED_ICONS = {
     </Svg>
   ),
 
-
   // Action icons (used in buttons and interactions)
   plus: ({ width, height, color, variant, strokeWidth }) => (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M12 5v14m-7-7h14"
-        stroke={color}
-        strokeWidth={strokeWidth}
-      />
+      <Path d="M12 5v14m-7-7h14" stroke={color} strokeWidth={strokeWidth} />
     </Svg>
   ),
 
@@ -451,11 +406,7 @@ const USED_ICONS = {
 
   close: ({ width, height, color, variant, strokeWidth }) => (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M18 6L6 18m12 0L6 6"
-        stroke={color}
-        strokeWidth={strokeWidth}
-      />
+      <Path d="M18 6L6 18m12 0L6 6" stroke={color} strokeWidth={strokeWidth} />
     </Svg>
   ),
 
@@ -479,7 +430,7 @@ const USED_ICONS = {
   ),
 
   // Wellness and emergency icons
-  "wellness": ({ width, height, color, variant, strokeWidth }) => (
+  wellness: ({ width, height, color, variant, strokeWidth }) => (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
       <Circle
         cx="12"
@@ -502,7 +453,7 @@ const USED_ICONS = {
     </Svg>
   ),
 
-  "emergency": ({ width, height, color, variant, strokeWidth }) => (
+  emergency: ({ width, height, color, variant, strokeWidth }) => (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
       <Circle
         cx="12"

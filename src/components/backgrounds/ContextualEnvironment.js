@@ -1,24 +1,20 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
-import {
-  View,
-  StyleSheet,
-  Animated,
-  Dimensions,
-} from 'react-native';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import AtmosphericBackground from './AtmosphericBackground';
-import ParallaxBackground from './ParallaxBackground';
-import { modernDarkColors } from '../../shared/theme/darkTheme';
+import React, { useRef, useEffect, useState, useMemo } from "react";
+import { View, StyleSheet, Animated, Dimensions } from "react-native";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import AtmosphericBackground from "./AtmosphericBackground";
+import ParallaxBackground from "./ParallaxBackground";
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { modernDarkColors } from "../../shared/theme/darkTheme";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 // Contextual Environment System - Adaptive backgrounds based on context
 // Automatically selects optimal background effects based on app context
 const ContextualEnvironment = ({
-  context = 'dashboard', // 'dashboard', 'mood', 'chat', 'meditation', 'assessment', 'profile'
-  timeOfDay = 'auto', // 'auto', 'morning', 'afternoon', 'evening', 'night'
-  weatherMood = 'auto', // 'auto', 'calm', 'energetic', 'peaceful', 'focused'
-  userState = 'neutral', // 'neutral', 'stressed', 'relaxed', 'motivated', 'contemplative'
+  context = "dashboard", // 'dashboard', 'mood', 'chat', 'meditation', 'assessment', 'profile'
+  timeOfDay = "auto", // 'auto', 'morning', 'afternoon', 'evening', 'night'
+  weatherMood = "auto", // 'auto', 'calm', 'energetic', 'peaceful', 'focused'
+  userState = "neutral", // 'neutral', 'stressed', 'relaxed', 'motivated', 'contemplative'
   intensity = 0.7,
   animated = true,
   interactive = true,
@@ -33,129 +29,143 @@ const ContextualEnvironment = ({
 
   // Determine time of day if auto
   const getTimeOfDay = () => {
-    if (timeOfDay !== 'auto') return timeOfDay;
-    
+    if (timeOfDay !== "auto") return timeOfDay;
+
     const hour = new Date().getHours();
-    if (hour >= 5 && hour < 12) return 'morning';
-    if (hour >= 12 && hour < 17) return 'afternoon';
-    if (hour >= 17 && hour < 22) return 'evening';
-    return 'night';
+    if (hour >= 5 && hour < 12) return "morning";
+    if (hour >= 12 && hour < 17) return "afternoon";
+    if (hour >= 17 && hour < 22) return "evening";
+    return "night";
   };
 
   // Determine weather mood based on user state and context
   const getWeatherMood = () => {
-    if (weatherMood !== 'auto') return weatherMood;
-    
+    if (weatherMood !== "auto") return weatherMood;
+
     // Contextual weather mood mapping
     const moodMap = {
-      stressed: 'calm',
-      relaxed: 'peaceful',
-      motivated: 'energetic',
-      contemplative: 'peaceful',
-      neutral: 'calm',
+      stressed: "calm",
+      relaxed: "peaceful",
+      motivated: "energetic",
+      contemplative: "peaceful",
+      neutral: "calm",
     };
-    
-    return moodMap[userState] || 'calm';
+
+    return moodMap[userState] || "calm";
   };
 
   // Get contextual environment configuration
   const getContextualConfig = useMemo(() => {
     const currentTime = getTimeOfDay();
     const currentWeatherMood = getWeatherMood();
-    
+
     const configs = {
       dashboard: {
-        type: 'atmospheric',
-        variant: currentTime === 'night' ? 'cosmos' : currentTime === 'morning' ? 'twilight' : 'aurora',
-        weather: currentWeatherMood === 'energetic' ? 'clear' : 'calm',
+        type: "atmospheric",
+        variant:
+          currentTime === "night"
+            ? "cosmos"
+            : currentTime === "morning"
+              ? "twilight"
+              : "aurora",
+        weather: currentWeatherMood === "energetic" ? "clear" : "calm",
         particles: 35,
         intensity: intensity * 0.8,
-        description: 'Welcoming and energizing environment for daily overview',
+        description: "Welcoming and energizing environment for daily overview",
       },
-      
+
       mood: {
-        type: 'atmospheric',
-        variant: userState === 'stressed' ? 'ocean' : userState === 'contemplative' ? 'zen' : 'aurora',
-        weather: userState === 'stressed' ? 'rain' : 'clear',
+        type: "atmospheric",
+        variant:
+          userState === "stressed"
+            ? "ocean"
+            : userState === "contemplative"
+              ? "zen"
+              : "aurora",
+        weather: userState === "stressed" ? "rain" : "clear",
         particles: 25,
         intensity: intensity * 0.9,
-        description: 'Emotionally supportive atmosphere for mood tracking',
+        description: "Emotionally supportive atmosphere for mood tracking",
       },
-      
+
       chat: {
-        type: 'parallax',
-        variant: 'neural',
+        type: "parallax",
+        variant: "neural",
         layerCount: 4,
         particles: 30,
         floatingElements: 20,
         intensity: intensity * 0.6,
-        description: 'Neural network inspired environment for AI conversations',
+        description: "Neural network inspired environment for AI conversations",
       },
-      
+
       meditation: {
-        type: 'atmospheric',
-        variant: 'zen',
-        weather: 'clear',
+        type: "atmospheric",
+        variant: "zen",
+        weather: "clear",
         particles: 15,
         intensity: intensity * 0.5,
-        description: 'Minimal and peaceful environment for mindfulness',
+        description: "Minimal and peaceful environment for mindfulness",
       },
-      
+
       assessment: {
-        type: 'parallax',
-        variant: 'abstract',
+        type: "parallax",
+        variant: "abstract",
         layerCount: 3,
         particles: 20,
         floatingElements: 10,
         intensity: intensity * 0.7,
-        description: 'Clean geometric environment for focused assessment',
+        description: "Clean geometric environment for focused assessment",
       },
-      
+
       profile: {
-        type: 'atmospheric',
-        variant: currentTime === 'evening' ? 'twilight' : 'forest',
-        weather: 'clear',
+        type: "atmospheric",
+        variant: currentTime === "evening" ? "twilight" : "forest",
+        weather: "clear",
         particles: 40,
         intensity: intensity * 0.8,
-        description: 'Personal and warm environment for profile management',
+        description: "Personal and warm environment for profile management",
       },
-      
+
       // Special therapeutic contexts
       crisis: {
-        type: 'atmospheric',
-        variant: 'zen',
-        weather: 'clear',
+        type: "atmospheric",
+        variant: "zen",
+        weather: "clear",
         particles: 5,
         intensity: intensity * 0.3,
-        description: 'Calming minimal environment for crisis support',
+        description: "Calming minimal environment for crisis support",
       },
-      
+
       celebration: {
-        type: 'atmospheric',
-        variant: 'aurora',
-        weather: 'clear',
+        type: "atmospheric",
+        variant: "aurora",
+        weather: "clear",
         particles: 60,
         intensity: intensity * 1.0,
-        description: 'Vibrant celebratory environment for achievements',
+        description: "Vibrant celebratory environment for achievements",
       },
-      
+
       focus: {
-        type: 'parallax',
-        variant: 'mountain',
+        type: "parallax",
+        variant: "mountain",
         layerCount: 5,
         particles: 15,
         floatingElements: 8,
         intensity: intensity * 0.6,
-        description: 'Serene mountain environment for deep focus',
+        description: "Serene mountain environment for deep focus",
       },
     };
-    
+
     return configs[context] || configs.dashboard;
   }, [context, timeOfDay, weatherMood, userState, intensity]);
 
   // Smooth transition between configurations
   useEffect(() => {
-    if (adaptiveEffects && currentConfig && currentConfig !== getContextualConfig) {
+    if (
+      adaptiveEffects &&
+      currentConfig &&
+      currentConfig !== getContextualConfig
+    ) {
       // Fade out current background
       Animated.timing(transitionAnim, {
         toValue: 0,
@@ -164,7 +174,7 @@ const ContextualEnvironment = ({
       }).start(() => {
         // Update configuration
         setCurrentConfig(getContextualConfig);
-        
+
         // Fade in new background
         Animated.timing(transitionAnim, {
           toValue: 1,
@@ -175,18 +185,40 @@ const ContextualEnvironment = ({
     } else if (!currentConfig) {
       setCurrentConfig(getContextualConfig);
     }
-  }, [context, adaptiveEffects, currentConfig, getContextualConfig, transitionAnim]);
+  }, [
+    context,
+    adaptiveEffects,
+    currentConfig,
+    getContextualConfig,
+    transitionAnim,
+  ]);
 
   // Get enhanced colors based on context and time
   const getContextualColors = () => {
     const base = modernDarkColors;
     const timeColors = {
-      morning: [base.therapeutic.energizing[900], base.therapeutic.calming[800], base.therapeutic.peaceful[700]],
-      afternoon: [base.therapeutic.calming[900], base.therapeutic.nurturing[800], base.therapeutic.peaceful[700]],
-      evening: [base.therapeutic.peaceful[900], base.therapeutic.grounding[800], base.therapeutic.calming[700]],
-      night: [base.background.primary, base.background.secondary, base.background.tertiary],
+      morning: [
+        base.therapeutic.energizing[900],
+        base.therapeutic.calming[800],
+        base.therapeutic.peaceful[700],
+      ],
+      afternoon: [
+        base.therapeutic.calming[900],
+        base.therapeutic.nurturing[800],
+        base.therapeutic.peaceful[700],
+      ],
+      evening: [
+        base.therapeutic.peaceful[900],
+        base.therapeutic.grounding[800],
+        base.therapeutic.calming[700],
+      ],
+      night: [
+        base.background.primary,
+        base.background.secondary,
+        base.background.tertiary,
+      ],
     };
-    
+
     return timeColors[getTimeOfDay()] || timeColors.evening;
   };
 
@@ -198,7 +230,7 @@ const ContextualEnvironment = ({
 
     // Add context-specific overlays
     switch (context) {
-      case 'mood':
+      case "mood":
         // Emotional state indicator
         overlayEffects.push(
           <Animated.View
@@ -206,17 +238,18 @@ const ContextualEnvironment = ({
             style={[
               styles.moodIndicator,
               {
-                backgroundColor: userState === 'stressed' 
-                  ? modernDarkColors.therapeutic.calming.primary + '20'
-                  : modernDarkColors.therapeutic.nurturing.primary + '20',
+                backgroundColor:
+                  userState === "stressed"
+                    ? modernDarkColors.therapeutic.calming.primary + "20"
+                    : modernDarkColors.therapeutic.nurturing.primary + "20",
                 opacity: transitionAnim,
               },
             ]}
-          />
+          />,
         );
         break;
-        
-      case 'chat':
+
+      case "chat":
         // Neural activity indicators
         overlayEffects.push(
           <Animated.View
@@ -230,11 +263,11 @@ const ContextualEnvironment = ({
                 }),
               },
             ]}
-          />
+          />,
         );
         break;
-        
-      case 'meditation':
+
+      case "meditation":
         // Breathing rhythm indicator
         overlayEffects.push(
           <Animated.View
@@ -248,7 +281,7 @@ const ContextualEnvironment = ({
                 }),
               },
             ]}
-          />
+          />,
         );
         break;
     }
@@ -267,7 +300,7 @@ const ContextualEnvironment = ({
       style: styles.background,
     };
 
-    if (currentConfig.type === 'atmospheric') {
+    if (currentConfig.type === "atmospheric") {
       return (
         <AtmosphericBackground
           variant={currentConfig.variant}
@@ -277,7 +310,7 @@ const ContextualEnvironment = ({
           {...backgroundProps}
         />
       );
-    } else if (currentConfig.type === 'parallax') {
+    } else if (currentConfig.type === "parallax") {
       return (
         <ParallaxBackground
           variant={currentConfig.variant}
@@ -306,18 +339,16 @@ const ContextualEnvironment = ({
     >
       {/* Main background */}
       {renderBackground()}
-      
+
       {/* Contextual overlays */}
-      <View style={styles.overlayContainer}>
-        {renderContextualOverlays()}
-      </View>
-      
+      <View style={styles.overlayContainer}>{renderContextualOverlays()}</View>
+
       {/* Time-based color tint */}
       <Animated.View
         style={[
           styles.timeOfDayTint,
           {
-            backgroundColor: getContextualColors()[0] + '10',
+            backgroundColor: getContextualColors()[0] + "10",
             opacity: transitionAnim.interpolate({
               inputRange: [0, 1],
               outputRange: [0, 0.3],
@@ -325,13 +356,9 @@ const ContextualEnvironment = ({
           },
         ]}
       />
-      
+
       {/* Content layer */}
-      {children && (
-        <View style={styles.contentLayer}>
-          {children}
-        </View>
-      )}
+      {children && <View style={styles.contentLayer}>{children}</View>}
     </Animated.View>
   );
 };
@@ -339,10 +366,10 @@ const ContextualEnvironment = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative',
+    position: "relative",
   },
   background: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -350,7 +377,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   overlayContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -358,9 +385,9 @@ const styles = StyleSheet.create({
     zIndex: 5,
   },
   moodIndicator: {
-    position: 'absolute',
-    top: '20%',
-    right: '10%',
+    position: "absolute",
+    top: "20%",
+    right: "10%",
     width: 100,
     height: 100,
     borderRadius: 50,
@@ -368,7 +395,7 @@ const styles = StyleSheet.create({
     borderColor: modernDarkColors.border.glass,
   },
   neuralOverlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -376,16 +403,16 @@ const styles = StyleSheet.create({
     backgroundColor: modernDarkColors.therapeutic.calming.primary,
   },
   breathingOverlay: {
-    position: 'absolute',
-    top: '40%',
-    left: '40%',
-    width: '20%',
-    height: '20%',
+    position: "absolute",
+    top: "40%",
+    left: "40%",
+    width: "20%",
+    height: "20%",
     borderRadius: 1000,
     backgroundColor: modernDarkColors.therapeutic.peaceful.primary,
   },
   timeOfDayTint: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,

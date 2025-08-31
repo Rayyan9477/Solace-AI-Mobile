@@ -4,18 +4,22 @@
  * Designed specifically for mental health and wellness applications
  */
 
-import React, { useEffect, useRef } from 'react';
-import { Animated, Platform } from 'react-native';
-import { useMotionAccessibility, MOTION_TYPES } from '../../utils/motionAccessibility';
+import React, { useEffect, useRef } from "react";
+import { Animated, Platform } from "react-native";
+
+import {
+  useMotionAccessibility,
+  MOTION_TYPES,
+} from "../../utils/motionAccessibility";
 
 // Web-only Framer Motion import with fallback
 let motion = null;
-if (Platform.OS === 'web') {
+if (Platform.OS === "web") {
   try {
-    const framerMotion = require('framer-motion');
+    const framerMotion = require("framer-motion");
     motion = framerMotion.motion;
   } catch (error) {
-    console.warn('Framer Motion not available, using React Native animations');
+    console.warn("Framer Motion not available, using React Native animations");
   }
 }
 
@@ -51,20 +55,24 @@ export const TherapeuticAnimatedComponents = {
           fadeAnim,
           1,
           { duration: 800, delay },
-          MOTION_TYPES.FADE
+          MOTION_TYPES.FADE,
         ),
         motionUtils.createSafeTiming(
           translateY,
           0,
           { duration: 800, delay },
-          MOTION_TYPES.SLIDE
+          MOTION_TYPES.SLIDE,
         ),
       ];
 
       Animated.parallel(animations).start();
     }, [fadeAnim, translateY, delay, motionUtils]);
 
-    if (Platform.OS === 'web' && motion && !motionUtils.isReducedMotionEnabled) {
+    if (
+      Platform.OS === "web" &&
+      motion &&
+      !motionUtils.isReducedMotionEnabled
+    ) {
       return (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -113,22 +121,27 @@ export const TherapeuticAnimatedComponents = {
             scale,
             1.05,
             { duration: 4000 }, // 4 second inhale
-            MOTION_TYPES.PULSE
+            MOTION_TYPES.PULSE,
           ),
           motionUtils.createSafeTiming(
             scale,
             1,
             { duration: 4000 }, // 4 second exhale
-            MOTION_TYPES.PULSE
+            MOTION_TYPES.PULSE,
           ),
-        ])
+        ]),
       );
 
       breathingAnimation.start();
       return () => breathingAnimation.stop();
     }, [scale, isActive, motionUtils]);
 
-    if (Platform.OS === 'web' && motion && !motionUtils.isReducedMotionEnabled && isActive) {
+    if (
+      Platform.OS === "web" &&
+      motion &&
+      !motionUtils.isReducedMotionEnabled &&
+      isActive
+    ) {
       return (
         <motion.div
           animate={{
@@ -177,29 +190,34 @@ export const TherapeuticAnimatedComponents = {
             glow,
             1.1,
             { duration: 2000 },
-            MOTION_TYPES.PULSE
+            MOTION_TYPES.PULSE,
           ),
           motionUtils.createSafeTiming(
             glow,
             1,
             { duration: 2000 },
-            MOTION_TYPES.PULSE
+            MOTION_TYPES.PULSE,
           ),
-        ])
+        ]),
       );
 
       glowAnimation.start();
       return () => glowAnimation.stop();
     }, [glow, isHighlighted, motionUtils]);
 
-    if (Platform.OS === 'web' && motion && !motionUtils.isReducedMotionEnabled && isHighlighted) {
+    if (
+      Platform.OS === "web" &&
+      motion &&
+      !motionUtils.isReducedMotionEnabled &&
+      isHighlighted
+    ) {
       return (
         <motion.div
           animate={{
             boxShadow: [
-              '0 0 0 rgba(59, 130, 246, 0)',
-              '0 0 20px rgba(59, 130, 246, 0.3)',
-              '0 0 0 rgba(59, 130, 246, 0)',
+              "0 0 0 rgba(59, 130, 246, 0)",
+              "0 0 20px rgba(59, 130, 246, 0.3)",
+              "0 0 0 rgba(59, 130, 246, 0)",
             ],
           }}
           transition={{
@@ -236,26 +254,30 @@ export const TherapeuticAnimatedComponents = {
 
     useEffect(() => {
       const staggerDelay = motionUtils.isReducedMotionEnabled ? 0 : index * 100;
-      
+
       const animations = [
         motionUtils.createSafeTiming(
           fadeAnim,
           1,
           { duration: 600, delay: staggerDelay },
-          MOTION_TYPES.FADE
+          MOTION_TYPES.FADE,
         ),
         motionUtils.createSafeTiming(
           translateY,
           0,
           { duration: 600, delay: staggerDelay },
-          MOTION_TYPES.SLIDE
+          MOTION_TYPES.SLIDE,
         ),
       ];
 
       Animated.parallel(animations).start();
     }, [fadeAnim, translateY, index, motionUtils]);
 
-    if (Platform.OS === 'web' && motion && !motionUtils.isReducedMotionEnabled) {
+    if (
+      Platform.OS === "web" &&
+      motion &&
+      !motionUtils.isReducedMotionEnabled
+    ) {
       return (
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -304,28 +326,32 @@ export const TherapeuticAnimatedComponents = {
             floatY,
             -5,
             { duration: 3000 },
-            MOTION_TYPES.FADE
+            MOTION_TYPES.FADE,
           ),
           motionUtils.createSafeTiming(
             floatY,
             5,
             { duration: 3000 },
-            MOTION_TYPES.FADE
+            MOTION_TYPES.FADE,
           ),
           motionUtils.createSafeTiming(
             floatY,
             0,
             { duration: 3000 },
-            MOTION_TYPES.FADE
+            MOTION_TYPES.FADE,
           ),
-        ])
+        ]),
       );
 
       floatingAnimation.start();
       return () => floatingAnimation.stop();
     }, [floatY, motionUtils]);
 
-    if (Platform.OS === 'web' && motion && !motionUtils.isReducedMotionEnabled) {
+    if (
+      Platform.OS === "web" &&
+      motion &&
+      !motionUtils.isReducedMotionEnabled
+    ) {
       return (
         <motion.div
           animate={{
@@ -363,15 +389,21 @@ export const TherapeuticAnimatedComponents = {
     const progressAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
-      motionUtils.createSafeTiming(
-        progressAnim,
-        progress,
-        { duration: 1500 },
-        MOTION_TYPES.SCALE
-      ).start();
+      motionUtils
+        .createSafeTiming(
+          progressAnim,
+          progress,
+          { duration: 1500 },
+          MOTION_TYPES.SCALE,
+        )
+        .start();
     }, [progress, progressAnim, motionUtils]);
 
-    if (Platform.OS === 'web' && motion && !motionUtils.isReducedMotionEnabled) {
+    if (
+      Platform.OS === "web" &&
+      motion &&
+      !motionUtils.isReducedMotionEnabled
+    ) {
       return (
         <motion.div
           animate={{ scaleX: progress }}
@@ -423,22 +455,22 @@ export const TherapeuticAnimatedComponents = {
             pulse,
             1.08,
             { duration: 1000 },
-            MOTION_TYPES.PULSE
+            MOTION_TYPES.PULSE,
           ),
           motionUtils.createSafeTiming(
             pulse,
             1,
             { duration: 1000 },
-            MOTION_TYPES.PULSE
+            MOTION_TYPES.PULSE,
           ),
-        ])
+        ]),
       );
 
       emergencyAnimation.start();
       return () => emergencyAnimation.stop();
     }, [pulse, isEmergency, motionUtils]);
 
-    if (Platform.OS === 'web' && motion && isEmergency) {
+    if (Platform.OS === "web" && motion && isEmergency) {
       const animateProps = motionUtils.isReducedMotionEnabled
         ? { scale: 1.05 }
         : {
@@ -510,20 +542,20 @@ export const useTherapeuticPageTransition = () => {
 export const therapeuticGestures = {
   // Gentle swipe feedback
   swipeFeedback: (animatedValue, direction, motionUtils) => {
-    const translateX = direction === 'left' ? -30 : 30;
-    
+    const translateX = direction === "left" ? -30 : 30;
+
     return Animated.sequence([
       motionUtils.createSafeTiming(
         animatedValue,
         translateX,
         { duration: 200 },
-        MOTION_TYPES.SLIDE
+        MOTION_TYPES.SLIDE,
       ),
       motionUtils.createSafeSpring(
         animatedValue,
         0,
         THERAPEUTIC_SPRINGS.RESPONSIVE,
-        MOTION_TYPES.BOUNCE
+        MOTION_TYPES.BOUNCE,
       ),
     ]);
   },
@@ -535,13 +567,13 @@ export const therapeuticGestures = {
         animatedValue,
         1.1,
         THERAPEUTIC_SPRINGS.GENTLE,
-        MOTION_TYPES.SCALE
+        MOTION_TYPES.SCALE,
       ),
       motionUtils.createSafeSpring(
         animatedValue,
         1,
         THERAPEUTIC_SPRINGS.SUPPORTIVE,
-        MOTION_TYPES.SCALE
+        MOTION_TYPES.SCALE,
       ),
     ]);
   },
@@ -553,13 +585,13 @@ export const therapeuticGestures = {
         animatedValue,
         1.05,
         { duration: 300 },
-        MOTION_TYPES.SCALE
+        MOTION_TYPES.SCALE,
       ),
       motionUtils.createSafeTiming(
         animatedValue,
         1,
         { duration: 200 },
-        MOTION_TYPES.SCALE
+        MOTION_TYPES.SCALE,
       ),
     ]);
   },

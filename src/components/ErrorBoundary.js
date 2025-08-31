@@ -7,6 +7,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
+
 import { useTheme } from "../shared/theme/ThemeContext";
 
 class ErrorBoundary extends React.Component {
@@ -86,16 +87,13 @@ const ErrorFallbackWithTheme = ({ error, errorInfo, onRetry, onRestart }) => {
           <Text style={styles.errorIcon}>⚠️</Text>
         </View>
 
-        <Text
-          style={[styles.title, { color: theme.colors.text.primary }]}
-        >
+        <Text style={[styles.title, { color: theme.colors.text.primary }]}>
           Something went wrong
         </Text>
 
-        <Text
-          style={[styles.subtitle, { color: theme.colors.text.secondary }]}
-        >
-          We're sorry for the inconvenience. The app encountered an unexpected error.
+        <Text style={[styles.subtitle, { color: theme.colors.text.secondary }]}>
+          We're sorry for the inconvenience. The app encountered an unexpected
+          error.
         </Text>
 
         {isDev && error && (
@@ -120,7 +118,10 @@ const ErrorFallbackWithTheme = ({ error, errorInfo, onRetry, onRestart }) => {
             </Text>
             {errorInfo && (
               <Text
-                style={[styles.stackTrace, { color: theme.colors.text.secondary }]}
+                style={[
+                  styles.stackTrace,
+                  { color: theme.colors.text.secondary },
+                ]}
               >
                 {errorInfo.componentStack}
               </Text>
@@ -140,10 +141,7 @@ const ErrorFallbackWithTheme = ({ error, errorInfo, onRetry, onRestart }) => {
             accessibilityLabel="Retry the last action"
           >
             <Text
-              style={[
-                styles.buttonText,
-                { color: theme.colors.text.inverse },
-              ]}
+              style={[styles.buttonText, { color: theme.colors.text.inverse }]}
             >
               Try Again
             </Text>

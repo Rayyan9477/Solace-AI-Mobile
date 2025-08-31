@@ -15,22 +15,22 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
+import EnhancedInput from "../../components/forms/EnhancedInput";
 import { MentalHealthIcon } from "../../components/icons";
 import { FreudLogo, ThemedFreudIcon } from "../../components/icons/FreudIcons";
 import FreudButton from "../../components/ui/FreudButton";
 import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
 import { freudTheme } from "../../shared/theme/freudTheme";
-import EnhancedInput from "../../components/forms/EnhancedInput";
-import { 
-  createValidator, 
-  FORM_CONTEXTS, 
-  VALIDATION_SCHEMAS 
-} from "../../utils/formValidation";
 import {
   registerStart,
   registerSuccess,
   registerFailure,
 } from "../../store/slices/authSlice";
+import {
+  createValidator,
+  FORM_CONTEXTS,
+  VALIDATION_SCHEMAS,
+} from "../../utils/formValidation";
 
 const RegisterScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -45,7 +45,7 @@ const RegisterScreen = ({ navigation }) => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   // Initialize form validator
   const validator = useState(() => createValidator(FORM_CONTEXTS.AUTH))[0];
 
@@ -53,11 +53,16 @@ const RegisterScreen = ({ navigation }) => {
   const handleFieldChange = (field, value) => {
     const newValues = { ...formValues, [field]: value };
     setFormValues(newValues);
-    
+
     // Mark field as touched and validate
     validator.markFieldTouched(field);
     if (VALIDATION_SCHEMAS.REGISTER[field]) {
-      validator.validateFieldRealTime(field, value, newValues, VALIDATION_SCHEMAS.REGISTER[field]);
+      validator.validateFieldRealTime(
+        field,
+        value,
+        newValues,
+        VALIDATION_SCHEMAS.REGISTER[field],
+      );
     }
   };
 
@@ -65,10 +70,10 @@ const RegisterScreen = ({ navigation }) => {
     validator.markFieldTouched(field);
     if (VALIDATION_SCHEMAS.REGISTER[field]) {
       const fieldErrors = validator.validateField(
-        field, 
-        formValues[field], 
-        formValues, 
-        VALIDATION_SCHEMAS.REGISTER[field]
+        field,
+        formValues[field],
+        formValues,
+        VALIDATION_SCHEMAS.REGISTER[field],
       );
       if (fieldErrors.length > 0) {
         validator.errors[field] = fieldErrors;
@@ -262,7 +267,11 @@ const RegisterScreen = ({ navigation }) => {
                 </Text>
                 <View style={styles.inputWrapper}>
                   <View style={styles.inputIcon}>
-                    <ThemedFreudIcon name="heart" size={20} color={freudTheme.colors.green[60]} />
+                    <ThemedFreudIcon
+                      name="heart"
+                      size={20}
+                      color={freudTheme.colors.green[60]}
+                    />
                   </View>
                   <TextInput
                     style={[
@@ -304,7 +313,11 @@ const RegisterScreen = ({ navigation }) => {
                 </Text>
                 <View style={styles.inputWrapper}>
                   <View style={styles.inputIcon}>
-                    <ThemedFreudIcon name="brain" size={20} color={freudTheme.colors.green[60]} />
+                    <ThemedFreudIcon
+                      name="brain"
+                      size={20}
+                      color={freudTheme.colors.green[60]}
+                    />
                   </View>
                   <TextInput
                     style={[
@@ -355,7 +368,11 @@ const RegisterScreen = ({ navigation }) => {
                 </Text>
                 <View style={styles.inputWrapper}>
                   <View style={styles.inputIcon}>
-                    <ThemedFreudIcon name="mindfulness" size={20} color={freudTheme.colors.green[60]} />
+                    <ThemedFreudIcon
+                      name="mindfulness"
+                      size={20}
+                      color={freudTheme.colors.green[60]}
+                    />
                   </View>
                   <TextInput
                     style={[
@@ -405,9 +422,20 @@ const RegisterScreen = ({ navigation }) => {
                 loading={isLoading}
                 disabled={isLoading}
                 onPress={handleRegister}
-                icon={!isLoading && <ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+                icon={
+                  !isLoading && (
+                    <ThemedFreudIcon
+                      name="chevron-right"
+                      size={20}
+                      color={freudTheme.colors.text.inverse}
+                    />
+                  )
+                }
                 iconPosition="right"
-                style={{ marginTop: freudTheme.spacing.sm, marginBottom: freudTheme.spacing.xl }}
+                style={{
+                  marginTop: freudTheme.spacing.sm,
+                  marginBottom: freudTheme.spacing.xl,
+                }}
               />
 
               {/* Footer Links */}

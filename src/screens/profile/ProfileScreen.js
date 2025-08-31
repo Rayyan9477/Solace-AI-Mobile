@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -16,10 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import ProfileHeader from "../../components/profile/ProfileHeader";
 import SettingsSection from "../../components/profile/SettingsSection";
 import StatsCard from "../../components/profile/StatsCard";
-import { useTheme } from "../../shared/theme/ThemeContext";
 import DarkModeToggle from "../../components/ui/DarkModeToggle";
-import { logout } from "../../store/slices/authSlice";
-import { updatePreferences, setTheme } from "../../store/slices/userSlice";
+import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
 import {
   colors,
   typography,
@@ -27,12 +25,14 @@ import {
   borderRadius,
   shadows,
 } from "../../shared/theme/theme";
+import { logout } from "../../store/slices/authSlice";
+import { updatePreferences, setTheme } from "../../store/slices/userSlice";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
 
   // Handle hardware back button on Android
-  React.useEffect(() => {
+  useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
@@ -297,7 +297,7 @@ const ProfileScreen = () => {
 
           <TouchableOpacity
             style={[styles.settingButton, { minWidth: 44, minHeight: 44 }]}
-            onPress={() => navigation.navigate('DarkModeShowcase')}
+            onPress={() => navigation.navigate("DarkModeShowcase")}
             accessible
             accessibilityRole="button"
             accessibilityLabel="Dark Mode Showcase"

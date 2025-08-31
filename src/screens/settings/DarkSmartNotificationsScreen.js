@@ -21,7 +21,7 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const [selectedTab, setSelectedTab] = useState("notifications");
   const [todayNotifications, setTodayNotifications] = useState([]);
-  
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
@@ -29,7 +29,7 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
   const tabs = [
     { id: "notifications", title: "Notifications", icon: "Brain" },
     { id: "history", title: "History", icon: "Heart" },
-    { id: "settings", title: "Settings", icon: "Therapy" }
+    { id: "settings", title: "Settings", icon: "Therapy" },
   ];
 
   const notificationTypes = [
@@ -42,10 +42,10 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
       color: "#10B981",
       character: "🧠",
       isUnread: true,
-      gradient: ['#10B981', '#059669']
+      gradient: ["#10B981", "#059669"],
     },
     {
-      id: "journal_incomplete", 
+      id: "journal_incomplete",
       title: "Journal Incomplete!",
       subtitle: "It's Reflection Time 😊",
       time: "5m ago",
@@ -53,7 +53,7 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
       color: "#8B5CF6",
       character: "📝",
       isUnread: true,
-      gradient: ['#8B5CF6', '#7C3AED']
+      gradient: ["#8B5CF6", "#7C3AED"],
     },
     {
       id: "exercise_complete",
@@ -64,7 +64,7 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
       color: "#059669",
       character: "🌱",
       isUnread: false,
-      gradient: ['#059669', '#047857']
+      gradient: ["#059669", "#047857"],
     },
     {
       id: "mental_health",
@@ -75,7 +75,7 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
       color: "#F59E0B",
       character: "💚",
       isUnread: false,
-      gradient: ['#F59E0B', '#D97706']
+      gradient: ["#F59E0B", "#D97706"],
     },
     {
       id: "mood_improved",
@@ -86,7 +86,7 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
       color: "#10B981",
       character: "😊",
       isUnread: false,
-      gradient: ['#10B981', '#059669']
+      gradient: ["#10B981", "#059669"],
     },
     {
       id: "stress_decreased",
@@ -97,7 +97,7 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
       color: "#F97316",
       character: "😌",
       isUnread: false,
-      gradient: ['#F97316', '#EA580C']
+      gradient: ["#F97316", "#EA580C"],
     },
     {
       id: "freud_recommendations",
@@ -108,8 +108,8 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
       color: "#EF4444",
       character: "📍",
       isUnread: false,
-      gradient: ['#EF4444', '#DC2626']
-    }
+      gradient: ["#EF4444", "#DC2626"],
+    },
   ];
 
   const illustrativeNotifications = [
@@ -120,28 +120,30 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
       action: "See Score",
       character: "🎉",
       time: "now",
-      gradient: ['#10B981', '#34D399'],
-      illustration: "celebration"
+      gradient: ["#10B981", "#34D399"],
+      illustration: "celebration",
     },
     {
       id: "journal_completed",
       title: "21/30 Journal Completed",
-      subtitle: "You still need to complete 9 more journals this month. Keep it up!",
+      subtitle:
+        "You still need to complete 9 more journals this month. Keep it up!",
       action: "See Journal",
       character: "📖",
       time: "2h",
-      gradient: ['#F59E0B', '#FCD34D'],
-      illustration: "journal"
+      gradient: ["#F59E0B", "#FCD34D"],
+      illustration: "journal",
     },
     {
       id: "therapy_session",
       title: "05:25AM Therapy with Dr. Freud AI",
-      subtitle: "You have a therapy session with Dr. Freud AI in 2h 2m from now.",
+      subtitle:
+        "You have a therapy session with Dr. Freud AI in 2h 2m from now.",
       action: "See Schedule",
       character: "🧠",
       time: "2h 2m",
-      gradient: ['#EF4444', '#F87171'],
-      illustration: "therapy"
+      gradient: ["#EF4444", "#F87171"],
+      illustration: "therapy",
     },
     {
       id: "stress_neutral",
@@ -150,8 +152,8 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
       action: "See Stress Level",
       character: "🧘‍♀️",
       time: "45m",
-      gradient: ['#8B5CF6', '#A78BFA'],
-      illustration: "meditation"
+      gradient: ["#8B5CF6", "#A78BFA"],
+      illustration: "meditation",
     },
     {
       id: "meditation_time",
@@ -160,8 +162,8 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
       action: "Let's Meditate",
       character: "🕯️",
       time: "now",
-      gradient: ['#F97316', '#FB923C'],
-      illustration: "meditation_timer"
+      gradient: ["#F97316", "#FB923C"],
+      illustration: "meditation_timer",
     },
     {
       id: "sleep_quality",
@@ -170,14 +172,14 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
       action: "See Sleep Quality",
       character: "😴",
       time: "8h",
-      gradient: ['#8B5CF6', '#C4B5FD'],
-      illustration: "sleep"
-    }
+      gradient: ["#8B5CF6", "#C4B5FD"],
+      illustration: "sleep",
+    },
   ];
 
   useEffect(() => {
     setTodayNotifications(notificationTypes);
-    
+
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -200,7 +202,7 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
 
   const renderNotificationsList = () => {
     const notificationAnims = useRef(
-      todayNotifications.map(() => new Animated.Value(0))
+      todayNotifications.map(() => new Animated.Value(0)),
     ).current;
 
     useEffect(() => {
@@ -210,19 +212,22 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
           duration: 500,
           delay: index * 100,
           useNativeDriver: true,
-        })
+        }),
       );
-      
+
       Animated.stagger(100, animations).start();
     }, []);
 
     return (
-      <ScrollView style={styles.notificationsList} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.notificationsList}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Today's Notifications Header */}
-        <Animated.View 
+        <Animated.View
           style={[
             styles.sectionHeader,
-            { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
+            { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
           ]}
         >
           <View style={styles.sectionTitleContainer}>
@@ -232,12 +237,17 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
               color={theme.colors.therapeutic.calming[500]}
               variant="filled"
             />
-            <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.sectionTitle,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Earlier This Day
             </Text>
           </View>
           <LinearGradient
-            colors={['#EF4444', '#DC2626']}
+            colors={["#EF4444", "#DC2626"]}
             style={styles.unreadBadge}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
@@ -256,19 +266,21 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
                 backgroundColor: theme.colors.background.secondary,
                 opacity: notificationAnims[index],
                 transform: [
-                  { 
+                  {
                     translateY: notificationAnims[index].interpolate({
                       inputRange: [0, 1],
                       outputRange: [30, 0],
-                    })
-                  }
-                ]
-              }
+                    }),
+                  },
+                ],
+              },
             ]}
           >
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.notificationContent}
-              onPress={() => {/* Handle notification press */}}
+              onPress={() => {
+                /* Handle notification press */
+              }}
             >
               <View style={styles.notificationLeft}>
                 <LinearGradient
@@ -286,25 +298,50 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
                     </View>
                   )}
                 </LinearGradient>
-                
+
                 <View style={styles.notificationText}>
-                  <Text style={[styles.notificationTitle, { color: theme.colors.text.primary }]}>
+                  <Text
+                    style={[
+                      styles.notificationTitle,
+                      { color: theme.colors.text.primary },
+                    ]}
+                  >
                     {notification.title}
                   </Text>
-                  <Text style={[styles.notificationSubtitle, { color: theme.colors.text.secondary }]}>
+                  <Text
+                    style={[
+                      styles.notificationSubtitle,
+                      { color: theme.colors.text.secondary },
+                    ]}
+                  >
                     {notification.subtitle}
                   </Text>
                   <View style={styles.notificationMeta}>
-                    <View style={[styles.priorityDot, { backgroundColor: notification.color }]} />
-                    <Text style={[styles.notificationCategory, { color: theme.colors.text.tertiary }]}>
+                    <View
+                      style={[
+                        styles.priorityDot,
+                        { backgroundColor: notification.color },
+                      ]}
+                    />
+                    <Text
+                      style={[
+                        styles.notificationCategory,
+                        { color: theme.colors.text.tertiary },
+                      ]}
+                    >
                       {notification.icon.toUpperCase()}
                     </Text>
                   </View>
                 </View>
               </View>
-              
+
               <View style={styles.notificationRight}>
-                <Text style={[styles.notificationTime, { color: theme.colors.text.tertiary }]}>
+                <Text
+                  style={[
+                    styles.notificationTime,
+                    { color: theme.colors.text.tertiary },
+                  ]}
+                >
                   {notification.time}
                 </Text>
                 <NavigationIcon
@@ -312,14 +349,12 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
                   size={14}
                   color={theme.colors.text.tertiary}
                   variant="outline"
-                  style={{ transform: [{ rotate: '180deg' }] }}
+                  style={{ transform: [{ rotate: "180deg" }] }}
                 />
               </View>
             </TouchableOpacity>
-            
-            {notification.isUnread && (
-              <View style={styles.unreadHighlight} />
-            )}
+
+            {notification.isUnread && <View style={styles.unreadHighlight} />}
           </Animated.View>
         ))}
 
@@ -332,17 +367,27 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
               color={theme.colors.therapeutic.nurturing[400]}
               variant="outline"
             />
-            <Text style={[styles.sectionTitle, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.sectionTitle,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               Last Week
             </Text>
           </View>
         </View>
 
-        <View style={[styles.notificationItem, { backgroundColor: theme.colors.background.secondary }]}>
+        <View
+          style={[
+            styles.notificationItem,
+            { backgroundColor: theme.colors.background.secondary },
+          ]}
+        >
           <TouchableOpacity style={styles.notificationContent}>
             <View style={styles.notificationLeft}>
               <LinearGradient
-                colors={['#EF4444', '#DC2626']}
+                colors={["#EF4444", "#DC2626"]}
                 style={styles.notificationIcon}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
@@ -350,16 +395,31 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
                 <Text style={styles.notificationCharacter}>💤</Text>
               </LinearGradient>
               <View style={styles.notificationText}>
-                <Text style={[styles.notificationTitle, { color: theme.colors.text.primary }]}>
+                <Text
+                  style={[
+                    styles.notificationTitle,
+                    { color: theme.colors.text.primary },
+                  ]}
+                >
                   Stress Decreased!
                 </Text>
-                <Text style={[styles.notificationSubtitle, { color: theme.colors.text.secondary }]}>
+                <Text
+                  style={[
+                    styles.notificationSubtitle,
+                    { color: theme.colors.text.secondary },
+                  ]}
+                >
                   Stress Level is now 3.
                 </Text>
               </View>
             </View>
             <View style={styles.notificationRight}>
-              <Text style={[styles.notificationTime, { color: theme.colors.text.tertiary }]}>
+              <Text
+                style={[
+                  styles.notificationTime,
+                  { color: theme.colors.text.tertiary },
+                ]}
+              >
                 5 days ago
               </Text>
             </View>
@@ -371,7 +431,7 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
 
   const renderIllustrativeNotifications = () => {
     const cardAnimations = useRef(
-      illustrativeNotifications.map(() => new Animated.Value(0))
+      illustrativeNotifications.map(() => new Animated.Value(0)),
     ).current;
 
     useEffect(() => {
@@ -381,75 +441,233 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
           duration: 600,
           delay: index * 150,
           useNativeDriver: true,
-        })
+        }),
       );
-      
+
       Animated.stagger(150, animations).start();
     }, []);
 
     const renderIllustrationBackground = (type, gradient) => {
       switch (type) {
-        case 'celebration':
+        case "celebration":
           return (
             <View style={styles.illustrationBackground}>
-              <View style={[styles.celebrationCircle, { backgroundColor: 'rgba(255,255,255,0.1)' }]} />
-              <View style={[styles.celebrationCircle, { backgroundColor: 'rgba(255,255,255,0.05)', transform: [{ scale: 1.5 }] }]} />
-              <Text style={[styles.decorativeEmoji, { top: 15, right: 20, fontSize: 24 }]}>✨</Text>
-              <Text style={[styles.decorativeEmoji, { top: 45, right: 50, fontSize: 20 }]}>🎉</Text>
-              <Text style={[styles.decorativeEmoji, { bottom: 25, right: 25, fontSize: 18 }]}>⭐</Text>
-              <Text style={[styles.decorativeEmoji, { bottom: 50, left: 30, fontSize: 16 }]}>🎊</Text>
+              <View
+                style={[
+                  styles.celebrationCircle,
+                  { backgroundColor: "rgba(255,255,255,0.1)" },
+                ]}
+              />
+              <View
+                style={[
+                  styles.celebrationCircle,
+                  {
+                    backgroundColor: "rgba(255,255,255,0.05)",
+                    transform: [{ scale: 1.5 }],
+                  },
+                ]}
+              />
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { top: 15, right: 20, fontSize: 24 },
+                ]}
+              >
+                ✨
+              </Text>
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { top: 45, right: 50, fontSize: 20 },
+                ]}
+              >
+                🎉
+              </Text>
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { bottom: 25, right: 25, fontSize: 18 },
+                ]}
+              >
+                ⭐
+              </Text>
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { bottom: 50, left: 30, fontSize: 16 },
+                ]}
+              >
+                🎊
+              </Text>
             </View>
           );
-        case 'journal':
+        case "journal":
           return (
             <View style={styles.illustrationBackground}>
-              <View style={[styles.journalLines, { backgroundColor: 'rgba(255,255,255,0.1)' }]} />
-              <View style={[styles.journalLines, { backgroundColor: 'rgba(255,255,255,0.05)', top: 35 }]} />
-              <Text style={[styles.decorativeEmoji, { top: 20, right: 25, fontSize: 22 }]}>📖</Text>
-              <Text style={[styles.decorativeEmoji, { bottom: 30, right: 20, fontSize: 18 }]}>✍️</Text>
+              <View
+                style={[
+                  styles.journalLines,
+                  { backgroundColor: "rgba(255,255,255,0.1)" },
+                ]}
+              />
+              <View
+                style={[
+                  styles.journalLines,
+                  { backgroundColor: "rgba(255,255,255,0.05)", top: 35 },
+                ]}
+              />
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { top: 20, right: 25, fontSize: 22 },
+                ]}
+              >
+                📖
+              </Text>
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { bottom: 30, right: 20, fontSize: 18 },
+                ]}
+              >
+                ✍️
+              </Text>
             </View>
           );
-        case 'therapy':
+        case "therapy":
           return (
             <View style={styles.illustrationBackground}>
-              <View style={[styles.therapyBubble, { backgroundColor: 'rgba(255,255,255,0.1)' }]} />
-              <Text style={[styles.decorativeEmoji, { top: 20, right: 30, fontSize: 22 }]}>🧠</Text>
-              <Text style={[styles.decorativeEmoji, { bottom: 25, right: 15, fontSize: 18 }]}>💭</Text>
+              <View
+                style={[
+                  styles.therapyBubble,
+                  { backgroundColor: "rgba(255,255,255,0.1)" },
+                ]}
+              />
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { top: 20, right: 30, fontSize: 22 },
+                ]}
+              >
+                🧠
+              </Text>
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { bottom: 25, right: 15, fontSize: 18 },
+                ]}
+              >
+                💭
+              </Text>
             </View>
           );
-        case 'meditation':
+        case "meditation":
           return (
             <View style={styles.illustrationBackground}>
-              <View style={[styles.meditationAura, { backgroundColor: 'rgba(255,255,255,0.08)' }]} />
-              <Text style={[styles.decorativeEmoji, { top: 15, right: 25, fontSize: 24 }]}>🧘‍♀️</Text>
-              <Text style={[styles.decorativeEmoji, { bottom: 20, right: 15, fontSize: 18 }]}>🕯️</Text>
-              <Text style={[styles.decorativeEmoji, { top: 40, left: 20, fontSize: 16 }]}>🌸</Text>
+              <View
+                style={[
+                  styles.meditationAura,
+                  { backgroundColor: "rgba(255,255,255,0.08)" },
+                ]}
+              />
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { top: 15, right: 25, fontSize: 24 },
+                ]}
+              >
+                🧘‍♀️
+              </Text>
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { bottom: 20, right: 15, fontSize: 18 },
+                ]}
+              >
+                🕯️
+              </Text>
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { top: 40, left: 20, fontSize: 16 },
+                ]}
+              >
+                🌸
+              </Text>
             </View>
           );
-        case 'meditation_timer':
+        case "meditation_timer":
           return (
             <View style={styles.illustrationBackground}>
-              <View style={[styles.timerCircle, { backgroundColor: 'rgba(255,255,255,0.1)' }]} />
-              <Text style={[styles.decorativeEmoji, { top: 25, right: 30, fontSize: 20 }]}>🕯️</Text>
-              <Text style={[styles.decorativeEmoji, { bottom: 30, right: 20, fontSize: 18 }]}>⏰</Text>
+              <View
+                style={[
+                  styles.timerCircle,
+                  { backgroundColor: "rgba(255,255,255,0.1)" },
+                ]}
+              />
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { top: 25, right: 30, fontSize: 20 },
+                ]}
+              >
+                🕯️
+              </Text>
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { bottom: 30, right: 20, fontSize: 18 },
+                ]}
+              >
+                ⏰
+              </Text>
             </View>
           );
-        case 'sleep':
+        case "sleep":
           return (
             <View style={styles.illustrationBackground}>
-              <View style={[styles.sleepCloud, { backgroundColor: 'rgba(255,255,255,0.08)' }]} />
-              <Text style={[styles.decorativeEmoji, { top: 20, right: 20, fontSize: 22 }]}>💤</Text>
-              <Text style={[styles.decorativeEmoji, { bottom: 25, right: 35, fontSize: 20 }]}>🌙</Text>
-              <Text style={[styles.decorativeEmoji, { top: 30, left: 25, fontSize: 14 }]}>⭐</Text>
+              <View
+                style={[
+                  styles.sleepCloud,
+                  { backgroundColor: "rgba(255,255,255,0.08)" },
+                ]}
+              />
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { top: 20, right: 20, fontSize: 22 },
+                ]}
+              >
+                💤
+              </Text>
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { bottom: 25, right: 35, fontSize: 20 },
+                ]}
+              >
+                🌙
+              </Text>
+              <Text
+                style={[
+                  styles.decorativeEmoji,
+                  { top: 30, left: 25, fontSize: 14 },
+                ]}
+              >
+                ⭐
+              </Text>
             </View>
           );
         default:
           return null;
       }
     };
-    
+
     return (
-      <ScrollView style={styles.illustrativeList} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.illustrativeList}
+        showsVerticalScrollIndicator={false}
+      >
         {illustrativeNotifications.map((notification, index) => (
           <Animated.View
             key={notification.id}
@@ -458,20 +676,20 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
               {
                 opacity: cardAnimations[index],
                 transform: [
-                  { 
+                  {
                     translateY: cardAnimations[index].interpolate({
                       inputRange: [0, 1],
                       outputRange: [50, 0],
-                    })
+                    }),
                   },
-                  { 
+                  {
                     scale: cardAnimations[index].interpolate({
                       inputRange: [0, 1],
                       outputRange: [0.95, 1],
-                    })
-                  }
-                ]
-              }
+                    }),
+                  },
+                ],
+              },
             ]}
           >
             <LinearGradient
@@ -480,12 +698,18 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
             >
-              {renderIllustrationBackground(notification.illustration, notification.gradient)}
-              
+              {renderIllustrationBackground(
+                notification.illustration,
+                notification.gradient,
+              )}
+
               <View style={styles.illustrativeContent}>
                 <View style={styles.illustrativeHeader}>
                   <LinearGradient
-                    colors={['rgba(255,255,255,0.25)', 'rgba(255,255,255,0.15)']}
+                    colors={[
+                      "rgba(255,255,255,0.25)",
+                      "rgba(255,255,255,0.15)",
+                    ]}
                     style={styles.illustrativeIcon}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
@@ -494,36 +718,63 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
                       {notification.character}
                     </Text>
                   </LinearGradient>
-                  
+
                   <View style={styles.illustrativeText}>
-                    <Text style={[styles.illustrativeTitle, { color: theme.colors.text.inverse }]}>
+                    <Text
+                      style={[
+                        styles.illustrativeTitle,
+                        { color: theme.colors.text.inverse },
+                      ]}
+                    >
                       {notification.title}
                     </Text>
-                    <Text style={[styles.illustrativeSubtitle, { color: 'rgba(255,255,255,0.9)' }]}>
+                    <Text
+                      style={[
+                        styles.illustrativeSubtitle,
+                        { color: "rgba(255,255,255,0.9)" },
+                      ]}
+                    >
                       {notification.subtitle}
                     </Text>
                   </View>
-                  
+
                   <View style={styles.timeContainer}>
-                    <Text style={[styles.illustrativeTime, { color: 'rgba(255,255,255,0.8)' }]}>
+                    <Text
+                      style={[
+                        styles.illustrativeTime,
+                        { color: "rgba(255,255,255,0.8)" },
+                      ]}
+                    >
                       {notification.time}
                     </Text>
-                    <View style={[styles.timeDot, { backgroundColor: 'rgba(255,255,255,0.6)' }]} />
+                    <View
+                      style={[
+                        styles.timeDot,
+                        { backgroundColor: "rgba(255,255,255,0.6)" },
+                      ]}
+                    />
                   </View>
                 </View>
 
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={[
                     styles.illustrativeAction,
-                    { 
-                      backgroundColor: 'rgba(255,255,255,0.2)',
+                    {
+                      backgroundColor: "rgba(255,255,255,0.2)",
                       borderWidth: 1,
-                      borderColor: 'rgba(255,255,255,0.3)'
-                    }
+                      borderColor: "rgba(255,255,255,0.3)",
+                    },
                   ]}
-                  onPress={() => {/* Handle action */}}
+                  onPress={() => {
+                    /* Handle action */
+                  }}
                 >
-                  <Text style={[styles.illustrativeActionText, { color: theme.colors.text.inverse }]}>
+                  <Text
+                    style={[
+                      styles.illustrativeActionText,
+                      { color: theme.colors.text.inverse },
+                    ]}
+                  >
                     {notification.action}
                   </Text>
                   <NavigationIcon
@@ -542,7 +793,12 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background.primary },
+      ]}
+    >
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -554,11 +810,13 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
             size={24}
             color={theme.colors.text.primary}
             variant="outline"
-            style={{ transform: [{ rotate: '180deg' }] }}
+            style={{ transform: [{ rotate: "180deg" }] }}
           />
         </TouchableOpacity>
 
-        <Text style={[styles.headerTitle, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[styles.headerTitle, { color: theme.colors.text.primary }]}
+        >
           Notifications
         </Text>
 
@@ -580,29 +838,33 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
             style={[
               styles.tabItem,
               {
-                backgroundColor: selectedTab === tab.id
-                  ? theme.colors.therapeutic.calming[600]
-                  : 'transparent'
-              }
+                backgroundColor:
+                  selectedTab === tab.id
+                    ? theme.colors.therapeutic.calming[600]
+                    : "transparent",
+              },
             ]}
             onPress={() => setSelectedTab(tab.id)}
           >
             <MentalHealthIcon
               name={tab.icon}
               size={20}
-              color={selectedTab === tab.id
-                ? theme.colors.text.inverse
-                : theme.colors.text.secondary}
+              color={
+                selectedTab === tab.id
+                  ? theme.colors.text.inverse
+                  : theme.colors.text.secondary
+              }
               variant={selectedTab === tab.id ? "filled" : "outline"}
             />
             <Text
               style={[
                 styles.tabItemText,
                 {
-                  color: selectedTab === tab.id
-                    ? theme.colors.text.inverse
-                    : theme.colors.text.secondary
-                }
+                  color:
+                    selectedTab === tab.id
+                      ? theme.colors.text.inverse
+                      : theme.colors.text.secondary,
+                },
               ]}
             >
               {tab.title}
@@ -617,13 +879,14 @@ const DarkSmartNotificationsScreen = ({ navigation }) => {
           styles.content,
           {
             opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }]
-          }
+            transform: [{ translateY: slideAnim }],
+          },
         ]}
       >
         {selectedTab === "notifications" && renderNotificationsList()}
         {selectedTab === "history" && renderIllustrativeNotifications()}
-        {selectedTab === "settings" && renderNotificationsList()} {/* Using list for now */}
+        {selectedTab === "settings" && renderNotificationsList()}{" "}
+        {/* Using list for now */}
       </Animated.View>
     </SafeAreaView>
   );
@@ -634,37 +897,37 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
   backButton: {
     width: 40,
     height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   menuButton: {
     width: 40,
     height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   tabNavigation: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 20,
     marginBottom: 16,
     gap: 8,
   },
   tabItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 20,
@@ -672,7 +935,7 @@ const styles = StyleSheet.create({
   },
   tabItemText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   content: {
     flex: 1,
@@ -682,40 +945,40 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 16,
     marginTop: 8,
     paddingHorizontal: 4,
   },
   sectionTitleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   unreadBadge: {
-    backgroundColor: '#EF4444',
+    backgroundColor: "#EF4444",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
     minWidth: 24,
-    alignItems: 'center',
+    alignItems: "center",
   },
   unreadCount: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   notificationItem: {
     borderRadius: 16,
     marginBottom: 10,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -723,27 +986,27 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 4,
     elevation: 3,
-    position: 'relative',
+    position: "relative",
   },
   notificationContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     padding: 16,
   },
   notificationLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   notificationIcon: {
     width: 52,
     height: 52,
     borderRadius: 26,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 16,
-    position: 'relative',
+    position: "relative",
   },
   notificationCharacter: {
     fontSize: 20,
@@ -753,7 +1016,7 @@ const styles = StyleSheet.create({
   },
   notificationTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 2,
   },
   notificationSubtitle: {
@@ -761,7 +1024,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   notificationRight: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
     gap: 8,
   },
   notificationTime: {
@@ -771,34 +1034,34 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   unreadIndicator: {
-    position: 'absolute',
+    position: "absolute",
     top: 2,
     right: 2,
-    backgroundColor: '#EF4444',
+    backgroundColor: "#EF4444",
     borderRadius: 8,
     width: 16,
     height: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: "#FFFFFF",
   },
   unreadHighlight: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     top: 0,
     bottom: 0,
     width: 4,
-    backgroundColor: '#10B981',
+    backgroundColor: "#10B981",
     borderTopLeftRadius: 16,
     borderBottomLeftRadius: 16,
   },
   notificationMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
     marginTop: 4,
   },
@@ -809,7 +1072,7 @@ const styles = StyleSheet.create({
   },
   notificationCategory: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: "600",
     letterSpacing: 0.5,
   },
   illustrativeList: {
@@ -818,29 +1081,29 @@ const styles = StyleSheet.create({
   illustrativeCard: {
     borderRadius: 16,
     marginBottom: 16,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   illustrativeGradient: {
     padding: 20,
     minHeight: 120,
-    position: 'relative',
+    position: "relative",
   },
   illustrativeContent: {
     flex: 1,
     zIndex: 2,
   },
   illustrativeHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     marginBottom: 16,
   },
   illustrativeIcon: {
     width: 40,
     height: 40,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: "rgba(255,255,255,0.2)",
     borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 12,
   },
   illustrativeCharacter: {
@@ -852,7 +1115,7 @@ const styles = StyleSheet.create({
   },
   illustrativeTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 4,
     lineHeight: 20,
   },
@@ -862,24 +1125,24 @@ const styles = StyleSheet.create({
   },
   illustrativeTime: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   illustrativeAction: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
     gap: 8,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   illustrativeActionText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   decorativeElements: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -887,12 +1150,12 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   decorativeEmoji: {
-    position: 'absolute',
+    position: "absolute",
     fontSize: 20,
     opacity: 0.6,
   },
   illustrationBackground: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -900,7 +1163,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   celebrationCircle: {
-    position: 'absolute',
+    position: "absolute",
     width: 80,
     height: 80,
     borderRadius: 40,
@@ -908,14 +1171,14 @@ const styles = StyleSheet.create({
     left: 20,
   },
   journalLines: {
-    position: 'absolute',
+    position: "absolute",
     height: 2,
     left: 20,
     right: 60,
     top: 25,
   },
   therapyBubble: {
-    position: 'absolute',
+    position: "absolute",
     width: 60,
     height: 40,
     borderRadius: 20,
@@ -923,7 +1186,7 @@ const styles = StyleSheet.create({
     right: 60,
   },
   meditationAura: {
-    position: 'absolute',
+    position: "absolute",
     width: 100,
     height: 100,
     borderRadius: 50,
@@ -931,17 +1194,17 @@ const styles = StyleSheet.create({
     right: 10,
   },
   timerCircle: {
-    position: 'absolute',
+    position: "absolute",
     width: 60,
     height: 60,
     borderRadius: 30,
     top: 30,
     right: 30,
     borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.2)',
+    borderColor: "rgba(255,255,255,0.2)",
   },
   sleepCloud: {
-    position: 'absolute',
+    position: "absolute",
     width: 80,
     height: 40,
     borderRadius: 20,
@@ -949,7 +1212,7 @@ const styles = StyleSheet.create({
     right: 40,
   },
   timeContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     gap: 4,
   },
   timeDot: {

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -8,13 +9,18 @@ import {
   StatusBar,
   Alert,
   Linking,
-} from 'react-native';
-import { WebSafeLinearGradient as LinearGradient } from '../../components/common/WebSafeLinearGradient';
-import ChatTopicSidebar from '../../components/chat/ChatTopicSidebar';
-import { MentalHealthIcon } from '../../components/icons';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { useNavigation } from '@react-navigation/native';
-import { spacing, typography, borderRadius, shadows } from '../../shared/theme/theme';
+} from "react-native";
+
+import ChatTopicSidebar from "../../components/chat/ChatTopicSidebar";
+import { WebSafeLinearGradient as LinearGradient } from "../../components/common/WebSafeLinearGradient";
+import { MentalHealthIcon } from "../../components/icons";
+import { useTheme } from "../../shared/theme/ThemeContext";
+import {
+  spacing,
+  typography,
+  borderRadius,
+  shadows,
+} from "../../shared/theme/theme";
 
 const EnhancedChatScreen = () => {
   const { theme } = useTheme();
@@ -32,7 +38,7 @@ const EnhancedChatScreen = () => {
 
   const handleTopicSelect = (topic) => {
     setSelectedTopic(topic);
-    console.log('Selected topic:', topic.title);
+    console.log("Selected topic:", topic.title);
   };
 
   const handleEmergencyPress = useCallback(async () => {
@@ -50,11 +56,17 @@ const EnhancedChatScreen = () => {
               if (supported) {
                 await Linking.openURL("tel:988");
               } else {
-                Alert.alert("Unable to call", "Please dial 988 manually for immediate assistance.");
+                Alert.alert(
+                  "Unable to call",
+                  "Please dial 988 manually for immediate assistance.",
+                );
               }
             } catch (error) {
               console.error("Error making emergency call:", error);
-              Alert.alert("Call Error", "Please dial 988 manually for immediate assistance.");
+              Alert.alert(
+                "Call Error",
+                "Please dial 988 manually for immediate assistance.",
+              );
             }
           },
         },
@@ -66,7 +78,10 @@ const EnhancedChatScreen = () => {
               if (supported) {
                 await Linking.openURL("sms:741741?body=HOME");
               } else {
-                Alert.alert("Unable to text", "Please text HOME to 741741 manually.");
+                Alert.alert(
+                  "Unable to text",
+                  "Please text HOME to 741741 manually.",
+                );
               }
             } catch (error) {
               console.error("Error opening text messaging:", error);
@@ -79,7 +94,12 @@ const EnhancedChatScreen = () => {
   }, []);
 
   const ProfessionalHeader = () => (
-    <View style={[styles.header, { backgroundColor: theme.colors.background.primary }]}>
+    <View
+      style={[
+        styles.header,
+        { backgroundColor: theme.colors.background.primary },
+      ]}
+    >
       {/* Top Section - Branding */}
       <View style={styles.headerTop}>
         <TouchableOpacity
@@ -88,11 +108,17 @@ const EnhancedChatScreen = () => {
           accessibilityLabel="Open chat topics menu"
           accessibilityHint="Double tap to view conversation topics and categories"
         >
-          <MentalHealthIcon name="menu" size={24} color={theme.colors.text.primary} />
+          <MentalHealthIcon
+            name="menu"
+            size={24}
+            color={theme.colors.text.primary}
+          />
         </TouchableOpacity>
 
         <View style={styles.brandingSection}>
-          <Text style={[styles.brandTitle, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[styles.brandTitle, { color: theme.colors.text.primary }]}
+          >
             Doctor Freud.AI
           </Text>
           <View style={styles.statusTags}>
@@ -106,38 +132,63 @@ const EnhancedChatScreen = () => {
         </View>
 
         <View style={styles.headerActions}>
-          <View style={[styles.topicsBadge, { backgroundColor: theme.colors.therapeutic.empathy[500] }]}>
+          <View
+            style={[
+              styles.topicsBadge,
+              { backgroundColor: theme.colors.therapeutic.empathy[500] },
+            ]}
+          >
             <Text style={styles.topicsCount}>Topics 24</Text>
           </View>
-          
+
           <TouchableOpacity style={styles.headerButton}>
-            <MentalHealthIcon name="search" size={20} color={theme.colors.text.secondary} />
+            <MentalHealthIcon
+              name="search"
+              size={20}
+              color={theme.colors.text.secondary}
+            />
           </TouchableOpacity>
-          
+
           <TouchableOpacity style={styles.headerButton}>
-            <MentalHealthIcon name="settings" size={20} color={theme.colors.text.secondary} />
+            <MentalHealthIcon
+              name="settings"
+              size={20}
+              color={theme.colors.text.secondary}
+            />
           </TouchableOpacity>
         </View>
       </View>
 
       {/* AI Assistant Section */}
       <LinearGradient
-        colors={[theme.colors.therapeutic.calming[100], theme.colors.therapeutic.nurturing[100]]}
+        colors={[
+          theme.colors.therapeutic.calming[100],
+          theme.colors.therapeutic.nurturing[100],
+        ]}
         style={styles.aiSection}
       >
         <View style={styles.aiIconContainer}>
-          <MentalHealthIcon name="brain" size={24} color={theme.colors.therapeutic.empathy[600]} />
+          <MentalHealthIcon
+            name="brain"
+            size={24}
+            color={theme.colors.therapeutic.empathy[600]}
+          />
         </View>
         <View style={styles.aiInfo}>
           <Text style={[styles.aiTitle, { color: theme.colors.text.primary }]}>
             AI Mental Health Assistant
           </Text>
-          <Text style={[styles.aiSubtitle, { color: theme.colors.text.secondary }]}>
+          <Text
+            style={[styles.aiSubtitle, { color: theme.colors.text.secondary }]}
+          >
             Ready to support your wellness journey
           </Text>
         </View>
         <TouchableOpacity
-          style={[styles.emergencyButton, { backgroundColor: theme.colors.therapeutic.empathy[500] }]}
+          style={[
+            styles.emergencyButton,
+            { backgroundColor: theme.colors.therapeutic.empathy[500] },
+          ]}
           onPress={handleEmergencyPress}
           accessibilityLabel="Emergency support"
           accessibilityHint="Double tap for immediate crisis support resources"
@@ -149,19 +200,28 @@ const EnhancedChatScreen = () => {
       {/* Selected Topic Indicator */}
       {selectedTopic && (
         <View style={styles.selectedTopicBar}>
-          <MentalHealthIcon 
-            name={selectedTopic.icon} 
-            size={16} 
-            color={theme.colors.therapeutic.empathy[500]} 
+          <MentalHealthIcon
+            name={selectedTopic.icon}
+            size={16}
+            color={theme.colors.therapeutic.empathy[500]}
           />
-          <Text style={[styles.selectedTopicText, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[
+              styles.selectedTopicText,
+              { color: theme.colors.text.primary },
+            ]}
+          >
             {selectedTopic.title}
           </Text>
           <TouchableOpacity
             onPress={() => setSelectedTopic(null)}
             style={styles.clearTopicButton}
           >
-            <MentalHealthIcon name="close" size={16} color={theme.colors.text.secondary} />
+            <MentalHealthIcon
+              name="close"
+              size={16}
+              color={theme.colors.text.secondary}
+            />
           </TouchableOpacity>
         </View>
       )}
@@ -171,15 +231,26 @@ const EnhancedChatScreen = () => {
   const ChatPlaceholder = () => (
     <View style={styles.chatContainer}>
       <View style={styles.welcomeMessage}>
-        <Text style={[styles.welcomeTitle, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[styles.welcomeTitle, { color: theme.colors.text.primary }]}
+        >
           Welcome to Doctor Freud.AI
         </Text>
-        <Text style={[styles.welcomeSubtitle, { color: theme.colors.text.secondary }]}>
-          Your AI-powered mental health companion is here to support you. Select a topic from the menu to begin a conversation.
+        <Text
+          style={[
+            styles.welcomeSubtitle,
+            { color: theme.colors.text.secondary },
+          ]}
+        >
+          Your AI-powered mental health companion is here to support you. Select
+          a topic from the menu to begin a conversation.
         </Text>
-        
+
         <TouchableOpacity
-          style={[styles.startButton, { backgroundColor: theme.colors.therapeutic.empathy[500] }]}
+          style={[
+            styles.startButton,
+            { backgroundColor: theme.colors.therapeutic.empathy[500] },
+          ]}
           onPress={handleMenuPress}
         >
           <Text style={styles.startButtonText}>Browse Topics</Text>
@@ -190,16 +261,21 @@ const EnhancedChatScreen = () => {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background.primary },
+      ]}
+    >
       <StatusBar
         backgroundColor="transparent"
         translucent
         barStyle={theme.isDark ? "light-content" : "dark-content"}
       />
-      
+
       <ProfessionalHeader />
       <ChatPlaceholder />
-      
+
       <ChatTopicSidebar
         isVisible={sidebarVisible}
         onClose={handleSidebarClose}
@@ -219,8 +295,8 @@ const styles = StyleSheet.create({
     ...shadows.sm,
   },
   headerTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[3],
   },
@@ -237,7 +313,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing[1],
   },
   statusTags: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: spacing[2],
   },
   statusTag: {
@@ -246,19 +322,19 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.sm,
   },
   mobileTag: {
-    backgroundColor: '#E8F5E8',
+    backgroundColor: "#E8F5E8",
   },
   webTag: {
-    backgroundColor: '#E8F3FF',
+    backgroundColor: "#E8F3FF",
   },
   statusTagText: {
     fontSize: typography.sizes.xs,
     fontWeight: typography.weights.medium,
-    color: '#666666',
+    color: "#666666",
   },
   headerActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacing[2],
   },
   topicsBadge: {
@@ -267,7 +343,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.full,
   },
   topicsCount: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: typography.sizes.xs,
     fontWeight: typography.weights.semiBold,
   },
@@ -275,8 +351,8 @@ const styles = StyleSheet.create({
     padding: spacing[2],
   },
   aiSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[3],
     marginHorizontal: spacing[4],
@@ -305,13 +381,13 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.sm,
   },
   selectedTopicBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[2],
     borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.1)',
-    backgroundColor: 'rgba(255, 107, 53, 0.05)',
+    borderTopColor: "rgba(0,0,0,0.1)",
+    backgroundColor: "rgba(255, 107, 53, 0.05)",
   },
   selectedTopicText: {
     fontSize: typography.sizes.sm,
@@ -324,36 +400,36 @@ const styles = StyleSheet.create({
   },
   chatContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: spacing[6],
   },
   welcomeMessage: {
-    alignItems: 'center',
+    alignItems: "center",
     maxWidth: 300,
   },
   welcomeTitle: {
     fontSize: typography.sizes.xl,
     fontWeight: typography.weights.bold,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: spacing[3],
   },
   welcomeSubtitle: {
     fontSize: typography.sizes.base,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: typography.lineHeights.relaxed,
     marginBottom: spacing[6],
   },
   startButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: spacing[6],
     paddingVertical: spacing[3],
     borderRadius: borderRadius.full,
     gap: spacing[2],
   },
   startButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: typography.sizes.base,
     fontWeight: typography.weights.semiBold,
   },

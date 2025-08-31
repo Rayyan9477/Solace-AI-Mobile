@@ -4,31 +4,27 @@
  * Includes therapeutic design patterns and accessibility
  */
 
-import React from 'react';
-import {
-  render,
-  fireEvent,
-  waitFor,
-  act,
-} from '@testing-library/react-native';
-import { ThemeProvider } from '../../../shared/theme/ThemeContext';
-import QuickActions from '../../../components/dashboard/QuickActions';
+import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
+import React from "react";
+
+import QuickActions from "../../../components/dashboard/QuickActions";
+import { ThemeProvider } from "../../../shared/theme/ThemeContext";
 
 // Mock dependencies
-jest.mock('expo-linear-gradient', () => ({
+jest.mock("expo-linear-gradient", () => ({
   LinearGradient: ({ children, ...props }) => children,
 }));
 
-jest.mock('expo-haptics', () => ({
+jest.mock("expo-haptics", () => ({
   impactAsync: jest.fn(),
   ImpactFeedbackStyle: {
-    Light: 'light',
-    Medium: 'medium', 
-    Heavy: 'heavy',
+    Light: "light",
+    Medium: "medium",
+    Heavy: "heavy",
   },
 }));
 
-jest.mock('@react-navigation/native', () => ({
+jest.mock("@react-navigation/native", () => ({
   useNavigation: () => ({
     navigate: jest.fn(),
     push: jest.fn(),
@@ -38,15 +34,15 @@ jest.mock('@react-navigation/native', () => ({
 
 const mockTheme = {
   colors: {
-    nurturing: ['#4CAF50', '#81C784'],
-    calming: ['#2196F3', '#64B5F6'],
-    peaceful: ['#607D8B', '#90A4AE'],
-    grounding: ['#9C27B0', '#BA68C8'],
-    energizing: ['#FF9800', '#FFB74D'],
-    background: '#FFFFFF',
-    text: '#000000',
-    surface: '#F5F5F5',
-    primary: '#2196F3',
+    nurturing: ["#4CAF50", "#81C784"],
+    calming: ["#2196F3", "#64B5F6"],
+    peaceful: ["#607D8B", "#90A4AE"],
+    grounding: ["#9C27B0", "#BA68C8"],
+    energizing: ["#FF9800", "#FFB74D"],
+    background: "#FFFFFF",
+    text: "#000000",
+    surface: "#F5F5F5",
+    primary: "#2196F3",
   },
   spacing: {
     xs: 4,
@@ -62,27 +58,29 @@ const mockTheme = {
     xl: 16,
   },
   typography: {
-    h3: { fontSize: 20, fontWeight: 'bold' },
-    body: { fontSize: 16, fontWeight: 'normal' },
-    caption: { fontSize: 12, fontWeight: 'normal' },
+    h3: { fontSize: 20, fontWeight: "bold" },
+    body: { fontSize: 16, fontWeight: "normal" },
+    caption: { fontSize: 12, fontWeight: "normal" },
   },
 };
 
 const MockThemeProvider = ({ children }) => (
-  <ThemeProvider value={{
-    theme: mockTheme,
-    isReducedMotionEnabled: false,
-    colors: mockTheme.colors,
-  }}>
+  <ThemeProvider
+    value={{
+      theme: mockTheme,
+      isReducedMotionEnabled: false,
+      colors: mockTheme.colors,
+    }}
+  >
     {children}
   </ThemeProvider>
 );
 
-describe('QuickActions Component', () => {
+describe("QuickActions Component", () => {
   const defaultProps = {
     onActionPress: jest.fn(),
-    accessibilityLabel: 'Quick mental health actions',
-    testID: 'quick-actions',
+    accessibilityLabel: "Quick mental health actions",
+    testID: "quick-actions",
   };
 
   beforeEach(() => {
@@ -99,116 +97,127 @@ describe('QuickActions Component', () => {
     return render(
       <MockThemeProvider>
         <QuickActions {...defaultProps} {...props} />
-      </MockThemeProvider>
+      </MockThemeProvider>,
     );
   };
 
-  describe('Rendering and Layout', () => {
-    it('renders correctly with default props', () => {
+  describe("Rendering and Layout", () => {
+    it("renders correctly with default props", () => {
       const { getByTestId } = renderQuickActions();
-      const component = getByTestId('quick-actions');
+      const component = getByTestId("quick-actions");
       expect(component).toBeTruthy();
     });
 
-    it('displays all mental health action options', () => {
+    it("displays all mental health action options", () => {
       const { getByText } = renderQuickActions();
-      
+
       // Common mental health actions
-      expect(getByText(/therapy/i) || getByText(/journal/i) || getByText(/mindful/i)).toBeTruthy();
+      expect(
+        getByText(/therapy/i) || getByText(/journal/i) || getByText(/mindful/i),
+      ).toBeTruthy();
     });
 
-    it('renders action cards with proper therapeutic styling', () => {
+    it("renders action cards with proper therapeutic styling", () => {
       const { getAllByTestId } = renderQuickActions();
       const actionCards = getAllByTestId(/action-card/i);
-      
+
       expect(actionCards.length).toBeGreaterThan(0);
-      actionCards.forEach(card => {
+      actionCards.forEach((card) => {
         expect(card).toBeTruthy();
       });
     });
 
-    it('applies staggered animations correctly', async () => {
+    it("applies staggered animations correctly", async () => {
       const { getAllByTestId } = renderQuickActions();
       const actionCards = getAllByTestId(/action-card/i);
-      
+
       // Fast-forward timers for staggered animations
       act(() => {
         jest.advanceTimersByTime(2000);
       });
-      
+
       expect(actionCards.length).toBeGreaterThan(0);
     });
   });
 
-  describe('Mental Health Action Types', () => {
-    it('includes therapy session action', () => {
+  describe("Mental Health Action Types", () => {
+    it("includes therapy session action", () => {
       const { getByTestId } = renderQuickActions();
-      const therapyAction = getByTestId('action-therapy') || getByTestId('action-card-therapy');
+      const therapyAction =
+        getByTestId("action-therapy") || getByTestId("action-card-therapy");
       expect(therapyAction).toBeTruthy();
     });
 
-    it('includes journaling action', () => {
+    it("includes journaling action", () => {
       const { getByTestId } = renderQuickActions();
-      const journalAction = getByTestId('action-journal') || getByTestId('action-card-journal');
+      const journalAction =
+        getByTestId("action-journal") || getByTestId("action-card-journal");
       expect(journalAction).toBeTruthy();
     });
 
-    it('includes mindfulness action', () => {
+    it("includes mindfulness action", () => {
       const { getByTestId } = renderQuickActions();
-      const mindfulAction = getByTestId('action-mindful') || getByTestId('action-card-mindful');
+      const mindfulAction =
+        getByTestId("action-mindful") || getByTestId("action-card-mindful");
       expect(mindfulAction).toBeTruthy();
     });
 
-    it('includes crisis support access', () => {
+    it("includes crisis support access", () => {
       const { getByTestId, getByText } = renderQuickActions();
-      const crisisAction = getByTestId('action-crisis') || 
-                          getByTestId('action-card-crisis') ||
-                          getByText(/crisis/i) ||
-                          getByText(/emergency/i);
+      const crisisAction =
+        getByTestId("action-crisis") ||
+        getByTestId("action-card-crisis") ||
+        getByText(/crisis/i) ||
+        getByText(/emergency/i);
       expect(crisisAction).toBeTruthy();
     });
   });
 
-  describe('Interaction and Navigation', () => {
-    it('calls onActionPress when action is selected', async () => {
+  describe("Interaction and Navigation", () => {
+    it("calls onActionPress when action is selected", async () => {
       const mockOnActionPress = jest.fn();
-      const { getAllByTestId } = renderQuickActions({ onActionPress: mockOnActionPress });
+      const { getAllByTestId } = renderQuickActions({
+        onActionPress: mockOnActionPress,
+      });
       const actionCards = getAllByTestId(/action-card/i);
-      
+
       if (actionCards.length > 0) {
         fireEvent.press(actionCards[0]);
-        
+
         await waitFor(() => {
           expect(mockOnActionPress).toHaveBeenCalled();
         });
       }
     });
 
-    it('navigates to correct screens for each action', async () => {
-      const { useNavigation } = require('@react-navigation/native');
+    it("navigates to correct screens for each action", async () => {
+      const { useNavigation } = require("@react-navigation/native");
       const mockNavigate = jest.fn();
       useNavigation.mockReturnValue({ navigate: mockNavigate });
-      
+
       const { getByTestId } = renderQuickActions();
-      
+
       // Test therapy action navigation
-      const therapyAction = getByTestId('action-therapy') || getByTestId('action-card-therapy');
+      const therapyAction =
+        getByTestId("action-therapy") || getByTestId("action-card-therapy");
       if (therapyAction) {
         fireEvent.press(therapyAction);
         await waitFor(() => {
-          expect(mockNavigate).toHaveBeenCalledWith(expect.stringContaining('Therapy'));
+          expect(mockNavigate).toHaveBeenCalledWith(
+            expect.stringContaining("Therapy"),
+          );
         });
       }
     });
 
-    it('provides haptic feedback on action press', async () => {
-      const { Haptics } = require('expo-haptics');
+    it("provides haptic feedback on action press", async () => {
+      const { Haptics } = require("expo-haptics");
       const { getAllByTestId } = renderQuickActions();
       const actionCards = getAllByTestId(/action-card/i);
-      
+
       if (actionCards.length > 0) {
         fireEvent.press(actionCards[0]);
-        
+
         await waitFor(() => {
           expect(Haptics.impactAsync).toHaveBeenCalled();
         });
@@ -216,60 +225,62 @@ describe('QuickActions Component', () => {
     });
   });
 
-  describe('Accessibility Features', () => {
-    it('has proper accessibility labels for each action', () => {
+  describe("Accessibility Features", () => {
+    it("has proper accessibility labels for each action", () => {
       const { getAllByTestId } = renderQuickActions();
       const actionCards = getAllByTestId(/action-card/i);
-      
-      actionCards.forEach(card => {
+
+      actionCards.forEach((card) => {
         expect(card.props.accessibilityLabel).toBeTruthy();
-        expect(card.props.accessibilityRole).toBe('button');
+        expect(card.props.accessibilityRole).toBe("button");
       });
     });
 
-    it('provides meaningful accessibility hints', () => {
+    it("provides meaningful accessibility hints", () => {
       const { getAllByTestId } = renderQuickActions();
       const actionCards = getAllByTestId(/action-card/i);
-      
-      actionCards.forEach(card => {
+
+      actionCards.forEach((card) => {
         expect(card.props.accessibilityHint).toBeTruthy();
       });
     });
 
-    it('meets minimum touch target requirements', () => {
+    it("meets minimum touch target requirements", () => {
       const { getAllByTestId } = renderQuickActions();
       const actionCards = getAllByTestId(/action-card/i);
       const minTouchTarget = 44;
-      
-      actionCards.forEach(card => {
+
+      actionCards.forEach((card) => {
         const style = card.props.style;
-        expect(style.minHeight || style.height).toBeGreaterThanOrEqual(minTouchTarget);
+        expect(style.minHeight || style.height).toBeGreaterThanOrEqual(
+          minTouchTarget,
+        );
       });
     });
 
-    it('supports screen reader navigation', () => {
+    it("supports screen reader navigation", () => {
       const { getByTestId } = renderQuickActions();
-      const component = getByTestId('quick-actions');
-      
+      const component = getByTestId("quick-actions");
+
       expect(component.props.accessible).toBe(true);
       expect(component.props.accessibilityLabel).toBeTruthy();
     });
   });
 
-  describe('Therapeutic Design Patterns', () => {
-    it('uses appropriate therapeutic colors for each action type', () => {
+  describe("Therapeutic Design Patterns", () => {
+    it("uses appropriate therapeutic colors for each action type", () => {
       const { getAllByTestId } = renderQuickActions();
       const actionCards = getAllByTestId(/action-card/i);
-      
+
       // Each card should have therapeutic styling
-      actionCards.forEach(card => {
+      actionCards.forEach((card) => {
         expect(card).toBeTruthy();
       });
     });
 
-    it('displays encouraging and supportive text', () => {
+    it("displays encouraging and supportive text", () => {
       const { getByText } = renderQuickActions();
-      
+
       // Should contain positive, supportive language
       const supportiveElements = [
         /support/i,
@@ -278,110 +289,117 @@ describe('QuickActions Component', () => {
         /mindful/i,
         /care/i,
         /journal/i,
-        /therapy/i
+        /therapy/i,
       ];
-      
-      const hasSupprotiveText = supportiveElements.some(pattern => {
+
+      const hasSupprotiveText = supportiveElements.some((pattern) => {
         try {
           return getByText(pattern);
         } catch {
           return false;
         }
       });
-      
+
       expect(hasSupprotiveText).toBe(true);
     });
 
-    it('prioritizes crisis support visibility', () => {
+    it("prioritizes crisis support visibility", () => {
       const { getAllByTestId } = renderQuickActions();
       const actionCards = getAllByTestId(/action-card/i);
-      
+
       // Crisis support should be prominently displayed
-      const crisisCard = actionCards.find(card => 
-        card.props.testID?.includes('crisis') || 
-        card.props.accessibilityLabel?.toLowerCase().includes('crisis')
+      const crisisCard = actionCards.find(
+        (card) =>
+          card.props.testID?.includes("crisis") ||
+          card.props.accessibilityLabel?.toLowerCase().includes("crisis"),
       );
-      
+
       if (crisisCard) {
         expect(crisisCard).toBeTruthy();
       }
     });
   });
 
-  describe('Animation and Visual Feedback', () => {
-    it('respects reduced motion preferences', () => {
+  describe("Animation and Visual Feedback", () => {
+    it("respects reduced motion preferences", () => {
       const ReducedMotionProvider = ({ children }) => (
-        <ThemeProvider value={{
-          theme: mockTheme,
-          isReducedMotionEnabled: true,
-          colors: mockTheme.colors,
-        }}>
+        <ThemeProvider
+          value={{
+            theme: mockTheme,
+            isReducedMotionEnabled: true,
+            colors: mockTheme.colors,
+          }}
+        >
           {children}
         </ThemeProvider>
       );
-      
+
       const { getByTestId } = render(
         <ReducedMotionProvider>
           <QuickActions {...defaultProps} />
-        </ReducedMotionProvider>
+        </ReducedMotionProvider>,
       );
-      
-      const component = getByTestId('quick-actions');
+
+      const component = getByTestId("quick-actions");
       expect(component).toBeTruthy();
     });
 
-    it('animates cards with staggered entrance', async () => {
+    it("animates cards with staggered entrance", async () => {
       const { getAllByTestId } = renderQuickActions();
       const actionCards = getAllByTestId(/action-card/i);
-      
+
       // Advance timers to trigger staggered animations
       act(() => {
         jest.advanceTimersByTime(1000);
       });
-      
+
       expect(actionCards.length).toBeGreaterThan(0);
     });
 
-    it('provides visual feedback on press', async () => {
+    it("provides visual feedback on press", async () => {
       const { getAllByTestId } = renderQuickActions();
       const actionCards = getAllByTestId(/action-card/i);
-      
+
       if (actionCards.length > 0) {
         fireEvent.press(actionCards[0]);
-        
+
         // Should provide visual feedback
         expect(actionCards[0]).toBeTruthy();
       }
     });
   });
 
-  describe('Error Handling and Edge Cases', () => {
-    it('handles missing onActionPress gracefully', () => {
-      const { getAllByTestId } = renderQuickActions({ onActionPress: undefined });
+  describe("Error Handling and Edge Cases", () => {
+    it("handles missing onActionPress gracefully", () => {
+      const { getAllByTestId } = renderQuickActions({
+        onActionPress: undefined,
+      });
       const actionCards = getAllByTestId(/action-card/i);
-      
+
       if (actionCards.length > 0) {
         expect(() => fireEvent.press(actionCards[0])).not.toThrow();
       }
     });
 
-    it('renders without theme context', () => {
+    it("renders without theme context", () => {
       expect(() => {
         render(<QuickActions {...defaultProps} />);
       }).not.toThrow();
     });
 
-    it('handles rapid action selections', async () => {
+    it("handles rapid action selections", async () => {
       const mockOnActionPress = jest.fn();
-      const { getAllByTestId } = renderQuickActions({ onActionPress: mockOnActionPress });
+      const { getAllByTestId } = renderQuickActions({
+        onActionPress: mockOnActionPress,
+      });
       const actionCards = getAllByTestId(/action-card/i);
-      
+
       if (actionCards.length > 0) {
         // Rapidly press multiple actions
         fireEvent.press(actionCards[0]);
         if (actionCards[1]) fireEvent.press(actionCards[1]);
         if (actionCards[2]) fireEvent.press(actionCards[2]);
-        
+
         await waitFor(() => {
           expect(mockOnActionPress).toHaveBeenCalled();
         });
@@ -389,49 +407,54 @@ describe('QuickActions Component', () => {
     });
   });
 
-  describe('Integration with Mental Health Features', () => {
-    it('integrates with crisis intervention system', async () => {
+  describe("Integration with Mental Health Features", () => {
+    it("integrates with crisis intervention system", async () => {
       const mockOnActionPress = jest.fn();
-      const { getByTestId } = renderQuickActions({ onActionPress: mockOnActionPress });
-      
-      const crisisAction = getByTestId('action-crisis') || getByTestId('action-card-crisis');
+      const { getByTestId } = renderQuickActions({
+        onActionPress: mockOnActionPress,
+      });
+
+      const crisisAction =
+        getByTestId("action-crisis") || getByTestId("action-card-crisis");
       if (crisisAction) {
         fireEvent.press(crisisAction);
-        
+
         await waitFor(() => {
           expect(mockOnActionPress).toHaveBeenCalledWith(
             expect.objectContaining({
-              type: expect.stringMatching(/crisis|emergency/i)
-            })
+              type: expect.stringMatching(/crisis|emergency/i),
+            }),
           );
         });
       }
     });
 
-    it('tracks action analytics for mental health insights', async () => {
+    it("tracks action analytics for mental health insights", async () => {
       const mockOnActionPress = jest.fn();
-      const { getAllByTestId } = renderQuickActions({ onActionPress: mockOnActionPress });
+      const { getAllByTestId } = renderQuickActions({
+        onActionPress: mockOnActionPress,
+      });
       const actionCards = getAllByTestId(/action-card/i);
-      
+
       if (actionCards.length > 0) {
         fireEvent.press(actionCards[0]);
-        
+
         await waitFor(() => {
           const callArgs = mockOnActionPress.mock.calls[0];
           expect(callArgs).toBeDefined();
-          expect(callArgs[0]).toHaveProperty('timestamp');
+          expect(callArgs[0]).toHaveProperty("timestamp");
         });
       }
     });
 
-    it('provides contextual recommendations', () => {
-      const { getByTestId } = renderQuickActions({ 
-        userContext: { recentMood: 'anxious', timeOfDay: 'evening' }
+    it("provides contextual recommendations", () => {
+      const { getByTestId } = renderQuickActions({
+        userContext: { recentMood: "anxious", timeOfDay: "evening" },
       });
-      
-      const component = getByTestId('quick-actions');
+
+      const component = getByTestId("quick-actions");
       expect(component).toBeTruthy();
-      
+
       // Should adapt recommendations based on context
     });
   });

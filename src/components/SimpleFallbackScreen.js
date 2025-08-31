@@ -3,57 +3,72 @@
  * Used as a fallback and loading screen - No complex dependencies
  */
 
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 
-const SimpleFallbackScreen = ({ 
-  message = "Loading...", 
-  error, 
-  onRetry, 
-  onGoHome, 
+const SimpleFallbackScreen = ({
+  message = "Loading...",
+  error,
+  onRetry,
+  onGoHome,
   showSpinner = false,
-  showEmergencyHelp = false 
+  showEmergencyHelp = false,
 }) => {
-  console.log('📱 SimpleFallbackScreen: Rendering with message:', message);
+  console.log("📱 SimpleFallbackScreen: Rendering with message:", message);
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         {showSpinner && (
-          <ActivityIndicator size="large" color="#3B82F6" style={styles.spinner} />
+          <ActivityIndicator
+            size="large"
+            color="#3B82F6"
+            style={styles.spinner}
+          />
         )}
-        
+
         <View style={styles.iconContainer}>
           <Text style={styles.icon}>
-            {error ? '⚠️' : showEmergencyHelp ? '🆘' : '🌟'}
+            {error ? "⚠️" : showEmergencyHelp ? "🆘" : "🌟"}
           </Text>
         </View>
-        
+
         <Text style={styles.title}>
-          {error ? 'Something went wrong' : 'Solace AI Mobile'}
+          {error ? "Something went wrong" : "Solace AI Mobile"}
         </Text>
-        
+
         <Text style={styles.message}>{message}</Text>
-        
+
         {error && (
           <Text style={styles.errorText}>
-            {error.message || 'An unexpected error occurred'}
+            {error.message || "An unexpected error occurred"}
           </Text>
         )}
-        
+
         <View style={styles.buttonContainer}>
           {onRetry && (
             <TouchableOpacity style={styles.button} onPress={onRetry}>
               <Text style={styles.buttonText}>Try Again</Text>
             </TouchableOpacity>
           )}
-          
+
           {onGoHome && (
-            <TouchableOpacity style={[styles.button, styles.secondaryButton]} onPress={onGoHome}>
-              <Text style={[styles.buttonText, styles.secondaryButtonText]}>Go Home</Text>
+            <TouchableOpacity
+              style={[styles.button, styles.secondaryButton]}
+              onPress={onGoHome}
+            >
+              <Text style={[styles.buttonText, styles.secondaryButtonText]}>
+                Go Home
+              </Text>
             </TouchableOpacity>
           )}
-          
+
           {showEmergencyHelp && (
             <TouchableOpacity style={[styles.button, styles.emergencyButton]}>
               <Text style={styles.buttonText}>Emergency Support</Text>
@@ -68,12 +83,12 @@ const SimpleFallbackScreen = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: "#f8fafc",
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 24,
   },
   spinner: {
@@ -83,9 +98,9 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#e0f2fe',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#e0f2fe",
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 24,
   },
   icon: {
@@ -93,55 +108,55 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: '700',
-    color: '#1e293b',
-    textAlign: 'center',
+    fontWeight: "700",
+    color: "#1e293b",
+    textAlign: "center",
     marginBottom: 16,
   },
   message: {
     fontSize: 16,
-    color: '#64748b',
-    textAlign: 'center',
+    color: "#64748b",
+    textAlign: "center",
     lineHeight: 24,
     marginBottom: 20,
     maxWidth: 300,
   },
   errorText: {
     fontSize: 14,
-    color: '#ef4444',
-    textAlign: 'center',
+    color: "#ef4444",
+    textAlign: "center",
     marginBottom: 20,
     maxWidth: 300,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 12,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   button: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: "#3b82f6",
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 24,
     minWidth: 120,
   },
   secondaryButton: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: '#3b82f6',
+    borderColor: "#3b82f6",
   },
   emergencyButton: {
-    backgroundColor: '#ef4444',
+    backgroundColor: "#ef4444",
   },
   buttonText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
   },
   secondaryButtonText: {
-    color: '#3b82f6',
+    color: "#3b82f6",
   },
 });
 

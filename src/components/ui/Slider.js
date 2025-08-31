@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -6,13 +6,14 @@ import {
   StyleSheet,
   Dimensions,
   Animated,
-  Platform
-} from 'react-native';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { getTherapeuticColor } from '../../shared/theme/ColorPalette';
+  Platform,
+} from "react-native";
+
+import { getTherapeuticColor } from "../../shared/theme/ColorPalette";
+import { useTheme } from "../../shared/theme/ThemeContext";
 
 // For React Native without Reanimated, we'll use a simpler implementation
-const { width: screenWidth } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get("window");
 
 const Slider = ({
   value = 50,
@@ -21,12 +22,12 @@ const Slider = ({
   step = 1,
   onValueChange = () => {},
   onSlidingComplete = () => {},
-  therapeuticColor = 'calming',
-  size = 'medium',
+  therapeuticColor = "calming",
+  size = "medium",
   showLabels = true,
   showValue = true,
-  minimumLabel = '',
-  maximumLabel = '',
+  minimumLabel = "",
+  maximumLabel = "",
   formatValue = (val) => val.toString(),
   disabled = false,
   style = {},
@@ -42,19 +43,23 @@ const Slider = ({
   const [currentValue, setCurrentValue] = useState(value);
   const [isSliding, setIsSliding] = useState(false);
   const sliderWidth = useRef(200);
-  
-  const therapeuticColors = getTherapeuticColor(therapeuticColor, 500, isDarkMode);
+
+  const therapeuticColors = getTherapeuticColor(
+    therapeuticColor,
+    500,
+    isDarkMode,
+  );
 
   const getSizeStyles = () => {
     switch (size) {
-      case 'small':
+      case "small":
         return {
           trackHeight: 4,
           thumbSize: 16,
           fontSize: 12,
           padding: 16,
         };
-      case 'large':
+      case "large":
         return {
           trackHeight: 8,
           thumbSize: 28,
@@ -72,48 +77,61 @@ const Slider = ({
   };
 
   const sizeStyles = getSizeStyles();
-  const normalizedValue = Math.max(minimumValue, Math.min(maximumValue, currentValue));
-  const percentage = ((normalizedValue - minimumValue) / (maximumValue - minimumValue)) * 100;
+  const normalizedValue = Math.max(
+    minimumValue,
+    Math.min(maximumValue, currentValue),
+  );
+  const percentage =
+    ((normalizedValue - minimumValue) / (maximumValue - minimumValue)) * 100;
 
-  const handleValueChange = useCallback((newValue) => {
-    if (disabled) return;
-    
-    const steppedValue = step > 0 
-      ? Math.round(newValue / step) * step 
-      : newValue;
-    
-    const clampedValue = Math.max(minimumValue, Math.min(maximumValue, steppedValue));
-    
-    if (clampedValue !== currentValue) {
-      setCurrentValue(clampedValue);
-      onValueChange(clampedValue);
-    }
-  }, [currentValue, step, minimumValue, maximumValue, disabled, onValueChange]);
+  const handleValueChange = useCallback(
+    (newValue) => {
+      if (disabled) return;
+
+      const steppedValue =
+        step > 0 ? Math.round(newValue / step) * step : newValue;
+
+      const clampedValue = Math.max(
+        minimumValue,
+        Math.min(maximumValue, steppedValue),
+      );
+
+      if (clampedValue !== currentValue) {
+        setCurrentValue(clampedValue);
+        onValueChange(clampedValue);
+      }
+    },
+    [currentValue, step, minimumValue, maximumValue, disabled, onValueChange],
+  );
 
   const renderLabels = () => {
     if (!showLabels) return null;
 
     return (
       <View style={styles.labelsContainer}>
-        <Text style={[
-          styles.label,
-          {
-            color: theme.colors.text.secondary,
-            fontSize: sizeStyles.fontSize - 2,
-          },
-          labelStyle,
-        ]}>
+        <Text
+          style={[
+            styles.label,
+            {
+              color: theme.colors.text.secondary,
+              fontSize: sizeStyles.fontSize - 2,
+            },
+            labelStyle,
+          ]}
+        >
           {minimumLabel || minimumValue}
         </Text>
-        
-        <Text style={[
-          styles.label,
-          {
-            color: theme.colors.text.secondary,
-            fontSize: sizeStyles.fontSize - 2,
-          },
-          labelStyle,
-        ]}>
+
+        <Text
+          style={[
+            styles.label,
+            {
+              color: theme.colors.text.secondary,
+              fontSize: sizeStyles.fontSize - 2,
+            },
+            labelStyle,
+          ]}
+        >
           {maximumLabel || maximumValue}
         </Text>
       </View>
@@ -125,14 +143,16 @@ const Slider = ({
 
     return (
       <View style={styles.valueContainer}>
-        <Text style={[
-          styles.valueText,
-          {
-            color: therapeuticColors,
-            fontSize: sizeStyles.fontSize + 2,
-            fontWeight: '600',
-          },
-        ]}>
+        <Text
+          style={[
+            styles.valueText,
+            {
+              color: therapeuticColors,
+              fontSize: sizeStyles.fontSize + 2,
+              fontWeight: "600",
+            },
+          ]}
+        >
           {formatValue(currentValue)}
         </Text>
       </View>
@@ -168,7 +188,7 @@ const Slider = ({
             fillStyle,
           ]}
         />
-        
+
         {/* Thumb */}
         <View
           style={[
@@ -230,8 +250,8 @@ export const RangeSlider = ({
   highValue = 75,
   step = 1,
   onValueChange = () => {},
-  therapeuticColor = 'calming',
-  size = 'medium',
+  therapeuticColor = "calming",
+  size = "medium",
   showLabels = true,
   showValues = true,
   disabled = false,
@@ -241,12 +261,18 @@ export const RangeSlider = ({
   const { theme, isDarkMode } = useTheme();
   const [currentLow, setCurrentLow] = useState(lowValue);
   const [currentHigh, setCurrentHigh] = useState(highValue);
-  
-  const therapeuticColors = getTherapeuticColor(therapeuticColor, 500, isDarkMode);
+
+  const therapeuticColors = getTherapeuticColor(
+    therapeuticColor,
+    500,
+    isDarkMode,
+  );
   const sizeStyles = getSizeStyles(size);
 
-  const lowPercentage = ((currentLow - minimumValue) / (maximumValue - minimumValue)) * 100;
-  const highPercentage = ((currentHigh - minimumValue) / (maximumValue - minimumValue)) * 100;
+  const lowPercentage =
+    ((currentLow - minimumValue) / (maximumValue - minimumValue)) * 100;
+  const highPercentage =
+    ((currentHigh - minimumValue) / (maximumValue - minimumValue)) * 100;
   const rangePercentage = highPercentage - lowPercentage;
 
   const renderValues = () => {
@@ -254,33 +280,39 @@ export const RangeSlider = ({
 
     return (
       <View style={styles.rangeValuesContainer}>
-        <Text style={[
-          styles.rangeValue,
-          {
-            color: therapeuticColors,
-            fontSize: sizeStyles.fontSize,
-            fontWeight: '600',
-          },
-        ]}>
+        <Text
+          style={[
+            styles.rangeValue,
+            {
+              color: therapeuticColors,
+              fontSize: sizeStyles.fontSize,
+              fontWeight: "600",
+            },
+          ]}
+        >
           {currentLow}
         </Text>
-        <Text style={[
-          styles.rangeValue,
-          {
-            color: theme.colors.text.secondary,
-            fontSize: sizeStyles.fontSize - 2,
-          },
-        ]}>
+        <Text
+          style={[
+            styles.rangeValue,
+            {
+              color: theme.colors.text.secondary,
+              fontSize: sizeStyles.fontSize - 2,
+            },
+          ]}
+        >
           —
         </Text>
-        <Text style={[
-          styles.rangeValue,
-          {
-            color: therapeuticColors,
-            fontSize: sizeStyles.fontSize,
-            fontWeight: '600',
-          },
-        ]}>
+        <Text
+          style={[
+            styles.rangeValue,
+            {
+              color: therapeuticColors,
+              fontSize: sizeStyles.fontSize,
+              fontWeight: "600",
+            },
+          ]}
+        >
           {currentHigh}
         </Text>
       </View>
@@ -312,7 +344,7 @@ export const RangeSlider = ({
             },
           ]}
         />
-        
+
         {/* Low Thumb */}
         <View
           style={[
@@ -327,7 +359,7 @@ export const RangeSlider = ({
             },
           ]}
         />
-        
+
         {/* High Thumb */}
         <View
           style={[
@@ -362,22 +394,26 @@ export const RangeSlider = ({
       {renderRangeTrack()}
       {showLabels && (
         <View style={styles.labelsContainer}>
-          <Text style={[
-            styles.label,
-            {
-              color: theme.colors.text.secondary,
-              fontSize: sizeStyles.fontSize - 2,
-            },
-          ]}>
+          <Text
+            style={[
+              styles.label,
+              {
+                color: theme.colors.text.secondary,
+                fontSize: sizeStyles.fontSize - 2,
+              },
+            ]}
+          >
             {minimumValue}
           </Text>
-          <Text style={[
-            styles.label,
-            {
-              color: theme.colors.text.secondary,
-              fontSize: sizeStyles.fontSize - 2,
-            },
-          ]}>
+          <Text
+            style={[
+              styles.label,
+              {
+                color: theme.colors.text.secondary,
+                fontSize: sizeStyles.fontSize - 2,
+              },
+            ]}
+          >
             {maximumValue}
           </Text>
         </View>
@@ -406,14 +442,14 @@ export const GroundingSlider = (props) => (
 // Utility function for size styles
 const getSizeStyles = (size) => {
   switch (size) {
-    case 'small':
+    case "small":
       return {
         trackHeight: 4,
         thumbSize: 16,
         fontSize: 12,
         padding: 16,
       };
-    case 'large':
+    case "large":
       return {
         trackHeight: 8,
         thumbSize: 28,
@@ -432,31 +468,31 @@ const getSizeStyles = (size) => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    justifyContent: "center",
     minHeight: 60,
   },
   track: {
-    position: 'relative',
-    width: '100%',
-    justifyContent: 'center',
+    position: "relative",
+    width: "100%",
+    justifyContent: "center",
   },
   fill: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
   },
   rangeFill: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
   },
   thumb: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: "#FFFFFF",
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 4,
@@ -467,29 +503,29 @@ const styles = StyleSheet.create({
     }),
   },
   valueContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 12,
   },
   valueText: {
-    fontWeight: '600',
+    fontWeight: "600",
   },
   rangeValuesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 12,
     gap: 8,
   },
   rangeValue: {
-    fontWeight: '600',
+    fontWeight: "600",
   },
   labelsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 8,
   },
   label: {
-    fontWeight: '500',
+    fontWeight: "500",
   },
 });
 

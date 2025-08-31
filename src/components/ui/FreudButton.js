@@ -5,22 +5,23 @@
  * Multiple sizes: large, medium, small, extra-small
  */
 
-import React from 'react';
+import React from "react";
 import {
   TouchableOpacity,
   Text,
   View,
   ActivityIndicator,
   Animated,
-} from 'react-native';
-import { freudTheme } from '../../shared/theme/freudTheme';
+} from "react-native";
+
+import { freudTheme } from "../../shared/theme/freudTheme";
 
 const FreudButton = ({
   title,
-  variant = 'primary',
-  size = 'medium',
+  variant = "primary",
+  size = "medium",
   icon,
-  iconPosition = 'left',
+  iconPosition = "left",
   disabled = false,
   loading = false,
   onPress,
@@ -55,7 +56,7 @@ const FreudButton = ({
 
   // Size configurations
   const sizeConfig = {
-    'extra-small': {
+    "extra-small": {
       paddingHorizontal: freudTheme.spacing.sm,
       paddingVertical: freudTheme.spacing.xs,
       fontSize: freudTheme.typography.fontSize.textXs,
@@ -74,78 +75,78 @@ const FreudButton = ({
       paddingVertical: freudTheme.spacing.md,
       fontSize: freudTheme.typography.fontSize.textMd,
       minHeight: 44,
-      borderRadius: freudTheme.radii['2xl'],
+      borderRadius: freudTheme.radii["2xl"],
     },
     large: {
       paddingHorizontal: freudTheme.spacing.xl,
       paddingVertical: freudTheme.spacing.lg,
       fontSize: freudTheme.typography.fontSize.textLg,
       minHeight: 52,
-      borderRadius: freudTheme.radii['2xl'],
+      borderRadius: freudTheme.radii["2xl"],
     },
   };
 
   // Variant configurations
   const variantConfig = {
     primary: {
-      backgroundColor: disabled 
-        ? freudTheme.colors.gray[30] 
+      backgroundColor: disabled
+        ? freudTheme.colors.gray[30]
         : freudTheme.colors.brown[80],
-      color: disabled 
-        ? freudTheme.colors.text.disabled 
+      color: disabled
+        ? freudTheme.colors.text.disabled
         : freudTheme.colors.text.inverse,
       borderWidth: 0,
-      borderColor: 'transparent',
+      borderColor: "transparent",
     },
     secondary: {
-      backgroundColor: disabled 
-        ? freudTheme.colors.gray[20] 
+      backgroundColor: disabled
+        ? freudTheme.colors.gray[20]
         : freudTheme.colors.brown[20],
-      color: disabled 
-        ? freudTheme.colors.text.disabled 
+      color: disabled
+        ? freudTheme.colors.text.disabled
         : freudTheme.colors.text.primary,
       borderWidth: 0,
-      borderColor: 'transparent',
+      borderColor: "transparent",
     },
     outline: {
-      backgroundColor: 'transparent',
-      color: disabled 
-        ? freudTheme.colors.text.disabled 
+      backgroundColor: "transparent",
+      color: disabled
+        ? freudTheme.colors.text.disabled
         : freudTheme.colors.text.primary,
       borderWidth: 1,
-      borderColor: disabled 
-        ? freudTheme.colors.border.primary 
+      borderColor: disabled
+        ? freudTheme.colors.border.primary
         : freudTheme.colors.border.secondary,
     },
     accent: {
-      backgroundColor: disabled 
-        ? freudTheme.colors.gray[30] 
+      backgroundColor: disabled
+        ? freudTheme.colors.gray[30]
         : freudTheme.colors.orange[40],
-      color: disabled 
-        ? freudTheme.colors.text.disabled 
+      color: disabled
+        ? freudTheme.colors.text.disabled
         : freudTheme.colors.text.inverse,
       borderWidth: 0,
-      borderColor: 'transparent',
+      borderColor: "transparent",
     },
     success: {
-      backgroundColor: disabled 
-        ? freudTheme.colors.gray[30] 
+      backgroundColor: disabled
+        ? freudTheme.colors.gray[30]
         : freudTheme.colors.green[60],
-      color: disabled 
-        ? freudTheme.colors.text.disabled 
+      color: disabled
+        ? freudTheme.colors.text.disabled
         : freudTheme.colors.text.inverse,
       borderWidth: 0,
-      borderColor: 'transparent',
+      borderColor: "transparent",
     },
     warning: {
-      backgroundColor: disabled 
-        ? freudTheme.colors.gray[30] 
+      backgroundColor: disabled
+        ? freudTheme.colors.gray[30]
         : freudTheme.colors.yellow[50],
-      color: disabled 
-        ? freudTheme.colors.text.disabled 
+      color: disabled
+        ? freudTheme.colors.text.disabled
         : freudTheme.colors.text.primary,
       borderWidth: 0,
-      borderColor: 'transparent',
+      borderColor: "transparent",
     },
   };
 
@@ -153,9 +154,9 @@ const FreudButton = ({
   const currentVariant = variantConfig[variant];
 
   const buttonStyle = {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     minHeight: currentSize.minHeight,
     paddingHorizontal: currentSize.paddingHorizontal,
     paddingVertical: currentSize.paddingVertical,
@@ -163,8 +164,8 @@ const FreudButton = ({
     backgroundColor: currentVariant.backgroundColor,
     borderWidth: currentVariant.borderWidth,
     borderColor: currentVariant.borderColor,
-    width: fullWidth ? '100%' : 'auto',
-    opacity: (disabled || loading) ? 0.6 : 1,
+    width: fullWidth ? "100%" : "auto",
+    opacity: disabled || loading ? 0.6 : 1,
     ...freudTheme.shadows.sm,
   };
 
@@ -172,17 +173,17 @@ const FreudButton = ({
     fontSize: currentSize.fontSize,
     fontWeight: freudTheme.typography.fontWeight.semibold,
     color: currentVariant.color,
-    textAlign: 'center',
+    textAlign: "center",
     fontFamily: freudTheme.typography.fontFamily.primary,
   };
 
   const renderContent = () => {
     if (loading) {
       return (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <ActivityIndicator 
-            size="small" 
-            color={currentVariant.color} 
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <ActivityIndicator
+            size="small"
+            color={currentVariant.color}
             style={{ marginRight: title ? freudTheme.spacing.sm : 0 }}
           />
           {title && <Text style={[textStyles, textStyle]}>{title}</Text>}
@@ -192,17 +193,13 @@ const FreudButton = ({
 
     if (icon && title) {
       return (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {iconPosition === 'left' && (
-            <View style={{ marginRight: freudTheme.spacing.sm }}>
-              {icon}
-            </View>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          {iconPosition === "left" && (
+            <View style={{ marginRight: freudTheme.spacing.sm }}>{icon}</View>
           )}
           <Text style={[textStyles, textStyle]}>{title}</Text>
-          {iconPosition === 'right' && (
-            <View style={{ marginLeft: freudTheme.spacing.sm }}>
-              {icon}
-            </View>
+          {iconPosition === "right" && (
+            <View style={{ marginLeft: freudTheme.spacing.sm }}>{icon}</View>
           )}
         </View>
       );
@@ -215,7 +212,8 @@ const FreudButton = ({
     return <Text style={[textStyles, textStyle]}>{title}</Text>;
   };
 
-  const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
+  const AnimatedTouchableOpacity =
+    Animated.createAnimatedComponent(TouchableOpacity);
 
   return (
     <AnimatedTouchableOpacity
@@ -245,24 +243,24 @@ const FreudButton = ({
 };
 
 // Button group component for multiple buttons
-export const FreudButtonGroup = ({ 
-  children, 
-  orientation = 'horizontal',
-  spacing = 'md',
-  style 
+export const FreudButtonGroup = ({
+  children,
+  orientation = "horizontal",
+  spacing = "md",
+  style,
 }) => {
-  const isHorizontal = orientation === 'horizontal';
+  const isHorizontal = orientation === "horizontal";
   const spacingValue = freudTheme.spacing[spacing];
-  
+
   return (
-    <View 
+    <View
       style={[
         {
-          flexDirection: isHorizontal ? 'row' : 'column',
-          alignItems: isHorizontal ? 'center' : 'stretch',
+          flexDirection: isHorizontal ? "row" : "column",
+          alignItems: isHorizontal ? "center" : "stretch",
           gap: spacingValue,
         },
-        style
+        style,
       ]}
     >
       {children}
@@ -273,12 +271,12 @@ export const FreudButtonGroup = ({
 // Icon button component for icon-only buttons
 export const FreudIconButton = ({
   icon,
-  variant = 'outline',
-  size = 'medium',
+  variant = "outline",
+  size = "medium",
   ...props
 }) => {
   const sizeMap = {
-    'extra-small': 32,
+    "extra-small": 32,
     small: 36,
     medium: 44,
     large: 52,
@@ -305,7 +303,7 @@ export const FreudIconButton = ({
 // FAB (Floating Action Button) component
 export const FreudFAB = ({
   icon,
-  variant = 'accent',
+  variant = "accent",
   size = 56,
   onPress,
   style,
@@ -323,8 +321,8 @@ export const FreudFAB = ({
           borderRadius: size / 2,
           paddingHorizontal: 0,
           paddingVertical: 0,
-          position: 'absolute',
-          bottom: freudTheme.spacing['4xl'],
+          position: "absolute",
+          bottom: freudTheme.spacing["4xl"],
           right: freudTheme.spacing.lg,
           ...freudTheme.shadows.lg,
           elevation: 8,

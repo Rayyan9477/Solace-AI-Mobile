@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useMemo, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useEffect, useRef, useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -13,7 +13,12 @@ import { MentalHealthIcon } from "../components/icons";
 import { FreudLogo } from "../components/icons/FreudIcons";
 import { useTheme } from "../shared/theme/ThemeContext";
 import { freudTheme } from "../shared/theme/freudTheme";
-import { spacing, typography, borderRadius, shadows } from "../shared/theme/theme";
+import {
+  spacing,
+  typography,
+  borderRadius,
+  shadows,
+} from "../shared/theme/theme";
 
 const { width, height } = Dimensions.get("window");
 
@@ -114,7 +119,7 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
       ];
     }
     return [
-      '#FFFFFF', // Clean white background like design reference
+      "#FFFFFF", // Clean white background like design reference
       freudTheme.colors.gray[10],
     ];
   };
@@ -214,18 +219,15 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
         <View style={styles.contentContainer}>
           {/* Logo Section - Freud Design System */}
           <Animated.View style={[styles.logoContainer, logoContainerStyle]}>
-            <FreudLogo 
-              size={80} 
-              primaryColor={freudTheme.colors.brown[80]} 
-            />
+            <FreudLogo size={80} primaryColor={freudTheme.colors.brown[80]} />
 
             <Animated.Text
               style={[
                 styles.appTitle,
-                { 
-                  color: showQuote 
-                    ? freudTheme.colors.text.inverse 
-                    : freudTheme.colors.text.primary 
+                {
+                  color: showQuote
+                    ? freudTheme.colors.text.inverse
+                    : freudTheme.colors.text.primary,
                 },
                 fadeStyle,
               ]}
@@ -249,9 +251,9 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
           {/* Quote Section - Orange Background like Design Reference */}
           {showQuote && (
             <Animated.View style={[styles.quoteContainer, quoteFadeStyle]}>
-              <FreudLogo 
-                size={48} 
-                primaryColor={freudTheme.colors.text.inverse} 
+              <FreudLogo
+                size={48}
+                primaryColor={freudTheme.colors.text.inverse}
               />
               <Text
                 style={[
@@ -395,9 +397,9 @@ const styles = StyleSheet.create({
     fontFamily: freudTheme.typography.fontFamily.primary,
     textAlign: "center",
     lineHeight: freudTheme.typography.lineHeight.headingLg,
-    marginTop: freudTheme.spacing['2xl'],
+    marginTop: freudTheme.spacing["2xl"],
     marginBottom: freudTheme.spacing.lg,
-    paddingHorizontal: freudTheme.spacing['4xl'],
+    paddingHorizontal: freudTheme.spacing["4xl"],
   },
   quoteAuthor: {
     fontSize: freudTheme.typography.fontSize.textSm,

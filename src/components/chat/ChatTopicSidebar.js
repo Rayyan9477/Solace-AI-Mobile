@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,87 +9,93 @@ import {
   Dimensions,
   SafeAreaView,
   Platform,
-} from 'react-native';
-import { WebSafeLinearGradient as LinearGradient } from '../common/WebSafeLinearGradient';
-import { MentalHealthIcon } from '../icons';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { spacing, typography, borderRadius, shadows } from '../../shared/theme/theme';
+} from "react-native";
 
-const { width, height } = Dimensions.get('window');
+import { useTheme } from "../../shared/theme/ThemeContext";
+import {
+  spacing,
+  typography,
+  borderRadius,
+  shadows,
+} from "../../shared/theme/theme";
+import { WebSafeLinearGradient as LinearGradient } from "../common/WebSafeLinearGradient";
+import { MentalHealthIcon } from "../icons";
+
+const { width, height } = Dimensions.get("window");
 const SIDEBAR_WIDTH = width * 0.75;
 
 // Sample mental health conversation topics
 const sampleTopics = [
   {
-    id: '1',
-    title: 'Mental Health',
-    subtitle: 'Depression, anxiety support',
-    icon: 'brain',
-    timestamp: '2 min ago',
-    category: 'current',
+    id: "1",
+    title: "Mental Health",
+    subtitle: "Depression, anxiety support",
+    icon: "brain",
+    timestamp: "2 min ago",
+    category: "current",
     unread: true,
   },
   {
-    id: '2',
-    title: 'Stress & Anxiety Exercise',
-    subtitle: 'Coping strategies discussion',
-    icon: 'heart',
-    timestamp: '1 hour ago',
-    category: 'current',
+    id: "2",
+    title: "Stress & Anxiety Exercise",
+    subtitle: "Coping strategies discussion",
+    icon: "heart",
+    timestamp: "1 hour ago",
+    category: "current",
     unread: false,
   },
   {
-    id: '3',
-    title: 'Becoming Happy Focused',
-    subtitle: 'Building positive habits',
-    icon: 'therapy',
-    timestamp: '3 hours ago',
-    category: 'bookmark',
+    id: "3",
+    title: "Becoming Happy Focused",
+    subtitle: "Building positive habits",
+    icon: "therapy",
+    timestamp: "3 hours ago",
+    category: "bookmark",
     unread: false,
   },
   {
-    id: '4',
-    title: 'Not Having Enough Sleep',
-    subtitle: 'Sleep hygiene tips',
-    icon: 'mindfulness',
-    timestamp: '1 day ago',
-    category: 'bookmark',
+    id: "4",
+    title: "Not Having Enough Sleep",
+    subtitle: "Sleep hygiene tips",
+    icon: "mindfulness",
+    timestamp: "1 day ago",
+    category: "bookmark",
     unread: false,
   },
   {
-    id: '5',
-    title: 'Status Anxiety',
-    subtitle: 'Social pressure management',
-    icon: 'insights',
-    timestamp: '2 days ago',
-    category: 'favorites',
+    id: "5",
+    title: "Status Anxiety",
+    subtitle: "Social pressure management",
+    icon: "insights",
+    timestamp: "2 days ago",
+    category: "favorites",
     unread: false,
   },
   {
-    id: '6',
-    title: 'Finding Purpose',
-    subtitle: 'Life meaning exploration',
-    icon: 'journal',
-    timestamp: '3 days ago',
-    category: 'favorites',
+    id: "6",
+    title: "Finding Purpose",
+    subtitle: "Life meaning exploration",
+    icon: "journal",
+    timestamp: "3 days ago",
+    category: "favorites",
     unread: false,
   },
   {
-    id: '7',
-    title: 'Alan Watts Philosophy',
-    subtitle: 'Mindfulness discussions',
-    icon: 'meditation',
-    timestamp: '1 week ago',
-    category: 'favorites',
+    id: "7",
+    title: "Alan Watts Philosophy",
+    subtitle: "Mindfulness discussions",
+    icon: "meditation",
+    timestamp: "1 week ago",
+    category: "favorites",
     unread: false,
   },
   {
-    id: '8',
-    title: 'Best Meditation Apps',
-    subtitle: 'App recommendations',
-    icon: 'mindfulness',
-    timestamp: '2 weeks ago',
-    category: 'unassigned',
+    id: "8",
+    title: "Best Meditation Apps",
+    subtitle: "App recommendations",
+    icon: "mindfulness",
+    timestamp: "2 weeks ago",
+    category: "unassigned",
     unread: false,
   },
 ];
@@ -145,27 +151,38 @@ const ChatTopicSidebar = ({
 
   const handleInviteFriends = () => {
     // Handle invite friends functionality
-    console.log('Invite friends pressed');
+    console.log("Invite friends pressed");
     onClose?.();
   };
 
   const getCategoryTopics = (category) => {
-    return sampleTopics.filter(topic => topic.category === category);
+    return sampleTopics.filter((topic) => topic.category === category);
   };
 
   const getCategoryCount = (category) => {
     return getCategoryTopics(category).length;
   };
 
-  const CategorySection = ({ title, category, icon, count, color = theme.colors.text.secondary }) => {
+  const CategorySection = ({
+    title,
+    category,
+    icon,
+    count,
+    color = theme.colors.text.secondary,
+  }) => {
     const topics = getCategoryTopics(category);
-    
+
     return (
       <View style={styles.categorySection}>
         <View style={[styles.categoryHeader, { borderLeftColor: color }]}>
           <View style={styles.categoryTitleRow}>
             <MentalHealthIcon name={icon} size={16} color={color} />
-            <Text style={[styles.categoryTitle, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.categoryTitle,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               {title}
             </Text>
           </View>
@@ -173,7 +190,7 @@ const ChatTopicSidebar = ({
             <Text style={styles.categoryCount}>{count}</Text>
           </View>
         </View>
-        
+
         {topics.map((topic) => (
           <TouchableOpacity
             key={topic.id}
@@ -189,33 +206,49 @@ const ChatTopicSidebar = ({
               <MentalHealthIcon
                 name={topic.icon}
                 size={20}
-                color={selectedTopic === topic.id ? theme.colors.therapeutic.empathy[500] : theme.colors.text.secondary}
+                color={
+                  selectedTopic === topic.id
+                    ? theme.colors.therapeutic.empathy[500]
+                    : theme.colors.text.secondary
+                }
               />
               {topic.unread && <View style={styles.unreadIndicator} />}
             </View>
-            
+
             <View style={styles.topicContent}>
-              <Text 
+              <Text
                 style={[
                   styles.topicTitle,
-                  { 
-                    color: selectedTopic === topic.id 
-                      ? theme.colors.therapeutic.empathy[600] 
-                      : theme.colors.text.primary 
-                  }
+                  {
+                    color:
+                      selectedTopic === topic.id
+                        ? theme.colors.therapeutic.empathy[600]
+                        : theme.colors.text.primary,
+                  },
                 ]}
                 numberOfLines={1}
               >
                 {topic.title}
               </Text>
-              <Text style={[styles.topicSubtitle, { color: theme.colors.text.secondary }]} numberOfLines={1}>
+              <Text
+                style={[
+                  styles.topicSubtitle,
+                  { color: theme.colors.text.secondary },
+                ]}
+                numberOfLines={1}
+              >
                 {topic.subtitle}
               </Text>
-              <Text style={[styles.topicTimestamp, { color: theme.colors.text.tertiary }]}>
+              <Text
+                style={[
+                  styles.topicTimestamp,
+                  { color: theme.colors.text.tertiary },
+                ]}
+              >
                 {topic.timestamp}
               </Text>
             </View>
-            
+
             {selectedTopic === topic.id && (
               <View style={styles.activeIndicator} />
             )}
@@ -233,7 +266,10 @@ const ChatTopicSidebar = ({
       accessibilityHint="Double tap to invite friends to the app"
     >
       <LinearGradient
-        colors={[theme.colors.therapeutic.empathy[400], theme.colors.therapeutic.empathy[600]]}
+        colors={[
+          theme.colors.therapeutic.empathy[400],
+          theme.colors.therapeutic.empathy[600],
+        ]}
         style={styles.inviteGradient}
       >
         <View style={styles.inviteIcon}>
@@ -244,7 +280,11 @@ const ChatTopicSidebar = ({
           Share the journey of mental wellness together
         </Text>
         <View style={styles.inviteButton}>
-          <MentalHealthIcon name="plus" size={16} color={theme.colors.therapeutic.empathy[500]} />
+          <MentalHealthIcon
+            name="plus"
+            size={16}
+            color={theme.colors.therapeutic.empathy[500]}
+          />
         </View>
       </LinearGradient>
     </TouchableOpacity>
@@ -255,12 +295,7 @@ const ChatTopicSidebar = ({
   return (
     <>
       {/* Overlay */}
-      <Animated.View
-        style={[
-          styles.overlay,
-          { opacity: overlayOpacity }
-        ]}
-      >
+      <Animated.View style={[styles.overlay, { opacity: overlayOpacity }]}>
         <TouchableOpacity
           style={styles.overlayTouchable}
           onPress={onClose}
@@ -284,10 +319,20 @@ const ChatTopicSidebar = ({
           {/* Header */}
           <View style={styles.header}>
             <View style={styles.headerLeft}>
-              <Text style={[styles.headerTitle, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.headerTitle,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 Chats
               </Text>
-              <View style={[styles.topicsBadge, { backgroundColor: theme.colors.therapeutic.empathy[500] }]}>
+              <View
+                style={[
+                  styles.topicsBadge,
+                  { backgroundColor: theme.colors.therapeutic.empathy[500] },
+                ]}
+              >
                 <Text style={styles.topicsCount}>24</Text>
               </View>
             </View>
@@ -297,18 +342,25 @@ const ChatTopicSidebar = ({
               accessibilityLabel="Close sidebar"
               accessibilityHint="Double tap to close the chat topics sidebar"
             >
-              <MentalHealthIcon name="close" size={20} color={theme.colors.text.secondary} />
+              <MentalHealthIcon
+                name="close"
+                size={20}
+                color={theme.colors.text.secondary}
+              />
             </TouchableOpacity>
           </View>
 
           {/* Topics List */}
-          <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            style={styles.scrollView}
+            showsVerticalScrollIndicator={false}
+          >
             {/* Current Conversations */}
             <CategorySection
               title="Current"
               category="current"
               icon="folder"
-              count={getCategoryCount('current')}
+              count={getCategoryCount("current")}
               color={theme.colors.therapeutic.empathy[500]}
             />
 
@@ -317,7 +369,7 @@ const ChatTopicSidebar = ({
               title="Bookmark"
               category="bookmark"
               icon="bookmark"
-              count={getCategoryCount('bookmark')}
+              count={getCategoryCount("bookmark")}
               color={theme.colors.therapeutic.kind[500]}
             />
 
@@ -326,7 +378,7 @@ const ChatTopicSidebar = ({
               title="Favorites"
               category="favorites"
               icon="heart"
-              count={getCategoryCount('favorites')}
+              count={getCategoryCount("favorites")}
               color={theme.colors.therapeutic.nurturing[500]}
             />
 
@@ -344,7 +396,7 @@ const ChatTopicSidebar = ({
               title="Unassigned"
               category="unassigned"
               icon="grid"
-              count={getCategoryCount('unassigned')}
+              count={getCategoryCount("unassigned")}
               color={theme.colors.text.secondary}
             />
 
@@ -364,19 +416,19 @@ const ChatTopicSidebar = ({
 
 const styles = StyleSheet.create({
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#000000',
+    backgroundColor: "#000000",
     zIndex: 999,
   },
   overlayTouchable: {
     flex: 1,
   },
   sidebar: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     bottom: 0,
@@ -384,7 +436,7 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowOffset: { width: 2, height: 0 },
         shadowOpacity: 0.25,
         shadowRadius: 8,
@@ -398,17 +450,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[4],
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.05)',
+    borderBottomColor: "rgba(0,0,0,0.05)",
   },
   headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   headerTitle: {
     fontSize: typography.sizes.xl,
@@ -421,7 +473,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.full,
   },
   topicsCount: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: typography.sizes.xs,
     fontWeight: typography.weights.semiBold,
   },
@@ -435,17 +487,17 @@ const styles = StyleSheet.create({
     marginTop: spacing[4],
   },
   categoryHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[2],
     borderLeftWidth: 3,
     marginLeft: spacing[4],
   },
   categoryTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   categoryTitle: {
     fontSize: typography.sizes.sm,
@@ -457,40 +509,40 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[1],
     borderRadius: borderRadius.sm,
     minWidth: 24,
-    alignItems: 'center',
+    alignItems: "center",
   },
   categoryCount: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: typography.sizes.xs,
     fontWeight: typography.weights.bold,
   },
   topicItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[3],
     marginHorizontal: spacing[2],
     borderRadius: borderRadius.md,
-    position: 'relative',
+    position: "relative",
   },
   selectedTopicItem: {
-    backgroundColor: 'rgba(255, 107, 53, 0.1)',
+    backgroundColor: "rgba(255, 107, 53, 0.1)",
     borderLeftWidth: 3,
-    borderLeftColor: '#FF6B35',
+    borderLeftColor: "#FF6B35",
   },
   topicIconContainer: {
-    position: 'relative',
+    position: "relative",
     marginRight: spacing[3],
     marginTop: spacing[1],
   },
   unreadIndicator: {
-    position: 'absolute',
+    position: "absolute",
     top: -2,
     right: -2,
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#FF6B35',
+    backgroundColor: "#FF6B35",
   },
   topicContent: {
     flex: 1,
@@ -511,12 +563,12 @@ const styles = StyleSheet.create({
     fontWeight: typography.weights.medium,
   },
   activeIndicator: {
-    position: 'absolute',
+    position: "absolute",
     right: spacing[4],
-    top: '50%',
+    top: "50%",
     width: 4,
     height: 20,
-    backgroundColor: '#FF6B35',
+    backgroundColor: "#FF6B35",
     borderRadius: 2,
     marginTop: -10,
   },
@@ -526,32 +578,32 @@ const styles = StyleSheet.create({
   },
   inviteCard: {
     borderRadius: borderRadius.lg,
-    overflow: 'hidden',
+    overflow: "hidden",
     ...shadows.md,
   },
   inviteGradient: {
     padding: spacing[4],
-    alignItems: 'center',
-    position: 'relative',
+    alignItems: "center",
+    position: "relative",
   },
   inviteIcon: {
     marginBottom: spacing[2],
   },
   inviteTitle: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: typography.sizes.base,
     fontWeight: typography.weights.bold,
     marginBottom: spacing[1],
   },
   inviteSubtitle: {
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: "rgba(255, 255, 255, 0.9)",
     fontSize: typography.sizes.xs,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: typography.lineHeights.sm,
     marginBottom: spacing[3],
   },
   inviteButton: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     padding: spacing[2],
     borderRadius: borderRadius.full,
   },

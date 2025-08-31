@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { AppState, DeviceEventEmitter, Platform } from 'react-native';
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { AppState, DeviceEventEmitter, Platform } from "react-native";
 
 /**
  * Memory optimization hook for managing large datasets
@@ -15,7 +15,7 @@ export const useMemoryOptimization = (options = {}) => {
     windowSize = 10,
   } = options;
 
-  const [memoryPressure, setMemoryPressure] = useState('normal');
+  const [memoryPressure, setMemoryPressure] = useState("normal");
   const [isCleaningUp, setIsCleaningUp] = useState(false);
   const cacheRef = useRef(new Map());
   const accessTimeRef = useRef(new Map());
@@ -24,33 +24,33 @@ export const useMemoryOptimization = (options = {}) => {
   // Memory pressure monitoring
   useEffect(() => {
     const handleMemoryWarning = () => {
-      setMemoryPressure('high');
+      setMemoryPressure("high");
       performEmergencyCleanup();
     };
 
     const handleAppStateChange = (nextAppState) => {
-      if (nextAppState === 'background') {
+      if (nextAppState === "background") {
         performCleanup();
-      } else if (nextAppState === 'active') {
-        setMemoryPressure('normal');
+      } else if (nextAppState === "active") {
+        setMemoryPressure("normal");
       }
     };
 
     // iOS memory warning
-    if (Platform.OS === 'ios') {
-      DeviceEventEmitter.addListener('memoryWarning', handleMemoryWarning);
+    if (Platform.OS === "ios") {
+      DeviceEventEmitter.addListener("memoryWarning", handleMemoryWarning);
     }
 
-    AppState.addEventListener('change', handleAppStateChange);
+    AppState.addEventListener("change", handleAppStateChange);
 
     // Periodic cleanup
     cleanupTimerRef.current = setInterval(performCleanup, cleanupInterval);
 
     return () => {
-      if (Platform.OS === 'ios') {
-        DeviceEventEmitter.removeAllListeners('memoryWarning');
+      if (Platform.OS === "ios") {
+        DeviceEventEmitter.removeAllListeners("memoryWarning");
       }
-      AppState.removeEventListener('change', handleAppStateChange);
+      AppState.removeEventListener("change", handleAppStateChange);
       if (cleanupTimerRef.current) {
         clearInterval(cleanupTimerRef.current);
       }
@@ -58,29 +58,33 @@ export const useMemoryOptimization = (options = {}) => {
   }, [cleanupInterval]);
 
   // LRU Cache management
-  const cacheData = useCallback((key, data) => {
-    const now = Date.now();
-    
-    // Update access time
-    accessTimeRef.current.set(key, now);
-    
-    // Add to cache
-    cacheRef.current.set(key, data);
-    
-    // Cleanup old items if cache is full
-    if (cacheRef.current.size > maxCacheSize) {
-      const sortedByAccess = Array.from(accessTimeRef.current.entries())
-        .sort(([, a], [, b]) => a - b);
-      
-      // Remove oldest 20% of items
-      const itemsToRemove = Math.floor(maxCacheSize * 0.2);
-      for (let i = 0; i < itemsToRemove; i++) {
-        const [oldKey] = sortedByAccess[i];
-        cacheRef.current.delete(oldKey);
-        accessTimeRef.current.delete(oldKey);
+  const cacheData = useCallback(
+    (key, data) => {
+      const now = Date.now();
+
+      // Update access time
+      accessTimeRef.current.set(key, now);
+
+      // Add to cache
+      cacheRef.current.set(key, data);
+
+      // Cleanup old items if cache is full
+      if (cacheRef.current.size > maxCacheSize) {
+        const sortedByAccess = Array.from(accessTimeRef.current.entries()).sort(
+          ([, a], [, b]) => a - b,
+        );
+
+        // Remove oldest 20% of items
+        const itemsToRemove = Math.floor(maxCacheSize * 0.2);
+        for (let i = 0; i < itemsToRemove; i++) {
+          const [oldKey] = sortedByAccess[i];
+          cacheRef.current.delete(oldKey);
+          accessTimeRef.current.delete(oldKey);
+        }
       }
-    }
-  }, [maxCacheSize]);
+    },
+    [maxCacheSize],
+  );
 
   const getCachedData = useCallback((key) => {
     if (cacheRef.current.has(key)) {
@@ -92,13 +96,13 @@ export const useMemoryOptimization = (options = {}) => {
 
   const performCleanup = useCallback(() => {
     if (isCleaningUp) return;
-    
+
     setIsCleaningUp(true);
-    
+
     try {
       const now = Date.now();
       const maxAge = cleanupInterval * 2; // Keep items for 2 cleanup cycles
-      
+
       // Remove stale cache entries
       for (const [key, accessTime] of accessTimeRef.current.entries()) {
         if (now - accessTime > maxAge) {
@@ -106,7 +110,7 @@ export const useMemoryOptimization = (options = {}) => {
           accessTimeRef.current.delete(key);
         }
       }
-      
+
       // Force garbage collection if available (development)
       if (__DEV__ && global.gc) {
         global.gc();
@@ -118,26 +122,26 @@ export const useMemoryOptimization = (options = {}) => {
 
   const performEmergencyCleanup = useCallback(() => {
     setIsCleaningUp(true);
-    
+
     try {
       // Clear 80% of cache
       const entries = Array.from(accessTimeRef.current.entries());
       const itemsToKeep = Math.floor(entries.length * 0.2);
-      
+
       // Keep only most recently accessed items
       const sortedByAccess = entries.sort(([, a], [, b]) => b - a);
-      
+
       cacheRef.current.clear();
       accessTimeRef.current.clear();
-      
+
       for (let i = 0; i < itemsToKeep; i++) {
         const [key] = sortedByAccess[i];
         // Note: We lose the actual data in emergency cleanup
         // This is acceptable for memory pressure situations
       }
-      
-      setMemoryPressure('critical');
-      
+
+      setMemoryPressure("critical");
+
       // Force garbage collection if available
       if (global.gc) {
         global.gc();
@@ -168,10 +172,7 @@ export const useMemoryOptimization = (options = {}) => {
  * Virtual list optimization hook
  * Renders only visible items for better performance with large datasets
  */
-export const useVirtualList = (
-  items = [],
-  options = {}
-) => {
+export const useVirtualList = (items = [], options = {}) => {
   const {
     itemHeight = 100,
     containerHeight = 600,
@@ -183,12 +184,15 @@ export const useVirtualList = (
   const itemHeightsRef = useRef(new Map());
 
   const visibleRange = useMemo(() => {
-    const startIndex = Math.max(0, Math.floor(scrollOffset / itemHeight) - overscan);
+    const startIndex = Math.max(
+      0,
+      Math.floor(scrollOffset / itemHeight) - overscan,
+    );
     const endIndex = Math.min(
       items.length - 1,
-      Math.ceil((scrollOffset + containerHeight) / itemHeight) + overscan
+      Math.ceil((scrollOffset + containerHeight) / itemHeight) + overscan,
     );
-    
+
     return { startIndex, endIndex };
   }, [scrollOffset, itemHeight, containerHeight, overscan, items.length]);
 
@@ -212,23 +216,29 @@ export const useVirtualList = (
     return items.length * itemHeight;
   }, [items.length, itemHeight, enableDynamicHeight]);
 
-  const updateItemHeight = useCallback((index, height) => {
-    if (enableDynamicHeight) {
-      itemHeightsRef.current.set(index, height);
-    }
-  }, [enableDynamicHeight]);
-
-  const scrollToIndex = useCallback((index) => {
-    let offset = 0;
-    if (enableDynamicHeight) {
-      for (let i = 0; i < index; i++) {
-        offset += itemHeightsRef.current.get(i) || itemHeight;
+  const updateItemHeight = useCallback(
+    (index, height) => {
+      if (enableDynamicHeight) {
+        itemHeightsRef.current.set(index, height);
       }
-    } else {
-      offset = index * itemHeight;
-    }
-    setScrollOffset(offset);
-  }, [itemHeight, enableDynamicHeight]);
+    },
+    [enableDynamicHeight],
+  );
+
+  const scrollToIndex = useCallback(
+    (index) => {
+      let offset = 0;
+      if (enableDynamicHeight) {
+        for (let i = 0; i < index; i++) {
+          offset += itemHeightsRef.current.get(i) || itemHeight;
+        }
+      } else {
+        offset = index * itemHeight;
+      }
+      setScrollOffset(offset);
+    },
+    [itemHeight, enableDynamicHeight],
+  );
 
   return {
     visibleItems,
@@ -243,10 +253,7 @@ export const useVirtualList = (
 /**
  * Data pagination hook for large datasets
  */
-export const useDataPagination = (
-  fetchData,
-  options = {}
-) => {
+export const useDataPagination = (fetchData, options = {}) => {
   const {
     pageSize = 20,
     prefetchPages = 1,
@@ -264,62 +271,65 @@ export const useDataPagination = (
     maxCacheSize: maxPages,
   });
 
-  const loadPage = useCallback(async (pageNumber) => {
-    if (loadingPages.has(pageNumber) || pages.has(pageNumber)) {
-      return;
-    }
-
-    // Check cache first
-    const cacheKey = `page_${pageNumber}`;
-    const cachedData = getCachedData(cacheKey);
-    if (cachedData) {
-      setPages(prev => new Map([...prev, [pageNumber, cachedData]]));
-      return;
-    }
-
-    setLoadingPages(prev => new Set([...prev, pageNumber]));
-    setError(null);
-
-    try {
-      const data = await fetchData(pageNumber, pageSize);
-      
-      setPages(prev => new Map([...prev, [pageNumber, data]]));
-      
-      if (cachePages) {
-        cacheData(cacheKey, data);
+  const loadPage = useCallback(
+    async (pageNumber) => {
+      if (loadingPages.has(pageNumber) || pages.has(pageNumber)) {
+        return;
       }
-      
-      // Check if we have more data
-      setHasNextPage(data.length === pageSize);
-      
-      // Prefetch next pages
-      for (let i = 1; i <= prefetchPages; i++) {
-        const nextPage = pageNumber + i;
-        if (nextPage < maxPages && hasNextPage) {
-          setTimeout(() => loadPage(nextPage), i * 100);
+
+      // Check cache first
+      const cacheKey = `page_${pageNumber}`;
+      const cachedData = getCachedData(cacheKey);
+      if (cachedData) {
+        setPages((prev) => new Map([...prev, [pageNumber, cachedData]]));
+        return;
+      }
+
+      setLoadingPages((prev) => new Set([...prev, pageNumber]));
+      setError(null);
+
+      try {
+        const data = await fetchData(pageNumber, pageSize);
+
+        setPages((prev) => new Map([...prev, [pageNumber, data]]));
+
+        if (cachePages) {
+          cacheData(cacheKey, data);
         }
+
+        // Check if we have more data
+        setHasNextPage(data.length === pageSize);
+
+        // Prefetch next pages
+        for (let i = 1; i <= prefetchPages; i++) {
+          const nextPage = pageNumber + i;
+          if (nextPage < maxPages && hasNextPage) {
+            setTimeout(() => loadPage(nextPage), i * 100);
+          }
+        }
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoadingPages((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(pageNumber);
+          return newSet;
+        });
       }
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoadingPages(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(pageNumber);
-        return newSet;
-      });
-    }
-  }, [
-    loadingPages,
-    pages,
-    fetchData,
-    pageSize,
-    prefetchPages,
-    maxPages,
-    hasNextPage,
-    cachePages,
-    cacheData,
-    getCachedData,
-  ]);
+    },
+    [
+      loadingPages,
+      pages,
+      fetchData,
+      pageSize,
+      prefetchPages,
+      maxPages,
+      hasNextPage,
+      cachePages,
+      cacheData,
+      getCachedData,
+    ],
+  );
 
   const loadNextPage = useCallback(() => {
     if (hasNextPage && !loadingPages.has(currentPage + 1)) {
@@ -329,10 +339,13 @@ export const useDataPagination = (
     }
   }, [currentPage, hasNextPage, loadingPages, loadPage]);
 
-  const goToPage = useCallback((pageNumber) => {
-    setCurrentPage(pageNumber);
-    loadPage(pageNumber);
-  }, [loadPage]);
+  const goToPage = useCallback(
+    (pageNumber) => {
+      setCurrentPage(pageNumber);
+      loadPage(pageNumber);
+    },
+    [loadPage],
+  );
 
   const getAllData = useMemo(() => {
     const allData = [];
@@ -383,8 +396,8 @@ export const useFormDataOptimization = (initialData = {}) => {
 
     // Set new debounce timer
     const timer = setTimeout(() => {
-      setData(prev => ({ ...prev, [field]: value }));
-      setDirtyFields(prev => new Set([...prev, field]));
+      setData((prev) => ({ ...prev, [field]: value }));
+      setDirtyFields((prev) => new Set([...prev, field]));
       debounceTimersRef.current.delete(field);
     }, debounceMs);
 
@@ -405,7 +418,7 @@ export const useFormDataOptimization = (initialData = {}) => {
     setData(initialData);
     setDirtyFields(new Set());
     // Clear all debounce timers
-    debounceTimersRef.current.forEach(timer => clearTimeout(timer));
+    debounceTimersRef.current.forEach((timer) => clearTimeout(timer));
     debounceTimersRef.current.clear();
   }, [initialData]);
 

@@ -4,59 +4,60 @@
  * Ensures optimal experience across different mobile devices and screen sizes
  */
 
-import { Platform, Dimensions, PixelRatio } from 'react-native';
-import { WCAG_CONSTANTS } from '../shared/utils/accessibility';
+import { Platform, Dimensions, PixelRatio } from "react-native";
+
+import { WCAG_CONSTANTS } from "../shared/utils/accessibility";
 
 // Device detection and optimization helpers
 export const DeviceDetection = {
   // Get device type based on screen dimensions
   getDeviceType: () => {
-    const { width, height } = Dimensions.get('window');
+    const { width, height } = Dimensions.get("window");
     const aspectRatio = height / width;
-    
-    if (Platform.OS === 'web') {
-      if (width < 768) return 'mobile';
-      if (width < 1024) return 'tablet';
-      return 'desktop';
+
+    if (Platform.OS === "web") {
+      if (width < 768) return "mobile";
+      if (width < 1024) return "tablet";
+      return "desktop";
     }
-    
+
     // React Native mobile detection
-    if (Platform.OS === 'ios') {
-      if (width <= 414 && height <= 896) return 'phone';
-      return 'tablet';
+    if (Platform.OS === "ios") {
+      if (width <= 414 && height <= 896) return "phone";
+      return "tablet";
     }
-    
-    if (Platform.OS === 'android') {
+
+    if (Platform.OS === "android") {
       const pixelDensity = PixelRatio.get();
       const adjustedWidth = width * pixelDensity;
       const adjustedHeight = height * pixelDensity;
-      
-      if (adjustedWidth < 1000 || adjustedHeight < 1000) return 'phone';
-      return 'tablet';
+
+      if (adjustedWidth < 1000 || adjustedHeight < 1000) return "phone";
+      return "tablet";
     }
-    
-    return 'mobile';
+
+    return "mobile";
   },
 
   // Check if device is in landscape mode
   isLandscape: () => {
-    const { width, height } = Dimensions.get('window');
+    const { width, height } = Dimensions.get("window");
     return width > height;
   },
 
   // Get safe dimensions accounting for notches and navigation
   getSafeDimensions: () => {
-    const { width, height } = Dimensions.get('window');
+    const { width, height } = Dimensions.get("window");
     const deviceType = DeviceDetection.getDeviceType();
-    
+
     // Account for common mobile UI elements
     const adjustments = {
       phone: {
-        topPadding: Platform.OS === 'ios' ? 44 : 24, // Status bar
-        bottomPadding: Platform.OS === 'ios' ? 34 : 0, // Home indicator
+        topPadding: Platform.OS === "ios" ? 44 : 24, // Status bar
+        bottomPadding: Platform.OS === "ios" ? 34 : 0, // Home indicator
       },
       tablet: {
-        topPadding: Platform.OS === 'ios' ? 20 : 24,
+        topPadding: Platform.OS === "ios" ? 20 : 24,
         bottomPadding: 0,
       },
       desktop: {
@@ -66,7 +67,7 @@ export const DeviceDetection = {
     };
 
     const adjustment = adjustments[deviceType] || adjustments.phone;
-    
+
     return {
       width,
       height: height - adjustment.topPadding - adjustment.bottomPadding,
@@ -82,7 +83,7 @@ export const TouchOptimizations = {
   getOptimalTouchTarget: (minSize = WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE) => {
     const deviceType = DeviceDetection.getDeviceType();
     const pixelRatio = PixelRatio.get();
-    
+
     const targetSizes = {
       phone: Math.max(minSize, 48), // Larger for phone usage
       tablet: Math.max(minSize, 44), // Standard for tablet
@@ -93,9 +94,9 @@ export const TouchOptimizations = {
   },
 
   // Calculate touch target spacing for different contexts
-  getTouchTargetSpacing: (context = 'normal') => {
+  getTouchTargetSpacing: (context = "normal") => {
     const deviceType = DeviceDetection.getDeviceType();
-    
+
     const spacingMap = {
       normal: {
         phone: 8,
@@ -126,7 +127,7 @@ export const TouchOptimizations = {
   getEnhancedHitSlop: (targetSize) => {
     const optimalSize = TouchOptimizations.getOptimalTouchTarget();
     const hitSlopNeeded = Math.max(0, (optimalSize - targetSize) / 2);
-    
+
     return {
       top: hitSlopNeeded,
       bottom: hitSlopNeeded,
@@ -142,7 +143,7 @@ export const PerformanceOptimizations = {
   getOptimalAnimationDuration: (baseDuration = 300) => {
     const deviceType = DeviceDetection.getDeviceType();
     const pixelRatio = PixelRatio.get();
-    
+
     // Adjust animation duration based on device capabilities
     const performanceMultipliers = {
       phone: pixelRatio > 2 ? 1.0 : 1.2, // Slightly slower on lower density screens
@@ -150,14 +151,16 @@ export const PerformanceOptimizations = {
       desktop: 0.8, // Faster on desktop
     };
 
-    return Math.round(baseDuration * (performanceMultipliers[deviceType] || 1.0));
+    return Math.round(
+      baseDuration * (performanceMultipliers[deviceType] || 1.0),
+    );
   },
 
   // Memory optimization for large lists
   getOptimalListConfig: () => {
     const deviceType = DeviceDetection.getDeviceType();
-    const { height } = Dimensions.get('window');
-    
+    const { height } = Dimensions.get("window");
+
     const configs = {
       phone: {
         initialNumToRender: 10,
@@ -198,10 +201,10 @@ export const PerformanceOptimizations = {
   getOptimalImageSize: (baseWidth, baseHeight) => {
     const pixelRatio = PixelRatio.get();
     const deviceType = DeviceDetection.getDeviceType();
-    
+
     // Scale images appropriately for device pixel density
-    const scale = Math.min(pixelRatio, deviceType === 'phone' ? 2 : 3);
-    
+    const scale = Math.min(pixelRatio, deviceType === "phone" ? 2 : 3);
+
     return {
       width: Math.round(baseWidth * scale),
       height: Math.round(baseHeight * scale),
@@ -216,7 +219,7 @@ export const TypographyOptimizations = {
   getOptimalFontSize: (baseFontSize = 16) => {
     const deviceType = DeviceDetection.getDeviceType();
     const pixelRatio = PixelRatio.get();
-    
+
     const fontScales = {
       phone: {
         small: pixelRatio < 2 ? 1.1 : 1.0, // Slightly larger on low-density screens
@@ -242,7 +245,7 @@ export const TypographyOptimizations = {
   // Get optimal line height for mobile reading
   getOptimalLineHeight: (fontSize) => {
     const deviceType = DeviceDetection.getDeviceType();
-    
+
     const lineHeightRatios = {
       phone: 1.5, // More generous for mobile reading
       tablet: 1.4,
@@ -258,7 +261,7 @@ export const GestureOptimizations = {
   // Therapeutic gesture configurations
   getTherapeuticGestureConfig: (gestureType) => {
     const deviceType = DeviceDetection.getDeviceType();
-    
+
     const configs = {
       moodSelection: {
         phone: {
@@ -314,10 +317,10 @@ export const GestureOptimizations = {
 // Layout optimization utilities
 export const LayoutOptimizations = {
   // Get optimal grid columns for different content types
-  getOptimalGridColumns: (contentType = 'cards') => {
-    const { width } = Dimensions.get('window');
+  getOptimalGridColumns: (contentType = "cards") => {
+    const { width } = Dimensions.get("window");
     const deviceType = DeviceDetection.getDeviceType();
-    
+
     const configurations = {
       cards: {
         phone: width < 375 ? 1 : 2, // Single column on very small phones
@@ -341,14 +344,16 @@ export const LayoutOptimizations = {
       },
     };
 
-    return configurations[contentType]?.[deviceType] || configurations.cards.phone;
+    return (
+      configurations[contentType]?.[deviceType] || configurations.cards.phone
+    );
   },
 
   // Get optimal padding for different screen sizes
-  getOptimalPadding: (context = 'normal') => {
+  getOptimalPadding: (context = "normal") => {
     const deviceType = DeviceDetection.getDeviceType();
-    const { width } = Dimensions.get('window');
-    
+    const { width } = Dimensions.get("window");
+
     const paddingConfigs = {
       normal: {
         phone: width < 375 ? 12 : 16,
@@ -373,12 +378,14 @@ export const LayoutOptimizations = {
   // Get optimal card spacing
   getOptimalCardSpacing: () => {
     const deviceType = DeviceDetection.getDeviceType();
-    
-    return {
-      phone: 12,
-      tablet: 16,
-      desktop: 20,
-    }[deviceType] || 12;
+
+    return (
+      {
+        phone: 12,
+        tablet: 16,
+        desktop: 20,
+      }[deviceType] || 12
+    );
   },
 };
 

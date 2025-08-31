@@ -3,7 +3,7 @@
  * Enhanced setup with mental health specific mocks and utilities
  */
 
-import '@testing-library/jest-native/extend-expect';
+import "@testing-library/jest-native/extend-expect";
 import "react-native-gesture-handler/jestSetup";
 
 // Enhanced Expo Haptics mock for mental health app
@@ -18,7 +18,7 @@ jest.mock("expo-haptics", () => ({
   },
   NotificationFeedbackType: {
     Success: "success",
-    Warning: "warning", 
+    Warning: "warning",
     Error: "error",
   },
 }));
@@ -74,16 +74,16 @@ global.window = {};
 global.window = global;
 
 // Mock TurboModuleRegistry for React Native 0.76+ compatibility
-jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => ({
+jest.mock("react-native/Libraries/TurboModule/TurboModuleRegistry", () => ({
   getEnforcing: jest.fn((name) => {
-    if (name === 'SettingsManager') {
+    if (name === "SettingsManager") {
       return {
         settings: {},
         setSettings: jest.fn(),
         getSettings: jest.fn(() => ({})),
       };
     }
-    if (name === 'DeviceInfo') {
+    if (name === "DeviceInfo") {
       return {
         getConstants: jest.fn(() => ({
           Dimensions: {
@@ -99,7 +99,7 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => ({
 }));
 
 // Mock NativeDeviceInfo specifically
-jest.mock('react-native/src/private/specs/modules/NativeDeviceInfo', () => ({
+jest.mock("react-native/src/private/specs/modules/NativeDeviceInfo", () => ({
   getConstants: jest.fn(() => ({
     Dimensions: {
       window: { width: 375, height: 667, scale: 2, fontScale: 1 },
@@ -109,22 +109,26 @@ jest.mock('react-native/src/private/specs/modules/NativeDeviceInfo', () => ({
 }));
 
 // Mock Crisis Manager for safety testing
-jest.mock('./src/features/crisisIntervention/CrisisManager', () => {
+jest.mock("./src/features/crisisIntervention/CrisisManager", () => {
   return jest.fn().mockImplementation(() => ({
     detectCrisis: jest.fn((text) => ({
-      isCrisis: text.toLowerCase().includes('suicide') || text.toLowerCase().includes('hurt myself'),
-      severity: 'high',
-      keywords: ['suicide', 'hurt myself'].filter(k => text.toLowerCase().includes(k)),
+      isCrisis:
+        text.toLowerCase().includes("suicide") ||
+        text.toLowerCase().includes("hurt myself"),
+      severity: "high",
+      keywords: ["suicide", "hurt myself"].filter((k) =>
+        text.toLowerCase().includes(k),
+      ),
       riskScore: 0.9,
       timestamp: new Date().toISOString(),
     })),
     handleCrisisDetected: jest.fn(),
     getEmergencyResources: jest.fn(() => [
       {
-        id: 'suicide_prevention_lifeline',
-        name: '988 Suicide & Crisis Lifeline',
-        number: '988',
-        type: 'voice',
+        id: "suicide_prevention_lifeline",
+        name: "988 Suicide & Crisis Lifeline",
+        number: "988",
+        type: "voice",
         priority: 1,
       },
     ]),
@@ -135,28 +139,28 @@ jest.mock('./src/features/crisisIntervention/CrisisManager', () => {
 
 // Mental health testing utilities
 global.testUtils = {
-  createMoodEntry: (mood = 'happy', intensity = 7) => ({
+  createMoodEntry: (mood = "happy", intensity = 7) => ({
     id: `mood-${Date.now()}`,
     mood,
     intensity,
     timestamp: new Date().toISOString(),
-    activities: ['exercise'],
-    notes: 'Test mood entry',
+    activities: ["exercise"],
+    notes: "Test mood entry",
   }),
-  
-  createCrisisScenario: (severity = 'high') => ({
-    text: 'I feel hopeless',
+
+  createCrisisScenario: (severity = "high") => ({
+    text: "I feel hopeless",
     severity,
-    keywords: ['hopeless'],
+    keywords: ["hopeless"],
     isCrisis: true,
     riskScore: 0.8,
   }),
 };
 
 // Enhanced accessibility mocking
-jest.mock('react-native', () => {
-  const RN = jest.requireActual('react-native');
-  
+jest.mock("react-native", () => {
+  const RN = jest.requireActual("react-native");
+
   return {
     ...RN,
     AccessibilityInfo: {
@@ -200,15 +204,15 @@ jest.mock("react-native/Libraries/EventEmitter/NativeEventEmitter", () => {
 jest.mock("react-native-reanimated", () => {
   try {
     const Reanimated = require("react-native-reanimated/mock");
-    
+
     // Core Reanimated setup
     Reanimated.default.call = () => {};
-    
+
     // Add missing methods that tests might expect
     if (!Reanimated.default.createAnimatedComponent) {
       Reanimated.default.createAnimatedComponent = (component) => component;
     }
-    
+
     // Mock additional Reanimated exports
     return {
       ...Reanimated,

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,13 +9,13 @@ import {
   StyleSheet,
   StatusBar,
   Alert,
-} from 'react-native';
+} from "react-native";
 
 // Import components and themes
-import { useTheme } from '../shared/theme/ThemeContext';
-import { freudDarkTheme } from '../shared/theme/freudDarkTheme';
-import DarkModeToggle from '../components/ui/DarkModeToggle';
-import DarkModeNavigator from '../navigation/DarkModeNavigator';
+import DarkModeToggle from "../components/ui/DarkModeToggle";
+import DarkModeNavigator from "../navigation/DarkModeNavigator";
+import { useTheme } from "../shared/theme/ThemeContext";
+import { freudDarkTheme } from "../shared/theme/freudDarkTheme";
 
 const Stack = createStackNavigator();
 
@@ -28,13 +28,17 @@ const DarkModeShowcaseScreen = () => {
       title: "🌙 Dark Mode Splash Screens",
       description: "4 beautiful splash screen variations with animations",
       screens: ["Logo", "Progress", "Quote", "Loading"],
-      color: isDarkMode ? freudDarkTheme.colors.accent.primary : theme.colors.primary[500],
+      color: isDarkMode
+        ? freudDarkTheme.colors.accent.primary
+        : theme.colors.primary[500],
     },
     {
       title: "👋 Welcome Onboarding",
       description: "6-step guided introduction with smooth transitions",
       screens: ["Step 1-6"],
-      color: isDarkMode ? freudDarkTheme.colors.header.primary : theme.colors.secondary[500],
+      color: isDarkMode
+        ? freudDarkTheme.colors.header.primary
+        : theme.colors.secondary[500],
     },
     {
       title: "🔐 Authentication Flow",
@@ -54,32 +58,38 @@ const DarkModeShowcaseScreen = () => {
     {
       icon: "🎨",
       title: "Freud Dark Theme",
-      description: "Custom dark theme based on UI design references with therapeutic brown colors",
+      description:
+        "Custom dark theme based on UI design references with therapeutic brown colors",
     },
     {
       icon: "🌙",
-      title: "Smart Transitions", 
-      description: "Smooth animations and transitions optimized for dark mode viewing",
+      title: "Smart Transitions",
+      description:
+        "Smooth animations and transitions optimized for dark mode viewing",
     },
     {
       icon: "♿",
       title: "Accessibility First",
-      description: "WCAG 2.1 compliant with proper contrast ratios and screen reader support",
+      description:
+        "WCAG 2.1 compliant with proper contrast ratios and screen reader support",
     },
     {
       icon: "📱",
       title: "Cross Platform",
-      description: "Consistent experience across iOS, Android, and Web platforms",
+      description:
+        "Consistent experience across iOS, Android, and Web platforms",
     },
     {
       icon: "🧠",
       title: "Mental Health Focus",
-      description: "UI patterns specifically designed for mental health applications",
+      description:
+        "UI patterns specifically designed for mental health applications",
     },
     {
       icon: "🎯",
       title: "Pixel Perfect",
-      description: "Implementation matches design references exactly with attention to detail",
+      description:
+        "Implementation matches design references exactly with attention to detail",
     },
   ];
 
@@ -91,27 +101,25 @@ const DarkModeShowcaseScreen = () => {
     Alert.alert(
       "Authentication Complete",
       `Welcome! Credentials: ${JSON.stringify(credentials, null, 2)}`,
-      [
-        { text: "Continue", onPress: () => setShowDemo(false) }
-      ]
+      [{ text: "Continue", onPress: () => setShowDemo(false) }],
     );
   };
 
   const handleAssessmentComplete = (assessmentData) => {
     Alert.alert(
-      "Assessment Complete", 
+      "Assessment Complete",
       `Assessment data collected: ${Object.keys(assessmentData).length} responses`,
       [
         { text: "View Results", onPress: () => console.log(assessmentData) },
-        { text: "Continue", onPress: () => setShowDemo(false) }
-      ]
+        { text: "Continue", onPress: () => setShowDemo(false) },
+      ],
     );
   };
 
   if (showDemo) {
     return (
-      <NavigationContainer independent={true}>
-        <DarkModeNavigator 
+      <NavigationContainer independent>
+        <DarkModeNavigator
           onAuthComplete={handleAuthComplete}
           onAssessmentComplete={handleAssessmentComplete}
           startScreen="DarkSplash"
@@ -121,19 +129,19 @@ const DarkModeShowcaseScreen = () => {
   }
 
   const currentTheme = isDarkMode ? freudDarkTheme : theme;
-  const backgroundColor = isDarkMode 
-    ? freudDarkTheme.colors.background.primary 
+  const backgroundColor = isDarkMode
+    ? freudDarkTheme.colors.background.primary
     : theme.colors.background.primary;
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
-      <StatusBar 
+      <StatusBar
         barStyle={isDarkMode ? "light-content" : "dark-content"}
         backgroundColor="transparent"
         translucent
       />
 
-      <ScrollView 
+      <ScrollView
         style={styles.scrollContainer}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -141,69 +149,101 @@ const DarkModeShowcaseScreen = () => {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={[
-              styles.title, 
-              { color: currentTheme.colors.text?.primary || currentTheme.colors.text.primary }
-            ]}>
+            <Text
+              style={[
+                styles.title,
+                {
+                  color:
+                    currentTheme.colors.text?.primary ||
+                    currentTheme.colors.text.primary,
+                },
+              ]}
+            >
               Dark Mode Showcase
             </Text>
-            <Text style={[
-              styles.subtitle,
-              { color: currentTheme.colors.text?.secondary || currentTheme.colors.text.secondary }
-            ]}>
+            <Text
+              style={[
+                styles.subtitle,
+                {
+                  color:
+                    currentTheme.colors.text?.secondary ||
+                    currentTheme.colors.text.secondary,
+                },
+              ]}
+            >
               Complete implementation of dark mode UI based on design references
             </Text>
           </View>
-          
+
           <DarkModeToggle size="large" />
         </View>
 
         {/* Demo Sections */}
         <View style={styles.sectionsContainer}>
-          <Text style={[
-            styles.sectionTitle,
-            { color: currentTheme.colors.text?.primary || currentTheme.colors.text.primary }
-          ]}>
+          <Text
+            style={[
+              styles.sectionTitle,
+              {
+                color:
+                  currentTheme.colors.text?.primary ||
+                  currentTheme.colors.text.primary,
+              },
+            ]}
+          >
             🎯 What's Included
           </Text>
 
           {demoSections.map((section, index) => (
-            <View 
+            <View
               key={index}
               style={[
                 styles.sectionCard,
-                { 
-                  backgroundColor: currentTheme.colors.background?.card || currentTheme.colors.card?.background || '#FFFFFF',
+                {
+                  backgroundColor:
+                    currentTheme.colors.background?.card ||
+                    currentTheme.colors.card?.background ||
+                    "#FFFFFF",
                   borderLeftColor: section.color,
-                  ...currentTheme.shadows?.sm || {},
-                }
+                  ...(currentTheme.shadows?.sm || {}),
+                },
               ]}
             >
-              <Text style={[
-                styles.cardTitle,
-                { color: currentTheme.colors.text?.primary || currentTheme.colors.text.primary }
-              ]}>
+              <Text
+                style={[
+                  styles.cardTitle,
+                  {
+                    color:
+                      currentTheme.colors.text?.primary ||
+                      currentTheme.colors.text.primary,
+                  },
+                ]}
+              >
                 {section.title}
               </Text>
-              <Text style={[
-                styles.cardDescription,
-                { color: currentTheme.colors.text?.secondary || currentTheme.colors.text.secondary }
-              ]}>
+              <Text
+                style={[
+                  styles.cardDescription,
+                  {
+                    color:
+                      currentTheme.colors.text?.secondary ||
+                      currentTheme.colors.text.secondary,
+                  },
+                ]}
+              >
                 {section.description}
               </Text>
               <View style={styles.screensContainer}>
                 {section.screens.map((screen, screenIndex) => (
-                  <View 
+                  <View
                     key={screenIndex}
                     style={[
                       styles.screenTag,
-                      { backgroundColor: `${section.color}20` }
+                      { backgroundColor: `${section.color}20` },
                     ]}
                   >
-                    <Text style={[
-                      styles.screenTagText,
-                      { color: section.color }
-                    ]}>
+                    <Text
+                      style={[styles.screenTagText, { color: section.color }]}
+                    >
                       {screen}
                     </Text>
                   </View>
@@ -215,36 +255,57 @@ const DarkModeShowcaseScreen = () => {
 
         {/* Features */}
         <View style={styles.featuresContainer}>
-          <Text style={[
-            styles.sectionTitle,
-            { color: currentTheme.colors.text?.primary || currentTheme.colors.text.primary }
-          ]}>
+          <Text
+            style={[
+              styles.sectionTitle,
+              {
+                color:
+                  currentTheme.colors.text?.primary ||
+                  currentTheme.colors.text.primary,
+              },
+            ]}
+          >
             ✨ Key Features
           </Text>
 
           <View style={styles.featuresGrid}>
             {features.map((feature, index) => (
-              <View 
+              <View
                 key={index}
                 style={[
                   styles.featureCard,
-                  { 
-                    backgroundColor: currentTheme.colors.background?.card || currentTheme.colors.card?.background || '#FFFFFF',
-                    ...currentTheme.shadows?.sm || {},
-                  }
+                  {
+                    backgroundColor:
+                      currentTheme.colors.background?.card ||
+                      currentTheme.colors.card?.background ||
+                      "#FFFFFF",
+                    ...(currentTheme.shadows?.sm || {}),
+                  },
                 ]}
               >
                 <Text style={styles.featureIcon}>{feature.icon}</Text>
-                <Text style={[
-                  styles.featureTitle,
-                  { color: currentTheme.colors.text?.primary || currentTheme.colors.text.primary }
-                ]}>
+                <Text
+                  style={[
+                    styles.featureTitle,
+                    {
+                      color:
+                        currentTheme.colors.text?.primary ||
+                        currentTheme.colors.text.primary,
+                    },
+                  ]}
+                >
                   {feature.title}
                 </Text>
-                <Text style={[
-                  styles.featureDescription,
-                  { color: currentTheme.colors.text?.secondary || currentTheme.colors.text.secondary }
-                ]}>
+                <Text
+                  style={[
+                    styles.featureDescription,
+                    {
+                      color:
+                        currentTheme.colors.text?.secondary ||
+                        currentTheme.colors.text.secondary,
+                    },
+                  ]}
+                >
                   {feature.description}
                 </Text>
               </View>
@@ -254,46 +315,62 @@ const DarkModeShowcaseScreen = () => {
 
         {/* Start Demo Button */}
         <View style={styles.demoButtonContainer}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[
               styles.demoButton,
-              { 
-                backgroundColor: currentTheme.colors.accent?.primary || 
-                  currentTheme.colors.primary?.[500] || 
-                  '#926247'
-              }
+              {
+                backgroundColor:
+                  currentTheme.colors.accent?.primary ||
+                  currentTheme.colors.primary?.[500] ||
+                  "#926247",
+              },
             ]}
             onPress={handleStartDemo}
           >
-            <Text style={styles.demoButtonText}>
-              🚀 Start Dark Mode Demo
-            </Text>
+            <Text style={styles.demoButtonText}>🚀 Start Dark Mode Demo</Text>
           </TouchableOpacity>
 
-          <Text style={[
-            styles.demoNote,
-            { color: currentTheme.colors.text?.tertiary || currentTheme.colors.text.tertiary }
-          ]}>
+          <Text
+            style={[
+              styles.demoNote,
+              {
+                color:
+                  currentTheme.colors.text?.tertiary ||
+                  currentTheme.colors.text.tertiary,
+              },
+            ]}
+          >
             Experience all screens in sequence starting with splash screens
           </Text>
         </View>
 
         {/* Theme Info */}
         <View style={styles.themeInfoContainer}>
-          <Text style={[
-            styles.themeInfoTitle,
-            { color: currentTheme.colors.text?.primary || currentTheme.colors.text.primary }
-          ]}>
-            Current Theme: {isDarkMode ? 'Freud Dark' : 'Light Mode'}
+          <Text
+            style={[
+              styles.themeInfoTitle,
+              {
+                color:
+                  currentTheme.colors.text?.primary ||
+                  currentTheme.colors.text.primary,
+              },
+            ]}
+          >
+            Current Theme: {isDarkMode ? "Freud Dark" : "Light Mode"}
           </Text>
-          <Text style={[
-            styles.themeInfoText,
-            { color: currentTheme.colors.text?.secondary || currentTheme.colors.text.secondary }
-          ]}>
-            {isDarkMode 
-              ? 'Using custom Freud dark theme with therapeutic brown color palette'
-              : 'Using standard light theme with Freud design system colors'
-            }
+          <Text
+            style={[
+              styles.themeInfoText,
+              {
+                color:
+                  currentTheme.colors.text?.secondary ||
+                  currentTheme.colors.text.secondary,
+              },
+            ]}
+          >
+            {isDarkMode
+              ? "Using custom Freud dark theme with therapeutic brown color palette"
+              : "Using standard light theme with Freud design system colors"}
           </Text>
         </View>
       </ScrollView>
@@ -311,18 +388,18 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 40,
   },
-  
+
   // Header
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     padding: 24,
     paddingTop: 60,
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   subtitle: {
@@ -338,7 +415,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
   },
   sectionCard: {
@@ -349,7 +426,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
   },
   cardDescription: {
@@ -358,8 +435,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   screensContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
   },
   screenTag: {
@@ -369,7 +446,7 @@ const styles = StyleSheet.create({
   },
   screenTagText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 
   // Features
@@ -383,8 +460,8 @@ const styles = StyleSheet.create({
   featureCard: {
     padding: 20,
     borderRadius: 12,
-    alignItems: 'center',
-    textAlign: 'center',
+    alignItems: "center",
+    textAlign: "center",
   },
   featureIcon: {
     fontSize: 32,
@@ -392,14 +469,14 @@ const styles = StyleSheet.create({
   },
   featureTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
-    textAlign: 'center',
+    textAlign: "center",
   },
   featureDescription: {
     fontSize: 14,
     lineHeight: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   // Demo button
@@ -411,18 +488,18 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderRadius: 12,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 12,
   },
   demoButtonText: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
   demoNote: {
     fontSize: 14,
-    textAlign: 'center',
-    fontStyle: 'italic',
+    textAlign: "center",
+    fontStyle: "italic",
   },
 
   // Theme info
@@ -431,11 +508,11 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     marginHorizontal: 24,
     borderRadius: 12,
-    backgroundColor: 'rgba(100, 100, 100, 0.1)',
+    backgroundColor: "rgba(100, 100, 100, 0.1)",
   },
   themeInfoTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
   },
   themeInfoText: {

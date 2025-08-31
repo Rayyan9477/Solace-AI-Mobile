@@ -143,14 +143,25 @@ const ForgotPasswordScreen = ({ navigation }) => {
           {
             backgroundColor: theme.isDark ? "#4A5568" : "#F7FAFC",
             borderColor:
-              selectedMethod === "password" ? freudTheme.colors.green[60] : "transparent",
+              selectedMethod === "password"
+                ? freudTheme.colors.green[60]
+                : "transparent",
           },
         ]}
         onPress={() => handleMethodSelect("password")}
         activeOpacity={0.8}
       >
-        <View style={[styles.methodIcon, { backgroundColor: freudTheme.colors.green[60] }]}>
-          <ThemedFreudIcon name="heart" size={24} color={freudTheme.colors.text.inverse} />
+        <View
+          style={[
+            styles.methodIcon,
+            { backgroundColor: freudTheme.colors.green[60] },
+          ]}
+        >
+          <ThemedFreudIcon
+            name="heart"
+            size={24}
+            color={freudTheme.colors.text.inverse}
+          />
         </View>
         <View style={styles.methodContent}>
           <Text
@@ -175,9 +186,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
             styles.methodRadio,
             {
               backgroundColor:
-                selectedMethod === "password" ? freudTheme.colors.green[60] : "transparent",
+                selectedMethod === "password"
+                  ? freudTheme.colors.green[60]
+                  : "transparent",
               borderColor:
-                selectedMethod === "password" ? freudTheme.colors.green[60] : freudTheme.colors.gray[30],
+                selectedMethod === "password"
+                  ? freudTheme.colors.green[60]
+                  : freudTheme.colors.gray[30],
             },
           ]}
         >
@@ -193,14 +208,26 @@ const ForgotPasswordScreen = ({ navigation }) => {
           styles.methodOption,
           {
             backgroundColor: theme.isDark ? "#4A5568" : "#F7FAFC",
-            borderColor: selectedMethod === "2fa" ? freudTheme.colors.green[60] : "transparent",
+            borderColor:
+              selectedMethod === "2fa"
+                ? freudTheme.colors.green[60]
+                : "transparent",
           },
         ]}
         onPress={() => handleMethodSelect("2fa")}
         activeOpacity={0.8}
       >
-        <View style={[styles.methodIcon, { backgroundColor: freudTheme.colors.green[60] }]}>
-          <ThemedFreudIcon name="brain" size={24} color={freudTheme.colors.text.inverse} />
+        <View
+          style={[
+            styles.methodIcon,
+            { backgroundColor: freudTheme.colors.green[60] },
+          ]}
+        >
+          <ThemedFreudIcon
+            name="brain"
+            size={24}
+            color={freudTheme.colors.text.inverse}
+          />
         </View>
         <View style={styles.methodContent}>
           <Text
@@ -225,8 +252,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
             styles.methodRadio,
             {
               backgroundColor:
-                selectedMethod === "2fa" ? freudTheme.colors.green[60] : "transparent",
-              borderColor: selectedMethod === "2fa" ? freudTheme.colors.green[60] : freudTheme.colors.gray[30],
+                selectedMethod === "2fa"
+                  ? freudTheme.colors.green[60]
+                  : "transparent",
+              borderColor:
+                selectedMethod === "2fa"
+                  ? freudTheme.colors.green[60]
+                  : freudTheme.colors.gray[30],
             },
           ]}
         >
@@ -241,14 +273,25 @@ const ForgotPasswordScreen = ({ navigation }) => {
           {
             backgroundColor: theme.isDark ? "#4A5568" : "#F7FAFC",
             borderColor:
-              selectedMethod === "google" ? freudTheme.colors.green[60] : "transparent",
+              selectedMethod === "google"
+                ? freudTheme.colors.green[60]
+                : "transparent",
           },
         ]}
         onPress={() => handleMethodSelect("google")}
         activeOpacity={0.8}
       >
-        <View style={[styles.methodIcon, { backgroundColor: freudTheme.colors.green[60] }]}>
-          <ThemedFreudIcon name="mindfulness" size={24} color={freudTheme.colors.text.inverse} />
+        <View
+          style={[
+            styles.methodIcon,
+            { backgroundColor: freudTheme.colors.green[60] },
+          ]}
+        >
+          <ThemedFreudIcon
+            name="mindfulness"
+            size={24}
+            color={freudTheme.colors.text.inverse}
+          />
         </View>
         <View style={styles.methodContent}>
           <Text
@@ -273,8 +316,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
             styles.methodRadio,
             {
               backgroundColor:
-                selectedMethod === "google" ? freudTheme.colors.green[60] : "transparent",
-              borderColor: selectedMethod === "google" ? freudTheme.colors.green[60] : freudTheme.colors.gray[30],
+                selectedMethod === "google"
+                  ? freudTheme.colors.green[60]
+                  : "transparent",
+              borderColor:
+                selectedMethod === "google"
+                  ? freudTheme.colors.green[60]
+                  : freudTheme.colors.gray[30],
             },
           ]}
         >
@@ -297,7 +345,11 @@ const ForgotPasswordScreen = ({ navigation }) => {
           </Text>
           <View style={styles.inputWrapper}>
             <View style={styles.inputIcon}>
-              <ThemedFreudIcon name="therapy" size={20} color={freudTheme.colors.green[60]} />
+              <ThemedFreudIcon
+                name="therapy"
+                size={20}
+                color={freudTheme.colors.green[60]}
+              />
             </View>
             <TextInput
               style={[
@@ -327,7 +379,15 @@ const ForgotPasswordScreen = ({ navigation }) => {
         loading={isLoading}
         disabled={isLoading}
         onPress={handleSendCode}
-        icon={!isLoading && <ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+        icon={
+          !isLoading && (
+            <ThemedFreudIcon
+              name="chevron-right"
+              size={20}
+              color={freudTheme.colors.text.inverse}
+            />
+          )
+        }
         iconPosition="right"
         style={{ marginBottom: freudTheme.spacing.md }}
       />
@@ -345,8 +405,17 @@ const ForgotPasswordScreen = ({ navigation }) => {
       ]}
     >
       <View style={styles.verificationHeader}>
-        <View style={[styles.verificationIcon, { backgroundColor: freudTheme.colors.orange[60] }]}>
-          <ThemedFreudIcon name="therapy" size={32} color={freudTheme.colors.text.inverse} />
+        <View
+          style={[
+            styles.verificationIcon,
+            { backgroundColor: freudTheme.colors.orange[60] },
+          ]}
+        >
+          <ThemedFreudIcon
+            name="therapy"
+            size={32}
+            color={freudTheme.colors.text.inverse}
+          />
         </View>
         <Text
           style={[
@@ -362,7 +431,8 @@ const ForgotPasswordScreen = ({ navigation }) => {
             { color: theme.isDark ? "#B2BEB5" : "#636E72" },
           ]}
         >
-          Didn't receive the code? Click below to resend it to your email address. 💚
+          Didn't receive the code? Click below to resend it to your email
+          address. 💚
         </Text>
       </View>
 
@@ -401,7 +471,15 @@ const ForgotPasswordScreen = ({ navigation }) => {
         loading={isLoading}
         disabled={isLoading}
         onPress={handleVerifyCode}
-        icon={!isLoading && <ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+        icon={
+          !isLoading && (
+            <ThemedFreudIcon
+              name="chevron-right"
+              size={20}
+              color={freudTheme.colors.text.inverse}
+            />
+          )
+        }
         iconPosition="right"
         style={{ marginBottom: freudTheme.spacing.md }}
       />
@@ -429,8 +507,17 @@ const ForgotPasswordScreen = ({ navigation }) => {
       ]}
     >
       <View style={styles.successHeader}>
-        <View style={[styles.successIcon, { backgroundColor: freudTheme.colors.green[60] }]}>
-          <ThemedFreudIcon name="heart" size={40} color={freudTheme.colors.text.inverse} />
+        <View
+          style={[
+            styles.successIcon,
+            { backgroundColor: freudTheme.colors.green[60] },
+          ]}
+        >
+          <ThemedFreudIcon
+            name="heart"
+            size={40}
+            color={freudTheme.colors.text.inverse}
+          />
         </View>
         <Text
           style={[
@@ -446,7 +533,8 @@ const ForgotPasswordScreen = ({ navigation }) => {
             { color: theme.isDark ? "#B2BEB5" : "#636E72" },
           ]}
         >
-          Your password has been reset successfully! 🌟 You can now sign in with your new password and continue your mental wellness journey.
+          Your password has been reset successfully! 🌟 You can now sign in with
+          your new password and continue your mental wellness journey.
         </Text>
       </View>
 
@@ -456,7 +544,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
         size="large"
         fullWidth
         onPress={() => navigation.navigate("Login")}
-        icon={<ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+        icon={
+          <ThemedFreudIcon
+            name="chevron-right"
+            size={20}
+            color={freudTheme.colors.text.inverse}
+          />
+        }
         iconPosition="right"
       />
     </Animated.View>
@@ -483,11 +577,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
             onPress={() => navigation.goBack()}
             activeOpacity={0.8}
           >
-            <ThemedFreudIcon 
-              name="chevron-left" 
-              size={24} 
-              color="#FFFFFF" 
-            />
+            <ThemedFreudIcon name="chevron-left" size={24} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
       </LinearGradient>

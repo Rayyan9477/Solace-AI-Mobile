@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
+
 import {
   WebSafeSvg as Svg,
   Path,
@@ -11,7 +12,6 @@ import {
   G,
   getWebSafeSvgProps,
 } from "./WebSafeSvg";
-
 import { useTheme } from "../../shared/theme/ThemeContext";
 
 // Base Navigation Interface Icon Component
@@ -1061,11 +1061,7 @@ const NavigationInterfaceIcon = ({
     testID: testID || `navigation-interface-icon-${name}`,
   });
 
-  return (
-    <Svg {...svgProps}>
-      {renderIcon()}
-    </Svg>
-  );
+  return <Svg {...svgProps}>{renderIcon()}</Svg>;
 };
 
 // Specialized Navigation Interface Icon Components

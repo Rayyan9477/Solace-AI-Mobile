@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,16 +7,16 @@ import {
   SafeAreaView,
   Animated,
   StatusBar,
-} from 'react-native';
-import { useTheme } from '../shared/theme/ThemeContext';
+} from "react-native";
 
 // Modern Components
-import AdvancedShadersContainer from '../components/advanced/AdvancedShadersContainer';
-import ModernCard from '../components/modern/ModernCard';
-import ModernButton from '../components/modern/ModernButton';
+import AdvancedShadersContainer from "../components/advanced/AdvancedShadersContainer";
+import { MentalHealthIcon } from "../components/icons";
+import ModernButton from "../components/modern/ModernButton";
+import ModernCard from "../components/modern/ModernCard";
 
 // Icons
-import { MentalHealthIcon } from '../components/icons';
+import { useTheme } from "../shared/theme/ThemeContext";
 
 // Theme
 import {
@@ -26,16 +26,16 @@ import {
   modernBorderRadius,
   modernShadows,
   modernAnimations,
-} from '../shared/theme/darkTheme';
+} from "../shared/theme/darkTheme";
 
 // Modern Design Showcase - Dark, Elegant, Premium
 // Features all advanced components and design system elements
 const ModernDesignShowcaseScreen = () => {
   const { theme } = useTheme();
-  const [selectedShader, setSelectedShader] = useState('neon');
-  const [selectedCard, setSelectedCard] = useState('glass');
-  const [selectedButton, setSelectedButton] = useState('primary');
-  
+  const [selectedShader, setSelectedShader] = useState("neon");
+  const [selectedCard, setSelectedCard] = useState("glass");
+  const [selectedButton, setSelectedButton] = useState("primary");
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
 
@@ -54,19 +54,46 @@ const ModernDesignShowcaseScreen = () => {
     ]).start();
   }, [fadeAnim, slideAnim]);
 
-  const shaderVariants = ['neon', 'aurora', 'holographic', 'neural', 'quantum', 'plasma', 'void'];
-  const cardVariants = ['glass', 'neon', 'void', 'neural', 'holographic', 'minimal'];
-  const buttonVariants = ['primary', 'ghost', 'glass', 'neon', 'void', 'neural', 'outline'];
+  const shaderVariants = [
+    "neon",
+    "aurora",
+    "holographic",
+    "neural",
+    "quantum",
+    "plasma",
+    "void",
+  ];
+  const cardVariants = [
+    "glass",
+    "neon",
+    "void",
+    "neural",
+    "holographic",
+    "minimal",
+  ];
+  const buttonVariants = [
+    "primary",
+    "ghost",
+    "glass",
+    "neon",
+    "void",
+    "neural",
+    "outline",
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-      
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
+
       {/* Background Shader */}
       <AdvancedShadersContainer
         variant="aurora"
         intensity={0.2}
-        animated={true}
+        animated
         interactive={false}
         style={styles.backgroundShader}
       />
@@ -89,9 +116,9 @@ const ModernDesignShowcaseScreen = () => {
           <AdvancedShadersContainer
             variant="holographic"
             intensity={0.6}
-            animated={true}
-            interactive={true}
-            glowEffect={true}
+            animated
+            interactive
+            glowEffect
             style={styles.heroContainer}
           >
             <View style={styles.heroContent}>
@@ -108,7 +135,8 @@ const ModernDesignShowcaseScreen = () => {
                 Elegant • Sophisticated • Engaging
               </Text>
               <Text style={styles.heroDescription}>
-                Premium visual effects with advanced shaders, glassmorphism, and therapeutic design principles
+                Premium visual effects with advanced shaders, glassmorphism, and
+                therapeutic design principles
               </Text>
             </View>
           </AdvancedShadersContainer>
@@ -129,22 +157,22 @@ const ModernDesignShowcaseScreen = () => {
             subtitle="Paper Design inspired visual elements"
             variant="neural"
             elevation="high"
-            animated={true}
-            glowEffect={true}
+            animated
+            glowEffect
             shaderVariant={selectedShader}
           >
             <Text style={styles.sectionDescription}>
               Select a shader variant to experience real-time visual effects
             </Text>
-            
+
             <View style={styles.variantGrid}>
               {shaderVariants.map((variant) => (
                 <ModernButton
                   key={variant}
                   title={variant}
-                  variant={selectedShader === variant ? 'neon' : 'ghost'}
+                  variant={selectedShader === variant ? "neon" : "ghost"}
                   size="small"
-                  animated={true}
+                  animated
                   glowEffect={selectedShader === variant}
                   onPress={() => setSelectedShader(variant)}
                   style={styles.variantButton}
@@ -157,10 +185,10 @@ const ModernDesignShowcaseScreen = () => {
               <AdvancedShadersContainer
                 variant={selectedShader}
                 intensity={0.8}
-                animated={true}
-                interactive={true}
-                glowEffect={true}
-                morphEffect={true}
+                animated
+                interactive
+                glowEffect
+                morphEffect
                 style={styles.interactiveShader}
               >
                 <View style={styles.shaderContent}>
@@ -189,7 +217,7 @@ const ModernDesignShowcaseScreen = () => {
             subtitle="Glassmorphism and modern design"
             variant="void"
             elevation="floating"
-            animated={true}
+            animated
             shaderVariant="quantum"
           >
             <View style={styles.cardVariantsContainer}>
@@ -200,9 +228,9 @@ const ModernDesignShowcaseScreen = () => {
                   subtitle={`Premium ${variant} styling`}
                   variant={variant}
                   elevation="medium"
-                  animated={true}
-                  glowEffect={variant === 'neon' || variant === 'neural'}
-                  interactive={true}
+                  animated
+                  glowEffect={variant === "neon" || variant === "neural"}
+                  interactive
                   onPress={() => setSelectedCard(variant)}
                   style={[
                     styles.miniCard,
@@ -233,8 +261,8 @@ const ModernDesignShowcaseScreen = () => {
             subtitle="Micro-animations and premium feedback"
             variant="holographic"
             elevation="high"
-            animated={true}
-            glowEffect={true}
+            animated
+            glowEffect
             shaderVariant="holographic"
           >
             <View style={styles.buttonGrid}>
@@ -244,11 +272,17 @@ const ModernDesignShowcaseScreen = () => {
                   title={`${variant} Button`}
                   variant={variant}
                   size="medium"
-                  animated={true}
-                  glowEffect={variant === 'neon' || variant === 'neural'}
-                  shaderEffect={variant === 'primary' || variant === 'neon'}
-                  morphEffect={variant === 'neural'}
-                  icon={variant === 'primary' ? 'Heart' : variant === 'neural' ? 'Brain' : undefined}
+                  animated
+                  glowEffect={variant === "neon" || variant === "neural"}
+                  shaderEffect={variant === "primary" || variant === "neon"}
+                  morphEffect={variant === "neural"}
+                  icon={
+                    variant === "primary"
+                      ? "Heart"
+                      : variant === "neural"
+                        ? "Brain"
+                        : undefined
+                  }
                   onPress={() => setSelectedButton(variant)}
                   style={styles.demoButton}
                 />
@@ -272,26 +306,40 @@ const ModernDesignShowcaseScreen = () => {
             subtitle="Sophisticated colors for mental wellness"
             variant="minimal"
             elevation="medium"
-            animated={true}
+            animated
             shaderVariant="void"
           >
             <View style={styles.colorPalette}>
               <View style={styles.colorSection}>
                 <Text style={styles.colorSectionTitle}>Primary Accents</Text>
                 <View style={styles.colorRow}>
-                  <View style={[styles.colorSwatch, { backgroundColor: modernDarkColors.accent.primary }]} />
+                  <View
+                    style={[
+                      styles.colorSwatch,
+                      { backgroundColor: modernDarkColors.accent.primary },
+                    ]}
+                  />
                   <View style={styles.colorInfo}>
                     <Text style={styles.colorName}>Electric Purple</Text>
                     <Text style={styles.colorHex}>#7C3AED</Text>
-                    <Text style={styles.colorDescription}>Primary interactive elements</Text>
+                    <Text style={styles.colorDescription}>
+                      Primary interactive elements
+                    </Text>
                   </View>
                 </View>
                 <View style={styles.colorRow}>
-                  <View style={[styles.colorSwatch, { backgroundColor: modernDarkColors.accent.secondary }]} />
+                  <View
+                    style={[
+                      styles.colorSwatch,
+                      { backgroundColor: modernDarkColors.accent.secondary },
+                    ]}
+                  />
                   <View style={styles.colorInfo}>
                     <Text style={styles.colorName}>Electric Blue</Text>
                     <Text style={styles.colorHex}>#3B82F6</Text>
-                    <Text style={styles.colorDescription}>Secondary highlights</Text>
+                    <Text style={styles.colorDescription}>
+                      Secondary highlights
+                    </Text>
                   </View>
                 </View>
               </View>
@@ -299,24 +347,54 @@ const ModernDesignShowcaseScreen = () => {
               <View style={styles.colorSection}>
                 <Text style={styles.colorSectionTitle}>Therapeutic Colors</Text>
                 <View style={styles.colorRow}>
-                  <View style={[styles.colorSwatch, { backgroundColor: modernDarkColors.therapeutic.calming.primary }]} />
+                  <View
+                    style={[
+                      styles.colorSwatch,
+                      {
+                        backgroundColor:
+                          modernDarkColors.therapeutic.calming.primary,
+                      },
+                    ]}
+                  />
                   <View style={styles.colorInfo}>
                     <Text style={styles.colorName}>Midnight Calming</Text>
-                    <Text style={styles.colorDescription}>Deep blues for peace & tranquility</Text>
+                    <Text style={styles.colorDescription}>
+                      Deep blues for peace & tranquility
+                    </Text>
                   </View>
                 </View>
                 <View style={styles.colorRow}>
-                  <View style={[styles.colorSwatch, { backgroundColor: modernDarkColors.therapeutic.nurturing.primary }]} />
+                  <View
+                    style={[
+                      styles.colorSwatch,
+                      {
+                        backgroundColor:
+                          modernDarkColors.therapeutic.nurturing.primary,
+                      },
+                    ]}
+                  />
                   <View style={styles.colorInfo}>
                     <Text style={styles.colorName}>Deep Nurturing</Text>
-                    <Text style={styles.colorDescription}>Rich emerald for growth & healing</Text>
+                    <Text style={styles.colorDescription}>
+                      Rich emerald for growth & healing
+                    </Text>
                   </View>
                 </View>
                 <View style={styles.colorRow}>
-                  <View style={[styles.colorSwatch, { backgroundColor: modernDarkColors.therapeutic.peaceful.primary }]} />
+                  <View
+                    style={[
+                      styles.colorSwatch,
+                      {
+                        backgroundColor:
+                          modernDarkColors.therapeutic.peaceful.primary,
+                      },
+                    ]}
+                  />
                   <View style={styles.colorInfo}>
                     <Text style={styles.colorName}>Sophisticated Peaceful</Text>
-                    <Text style={styles.colorDescription}>Elegant purples for serenity</Text>
+                    <Text style={styles.colorDescription}>
+                      Elegant purples for serenity
+                    </Text>
                   </View>
                 </View>
               </View>
@@ -339,17 +417,20 @@ const ModernDesignShowcaseScreen = () => {
             subtitle="Premium fonts and sophisticated hierarchy"
             variant="glass"
             elevation="medium"
-            animated={true}
+            animated
             shaderVariant="neural"
           >
             <View style={styles.typographyDemo}>
               <Text style={styles.displayText}>Display Heading</Text>
               <Text style={styles.headingText}>Section Heading</Text>
               <Text style={styles.bodyText}>
-                Body text with perfect readability and sophisticated character spacing.
-                Designed for premium user experiences with mental health focus.
+                Body text with perfect readability and sophisticated character
+                spacing. Designed for premium user experiences with mental
+                health focus.
               </Text>
-              <Text style={styles.captionText}>Caption • Metadata • Supporting Information</Text>
+              <Text style={styles.captionText}>
+                Caption • Metadata • Supporting Information
+              </Text>
             </View>
           </ModernCard>
         </Animated.View>
@@ -369,8 +450,8 @@ const ModernDesignShowcaseScreen = () => {
             subtitle="Technical excellence and performance"
             variant="neural"
             elevation="high"
-            animated={true}
-            glowEffect={true}
+            animated
+            glowEffect
             shaderVariant="quantum"
           >
             <View style={styles.metricsGrid}>
@@ -407,7 +488,7 @@ const styles = StyleSheet.create({
     backgroundColor: modernDarkColors.background.primary,
   },
   backgroundShader: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -429,18 +510,18 @@ const styles = StyleSheet.create({
     minHeight: 200,
   },
   heroContent: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: modernSpacing[8],
   },
   heroIcon: {
     marginBottom: modernSpacing[6],
   },
   heroTitle: {
-    fontSize: modernTypography.sizes['5xl'],
+    fontSize: modernTypography.sizes["5xl"],
     fontWeight: modernTypography.weights.black,
     fontFamily: modernTypography.fontFamily.display,
     color: modernDarkColors.text.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: modernSpacing[3],
     letterSpacing: modernTypography.letterSpacing.tight,
   },
@@ -449,7 +530,7 @@ const styles = StyleSheet.create({
     fontWeight: modernTypography.weights.medium,
     fontFamily: modernTypography.fontFamily.sans,
     color: modernDarkColors.accent.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: modernSpacing[4],
     letterSpacing: modernTypography.letterSpacing.wide,
   },
@@ -458,7 +539,7 @@ const styles = StyleSheet.create({
     fontWeight: modernTypography.weights.normal,
     fontFamily: modernTypography.fontFamily.sans,
     color: modernDarkColors.text.secondary,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: modernTypography.lineHeights.base,
     paddingHorizontal: modernSpacing[4],
     opacity: 0.9,
@@ -475,8 +556,8 @@ const styles = StyleSheet.create({
     lineHeight: modernTypography.lineHeights.sm,
   },
   variantGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: modernSpacing[2],
     marginBottom: modernSpacing[6],
   },
@@ -492,8 +573,8 @@ const styles = StyleSheet.create({
   },
   shaderContent: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   shaderText: {
     fontSize: modernTypography.sizes.xl,
@@ -545,8 +626,8 @@ const styles = StyleSheet.create({
     marginBottom: modernSpacing[2],
   },
   colorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: modernSpacing[2],
   },
   colorSwatch: {
@@ -585,14 +666,14 @@ const styles = StyleSheet.create({
     gap: modernSpacing[4],
   },
   displayText: {
-    fontSize: modernTypography.sizes['4xl'],
+    fontSize: modernTypography.sizes["4xl"],
     fontWeight: modernTypography.weights.black,
     fontFamily: modernTypography.fontFamily.display,
     color: modernDarkColors.text.primary,
     letterSpacing: modernTypography.letterSpacing.tight,
   },
   headingText: {
-    fontSize: modernTypography.sizes['2xl'],
+    fontSize: modernTypography.sizes["2xl"],
     fontWeight: modernTypography.weights.bold,
     fontFamily: modernTypography.fontFamily.display,
     color: modernDarkColors.text.primary,
@@ -613,14 +694,14 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   metricsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: modernSpacing[4],
   },
   metric: {
     flex: 1,
     minWidth: 120,
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: modernSpacing[4],
     paddingHorizontal: modernSpacing[3],
     backgroundColor: modernDarkColors.glass.light,
@@ -629,19 +710,19 @@ const styles = StyleSheet.create({
     borderColor: modernDarkColors.border.glass,
   },
   metricValue: {
-    fontSize: modernTypography.sizes['2xl'],
+    fontSize: modernTypography.sizes["2xl"],
     fontWeight: modernTypography.weights.black,
     fontFamily: modernTypography.fontFamily.display,
     color: modernDarkColors.accent.primary,
     marginBottom: modernSpacing[1],
-    textAlign: 'center',
+    textAlign: "center",
   },
   metricLabel: {
     fontSize: modernTypography.sizes.xs,
     fontWeight: modernTypography.weights.medium,
     fontFamily: modernTypography.fontFamily.sans,
     color: modernDarkColors.text.secondary,
-    textAlign: 'center',
+    textAlign: "center",
     opacity: 0.8,
   },
   bottomSpacing: {

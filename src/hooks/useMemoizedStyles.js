@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
 /**
  * Hook for memoizing styles to prevent recalculation on every render
@@ -26,6 +26,6 @@ export const useMemoizedObject = (obj, dependencies = []) => {
 
 export default {
   useMemoizedStyles,
-  useMemoizedCallback, 
+  useMemoizedCallback,
   useMemoizedObject,
 };

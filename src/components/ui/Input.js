@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -7,35 +7,36 @@ import {
   StyleSheet,
   Animated,
   Dimensions,
-  Platform
-} from 'react-native';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { getTherapeuticColor } from '../../shared/theme/ColorPalette';
-import { MentalHealthIcon } from '../icons';
+  Platform,
+} from "react-native";
 
-const { width: screenWidth } = Dimensions.get('window');
+import { getTherapeuticColor } from "../../shared/theme/ColorPalette";
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { MentalHealthIcon } from "../icons";
+
+const { width: screenWidth } = Dimensions.get("window");
 
 const Input = ({
-  label = '',
-  placeholder = '',
-  value = '',
+  label = "",
+  placeholder = "",
+  value = "",
   onChangeText = () => {},
   onFocus = () => {},
   onBlur = () => {},
-  variant = 'default',
-  size = 'medium',
-  therapeuticColor = 'calming',
+  variant = "default",
+  size = "medium",
+  therapeuticColor = "calming",
   disabled = false,
   error = false,
-  errorMessage = '',
-  helperText = '',
+  errorMessage = "",
+  helperText = "",
   required = false,
   multiline = false,
   numberOfLines = 4,
   maxLength,
-  keyboardType = 'default',
+  keyboardType = "default",
   secureTextEntry = false,
-  autoCapitalize = 'sentences',
+  autoCapitalize = "sentences",
   leftIcon = null,
   rightIcon = null,
   onRightIconPress = null,
@@ -55,7 +56,7 @@ const Input = ({
 
   useEffect(() => {
     Animated.timing(animatedValue, {
-      toValue: (isFocused || value) ? 1 : 0,
+      toValue: isFocused || value ? 1 : 0,
       duration: 200,
       useNativeDriver: false,
     }).start();
@@ -80,11 +81,15 @@ const Input = ({
   };
 
   const getContainerStyles = () => {
-    const therapeuticColors = getTherapeuticColor(therapeuticColor, 500, isDarkMode);
-    
+    const therapeuticColors = getTherapeuticColor(
+      therapeuticColor,
+      500,
+      isDarkMode,
+    );
+
     let borderColor = theme.colors.border.primary;
     let backgroundColor = theme.colors.background.card;
-    
+
     if (error) {
       borderColor = theme.colors.error[500];
     } else if (isFocused) {
@@ -98,28 +103,28 @@ const Input = ({
     const baseStyle = {
       backgroundColor,
       borderColor,
-      borderWidth: variant === 'outline' || variant === 'default' ? 1.5 : 0,
+      borderWidth: variant === "outline" || variant === "default" ? 1.5 : 0,
       borderRadius: getSizeStyles().borderRadius,
       ...getSizeStyles().container,
     };
 
     switch (variant) {
-      case 'filled':
-        baseStyle.backgroundColor = isFocused 
-          ? theme.colors.background.card 
+      case "filled":
+        baseStyle.backgroundColor = isFocused
+          ? theme.colors.background.card
           : theme.colors.background.secondary;
         baseStyle.borderWidth = 0;
         break;
-      
-      case 'underline':
-        baseStyle.backgroundColor = 'transparent';
+
+      case "underline":
+        baseStyle.backgroundColor = "transparent";
         baseStyle.borderWidth = 0;
         baseStyle.borderBottomWidth = 2;
         baseStyle.borderRadius = 0;
         break;
-      
-      case 'none':
-        baseStyle.backgroundColor = 'transparent';
+
+      case "none":
+        baseStyle.backgroundColor = "transparent";
         baseStyle.borderWidth = 0;
         break;
     }
@@ -129,7 +134,7 @@ const Input = ({
 
   const getSizeStyles = () => {
     switch (size) {
-      case 'small':
+      case "small":
         return {
           container: {
             minHeight: 36,
@@ -140,8 +145,8 @@ const Input = ({
           fontSize: 14,
           iconSize: 16,
         };
-      
-      case 'large':
+
+      case "large":
         return {
           container: {
             minHeight: 56,
@@ -152,7 +157,7 @@ const Input = ({
           fontSize: 18,
           iconSize: 20,
         };
-      
+
       default: // medium
         return {
           container: {
@@ -169,14 +174,16 @@ const Input = ({
 
   const getInputStyles = () => {
     const sizeStyles = getSizeStyles();
-    
+
     return [
       styles.input,
       {
         fontSize: sizeStyles.fontSize,
-        color: disabled ? theme.colors.text.tertiary : theme.colors.text.primary,
+        color: disabled
+          ? theme.colors.text.tertiary
+          : theme.colors.text.primary,
         paddingVertical: multiline ? 8 : 0,
-        textAlignVertical: multiline ? 'top' : 'center',
+        textAlignVertical: multiline ? "top" : "center",
         minHeight: multiline ? sizeStyles.fontSize * numberOfLines : undefined,
       },
       inputStyle,
@@ -184,14 +191,21 @@ const Input = ({
   };
 
   const renderFloatingLabel = () => {
-    if (!label || variant === 'none') return null;
+    if (!label || variant === "none") return null;
 
-    const therapeuticColors = getTherapeuticColor(therapeuticColor, 500, isDarkMode);
+    const therapeuticColors = getTherapeuticColor(
+      therapeuticColor,
+      500,
+      isDarkMode,
+    );
     const sizeStyles = getSizeStyles();
-    
+
     const labelTop = animatedValue.interpolate({
       inputRange: [0, 1],
-      outputRange: [sizeStyles.container.paddingVertical + (sizeStyles.fontSize / 2), -10],
+      outputRange: [
+        sizeStyles.container.paddingVertical + sizeStyles.fontSize / 2,
+        -10,
+      ],
     });
 
     const labelFontSize = animatedValue.interpolate({
@@ -212,7 +226,9 @@ const Input = ({
           styles.floatingLabelContainer,
           {
             top: labelTop,
-            left: leftIcon ? sizeStyles.iconSize + 20 : sizeStyles.container.paddingHorizontal,
+            left: leftIcon
+              ? sizeStyles.iconSize + 20
+              : sizeStyles.container.paddingHorizontal,
           },
         ]}
         pointerEvents="none"
@@ -227,18 +243,23 @@ const Input = ({
             },
           ]}
         >
-          {label}{required && ' *'}
+          {label}
+          {required && " *"}
         </Animated.Text>
       </Animated.View>
     );
   };
 
   const renderLabel = () => {
-    if (!label || variant === 'floating') return null;
+    if (!label || variant === "floating") return null;
 
-    const therapeuticColors = getTherapeuticColor(therapeuticColor, 500, isDarkMode);
+    const therapeuticColors = getTherapeuticColor(
+      therapeuticColor,
+      500,
+      isDarkMode,
+    );
     let labelColor = theme.colors.text.secondary;
-    
+
     if (error) {
       labelColor = theme.colors.error[500];
     } else if (isFocused) {
@@ -247,7 +268,8 @@ const Input = ({
 
     return (
       <Text style={[styles.label, { color: labelColor }]}>
-        {label}{required && ' *'}
+        {label}
+        {required && " *"}
       </Text>
     );
   };
@@ -256,13 +278,13 @@ const Input = ({
     if (!leftIcon) return null;
 
     const sizeStyles = getSizeStyles();
-    const iconColor = error 
-      ? theme.colors.error[500] 
-      : isFocused 
+    const iconColor = error
+      ? theme.colors.error[500]
+      : isFocused
         ? getTherapeuticColor(therapeuticColor, 500, isDarkMode)
         : theme.colors.text.tertiary;
 
-    if (typeof leftIcon === 'string') {
+    if (typeof leftIcon === "string") {
       return (
         <MentalHealthIcon
           name={leftIcon}
@@ -282,8 +304,8 @@ const Input = ({
 
   const renderRightIcon = () => {
     const sizeStyles = getSizeStyles();
-    const iconColor = error 
-      ? theme.colors.error[500] 
+    const iconColor = error
+      ? theme.colors.error[500]
       : theme.colors.text.tertiary;
 
     // Security toggle for password fields
@@ -293,7 +315,9 @@ const Input = ({
           onPress={toggleSecureEntry}
           style={styles.rightIcon}
           accessibilityRole="button"
-          accessibilityLabel={isSecureVisible ? "Hide password" : "Show password"}
+          accessibilityLabel={
+            isSecureVisible ? "Hide password" : "Show password"
+          }
         >
           <MentalHealthIcon
             name={isSecureVisible ? "Heart" : "Brain"}
@@ -306,12 +330,19 @@ const Input = ({
 
     if (!rightIcon) return null;
 
-    const IconComponent = typeof rightIcon === 'string' 
-      ? <MentalHealthIcon name={rightIcon} size={sizeStyles.iconSize} color={iconColor} />
-      : React.cloneElement(rightIcon, {
+    const IconComponent =
+      typeof rightIcon === "string" ? (
+        <MentalHealthIcon
+          name={rightIcon}
+          size={sizeStyles.iconSize}
+          color={iconColor}
+        />
+      ) : (
+        React.cloneElement(rightIcon, {
           size: sizeStyles.iconSize,
           color: iconColor,
-        });
+        })
+      );
 
     if (onRightIconPress) {
       return (
@@ -334,11 +365,7 @@ const Input = ({
     const text = error ? errorMessage : helperText;
     const color = error ? theme.colors.error[500] : theme.colors.text.tertiary;
 
-    return (
-      <Text style={[styles.helperText, { color }]}>
-        {text}
-      </Text>
-    );
+    return <Text style={[styles.helperText, { color }]}>{text}</Text>;
   };
 
   const renderCharacterCount = () => {
@@ -346,7 +373,9 @@ const Input = ({
 
     const count = value.length;
     const isNearLimit = count / maxLength > 0.8;
-    const color = isNearLimit ? theme.colors.warning[500] : theme.colors.text.tertiary;
+    const color = isNearLimit
+      ? theme.colors.warning[500]
+      : theme.colors.text.tertiary;
 
     return (
       <Text style={[styles.characterCount, { color }]}>
@@ -357,15 +386,15 @@ const Input = ({
 
   return (
     <View style={[styles.wrapper, style]}>
-      {variant !== 'floating' && renderLabel()}
-      
+      {variant !== "floating" && renderLabel()}
+
       <TouchableOpacity
         style={getContainerStyles()}
         onPress={focusInput}
         activeOpacity={1}
       >
         {renderLeftIcon()}
-        
+
         <View style={styles.inputWrapper}>
           <TextInput
             ref={inputRef}
@@ -374,7 +403,9 @@ const Input = ({
             onChangeText={onChangeText}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            placeholder={variant === 'floating' && (isFocused || !value) ? '' : placeholder}
+            placeholder={
+              variant === "floating" && (isFocused || !value) ? "" : placeholder
+            }
             placeholderTextColor={theme.colors.text.placeholder}
             editable={!disabled}
             multiline={multiline}
@@ -391,8 +422,8 @@ const Input = ({
         </View>
 
         {renderRightIcon()}
-        
-        {variant === 'floating' && renderFloatingLabel()}
+
+        {variant === "floating" && renderFloatingLabel()}
       </TouchableOpacity>
 
       <View style={styles.bottomSection}>
@@ -408,13 +439,9 @@ export const FloatingLabelInput = (props) => (
   <Input {...props} variant="floating" />
 );
 
-export const FilledInput = (props) => (
-  <Input {...props} variant="filled" />
-);
+export const FilledInput = (props) => <Input {...props} variant="filled" />;
 
-export const OutlineInput = (props) => (
-  <Input {...props} variant="outline" />
-);
+export const OutlineInput = (props) => <Input {...props} variant="outline" />;
 
 export const UnderlineInput = (props) => (
   <Input {...props} variant="underline" />
@@ -422,7 +449,7 @@ export const UnderlineInput = (props) => (
 
 // Therapeutic Input Variants
 export const TherapeuticInput = (props) => (
-  <Input {...props} therapeuticColor={props.therapeuticColor || 'calming'} />
+  <Input {...props} therapeuticColor={props.therapeuticColor || "calming"} />
 );
 
 export const CalmingInput = (props) => (
@@ -435,16 +462,16 @@ export const NurturingInput = (props) => (
 
 // Specialized Input Types
 export const PasswordInput = (props) => (
-  <Input 
-    {...props} 
-    secureTextEntry={true}
+  <Input
+    {...props}
+    secureTextEntry
     keyboardType="default"
     autoCapitalize="none"
   />
 );
 
 export const EmailInput = (props) => (
-  <Input 
+  <Input
     {...props}
     keyboardType="email-address"
     autoCapitalize="none"
@@ -453,20 +480,11 @@ export const EmailInput = (props) => (
 );
 
 export const PhoneInput = (props) => (
-  <Input 
-    {...props}
-    keyboardType="phone-pad"
-    autoCapitalize="none"
-  />
+  <Input {...props} keyboardType="phone-pad" autoCapitalize="none" />
 );
 
 export const SearchInput = (props) => (
-  <Input 
-    {...props}
-    leftIcon="Heart"
-    placeholder="Search..."
-    variant="filled"
-  />
+  <Input {...props} leftIcon="Heart" placeholder="Search..." variant="filled" />
 );
 
 const styles = StyleSheet.create({
@@ -474,9 +492,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'relative',
+    flexDirection: "row",
+    alignItems: "center",
+    position: "relative",
   },
   inputWrapper: {
     flex: 1,
@@ -487,22 +505,22 @@ const styles = StyleSheet.create({
     margin: 0,
     ...Platform.select({
       web: {
-        outline: 'none',
+        outline: "none",
       },
     }),
   },
   label: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 8,
   },
   floatingLabelContainer: {
-    position: 'absolute',
+    position: "absolute",
     paddingHorizontal: 4,
     zIndex: 1,
   },
   floatingLabel: {
-    fontWeight: '500',
+    fontWeight: "500",
   },
   leftIcon: {
     marginRight: 12,
@@ -512,9 +530,9 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   bottomSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 4,
   },
   helperText: {

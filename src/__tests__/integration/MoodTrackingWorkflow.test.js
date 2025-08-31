@@ -4,35 +4,35 @@
  * Ensures proper data flow and user experience
  */
 
-import React from 'react';
+import { NavigationContainer } from "@react-navigation/native";
+import { configureStore } from "@reduxjs/toolkit";
 import {
   render,
   fireEvent,
   waitFor,
   act,
   screen,
-} from '@testing-library/react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
+} from "@testing-library/react-native";
+import React from "react";
+import { Provider } from "react-redux";
 
-import { ThemeProvider } from '../../shared/theme/ThemeContext';
-import moodSlice from '../../store/slices/moodSlice';
-import enhancedMoodSlice from '../../store/slices/enhancedMoodSlice';
-import EnhancedMoodTrackerScreen from '../../screens/mood/EnhancedMoodTrackerScreen';
-import MoodCheckIn from '../../components/dashboard/MoodCheckIn';
-import MainAppScreen from '../../screens/MainAppScreen';
+import MoodCheckIn from "../../components/dashboard/MoodCheckIn";
+import MainAppScreen from "../../screens/MainAppScreen";
+import EnhancedMoodTrackerScreen from "../../screens/mood/EnhancedMoodTrackerScreen";
+import { ThemeProvider } from "../../shared/theme/ThemeContext";
+import enhancedMoodSlice from "../../store/slices/enhancedMoodSlice";
+import moodSlice from "../../store/slices/moodSlice";
 
 // Mock dependencies
-jest.mock('expo-linear-gradient', () => ({
+jest.mock("expo-linear-gradient", () => ({
   LinearGradient: ({ children }) => children,
 }));
 
-jest.mock('expo-haptics', () => ({
+jest.mock("expo-haptics", () => ({
   impactAsync: jest.fn(),
 }));
 
-jest.mock('@react-native-async-storage/async-storage', () => ({
+jest.mock("@react-native-async-storage/async-storage", () => ({
   getItem: jest.fn(() => Promise.resolve(null)),
   setItem: jest.fn(() => Promise.resolve()),
 }));
@@ -57,7 +57,7 @@ const createTestStore = (initialState = {}) => {
         selectedMood: null,
         intensity: 5,
         activities: [],
-        notes: '',
+        notes: "",
         triggers: [],
         isSubmitting: false,
         ...initialState.enhancedMood,
@@ -68,37 +68,37 @@ const createTestStore = (initialState = {}) => {
 
 const mockTheme = {
   colors: {
-    calming: ['#2196F3', '#64B5F6'],
-    nurturing: ['#4CAF50', '#81C784'],
-    peaceful: ['#607D8B', '#90A4AE'],
-    background: '#FFFFFF',
-    text: '#000000',
-    surface: '#F5F5F5',
+    calming: ["#2196F3", "#64B5F6"],
+    nurturing: ["#4CAF50", "#81C784"],
+    peaceful: ["#607D8B", "#90A4AE"],
+    background: "#FFFFFF",
+    text: "#000000",
+    surface: "#F5F5F5",
   },
   spacing: { xs: 4, sm: 8, md: 16, lg: 24, xl: 32 },
   borderRadius: { sm: 4, md: 8, lg: 12, xl: 16 },
   typography: {
-    h1: { fontSize: 32, fontWeight: 'bold' },
-    h2: { fontSize: 24, fontWeight: 'bold' },
-    body: { fontSize: 16, fontWeight: 'normal' },
+    h1: { fontSize: 32, fontWeight: "bold" },
+    h2: { fontSize: 24, fontWeight: "bold" },
+    body: { fontSize: 16, fontWeight: "normal" },
   },
 };
 
 const TestWrapper = ({ children, store, theme = mockTheme }) => (
   <Provider store={store}>
-    <ThemeProvider value={{
-      theme,
-      isReducedMotionEnabled: false,
-      colors: theme.colors,
-    }}>
-      <NavigationContainer>
-        {children}
-      </NavigationContainer>
+    <ThemeProvider
+      value={{
+        theme,
+        isReducedMotionEnabled: false,
+        colors: theme.colors,
+      }}
+    >
+      <NavigationContainer>{children}</NavigationContainer>
     </ThemeProvider>
   </Provider>
 );
 
-describe('Mood Tracking Workflow Integration', () => {
+describe("Mood Tracking Workflow Integration", () => {
   let store;
 
   beforeEach(() => {
@@ -106,20 +106,20 @@ describe('Mood Tracking Workflow Integration', () => {
     jest.clearAllMocks();
   });
 
-  describe('Quick Mood Check-In Flow', () => {
-    it('completes basic mood check-in from dashboard', async () => {
+  describe("Quick Mood Check-In Flow", () => {
+    it("completes basic mood check-in from dashboard", async () => {
       const { getByTestId, getByText } = render(
         <TestWrapper store={store}>
           <MainAppScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Find mood check-in component
-      const moodCheckIn = getByTestId('mood-check-in');
+      const moodCheckIn = getByTestId("mood-check-in");
       expect(moodCheckIn).toBeTruthy();
 
       // Select a mood
-      const checkInButton = getByTestId('mood-check-in-button');
+      const checkInButton = getByTestId("mood-check-in-button");
       fireEvent.press(checkInButton);
 
       await waitFor(() => {
@@ -129,19 +129,19 @@ describe('Mood Tracking Workflow Integration', () => {
       });
     });
 
-    it('persists mood data after check-in', async () => {
+    it("persists mood data after check-in", async () => {
       const { getByTestId } = render(
         <TestWrapper store={store}>
           <MoodCheckIn
             testID="mood-check-in"
             onCheckIn={(mood) => {
-              store.dispatch({ type: 'mood/setCurrentMood', payload: mood });
+              store.dispatch({ type: "mood/setCurrentMood", payload: mood });
             }}
           />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      const checkInButton = getByTestId('mood-check-in-button');
+      const checkInButton = getByTestId("mood-check-in-button");
       fireEvent.press(checkInButton);
 
       await waitFor(() => {
@@ -150,14 +150,14 @@ describe('Mood Tracking Workflow Integration', () => {
       });
     });
 
-    it('shows mood history and trends', async () => {
+    it("shows mood history and trends", async () => {
       // Pre-populate mood history
       const storeWithHistory = createTestStore({
         mood: {
           moodHistory: [
-            { mood: 'happy', timestamp: Date.now() - 86400000, intensity: 8 },
-            { mood: 'calm', timestamp: Date.now() - 43200000, intensity: 7 },
-            { mood: 'anxious', timestamp: Date.now(), intensity: 3 },
+            { mood: "happy", timestamp: Date.now() - 86400000, intensity: 8 },
+            { mood: "calm", timestamp: Date.now() - 43200000, intensity: 7 },
+            { mood: "anxious", timestamp: Date.now(), intensity: 3 },
           ],
         },
       });
@@ -165,7 +165,7 @@ describe('Mood Tracking Workflow Integration', () => {
       const { getByText } = render(
         <TestWrapper store={storeWithHistory}>
           <MainAppScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Should display mood trends
@@ -175,21 +175,21 @@ describe('Mood Tracking Workflow Integration', () => {
     });
   });
 
-  describe('Enhanced Mood Tracking Flow', () => {
-    it('completes full 4-step mood tracking process', async () => {
+  describe("Enhanced Mood Tracking Flow", () => {
+    it("completes full 4-step mood tracking process", async () => {
       const { getByTestId, getByText, queryByText } = render(
         <TestWrapper store={store}>
           <EnhancedMoodTrackerScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Step 1: Mood Selection
       expect(getByText(/select.*mood/i)).toBeTruthy();
-      
-      const happyMood = getByTestId('mood-option-happy') || getByText(/happy/i);
+
+      const happyMood = getByTestId("mood-option-happy") || getByText(/happy/i);
       fireEvent.press(happyMood);
-      
-      const nextButton = getByTestId('next-button') || getByText(/next/i);
+
+      const nextButton = getByTestId("next-button") || getByText(/next/i);
       fireEvent.press(nextButton);
 
       await waitFor(() => {
@@ -198,10 +198,10 @@ describe('Mood Tracking Workflow Integration', () => {
       });
 
       // Set intensity
-      const intensitySlider = getByTestId('intensity-slider');
-      fireEvent(intensitySlider, 'valueChange', 8);
-      
-      fireEvent.press(getByTestId('next-button') || getByText(/next/i));
+      const intensitySlider = getByTestId("intensity-slider");
+      fireEvent(intensitySlider, "valueChange", 8);
+
+      fireEvent.press(getByTestId("next-button") || getByText(/next/i));
 
       await waitFor(() => {
         // Step 3: Activity Selection
@@ -209,10 +209,11 @@ describe('Mood Tracking Workflow Integration', () => {
       });
 
       // Select activities
-      const exerciseActivity = getByTestId('activity-exercise') || getByText(/exercise/i);
+      const exerciseActivity =
+        getByTestId("activity-exercise") || getByText(/exercise/i);
       fireEvent.press(exerciseActivity);
-      
-      fireEvent.press(getByTestId('next-button') || getByText(/next/i));
+
+      fireEvent.press(getByTestId("next-button") || getByText(/next/i));
 
       await waitFor(() => {
         // Step 4: Notes and Triggers
@@ -220,39 +221,39 @@ describe('Mood Tracking Workflow Integration', () => {
       });
 
       // Add notes
-      const notesInput = getByTestId('notes-input');
-      fireEvent.changeText(notesInput, 'Had a great workout today!');
+      const notesInput = getByTestId("notes-input");
+      fireEvent.changeText(notesInput, "Had a great workout today!");
 
       // Save mood entry
-      const saveButton = getByTestId('save-button') || getByText(/save/i);
+      const saveButton = getByTestId("save-button") || getByText(/save/i);
       fireEvent.press(saveButton);
 
       await waitFor(() => {
         const state = store.getState();
-        expect(state.enhancedMood.selectedMood).toBe('happy');
+        expect(state.enhancedMood.selectedMood).toBe("happy");
         expect(state.enhancedMood.intensity).toBe(8);
-        expect(state.enhancedMood.activities).toContain('exercise');
-        expect(state.enhancedMood.notes).toBe('Had a great workout today!');
+        expect(state.enhancedMood.activities).toContain("exercise");
+        expect(state.enhancedMood.notes).toBe("Had a great workout today!");
       });
     });
 
-    it('validates required fields before progression', async () => {
+    it("validates required fields before progression", async () => {
       const { getByTestId, getByText } = render(
         <TestWrapper store={store}>
           <EnhancedMoodTrackerScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Try to proceed without selecting mood
-      const nextButton = getByTestId('next-button') || getByText(/next/i);
+      const nextButton = getByTestId("next-button") || getByText(/next/i);
       fireEvent.press(nextButton);
 
       await waitFor(() => {
         // Should show validation error
         expect(
-          getByText(/select.*mood/i) || 
-          getByText(/required/i) ||
-          screen.queryByText(/please.*select/i)
+          getByText(/select.*mood/i) ||
+            getByText(/required/i) ||
+            screen.queryByText(/please.*select/i),
         ).toBeTruthy();
       });
 
@@ -261,18 +262,18 @@ describe('Mood Tracking Workflow Integration', () => {
       expect(state.enhancedMood.currentStep).toBe(1);
     });
 
-    it('allows going back to previous steps', async () => {
+    it("allows going back to previous steps", async () => {
       const { getByTestId, getByText } = render(
         <TestWrapper store={store}>
           <EnhancedMoodTrackerScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Complete step 1
-      const happyMood = getByTestId('mood-option-happy') || getByText(/happy/i);
+      const happyMood = getByTestId("mood-option-happy") || getByText(/happy/i);
       fireEvent.press(happyMood);
-      
-      const nextButton = getByTestId('next-button') || getByText(/next/i);
+
+      const nextButton = getByTestId("next-button") || getByText(/next/i);
       fireEvent.press(nextButton);
 
       await waitFor(() => {
@@ -280,7 +281,7 @@ describe('Mood Tracking Workflow Integration', () => {
       });
 
       // Go back to step 1
-      const backButton = getByTestId('back-button') || getByText(/back/i);
+      const backButton = getByTestId("back-button") || getByText(/back/i);
       fireEvent.press(backButton);
 
       await waitFor(() => {
@@ -289,46 +290,50 @@ describe('Mood Tracking Workflow Integration', () => {
       });
     });
 
-    it('preserves data when navigating between steps', async () => {
+    it("preserves data when navigating between steps", async () => {
       const { getByTestId, getByText } = render(
         <TestWrapper store={store}>
           <EnhancedMoodTrackerScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Select mood and go to step 2
-      const calmMood = getByTestId('mood-option-calm') || getByText(/calm/i);
+      const calmMood = getByTestId("mood-option-calm") || getByText(/calm/i);
       fireEvent.press(calmMood);
-      
-      fireEvent.press(getByTestId('next-button') || getByText(/next/i));
+
+      fireEvent.press(getByTestId("next-button") || getByText(/next/i));
 
       // Set intensity and go back
-      const intensitySlider = getByTestId('intensity-slider');
-      fireEvent(intensitySlider, 'valueChange', 6);
-      
-      fireEvent.press(getByTestId('back-button') || getByText(/back/i));
+      const intensitySlider = getByTestId("intensity-slider");
+      fireEvent(intensitySlider, "valueChange", 6);
+
+      fireEvent.press(getByTestId("back-button") || getByText(/back/i));
 
       // Go forward again
-      fireEvent.press(getByTestId('next-button') || getByText(/next/i));
+      fireEvent.press(getByTestId("next-button") || getByText(/next/i));
 
       await waitFor(() => {
         const state = store.getState();
-        expect(state.enhancedMood.selectedMood).toBe('calm');
+        expect(state.enhancedMood.selectedMood).toBe("calm");
         expect(state.enhancedMood.intensity).toBe(6);
       });
     });
   });
 
-  describe('Data Integration and Analytics', () => {
-    it('aggregates mood data for insights', async () => {
+  describe("Data Integration and Analytics", () => {
+    it("aggregates mood data for insights", async () => {
       const storeWithData = createTestStore({
         mood: {
           moodHistory: [
-            { mood: 'happy', timestamp: Date.now() - 604800000, intensity: 8 },
-            { mood: 'anxious', timestamp: Date.now() - 518400000, intensity: 4 },
-            { mood: 'calm', timestamp: Date.now() - 432000000, intensity: 7 },
-            { mood: 'happy', timestamp: Date.now() - 345600000, intensity: 9 },
-            { mood: 'sad', timestamp: Date.now() - 259200000, intensity: 3 },
+            { mood: "happy", timestamp: Date.now() - 604800000, intensity: 8 },
+            {
+              mood: "anxious",
+              timestamp: Date.now() - 518400000,
+              intensity: 4,
+            },
+            { mood: "calm", timestamp: Date.now() - 432000000, intensity: 7 },
+            { mood: "happy", timestamp: Date.now() - 345600000, intensity: 9 },
+            { mood: "sad", timestamp: Date.now() - 259200000, intensity: 3 },
           ],
         },
       });
@@ -336,23 +341,21 @@ describe('Mood Tracking Workflow Integration', () => {
       const { getByText } = render(
         <TestWrapper store={storeWithData}>
           <MainAppScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
         // Should show mood insights
         expect(
-          getByText(/insight/i) || 
-          getByText(/trend/i) ||
-          getByText(/pattern/i)
+          getByText(/insight/i) || getByText(/trend/i) || getByText(/pattern/i),
         ).toBeTruthy();
       });
     });
 
-    it('tracks mood patterns over time', async () => {
+    it("tracks mood patterns over time", async () => {
       const weeklyData = Array.from({ length: 7 }, (_, i) => ({
-        mood: i % 2 === 0 ? 'happy' : 'anxious',
-        timestamp: Date.now() - (i * 86400000),
+        mood: i % 2 === 0 ? "happy" : "anxious",
+        timestamp: Date.now() - i * 86400000,
         intensity: i % 2 === 0 ? 8 : 4,
       }));
 
@@ -363,26 +366,24 @@ describe('Mood Tracking Workflow Integration', () => {
       const { getByText } = render(
         <TestWrapper store={storeWithPatterns}>
           <MainAppScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
         // Should detect alternating pattern
         expect(
-          getByText(/pattern/i) || 
-          getByText(/weekly/i) ||
-          getByText(/trend/i)
+          getByText(/pattern/i) || getByText(/weekly/i) || getByText(/trend/i),
         ).toBeTruthy();
       });
     });
 
-    it('provides mood-based recommendations', async () => {
+    it("provides mood-based recommendations", async () => {
       const storeWithLowMood = createTestStore({
         mood: {
-          currentMood: 'sad',
+          currentMood: "sad",
           moodHistory: [
-            { mood: 'sad', timestamp: Date.now(), intensity: 2 },
-            { mood: 'anxious', timestamp: Date.now() - 3600000, intensity: 3 },
+            { mood: "sad", timestamp: Date.now(), intensity: 2 },
+            { mood: "anxious", timestamp: Date.now() - 3600000, intensity: 3 },
           ],
         },
       });
@@ -390,35 +391,35 @@ describe('Mood Tracking Workflow Integration', () => {
       const { getByText } = render(
         <TestWrapper store={storeWithLowMood}>
           <MainAppScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
         // Should show supportive recommendations
         expect(
-          getByText(/recommend/i) || 
-          getByText(/suggest/i) ||
-          getByText(/might help/i) ||
-          getByText(/support/i)
+          getByText(/recommend/i) ||
+            getByText(/suggest/i) ||
+            getByText(/might help/i) ||
+            getByText(/support/i),
         ).toBeTruthy();
       });
     });
   });
 
-  describe('Crisis Detection Integration', () => {
-    it('detects concerning mood patterns', async () => {
+  describe("Crisis Detection Integration", () => {
+    it("detects concerning mood patterns", async () => {
       const concerningData = Array.from({ length: 5 }, (_, i) => ({
-        mood: 'depressed',
-        timestamp: Date.now() - (i * 86400000),
+        mood: "depressed",
+        timestamp: Date.now() - i * 86400000,
         intensity: 2,
-        notes: i === 0 ? 'feeling hopeless' : '',
+        notes: i === 0 ? "feeling hopeless" : "",
       }));
 
       const storeWithConcern = createTestStore({
         mood: { moodHistory: concerningData },
         enhancedMood: {
-          notes: 'feeling hopeless and worthless',
-          selectedMood: 'depressed',
+          notes: "feeling hopeless and worthless",
+          selectedMood: "depressed",
           intensity: 1,
         },
       });
@@ -426,167 +427,164 @@ describe('Mood Tracking Workflow Integration', () => {
       const { getByText } = render(
         <TestWrapper store={storeWithConcern}>
           <EnhancedMoodTrackerScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Complete mood tracking with concerning data
-      const saveButton = getByTestId('save-button') || getByText(/save/i);
+      const saveButton = getByTestId("save-button") || getByText(/save/i);
       fireEvent.press(saveButton);
 
       await waitFor(() => {
         // Should trigger support resources
         expect(
-          getByText(/support/i) || 
-          getByText(/help/i) ||
-          getByText(/resource/i)
+          getByText(/support/i) || getByText(/help/i) || getByText(/resource/i),
         ).toBeTruthy();
       });
     });
 
-    it('provides immediate crisis support when needed', async () => {
+    it("provides immediate crisis support when needed", async () => {
       const { getByTestId, getByText } = render(
         <TestWrapper store={store}>
           <EnhancedMoodTrackerScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Navigate to notes step
       // ... (navigation steps)
-      
+
       // Add crisis-related note
-      const notesInput = getByTestId('notes-input');
-      fireEvent.changeText(notesInput, 'I want to hurt myself');
+      const notesInput = getByTestId("notes-input");
+      fireEvent.changeText(notesInput, "I want to hurt myself");
 
       await waitFor(() => {
         // Should immediately show crisis resources
         expect(
-          getByText(/crisis/i) || 
-          getByText(/emergency/i) ||
-          getByText(/988/i) ||
-          getByText(/help.*now/i)
+          getByText(/crisis/i) ||
+            getByText(/emergency/i) ||
+            getByText(/988/i) ||
+            getByText(/help.*now/i),
         ).toBeTruthy();
       });
     });
   });
 
-  describe('Error Handling and Recovery', () => {
-    it('handles save failures gracefully', async () => {
+  describe("Error Handling and Recovery", () => {
+    it("handles save failures gracefully", async () => {
       // Mock save failure
       const failingStore = createTestStore();
       const originalDispatch = failingStore.dispatch;
       failingStore.dispatch = jest.fn(() => {
-        throw new Error('Save failed');
+        throw new Error("Save failed");
       });
 
       const { getByTestId, getByText } = render(
         <TestWrapper store={failingStore}>
           <EnhancedMoodTrackerScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Complete mood tracking
-      const happyMood = getByTestId('mood-option-happy') || getByText(/happy/i);
+      const happyMood = getByTestId("mood-option-happy") || getByText(/happy/i);
       fireEvent.press(happyMood);
-      
-      const saveButton = getByTestId('save-button') || getByText(/save/i);
+
+      const saveButton = getByTestId("save-button") || getByText(/save/i);
       fireEvent.press(saveButton);
 
       await waitFor(() => {
         // Should show error message
         expect(
-          getByText(/error/i) || 
-          getByText(/failed/i) ||
-          getByText(/try.*again/i)
+          getByText(/error/i) ||
+            getByText(/failed/i) ||
+            getByText(/try.*again/i),
         ).toBeTruthy();
       });
     });
 
-    it('recovers from network connectivity issues', async () => {
+    it("recovers from network connectivity issues", async () => {
       // Mock network failure
-      global.fetch = jest.fn(() => Promise.reject(new Error('Network error')));
+      global.fetch = jest.fn(() => Promise.reject(new Error("Network error")));
 
       const { getByTestId, getByText } = render(
         <TestWrapper store={store}>
           <EnhancedMoodTrackerScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Complete mood tracking
-      const calmMood = getByTestId('mood-option-calm') || getByText(/calm/i);
+      const calmMood = getByTestId("mood-option-calm") || getByText(/calm/i);
       fireEvent.press(calmMood);
-      
-      const saveButton = getByTestId('save-button') || getByText(/save/i);
+
+      const saveButton = getByTestId("save-button") || getByText(/save/i);
       fireEvent.press(saveButton);
 
       await waitFor(() => {
         // Should save locally and show sync pending
         expect(
-          getByText(/saved.*locally/i) || 
-          getByText(/sync.*later/i) ||
-          getByText(/offline/i)
+          getByText(/saved.*locally/i) ||
+            getByText(/sync.*later/i) ||
+            getByText(/offline/i),
         ).toBeTruthy();
       });
     });
 
-    it('validates data integrity', async () => {
+    it("validates data integrity", async () => {
       const { getByTestId, getByText } = render(
         <TestWrapper store={store}>
           <EnhancedMoodTrackerScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Try to save with invalid intensity
-      const intensitySlider = getByTestId('intensity-slider');
-      fireEvent(intensitySlider, 'valueChange', -1); // Invalid value
-      
-      const saveButton = getByTestId('save-button') || getByText(/save/i);
+      const intensitySlider = getByTestId("intensity-slider");
+      fireEvent(intensitySlider, "valueChange", -1); // Invalid value
+
+      const saveButton = getByTestId("save-button") || getByText(/save/i);
       fireEvent.press(saveButton);
 
       await waitFor(() => {
         // Should show validation error
         expect(
-          getByText(/invalid/i) || 
-          getByText(/valid.*range/i)
+          getByText(/invalid/i) || getByText(/valid.*range/i),
         ).toBeTruthy();
       });
     });
   });
 
-  describe('Accessibility in Workflow', () => {
-    it('supports screen reader navigation through all steps', async () => {
+  describe("Accessibility in Workflow", () => {
+    it("supports screen reader navigation through all steps", async () => {
       const { getAllByRole } = render(
         <TestWrapper store={store}>
           <EnhancedMoodTrackerScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // All interactive elements should have proper roles
-      const buttons = getAllByRole('button');
+      const buttons = getAllByRole("button");
       expect(buttons.length).toBeGreaterThan(0);
 
-      buttons.forEach(button => {
+      buttons.forEach((button) => {
         expect(button.props.accessibilityLabel).toBeTruthy();
       });
     });
 
-    it('provides progress indication for screen readers', async () => {
+    it("provides progress indication for screen readers", async () => {
       const { getByTestId } = render(
         <TestWrapper store={store}>
           <EnhancedMoodTrackerScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      const progressIndicator = getByTestId('progress-indicator');
-      expect(progressIndicator.props.accessibilityLabel).toContain('step');
+      const progressIndicator = getByTestId("progress-indicator");
+      expect(progressIndicator.props.accessibilityLabel).toContain("step");
       expect(progressIndicator.props.accessibilityValue).toBeTruthy();
     });
   });
 
-  describe('Performance', () => {
-    it('handles large mood history datasets efficiently', async () => {
+  describe("Performance", () => {
+    it("handles large mood history datasets efficiently", async () => {
       const largeDataset = Array.from({ length: 1000 }, (_, i) => ({
-        mood: ['happy', 'sad', 'anxious', 'calm'][i % 4],
-        timestamp: Date.now() - (i * 3600000),
+        mood: ["happy", "sad", "anxious", "calm"][i % 4],
+        timestamp: Date.now() - i * 3600000,
         intensity: Math.floor(Math.random() * 10) + 1,
       }));
 
@@ -595,11 +593,11 @@ describe('Mood Tracking Workflow Integration', () => {
       });
 
       const startTime = Date.now();
-      
+
       const { getByTestId } = render(
         <TestWrapper store={storeWithLargeData}>
           <MainAppScreen />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const endTime = Date.now();
@@ -607,7 +605,7 @@ describe('Mood Tracking Workflow Integration', () => {
 
       // Should render quickly even with large dataset
       expect(renderTime).toBeLessThan(1000);
-      expect(getByTestId('main-app-screen')).toBeTruthy();
+      expect(getByTestId("main-app-screen")).toBeTruthy();
     });
   });
 });

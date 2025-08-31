@@ -23,7 +23,7 @@ const DarkSleepQualityScreen = ({ navigation }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [sleepGoal, setSleepGoal] = useState(8.25);
   const [currentStreak, setCurrentStreak] = useState(20);
-  
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
@@ -32,24 +32,24 @@ const DarkSleepQualityScreen = ({ navigation }) => {
     { id: "overview", title: "Overview", icon: "Brain" },
     { id: "calendar", title: "Calendar", icon: "Heart" },
     { id: "schedule", title: "Schedule", icon: "Mindfulness" },
-    { id: "insights", title: "Insights", icon: "Therapy" }
+    { id: "insights", title: "Insights", icon: "Therapy" },
   ];
 
   const sleepData = {
     lastNight: {
       bedTime: "22:15",
-      wakeTime: "06:15", 
+      wakeTime: "06:15",
       duration: 8.0,
       quality: 85,
       stages: {
         deep: 2.1,
         light: 4.2,
-        rem: 1.7
-      }
+        rem: 1.7,
+      },
     },
     weeklyAverage: 7.8,
     streak: 20,
-    goal: 8.25
+    goal: 8.25,
   };
 
   const monthlyData = [
@@ -74,7 +74,7 @@ const DarkSleepQualityScreen = ({ navigation }) => {
     { date: 19, quality: 87, duration: 8.2 },
     { date: 20, quality: 83, duration: 8.1 },
     // Current date
-    { date: 21, quality: 85, duration: 8.0, isToday: true }
+    { date: 21, quality: 85, duration: 8.0, isToday: true },
   ];
 
   const sleepInsights = [
@@ -84,7 +84,7 @@ const DarkSleepQualityScreen = ({ navigation }) => {
       value: "91%",
       change: "+5%",
       color: "#10B981",
-      icon: "Brain"
+      icon: "Brain",
     },
     {
       id: 2,
@@ -92,7 +92,7 @@ const DarkSleepQualityScreen = ({ navigation }) => {
       value: "8.2",
       change: "+0.3",
       color: "#F59E0B",
-      icon: "Heart"
+      icon: "Heart",
     },
     {
       id: 3,
@@ -100,7 +100,7 @@ const DarkSleepQualityScreen = ({ navigation }) => {
       value: "94%",
       change: "+2%",
       color: "#8B5CF6",
-      icon: "Mindfulness"
+      icon: "Mindfulness",
     },
     {
       id: 4,
@@ -108,8 +108,8 @@ const DarkSleepQualityScreen = ({ navigation }) => {
       value: "Good",
       change: "Stable",
       color: "#6366F1",
-      icon: "Therapy"
-    }
+      icon: "Therapy",
+    },
   ];
 
   useEffect(() => {
@@ -134,7 +134,10 @@ const DarkSleepQualityScreen = ({ navigation }) => {
   }, []);
 
   const renderOverviewScreen = () => (
-    <ScrollView style={styles.screenContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.screenContainer}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Sleep Streak Card */}
       <Animated.View
         style={[
@@ -142,29 +145,38 @@ const DarkSleepQualityScreen = ({ navigation }) => {
           {
             backgroundColor: theme.colors.background.secondary,
             opacity: fadeAnim,
-            transform: [{ scale: scaleAnim }]
-          }
+            transform: [{ scale: scaleAnim }],
+          },
         ]}
       >
         <LinearGradient
-          colors={['#8B5CF6', '#6366F1']}
+          colors={["#8B5CF6", "#6366F1"]}
           style={styles.streakGradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
           <View style={styles.streakHeader}>
-            <Text style={[styles.streakNumber, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[
+                styles.streakNumber,
+                { color: theme.colors.text.inverse },
+              ]}
+            >
               {currentStreak}
             </Text>
-            <Text style={[styles.streakLabel, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[styles.streakLabel, { color: theme.colors.text.inverse }]}
+            >
               You are improving.
             </Text>
           </View>
           <View style={styles.streakProgress}>
             <View style={styles.streakProgressBar}>
-              <View style={[styles.streakProgressFill, { width: '75%' }]} />
+              <View style={[styles.streakProgressFill, { width: "75%" }]} />
             </View>
-            <Text style={[styles.streakDays, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[styles.streakDays, { color: theme.colors.text.inverse }]}
+            >
               7 in
             </Text>
           </View>
@@ -172,14 +184,14 @@ const DarkSleepQualityScreen = ({ navigation }) => {
       </Animated.View>
 
       {/* Sleep Quality Chart */}
-      <Animated.View 
+      <Animated.View
         style={[
-          styles.chartCard, 
-          { 
+          styles.chartCard,
+          {
             backgroundColor: theme.colors.background.secondary,
             transform: [{ scale: scaleAnim }],
-            opacity: fadeAnim
-          }
+            opacity: fadeAnim,
+          },
         ]}
       >
         <View style={styles.chartHeader}>
@@ -190,12 +202,19 @@ const DarkSleepQualityScreen = ({ navigation }) => {
               color={theme.colors.therapeutic.calming[500]}
               variant="filled"
             />
-            <Text style={[styles.chartTitle, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[styles.chartTitle, { color: theme.colors.text.primary }]}
+            >
               Sleep Quality
             </Text>
           </View>
           <TouchableOpacity style={styles.chartPeriod}>
-            <Text style={[styles.chartPeriodText, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[
+                styles.chartPeriodText,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
               January 2025
             </Text>
             <NavigationIcon
@@ -203,7 +222,7 @@ const DarkSleepQualityScreen = ({ navigation }) => {
               size={16}
               color={theme.colors.text.secondary}
               variant="outline"
-              style={{ transform: [{ rotate: '90deg' }] }}
+              style={{ transform: [{ rotate: "90deg" }] }}
             />
           </TouchableOpacity>
         </View>
@@ -212,74 +231,114 @@ const DarkSleepQualityScreen = ({ navigation }) => {
         <View style={styles.qualityVisualization}>
           <View style={styles.qualityCircleContainer}>
             <LinearGradient
-              colors={['rgba(16, 185, 129, 0.15)', 'rgba(16, 185, 129, 0.05)']}
+              colors={["rgba(16, 185, 129, 0.15)", "rgba(16, 185, 129, 0.05)"]}
               style={styles.qualityCircle}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
             >
               <LinearGradient
-                colors={['#10B981', '#059669']}
+                colors={["#10B981", "#059669"]}
                 style={styles.qualityInnerCircle}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
               >
-                <Text style={[styles.qualityPercentage, { color: theme.colors.text.inverse }]}>
+                <Text
+                  style={[
+                    styles.qualityPercentage,
+                    { color: theme.colors.text.inverse },
+                  ]}
+                >
                   85%
                 </Text>
-                <Text style={[styles.qualityLabel, { color: 'rgba(255,255,255,0.8)' }]}>
+                <Text
+                  style={[
+                    styles.qualityLabel,
+                    { color: "rgba(255,255,255,0.8)" },
+                  ]}
+                >
                   Excellent
                 </Text>
               </LinearGradient>
             </LinearGradient>
           </View>
-          
+
           <View style={styles.qualityDetails}>
             <TouchableOpacity style={styles.qualityDetailItem}>
               <LinearGradient
-                colors={['#10B981', '#059669']}
+                colors={["#10B981", "#059669"]}
                 style={styles.qualityDot}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
               />
               <View style={styles.qualityDetailText}>
-                <Text style={[styles.qualityDetailLabel, { color: theme.colors.text.primary }]}>
+                <Text
+                  style={[
+                    styles.qualityDetailLabel,
+                    { color: theme.colors.text.primary },
+                  ]}
+                >
                   Deep Sleep
                 </Text>
-                <Text style={[styles.qualityDetailValue, { color: theme.colors.text.secondary }]}>
+                <Text
+                  style={[
+                    styles.qualityDetailValue,
+                    { color: theme.colors.text.secondary },
+                  ]}
+                >
                   2.1h • 26%
                 </Text>
               </View>
             </TouchableOpacity>
-            
+
             <TouchableOpacity style={styles.qualityDetailItem}>
               <LinearGradient
-                colors={['#F59E0B', '#D97706']}
+                colors={["#F59E0B", "#D97706"]}
                 style={styles.qualityDot}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
               />
               <View style={styles.qualityDetailText}>
-                <Text style={[styles.qualityDetailLabel, { color: theme.colors.text.primary }]}>
+                <Text
+                  style={[
+                    styles.qualityDetailLabel,
+                    { color: theme.colors.text.primary },
+                  ]}
+                >
                   Light Sleep
                 </Text>
-                <Text style={[styles.qualityDetailValue, { color: theme.colors.text.secondary }]}>
+                <Text
+                  style={[
+                    styles.qualityDetailValue,
+                    { color: theme.colors.text.secondary },
+                  ]}
+                >
                   4.2h • 53%
                 </Text>
               </View>
             </TouchableOpacity>
-            
+
             <TouchableOpacity style={styles.qualityDetailItem}>
               <LinearGradient
-                colors={['#8B5CF6', '#7C3AED']}
+                colors={["#8B5CF6", "#7C3AED"]}
                 style={styles.qualityDot}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
               />
               <View style={styles.qualityDetailText}>
-                <Text style={[styles.qualityDetailLabel, { color: theme.colors.text.primary }]}>
+                <Text
+                  style={[
+                    styles.qualityDetailLabel,
+                    { color: theme.colors.text.primary },
+                  ]}
+                >
                   REM Sleep
                 </Text>
-                <Text style={[styles.qualityDetailValue, { color: theme.colors.text.secondary }]}>
+                <Text
+                  style={[
+                    styles.qualityDetailValue,
+                    { color: theme.colors.text.secondary },
+                  ]}
+                >
                   1.7h • 21%
                 </Text>
               </View>
@@ -290,52 +349,88 @@ const DarkSleepQualityScreen = ({ navigation }) => {
         {/* Monthly Progress */}
         <View style={styles.monthlyProgress}>
           <View style={styles.progressHeader}>
-            <Text style={[styles.progressTitle, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[
+                styles.progressTitle,
+                { color: theme.colors.text.primary },
+              ]}
+            >
               This Month Progress
             </Text>
             <View style={styles.progressLegend}>
               <View style={styles.legendItem}>
-                <View style={[styles.legendDot, { backgroundColor: '#10B981' }]} />
-                <Text style={[styles.legendText, { color: theme.colors.text.secondary }]}>
+                <View
+                  style={[styles.legendDot, { backgroundColor: "#10B981" }]}
+                />
+                <Text
+                  style={[
+                    styles.legendText,
+                    { color: theme.colors.text.secondary },
+                  ]}
+                >
                   Good Sleep
                 </Text>
               </View>
               <View style={styles.legendItem}>
-                <View style={[styles.legendDot, { backgroundColor: '#FF8C42' }]} />
-                <Text style={[styles.legendText, { color: theme.colors.text.secondary }]}>
+                <View
+                  style={[styles.legendDot, { backgroundColor: "#FF8C42" }]}
+                />
+                <Text
+                  style={[
+                    styles.legendText,
+                    { color: theme.colors.text.secondary },
+                  ]}
+                >
                   Today
                 </Text>
               </View>
             </View>
           </View>
-          
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.progressScrollContent}>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.progressScrollContent}
+          >
             {monthlyData.map((day) => (
               <TouchableOpacity key={day.date} style={styles.dayProgress}>
-                <Text style={[
-                  styles.dayDate, 
-                  { 
-                    color: day.isToday ? '#FF8C42' : theme.colors.text.tertiary,
-                    fontWeight: day.isToday ? '600' : '500'
-                  }
-                ]}>
+                <Text
+                  style={[
+                    styles.dayDate,
+                    {
+                      color: day.isToday
+                        ? "#FF8C42"
+                        : theme.colors.text.tertiary,
+                      fontWeight: day.isToday ? "600" : "500",
+                    },
+                  ]}
+                >
                   {day.date}
                 </Text>
-                
+
                 <View style={styles.dayBarContainer}>
                   <LinearGradient
-                    colors={day.isToday ? ['#FF8C42', '#F97316'] : ['#10B981', '#059669']}
+                    colors={
+                      day.isToday
+                        ? ["#FF8C42", "#F97316"]
+                        : ["#10B981", "#059669"]
+                    }
                     style={[
                       styles.dayBarFill,
-                      { height: `${Math.max(day.quality, 10)}%` }
+                      { height: `${Math.max(day.quality, 10)}%` },
                     ]}
                     start={{ x: 0, y: 1 }}
                     end={{ x: 0, y: 0 }}
                   />
                   <View style={styles.dayBar} />
                 </View>
-                
-                <Text style={[styles.dayQuality, { color: theme.colors.text.tertiary }]}>
+
+                <Text
+                  style={[
+                    styles.dayQuality,
+                    { color: theme.colors.text.tertiary },
+                  ]}
+                >
                   {day.quality}%
                 </Text>
               </TouchableOpacity>
@@ -345,18 +440,18 @@ const DarkSleepQualityScreen = ({ navigation }) => {
       </Animated.View>
 
       {/* Quick Actions */}
-      <Animated.View 
+      <Animated.View
         style={[
           styles.quickActions,
-          { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
+          { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
         ]}
       >
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.actionButtonContainer}
           onPress={() => setSelectedScreen("schedule")}
         >
           <LinearGradient
-            colors={['#10B981', '#059669']}
+            colors={["#10B981", "#059669"]}
             style={styles.actionButton}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
@@ -367,18 +462,23 @@ const DarkSleepQualityScreen = ({ navigation }) => {
               color={theme.colors.text.inverse}
               variant="filled"
             />
-            <Text style={[styles.actionButtonText, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[
+                styles.actionButtonText,
+                { color: theme.colors.text.inverse },
+              ]}
+            >
               New Sleep Schedule
             </Text>
           </LinearGradient>
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.actionButtonContainer}
           onPress={() => setSelectedScreen("insights")}
         >
           <LinearGradient
-            colors={['#8B5CF6', '#7C3AED']}
+            colors={["#8B5CF6", "#7C3AED"]}
             style={styles.actionButton}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
@@ -389,7 +489,12 @@ const DarkSleepQualityScreen = ({ navigation }) => {
               color={theme.colors.text.inverse}
               variant="filled"
             />
-            <Text style={[styles.actionButtonText, { color: theme.colors.text.inverse }]}>
+            <Text
+              style={[
+                styles.actionButtonText,
+                { color: theme.colors.text.inverse },
+              ]}
+            >
               Sleep Insights
             </Text>
           </LinearGradient>
@@ -399,48 +504,91 @@ const DarkSleepQualityScreen = ({ navigation }) => {
   );
 
   const renderScheduleScreen = () => (
-    <ScrollView style={styles.screenContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.screenContainer}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Sleep Schedule Header */}
-      <View style={[styles.scheduleHeader, { backgroundColor: theme.colors.background.secondary }]}>
+      <View
+        style={[
+          styles.scheduleHeader,
+          { backgroundColor: theme.colors.background.secondary },
+        ]}
+      >
         <View style={styles.scheduleTime}>
-          <Text style={[styles.scheduleTimeLabel, { color: theme.colors.text.secondary }]}>
+          <Text
+            style={[
+              styles.scheduleTimeLabel,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
             Good Night, Sleepytopia!
           </Text>
-          <Text style={[styles.scheduleTimeValue, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[
+              styles.scheduleTimeValue,
+              { color: theme.colors.text.primary },
+            ]}
+          >
             22:15
           </Text>
         </View>
         <View style={styles.scheduleTime}>
-          <Text style={[styles.scheduleTimeLabel, { color: theme.colors.text.secondary }]}>
+          <Text
+            style={[
+              styles.scheduleTimeLabel,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
             Wake Up, Sleepytopia!
           </Text>
-          <Text style={[styles.scheduleTimeValue, { color: theme.colors.text.primary }]}>
+          <Text
+            style={[
+              styles.scheduleTimeValue,
+              { color: theme.colors.text.primary },
+            ]}
+          >
             06:15
           </Text>
         </View>
       </View>
 
       {/* Sleep Goal */}
-      <View style={[styles.goalCard, { backgroundColor: theme.colors.background.secondary }]}>
+      <View
+        style={[
+          styles.goalCard,
+          { backgroundColor: theme.colors.background.secondary },
+        ]}
+      >
         <Text style={[styles.goalTitle, { color: theme.colors.text.primary }]}>
           You Slept for
         </Text>
-        <Text style={[styles.goalValue, { color: '#10B981' }]}>
-          8.25h
-        </Text>
-        <Text style={[styles.goalSubtitle, { color: theme.colors.text.secondary }]}>
+        <Text style={[styles.goalValue, { color: "#10B981" }]}>8.25h</Text>
+        <Text
+          style={[styles.goalSubtitle, { color: theme.colors.text.secondary }]}
+        >
           Goal: 8h 15m everyday
         </Text>
         <View style={styles.goalProgress}>
-          <View style={[styles.goalProgressBar, { backgroundColor: theme.colors.background.primary }]}>
-            <View style={[styles.goalProgressFill, { width: '85%', backgroundColor: '#10B981' }]} />
+          <View
+            style={[
+              styles.goalProgressBar,
+              { backgroundColor: theme.colors.background.primary },
+            ]}
+          >
+            <View
+              style={[
+                styles.goalProgressFill,
+                { width: "85%", backgroundColor: "#10B981" },
+              ]}
+            />
           </View>
         </View>
       </View>
 
       {/* Start Sleeping Button */}
-      <TouchableOpacity 
-        style={[styles.startSleepButton, { backgroundColor: '#FF8C42' }]}
+      <TouchableOpacity
+        style={[styles.startSleepButton, { backgroundColor: "#FF8C42" }]}
       >
         <MentalHealthIcon
           name="Mindfulness"
@@ -448,7 +596,9 @@ const DarkSleepQualityScreen = ({ navigation }) => {
           color={theme.colors.text.inverse}
           variant="filled"
         />
-        <Text style={[styles.startSleepText, { color: theme.colors.text.inverse }]}>
+        <Text
+          style={[styles.startSleepText, { color: theme.colors.text.inverse }]}
+        >
           Start Sleeping
         </Text>
       </TouchableOpacity>
@@ -459,8 +609,13 @@ const DarkSleepQualityScreen = ({ navigation }) => {
           Sleep Better Tonight
         </Text>
         <View style={styles.tipsList}>
-          <View style={[styles.tipItem, { backgroundColor: theme.colors.background.secondary }]}>
-            <View style={[styles.tipIcon, { backgroundColor: '#10B981' }]}>
+          <View
+            style={[
+              styles.tipItem,
+              { backgroundColor: theme.colors.background.secondary },
+            ]}
+          >
+            <View style={[styles.tipIcon, { backgroundColor: "#10B981" }]}>
               <MentalHealthIcon
                 name="Brain"
                 size={20}
@@ -468,13 +623,20 @@ const DarkSleepQualityScreen = ({ navigation }) => {
                 variant="filled"
               />
             </View>
-            <Text style={[styles.tipText, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[styles.tipText, { color: theme.colors.text.primary }]}
+            >
               Keep your room cool (60-67°F)
             </Text>
           </View>
-          
-          <View style={[styles.tipItem, { backgroundColor: theme.colors.background.secondary }]}>
-            <View style={[styles.tipIcon, { backgroundColor: '#8B5CF6' }]}>
+
+          <View
+            style={[
+              styles.tipItem,
+              { backgroundColor: theme.colors.background.secondary },
+            ]}
+          >
+            <View style={[styles.tipIcon, { backgroundColor: "#8B5CF6" }]}>
               <MentalHealthIcon
                 name="Mindfulness"
                 size={20}
@@ -482,13 +644,20 @@ const DarkSleepQualityScreen = ({ navigation }) => {
                 variant="filled"
               />
             </View>
-            <Text style={[styles.tipText, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[styles.tipText, { color: theme.colors.text.primary }]}
+            >
               Practice deep breathing exercises
             </Text>
           </View>
 
-          <View style={[styles.tipItem, { backgroundColor: theme.colors.background.secondary }]}>
-            <View style={[styles.tipIcon, { backgroundColor: '#F59E0B' }]}>
+          <View
+            style={[
+              styles.tipItem,
+              { backgroundColor: theme.colors.background.secondary },
+            ]}
+          >
+            <View style={[styles.tipIcon, { backgroundColor: "#F59E0B" }]}>
               <MentalHealthIcon
                 name="Heart"
                 size={20}
@@ -496,7 +665,9 @@ const DarkSleepQualityScreen = ({ navigation }) => {
                 variant="filled"
               />
             </View>
-            <Text style={[styles.tipText, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[styles.tipText, { color: theme.colors.text.primary }]}
+            >
               Limit screen time before bed
             </Text>
           </View>
@@ -506,7 +677,10 @@ const DarkSleepQualityScreen = ({ navigation }) => {
   );
 
   const renderInsightsScreen = () => (
-    <ScrollView style={styles.screenContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.screenContainer}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Sleep Insights Grid */}
       <View style={styles.insightsGrid}>
         {sleepInsights.map((insight, index) => (
@@ -517,11 +691,13 @@ const DarkSleepQualityScreen = ({ navigation }) => {
               {
                 backgroundColor: theme.colors.background.secondary,
                 opacity: fadeAnim,
-                transform: [{ translateY: slideAnim }]
-              }
+                transform: [{ translateY: slideAnim }],
+              },
             ]}
           >
-            <View style={[styles.insightIcon, { backgroundColor: insight.color }]}>
+            <View
+              style={[styles.insightIcon, { backgroundColor: insight.color }]}
+            >
               <MentalHealthIcon
                 name={insight.icon}
                 size={24}
@@ -530,14 +706,19 @@ const DarkSleepQualityScreen = ({ navigation }) => {
               />
             </View>
             <View style={styles.insightContent}>
-              <Text style={[styles.insightTitle, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.insightTitle,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 {insight.title}
               </Text>
               <View style={styles.insightValues}>
                 <Text style={[styles.insightValue, { color: insight.color }]}>
                   {insight.value}
                 </Text>
-                <Text style={[styles.insightChange, { color: '#10B981' }]}>
+                <Text style={[styles.insightChange, { color: "#10B981" }]}>
                   {insight.change}
                 </Text>
               </View>
@@ -547,80 +728,154 @@ const DarkSleepQualityScreen = ({ navigation }) => {
       </View>
 
       {/* Sleep Pattern Analysis */}
-      <View style={[styles.patternCard, { backgroundColor: theme.colors.background.secondary }]}>
-        <Text style={[styles.patternTitle, { color: theme.colors.text.primary }]}>
+      <View
+        style={[
+          styles.patternCard,
+          { backgroundColor: theme.colors.background.secondary },
+        ]}
+      >
+        <Text
+          style={[styles.patternTitle, { color: theme.colors.text.primary }]}
+        >
           Sleep Pattern Analysis
         </Text>
         <View style={styles.patternChart}>
           <View style={styles.patternDays}>
-            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
-              <View key={day} style={styles.patternDay}>
-                <Text style={[styles.patternDayText, { color: theme.colors.text.secondary }]}>
-                  {day}
-                </Text>
-                <View style={styles.patternBar}>
-                  <View 
+            {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
+              (day, index) => (
+                <View key={day} style={styles.patternDay}>
+                  <Text
                     style={[
-                      styles.patternBarFill,
-                      { 
-                        height: `${60 + (index * 5)}%`,
-                        backgroundColor: index === 6 ? '#FF8C42' : '#10B981'
-                      }
-                    ]} 
-                  />
+                      styles.patternDayText,
+                      { color: theme.colors.text.secondary },
+                    ]}
+                  >
+                    {day}
+                  </Text>
+                  <View style={styles.patternBar}>
+                    <View
+                      style={[
+                        styles.patternBarFill,
+                        {
+                          height: `${60 + index * 5}%`,
+                          backgroundColor: index === 6 ? "#FF8C42" : "#10B981",
+                        },
+                      ]}
+                    />
+                  </View>
+                  <Text
+                    style={[
+                      styles.patternHours,
+                      { color: theme.colors.text.tertiary },
+                    ]}
+                  >
+                    {7.5 + index * 0.2}h
+                  </Text>
                 </View>
-                <Text style={[styles.patternHours, { color: theme.colors.text.tertiary }]}>
-                  {7.5 + (index * 0.2)}h
-                </Text>
-              </View>
-            ))}
+              ),
+            )}
           </View>
         </View>
       </View>
 
       {/* Recommendations */}
-      <View style={[styles.recommendationsCard, { backgroundColor: theme.colors.background.secondary }]}>
-        <Text style={[styles.recommendationsTitle, { color: theme.colors.text.primary }]}>
+      <View
+        style={[
+          styles.recommendationsCard,
+          { backgroundColor: theme.colors.background.secondary },
+        ]}
+      >
+        <Text
+          style={[
+            styles.recommendationsTitle,
+            { color: theme.colors.text.primary },
+          ]}
+        >
           Personalized Recommendations
         </Text>
         <View style={styles.recommendationsList}>
           <View style={styles.recommendationItem}>
-            <View style={[styles.recommendationIcon, { backgroundColor: '#10B981' }]}>
+            <View
+              style={[
+                styles.recommendationIcon,
+                { backgroundColor: "#10B981" },
+              ]}
+            >
               <Text style={styles.recommendationEmoji}>💤</Text>
             </View>
             <View style={styles.recommendationContent}>
-              <Text style={[styles.recommendationText, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.recommendationText,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 Your sleep quality improved by 12% this week
               </Text>
-              <Text style={[styles.recommendationSubtext, { color: theme.colors.text.secondary }]}>
+              <Text
+                style={[
+                  styles.recommendationSubtext,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
                 Keep maintaining your bedtime routine
               </Text>
             </View>
           </View>
 
           <View style={styles.recommendationItem}>
-            <View style={[styles.recommendationIcon, { backgroundColor: '#F59E0B' }]}>
+            <View
+              style={[
+                styles.recommendationIcon,
+                { backgroundColor: "#F59E0B" },
+              ]}
+            >
               <Text style={styles.recommendationEmoji}>⏰</Text>
             </View>
             <View style={styles.recommendationContent}>
-              <Text style={[styles.recommendationText, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.recommendationText,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 Try going to bed 15 minutes earlier
               </Text>
-              <Text style={[styles.recommendationSubtext, { color: theme.colors.text.secondary }]}>
+              <Text
+                style={[
+                  styles.recommendationSubtext,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
                 This could help you reach your 8.25h goal
               </Text>
             </View>
           </View>
 
           <View style={styles.recommendationItem}>
-            <View style={[styles.recommendationIcon, { backgroundColor: '#8B5CF6' }]}>
+            <View
+              style={[
+                styles.recommendationIcon,
+                { backgroundColor: "#8B5CF6" },
+              ]}
+            >
               <Text style={styles.recommendationEmoji}>🧘</Text>
             </View>
             <View style={styles.recommendationContent}>
-              <Text style={[styles.recommendationText, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.recommendationText,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 Consider meditation before sleep
               </Text>
-              <Text style={[styles.recommendationSubtext, { color: theme.colors.text.secondary }]}>
+              <Text
+                style={[
+                  styles.recommendationSubtext,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
                 Users report 23% better sleep quality
               </Text>
             </View>
@@ -631,7 +886,12 @@ const DarkSleepQualityScreen = ({ navigation }) => {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background.primary },
+      ]}
+    >
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -643,11 +903,13 @@ const DarkSleepQualityScreen = ({ navigation }) => {
             size={24}
             color={theme.colors.text.primary}
             variant="outline"
-            style={{ transform: [{ rotate: '180deg' }] }}
+            style={{ transform: [{ rotate: "180deg" }] }}
           />
         </TouchableOpacity>
 
-        <Text style={[styles.headerTitle, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[styles.headerTitle, { color: theme.colors.text.primary }]}
+        >
           Sleep Quality
         </Text>
 
@@ -663,36 +925,44 @@ const DarkSleepQualityScreen = ({ navigation }) => {
 
       {/* Screen Navigation */}
       <View style={styles.screenNavigation}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.navScroll}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.navScroll}
+        >
           {screens.map((screen) => (
             <TouchableOpacity
               key={screen.id}
               style={[
                 styles.navItem,
                 {
-                  backgroundColor: selectedScreen === screen.id
-                    ? theme.colors.therapeutic.calming[600]
-                    : theme.colors.background.secondary
-                }
+                  backgroundColor:
+                    selectedScreen === screen.id
+                      ? theme.colors.therapeutic.calming[600]
+                      : theme.colors.background.secondary,
+                },
               ]}
               onPress={() => setSelectedScreen(screen.id)}
             >
               <MentalHealthIcon
                 name={screen.icon}
                 size={20}
-                color={selectedScreen === screen.id
-                  ? theme.colors.text.inverse
-                  : theme.colors.text.primary}
+                color={
+                  selectedScreen === screen.id
+                    ? theme.colors.text.inverse
+                    : theme.colors.text.primary
+                }
                 variant={selectedScreen === screen.id ? "filled" : "outline"}
               />
               <Text
                 style={[
                   styles.navItemText,
                   {
-                    color: selectedScreen === screen.id
-                      ? theme.colors.text.inverse
-                      : theme.colors.text.primary
-                  }
+                    color:
+                      selectedScreen === screen.id
+                        ? theme.colors.text.inverse
+                        : theme.colors.text.primary,
+                  },
                 ]}
               >
                 {screen.title}
@@ -708,12 +978,13 @@ const DarkSleepQualityScreen = ({ navigation }) => {
           styles.content,
           {
             opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }]
-          }
+            transform: [{ translateY: slideAnim }],
+          },
         ]}
       >
         {selectedScreen === "overview" && renderOverviewScreen()}
-        {selectedScreen === "calendar" && renderOverviewScreen()} {/* Using overview for now */}
+        {selectedScreen === "calendar" && renderOverviewScreen()}{" "}
+        {/* Using overview for now */}
         {selectedScreen === "schedule" && renderScheduleScreen()}
         {selectedScreen === "insights" && renderInsightsScreen()}
       </Animated.View>
@@ -726,27 +997,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
   backButton: {
     width: 40,
     height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   menuButton: {
     width: 40,
     height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   screenNavigation: {
     paddingHorizontal: 20,
@@ -756,8 +1027,8 @@ const styles = StyleSheet.create({
     flexGrow: 0,
   },
   navItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -765,7 +1036,7 @@ const styles = StyleSheet.create({
   },
   navItemText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     marginLeft: 8,
   },
   content: {
@@ -777,19 +1048,19 @@ const styles = StyleSheet.create({
   },
   streakCard: {
     borderRadius: 16,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginBottom: 20,
   },
   streakGradient: {
     padding: 20,
   },
   streakHeader: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 16,
   },
   streakNumber: {
     fontSize: 48,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 4,
   },
   streakLabel: {
@@ -797,24 +1068,24 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   streakProgress: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
   },
   streakProgressBar: {
     flex: 1,
     height: 6,
-    backgroundColor: 'rgba(255,255,255,0.3)',
+    backgroundColor: "rgba(255,255,255,0.3)",
     borderRadius: 3,
   },
   streakProgressFill: {
-    height: '100%',
-    backgroundColor: '#FFFFFF',
+    height: "100%",
+    backgroundColor: "#FFFFFF",
     borderRadius: 3,
   },
   streakDays: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   chartCard: {
     borderRadius: 16,
@@ -822,31 +1093,31 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   chartHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
   },
   chartTitleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   chartTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   chartPeriod: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   chartPeriodText: {
     fontSize: 14,
   },
   qualityVisualization: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 24,
   },
   qualityCircleContainer: {
@@ -856,36 +1127,36 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   qualityInnerCircle: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   qualityPercentage: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 2,
   },
   qualityLabel: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   qualityDetails: {
     flex: 1,
     gap: 12,
   },
   qualityDetailItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
     padding: 12,
     borderRadius: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    backgroundColor: "rgba(255, 255, 255, 0.02)",
   },
   qualityDot: {
     width: 16,
@@ -897,7 +1168,7 @@ const styles = StyleSheet.create({
   },
   qualityDetailLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 2,
   },
   qualityDetailValue: {
@@ -907,22 +1178,22 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   progressHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 16,
   },
   progressTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   progressLegend: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 16,
   },
   legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   legendDot: {
@@ -932,13 +1203,13 @@ const styles = StyleSheet.create({
   },
   legendText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   progressScrollContent: {
     paddingHorizontal: 4,
   },
   dayProgress: {
-    alignItems: 'center',
+    alignItems: "center",
     marginRight: 12,
     padding: 4,
   },
@@ -947,19 +1218,19 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   dayBarContainer: {
-    position: 'relative',
+    position: "relative",
     marginBottom: 6,
   },
   dayBar: {
     width: 24,
     height: 70,
-    backgroundColor: 'rgba(107, 114, 128, 0.15)',
+    backgroundColor: "rgba(107, 114, 128, 0.15)",
     borderRadius: 12,
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
   },
   dayBarFill: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     width: 24,
     borderRadius: 12,
@@ -968,18 +1239,18 @@ const styles = StyleSheet.create({
   },
   dayQuality: {
     fontSize: 10,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   quickActions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
     marginBottom: 20,
   },
   actionButtonContainer: {
     flex: 1,
     borderRadius: 16,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 4,
@@ -989,26 +1260,26 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 18,
     paddingHorizontal: 16,
     gap: 10,
   },
   actionButtonText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   scheduleHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     padding: 20,
     borderRadius: 16,
     marginBottom: 20,
   },
   scheduleTime: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   scheduleTimeLabel: {
     fontSize: 14,
@@ -1016,12 +1287,12 @@ const styles = StyleSheet.create({
   },
   scheduleTimeValue: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   goalCard: {
     padding: 20,
     borderRadius: 16,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   goalTitle: {
@@ -1030,7 +1301,7 @@ const styles = StyleSheet.create({
   },
   goalValue: {
     fontSize: 48,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   goalSubtitle: {
@@ -1038,20 +1309,20 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   goalProgress: {
-    width: '100%',
+    width: "100%",
   },
   goalProgressBar: {
     height: 8,
     borderRadius: 4,
   },
   goalProgressFill: {
-    height: '100%',
+    height: "100%",
     borderRadius: 4,
   },
   startSleepButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 16,
     paddingHorizontal: 20,
     borderRadius: 12,
@@ -1060,22 +1331,22 @@ const styles = StyleSheet.create({
   },
   startSleepText: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   sleepTips: {
     marginBottom: 20,
   },
   tipsTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
   },
   tipsList: {
     gap: 12,
   },
   tipItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
     borderRadius: 12,
     gap: 12,
@@ -1084,17 +1355,17 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   tipText: {
     flex: 1,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   insightsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 12,
     marginBottom: 20,
   },
@@ -1107,8 +1378,8 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 12,
   },
   insightContent: {
@@ -1116,21 +1387,21 @@ const styles = StyleSheet.create({
   },
   insightTitle: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     lineHeight: 20,
   },
   insightValues: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   insightValue: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   insightChange: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   patternCard: {
     padding: 20,
@@ -1139,36 +1410,36 @@ const styles = StyleSheet.create({
   },
   patternTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 20,
   },
   patternChart: {
     height: 150,
   },
   patternDays: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    height: '100%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    height: "100%",
   },
   patternDay: {
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    height: '100%',
+    alignItems: "center",
+    justifyContent: "space-between",
+    height: "100%",
   },
   patternDayText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   patternBar: {
     width: 20,
     flex: 1,
-    backgroundColor: 'rgba(107, 114, 128, 0.2)',
+    backgroundColor: "rgba(107, 114, 128, 0.2)",
     borderRadius: 10,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     marginVertical: 8,
   },
   patternBarFill: {
-    width: '100%',
+    width: "100%",
     borderRadius: 10,
     minHeight: 4,
   },
@@ -1182,23 +1453,23 @@ const styles = StyleSheet.create({
   },
   recommendationsTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
   },
   recommendationsList: {
     gap: 16,
   },
   recommendationItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     gap: 12,
   },
   recommendationIcon: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   recommendationEmoji: {
     fontSize: 20,
@@ -1209,7 +1480,7 @@ const styles = StyleSheet.create({
   },
   recommendationText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     lineHeight: 20,
   },
   recommendationSubtext: {

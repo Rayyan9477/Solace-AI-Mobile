@@ -4,7 +4,8 @@
  * Features floating action button, wellness tips, and comprehensive mental health interface
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -15,17 +16,39 @@ import {
   Dimensions,
   Platform,
   RefreshControl,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Card, FAB, Avatar, IconButton, Snackbar } from 'react-native-paper';
-import { EnhancedDashboardCard, DashboardCardGrid, QuickActionCards } from './EnhancedDashboardCard';
-import { EnhancedMoodCard, MoodCardSlider } from './EnhancedMoodCard';
-import { TherapeuticButton, TherapeuticText, FreudColors, FreudContainer } from './FreudUISystem';
-import { TimeBasedShaderBackground, MoodBasedShaderBackground } from './PageShaderBackground';
-import { useFreudTheme, useTherapeuticTheme, useTimeBasedTheme } from './FreudThemeProvider';
-import { colors, spacing, borderRadius, shadows, typography } from '../../shared/theme/theme';
+} from "react-native";
+import { Card, FAB, Avatar, IconButton, Snackbar } from "react-native-paper";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import {
+  EnhancedDashboardCard,
+  DashboardCardGrid,
+  QuickActionCards,
+} from "./EnhancedDashboardCard";
+import { EnhancedMoodCard, MoodCardSlider } from "./EnhancedMoodCard";
+import {
+  useFreudTheme,
+  useTherapeuticTheme,
+  useTimeBasedTheme,
+} from "./FreudThemeProvider";
+import {
+  TherapeuticButton,
+  TherapeuticText,
+  FreudColors,
+  FreudContainer,
+} from "./FreudUISystem";
+import {
+  TimeBasedShaderBackground,
+  MoodBasedShaderBackground,
+} from "./PageShaderBackground";
+import {
+  colors,
+  spacing,
+  borderRadius,
+  shadows,
+  typography,
+} from "../../shared/theme/theme";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 /**
  * Wellness Tips Configuration
@@ -66,22 +89,22 @@ const WellnessTips = {
  */
 const DashboardSections = {
   quickActions: {
-    title: 'Quick Actions',
-    therapeutic: 'empathy',
-    cards: ['moodTracker', 'emergency', 'meditation'],
-    layout: 'horizontal',
+    title: "Quick Actions",
+    therapeutic: "empathy",
+    cards: ["moodTracker", "emergency", "meditation"],
+    layout: "horizontal",
   },
   dailyOverview: {
-    title: 'Today\'s Overview',
-    therapeutic: 'zen',
-    cards: ['progress', 'insights', 'sessions'],
-    layout: 'grid',
+    title: "Today's Overview",
+    therapeutic: "zen",
+    cards: ["progress", "insights", "sessions"],
+    layout: "grid",
   },
   wellnessTools: {
-    title: 'Wellness Tools',
-    therapeutic: 'serenity',
-    cards: ['journalEntry', 'community', 'meditation'],
-    layout: 'grid',
+    title: "Wellness Tools",
+    therapeutic: "serenity",
+    cards: ["journalEntry", "community", "meditation"],
+    layout: "grid",
   },
 };
 
@@ -89,7 +112,7 @@ const DashboardSections = {
  * Enhanced Dashboard Component
  */
 export const EnhancedDashboard = ({
-  user = { name: 'User', avatar: null },
+  user = { name: "User", avatar: null },
   moodHistory = [],
   onNavigate,
   onMoodTrack,
@@ -103,24 +126,24 @@ export const EnhancedDashboard = ({
   const { theme } = useFreudTheme();
   const { current: therapeuticTheme, applyMoodTheme } = useTherapeuticTheme();
   const { timeOfDay } = useTimeBasedTheme();
-  
+
   // State
   const [currentMood, setCurrentMood] = useState(null);
   const [showWellnessTip, setShowWellnessTip] = useState(true);
   const [currentTip, setCurrentTip] = useState(0);
   const [fabOpen, setFabOpen] = useState(false);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
   // Animation references
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const headerAnim = useRef(new Animated.Value(-100)).current;
   const cardsAnim = useRef(new Animated.Value(50)).current;
   const tipAnim = useRef(new Animated.Value(0)).current;
-  
+
   // Get wellness tips for current time
   const wellnessTips = WellnessTips[timeOfDay] || WellnessTips.morning;
-  
+
   // Initialize animations
   useEffect(() => {
     Animated.stagger(200, [
@@ -141,16 +164,16 @@ export const EnhancedDashboard = ({
       }),
     ]).start();
   }, [fadeAnim, headerAnim, cardsAnim]);
-  
+
   // Wellness tip rotation
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTip((prev) => (prev + 1) % wellnessTips.length);
     }, 10000); // Change tip every 10 seconds
-    
+
     return () => clearInterval(interval);
   }, [wellnessTips.length]);
-  
+
   // Animate wellness tip changes
   useEffect(() => {
     Animated.sequence([
@@ -166,7 +189,7 @@ export const EnhancedDashboard = ({
       }),
     ]).start();
   }, [currentTip, tipAnim]);
-  
+
   // Handle mood selection
   const handleMoodSelect = (mood) => {
     setCurrentMood(mood);
@@ -174,75 +197,78 @@ export const EnhancedDashboard = ({
     onMoodTrack?.(mood);
     showSnackbar(`Mood tracked: ${mood}`);
   };
-  
+
   // Show snackbar message
   const showSnackbar = (message) => {
     setSnackbarMessage(message);
     setSnackbarVisible(true);
   };
-  
+
   // Handle card press
   const handleCardPress = (cardType) => {
     switch (cardType) {
-      case 'moodTracker':
-        onNavigate?.('MoodTracker');
+      case "moodTracker":
+        onNavigate?.("MoodTracker");
         break;
-      case 'emergency':
+      case "emergency":
         onEmergencyContact?.();
         break;
-      case 'meditation':
-        onNavigate?.('Meditation');
+      case "meditation":
+        onNavigate?.("Meditation");
         break;
-      case 'journalEntry':
-        onNavigate?.('Journal');
+      case "journalEntry":
+        onNavigate?.("Journal");
         break;
-      case 'insights':
-        onNavigate?.('Insights');
+      case "insights":
+        onNavigate?.("Insights");
         break;
-      case 'progress':
-        onNavigate?.('Progress');
+      case "progress":
+        onNavigate?.("Progress");
         break;
-      case 'sessions':
-        onNavigate?.('Sessions');
+      case "sessions":
+        onNavigate?.("Sessions");
         break;
-      case 'community':
-        onNavigate?.('Community');
+      case "community":
+        onNavigate?.("Community");
         break;
       default:
         showSnackbar(`Opening ${cardType}...`);
     }
   };
-  
+
   // FAB actions
   const fabActions = [
     {
-      icon: 'plus',
-      label: 'Quick Mood Check',
-      onPress: () => onNavigate?.('QuickMoodCheck'),
+      icon: "plus",
+      label: "Quick Mood Check",
+      onPress: () => onNavigate?.("QuickMoodCheck"),
       color: FreudColors.zen.medium,
     },
     {
-      icon: 'meditation',
-      label: 'Start Meditation',
-      onPress: () => onNavigate?.('Meditation'),
+      icon: "meditation",
+      label: "Start Meditation",
+      onPress: () => onNavigate?.("Meditation"),
       color: FreudColors.serenity.medium,
     },
     {
-      icon: 'journal',
-      label: 'Journal Entry',
-      onPress: () => onNavigate?.('Journal'),
+      icon: "journal",
+      label: "Journal Entry",
+      onPress: () => onNavigate?.("Journal"),
       color: FreudColors.empathy.medium,
     },
     {
-      icon: 'help',
-      label: 'Get Support',
+      icon: "help",
+      label: "Get Support",
       onPress: () => onEmergencyContact?.(),
       color: FreudColors.kind.medium,
     },
   ];
-  
+
   return (
-    <TimeBasedShaderBackground intensity={0.4} style={[styles.container, style]}>
+    <TimeBasedShaderBackground
+      intensity={0.4}
+      style={[styles.container, style]}
+    >
       <Animated.View
         style={[
           styles.dashboard,
@@ -280,7 +306,7 @@ export const EnhancedDashboard = ({
               therapeutic={therapeuticTheme}
             />
           </Animated.View>
-          
+
           {/* Wellness Tip Card */}
           {showWellnessTip && (
             <Animated.View
@@ -302,7 +328,7 @@ export const EnhancedDashboard = ({
               />
             </Animated.View>
           )}
-          
+
           {/* Quick Mood Check */}
           <Animated.View
             style={[
@@ -321,10 +347,10 @@ export const EnhancedDashboard = ({
               onMoodSelect={handleMoodSelect}
               cardSize="small"
               variant="gradient"
-              animated={true}
+              animated
             />
           </Animated.View>
-          
+
           {/* Dashboard Sections */}
           {Object.entries(DashboardSections).map(([key, section], index) => (
             <Animated.View
@@ -347,8 +373,8 @@ export const EnhancedDashboard = ({
                 title={section.title}
                 therapeutic={section.therapeutic}
               />
-              
-              {section.layout === 'horizontal' ? (
+
+              {section.layout === "horizontal" ? (
                 <QuickActionCards
                   actions={section.cards}
                   onActionPress={handleCardPress}
@@ -360,12 +386,12 @@ export const EnhancedDashboard = ({
                   columns={2}
                   cardSize="medium"
                   variant="gradient"
-                  animated={true}
+                  animated
                 />
               )}
             </Animated.View>
           ))}
-          
+
           {/* Recent Activity Preview */}
           <Animated.View
             style={[
@@ -377,17 +403,17 @@ export const EnhancedDashboard = ({
           >
             <RecentActivityPreview
               moodHistory={moodHistory}
-              onViewAll={() => onNavigate?.('History')}
+              onViewAll={() => onNavigate?.("History")}
             />
           </Animated.View>
         </ScrollView>
-        
+
         {/* Floating Action Button */}
         <FAB.Group
           open={fabOpen}
-          visible={true}
-          icon={fabOpen ? 'close' : 'plus'}
-          actions={fabActions.map(action => ({
+          visible
+          icon={fabOpen ? "close" : "plus"}
+          actions={fabActions.map((action) => ({
             ...action,
             icon: action.icon,
             onPress: () => {
@@ -405,7 +431,7 @@ export const EnhancedDashboard = ({
           }}
         />
       </Animated.View>
-      
+
       {/* Snackbar for notifications */}
       <Snackbar
         visible={snackbarVisible}
@@ -422,27 +448,32 @@ export const EnhancedDashboard = ({
 /**
  * Enhanced Dashboard Header Component
  */
-const DashboardHeader = ({ user, timeOfDay, onEmergencyPress, therapeutic }) => {
+const DashboardHeader = ({
+  user,
+  timeOfDay,
+  onEmergencyPress,
+  therapeutic,
+}) => {
   const getGreeting = () => {
     const greetings = {
-      morning: 'Good morning',
-      afternoon: 'Good afternoon',
-      evening: 'Good evening',
-      night: 'Good night',
+      morning: "Good morning",
+      afternoon: "Good afternoon",
+      evening: "Good evening",
+      night: "Good night",
     };
-    return greetings[timeOfDay] || 'Hello';
+    return greetings[timeOfDay] || "Hello";
   };
-  
+
   const getTimeEmoji = () => {
     const emojis = {
-      morning: '🌅',
-      afternoon: '☀️',
-      evening: '🌇',
-      night: '🌙',
+      morning: "🌅",
+      afternoon: "☀️",
+      evening: "🌇",
+      night: "🌙",
     };
-    return emojis[timeOfDay] || '👋';
+    return emojis[timeOfDay] || "👋";
   };
-  
+
   return (
     <View style={styles.headerContent}>
       <View style={styles.userSection}>
@@ -451,7 +482,10 @@ const DashboardHeader = ({ user, timeOfDay, onEmergencyPress, therapeutic }) => 
           label={user.name[0].toUpperCase()}
           style={[
             styles.avatar,
-            { backgroundColor: FreudColors[therapeutic]?.medium || FreudColors.mindful.medium },
+            {
+              backgroundColor:
+                FreudColors[therapeutic]?.medium || FreudColors.mindful.medium,
+            },
           ]}
         />
         <View style={styles.greetingContainer}>
@@ -463,21 +497,18 @@ const DashboardHeader = ({ user, timeOfDay, onEmergencyPress, therapeutic }) => 
           >
             {getGreeting()}, {user.name}! {getTimeEmoji()}
           </TherapeuticText>
-          <TherapeuticText
-            variant="body"
-            style={styles.subGreeting}
-          >
+          <TherapeuticText variant="body" style={styles.subGreeting}>
             How can we support your wellbeing today?
           </TherapeuticText>
         </View>
       </View>
-      
+
       <TouchableOpacity
         style={styles.emergencyButton}
         onPress={onEmergencyPress}
       >
         <LinearGradient
-          colors={['#FF6B6B', '#FF8E8E']}
+          colors={["#FF6B6B", "#FF8E8E"]}
           style={styles.emergencyGradient}
         >
           <Text style={styles.emergencyText}>🆘</Text>
@@ -501,7 +532,11 @@ const WellnessTipCard = ({ tip, timeOfDay, onDismiss, therapeutic }) => {
       >
         <Card.Content style={styles.tipContent}>
           <View style={styles.tipHeader}>
-            <TherapeuticText variant="subtitle" weight="medium" style={styles.tipTitle}>
+            <TherapeuticText
+              variant="subtitle"
+              weight="medium"
+              style={styles.tipTitle}
+            >
               💡 Wellness Tip
             </TherapeuticText>
             <IconButton
@@ -554,17 +589,17 @@ const SectionHeader = ({ title, therapeutic, showViewAll, onViewAll }) => {
  */
 const RecentActivityPreview = ({ moodHistory, onViewAll }) => {
   const recentMoods = moodHistory.slice(0, 3);
-  
+
   if (recentMoods.length === 0) {
     return null;
   }
-  
+
   return (
     <View style={styles.activityPreview}>
       <SectionHeader
         title="Recent Activity"
         therapeutic="optimistic"
-        showViewAll={true}
+        showViewAll
         onViewAll={onViewAll}
       />
       <Card style={styles.activityCard}>
@@ -572,9 +607,13 @@ const RecentActivityPreview = ({ moodHistory, onViewAll }) => {
           {recentMoods.map((entry, index) => (
             <View key={entry.id || index} style={styles.activityItem}>
               <Text style={styles.activityEmoji}>
-                {entry.mood === 'happy' ? '😊' : 
-                 entry.mood === 'sad' ? '😢' : 
-                 entry.mood === 'calm' ? '😌' : '😐'}
+                {entry.mood === "happy"
+                  ? "😊"
+                  : entry.mood === "sad"
+                    ? "😢"
+                    : entry.mood === "calm"
+                      ? "😌"
+                      : "😐"}
               </Text>
               <View style={styles.activityDetails}>
                 <TherapeuticText variant="body" weight="medium">
@@ -605,21 +644,21 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: spacing[20], // Space for FAB
   },
-  
+
   // Header Styles
   header: {
     paddingHorizontal: spacing[4],
-    paddingTop: Platform.OS === 'ios' ? spacing[12] : spacing[8],
+    paddingTop: Platform.OS === "ios" ? spacing[12] : spacing[8],
     paddingBottom: spacing[4],
   },
   headerContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   userSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   avatar: {
@@ -637,19 +676,19 @@ const styles = StyleSheet.create({
   },
   emergencyButton: {
     borderRadius: borderRadius.full,
-    overflow: 'hidden',
+    overflow: "hidden",
     ...shadows.sm,
   },
   emergencyGradient: {
     width: 48,
     height: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   emergencyText: {
     fontSize: 20,
   },
-  
+
   // Tip Card Styles
   tipContainer: {
     paddingHorizontal: spacing[4],
@@ -657,42 +696,42 @@ const styles = StyleSheet.create({
   },
   tipCard: {
     borderRadius: borderRadius.lg,
-    overflow: 'hidden',
+    overflow: "hidden",
     ...shadows.sm,
   },
   tipGradient: {
-    width: '100%',
+    width: "100%",
   },
   tipContent: {
     paddingVertical: spacing[3],
   },
   tipHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: spacing[2],
   },
   tipTitle: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   tipDismiss: {
     margin: 0,
   },
   tipText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     lineHeight: 20,
     opacity: 0.95,
   },
-  
+
   // Section Styles
   section: {
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[3],
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: spacing[3],
   },
   sectionTitle: {
@@ -701,13 +740,13 @@ const styles = StyleSheet.create({
   viewAllText: {
     opacity: 0.7,
   },
-  
+
   // Mood Section Styles
   moodSection: {
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[4],
   },
-  
+
   // Activity Preview Styles
   activityPreview: {
     paddingHorizontal: spacing[4],
@@ -718,8 +757,8 @@ const styles = StyleSheet.create({
     ...shadows.sm,
   },
   activityItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: spacing[2],
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border.secondary,
@@ -735,15 +774,15 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     marginTop: spacing[0.5],
   },
-  
+
   // FAB Styles
   fab: {
-    position: 'absolute',
+    position: "absolute",
     margin: spacing[4],
     right: 0,
     bottom: 0,
   },
-  
+
   // Snackbar Styles
   snackbar: {
     marginBottom: spacing[20],

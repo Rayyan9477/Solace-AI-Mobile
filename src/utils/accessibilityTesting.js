@@ -1,11 +1,11 @@
 /**
  * Accessibility Testing Utilities for Solace AI Mobile App
- * 
+ *
  * Provides utilities for testing accessibility features, simulating screen readers,
  * and validating WCAG 2.1 AA compliance in React Native components.
  */
 
-import { AccessibilityInfo, Dimensions, Platform } from 'react-native';
+import { AccessibilityInfo, Dimensions, Platform } from "react-native";
 
 // Screen reader simulation and testing utilities
 export class AccessibilityTester {
@@ -20,19 +20,25 @@ export class AccessibilityTester {
   async initialize() {
     try {
       // Check current accessibility settings
-      this.screenReaderEnabled = await AccessibilityInfo.isScreenReaderEnabled();
-      this.reducedMotionEnabled = await AccessibilityInfo.isReducedMotionEnabled();
-      
+      this.screenReaderEnabled =
+        await AccessibilityInfo.isScreenReaderEnabled();
+      this.reducedMotionEnabled =
+        await AccessibilityInfo.isReducedMotionEnabled();
+
       // Set up announcement listener
       this.subscribeToAnnouncements();
-      
-      console.log('🔍 Accessibility Testing Environment Initialized');
-      console.log(`Screen Reader: ${this.screenReaderEnabled ? 'Enabled' : 'Disabled'}`);
-      console.log(`Reduced Motion: ${this.reducedMotionEnabled ? 'Enabled' : 'Disabled'}`);
-      
+
+      console.log("🔍 Accessibility Testing Environment Initialized");
+      console.log(
+        `Screen Reader: ${this.screenReaderEnabled ? "Enabled" : "Disabled"}`,
+      );
+      console.log(
+        `Reduced Motion: ${this.reducedMotionEnabled ? "Enabled" : "Disabled"}`,
+      );
+
       return true;
     } catch (error) {
-      console.error('Failed to initialize accessibility testing:', error);
+      console.error("Failed to initialize accessibility testing:", error);
       return false;
     }
   }
@@ -40,14 +46,14 @@ export class AccessibilityTester {
   // Subscribe to accessibility announcements
   subscribeToAnnouncements() {
     this.announcementListener = AccessibilityInfo.addEventListener(
-      'announceForAccessibility',
+      "announceForAccessibility",
       (announcement) => {
         this.announcements.push({
           message: announcement.announcement,
           timestamp: Date.now(),
           success: announcement.success,
         });
-      }
+      },
     );
   }
 
@@ -61,18 +67,19 @@ export class AccessibilityTester {
   // Test touch target sizes
   validateTouchTarget(component, expectedMinSize = 44) {
     const results = [];
-    
+
     if (!component || !component.props || !component.props.style) {
       results.push({
-        test: 'Touch Target Size',
-        status: 'WARNING',
-        message: 'Unable to determine touch target size - no style props found',
-        recommendation: 'Ensure component has width and height style properties',
+        test: "Touch Target Size",
+        status: "WARNING",
+        message: "Unable to determine touch target size - no style props found",
+        recommendation:
+          "Ensure component has width and height style properties",
       });
       return results;
     }
 
-    const style = Array.isArray(component.props.style) 
+    const style = Array.isArray(component.props.style)
       ? Object.assign({}, ...component.props.style)
       : component.props.style;
 
@@ -81,12 +88,12 @@ export class AccessibilityTester {
 
     if (width && width < expectedMinSize) {
       results.push({
-        test: 'Touch Target Width',
-        status: 'FAIL',
+        test: "Touch Target Width",
+        status: "FAIL",
         actual: width,
         expected: expectedMinSize,
         message: `Touch target width ${width}px is below WCAG minimum of ${expectedMinSize}px`,
-        wcagRule: '2.5.5 Target Size',
+        wcagRule: "2.5.5 Target Size",
         recommendation: `Increase width to ${expectedMinSize}px or add hitSlop padding`,
         fix: `style={{ ...style, minWidth: ${expectedMinSize}, minHeight: ${expectedMinSize} }}`,
       });
@@ -94,12 +101,12 @@ export class AccessibilityTester {
 
     if (height && height < expectedMinSize) {
       results.push({
-        test: 'Touch Target Height',
-        status: 'FAIL',
+        test: "Touch Target Height",
+        status: "FAIL",
         actual: height,
         expected: expectedMinSize,
         message: `Touch target height ${height}px is below WCAG minimum of ${expectedMinSize}px`,
-        wcagRule: '2.5.5 Target Size',
+        wcagRule: "2.5.5 Target Size",
         recommendation: `Increase height to ${expectedMinSize}px or add hitSlop padding`,
         fix: `style={{ ...style, minWidth: ${expectedMinSize}, minHeight: ${expectedMinSize} }}`,
       });
@@ -107,9 +114,9 @@ export class AccessibilityTester {
 
     if (results.length === 0) {
       results.push({
-        test: 'Touch Target Size',
-        status: 'PASS',
-        message: 'Touch target meets WCAG size requirements',
+        test: "Touch Target Size",
+        status: "PASS",
+        message: "Touch target meets WCAG size requirements",
       });
     }
 
@@ -124,27 +131,27 @@ export class AccessibilityTester {
     // Check for accessibility label
     if (!props.accessibilityLabel && !props.accessible === false) {
       results.push({
-        test: 'Accessibility Label',
-        status: 'FAIL',
-        message: 'Interactive element missing accessibilityLabel',
-        wcagRule: '4.1.2 Name, Role, Value',
-        recommendation: 'Add descriptive accessibilityLabel for screen readers',
+        test: "Accessibility Label",
+        status: "FAIL",
+        message: "Interactive element missing accessibilityLabel",
+        wcagRule: "4.1.2 Name, Role, Value",
+        recommendation: "Add descriptive accessibilityLabel for screen readers",
         fix: 'accessibilityLabel="Descriptive button text"',
       });
     } else if (props.accessibilityLabel) {
       // Validate label quality
       if (props.accessibilityLabel.length < 3) {
         results.push({
-          test: 'Accessibility Label Quality',
-          status: 'WARNING',
-          message: 'Accessibility label is too short to be meaningful',
-          recommendation: 'Provide more descriptive accessibility label',
+          test: "Accessibility Label Quality",
+          status: "WARNING",
+          message: "Accessibility label is too short to be meaningful",
+          recommendation: "Provide more descriptive accessibility label",
         });
       } else {
         results.push({
-          test: 'Accessibility Label',
-          status: 'PASS',
-          message: 'Component has meaningful accessibility label',
+          test: "Accessibility Label",
+          status: "PASS",
+          message: "Component has meaningful accessibility label",
         });
       }
     }
@@ -152,27 +159,30 @@ export class AccessibilityTester {
     // Check for accessibility role
     if (!props.accessibilityRole) {
       results.push({
-        test: 'Accessibility Role',
-        status: 'WARNING',
-        message: 'Element missing accessibilityRole for better screen reader context',
-        recommendation: 'Add appropriate accessibilityRole (button, text, etc.)',
+        test: "Accessibility Role",
+        status: "WARNING",
+        message:
+          "Element missing accessibilityRole for better screen reader context",
+        recommendation:
+          "Add appropriate accessibilityRole (button, text, etc.)",
         fix: 'accessibilityRole="button"',
       });
     } else {
       results.push({
-        test: 'Accessibility Role',
-        status: 'PASS',
+        test: "Accessibility Role",
+        status: "PASS",
         message: `Component has accessibility role: ${props.accessibilityRole}`,
       });
     }
 
     // Check for accessibility hint
-    if (props.accessibilityRole === 'button' && !props.accessibilityHint) {
+    if (props.accessibilityRole === "button" && !props.accessibilityHint) {
       results.push({
-        test: 'Accessibility Hint',
-        status: 'INFO',
-        message: 'Button could benefit from accessibility hint',
-        recommendation: 'Consider adding accessibilityHint to explain button action',
+        test: "Accessibility Hint",
+        status: "INFO",
+        message: "Button could benefit from accessibility hint",
+        recommendation:
+          "Consider adding accessibilityHint to explain button action",
         fix: 'accessibilityHint="Double tap to activate"',
       });
     }
@@ -181,38 +191,46 @@ export class AccessibilityTester {
   }
 
   // Test color contrast using the design system
-  validateColorContrast(foregroundColor, backgroundColor, fontSize = 16, isBold = false) {
+  validateColorContrast(
+    foregroundColor,
+    backgroundColor,
+    fontSize = 16,
+    isBold = false,
+  ) {
     const results = [];
 
     try {
-      const contrast = this.calculateContrastRatio(foregroundColor, backgroundColor);
+      const contrast = this.calculateContrastRatio(
+        foregroundColor,
+        backgroundColor,
+      );
       const isLargeText = fontSize >= 18 || (fontSize >= 14 && isBold);
       const requiredRatio = isLargeText ? 3.0 : 4.5;
 
       if (contrast < requiredRatio) {
         results.push({
-          test: 'Color Contrast',
-          status: 'FAIL',
+          test: "Color Contrast",
+          status: "FAIL",
           actual: contrast.toFixed(2),
           expected: requiredRatio,
           message: `Color contrast ratio ${contrast.toFixed(2)}:1 is below WCAG AA minimum of ${requiredRatio}:1`,
-          wcagRule: '1.4.3 Contrast (Minimum)',
+          wcagRule: "1.4.3 Contrast (Minimum)",
           colors: { foreground: foregroundColor, background: backgroundColor },
-          recommendation: 'Adjust colors to meet contrast requirements',
+          recommendation: "Adjust colors to meet contrast requirements",
         });
       } else {
         results.push({
-          test: 'Color Contrast',
-          status: 'PASS',
+          test: "Color Contrast",
+          status: "PASS",
           actual: contrast.toFixed(2),
           message: `Color contrast ratio ${contrast.toFixed(2)}:1 meets WCAG AA requirements`,
         });
       }
     } catch (error) {
       results.push({
-        test: 'Color Contrast',
-        status: 'ERROR',
-        message: 'Unable to calculate color contrast ratio',
+        test: "Color Contrast",
+        status: "ERROR",
+        message: "Unable to calculate color contrast ratio",
         error: error.message,
       });
     }
@@ -224,16 +242,17 @@ export class AccessibilityTester {
   calculateContrastRatio(color1, color2) {
     const getLuminance = (color) => {
       // Remove # if present
-      const hex = color.replace('#', '');
-      
+      const hex = color.replace("#", "");
+
       // Convert to RGB
       const r = parseInt(hex.substr(0, 2), 16) / 255;
       const g = parseInt(hex.substr(2, 2), 16) / 255;
       const b = parseInt(hex.substr(4, 2), 16) / 255;
 
       // Apply gamma correction
-      const gammaCorrect = (c) => c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-      
+      const gammaCorrect = (c) =>
+        c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+
       const rLinear = gammaCorrect(r);
       const gLinear = gammaCorrect(g);
       const bLinear = gammaCorrect(b);
@@ -257,28 +276,30 @@ export class AccessibilityTester {
     // Check for focus handlers
     if (!props.onFocus && !props.onBlur) {
       results.push({
-        test: 'Keyboard Focus Handlers',
-        status: 'WARNING',
-        message: 'Interactive element missing focus/blur handlers',
-        wcagRule: '2.1.1 Keyboard',
-        recommendation: 'Add onFocus and onBlur handlers for keyboard accessibility',
-        fix: 'onFocus={() => {}} onBlur={() => {}}',
+        test: "Keyboard Focus Handlers",
+        status: "WARNING",
+        message: "Interactive element missing focus/blur handlers",
+        wcagRule: "2.1.1 Keyboard",
+        recommendation:
+          "Add onFocus and onBlur handlers for keyboard accessibility",
+        fix: "onFocus={() => {}} onBlur={() => {}}",
       });
     } else {
       results.push({
-        test: 'Keyboard Focus Handlers',
-        status: 'PASS',
-        message: 'Component has keyboard focus handlers',
+        test: "Keyboard Focus Handlers",
+        status: "PASS",
+        message: "Component has keyboard focus handlers",
       });
     }
 
     // Check for tab accessibility
     if (props.accessible !== false && !props.accessibilityRole) {
       results.push({
-        test: 'Tab Navigation',
-        status: 'INFO',
-        message: 'Element is focusable but may need explicit accessibilityRole',
-        recommendation: 'Add accessibilityRole for better tab navigation context',
+        test: "Tab Navigation",
+        status: "INFO",
+        message: "Element is focusable but may need explicit accessibilityRole",
+        recommendation:
+          "Add accessibilityRole for better tab navigation context",
       });
     }
 
@@ -291,9 +312,9 @@ export class AccessibilityTester {
 
     if (!animationConfig) {
       results.push({
-        test: 'Animation Configuration',
-        status: 'INFO',
-        message: 'No animation configuration found',
+        test: "Animation Configuration",
+        status: "INFO",
+        message: "No animation configuration found",
       });
       return results;
     }
@@ -301,31 +322,32 @@ export class AccessibilityTester {
     // Check animation duration
     if (animationConfig.duration && animationConfig.duration > 5000) {
       results.push({
-        test: 'Animation Duration',
-        status: 'WARNING',
+        test: "Animation Duration",
+        status: "WARNING",
         actual: animationConfig.duration,
-        expected: '≤5000ms',
+        expected: "≤5000ms",
         message: `Animation duration ${animationConfig.duration}ms may be too long`,
-        wcagRule: '2.2.2 Pause, Stop, Hide',
-        recommendation: 'Reduce animation duration or provide user controls',
+        wcagRule: "2.2.2 Pause, Stop, Hide",
+        recommendation: "Reduce animation duration or provide user controls",
       });
     }
 
     // Check for reduced motion consideration
     if (!animationConfig.respectsReducedMotion) {
       results.push({
-        test: 'Reduced Motion Support',
-        status: 'WARNING',
-        message: 'Animation does not respect reduced motion preferences',
-        wcagRule: '2.3.3 Animation from Interactions',
-        recommendation: 'Implement useReducedMotion hook to respect user preferences',
-        fix: 'const reduceMotion = useReducedMotion(); duration: reduceMotion ? 0 : 300',
+        test: "Reduced Motion Support",
+        status: "WARNING",
+        message: "Animation does not respect reduced motion preferences",
+        wcagRule: "2.3.3 Animation from Interactions",
+        recommendation:
+          "Implement useReducedMotion hook to respect user preferences",
+        fix: "const reduceMotion = useReducedMotion(); duration: reduceMotion ? 0 : 300",
       });
     } else {
       results.push({
-        test: 'Reduced Motion Support',
-        status: 'PASS',
-        message: 'Animation respects reduced motion preferences',
+        test: "Reduced Motion Support",
+        status: "PASS",
+        message: "Animation respects reduced motion preferences",
       });
     }
 
@@ -338,14 +360,14 @@ export class AccessibilityTester {
     const props = formComponent.props || {};
 
     // Check for form labels
-    if (formComponent.type === 'TextInput' || props.textContentType) {
+    if (formComponent.type === "TextInput" || props.textContentType) {
       if (!props.accessibilityLabel && !props.placeholder) {
         results.push({
-          test: 'Form Label',
-          status: 'FAIL',
-          message: 'Text input missing accessible label',
-          wcagRule: '3.3.2 Labels or Instructions',
-          recommendation: 'Add accessibilityLabel or visible label',
+          test: "Form Label",
+          status: "FAIL",
+          message: "Text input missing accessible label",
+          wcagRule: "3.3.2 Labels or Instructions",
+          recommendation: "Add accessibilityLabel or visible label",
           fix: 'accessibilityLabel="Email address"',
         });
       }
@@ -353,11 +375,11 @@ export class AccessibilityTester {
       // Check for error handling
       if (!props.accessibilityInvalid && !props.accessibilityErrorMessage) {
         results.push({
-          test: 'Error Handling',
-          status: 'INFO',
-          message: 'Input field missing error state accessibility',
-          wcagRule: '3.3.1 Error Identification',
-          recommendation: 'Add error state accessibility attributes',
+          test: "Error Handling",
+          status: "INFO",
+          message: "Input field missing error state accessibility",
+          wcagRule: "3.3.1 Error Identification",
+          recommendation: "Add error state accessibility attributes",
           fix: 'accessibilityInvalid={hasError} accessibilityErrorMessage="Error description"',
         });
       }
@@ -371,20 +393,25 @@ export class AccessibilityTester {
     const results = [];
     const props = imageComponent.props || {};
 
-    if (!props.accessibilityLabel && props.accessible !== false && props.accessibilityRole !== 'none') {
+    if (
+      !props.accessibilityLabel &&
+      props.accessible !== false &&
+      props.accessibilityRole !== "none"
+    ) {
       results.push({
-        test: 'Image Alt Text',
-        status: 'FAIL',
-        message: 'Image missing accessibility description',
-        wcagRule: '1.1.1 Non-text Content',
-        recommendation: 'Add accessibilityLabel with meaningful description or accessibilityRole="none" for decorative images',
+        test: "Image Alt Text",
+        status: "FAIL",
+        message: "Image missing accessibility description",
+        wcagRule: "1.1.1 Non-text Content",
+        recommendation:
+          'Add accessibilityLabel with meaningful description or accessibilityRole="none" for decorative images',
         fix: 'accessibilityLabel="Descriptive text about the image"',
       });
     } else if (props.accessibilityLabel) {
       results.push({
-        test: 'Image Alt Text',
-        status: 'PASS',
-        message: 'Image has accessibility description',
+        test: "Image Alt Text",
+        status: "PASS",
+        message: "Image has accessibility description",
       });
     }
 
@@ -392,11 +419,11 @@ export class AccessibilityTester {
   }
 
   // Comprehensive component testing
-  testComponent(component, componentName = 'Unknown') {
+  testComponent(component, componentName = "Unknown") {
     const allResults = [];
 
     console.log(`\n🔍 Testing Accessibility for: ${componentName}`);
-    console.log('═'.repeat(50));
+    console.log("═".repeat(50));
 
     // Run all applicable tests
     allResults.push(...this.validateTouchTarget(component));
@@ -404,11 +431,11 @@ export class AccessibilityTester {
     allResults.push(...this.validateKeyboardNavigation(component));
 
     // Type-specific tests
-    if (component.type === 'Image' || component.props?.source) {
+    if (component.type === "Image" || component.props?.source) {
       allResults.push(...this.validateImageAccessibility(component));
     }
 
-    if (component.type === 'TextInput') {
+    if (component.type === "TextInput") {
       allResults.push(...this.validateFormAccessibility(component));
     }
 
@@ -420,10 +447,10 @@ export class AccessibilityTester {
 
   // Print formatted test results
   printTestResults(results, componentName) {
-    const passed = results.filter(r => r.status === 'PASS').length;
-    const failed = results.filter(r => r.status === 'FAIL').length;
-    const warnings = results.filter(r => r.status === 'WARNING').length;
-    const info = results.filter(r => r.status === 'INFO').length;
+    const passed = results.filter((r) => r.status === "PASS").length;
+    const failed = results.filter((r) => r.status === "FAIL").length;
+    const warnings = results.filter((r) => r.status === "WARNING").length;
+    const info = results.filter((r) => r.status === "INFO").length;
 
     console.log(`\n📊 Results for ${componentName}:`);
     console.log(`   ✅ Passed: ${passed}`);
@@ -432,25 +459,26 @@ export class AccessibilityTester {
     console.log(`   ℹ️  Info: ${info}`);
 
     // Show detailed results
-    results.forEach(result => {
-      const icon = {
-        'PASS': '✅',
-        'FAIL': '❌',
-        'WARNING': '⚠️',
-        'INFO': 'ℹ️',
-        'ERROR': '🚨',
-      }[result.status] || '❓';
+    results.forEach((result) => {
+      const icon =
+        {
+          PASS: "✅",
+          FAIL: "❌",
+          WARNING: "⚠️",
+          INFO: "ℹ️",
+          ERROR: "🚨",
+        }[result.status] || "❓";
 
       console.log(`\n   ${icon} ${result.test}: ${result.message}`);
-      
+
       if (result.wcagRule) {
         console.log(`      📋 WCAG Rule: ${result.wcagRule}`);
       }
-      
+
       if (result.recommendation) {
         console.log(`      💡 Recommendation: ${result.recommendation}`);
       }
-      
+
       if (result.fix) {
         console.log(`      🔧 Fix: ${result.fix}`);
       }
@@ -462,13 +490,25 @@ export class AccessibilityTester {
     const report = {
       summary: {
         totalComponents: testResults.length,
-        totalTests: testResults.reduce((sum, comp) => sum + comp.results.length, 0),
-        passedTests: testResults.reduce((sum, comp) => 
-          sum + comp.results.filter(r => r.status === 'PASS').length, 0),
-        failedTests: testResults.reduce((sum, comp) => 
-          sum + comp.results.filter(r => r.status === 'FAIL').length, 0),
-        warnings: testResults.reduce((sum, comp) => 
-          sum + comp.results.filter(r => r.status === 'WARNING').length, 0),
+        totalTests: testResults.reduce(
+          (sum, comp) => sum + comp.results.length,
+          0,
+        ),
+        passedTests: testResults.reduce(
+          (sum, comp) =>
+            sum + comp.results.filter((r) => r.status === "PASS").length,
+          0,
+        ),
+        failedTests: testResults.reduce(
+          (sum, comp) =>
+            sum + comp.results.filter((r) => r.status === "FAIL").length,
+          0,
+        ),
+        warnings: testResults.reduce(
+          (sum, comp) =>
+            sum + comp.results.filter((r) => r.status === "WARNING").length,
+          0,
+        ),
         timestamp: new Date().toISOString(),
       },
       components: testResults,
@@ -476,7 +516,7 @@ export class AccessibilityTester {
     };
 
     if (outputPath) {
-      require('fs').writeFileSync(outputPath, JSON.stringify(report, null, 2));
+      require("fs").writeFileSync(outputPath, JSON.stringify(report, null, 2));
       console.log(`\n📄 Accessibility report saved to: ${outputPath}`);
     }
 
@@ -486,13 +526,13 @@ export class AccessibilityTester {
   // Generate actionable recommendations
   generateAccessibilityRecommendations(testResults) {
     const recommendations = [];
-    const allResults = testResults.flatMap(comp => comp.results);
+    const allResults = testResults.flatMap((comp) => comp.results);
 
     // Group by common issues
-    const failedTests = allResults.filter(r => r.status === 'FAIL');
+    const failedTests = allResults.filter((r) => r.status === "FAIL");
     const groupedIssues = {};
 
-    failedTests.forEach(test => {
+    failedTests.forEach((test) => {
       if (!groupedIssues[test.test]) {
         groupedIssues[test.test] = [];
       }
@@ -503,7 +543,7 @@ export class AccessibilityTester {
     Object.entries(groupedIssues).forEach(([testType, issues]) => {
       if (issues.length > 1) {
         recommendations.push({
-          priority: 'HIGH',
+          priority: "HIGH",
           issue: testType,
           count: issues.length,
           description: `${issues.length} components failing ${testType} checks`,
@@ -518,13 +558,13 @@ export class AccessibilityTester {
 
   // Simulate screen reader announcement
   announceForAccessibility(message) {
-    if (Platform.OS === 'ios' || Platform.OS === 'android') {
+    if (Platform.OS === "ios" || Platform.OS === "android") {
       AccessibilityInfo.announceForAccessibility(message);
     }
-    
+
     // Log for testing
     console.log(`🔊 Screen Reader: "${message}"`);
-    
+
     this.announcements.push({
       message,
       timestamp: Date.now(),
@@ -547,7 +587,12 @@ export const useAccessibilityTesting = () => {
   };
 
   const validateColorContrast = (foreground, background, fontSize, isBold) => {
-    return tester.validateColorContrast(foreground, background, fontSize, isBold);
+    return tester.validateColorContrast(
+      foreground,
+      background,
+      fontSize,
+      isBold,
+    );
   };
 
   const announceForTesting = (message) => {
@@ -570,16 +615,20 @@ export const MentalHealthAccessibilityTesting = {
     const results = [];
 
     // Standard tests
-    results.push(...tester.testComponent(moodComponent, 'Mood Tracker'));
+    results.push(...tester.testComponent(moodComponent, "Mood Tracker"));
 
     // Mood-specific tests
     if (moodComponent.props?.mood) {
-      if (!moodComponent.props.accessibilityLabel?.includes(moodComponent.props.mood)) {
+      if (
+        !moodComponent.props.accessibilityLabel?.includes(
+          moodComponent.props.mood,
+        )
+      ) {
         results.push({
-          test: 'Mood Context',
-          status: 'WARNING',
-          message: 'Mood label should include current mood state',
-          recommendation: 'Include mood name in accessibility label',
+          test: "Mood Context",
+          status: "WARNING",
+          message: "Mood label should include current mood state",
+          recommendation: "Include mood name in accessibility label",
           fix: `accessibilityLabel="Select ${moodComponent.props.mood} mood"`,
         });
       }
@@ -593,17 +642,19 @@ export const MentalHealthAccessibilityTesting = {
     const tester = new AccessibilityTester();
     const results = [];
 
-    results.push(...tester.testComponent(chatComponent, 'Chat Component'));
+    results.push(...tester.testComponent(chatComponent, "Chat Component"));
 
     // Chat-specific tests
     if (chatComponent.props?.isUserMessage !== undefined) {
-      const expectedLabel = chatComponent.props.isUserMessage ? 'Your message' : 'AI therapist message';
+      const expectedLabel = chatComponent.props.isUserMessage
+        ? "Your message"
+        : "AI therapist message";
       if (!chatComponent.props.accessibilityLabel?.includes(expectedLabel)) {
         results.push({
-          test: 'Chat Message Context',
-          status: 'FAIL',
-          message: 'Chat message missing sender identification',
-          recommendation: 'Include sender information in accessibility label',
+          test: "Chat Message Context",
+          status: "FAIL",
+          message: "Chat message missing sender identification",
+          recommendation: "Include sender information in accessibility label",
           fix: `accessibilityLabel="${expectedLabel}: ${chatComponent.props.text}"`,
         });
       }
@@ -617,17 +668,24 @@ export const MentalHealthAccessibilityTesting = {
     const tester = new AccessibilityTester();
     const results = [];
 
-    results.push(...tester.testComponent(assessmentComponent, 'Assessment Component'));
+    results.push(
+      ...tester.testComponent(assessmentComponent, "Assessment Component"),
+    );
 
     // Assessment-specific tests
-    if (assessmentComponent.props?.questionNumber && assessmentComponent.props?.totalQuestions) {
+    if (
+      assessmentComponent.props?.questionNumber &&
+      assessmentComponent.props?.totalQuestions
+    ) {
       const expectedPattern = `Question ${assessmentComponent.props.questionNumber} of ${assessmentComponent.props.totalQuestions}`;
-      if (!assessmentComponent.props.accessibilityLabel?.includes(expectedPattern)) {
+      if (
+        !assessmentComponent.props.accessibilityLabel?.includes(expectedPattern)
+      ) {
         results.push({
-          test: 'Assessment Progress',
-          status: 'WARNING',
-          message: 'Assessment question missing progress context',
-          recommendation: 'Include question progress in accessibility label',
+          test: "Assessment Progress",
+          status: "WARNING",
+          message: "Assessment question missing progress context",
+          recommendation: "Include question progress in accessibility label",
           fix: `accessibilityLabel="${expectedPattern}: ${assessmentComponent.props.question}"`,
         });
       }
@@ -645,7 +703,7 @@ export const ACCESSIBILITY_TESTING_CONFIG = {
   LARGE_TEXT_MIN_SIZE: 18,
   LARGE_TEXT_MIN_SIZE_BOLD: 14,
   MAX_ANIMATION_DURATION: 5000,
-  FOCUS_VISIBLE_OUTLINE: '2px solid #0066cc',
+  FOCUS_VISIBLE_OUTLINE: "2px solid #0066cc",
 };
 
 export default AccessibilityTester;

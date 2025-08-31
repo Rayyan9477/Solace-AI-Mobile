@@ -3,13 +3,13 @@ import { View, Text, Animated, StyleSheet } from "react-native";
 
 import { useFixedTheme } from "./FixedThemeProvider";
 
-const ProgressIndicator = ({ 
-  progress = 0, 
-  showPercentage = true, 
-  label = "", 
+const ProgressIndicator = ({
+  progress = 0,
+  showPercentage = true,
+  label = "",
   style = {},
   barStyle = {},
-  ...props 
+  ...props
 }) => {
   const { theme } = useFixedTheme();
   const progressAnim = useRef(new Animated.Value(0)).current;
@@ -32,11 +32,16 @@ const ProgressIndicator = ({
   return (
     <View style={[styles.container, style]} {...props}>
       {label && (
-        <Text style={[styles.label, { color: theme.colors.text?.secondary || "#6B7280" }]}>
+        <Text
+          style={[
+            styles.label,
+            { color: theme.colors.text?.secondary || "#6B7280" },
+          ]}
+        >
           {label}
         </Text>
       )}
-      
+
       <View
         style={[
           styles.progressContainer,
@@ -56,7 +61,12 @@ const ProgressIndicator = ({
       </View>
 
       {showPercentage && (
-        <Text style={[styles.percentage, { color: theme.colors.text?.secondary || "#6B7280" }]}>
+        <Text
+          style={[
+            styles.percentage,
+            { color: theme.colors.text?.secondary || "#6B7280" },
+          ]}
+        >
           {Math.round(progress)}%
         </Text>
       )}

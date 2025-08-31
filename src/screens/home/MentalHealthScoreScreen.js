@@ -26,7 +26,7 @@ const MentalHealthScoreScreen = ({ navigation }) => {
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
   const scoreAnim = useRef(new Animated.Value(0)).current;
 
-  // Mock data - in real app this would come from API/state  
+  // Mock data - in real app this would come from API/state
   const mentalHealthData = {
     currentScore: 80,
     trend: "+8",
@@ -186,38 +186,39 @@ const MentalHealthScoreScreen = ({ navigation }) => {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity
-            style={[styles.backButton, { backgroundColor: 'rgba(255,255,255,0.2)' }]}
+            style={[
+              styles.backButton,
+              { backgroundColor: "rgba(255,255,255,0.2)" },
+            ]}
             onPress={() => navigation.goBack()}
           >
-            <ThemedFreudIcon
-              name="chevron-left"
-              size={24}
-              color="#FFFFFF"
-            />
+            <ThemedFreudIcon name="chevron-left" size={24} color="#FFFFFF" />
           </TouchableOpacity>
 
           <Text
-            style={[styles.headerTitle, { 
-              color: '#FFFFFF',
-              fontSize: freudTheme.typography.fontSize.headingLg,
-              fontWeight: freudTheme.typography.fontWeight.bold,
-              fontFamily: freudTheme.typography.fontFamily.primary,
-            }]}
+            style={[
+              styles.headerTitle,
+              {
+                color: "#FFFFFF",
+                fontSize: freudTheme.typography.fontSize.headingLg,
+                fontWeight: freudTheme.typography.fontWeight.bold,
+                fontFamily: freudTheme.typography.fontFamily.primary,
+              },
+            ]}
           >
             Mental Health Score
           </Text>
 
           <TouchableOpacity
-            style={[styles.infoButton, { backgroundColor: 'rgba(255,255,255,0.2)' }]}
+            style={[
+              styles.infoButton,
+              { backgroundColor: "rgba(255,255,255,0.2)" },
+            ]}
             onPress={() => {
               /* Show score explanation */
             }}
           >
-            <ThemedFreudIcon
-              name="settings"
-              size={24}
-              color="#FFFFFF"
-            />
+            <ThemedFreudIcon name="settings" size={24} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
 
@@ -283,32 +284,41 @@ const MentalHealthScoreScreen = ({ navigation }) => {
               <View style={styles.scoreContainer}>
                 {/* Large circular score display like design reference */}
                 <View style={styles.largeScoreCircle}>
-                  <View style={[
-                    styles.scoreCircleBackground,
-                    { backgroundColor: 'rgba(255,255,255,0.2)' }
-                  ]}>
+                  <View
+                    style={[
+                      styles.scoreCircleBackground,
+                      { backgroundColor: "rgba(255,255,255,0.2)" },
+                    ]}
+                  >
                     <Animated.Text
                       style={[
                         styles.largeScoreNumber,
-                        { 
-                          color: '#FFFFFF',
-                          transform: [{ scale: scaleAnim }]
-                        }
+                        {
+                          color: "#FFFFFF",
+                          transform: [{ scale: scaleAnim }],
+                        },
                       ]}
                     >
                       {mentalHealthData.currentScore}
                     </Animated.Text>
                   </View>
-                  
+
                   {/* Bottom section with "Mentally Stable" text */}
                   <View style={styles.scoreStatusContainer}>
-                    <Text style={[styles.scoreStatusText, { color: '#FFFFFF' }]}>
+                    <Text
+                      style={[styles.scoreStatusText, { color: "#FFFFFF" }]}
+                    >
                       Mentally Stable
                     </Text>
-                    
+
                     {/* Small trending icon */}
                     <View style={styles.trendingIndicator}>
-                      <View style={[styles.trendDot, { backgroundColor: freudTheme.colors.brown[80] }]} />
+                      <View
+                        style={[
+                          styles.trendDot,
+                          { backgroundColor: freudTheme.colors.brown[80] },
+                        ]}
+                      />
                     </View>
                   </View>
                 </View>
@@ -665,8 +675,8 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 20,
   },
   largeScoreNumber: {
@@ -675,7 +685,7 @@ const styles = StyleSheet.create({
     fontFamily: freudTheme.typography.fontFamily.primary,
   },
   scoreStatusContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   scoreStatusText: {
     fontSize: freudTheme.typography.fontSize.textLg,
@@ -684,7 +694,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   trendingIndicator: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   trendDot: {
     width: 8,

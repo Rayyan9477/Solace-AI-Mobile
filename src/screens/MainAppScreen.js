@@ -1,3 +1,6 @@
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+// Correct named import for expo-linear-gradient (incorrect default import could cause runtime error + blank screen)
+import { LinearGradient } from "expo-linear-gradient";
 import React, {
   useEffect,
   useRef,
@@ -19,33 +22,38 @@ import {
   Linking,
   SafeAreaView,
 } from "react-native";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import LinearGradient from 'expo-linear-gradient';
 
 // Icons and UI Components
-import { MentalHealthIcon } from '../components/icons';
-import TherapeuticCard, { MindfulCard, EmpathyCard, CalmingCard, WisdomCard } from '../components/ui/TherapeuticCard';
-import FloatingActionButton, { TherapyFAB } from '../components/ui/FloatingActionButton';
-import { withErrorBoundary } from '../utils/ErrorBoundary';
 
-// Dashboard Components  
+// Dashboard Components
 import DailyInsights from "../components/dashboard/DailyInsights";
 import MoodCheckIn from "../components/dashboard/MoodCheckIn";
 import ProgressOverview from "../components/dashboard/ProgressOverview";
 import QuickActions from "../components/dashboard/QuickActions";
 import RecentActivity from "../components/dashboard/RecentActivity";
 import WelcomeHeader from "../components/dashboard/WelcomeHeader";
+import { MentalHealthIcon } from "../components/icons";
+import FloatingActionButton, {
+  TherapyFAB,
+} from "../components/ui/FloatingActionButton";
+import TherapeuticCard, {
+  MindfulCard,
+  EmpathyCard,
+  CalmingCard,
+  WisdomCard,
+} from "../components/ui/TherapeuticCard";
 
 // Theme and Design System
-import { useTheme } from "../shared/theme/ThemeContext";
-import FreudDesignSystem, { 
-  FreudColors, 
-  FreudSpacing, 
-  FreudTypography, 
-  FreudShadows, 
-  FreudBorderRadius 
-} from '../shared/theme/FreudDesignSystem';
+import FreudDesignSystem, {
+  FreudColors,
+  FreudSpacing,
+  FreudTypography,
+  FreudShadows,
+  FreudBorderRadius,
+} from "../shared/theme/FreudDesignSystem";
+import { useTheme } from "../shared/theme/UnifiedThemeProvider";
+import { withErrorBoundary } from "../utils/ErrorBoundary";
 
 // Therapeutic Tips for daily wellness guidance
 const THERAPEUTIC_TIPS = [
@@ -53,31 +61,31 @@ const THERAPEUTIC_TIPS = [
     tip: "Take three deep breaths and notice how your body feels in this moment",
     category: "Mindfulness",
     icon: "Mindfulness",
-    color: FreudColors.serenityGreen[50]
+    color: FreudColors.serenityGreen[50],
   },
   {
     tip: "Practice the 5-4-3-2-1 grounding technique to center yourself",
-    category: "Grounding", 
+    category: "Grounding",
     icon: "Therapy",
-    color: FreudColors.mindfulBrown[50]
+    color: FreudColors.mindfulBrown[50],
   },
   {
     tip: "Remember: it's okay to not be okay. Your feelings are valid",
     category: "Self-Compassion",
     icon: "Heart",
-    color: FreudColors.kindPurple[50]
+    color: FreudColors.kindPurple[50],
   },
   {
     tip: "Journal three things you're grateful for today",
     category: "Gratitude",
-    icon: "Journal", 
-    color: FreudColors.empathyOrange[50]
+    icon: "Journal",
+    color: FreudColors.empathyOrange[50],
   },
   {
     tip: "Connect with someone you care about today",
     category: "Connection",
     icon: "Heart",
-    color: FreudColors.zenYellow[50]
+    color: FreudColors.zenYellow[50],
   },
 ];
 
@@ -90,13 +98,19 @@ const DailyTipCard = ({ tip, isDarkMode }) => (
     subtitle={tip.category}
     icon={tip.icon}
     variant="gradient"
-    gradientColors={[tip.color + '20', tip.color + '10']}
+    gradientColors={[tip.color + "20", tip.color + "10"]}
     iconColor={tip.color}
   >
-    <Text style={[
-      styles.tipText, 
-      { color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.primary : FreudDesignSystem.themes.light.colors.text.primary }
-    ]}>
+    <Text
+      style={[
+        styles.tipText,
+        {
+          color: isDarkMode
+            ? FreudDesignSystem.themes.dark.colors.text.primary
+            : FreudDesignSystem.themes.light.colors.text.primary,
+        },
+      ]}
+    >
       {tip.tip}
     </Text>
   </WisdomCard>
@@ -174,11 +188,12 @@ const MainAppScreen = () => {
   const handleRefresh = useCallback(async () => {
     try {
       setRefreshing(true);
-      
+
       // Update therapeutic tip
-      const randomTip = THERAPEUTIC_TIPS[Math.floor(Math.random() * THERAPEUTIC_TIPS.length)];
+      const randomTip =
+        THERAPEUTIC_TIPS[Math.floor(Math.random() * THERAPEUTIC_TIPS.length)];
       setCurrentTip(randomTip);
-      
+
       await fetchData();
     } catch (error) {
       // Error already handled in fetchData
@@ -247,7 +262,8 @@ const MainAppScreen = () => {
 
   // Initialize therapeutic tip on mount
   useEffect(() => {
-    const randomTip = THERAPEUTIC_TIPS[Math.floor(Math.random() * THERAPEUTIC_TIPS.length)];
+    const randomTip =
+      THERAPEUTIC_TIPS[Math.floor(Math.random() * THERAPEUTIC_TIPS.length)];
     setCurrentTip(randomTip);
   }, []);
 
@@ -262,13 +278,22 @@ const MainAppScreen = () => {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? FreudColors.optimisticGray[100] : '#FFFFFF' }]}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        {
+          backgroundColor: isDarkMode
+            ? FreudColors.optimisticGray[100]
+            : "#FFFFFF",
+        },
+      ]}
+    >
       <StatusBar
         barStyle={isDarkMode ? "light-content" : "dark-content"}
         backgroundColor="transparent"
-        translucent={true}
+        translucent
       />
-      
+
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         <ScrollView
           style={styles.scrollView}
@@ -279,7 +304,9 @@ const MainAppScreen = () => {
               onRefresh={handleRefresh}
               tintColor={FreudColors.serenityGreen[60]}
               colors={[FreudColors.serenityGreen[60]]}
-              progressBackgroundColor={isDarkMode ? FreudColors.optimisticGray[90] : '#FFFFFF'}
+              progressBackgroundColor={
+                isDarkMode ? FreudColors.optimisticGray[90] : "#FFFFFF"
+              }
             />
           }
           showsVerticalScrollIndicator={false}
@@ -306,7 +333,7 @@ const MainAppScreen = () => {
             <MoodCheckIn
               currentMood={mood?.currentMood}
               onCheckIn={handleMoodCheckIn}
-              compact={true}
+              compact
             />
           </MindfulCard>
 
@@ -378,14 +405,15 @@ const styles = StyleSheet.create({
     paddingTop: FreudSpacing[2],
     paddingHorizontal: FreudSpacing[4],
   },
-  
+
   // Daily Tip Card
   tipText: {
     fontSize: FreudTypography.sizes.base,
-    lineHeight: FreudTypography.sizes.base * FreudTypography.lineHeights.relaxed,
+    lineHeight:
+      FreudTypography.sizes.base * FreudTypography.lineHeights.relaxed,
     fontWeight: FreudTypography.weights.normal,
   },
-  
+
   // Spacing
   bottomSpacing: {
     height: 80,
@@ -394,24 +422,36 @@ const styles = StyleSheet.create({
 
 export default withErrorBoundary(MainAppScreen, {
   fallback: ({ error, retry, goHome }) => (
-    <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-      <Text style={{ fontSize: 18, textAlign: 'center', marginBottom: 20 }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20,
+      }}
+    >
+      <Text style={{ fontSize: 18, textAlign: "center", marginBottom: 20 }}>
         Something went wrong with the main dashboard
       </Text>
-      <TouchableOpacity 
+      <TouchableOpacity
         onPress={retry}
-        style={{ backgroundColor: '#007AFF', padding: 12, borderRadius: 8, marginBottom: 10 }}
+        style={{
+          backgroundColor: "#007AFF",
+          padding: 12,
+          borderRadius: 8,
+          marginBottom: 10,
+        }}
       >
-        <Text style={{ color: 'white', fontWeight: 'bold' }}>Try Again</Text>
+        <Text style={{ color: "white", fontWeight: "bold" }}>Try Again</Text>
       </TouchableOpacity>
-      <TouchableOpacity 
+      <TouchableOpacity
         onPress={goHome}
-        style={{ backgroundColor: '#666', padding: 12, borderRadius: 8 }}
+        style={{ backgroundColor: "#666", padding: 12, borderRadius: 8 }}
       >
-        <Text style={{ color: 'white', fontWeight: 'bold' }}>Go Home</Text>
+        <Text style={{ color: "white", fontWeight: "bold" }}>Go Home</Text>
       </TouchableOpacity>
     </SafeAreaView>
-  )
+  ),
 });
 
 // Export therapeutic tips for use in other components

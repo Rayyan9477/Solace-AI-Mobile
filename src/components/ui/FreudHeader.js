@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   StatusBar,
   Platform,
-} from 'react-native';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { ActionIcon } from '../icons';
+} from "react-native";
+
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { ActionIcon } from "../icons";
 
 const FreudHeader = ({
   onBackPress,
@@ -23,7 +24,7 @@ const FreudHeader = ({
   const styles = StyleSheet.create({
     container: {
       backgroundColor: theme.colors.background.primary,
-      paddingTop: Platform.OS === 'ios' ? 50 : StatusBar.currentHeight + 10,
+      paddingTop: Platform.OS === "ios" ? 50 : StatusBar.currentHeight + 10,
       paddingBottom: theme.spacing[4], // 16px
       paddingHorizontal: theme.spacing[4], // 16px
       borderBottomWidth: 1,
@@ -31,28 +32,28 @@ const FreudHeader = ({
       ...style,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       minHeight: 44, // Minimum touch target
     },
     leftSection: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       flex: 1,
     },
     rightSection: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: theme.spacing[2], // 8px
     },
     titleSection: {
       flex: 1,
-      alignItems: 'center',
+      alignItems: "center",
       paddingHorizontal: theme.spacing[4],
     },
     title: {
-      fontSize: theme.typography.sizes['2xl'], // 20px - matching Figma design
+      fontSize: theme.typography.sizes["2xl"], // 20px - matching Figma design
       fontWeight: theme.typography.weights.semiBold,
       color: theme.colors.primary[900], // Mindful Brown dark
       letterSpacing: -0.5,
@@ -68,9 +69,9 @@ const FreudHeader = ({
       width: 44,
       height: 44,
       borderRadius: theme.borderRadius.full,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'transparent',
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "transparent",
     },
     iconButtonPressed: {
       backgroundColor: theme.colors.gray[100],
@@ -124,7 +125,7 @@ const FreudHeader = ({
               />
             </TouchableOpacity>
           )}
-          
+
           {onMenuPress && (
             <TouchableOpacity
               style={styles.iconButton}

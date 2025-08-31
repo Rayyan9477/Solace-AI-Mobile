@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useMemo, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useEffect, useRef, useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -51,16 +51,16 @@ const DARK_LOADING_MESSAGES = [
 
 // Splash screen variants based on design reference
 export const DarkSplashVariants = {
-  LOGO: 'logo',           // Dark chocolate with logo
-  PROGRESS: 'progress',   // Dark chocolate with circular progress
-  QUOTE: 'quote',         // Orange background with quote
-  LOADING: 'loading',     // Green background with "Fetching Data..."
+  LOGO: "logo", // Dark chocolate with logo
+  PROGRESS: "progress", // Dark chocolate with circular progress
+  QUOTE: "quote", // Orange background with quote
+  LOADING: "loading", // Green background with "Fetching Data..."
 };
 
-const DarkSplashScreen = ({ 
-  variant = DarkSplashVariants.LOGO, 
+const DarkSplashScreen = ({
+  variant = DarkSplashVariants.LOGO,
   onComplete = () => {},
-  duration = 3000 
+  duration = 3000,
 }) => {
   const { isDarkMode } = useTheme();
   const [currentQuote] = useState(
@@ -69,7 +69,9 @@ const DarkSplashScreen = ({
         Math.floor(Math.random() * DARK_INSPIRATIONAL_QUOTES.length)
       ],
   );
-  const [currentMessage, setCurrentMessage] = useState(DARK_LOADING_MESSAGES[0]);
+  const [currentMessage, setCurrentMessage] = useState(
+    DARK_LOADING_MESSAGES[0],
+  );
   const [progress, setProgress] = useState(0);
 
   // Animation refs
@@ -84,57 +86,66 @@ const DarkSplashScreen = ({
     switch (variant) {
       case DarkSplashVariants.LOGO:
         return {
-          gradient: [freudDarkTheme.colors.background.primary, freudDarkTheme.colors.background.secondary],
+          gradient: [
+            freudDarkTheme.colors.background.primary,
+            freudDarkTheme.colors.background.secondary,
+          ],
           textColor: freudDarkTheme.colors.text.primary,
           logoColor: freudDarkTheme.colors.accent.primary,
           showLogo: true,
           showProgress: false,
           showQuote: false,
-          statusBarStyle: 'light-content',
+          statusBarStyle: "light-content",
         };
-      
+
       case DarkSplashVariants.PROGRESS:
         return {
-          gradient: [freudDarkTheme.colors.background.primary, freudDarkTheme.colors.background.secondary],
+          gradient: [
+            freudDarkTheme.colors.background.primary,
+            freudDarkTheme.colors.background.secondary,
+          ],
           textColor: freudDarkTheme.colors.text.primary,
           logoColor: freudDarkTheme.colors.accent.primary,
           showLogo: false,
           showProgress: true,
           showQuote: false,
-          statusBarStyle: 'light-content',
+          statusBarStyle: "light-content",
         };
-      
+
       case DarkSplashVariants.QUOTE:
         return {
-          gradient: ['#E67E22', '#F39C12'],  // Orange gradient from design
-          textColor: '#FFFFFF',
-          logoColor: '#FFFFFF',
+          gradient: ["#E67E22", "#F39C12"], // Orange gradient from design
+          textColor: "#FFFFFF",
+          logoColor: "#FFFFFF",
           showLogo: false,
           showProgress: false,
           showQuote: true,
-          statusBarStyle: 'light-content',
+          statusBarStyle: "light-content",
         };
-      
+
       case DarkSplashVariants.LOADING:
         return {
-          gradient: ['#8B9F6F', '#9CB079'],  // Green gradient from design
-          textColor: '#FFFFFF',
-          logoColor: '#FFFFFF',
+          gradient: ["#8B9F6F", "#9CB079"], // Green gradient from design
+          textColor: "#FFFFFF",
+          logoColor: "#FFFFFF",
           showLogo: false,
           showProgress: false,
           showQuote: false,
-          statusBarStyle: 'light-content',
+          statusBarStyle: "light-content",
         };
-      
+
       default:
         return {
-          gradient: [freudDarkTheme.colors.background.primary, freudDarkTheme.colors.background.secondary],
+          gradient: [
+            freudDarkTheme.colors.background.primary,
+            freudDarkTheme.colors.background.secondary,
+          ],
           textColor: freudDarkTheme.colors.text.primary,
           logoColor: freudDarkTheme.colors.accent.primary,
           showLogo: true,
           showProgress: false,
           showQuote: false,
-          statusBarStyle: 'light-content',
+          statusBarStyle: "light-content",
         };
     }
   };
@@ -176,12 +187,14 @@ const DarkSplashScreen = ({
 
   const circularProgressStyle = useMemo(
     () => ({
-      transform: [{
-        rotate: circularProgressAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: ['0deg', '360deg'],
-        }),
-      }],
+      transform: [
+        {
+          rotate: circularProgressAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: ["0deg", "360deg"],
+          }),
+        },
+      ],
     }),
     [circularProgressAnim],
   );
@@ -242,7 +255,9 @@ const DarkSplashScreen = ({
           (newProgress / 100) * DARK_LOADING_MESSAGES.length,
         );
         setCurrentMessage(
-          DARK_LOADING_MESSAGES[Math.min(messageIndex, DARK_LOADING_MESSAGES.length - 1)],
+          DARK_LOADING_MESSAGES[
+            Math.min(messageIndex, DARK_LOADING_MESSAGES.length - 1)
+          ],
         );
 
         return newProgress;
@@ -253,7 +268,7 @@ const DarkSplashScreen = ({
     if (variant !== DarkSplashVariants.PROGRESS) {
       Animated.timing(progressAnim, {
         toValue: 1,
-        duration: duration,
+        duration,
         useNativeDriver: false,
       }).start();
     }
@@ -279,15 +294,34 @@ const DarkSplashScreen = ({
       >
         {/* Main Content */}
         <View style={styles.contentContainer}>
-          
           {/* Logo Variant */}
           {config.showLogo && (
             <Animated.View style={[styles.logoContainer, logoContainerStyle]}>
               <View style={styles.logoGrid}>
-                <View style={[styles.logoCircle, { backgroundColor: config.logoColor }]} />
-                <View style={[styles.logoCircle, { backgroundColor: config.logoColor, opacity: 0.7 }]} />
-                <View style={[styles.logoCircle, { backgroundColor: config.logoColor, opacity: 0.5 }]} />
-                <View style={[styles.logoCircle, { backgroundColor: config.logoColor, opacity: 0.3 }]} />
+                <View
+                  style={[
+                    styles.logoCircle,
+                    { backgroundColor: config.logoColor },
+                  ]}
+                />
+                <View
+                  style={[
+                    styles.logoCircle,
+                    { backgroundColor: config.logoColor, opacity: 0.7 },
+                  ]}
+                />
+                <View
+                  style={[
+                    styles.logoCircle,
+                    { backgroundColor: config.logoColor, opacity: 0.5 },
+                  ]}
+                />
+                <View
+                  style={[
+                    styles.logoCircle,
+                    { backgroundColor: config.logoColor, opacity: 0.3 },
+                  ]}
+                />
               </View>
 
               <Animated.Text
@@ -304,9 +338,11 @@ const DarkSplashScreen = ({
 
           {/* Progress Variant - Circular Progress */}
           {config.showProgress && (
-            <Animated.View style={[styles.progressContainer, logoContainerStyle]}>
+            <Animated.View
+              style={[styles.progressContainer, logoContainerStyle]}
+            >
               <View style={styles.circularProgressContainer}>
-                <Animated.View 
+                <Animated.View
                   style={[styles.circularProgress, circularProgressStyle]}
                 >
                   {/* Create circular progress rings */}
@@ -314,9 +350,14 @@ const DarkSplashScreen = ({
                   <View style={[styles.progressRing, styles.middleRing]} />
                   <View style={[styles.progressRing, styles.innerRing]} />
                 </Animated.View>
-                
+
                 <View style={styles.progressCenter}>
-                  <Text style={[styles.progressPercentage, { color: config.textColor }]}>
+                  <Text
+                    style={[
+                      styles.progressPercentage,
+                      { color: config.textColor },
+                    ]}
+                  >
                     {Math.round(progress)}%
                   </Text>
                 </View>
@@ -327,24 +368,11 @@ const DarkSplashScreen = ({
           {/* Quote Variant */}
           {config.showQuote && (
             <Animated.View style={[styles.quoteContainer, quoteFadeStyle]}>
-              <FreudLogo 
-                size={48} 
-                primaryColor={config.logoColor} 
-              />
-              <Text
-                style={[
-                  styles.quoteText,
-                  { color: config.textColor },
-                ]}
-              >
+              <FreudLogo size={48} primaryColor={config.logoColor} />
+              <Text style={[styles.quoteText, { color: config.textColor }]}>
                 "{currentQuote.text}"
               </Text>
-              <Text
-                style={[
-                  styles.quoteAuthor,
-                  { color: config.textColor },
-                ]}
-              >
+              <Text style={[styles.quoteAuthor, { color: config.textColor }]}>
                 — {currentQuote.author}
               </Text>
             </Animated.View>
@@ -353,76 +381,75 @@ const DarkSplashScreen = ({
           {/* Loading Variant */}
           {variant === DarkSplashVariants.LOADING && (
             <Animated.View style={[styles.loadingContainer, fadeStyle]}>
-              <Text
-                style={[
-                  styles.loadingTitle,
-                  { color: config.textColor },
-                ]}
-              >
+              <Text style={[styles.loadingTitle, { color: config.textColor }]}>
                 Fetching Data...
               </Text>
               <Text
-                style={[
-                  styles.loadingSubtitle,
-                  { color: config.textColor },
-                ]}
+                style={[styles.loadingSubtitle, { color: config.textColor }]}
               >
                 🔗 Shake screen to interact!
               </Text>
-              
+
               {/* Animated dots loading indicator */}
               <View style={styles.dotsContainer}>
-                <View style={[styles.dot, { backgroundColor: config.textColor }]} />
-                <View style={[styles.dot, { backgroundColor: config.textColor }]} />
-                <View style={[styles.dot, { backgroundColor: config.textColor }]} />
+                <View
+                  style={[styles.dot, { backgroundColor: config.textColor }]}
+                />
+                <View
+                  style={[styles.dot, { backgroundColor: config.textColor }]}
+                />
+                <View
+                  style={[styles.dot, { backgroundColor: config.textColor }]}
+                />
               </View>
             </Animated.View>
           )}
 
           {/* Standard Loading with Progress Bar */}
-          {!config.showQuote && !config.showProgress && variant !== DarkSplashVariants.LOADING && (
-            <Animated.View style={[styles.standardLoadingContainer, fadeStyle]}>
-              <Text
-                style={[
-                  styles.loadingText,
-                  { color: config.textColor },
-                ]}
+          {!config.showQuote &&
+            !config.showProgress &&
+            variant !== DarkSplashVariants.LOADING && (
+              <Animated.View
+                style={[styles.standardLoadingContainer, fadeStyle]}
               >
-                {currentMessage}
-              </Text>
+                <Text style={[styles.loadingText, { color: config.textColor }]}>
+                  {currentMessage}
+                </Text>
 
-              <View
-                style={[
-                  styles.progressBarContainer,
-                  {
-                    backgroundColor: `${config.textColor}20`,
-                  },
-                ]}
-              >
-                <Animated.View
+                <View
                   style={[
-                    styles.progressBar,
-                    progressBarStyle,
-                    { backgroundColor: config.logoColor },
+                    styles.progressBarContainer,
+                    {
+                      backgroundColor: `${config.textColor}20`,
+                    },
                   ]}
-                />
-              </View>
+                >
+                  <Animated.View
+                    style={[
+                      styles.progressBar,
+                      progressBarStyle,
+                      { backgroundColor: config.logoColor },
+                    ]}
+                  />
+                </View>
 
-              <Text
-                style={[
-                  styles.progressText,
-                  { color: config.textColor },
-                ]}
-              >
-                {Math.round(progress)}%
-              </Text>
-            </Animated.View>
-          )}
+                <Text
+                  style={[styles.progressText, { color: config.textColor }]}
+                >
+                  {Math.round(progress)}%
+                </Text>
+              </Animated.View>
+            )}
         </View>
 
         {/* Bottom Indicator */}
         <Animated.View style={[styles.bottomContainer, fadeStyle]}>
-          <View style={[styles.homeIndicator, { backgroundColor: `${config.textColor}40` }]} />
+          <View
+            style={[
+              styles.homeIndicator,
+              { backgroundColor: `${config.textColor}40` },
+            ]}
+          />
         </Animated.View>
       </LinearGradient>
     </View>
@@ -439,7 +466,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: freudDarkTheme.spacing[6],
   },
-  
+
   // Logo variant styles
   logoContainer: {
     alignItems: "center",

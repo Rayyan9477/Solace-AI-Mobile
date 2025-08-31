@@ -1,29 +1,30 @@
-import React, { useState, useRef } from 'react';
-import { 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  StyleSheet, 
-  Animated, 
+import React, { useState, useRef } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
   ScrollView,
   Modal,
-  Dimensions 
-} from 'react-native';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { MentalHealthIcon } from '../icons';
+  Dimensions,
+} from "react-native";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { MentalHealthIcon } from "../icons";
 
-const Dropdown = ({ 
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
+
+const Dropdown = ({
   options = [],
   selectedValue = null,
   onSelect = () => {},
-  placeholder = 'Select an option',
-  label = '',
+  placeholder = "Select an option",
+  label = "",
   disabled = false,
-  variant = 'default',
+  variant = "default",
   accessibilityLabel,
-  accessibilityHint
+  accessibilityHint,
 }) => {
   const { theme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
@@ -33,22 +34,22 @@ const Dropdown = ({
 
   const toggleDropdown = () => {
     if (disabled) return;
-    
+
     const toValue = isOpen ? 0 : 1;
-    
+
     if (!isOpen) {
       // Measure button position for dropdown placement
       dropdownButton.current?.measure((fx, fy, width, height, px, py) => {
         setDropdownTop(py + height);
       });
     }
-    
+
     Animated.timing(rotateAnim, {
       toValue,
       duration: 200,
       useNativeDriver: true,
     }).start();
-    
+
     setIsOpen(!isOpen);
   };
 
@@ -59,20 +60,27 @@ const Dropdown = ({
 
   const getTherapeuticColor = () => {
     switch (variant) {
-      case 'calming': return theme.colors.therapeutic.calming[500];
-      case 'nurturing': return theme.colors.therapeutic.nurturing[500];
-      case 'peaceful': return theme.colors.therapeutic.peaceful[500];
-      case 'grounding': return theme.colors.therapeutic.grounding[500];
-      default: return theme.colors.primary[500];
+      case "calming":
+        return theme.colors.therapeutic.calming[500];
+      case "nurturing":
+        return theme.colors.therapeutic.nurturing[500];
+      case "peaceful":
+        return theme.colors.therapeutic.peaceful[500];
+      case "grounding":
+        return theme.colors.therapeutic.grounding[500];
+      default:
+        return theme.colors.primary[500];
     }
   };
 
   const therapeuticColor = getTherapeuticColor();
-  const selectedOption = options.find(option => option.value === selectedValue);
+  const selectedOption = options.find(
+    (option) => option.value === selectedValue,
+  );
 
   const rotateInterpolate = rotateAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '180deg']
+    outputRange: ["0deg", "180deg"],
   });
 
   return (
@@ -82,38 +90,44 @@ const Dropdown = ({
           {label}
         </Text>
       )}
-      
+
       <TouchableOpacity
         ref={dropdownButton}
         style={[
           styles.dropdownButton,
           {
             backgroundColor: theme.colors.background.input,
-            borderColor: isOpen ? therapeuticColor : theme.colors.border.primary,
+            borderColor: isOpen
+              ? therapeuticColor
+              : theme.colors.border.primary,
             opacity: disabled ? 0.5 : 1,
-          }
+          },
         ]}
         onPress={toggleDropdown}
         disabled={disabled}
         accessibilityRole="combobox"
         accessibilityState={{ expanded: isOpen }}
         accessibilityLabel={accessibilityLabel || label}
-        accessibilityHint={accessibilityHint || 'Double tap to open dropdown menu'}
+        accessibilityHint={
+          accessibilityHint || "Double tap to open dropdown menu"
+        }
       >
-        <Text 
+        <Text
           style={[
             styles.dropdownButtonText,
-            { 
-              color: selectedOption ? theme.colors.text.primary : theme.colors.text.placeholder 
-            }
+            {
+              color: selectedOption
+                ? theme.colors.text.primary
+                : theme.colors.text.placeholder,
+            },
           ]}
         >
           {selectedOption ? selectedOption.label : placeholder}
         </Text>
-        
+
         <Animated.View
           style={{
-            transform: [{ rotate: rotateInterpolate }]
+            transform: [{ rotate: rotateInterpolate }],
           }}
         >
           <MentalHealthIcon
@@ -127,16 +141,16 @@ const Dropdown = ({
 
       <Modal
         visible={isOpen}
-        transparent={true}
+        transparent
         animationType="fade"
         onRequestClose={toggleDropdown}
       >
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={toggleDropdown}
         >
-          <View 
+          <View
             style={[
               styles.dropdownContainer,
               {
@@ -144,13 +158,13 @@ const Dropdown = ({
                 borderColor: theme.colors.border.primary,
                 top: Math.min(dropdownTop, screenHeight - 300),
                 maxHeight: Math.min(250, screenHeight - dropdownTop - 50),
-              }
+              },
             ]}
           >
             <ScrollView
               style={styles.optionsContainer}
-              showsVerticalScrollIndicator={true}
-              nestedScrollEnabled={true}
+              showsVerticalScrollIndicator
+              nestedScrollEnabled
             >
               {options.map((option, index) => (
                 <TouchableOpacity
@@ -158,30 +172,35 @@ const Dropdown = ({
                   style={[
                     styles.option,
                     {
-                      backgroundColor: selectedValue === option.value 
-                        ? therapeuticColor + '20' 
-                        : 'transparent',
+                      backgroundColor:
+                        selectedValue === option.value
+                          ? therapeuticColor + "20"
+                          : "transparent",
                       borderBottomColor: theme.colors.border.secondary,
-                    }
+                    },
                   ]}
                   onPress={() => selectOption(option)}
                   accessibilityRole="option"
-                  accessibilityState={{ selected: selectedValue === option.value }}
+                  accessibilityState={{
+                    selected: selectedValue === option.value,
+                  }}
                 >
-                  <Text 
+                  <Text
                     style={[
                       styles.optionText,
-                      { 
-                        color: selectedValue === option.value 
-                          ? therapeuticColor 
-                          : theme.colors.text.primary,
-                        fontWeight: selectedValue === option.value ? '600' : '400',
-                      }
+                      {
+                        color:
+                          selectedValue === option.value
+                            ? therapeuticColor
+                            : theme.colors.text.primary,
+                        fontWeight:
+                          selectedValue === option.value ? "600" : "400",
+                      },
                     ]}
                   >
                     {option.label}
                   </Text>
-                  
+
                   {selectedValue === option.value && (
                     <MentalHealthIcon
                       name="Heart"
@@ -206,13 +225,13 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 6,
   },
   dropdownButton: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 8,
@@ -225,15 +244,15 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
   },
   dropdownContainer: {
-    position: 'absolute',
+    position: "absolute",
     left: 16,
     right: 16,
     borderRadius: 8,
     borderWidth: 1,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -243,9 +262,9 @@ const styles = StyleSheet.create({
     maxHeight: 200,
   },
   option: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,

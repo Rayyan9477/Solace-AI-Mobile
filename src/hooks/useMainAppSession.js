@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { BackHandler, Alert, Linking } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { BackHandler, Alert, Linking } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 
 /**
  * Custom hook for managing main app screen session logic
@@ -12,11 +12,11 @@ export const useMainAppSession = () => {
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
-  const [currentSection, setCurrentSection] = useState('dashboard');
+  const [currentSection, setCurrentSection] = useState("dashboard");
 
   // Redux state selectors with fallbacks
   const { user, mood, chat, loading } = useSelector((state) => ({
-    user: state.user || { profile: { name: 'Friend' }, stats: {} },
+    user: state.user || { profile: { name: "Friend" }, stats: {} },
     mood: state.mood || {
       currentMood: null,
       insights: [],
@@ -37,17 +37,17 @@ export const useMainAppSession = () => {
       // await dispatch(fetchUserData());
       // await dispatch(fetchMoodData());
     } catch (error) {
-      console.error('Failed to fetch app data:', error);
+      console.error("Failed to fetch app data:", error);
       setError(
-        'Unable to load app data. Please check your connection and try again.'
+        "Unable to load app data. Please check your connection and try again.",
       );
       Alert.alert(
-        'Data Load Error',
+        "Data Load Error",
         "We couldn't load your app data. Please check your internet connection and try again.",
         [
-          { text: 'Retry', onPress: () => fetchData() },
-          { text: 'OK', style: 'cancel' },
-        ]
+          { text: "Retry", onPress: () => fetchData() },
+          { text: "OK", style: "cancel" },
+        ],
       );
     }
   }, [dispatch]);
@@ -73,14 +73,14 @@ export const useMainAppSession = () => {
   // Back handler for Android
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
+      "hardwareBackPress",
       () => {
         if (navigation.canGoBack()) {
           navigation.goBack();
           return true;
         }
         return false;
-      }
+      },
     );
 
     return () => backHandler.remove();
@@ -89,19 +89,19 @@ export const useMainAppSession = () => {
   // Computed values
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
   }, []);
 
   const moodHistorySlice = useMemo(
     () => mood?.moodHistory?.slice(0, 3) || [],
-    [mood.moodHistory]
+    [mood.moodHistory],
   );
 
   const chatHistorySlice = useMemo(
     () => chat?.conversations?.slice(0, 2) || [],
-    [chat.conversations]
+    [chat.conversations],
   );
 
   return {
@@ -110,7 +110,7 @@ export const useMainAppSession = () => {
     error,
     currentSection,
     loading,
-    
+
     // Data
     user,
     mood,
@@ -118,7 +118,7 @@ export const useMainAppSession = () => {
     greeting,
     moodHistorySlice,
     chatHistorySlice,
-    
+
     // Actions
     handleRefresh,
     setCurrentSection,
@@ -133,19 +133,19 @@ export const useMainAppNavigation = () => {
   const navigation = useNavigation();
 
   const handleMoodCheckIn = useCallback(() => {
-    navigation.navigate('Mood');
+    navigation.navigate("Mood");
   }, [navigation]);
 
   const handleStartChat = useCallback(() => {
-    navigation.navigate('Chat');
+    navigation.navigate("Chat");
   }, [navigation]);
 
   const handleTakeAssessment = useCallback(() => {
-    navigation.navigate('Assessment');
+    navigation.navigate("Assessment");
   }, [navigation]);
 
   const handleViewProfile = useCallback(() => {
-    navigation.navigate('Profile');
+    navigation.navigate("Profile");
   }, [navigation]);
 
   return {
@@ -162,59 +162,59 @@ export const useMainAppNavigation = () => {
 export const useEmergencySupport = () => {
   const showEmergencyAlert = useCallback(() => {
     Alert.alert(
-      'Emergency Resources',
-      'If you are experiencing a mental health crisis, please contact:\n\n• National Suicide Prevention Lifeline: 988\n• Crisis Text Line: Text HOME to 741741\n• Or call 911 for immediate assistance',
+      "Emergency Resources",
+      "If you are experiencing a mental health crisis, please contact:\n\n• National Suicide Prevention Lifeline: 988\n• Crisis Text Line: Text HOME to 741741\n• Or call 911 for immediate assistance",
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: "Cancel", style: "cancel" },
         {
-          text: 'Call 988',
+          text: "Call 988",
           onPress: async () => {
             try {
-              const supported = await Linking.canOpenURL('tel:988');
+              const supported = await Linking.canOpenURL("tel:988");
               if (supported) {
-                await Linking.openURL('tel:988');
+                await Linking.openURL("tel:988");
               } else {
                 Alert.alert(
-                  'Unable to Call',
-                  'Your device cannot make phone calls. Please dial 988 manually or contact emergency services.',
-                  [{ text: 'OK' }]
+                  "Unable to Call",
+                  "Your device cannot make phone calls. Please dial 988 manually or contact emergency services.",
+                  [{ text: "OK" }],
                 );
               }
             } catch (error) {
-              console.error('Error making emergency call:', error);
+              console.error("Error making emergency call:", error);
               Alert.alert(
-                'Call Error',
-                'Unable to place call. Please dial 988 manually for immediate assistance.',
-                [{ text: 'OK' }]
+                "Call Error",
+                "Unable to place call. Please dial 988 manually for immediate assistance.",
+                [{ text: "OK" }],
               );
             }
           },
         },
         {
-          text: 'Text Crisis Line',
+          text: "Text Crisis Line",
           onPress: async () => {
             try {
-              const supported = await Linking.canOpenURL('sms:741741');
+              const supported = await Linking.canOpenURL("sms:741741");
               if (supported) {
-                await Linking.openURL('sms:741741?body=HOME');
+                await Linking.openURL("sms:741741?body=HOME");
               } else {
                 Alert.alert(
-                  'Unable to Text',
-                  'Your device cannot send text messages. Please text HOME to 741741 manually.',
-                  [{ text: 'OK' }]
+                  "Unable to Text",
+                  "Your device cannot send text messages. Please text HOME to 741741 manually.",
+                  [{ text: "OK" }],
                 );
               }
             } catch (error) {
-              console.error('Error opening text messaging:', error);
+              console.error("Error opening text messaging:", error);
               Alert.alert(
-                'Text Error',
-                'Unable to open messaging. Please text HOME to 741741 manually.',
-                [{ text: 'OK' }]
+                "Text Error",
+                "Unable to open messaging. Please text HOME to 741741 manually.",
+                [{ text: "OK" }],
               );
             }
           },
         },
-      ]
+      ],
     );
   }, []);
 

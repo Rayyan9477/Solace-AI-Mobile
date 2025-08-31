@@ -3,7 +3,12 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 import { useTheme } from "../../shared/theme/ThemeContext";
-import { colors, typography, spacing, borderRadius } from "../../shared/theme/theme";
+import {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+} from "../../shared/theme/theme";
 import {
   createSliderAccessibility,
   announceForAccessibility,

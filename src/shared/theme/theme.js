@@ -167,7 +167,7 @@ export const colors = {
       900: "#2E2500", // Yellow 100 - Darkest (exact Figma)
     },
 
-    // Kind Purple - For wisdom and spirituality (exact Figma match)  
+    // Kind Purple - For wisdom and spirituality (exact Figma match)
     kind: {
       50: "#F4F0FF", // Purple 10 - Very light (exact Figma)
       100: "#E9DEFF", // Purple 20 - Light
@@ -196,7 +196,7 @@ export const colors = {
     },
 
     // Additional therapeutic colors referenced by components
-    // Calming Blues - For peace and tranquility  
+    // Calming Blues - For peace and tranquility
     calming: {
       50: "#F0F9FF", // Very light blue
       100: "#E0F2FE", // Light blue

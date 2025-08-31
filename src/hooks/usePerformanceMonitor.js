@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { AppState, DeviceEventEmitter } from 'react-native';
+import { useEffect, useRef, useState, useCallback } from "react";
+import { AppState, DeviceEventEmitter } from "react-native";
 
 /**
  * Performance monitoring hook for React Native applications
@@ -26,8 +26,8 @@ export const usePerformanceMonitor = (componentName) => {
   const endRenderTimer = useCallback(() => {
     if (renderStartTime.current) {
       const renderTime = performance.now() - renderStartTime.current;
-      
-      setPerformanceMetrics(prev => ({
+
+      setPerformanceMetrics((prev) => ({
         ...prev,
         renderTime,
         renderCount: renderCount.current,
@@ -37,7 +37,7 @@ export const usePerformanceMonitor = (componentName) => {
       // Log slow renders in development
       if (__DEV__ && renderTime > 16.67) {
         console.warn(
-          `🐌 Slow render detected in ${componentName}: ${renderTime.toFixed(2)}ms`
+          `🐌 Slow render detected in ${componentName}: ${renderTime.toFixed(2)}ms`,
         );
       }
 
@@ -63,7 +63,7 @@ export const usePerformanceMonitor = (componentName) => {
       setMemoryInfo(mockMemoryInfo);
     } catch (error) {
       if (__DEV__) {
-        console.warn('Memory monitoring unavailable:', error);
+        console.warn("Memory monitoring unavailable:", error);
       }
     }
   }, []);
@@ -72,7 +72,7 @@ export const usePerformanceMonitor = (componentName) => {
   useEffect(() => {
     mountTime.current = performance.now();
     startRenderTimer();
-    
+
     return () => {
       const totalMountTime = performance.now() - mountTime.current;
       if (__DEV__) {
@@ -80,7 +80,7 @@ export const usePerformanceMonitor = (componentName) => {
           `📊 Component ${componentName} performance:
           - Mount time: ${totalMountTime.toFixed(2)}ms
           - Total renders: ${renderCount.current}
-          - Last render: ${performanceMetrics.renderTime.toFixed(2)}ms`
+          - Last render: ${performanceMetrics.renderTime.toFixed(2)}ms`,
         );
       }
     };
@@ -95,7 +95,7 @@ export const usePerformanceMonitor = (componentName) => {
   useEffect(() => {
     checkMemoryUsage();
     const memoryInterval = setInterval(checkMemoryUsage, 10000); // Check every 10s
-    
+
     return () => clearInterval(memoryInterval);
   }, [checkMemoryUsage]);
 
@@ -138,15 +138,15 @@ export const useMemoryLeakDetector = (componentName) => {
   // Cleanup all registered resources
   const cleanup = useCallback(() => {
     // Clear timers
-    timers.current.forEach(timerId => {
+    timers.current.forEach((timerId) => {
       clearTimeout(timerId);
       clearInterval(timerId);
     });
     timers.current.clear();
 
     // Remove listeners
-    listeners.current.forEach(listener => {
-      if (listener && typeof listener.remove === 'function') {
+    listeners.current.forEach((listener) => {
+      if (listener && typeof listener.remove === "function") {
         listener.remove();
       }
     });
@@ -182,21 +182,24 @@ export const useBundlePerformance = (bundleName) => {
     cached: false,
   });
 
-  const trackBundleLoad = useCallback((startTime, endTime, size = 0) => {
-    const loadTime = endTime - startTime;
-    
-    setBundleMetrics({
-      loadTime,
-      size,
-      cached: loadTime < 50, // Assume cached if very fast
-    });
+  const trackBundleLoad = useCallback(
+    (startTime, endTime, size = 0) => {
+      const loadTime = endTime - startTime;
 
-    if (__DEV__) {
-      console.log(
-        `📦 Bundle ${bundleName} loaded: ${loadTime.toFixed(2)}ms (${size > 0 ? `${(size / 1024).toFixed(2)}KB` : 'unknown size'})`
-      );
-    }
-  }, [bundleName]);
+      setBundleMetrics({
+        loadTime,
+        size,
+        cached: loadTime < 50, // Assume cached if very fast
+      });
+
+      if (__DEV__) {
+        console.log(
+          `📦 Bundle ${bundleName} loaded: ${loadTime.toFixed(2)}ms (${size > 0 ? `${(size / 1024).toFixed(2)}KB` : "unknown size"})`,
+        );
+      }
+    },
+    [bundleName],
+  );
 
   return {
     bundleMetrics,
@@ -215,15 +218,18 @@ export const useFrameRateMonitor = () => {
   const measureFrameRate = useCallback(() => {
     const currentTime = performance.now();
     const deltaTime = currentTime - lastFrameTime.current;
-    
-    if (deltaTime >= 1000) { // Update every second
-      const currentFrameRate = Math.round((frameCount.current * 1000) / deltaTime);
+
+    if (deltaTime >= 1000) {
+      // Update every second
+      const currentFrameRate = Math.round(
+        (frameCount.current * 1000) / deltaTime,
+      );
       setFrameRate(currentFrameRate);
-      
+
       if (__DEV__ && currentFrameRate < 55) {
         console.warn(`📉 Low frame rate detected: ${currentFrameRate}fps`);
       }
-      
+
       frameCount.current = 0;
       lastFrameTime.current = currentTime;
     } else {
@@ -236,9 +242,9 @@ export const useFrameRateMonitor = () => {
       measureFrameRate();
       requestAnimationFrame(animation);
     };
-    
+
     const animationId = requestAnimationFrame(animation);
-    
+
     return () => cancelAnimationFrame(animationId);
   }, [measureFrameRate]);
 
@@ -255,22 +261,25 @@ export const useNetworkPerformance = () => {
     requests: 0,
   });
 
-  const trackNetworkRequest = useCallback((url, startTime, endTime, size = 0) => {
-    const latency = endTime - startTime;
-    const bandwidth = size > 0 ? (size * 8) / (latency / 1000) : 0; // bits per second
-    
-    setNetworkMetrics(prev => ({
-      latency,
-      bandwidth,
-      requests: prev.requests + 1,
-    }));
+  const trackNetworkRequest = useCallback(
+    (url, startTime, endTime, size = 0) => {
+      const latency = endTime - startTime;
+      const bandwidth = size > 0 ? (size * 8) / (latency / 1000) : 0; // bits per second
 
-    if (__DEV__) {
-      console.log(
-        `🌐 Network request to ${url}: ${latency.toFixed(2)}ms${bandwidth > 0 ? ` (${(bandwidth / 1000000).toFixed(2)} Mbps)` : ''}`
-      );
-    }
-  }, []);
+      setNetworkMetrics((prev) => ({
+        latency,
+        bandwidth,
+        requests: prev.requests + 1,
+      }));
+
+      if (__DEV__) {
+        console.log(
+          `🌐 Network request to ${url}: ${latency.toFixed(2)}ms${bandwidth > 0 ? ` (${(bandwidth / 1000000).toFixed(2)} Mbps)` : ""}`,
+        );
+      }
+    },
+    [],
+  );
 
   return {
     networkMetrics,
@@ -285,17 +294,19 @@ export const useNetworkPerformance = () => {
 export const useRenderOptimization = (dependencies = []) => {
   const renderCount = useRef(0);
   const lastRenderTime = useRef(performance.now());
-  
+
   // Track unnecessary renders
   useEffect(() => {
     renderCount.current++;
     const now = performance.now();
     const timeSinceLastRender = now - lastRenderTime.current;
-    
+
     if (__DEV__ && timeSinceLastRender < 16 && renderCount.current > 1) {
-      console.warn(`⚡ Potential unnecessary render (${timeSinceLastRender.toFixed(2)}ms since last)`);
+      console.warn(
+        `⚡ Potential unnecessary render (${timeSinceLastRender.toFixed(2)}ms since last)`,
+      );
     }
-    
+
     lastRenderTime.current = now;
   });
 

@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 import apiService from "../../services/api";
 
 // Async thunk for updating user profile
@@ -10,11 +11,11 @@ export const updateUserProfile = createAsyncThunk(
       const updatedProfile = await apiService.user.updateProfile(profileData);
       return updatedProfile;
     } catch (error) {
-      console.error('Profile update error:', error);
+      console.error("Profile update error:", error);
       return rejectWithValue(
-        error.response?.data?.message || 
-        error.message || 
-        'Failed to update profile. Please try again.'
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to update profile. Please try again.",
       );
     }
   },
@@ -29,11 +30,11 @@ export const fetchUserStats = createAsyncThunk(
       const userStats = await apiService.user.getStats();
       return userStats;
     } catch (error) {
-      console.error('User stats fetch error:', error);
+      console.error("User stats fetch error:", error);
       return rejectWithValue(
-        error.response?.data?.message || 
-        error.message || 
-        'Failed to fetch user statistics. Please try again.'
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to fetch user statistics. Please try again.",
       );
     }
   },

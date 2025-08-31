@@ -1,6 +1,6 @@
 /**
  * Enhanced Accessible Button Component
- * 
+ *
  * Fully WCAG 2.1 AA compliant button component with:
  * - Proper touch target sizing (2.5.5 Target Size)
  * - Enhanced focus indicators (2.4.7 Focus Visible)
@@ -10,9 +10,9 @@
  * - Motion preferences support (2.3.3 Animation from Interactions)
  */
 
-import * as Haptics from 'expo-haptics';
-import PropTypes from 'prop-types';
-import React, { useState, useRef, useEffect } from 'react';
+import * as Haptics from "expo-haptics";
+import PropTypes from "prop-types";
+import React, { useState, useRef, useEffect } from "react";
 import {
   TouchableOpacity,
   Text,
@@ -21,26 +21,26 @@ import {
   Animated,
   View,
   AccessibilityInfo,
-} from 'react-native';
+} from "react-native";
 
-import { useTheme } from '../../shared/theme/ThemeContext';
+import { useTheme } from "../../shared/theme/ThemeContext";
 import {
   TouchTargetHelpers,
   WCAG_CONSTANTS,
   FocusManagement,
   AccessibilityValidators,
   AccessibilityRoles,
-} from '../../utils/accessibility';
+} from "../../utils/accessibility";
 
 const AccessibleButton = ({
   onPress,
   title,
-  variant = 'primary',
-  size = 'medium',
+  variant = "primary",
+  size = "medium",
   disabled = false,
   loading = false,
   icon,
-  iconPosition = 'left',
+  iconPosition = "left",
   accessibilityLabel,
   accessibilityHint,
   accessibilityRole = AccessibilityRoles.BUTTON,
@@ -84,41 +84,42 @@ const AccessibleButton = ({
 
     // Validate accessibility label
     const labelValidation = AccessibilityValidators.validateAccessibilityLabel(
-      accessibilityLabel || title
+      accessibilityLabel || title,
     );
     if (!labelValidation.hasLabel) {
-      errors.push('Missing accessibility label');
+      errors.push("Missing accessibility label");
     }
     if (labelValidation.isTooShort) {
-      errors.push('Accessibility label too short (minimum 3 characters)');
+      errors.push("Accessibility label too short (minimum 3 characters)");
     }
 
     // Validate touch target size
     const sizeStyle = getSizeStyles();
     const touchValidation = AccessibilityValidators.validateTouchTarget(
       sizeStyle.minWidth || WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
-      sizeStyle.minHeight || WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE
+      sizeStyle.minHeight || WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
     );
     if (!touchValidation.isValid) {
-      errors.push(`Touch target too small: ${touchValidation.width}x${touchValidation.height}px (minimum: ${touchValidation.minSize}px)`);
+      errors.push(
+        `Touch target too small: ${touchValidation.width}x${touchValidation.height}px (minimum: ${touchValidation.minSize}px)`,
+      );
     }
 
     setAccessibilityErrors(errors);
 
     if (errors.length > 0 && __DEV__) {
-      console.warn('AccessibleButton accessibility issues:', errors);
+      console.warn("AccessibleButton accessibility issues:", errors);
     }
   };
 
   // Enhanced touch target sizing with WCAG compliance
-  const { style: touchTargetStyle, hitSlop } = TouchTargetHelpers.ensureMinimumTouchTarget(
-    getSizeStyles()
-  );
+  const { style: touchTargetStyle, hitSlop } =
+    TouchTargetHelpers.ensureMinimumTouchTarget(getSizeStyles());
 
   // Animation handlers with motion preferences
   const handlePressIn = () => {
     setIsPressed(true);
-    
+
     const shouldAnimate = !isReducedMotionEnabled && !reducedMotion;
     if (shouldAnimate) {
       Animated.timing(scaleValue, {
@@ -131,7 +132,7 @@ const AccessibleButton = ({
 
   const handlePressOut = () => {
     setIsPressed(false);
-    
+
     const shouldAnimate = !isReducedMotionEnabled && !reducedMotion;
     if (shouldAnimate) {
       Animated.timing(scaleValue, {
@@ -156,7 +157,7 @@ const AccessibleButton = ({
       // Announce action for screen readers
       FocusManagement.announceForScreenReader(
         `${title} button activated`,
-        'assertive'
+        "assertive",
       );
     }
   };
@@ -169,7 +170,7 @@ const AccessibleButton = ({
     // Announce focus for screen readers
     FocusManagement.announceForScreenReader(
       `Focused on ${accessibilityLabel || title}`,
-      'polite'
+      "polite",
     );
   };
 
@@ -190,13 +191,13 @@ const AccessibleButton = ({
         borderColor: theme.colors.secondary[600],
       },
       outline: {
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
         borderColor: theme.colors.primary[500],
         borderWidth: 2,
       },
       text: {
-        backgroundColor: 'transparent',
-        borderColor: 'transparent',
+        backgroundColor: "transparent",
+        borderColor: "transparent",
         elevation: 0,
         shadowOpacity: 0,
       },
@@ -249,7 +250,7 @@ const AccessibleButton = ({
   function getTextStyles() {
     let color = theme.colors.text.inverse;
 
-    if (variant === 'outline' || variant === 'text') {
+    if (variant === "outline" || variant === "text") {
       color = theme.colors.primary[500];
     }
 
@@ -260,9 +261,9 @@ const AccessibleButton = ({
 
     return {
       color,
-      fontSize: size === 'small' ? 14 : size === 'large' ? 18 : 16,
-      fontWeight: '600',
-      textAlign: 'center',
+      fontSize: size === "small" ? 14 : size === "large" ? 18 : 16,
+      fontWeight: "600",
+      textAlign: "center",
     };
   }
 
@@ -272,8 +273,8 @@ const AccessibleButton = ({
 
     return {
       borderWidth: WCAG_CONSTANTS.FOCUS_OUTLINE_WIDTH,
-      borderColor: theme.colors.focus || '#0066cc',
-      shadowColor: theme.colors.focus || '#0066cc',
+      borderColor: theme.colors.focus || "#0066cc",
+      shadowColor: theme.colors.focus || "#0066cc",
       shadowOffset: { width: 0, height: 0 },
       shadowOpacity: 0.4,
       shadowRadius: 4,
@@ -286,12 +287,12 @@ const AccessibleButton = ({
     if (loading) {
       return (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator 
-            size="small" 
+          <ActivityIndicator
+            size="small"
             color={getTextStyles().color}
             accessibilityLabel="Loading"
           />
-          <Text 
+          <Text
             style={[styles.loadingText, getTextStyles()]}
             accessibilityLabel="Button is loading"
           >
@@ -303,18 +304,16 @@ const AccessibleButton = ({
 
     return (
       <View style={styles.contentContainer}>
-        {icon && iconPosition === 'left' && (
-          <View style={styles.iconLeft} accessibilityElementsHidden={true}>
+        {icon && iconPosition === "left" && (
+          <View style={styles.iconLeft} accessibilityElementsHidden>
             {icon}
           </View>
         )}
-        
-        <Text style={[styles.text, getTextStyles()]}>
-          {children || title}
-        </Text>
-        
-        {icon && iconPosition === 'right' && (
-          <View style={styles.iconRight} accessibilityElementsHidden={true}>
+
+        <Text style={[styles.text, getTextStyles()]}>{children || title}</Text>
+
+        {icon && iconPosition === "right" && (
+          <View style={styles.iconRight} accessibilityElementsHidden>
             {icon}
           </View>
         )}
@@ -341,12 +340,12 @@ const AccessibleButton = ({
         isPressed && styles.pressed,
       ]}
       // Enhanced accessibility props
-      accessible={true}
+      accessible
       accessibilityRole={accessibilityRole}
       accessibilityLabel={accessibilityLabel || title}
       accessibilityHint={
-        accessibilityHint || 
-        (disabled ? 'Button is disabled' : 'Double tap to activate')
+        accessibilityHint ||
+        (disabled ? "Button is disabled" : "Double tap to activate")
       }
       accessibilityState={{
         disabled: disabled || loading,
@@ -358,20 +357,26 @@ const AccessibleButton = ({
       focusable={!disabled}
       autoFocus={autoFocus}
       onAccessibilityTap={handlePress}
-      testID={testID || `accessible-button-${title?.toLowerCase().replace(/\s+/g, '-')}`}
+      testID={
+        testID ||
+        `accessible-button-${title?.toLowerCase().replace(/\s+/g, "-")}`
+      }
       // Accessibility error reporting in dev mode
       onAccessibilityAction={(event) => {
         if (__DEV__ && accessibilityErrors.length > 0) {
-          console.warn('AccessibleButton has accessibility issues:', accessibilityErrors);
+          console.warn(
+            "AccessibleButton has accessibility issues:",
+            accessibilityErrors,
+          );
         }
       }}
     >
-      <Animated.View 
-        style={{ 
+      <Animated.View
+        style={{
           transform: [{ scale: scaleValue }],
           flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         {renderContent()}
@@ -382,9 +387,9 @@ const AccessibleButton = ({
 
 const styles = StyleSheet.create({
   button: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 1,
     elevation: 2,
     shadowOffset: { width: 0, height: 2 },
@@ -393,20 +398,20 @@ const styles = StyleSheet.create({
   },
   disabled: {
     opacity: 0.6,
-    backgroundColor: '#cccccc',
+    backgroundColor: "#cccccc",
   },
   pressed: {
     opacity: 0.8,
   },
   contentContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     flex: 1,
   },
   text: {
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
   },
   iconLeft: {
     marginRight: 8,
@@ -415,9 +420,9 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   loadingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   loadingText: {
     marginLeft: 8,
@@ -427,12 +432,12 @@ const styles = StyleSheet.create({
 AccessibleButton.propTypes = {
   onPress: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  variant: PropTypes.oneOf(['primary', 'secondary', 'outline', 'text']),
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  variant: PropTypes.oneOf(["primary", "secondary", "outline", "text"]),
+  size: PropTypes.oneOf(["small", "medium", "large"]),
   disabled: PropTypes.bool,
   loading: PropTypes.bool,
   icon: PropTypes.node,
-  iconPosition: PropTypes.oneOf(['left', 'right']),
+  iconPosition: PropTypes.oneOf(["left", "right"]),
   accessibilityLabel: PropTypes.string,
   accessibilityHint: PropTypes.string,
   accessibilityRole: PropTypes.string,
@@ -448,11 +453,11 @@ AccessibleButton.propTypes = {
 };
 
 AccessibleButton.defaultProps = {
-  variant: 'primary',
-  size: 'medium',
+  variant: "primary",
+  size: "medium",
   disabled: false,
   loading: false,
-  iconPosition: 'left',
+  iconPosition: "left",
   accessibilityRole: AccessibilityRoles.BUTTON,
   autoFocus: false,
   highContrast: false,

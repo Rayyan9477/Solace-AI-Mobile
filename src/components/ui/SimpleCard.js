@@ -1,11 +1,7 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
-import { useTheme } from '../../shared/theme/ThemeContext';
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+
+import { useTheme } from "../../shared/theme/ThemeContext";
 
 const SimpleCard = ({
   children,
@@ -25,13 +21,13 @@ const SimpleCard = ({
       backgroundColor: theme.colors.background.card,
       borderRadius: theme.borderRadius.lg,
       padding: theme.spacing[6], // 24px - matching Figma design
-      ...elevated && theme.shadows.sm, // Simple shadow only
+      ...(elevated && theme.shadows.sm), // Simple shadow only
       ...style,
     },
     pressable: {
       backgroundColor: theme.colors.background.card,
       borderRadius: theme.borderRadius.lg,
-      ...elevated && theme.shadows.sm,
+      ...(elevated && theme.shadows.sm),
       ...style,
     },
     content: {
@@ -77,9 +73,7 @@ const SimpleCard = ({
         testID={testID}
         {...props}
       >
-        <View style={styles.content}>
-          {cardContent}
-        </View>
+        <View style={styles.content}>{cardContent}</View>
       </TouchableOpacity>
     );
   }

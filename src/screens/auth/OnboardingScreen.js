@@ -1,6 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import { WebSafeLinearGradient as LinearGradient } from "../../components/common/WebSafeLinearGradient";
 import {
   View,
   Text,
@@ -15,6 +14,7 @@ import {
 } from "react-native";
 import { useDispatch } from "react-redux";
 
+import { WebSafeLinearGradient as LinearGradient } from "../../components/common/WebSafeLinearGradient";
 import { useTheme } from "../../shared/theme/ThemeContext";
 import { MentalHealthAccessibility } from "../../shared/utils/accessibility";
 import { completeOnboarding, loginSuccess } from "../../store/slices/authSlice";
@@ -164,28 +164,32 @@ const OnboardingScreen = () => {
     } else {
       // Complete onboarding and automatically sign in for demo
       dispatch(completeOnboarding());
-      dispatch(loginSuccess({ 
-        user: { 
-          id: 'demo_user', 
-          name: 'Welcome User', 
-          email: 'demo@solace.ai' 
-        }, 
-        token: 'demo_token_' + Date.now() 
-      }));
+      dispatch(
+        loginSuccess({
+          user: {
+            id: "demo_user",
+            name: "Welcome User",
+            email: "demo@solace.ai",
+          },
+          token: "demo_token_" + Date.now(),
+        }),
+      );
     }
   };
 
   const handleSkip = () => {
     // Complete onboarding and automatically sign in for demo
     dispatch(completeOnboarding());
-    dispatch(loginSuccess({ 
-      user: { 
-        id: 'demo_user', 
-        name: 'Welcome User', 
-        email: 'demo@solace.ai' 
-      }, 
-      token: 'demo_token_' + Date.now() 
-    }));
+    dispatch(
+      loginSuccess({
+        user: {
+          id: "demo_user",
+          name: "Welcome User",
+          email: "demo@solace.ai",
+        },
+        token: "demo_token_" + Date.now(),
+      }),
+    );
   };
 
   const animatedStyle = {
@@ -303,7 +307,10 @@ const OnboardingScreen = () => {
         <View style={dynamicStyles.header}>
           <View style={dynamicStyles.stepIndicator}>
             <Text
-              style={[dynamicStyles.stepLabel, { color: theme.colors.text.tertiary }]}
+              style={[
+                dynamicStyles.stepLabel,
+                { color: theme.colors.text.tertiary },
+              ]}
             >
               {currentStepData.stepLabel}
             </Text>
@@ -316,7 +323,10 @@ const OnboardingScreen = () => {
             accessibilityLabel="Skip onboarding"
           >
             <Text
-              style={[dynamicStyles.skipText, { color: theme.colors.text.secondary }]}
+              style={[
+                dynamicStyles.skipText,
+                { color: theme.colors.text.secondary },
+              ]}
             >
               Skip
             </Text>
@@ -329,7 +339,9 @@ const OnboardingScreen = () => {
           accessibilityRole="scrollbar"
         >
           {/* Illustration Section */}
-          <Animated.View style={[dynamicStyles.illustrationSection, animatedStyle]}>
+          <Animated.View
+            style={[dynamicStyles.illustrationSection, animatedStyle]}
+          >
             <View style={dynamicStyles.illustrationContainer}>
               <Text style={styles.illustration}>
                 {currentStepData.illustration}
@@ -340,23 +352,34 @@ const OnboardingScreen = () => {
           {/* Content Section */}
           <Animated.View style={[dynamicStyles.contentSection, animatedStyle]}>
             <Text
-              style={[dynamicStyles.title, { color: theme.colors.text.primary }]}
+              style={[
+                dynamicStyles.title,
+                { color: theme.colors.text.primary },
+              ]}
               accessibilityRole="header"
             >
               {currentStepData.title}
             </Text>
 
             <Text
-              style={[dynamicStyles.subtitle, { color: theme.colors.text.secondary }]}
+              style={[
+                dynamicStyles.subtitle,
+                { color: theme.colors.text.secondary },
+              ]}
             >
               {currentStepData.subtitle}
             </Text>
           </Animated.View>
 
           {/* Navigation Section */}
-          <Animated.View style={[dynamicStyles.navigationSection, animatedStyle]}>
+          <Animated.View
+            style={[dynamicStyles.navigationSection, animatedStyle]}
+          >
             {/* Step Dots */}
-            <View style={dynamicStyles.dotsContainer} accessibilityRole="tablist">
+            <View
+              style={dynamicStyles.dotsContainer}
+              accessibilityRole="tablist"
+            >
               {onboardingSteps.map((_, index) => (
                 <View
                   key={index}

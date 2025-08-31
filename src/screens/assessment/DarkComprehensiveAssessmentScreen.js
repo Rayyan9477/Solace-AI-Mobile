@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -24,9 +24,19 @@ const ASSESSMENT_QUESTIONS = [
     title: "What's your health goal for today?",
     type: "selection",
     options: [
-      { id: 1, text: "Improve my mental health", emoji: "🧠", color: "#27AE60" },
+      {
+        id: 1,
+        text: "Improve my mental health",
+        emoji: "🧠",
+        color: "#27AE60",
+      },
       { id: 2, text: "Track my mood better", emoji: "😊", color: "#E67E22" },
-      { id: 3, text: "Reduce stress and anxiety", emoji: "😌", color: "#3498DB" },
+      {
+        id: 3,
+        text: "Reduce stress and anxiety",
+        emoji: "😌",
+        color: "#3498DB",
+      },
       { id: 4, text: "Better sleep quality", emoji: "😴", color: "#9B59B6" },
       { id: 5, text: "Just checking in", emoji: "👋", color: "#F39C12" },
     ],
@@ -128,7 +138,7 @@ const ASSESSMENT_QUESTIONS = [
     placeholder: "List your current medications...",
     condition: (answers) => {
       const medAnswer = answers[8]; // Previous question
-      return medAnswer && medAnswer.some(option => option.id !== 5);
+      return medAnswer && medAnswer.some((option) => option.id !== 5);
     },
   },
   {
@@ -172,7 +182,10 @@ const ASSESSMENT_QUESTIONS = [
   },
 ];
 
-const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }) => {
+const DarkComprehensiveAssessmentScreen = ({
+  navigation,
+  onComplete = () => {},
+}) => {
   const { isDarkMode } = useTheme();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -255,21 +268,21 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
     const currentAnswer = answers[currentQuestion];
 
     switch (question.type) {
-      case 'selection':
+      case "selection":
         return renderSelectionQuestion(question, currentAnswer);
-      case 'mood_selection':
+      case "mood_selection":
         return renderMoodSelection(question, currentAnswer);
-      case 'rating_scale':
+      case "rating_scale":
         return renderRatingScale(question, currentAnswer);
-      case 'weight_input':
+      case "weight_input":
         return renderWeightInput(question, currentAnswer);
-      case 'multi_selection':
+      case "multi_selection":
         return renderMultiSelection(question, currentAnswer);
-      case 'stress_meter':
+      case "stress_meter":
         return renderStressMeter(question, currentAnswer);
-      case 'sound_analysis':
+      case "sound_analysis":
         return renderSoundAnalysis(question, currentAnswer);
-      case 'expression_analysis':
+      case "expression_analysis":
         return renderExpressionAnalysis(question, currentAnswer);
       default:
         return renderSelectionQuestion(question, currentAnswer);
@@ -285,7 +298,7 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
       {question.subtitle && (
         <Text style={styles.questionSubtitle}>{question.subtitle}</Text>
       )}
-      
+
       <View style={styles.optionsContainer}>
         {question.options?.map((option) => (
           <TouchableOpacity
@@ -299,10 +312,12 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
           >
             <View style={styles.optionContent}>
               <Text style={styles.optionEmoji}>{option.emoji}</Text>
-              <Text style={[
-                styles.optionText,
-                currentAnswer?.id === option.id && styles.optionTextSelected
-              ]}>
+              <Text
+                style={[
+                  styles.optionText,
+                  currentAnswer?.id === option.id && styles.optionTextSelected,
+                ]}
+              >
                 {option.text}
               </Text>
             </View>
@@ -315,7 +330,7 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
   const renderMoodSelection = (question, currentAnswer) => (
     <View style={styles.questionContent}>
       <Text style={styles.questionTitle}>{question.title}</Text>
-      
+
       <View style={styles.moodContainer}>
         {question.options?.map((option) => (
           <TouchableOpacity
@@ -324,16 +339,18 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
               styles.moodOption,
               currentAnswer?.id === option.id && [
                 styles.moodOptionSelected,
-                { backgroundColor: option.color }
-              ]
+                { backgroundColor: option.color },
+              ],
             ]}
             onPress={() => handleAnswer(option)}
           >
             <Text style={styles.moodEmoji}>{option.emoji}</Text>
-            <Text style={[
-              styles.moodText,
-              currentAnswer?.id === option.id && styles.moodTextSelected
-            ]}>
+            <Text
+              style={[
+                styles.moodText,
+                currentAnswer?.id === option.id && styles.moodTextSelected,
+              ]}
+            >
               {option.text}
             </Text>
           </TouchableOpacity>
@@ -346,20 +363,20 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
     <View style={styles.questionContent}>
       <Text style={styles.questionCharacter}>{question.character}</Text>
       <Text style={styles.questionTitle}>{question.title}</Text>
-      
+
       <View style={styles.ratingContainer}>
         <View style={styles.ratingLabels}>
           <Text style={styles.ratingLabel}>{question.scale.labels[0]}</Text>
           <Text style={styles.ratingLabel}>{question.scale.labels[1]}</Text>
         </View>
-        
+
         <View style={styles.ratingScale}>
           {Array.from({ length: question.scale.max }, (_, i) => (
             <TouchableOpacity
               key={i + 1}
               style={[
                 styles.ratingDot,
-                currentAnswer === i + 1 && styles.ratingDotSelected
+                currentAnswer === i + 1 && styles.ratingDotSelected,
               ]}
               onPress={() => handleAnswer(i + 1)}
             >
@@ -375,24 +392,32 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
     <View style={styles.questionContent}>
       <Text style={styles.questionCharacter}>{question.character}</Text>
       <Text style={styles.questionTitle}>{question.title}</Text>
-      
+
       <View style={styles.weightInputContainer}>
         <Text style={styles.weightValue}>
           {currentAnswer || question.defaultValue}
         </Text>
         <Text style={styles.weightUnit}>{question.unit}</Text>
       </View>
-      
+
       <View style={styles.weightControls}>
         <TouchableOpacity
           style={styles.weightButton}
-          onPress={() => handleAnswer(Math.max(50, (currentAnswer || question.defaultValue) - 1))}
+          onPress={() =>
+            handleAnswer(
+              Math.max(50, (currentAnswer || question.defaultValue) - 1),
+            )
+          }
         >
           <Text style={styles.weightButtonText}>−</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.weightButton}
-          onPress={() => handleAnswer(Math.min(500, (currentAnswer || question.defaultValue) + 1))}
+          onPress={() =>
+            handleAnswer(
+              Math.min(500, (currentAnswer || question.defaultValue) + 1),
+            )
+          }
         >
           <Text style={styles.weightButtonText}>+</Text>
         </TouchableOpacity>
@@ -403,11 +428,13 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
   const renderMultiSelection = (question, currentAnswer) => (
     <View style={styles.questionContent}>
       <Text style={styles.questionTitle}>{question.title}</Text>
-      
+
       <View style={styles.optionsContainer}>
         {question.options?.map((option) => {
-          const isSelected = currentAnswer?.some(item => item.id === option.id);
-          
+          const isSelected = currentAnswer?.some(
+            (item) => item.id === option.id,
+          );
+
           return (
             <TouchableOpacity
               key={option.id}
@@ -418,22 +445,22 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
               onPress={() => {
                 const newAnswer = currentAnswer || [];
                 const updatedAnswer = isSelected
-                  ? newAnswer.filter(item => item.id !== option.id)
+                  ? newAnswer.filter((item) => item.id !== option.id)
                   : [...newAnswer, option];
                 handleAnswer(updatedAnswer);
               }}
             >
               <View style={styles.optionContent}>
                 <Text style={styles.optionEmoji}>{option.emoji}</Text>
-                <Text style={[
-                  styles.optionText,
-                  isSelected && styles.optionTextSelected
-                ]}>
+                <Text
+                  style={[
+                    styles.optionText,
+                    isSelected && styles.optionTextSelected,
+                  ]}
+                >
                   {option.text}
                 </Text>
-                {isSelected && (
-                  <Text style={styles.checkmark}>✓</Text>
-                )}
+                {isSelected && <Text style={styles.checkmark}>✓</Text>}
               </View>
             </TouchableOpacity>
           );
@@ -445,7 +472,7 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
   const renderStressMeter = (question, currentAnswer) => (
     <View style={styles.questionContent}>
       <Text style={styles.questionTitle}>{question.title}</Text>
-      
+
       <View style={styles.stressMeterContainer}>
         {question.scale.labels.map((label, index) => (
           <TouchableOpacity
@@ -453,7 +480,7 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
             style={[
               styles.stressOption,
               { backgroundColor: question.scale.colors[index] },
-              currentAnswer === index + 1 && styles.stressOptionSelected
+              currentAnswer === index + 1 && styles.stressOptionSelected,
             ]}
             onPress={() => handleAnswer(index + 1)}
           >
@@ -470,23 +497,25 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
       <Text style={styles.questionCharacter}>{question.character}</Text>
       <Text style={styles.questionTitle}>{question.title}</Text>
       <Text style={styles.questionSubtitle}>{question.subtitle}</Text>
-      
+
       <View style={styles.analysisContainer}>
         <View style={styles.soundWaveContainer}>
           {Array.from({ length: 20 }, (_, i) => (
             <View
               key={i}
-              style={[
-                styles.soundWave,
-                { height: Math.random() * 60 + 20 }
-              ]}
+              style={[styles.soundWave, { height: Math.random() * 60 + 20 }]}
             />
           ))}
         </View>
-        
+
         <TouchableOpacity
-          style={[styles.recordButton, currentAnswer && styles.recordButtonActive]}
-          onPress={() => handleAnswer({ recorded: true, timestamp: Date.now() })}
+          style={[
+            styles.recordButton,
+            currentAnswer && styles.recordButtonActive,
+          ]}
+          onPress={() =>
+            handleAnswer({ recorded: true, timestamp: Date.now() })
+          }
         >
           <Text style={styles.recordButtonText}>
             {currentAnswer ? "✓ Recorded" : "🎤 Start Recording"}
@@ -500,13 +529,13 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
     <View style={styles.questionContent}>
       <Text style={styles.questionTitle}>{question.title}</Text>
       <Text style={styles.questionSubtitle}>{question.subtitle}</Text>
-      
+
       <View style={styles.analysisContainer}>
         <View style={styles.expressionAnalysis}>
           <View style={styles.progressRing}>
             <Text style={styles.progressPercentage}>5</Text>
           </View>
-          
+
           <View style={styles.analysisResults}>
             <View style={styles.analysisItem}>
               <Text style={styles.analysisNumber}>1</Text>
@@ -522,9 +551,12 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
             </View>
           </View>
         </View>
-        
+
         <TouchableOpacity
-          style={[styles.analyzeButton, currentAnswer && styles.analyzeButtonActive]}
+          style={[
+            styles.analyzeButton,
+            currentAnswer && styles.analyzeButtonActive,
+          ]}
           onPress={() => handleAnswer({ analyzed: true, score: 85 })}
         >
           <Text style={styles.analyzeButtonText}>
@@ -537,8 +569,12 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-      
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
+
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -546,16 +582,18 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
           onPress={goToPreviousQuestion}
           disabled={currentQuestion === 0}
         >
-          <Text style={[
-            styles.backButtonText,
-            currentQuestion === 0 && styles.backButtonDisabled
-          ]}>
+          <Text
+            style={[
+              styles.backButtonText,
+              currentQuestion === 0 && styles.backButtonDisabled,
+            ]}
+          >
             ←
           </Text>
         </TouchableOpacity>
-        
+
         <Text style={styles.headerTitle}>Assessment</Text>
-        
+
         <TouchableOpacity
           style={styles.skipButton}
           onPress={() => navigation.goBack()}
@@ -573,7 +611,7 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
               {
                 width: progressAnim.interpolate({
                   inputRange: [0, 1],
-                  outputRange: ['0%', '100%'],
+                  outputRange: ["0%", "100%"],
                 }),
               },
             ]}
@@ -607,7 +645,7 @@ const DarkComprehensiveAssessmentScreen = ({ navigation, onComplete = () => {} }
         <TouchableOpacity
           style={[
             styles.continueButton,
-            !answers[currentQuestion] && styles.continueButtonDisabled
+            !answers[currentQuestion] && styles.continueButtonDisabled,
           ]}
           onPress={goToNextQuestion}
           disabled={!answers[currentQuestion]}
@@ -629,12 +667,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: freudDarkTheme.colors.background.primary,
   },
-  
+
   // Header
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingTop: 60,
     paddingHorizontal: freudDarkTheme.spacing[6],
     paddingBottom: freudDarkTheme.spacing[4],
@@ -644,8 +682,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: freudDarkTheme.colors.card.background,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   backButtonText: {
     fontSize: 20,
@@ -679,18 +717,18 @@ const styles = StyleSheet.create({
     height: 6,
     backgroundColor: freudDarkTheme.colors.border.primary,
     borderRadius: freudDarkTheme.borderRadius.full,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginBottom: freudDarkTheme.spacing[2],
   },
   progressBar: {
-    height: '100%',
+    height: "100%",
     backgroundColor: freudDarkTheme.colors.accent.primary,
     borderRadius: freudDarkTheme.borderRadius.full,
   },
   progressText: {
     fontSize: freudDarkTheme.typography.sizes.sm,
     color: freudDarkTheme.colors.text.tertiary,
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   // Content
@@ -704,7 +742,7 @@ const styles = StyleSheet.create({
     minHeight: height * 0.5,
   },
   questionContent: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   questionCharacter: {
     fontSize: 80,
@@ -714,20 +752,20 @@ const styles = StyleSheet.create({
     fontSize: freudDarkTheme.typography.sizes["2xl"],
     fontWeight: freudDarkTheme.typography.weights.bold,
     color: freudDarkTheme.colors.text.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: freudDarkTheme.spacing[4],
   },
   questionSubtitle: {
     fontSize: freudDarkTheme.typography.sizes.base,
     color: freudDarkTheme.colors.text.secondary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: freudDarkTheme.spacing[6],
     paddingHorizontal: freudDarkTheme.spacing[4],
   },
 
   // Options
   optionsContainer: {
-    width: '100%',
+    width: "100%",
   },
   optionButton: {
     backgroundColor: freudDarkTheme.colors.card.background,
@@ -735,7 +773,7 @@ const styles = StyleSheet.create({
     padding: freudDarkTheme.spacing[4],
     marginBottom: freudDarkTheme.spacing[3],
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: "transparent",
     ...freudDarkTheme.shadows.sm,
   },
   optionButtonSelected: {
@@ -743,8 +781,8 @@ const styles = StyleSheet.create({
     backgroundColor: `${freudDarkTheme.colors.accent.primary}20`,
   },
   optionContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   optionEmoji: {
     fontSize: 24,
@@ -768,7 +806,7 @@ const styles = StyleSheet.create({
     padding: freudDarkTheme.spacing[4],
     marginBottom: freudDarkTheme.spacing[3],
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: "transparent",
   },
   multiOptionButtonSelected: {
     borderColor: freudDarkTheme.colors.accent.primary,
@@ -782,17 +820,17 @@ const styles = StyleSheet.create({
 
   // Mood selection
   moodContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
     gap: freudDarkTheme.spacing[3],
   },
   moodOption: {
     width: 80,
     height: 80,
     borderRadius: freudDarkTheme.borderRadius.lg,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: freudDarkTheme.colors.card.background,
   },
   moodOptionSelected: {
@@ -805,20 +843,20 @@ const styles = StyleSheet.create({
   moodText: {
     fontSize: freudDarkTheme.typography.sizes.xs,
     color: freudDarkTheme.colors.text.secondary,
-    textAlign: 'center',
+    textAlign: "center",
   },
   moodTextSelected: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontWeight: freudDarkTheme.typography.weights.semibold,
   },
 
   // Rating scale
   ratingContainer: {
-    width: '100%',
+    width: "100%",
   },
   ratingLabels: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: freudDarkTheme.spacing[4],
   },
   ratingLabel: {
@@ -826,17 +864,17 @@ const styles = StyleSheet.create({
     color: freudDarkTheme.colors.text.tertiary,
   },
   ratingScale: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   ratingDot: {
     width: 40,
     height: 40,
     borderRadius: 20,
     backgroundColor: freudDarkTheme.colors.card.background,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 2,
     borderColor: freudDarkTheme.colors.border.primary,
   },
@@ -852,8 +890,8 @@ const styles = StyleSheet.create({
 
   // Weight input
   weightInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
+    flexDirection: "row",
+    alignItems: "baseline",
     marginBottom: freudDarkTheme.spacing[6],
   },
   weightValue: {
@@ -868,7 +906,7 @@ const styles = StyleSheet.create({
     fontWeight: freudDarkTheme.typography.weights.medium,
   },
   weightControls: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: freudDarkTheme.spacing[4],
   },
   weightButton: {
@@ -876,8 +914,8 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     backgroundColor: freudDarkTheme.colors.card.background,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 1,
     borderColor: freudDarkTheme.colors.border.primary,
   },
@@ -889,12 +927,12 @@ const styles = StyleSheet.create({
 
   // Stress meter
   stressMeterContainer: {
-    width: '100%',
+    width: "100%",
     gap: freudDarkTheme.spacing[3],
   },
   stressOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: freudDarkTheme.spacing[4],
     borderRadius: freudDarkTheme.borderRadius.lg,
     marginBottom: freudDarkTheme.spacing[2],
@@ -906,26 +944,26 @@ const styles = StyleSheet.create({
   stressLevel: {
     fontSize: freudDarkTheme.typography.sizes["2xl"],
     fontWeight: freudDarkTheme.typography.weights.bold,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     marginRight: freudDarkTheme.spacing[4],
     width: 40,
-    textAlign: 'center',
+    textAlign: "center",
   },
   stressLabel: {
     fontSize: freudDarkTheme.typography.sizes.lg,
     fontWeight: freudDarkTheme.typography.weights.medium,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
 
   // Analysis components
   analysisContainer: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   soundWaveContainer: {
-    flexDirection: 'row',
-    alignItems: 'end',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "end",
+    justifyContent: "center",
     height: 80,
     marginBottom: freudDarkTheme.spacing[6],
     gap: 2,
@@ -953,7 +991,7 @@ const styles = StyleSheet.create({
     color: freudDarkTheme.colors.text.primary,
   },
   expressionAnalysis: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: freudDarkTheme.spacing[6],
   },
   progressRing: {
@@ -961,21 +999,21 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     backgroundColor: freudDarkTheme.colors.accent.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: freudDarkTheme.spacing[4],
   },
   progressPercentage: {
     fontSize: freudDarkTheme.typography.sizes["3xl"],
     fontWeight: freudDarkTheme.typography.weights.bold,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   analysisResults: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: freudDarkTheme.spacing[4],
   },
   analysisItem: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   analysisNumber: {
     fontSize: freudDarkTheme.typography.sizes.lg,
@@ -1012,7 +1050,7 @@ const styles = StyleSheet.create({
     backgroundColor: freudDarkTheme.colors.button.primary.background,
     borderRadius: freudDarkTheme.borderRadius.lg,
     paddingVertical: freudDarkTheme.spacing[4],
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: freudDarkTheme.spacing[6],
     ...freudDarkTheme.shadows.md,
   },
@@ -1030,7 +1068,7 @@ const styles = StyleSheet.create({
     height: 5,
     backgroundColor: `${freudDarkTheme.colors.text.primary}40`,
     borderRadius: freudDarkTheme.borderRadius.full,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
 });
 

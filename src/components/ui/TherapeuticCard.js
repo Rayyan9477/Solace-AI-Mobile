@@ -1,24 +1,20 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
-import LinearGradient from 'expo-linear-gradient';
-import { MentalHealthIcon } from '../icons';
-import { useTheme } from '../../shared/theme/UnifiedThemeProvider';
-import FreudDesignSystem, { 
-  FreudColors, 
-  FreudSpacing, 
-  FreudTypography, 
-  FreudShadows, 
-  FreudBorderRadius 
-} from '../../shared/theme/FreudDesignSystem';
+import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+
+import FreudDesignSystem, {
+  FreudColors,
+  FreudSpacing,
+  FreudTypography,
+  FreudShadows,
+  FreudBorderRadius,
+} from "../../shared/theme/FreudDesignSystem";
+import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
+import { MentalHealthIcon } from "../icons";
 
 /**
  * TherapeuticCard - A reusable card component designed for mental health applications
- * 
+ *
  * Features:
  * - Consistent therapeutic design language
  * - Accessibility-first approach
@@ -32,7 +28,7 @@ const TherapeuticCard = ({
   subtitle,
   icon,
   iconColor,
-  variant = 'default', // 'default', 'elevated', 'outlined', 'gradient'
+  variant = "default", // 'default', 'elevated', 'outlined', 'gradient'
   gradientColors,
   onPress,
   style,
@@ -42,7 +38,7 @@ const TherapeuticCard = ({
   accessible = true,
   accessibilityLabel,
   accessibilityHint,
-  accessibilityRole = 'text',
+  accessibilityRole = "text",
   ...props
 }) => {
   const { theme, isDarkMode } = useTheme();
@@ -50,35 +46,39 @@ const TherapeuticCard = ({
   // Determine card background and styling based on variant
   const getCardVariant = () => {
     const baseStyle = {
-      backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.95)',
+      backgroundColor: isDarkMode
+        ? "rgba(255, 255, 255, 0.08)"
+        : "rgba(255, 255, 255, 0.95)",
       borderRadius: FreudBorderRadius.xl,
-      overflow: 'hidden',
+      overflow: "hidden",
     };
 
     switch (variant) {
-      case 'elevated':
+      case "elevated":
         return {
           ...baseStyle,
           ...FreudShadows.lg,
-          backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
+          backgroundColor: isDarkMode ? "rgba(255, 255, 255, 0.12)" : "#FFFFFF",
         };
-      
-      case 'outlined':
+
+      case "outlined":
         return {
           ...baseStyle,
           borderWidth: 1,
-          borderColor: isDarkMode ? FreudColors.optimisticGray[70] : FreudColors.optimisticGray[20],
-          backgroundColor: 'transparent',
+          borderColor: isDarkMode
+            ? FreudColors.optimisticGray[70]
+            : FreudColors.optimisticGray[20],
+          backgroundColor: "transparent",
           ...FreudShadows.xs,
         };
-      
-      case 'gradient':
+
+      case "gradient":
         return {
           ...baseStyle,
-          backgroundColor: 'transparent',
+          backgroundColor: "transparent",
           ...FreudShadows.md,
         };
-      
+
       default:
         return {
           ...baseStyle,
@@ -97,28 +97,45 @@ const TherapeuticCard = ({
     return (
       <View style={styles.header}>
         {icon && (
-          <View style={[styles.iconContainer, iconColor && { backgroundColor: iconColor + '20' }]}>
-            <MentalHealthIcon 
-              name={icon} 
-              size={24} 
-              color={iconColor || FreudColors.mindfulBrown[70]} 
+          <View
+            style={[
+              styles.iconContainer,
+              iconColor && { backgroundColor: iconColor + "20" },
+            ]}
+          >
+            <MentalHealthIcon
+              name={icon}
+              size={24}
+              color={iconColor || FreudColors.mindfulBrown[70]}
             />
           </View>
         )}
         <View style={styles.headerText}>
           {title && (
-            <Text style={[
-              styles.title, 
-              { color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.primary : FreudDesignSystem.themes.light.colors.text.primary }
-            ]}>
+            <Text
+              style={[
+                styles.title,
+                {
+                  color: isDarkMode
+                    ? FreudDesignSystem.themes.dark.colors.text.primary
+                    : FreudDesignSystem.themes.light.colors.text.primary,
+                },
+              ]}
+            >
               {title}
             </Text>
           )}
           {subtitle && (
-            <Text style={[
-              styles.subtitle, 
-              { color: isDarkMode ? FreudDesignSystem.themes.dark.colors.text.secondary : FreudDesignSystem.themes.light.colors.text.secondary }
-            ]}>
+            <Text
+              style={[
+                styles.subtitle,
+                {
+                  color: isDarkMode
+                    ? FreudDesignSystem.themes.dark.colors.text.secondary
+                    : FreudDesignSystem.themes.light.colors.text.secondary,
+                },
+              ]}
+            >
               {subtitle}
             </Text>
           )}
@@ -131,7 +148,7 @@ const TherapeuticCard = ({
   const CardContent = ({ children }) => {
     const content = (
       <View style={[styles.container, getCardVariant(), style]} {...props}>
-        {variant === 'gradient' && gradientColors ? (
+        {variant === "gradient" && gradientColors ? (
           <LinearGradient
             colors={gradientColors}
             style={styles.gradientBackground}
@@ -191,7 +208,10 @@ const TherapeuticCard = ({
 export const MindfulCard = (props) => (
   <TherapeuticCard
     variant="gradient"
-    gradientColors={[FreudColors.serenityGreen[20], FreudColors.serenityGreen[10]]}
+    gradientColors={[
+      FreudColors.serenityGreen[20],
+      FreudColors.serenityGreen[10],
+    ]}
     iconColor={FreudColors.serenityGreen[60]}
     {...props}
   />
@@ -200,7 +220,10 @@ export const MindfulCard = (props) => (
 export const EmpathyCard = (props) => (
   <TherapeuticCard
     variant="gradient"
-    gradientColors={[FreudColors.empathyOrange[20], FreudColors.empathyOrange[10]]}
+    gradientColors={[
+      FreudColors.empathyOrange[20],
+      FreudColors.empathyOrange[10],
+    ]}
     iconColor={FreudColors.empathyOrange[60]}
     {...props}
   />
@@ -218,7 +241,10 @@ export const CalmingCard = (props) => (
 export const WisdomCard = (props) => (
   <TherapeuticCard
     variant="gradient"
-    gradientColors={[FreudColors.mindfulBrown[20], FreudColors.mindfulBrown[10]]}
+    gradientColors={[
+      FreudColors.mindfulBrown[20],
+      FreudColors.mindfulBrown[10],
+    ]}
     iconColor={FreudColors.mindfulBrown[70]}
     {...props}
   />
@@ -236,8 +262,8 @@ const styles = StyleSheet.create({
     padding: FreudSpacing[4],
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: FreudSpacing[3],
   },
   iconContainer: {
@@ -245,8 +271,8 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: FreudBorderRadius.xl,
     backgroundColor: FreudColors.optimisticGray[10],
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: FreudSpacing[3],
   },
   headerText: {

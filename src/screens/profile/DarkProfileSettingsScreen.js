@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -11,70 +12,141 @@ import {
   Modal,
   FlatList,
   Alert,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { freudDarkTheme } from '../../shared/theme/freudDarkTheme';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+import { freudDarkTheme } from "../../shared/theme/freudDarkTheme";
 
 // Profile data
 const PROFILE_DATA = {
-  name: 'Shameera Perera',
-  email: 'sam@email.com',
-  phone: '+94 77 123 4567',
-  avatar: '👤',
+  name: "Shameera Perera",
+  email: "sam@email.com",
+  phone: "+94 77 123 4567",
+  avatar: "👤",
 };
 
 // Settings sections
 const ACCOUNT_SETTINGS = [
-  { id: 'personal', title: 'Personal Information', icon: '👤', hasArrow: true },
-  { id: 'password', title: 'Change Password', icon: '🔒', hasArrow: true },
-  { id: 'biometric', title: 'Biometric Login', icon: '👆', hasArrow: true },
-  { id: 'emergency', title: 'Emergency Contact', icon: '🚨', hasArrow: true },
-  { id: 'sync', title: 'Data Sync', icon: '🔄', hasArrow: true },
+  { id: "personal", title: "Personal Information", icon: "👤", hasArrow: true },
+  { id: "password", title: "Change Password", icon: "🔒", hasArrow: true },
+  { id: "biometric", title: "Biometric Login", icon: "👆", hasArrow: true },
+  { id: "emergency", title: "Emergency Contact", icon: "🚨", hasArrow: true },
+  { id: "sync", title: "Data Sync", icon: "🔄", hasArrow: true },
 ];
 
 const NOTIFICATION_SETTINGS = [
-  { id: 'push', title: 'Push Notifications', icon: '🔔', type: 'toggle', value: true },
-  { id: 'email', title: 'Email Notifications', icon: '📧', type: 'toggle', value: false },
-  { id: 'sms', title: 'SMS Notifications', icon: '💬', type: 'toggle', value: true },
-  { id: 'reminder', title: 'Mood Reminders', icon: '⏰', type: 'toggle', value: true },
-  { id: 'weekly', title: 'Weekly Reports', icon: '📊', type: 'toggle', value: true },
+  {
+    id: "push",
+    title: "Push Notifications",
+    icon: "🔔",
+    type: "toggle",
+    value: true,
+  },
+  {
+    id: "email",
+    title: "Email Notifications",
+    icon: "📧",
+    type: "toggle",
+    value: false,
+  },
+  {
+    id: "sms",
+    title: "SMS Notifications",
+    icon: "💬",
+    type: "toggle",
+    value: true,
+  },
+  {
+    id: "reminder",
+    title: "Mood Reminders",
+    icon: "⏰",
+    type: "toggle",
+    value: true,
+  },
+  {
+    id: "weekly",
+    title: "Weekly Reports",
+    icon: "📊",
+    type: "toggle",
+    value: true,
+  },
 ];
 
 const PRIVACY_SETTINGS = [
-  { id: 'analytics', title: 'Usage Analytics', icon: '📈', type: 'toggle', value: false },
-  { id: 'location', title: 'Location Services', icon: '📍', type: 'toggle', value: true },
-  { id: 'camera', title: 'Camera Access', icon: '📷', type: 'toggle', value: true },
-  { id: 'microphone', title: 'Microphone Access', icon: '🎤', type: 'toggle', value: false },
-  { id: 'contacts', title: 'Contacts Access', icon: '📱', type: 'toggle', value: false },
+  {
+    id: "analytics",
+    title: "Usage Analytics",
+    icon: "📈",
+    type: "toggle",
+    value: false,
+  },
+  {
+    id: "location",
+    title: "Location Services",
+    icon: "📍",
+    type: "toggle",
+    value: true,
+  },
+  {
+    id: "camera",
+    title: "Camera Access",
+    icon: "📷",
+    type: "toggle",
+    value: true,
+  },
+  {
+    id: "microphone",
+    title: "Microphone Access",
+    icon: "🎤",
+    type: "toggle",
+    value: false,
+  },
+  {
+    id: "contacts",
+    title: "Contacts Access",
+    icon: "📱",
+    type: "toggle",
+    value: false,
+  },
 ];
 
 const HELP_CENTER_OPTIONS = [
-  { id: 'faq', title: 'Frequently Asked Questions', icon: '❓', hasArrow: true },
-  { id: 'contact', title: 'Contact Support', icon: '📞', hasArrow: true },
-  { id: 'feedback', title: 'Send Feedback', icon: '💬', hasArrow: true },
-  { id: 'tutorial', title: 'App Tutorial', icon: '🎓', hasArrow: true },
-  { id: 'terms', title: 'Terms & Conditions', icon: '📄', hasArrow: true },
-  { id: 'privacy', title: 'Privacy Policy', icon: '🔒', hasArrow: true },
+  {
+    id: "faq",
+    title: "Frequently Asked Questions",
+    icon: "❓",
+    hasArrow: true,
+  },
+  { id: "contact", title: "Contact Support", icon: "📞", hasArrow: true },
+  { id: "feedback", title: "Send Feedback", icon: "💬", hasArrow: true },
+  { id: "tutorial", title: "App Tutorial", icon: "🎓", hasArrow: true },
+  { id: "terms", title: "Terms & Conditions", icon: "📄", hasArrow: true },
+  { id: "privacy", title: "Privacy Policy", icon: "🔒", hasArrow: true },
 ];
 
 const LANGUAGES = [
-  { id: 'en', name: 'English', flag: '🇺🇸' },
-  { id: 'es', name: 'Spanish', flag: '🇪🇸' },
-  { id: 'fr', name: 'French', flag: '🇫🇷' },
-  { id: 'de', name: 'German', flag: '🇩🇪' },
-  { id: 'si', name: 'Sinhala', flag: '🇱🇰' },
+  { id: "en", name: "English", flag: "🇺🇸" },
+  { id: "es", name: "Spanish", flag: "🇪🇸" },
+  { id: "fr", name: "French", flag: "🇫🇷" },
+  { id: "de", name: "German", flag: "🇩🇪" },
+  { id: "si", name: "Sinhala", flag: "🇱🇰" },
 ];
 
 export default function DarkProfileSettingsScreen() {
-  const [currentView, setCurrentView] = useState('profile'); // 'profile', 'account', 'notifications', 'privacy', 'help', 'language'
+  const [currentView, setCurrentView] = useState("profile"); // 'profile', 'account', 'notifications', 'privacy', 'help', 'language'
   const [notifications, setNotifications] = useState(
-    NOTIFICATION_SETTINGS.reduce((acc, item) => ({ ...acc, [item.id]: item.value }), {})
+    NOTIFICATION_SETTINGS.reduce(
+      (acc, item) => ({ ...acc, [item.id]: item.value }),
+      {},
+    ),
   );
   const [privacy, setPrivacy] = useState(
-    PRIVACY_SETTINGS.reduce((acc, item) => ({ ...acc, [item.id]: item.value }), {})
+    PRIVACY_SETTINGS.reduce(
+      (acc, item) => ({ ...acc, [item.id]: item.value }),
+      {},
+    ),
   );
-  const [selectedLanguage, setSelectedLanguage] = useState('en');
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(300)).current;
@@ -88,11 +160,11 @@ export default function DarkProfileSettingsScreen() {
   }, [currentView]);
 
   const toggleNotification = (id) => {
-    setNotifications(prev => ({ ...prev, [id]: !prev[id] }));
+    setNotifications((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   const togglePrivacy = (id) => {
-    setPrivacy(prev => ({ ...prev, [id]: !prev[id] }));
+    setPrivacy((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   const openLanguageModal = () => {
@@ -122,20 +194,20 @@ export default function DarkProfileSettingsScreen() {
   };
 
   const handleLogout = () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Logout', style: 'destructive', onPress: () => console.log('Logout pressed') },
-      ]
-    );
+    Alert.alert("Logout", "Are you sure you want to logout?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Logout",
+        style: "destructive",
+        onPress: () => console.log("Logout pressed"),
+      },
+    ]);
   };
 
   const renderProfileHeader = () => (
     <View style={styles.profileHeader}>
       <LinearGradient
-        colors={[freudDarkTheme.colors.accent.primary, '#F97316']}
+        colors={[freudDarkTheme.colors.accent.primary, "#F97316"]}
         style={styles.avatarContainer}
       >
         <Text style={styles.avatarText}>{PROFILE_DATA.avatar}</Text>
@@ -155,19 +227,22 @@ export default function DarkProfileSettingsScreen() {
       key={item.id}
       style={styles.settingItem}
       onPress={onPress}
-      disabled={item.type === 'toggle'}
+      disabled={item.type === "toggle"}
     >
       <View style={styles.settingLeft}>
         <Text style={styles.settingIcon}>{item.icon}</Text>
         <Text style={styles.settingTitle}>{item.title}</Text>
       </View>
       <View style={styles.settingRight}>
-        {item.type === 'toggle' ? (
+        {item.type === "toggle" ? (
           <Switch
             value={customValue}
             onValueChange={onPress}
-            trackColor={{ false: '#4D2F1C', true: freudDarkTheme.colors.accent.primary }}
-            thumbColor={customValue ? '#FFFFFF' : '#8D6E63'}
+            trackColor={{
+              false: "#4D2F1C",
+              true: freudDarkTheme.colors.accent.primary,
+            }}
+            thumbColor={customValue ? "#FFFFFF" : "#8D6E63"}
           />
         ) : item.hasArrow ? (
           <Text style={styles.settingArrow}>→</Text>
@@ -177,7 +252,7 @@ export default function DarkProfileSettingsScreen() {
   );
 
   const renderMainProfile = () => (
-    <Animated.ScrollView 
+    <Animated.ScrollView
       style={[styles.container, { opacity: fadeAnim }]}
       showsVerticalScrollIndicator={false}
     >
@@ -203,7 +278,7 @@ export default function DarkProfileSettingsScreen() {
       <View style={styles.menuSection}>
         <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => setCurrentView('account')}
+          onPress={() => setCurrentView("account")}
         >
           <View style={styles.menuLeft}>
             <Text style={styles.menuIcon}>⚙️</Text>
@@ -214,7 +289,7 @@ export default function DarkProfileSettingsScreen() {
 
         <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => setCurrentView('notifications')}
+          onPress={() => setCurrentView("notifications")}
         >
           <View style={styles.menuLeft}>
             <Text style={styles.menuIcon}>🔔</Text>
@@ -225,7 +300,7 @@ export default function DarkProfileSettingsScreen() {
 
         <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => setCurrentView('privacy')}
+          onPress={() => setCurrentView("privacy")}
         >
           <View style={styles.menuLeft}>
             <Text style={styles.menuIcon}>🔒</Text>
@@ -234,17 +309,14 @@ export default function DarkProfileSettingsScreen() {
           <Text style={styles.menuArrow}>→</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={openLanguageModal}
-        >
+        <TouchableOpacity style={styles.menuItem} onPress={openLanguageModal}>
           <View style={styles.menuLeft}>
             <Text style={styles.menuIcon}>🌐</Text>
             <Text style={styles.menuTitle}>Language</Text>
           </View>
           <View style={styles.menuRight}>
             <Text style={styles.menuValue}>
-              {LANGUAGES.find(l => l.id === selectedLanguage)?.name}
+              {LANGUAGES.find((l) => l.id === selectedLanguage)?.name}
             </Text>
             <Text style={styles.menuArrow}>→</Text>
           </View>
@@ -252,7 +324,7 @@ export default function DarkProfileSettingsScreen() {
 
         <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => setCurrentView('help')}
+          onPress={() => setCurrentView("help")}
         >
           <View style={styles.menuLeft}>
             <Text style={styles.menuIcon}>❓</Text>
@@ -265,7 +337,7 @@ export default function DarkProfileSettingsScreen() {
       {/* Logout Button */}
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <LinearGradient
-          colors={['#DC2626', '#EF4444']}
+          colors={["#DC2626", "#EF4444"]}
           style={styles.logoutGradient}
         >
           <Text style={styles.logoutText}>Log Out</Text>
@@ -279,14 +351,17 @@ export default function DarkProfileSettingsScreen() {
   const renderAccountSettings = () => (
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => setCurrentView('profile')}>
+        <TouchableOpacity onPress={() => setCurrentView("profile")}>
           <Text style={styles.backButton}>← Back</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Account Settings</Text>
       </View>
-      <ScrollView style={styles.settingsScroll} showsVerticalScrollIndicator={false}>
-        {ACCOUNT_SETTINGS.map(item =>
-          renderSettingItem(item, () => console.log(`Navigate to ${item.id}`))
+      <ScrollView
+        style={styles.settingsScroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {ACCOUNT_SETTINGS.map((item) =>
+          renderSettingItem(item, () => console.log(`Navigate to ${item.id}`)),
         )}
       </ScrollView>
     </Animated.View>
@@ -295,18 +370,21 @@ export default function DarkProfileSettingsScreen() {
   const renderNotificationSettings = () => (
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => setCurrentView('profile')}>
+        <TouchableOpacity onPress={() => setCurrentView("profile")}>
           <Text style={styles.backButton}>← Back</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Notifications</Text>
       </View>
-      <ScrollView style={styles.settingsScroll} showsVerticalScrollIndicator={false}>
-        {NOTIFICATION_SETTINGS.map(item =>
+      <ScrollView
+        style={styles.settingsScroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {NOTIFICATION_SETTINGS.map((item) =>
           renderSettingItem(
             item,
             () => toggleNotification(item.id),
-            notifications[item.id]
-          )
+            notifications[item.id],
+          ),
         )}
       </ScrollView>
     </Animated.View>
@@ -315,18 +393,21 @@ export default function DarkProfileSettingsScreen() {
   const renderPrivacySettings = () => (
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => setCurrentView('profile')}>
+        <TouchableOpacity onPress={() => setCurrentView("profile")}>
           <Text style={styles.backButton}>← Back</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Privacy Settings</Text>
       </View>
-      <ScrollView style={styles.settingsScroll} showsVerticalScrollIndicator={false}>
-        {PRIVACY_SETTINGS.map(item =>
+      <ScrollView
+        style={styles.settingsScroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {PRIVACY_SETTINGS.map((item) =>
           renderSettingItem(
             item,
             () => togglePrivacy(item.id),
-            privacy[item.id]
-          )
+            privacy[item.id],
+          ),
         )}
       </ScrollView>
     </Animated.View>
@@ -335,7 +416,7 @@ export default function DarkProfileSettingsScreen() {
   const renderHelpCenter = () => (
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => setCurrentView('profile')}>
+        <TouchableOpacity onPress={() => setCurrentView("profile")}>
           <Text style={styles.backButton}>← Back</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Help Center</Text>
@@ -344,7 +425,7 @@ export default function DarkProfileSettingsScreen() {
       {/* AI Chat Support */}
       <View style={styles.aiSupportContainer}>
         <LinearGradient
-          colors={[freudDarkTheme.colors.status.success, '#16A34A']}
+          colors={[freudDarkTheme.colors.status.success, "#16A34A"]}
           style={styles.aiSupportGradient}
         >
           <Text style={styles.aiSupportTitle}>🤖 AI Assistant</Text>
@@ -355,9 +436,12 @@ export default function DarkProfileSettingsScreen() {
         </LinearGradient>
       </View>
 
-      <ScrollView style={styles.settingsScroll} showsVerticalScrollIndicator={false}>
-        {HELP_CENTER_OPTIONS.map(item =>
-          renderSettingItem(item, () => console.log(`Open ${item.id}`))
+      <ScrollView
+        style={styles.settingsScroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {HELP_CENTER_OPTIONS.map((item) =>
+          renderSettingItem(item, () => console.log(`Open ${item.id}`)),
         )}
       </ScrollView>
     </Animated.View>
@@ -366,19 +450,22 @@ export default function DarkProfileSettingsScreen() {
   const renderLanguageModal = () => (
     <Modal
       visible={showLanguageModal}
-      transparent={true}
+      transparent
       animationType="none"
       onRequestClose={closeLanguageModal}
     >
       <View style={styles.modalOverlay}>
-        <Animated.View 
+        <Animated.View
           style={[
             styles.languageModal,
-            { transform: [{ translateY: slideAnim }] }
+            { transform: [{ translateY: slideAnim }] },
           ]}
         >
           <LinearGradient
-            colors={[freudDarkTheme.colors.background.secondary, freudDarkTheme.colors.background.tertiary]}
+            colors={[
+              freudDarkTheme.colors.background.secondary,
+              freudDarkTheme.colors.background.tertiary,
+            ]}
             style={styles.languageModalGradient}
           >
             <View style={styles.languageModalHeader}>
@@ -387,7 +474,7 @@ export default function DarkProfileSettingsScreen() {
                 <Text style={styles.modalCloseText}>×</Text>
               </TouchableOpacity>
             </View>
-            
+
             <FlatList
               data={LANGUAGES}
               keyExtractor={(item) => item.id}
@@ -395,7 +482,8 @@ export default function DarkProfileSettingsScreen() {
                 <TouchableOpacity
                   style={[
                     styles.languageOption,
-                    selectedLanguage === item.id && styles.selectedLanguageOption
+                    selectedLanguage === item.id &&
+                      styles.selectedLanguageOption,
                   ]}
                   onPress={() => selectLanguage(item.id)}
                 >
@@ -415,16 +503,22 @@ export default function DarkProfileSettingsScreen() {
 
   return (
     <LinearGradient
-      colors={[freudDarkTheme.colors.background.primary, freudDarkTheme.colors.background.secondary]}
+      colors={[
+        freudDarkTheme.colors.background.primary,
+        freudDarkTheme.colors.background.secondary,
+      ]}
       style={styles.screenContainer}
     >
-      <StatusBar barStyle="light-content" backgroundColor={freudDarkTheme.colors.background.primary} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={freudDarkTheme.colors.background.primary}
+      />
       <SafeAreaView style={styles.safeArea}>
-        {currentView === 'profile' && renderMainProfile()}
-        {currentView === 'account' && renderAccountSettings()}
-        {currentView === 'notifications' && renderNotificationSettings()}
-        {currentView === 'privacy' && renderPrivacySettings()}
-        {currentView === 'help' && renderHelpCenter()}
+        {currentView === "profile" && renderMainProfile()}
+        {currentView === "account" && renderAccountSettings()}
+        {currentView === "notifications" && renderNotificationSettings()}
+        {currentView === "privacy" && renderPrivacySettings()}
+        {currentView === "help" && renderHelpCenter()}
         {renderLanguageModal()}
       </SafeAreaView>
     </LinearGradient>
@@ -443,8 +537,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   profileHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: freudDarkTheme.colors.background.tertiary,
     borderRadius: 20,
     padding: 20,
@@ -455,20 +549,20 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 15,
   },
   avatarText: {
     fontSize: 28,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   profileInfo: {
     flex: 1,
   },
   profileName: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
     marginBottom: 4,
   },
@@ -485,11 +579,11 @@ const styles = StyleSheet.create({
   },
   editButtonText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
   statsContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 30,
   },
   statItem: {
@@ -498,11 +592,11 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     marginRight: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   statValue: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.accent.primary,
     marginBottom: 4,
   },
@@ -515,17 +609,17 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: freudDarkTheme.colors.background.tertiary,
     borderRadius: 16,
     padding: 20,
     marginBottom: 12,
   },
   menuLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   menuIcon: {
@@ -534,12 +628,12 @@ const styles = StyleSheet.create({
   },
   menuTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.primary,
   },
   menuRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   menuValue: {
     fontSize: 14,
@@ -557,31 +651,31 @@ const styles = StyleSheet.create({
   logoutGradient: {
     paddingVertical: 16,
     borderRadius: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   logoutText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
   bottomSpacer: {
     height: 20,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 20,
     marginBottom: 30,
   },
   backButton: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.accent.primary,
     marginRight: 20,
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
     flex: 1,
   },
@@ -589,17 +683,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   settingItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: freudDarkTheme.colors.background.tertiary,
     borderRadius: 16,
     padding: 20,
     marginBottom: 12,
   },
   settingLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   settingIcon: {
@@ -608,12 +702,12 @@ const styles = StyleSheet.create({
   },
   settingTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.primary,
   },
   settingRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   settingArrow: {
     fontSize: 18,
@@ -626,40 +720,40 @@ const styles = StyleSheet.create({
   aiSupportGradient: {
     borderRadius: 20,
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   aiSupportTitle: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    fontWeight: "700",
+    color: "#FFFFFF",
     marginBottom: 8,
   },
   aiSupportSubtitle: {
     fontSize: 14,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     opacity: 0.9,
     marginBottom: 15,
   },
   aiSupportButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: "rgba(255, 255, 255, 0.3)",
   },
   aiSupportButtonText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    justifyContent: 'flex-end',
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    justifyContent: "flex-end",
   },
   languageModal: {
-    maxHeight: '70%',
+    maxHeight: "70%",
   },
   languageModalGradient: {
     borderTopLeftRadius: 20,
@@ -669,31 +763,31 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   languageModalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   languageModalTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
   },
   modalCloseText: {
     fontSize: 24,
     color: freudDarkTheme.colors.text.secondary,
-    fontWeight: '300',
+    fontWeight: "300",
   },
   languageOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
     borderRadius: 12,
     marginBottom: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
   },
   selectedLanguageOption: {
-    backgroundColor: 'rgba(230, 126, 34, 0.2)',
+    backgroundColor: "rgba(230, 126, 34, 0.2)",
     borderWidth: 1,
     borderColor: freudDarkTheme.colors.accent.primary,
   },
@@ -703,13 +797,13 @@ const styles = StyleSheet.create({
   },
   languageName: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.primary,
     flex: 1,
   },
   languageCheck: {
     fontSize: 16,
     color: freudDarkTheme.colors.accent.primary,
-    fontWeight: '700',
+    fontWeight: "700",
   },
 });

@@ -17,7 +17,7 @@ const StatsCard = ({ title, value, subtitle, icon, color }) => {
     <View
       style={[
         styles.container,
-        { 
+        {
           backgroundColor: theme.colors.background.secondary,
           padding: theme.spacing[4],
           borderRadius: theme.borderRadius.md,
@@ -25,35 +25,41 @@ const StatsCard = ({ title, value, subtitle, icon, color }) => {
         },
       ]}
     >
-      <View style={[
-        styles.iconContainer, 
-        { 
-          backgroundColor: color,
-          borderRadius: theme.borderRadius.full,
-          marginBottom: theme.spacing[3],
-        }
-      ]}>
-        <Text style={[styles.icon, { fontSize: theme.typography.sizes.lg }]}>{icon}</Text>
+      <View
+        style={[
+          styles.iconContainer,
+          {
+            backgroundColor: color,
+            borderRadius: theme.borderRadius.full,
+            marginBottom: theme.spacing[3],
+          },
+        ]}
+      >
+        <Text style={[styles.icon, { fontSize: theme.typography.sizes.lg }]}>
+          {icon}
+        </Text>
       </View>
       <View style={styles.content}>
-        <Text style={[
-          styles.value, 
-          { 
-            color: theme.colors.text.primary,
-            fontSize: theme.typography.sizes.xl,
-            lineHeight: theme.typography.lineHeights.xl,
-            marginBottom: theme.spacing[1],
-          }
-        ]}>
+        <Text
+          style={[
+            styles.value,
+            {
+              color: theme.colors.text.primary,
+              fontSize: theme.typography.sizes.xl,
+              lineHeight: theme.typography.lineHeights.xl,
+              marginBottom: theme.spacing[1],
+            },
+          ]}
+        >
           {value}
           {subtitle && (
             <Text
               style={[
-                styles.subtitle, 
-                { 
+                styles.subtitle,
+                {
                   color: theme.colors.text.secondary,
                   fontSize: theme.typography.sizes.sm,
-                }
+                },
               ]}
             >
               {" "}
@@ -61,14 +67,16 @@ const StatsCard = ({ title, value, subtitle, icon, color }) => {
             </Text>
           )}
         </Text>
-        <Text style={[
-          styles.title, 
-          { 
-            color: theme.colors.text.secondary,
-            fontSize: theme.typography.sizes.sm,
-            lineHeight: theme.typography.lineHeights.sm,
-          }
-        ]}>
+        <Text
+          style={[
+            styles.title,
+            {
+              color: theme.colors.text.secondary,
+              fontSize: theme.typography.sizes.sm,
+              lineHeight: theme.typography.lineHeights.sm,
+            },
+          ]}
+        >
           {title}
         </Text>
       </View>

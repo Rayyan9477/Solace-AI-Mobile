@@ -3,8 +3,8 @@
  * Enhanced tools for validating and optimizing performance with mental health app focus
  */
 
-import { Alert } from 'react-native';
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { Alert } from "react-native";
 
 // Mental Health App Performance Standards
 const THERAPEUTIC_PERFORMANCE_STANDARDS = {
@@ -42,7 +42,7 @@ export class PerformanceBenchmark {
 
     const endTime = performance.now();
     const endMemory = this.getMemoryUsage();
-    
+
     const result = {
       name,
       duration: endTime - benchmark.startTime,
@@ -56,7 +56,7 @@ export class PerformanceBenchmark {
     if (__DEV__) {
       console.log(`📊 Benchmark ${name}:`, {
         duration: `${result.duration.toFixed(2)}ms`,
-        memory: `${result.memoryDelta > 0 ? '+' : ''}${result.memoryDelta}MB`,
+        memory: `${result.memoryDelta > 0 ? "+" : ""}${result.memoryDelta}MB`,
       });
     }
 
@@ -84,12 +84,13 @@ export class PerformanceBenchmark {
   generateReport() {
     const results = this.getResults();
     if (results.length === 0) {
-      return 'No performance data available';
+      return "No performance data available";
     }
 
-    const avgDuration = results.reduce((sum, r) => sum + r.duration, 0) / results.length;
-    const maxDuration = Math.max(...results.map(r => r.duration));
-    const minDuration = Math.min(...results.map(r => r.duration));
+    const avgDuration =
+      results.reduce((sum, r) => sum + r.duration, 0) / results.length;
+    const maxDuration = Math.max(...results.map((r) => r.duration));
+    const minDuration = Math.min(...results.map((r) => r.duration));
 
     return {
       totalBenchmarks: results.length,
@@ -104,29 +105,39 @@ export class PerformanceBenchmark {
 /**
  * Component performance validator
  */
-export const validateComponentPerformance = (componentName, renderCount, renderTime) => {
+export const validateComponentPerformance = (
+  componentName,
+  renderCount,
+  renderTime,
+) => {
   const warnings = [];
   const errors = [];
 
   // Check for excessive re-renders
   if (renderCount > 10) {
-    warnings.push(`${componentName} has rendered ${renderCount} times - consider memoization`);
+    warnings.push(
+      `${componentName} has rendered ${renderCount} times - consider memoization`,
+    );
   }
 
   // Check for slow renders
   if (renderTime > 16.67) {
-    warnings.push(`${componentName} render took ${renderTime.toFixed(2)}ms - exceeds 60fps threshold`);
+    warnings.push(
+      `${componentName} render took ${renderTime.toFixed(2)}ms - exceeds 60fps threshold`,
+    );
   }
 
   if (renderTime > 33) {
-    errors.push(`${componentName} render took ${renderTime.toFixed(2)}ms - critically slow`);
+    errors.push(
+      `${componentName} render took ${renderTime.toFixed(2)}ms - critically slow`,
+    );
   }
 
   return {
     isValid: errors.length === 0,
     warnings,
     errors,
-    score: Math.max(0, 100 - (warnings.length * 10) - (errors.length * 25)),
+    score: Math.max(0, 100 - warnings.length * 10 - errors.length * 25),
   };
 };
 
@@ -137,16 +148,19 @@ export const analyzeBundleSize = (bundleInfo) => {
   const recommendations = [];
   const { size, loadTime, cached } = bundleInfo;
 
-  if (size > 1024 * 1024) { // > 1MB
-    recommendations.push('Consider code splitting - bundle size exceeds 1MB');
+  if (size > 1024 * 1024) {
+    // > 1MB
+    recommendations.push("Consider code splitting - bundle size exceeds 1MB");
   }
 
-  if (loadTime > 2000) { // > 2 seconds
-    recommendations.push('Bundle load time is slow - consider lazy loading');
+  if (loadTime > 2000) {
+    // > 2 seconds
+    recommendations.push("Bundle load time is slow - consider lazy loading");
   }
 
-  if (!cached && size > 500 * 1024) { // > 500KB and not cached
-    recommendations.push('Large bundle not cached - implement bundle caching');
+  if (!cached && size > 500 * 1024) {
+    // > 500KB and not cached
+    recommendations.push("Large bundle not cached - implement bundle caching");
   }
 
   return {
@@ -154,7 +168,7 @@ export const analyzeBundleSize = (bundleInfo) => {
     loadTime: `${loadTime}ms`,
     cached,
     recommendations,
-    grade: size < 500 * 1024 ? 'A' : size < 1024 * 1024 ? 'B' : 'C',
+    grade: size < 500 * 1024 ? "A" : size < 1024 * 1024 ? "B" : "C",
   };
 };
 
@@ -167,17 +181,19 @@ export const validateAnimationPerformance = (animationData) => {
   const suggestions = [];
 
   if (!useNativeDriver) {
-    issues.push('Animation not using native driver - may drop frames');
-    suggestions.push('Add useNativeDriver: true to animation config');
+    issues.push("Animation not using native driver - may drop frames");
+    suggestions.push("Add useNativeDriver: true to animation config");
   }
 
   if (fps && fps < 55) {
     issues.push(`Low frame rate detected: ${fps}fps`);
-    suggestions.push('Consider optimizing animation complexity or duration');
+    suggestions.push("Consider optimizing animation complexity or duration");
   }
 
   if (duration > 1000) {
-    suggestions.push('Long animation duration - consider shortening for better UX');
+    suggestions.push(
+      "Long animation duration - consider shortening for better UX",
+    );
   }
 
   return {
@@ -194,25 +210,31 @@ export const validateAnimationPerformance = (animationData) => {
 export const analyzeMemoryUsage = (memoryData) => {
   const { used, available, percentage } = memoryData;
   const status = {
-    level: 'good',
-    message: 'Memory usage is optimal',
+    level: "good",
+    message: "Memory usage is optimal",
     recommendations: [],
   };
 
   if (percentage > 80) {
-    status.level = 'critical';
-    status.message = 'High memory usage detected';
-    status.recommendations.push('Consider implementing memory cleanup', 'Review component lifecycle management');
+    status.level = "critical";
+    status.message = "High memory usage detected";
+    status.recommendations.push(
+      "Consider implementing memory cleanup",
+      "Review component lifecycle management",
+    );
   } else if (percentage > 60) {
-    status.level = 'warning';
-    status.message = 'Moderate memory usage';
-    status.recommendations.push('Monitor memory usage trends', 'Consider lazy loading more components');
+    status.level = "warning";
+    status.message = "Moderate memory usage";
+    status.recommendations.push(
+      "Monitor memory usage trends",
+      "Consider lazy loading more components",
+    );
   }
 
   return {
     ...status,
     usage: `${used}MB / ${available + used}MB (${percentage}%)`,
-    grade: percentage < 60 ? 'A' : percentage < 80 ? 'B' : 'C',
+    grade: percentage < 60 ? "A" : percentage < 80 ? "B" : "C",
   };
 };
 
@@ -234,22 +256,22 @@ export class PerformanceTestSuite {
   // Run all performance tests
   async runTests() {
     this.results = [];
-    
+
     for (const test of this.tests) {
       try {
         this.benchmark.start(test.name);
         await test.testFunction();
         const result = this.benchmark.end(test.name);
-        
+
         this.results.push({
           ...result,
-          status: 'passed',
+          status: "passed",
           score: this.calculateScore(result),
         });
       } catch (error) {
         this.results.push({
           name: test.name,
-          status: 'failed',
+          status: "failed",
           error: error.message,
           score: 0,
         });
@@ -262,7 +284,7 @@ export class PerformanceTestSuite {
   // Calculate performance score
   calculateScore(result) {
     let score = 100;
-    
+
     // Deduct points for slow execution
     if (result.duration > 100) score -= 20;
     if (result.duration > 500) score -= 30;
@@ -277,9 +299,10 @@ export class PerformanceTestSuite {
 
   // Generate test report
   generateTestReport() {
-    const passed = this.results.filter(r => r.status === 'passed').length;
-    const failed = this.results.filter(r => r.status === 'failed').length;
-    const avgScore = this.results.reduce((sum, r) => sum + r.score, 0) / this.results.length;
+    const passed = this.results.filter((r) => r.status === "passed").length;
+    const failed = this.results.filter((r) => r.status === "failed").length;
+    const avgScore =
+      this.results.reduce((sum, r) => sum + r.score, 0) / this.results.length;
 
     return {
       summary: {
@@ -287,7 +310,14 @@ export class PerformanceTestSuite {
         passed,
         failed,
         averageScore: avgScore.toFixed(1),
-        grade: avgScore >= 90 ? 'A' : avgScore >= 80 ? 'B' : avgScore >= 70 ? 'C' : 'D',
+        grade:
+          avgScore >= 90
+            ? "A"
+            : avgScore >= 80
+              ? "B"
+              : avgScore >= 70
+                ? "C"
+                : "D",
       },
       results: this.results,
       recommendations: this.generateRecommendations(),
@@ -297,19 +327,25 @@ export class PerformanceTestSuite {
   // Generate recommendations based on test results
   generateRecommendations() {
     const recommendations = [];
-    const slowTests = this.results.filter(r => r.duration > 100);
-    const memoryHeavyTests = this.results.filter(r => r.memoryDelta > 10);
+    const slowTests = this.results.filter((r) => r.duration > 100);
+    const memoryHeavyTests = this.results.filter((r) => r.memoryDelta > 10);
 
     if (slowTests.length > 0) {
-      recommendations.push(`${slowTests.length} tests are running slowly - consider optimization`);
+      recommendations.push(
+        `${slowTests.length} tests are running slowly - consider optimization`,
+      );
     }
 
     if (memoryHeavyTests.length > 0) {
-      recommendations.push(`${memoryHeavyTests.length} tests show high memory usage - review memory management`);
+      recommendations.push(
+        `${memoryHeavyTests.length} tests show high memory usage - review memory management`,
+      );
     }
 
-    if (this.results.filter(r => r.status === 'failed').length > 0) {
-      recommendations.push('Some tests failed - review error logs and fix issues');
+    if (this.results.filter((r) => r.status === "failed").length > 0) {
+      recommendations.push(
+        "Some tests failed - review error logs and fix issues",
+      );
     }
 
     return recommendations;
@@ -323,10 +359,10 @@ export class PerformanceTestSuite {
 export const useMentalHealthPerformanceValidator = (componentName) => {
   const [performanceState, setPerformanceState] = useState({
     isTherapeuticallySafe: true,
-    renderHealth: 'excellent',
+    renderHealth: "excellent",
     animationSmooth: true,
     memoryStable: true,
-    recommendations: []
+    recommendations: [],
   });
 
   const renderTimes = useRef([]);
@@ -336,36 +372,48 @@ export const useMentalHealthPerformanceValidator = (componentName) => {
   const validateTherapeuticPerformance = useCallback(() => {
     const recommendations = [];
     let score = 100;
-    
+
     // Check render performance for therapeutic smoothness
-    const avgRenderTime = renderTimes.current.reduce((a, b) => a + b, 0) / renderTimes.current.length || 0;
+    const avgRenderTime =
+      renderTimes.current.reduce((a, b) => a + b, 0) /
+        renderTimes.current.length || 0;
     if (avgRenderTime > THERAPEUTIC_PERFORMANCE_STANDARDS.MAX_RENDER_TIME) {
       recommendations.push({
-        type: 'therapeutic_critical',
-        message: 'Slow renders may disrupt therapeutic flow',
-        solution: 'Optimize component rendering for mental health user experience'
+        type: "therapeutic_critical",
+        message: "Slow renders may disrupt therapeutic flow",
+        solution:
+          "Optimize component rendering for mental health user experience",
       });
       score -= 30;
     }
 
     // Check animation smoothness for calming effect
-    const avgFps = animationFrames.current.reduce((a, b) => a + b, 0) / animationFrames.current.length || 60;
+    const avgFps =
+      animationFrames.current.reduce((a, b) => a + b, 0) /
+        animationFrames.current.length || 60;
     if (avgFps < THERAPEUTIC_PERFORMANCE_STANDARDS.SMOOTH_ANIMATION_FPS * 0.9) {
       recommendations.push({
-        type: 'therapeutic_warning',
-        message: 'Animation stutter detected - may affect calming therapeutic UI',
-        solution: 'Ensure all animations use native driver and optimize complexity'
+        type: "therapeutic_warning",
+        message:
+          "Animation stutter detected - may affect calming therapeutic UI",
+        solution:
+          "Ensure all animations use native driver and optimize complexity",
       });
       score -= 20;
     }
 
     setPerformanceState({
       isTherapeuticallySafe: score > 80,
-      renderHealth: avgRenderTime < 10 ? 'excellent' : avgRenderTime < 16.67 ? 'good' : 'poor',
+      renderHealth:
+        avgRenderTime < 10
+          ? "excellent"
+          : avgRenderTime < 16.67
+            ? "good"
+            : "poor",
       animationSmooth: avgFps >= 58,
       memoryStable: true, // Enhanced in production
       recommendations,
-      score
+      score,
     });
   }, []);
 
@@ -380,74 +428,86 @@ export const quickPerformanceCheck = () => {
     timestamp: new Date().toISOString(),
     checks: [],
     overallScore: 0,
-    therapeuticReadiness: 'excellent',
+    therapeuticReadiness: "excellent",
   };
 
   // Check 1: Therapeutic Animation Performance
   const animationCheck = {
-    name: 'Therapeutic Animation Performance',
-    status: 'excellent',
+    name: "Therapeutic Animation Performance",
+    status: "excellent",
     score: 98,
-    details: 'Native driver animations optimized for calming therapeutic experience',
+    details:
+      "Native driver animations optimized for calming therapeutic experience",
     therapeutic: true,
   };
   results.checks.push(animationCheck);
 
   // Check 2: Bundle Loading (Mental Health Specific)
   const bundleCheck = {
-    name: 'Therapy Session Bundle Loading',
-    status: 'excellent',
+    name: "Therapy Session Bundle Loading",
+    status: "excellent",
     score: 94,
-    details: 'Lazy loading with preloading for therapy components - optimized for session continuity',
+    details:
+      "Lazy loading with preloading for therapy components - optimized for session continuity",
     therapeutic: true,
   };
   results.checks.push(bundleCheck);
 
   // Check 3: Memory Management for Extended Therapy Sessions
   const memoryCheck = {
-    name: 'Extended Session Memory Management',
-    status: 'good',
+    name: "Extended Session Memory Management",
+    status: "good",
     score: 92,
-    details: 'Memory leak detection and cleanup optimized for long therapy sessions',
+    details:
+      "Memory leak detection and cleanup optimized for long therapy sessions",
     therapeutic: true,
   };
   results.checks.push(memoryCheck);
 
   // Check 4: Component Optimization for Therapeutic UI
   const componentCheck = {
-    name: 'Therapeutic Component Optimization',
-    status: 'good',
+    name: "Therapeutic Component Optimization",
+    status: "good",
     score: 88,
-    details: 'React.memo and memoization for smooth mood tracking and therapy interactions',
+    details:
+      "React.memo and memoization for smooth mood tracking and therapy interactions",
     therapeutic: true,
   };
   results.checks.push(componentCheck);
 
   // Check 5: Gradient Performance for Therapeutic Colors
   const gradientCheck = {
-    name: 'Therapeutic Gradient Performance',
-    status: 'excellent',
+    name: "Therapeutic Gradient Performance",
+    status: "excellent",
     score: 96,
-    details: 'Time-based therapeutic gradients optimized with memoization',
+    details: "Time-based therapeutic gradients optimized with memoization",
     therapeutic: true,
   };
   results.checks.push(gradientCheck);
 
   // Calculate overall score
   results.overallScore = Math.round(
-    results.checks.reduce((sum, check) => sum + check.score, 0) / results.checks.length
+    results.checks.reduce((sum, check) => sum + check.score, 0) /
+      results.checks.length,
   );
 
   // Determine therapeutic readiness
-  const therapeuticScore = results.checks
-    .filter(check => check.therapeutic)
-    .reduce((sum, check) => sum + check.score, 0) / results.checks.filter(check => check.therapeutic).length;
+  const therapeuticScore =
+    results.checks
+      .filter((check) => check.therapeutic)
+      .reduce((sum, check) => sum + check.score, 0) /
+    results.checks.filter((check) => check.therapeutic).length;
 
-  results.therapeuticReadiness = 
-    therapeuticScore >= 95 ? 'excellent' :
-    therapeuticScore >= 90 ? 'very good' :
-    therapeuticScore >= 85 ? 'good' :
-    therapeuticScore >= 80 ? 'acceptable' : 'needs optimization';
+  results.therapeuticReadiness =
+    therapeuticScore >= 95
+      ? "excellent"
+      : therapeuticScore >= 90
+        ? "very good"
+        : therapeuticScore >= 85
+          ? "good"
+          : therapeuticScore >= 80
+            ? "acceptable"
+            : "needs optimization";
 
   return results;
 };
@@ -459,17 +519,17 @@ export const showPerformanceAlert = (issue) => {
   if (!__DEV__) return; // Only show in development
 
   const { type, component, metric, threshold, actual } = issue;
-  
+
   Alert.alert(
     `Performance ${type}`,
     `Component: ${component}\n${metric}: ${actual} (threshold: ${threshold})`,
     [
-      { text: 'Ignore', style: 'cancel' },
-      { 
-        text: 'Details', 
-        onPress: () => console.log('Performance issue details:', issue) 
+      { text: "Ignore", style: "cancel" },
+      {
+        text: "Details",
+        onPress: () => console.log("Performance issue details:", issue),
       },
-    ]
+    ],
   );
 };
 
@@ -481,12 +541,15 @@ export const exportPerformanceData = (data) => {
 
   const exportData = {
     timestamp: new Date().toISOString(),
-    platform: 'React Native',
-    app: 'Solace AI Mobile',
+    platform: "React Native",
+    app: "Solace AI Mobile",
     data,
   };
 
-  console.log('📊 Performance Data Export:', JSON.stringify(exportData, null, 2));
+  console.log(
+    "📊 Performance Data Export:",
+    JSON.stringify(exportData, null, 2),
+  );
   return exportData;
 };
 

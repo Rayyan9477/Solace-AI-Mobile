@@ -1,6 +1,6 @@
 /**
  * Navigation State Persistence Utility
- * 
+ *
  * Provides robust navigation state persistence across app sessions with:
  * - Automatic state saving and restoration
  * - Mental health session continuity
@@ -9,33 +9,33 @@
  * - Accessibility navigation history
  */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CommonActions } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CommonActions } from "@react-navigation/native";
 
 // Storage keys
 const STORAGE_KEYS = {
-  NAVIGATION_STATE: '@solace_navigation_state',
-  USER_PREFERENCES: '@solace_navigation_preferences',
-  SESSION_DATA: '@solace_session_data',
-  ACCESSIBILITY_HISTORY: '@solace_accessibility_history',
+  NAVIGATION_STATE: "@solace_navigation_state",
+  USER_PREFERENCES: "@solace_navigation_preferences",
+  SESSION_DATA: "@solace_session_data",
+  ACCESSIBILITY_HISTORY: "@solace_accessibility_history",
 };
 
 // Mental health session types that should be preserved
 const PRESERVABLE_SESSIONS = {
-  THERAPY: 'therapy',
-  MOOD_TRACKING: 'moodTracking',
-  ASSESSMENT: 'assessment',
-  JOURNAL: 'journal',
-  CRISIS_SUPPORT: 'crisisSupport',
+  THERAPY: "therapy",
+  MOOD_TRACKING: "moodTracking",
+  ASSESSMENT: "assessment",
+  JOURNAL: "journal",
+  CRISIS_SUPPORT: "crisisSupport",
 };
 
 // Screens that should not be persisted for privacy
 const PRIVATE_SCREENS = [
-  'SignIn',
-  'Register',
-  'ForgotPassword',
-  'CrisisSupport',
-  'EmergencyContacts',
+  "SignIn",
+  "Register",
+  "ForgotPassword",
+  "CrisisSupport",
+  "EmergencyContacts",
 ];
 
 // Maximum age for persisted state (24 hours)
@@ -48,21 +48,21 @@ class NavigationPersistence {
       enabled: true,
       persistPrivateScreens: false,
       maxStateAge: MAX_STATE_AGE,
-      
+
       // Mental health specific options
       preserveTherapySessions: true,
       preserveMoodTracking: true,
       preserveAssessmentProgress: true,
-      
+
       // Privacy options
       encryptSensitiveData: true,
       clearOnLogout: true,
       respectDoNotTrack: true,
-      
+
       // Accessibility options
       persistAccessibilityHistory: true,
       announceStateRestoration: true,
-      
+
       ...options,
     };
 
@@ -82,12 +82,12 @@ class NavigationPersistence {
     try {
       // Filter sensitive routes if privacy protection is enabled
       const sanitizedState = this.sanitizeState(state);
-      
+
       // Add metadata
       const stateWithMetadata = {
         state: sanitizedState,
         timestamp: Date.now(),
-        version: '1.0',
+        version: "1.0",
         sessionId: this.generateSessionId(),
         userAgent: this.getUserAgent(),
       };
@@ -95,15 +95,15 @@ class NavigationPersistence {
       // Save to storage
       await AsyncStorage.setItem(
         STORAGE_KEYS.NAVIGATION_STATE,
-        JSON.stringify(stateWithMetadata)
+        JSON.stringify(stateWithMetadata),
       );
 
       // Update current state reference
       this.currentState = sanitizedState;
 
-      console.log('✅ Navigation state saved successfully');
+      console.log("✅ Navigation state saved successfully");
     } catch (error) {
-      console.error('❌ Failed to save navigation state:', error);
+      console.error("❌ Failed to save navigation state:", error);
     }
   }
 
@@ -116,25 +116,27 @@ class NavigationPersistence {
     }
 
     try {
-      const storedData = await AsyncStorage.getItem(STORAGE_KEYS.NAVIGATION_STATE);
-      
+      const storedData = await AsyncStorage.getItem(
+        STORAGE_KEYS.NAVIGATION_STATE,
+      );
+
       if (!storedData) {
-        console.log('ℹ️ No navigation state found in storage');
+        console.log("ℹ️ No navigation state found in storage");
         return null;
       }
 
       const parsedData = JSON.parse(storedData);
-      
+
       // Check if state is too old
       if (this.isStateExpired(parsedData.timestamp)) {
-        console.log('⏰ Navigation state expired, clearing...');
+        console.log("⏰ Navigation state expired, clearing...");
         await this.clearNavigationState();
         return null;
       }
 
       // Validate state structure
       if (!this.isValidState(parsedData.state)) {
-        console.log('⚠️ Invalid navigation state structure, clearing...');
+        console.log("⚠️ Invalid navigation state structure, clearing...");
         await this.clearNavigationState();
         return null;
       }
@@ -147,10 +149,10 @@ class NavigationPersistence {
         this.announceStateRestoration(parsedData.state);
       }
 
-      console.log('✅ Navigation state restored successfully');
+      console.log("✅ Navigation state restored successfully");
       return parsedData.state;
     } catch (error) {
-      console.error('❌ Failed to restore navigation state:', error);
+      console.error("❌ Failed to restore navigation state:", error);
       // Clear corrupted state
       await this.clearNavigationState();
       return null;
@@ -180,7 +182,7 @@ class NavigationPersistence {
       }
 
       await AsyncStorage.setItem(sessionKey, JSON.stringify(sessionData));
-      
+
       console.log(`✅ ${sessionType} session data saved`);
     } catch (error) {
       console.error(`❌ Failed to save ${sessionType} session data:`, error);
@@ -205,7 +207,7 @@ class NavigationPersistence {
 
         if (storedData) {
           const sessionData = JSON.parse(storedData);
-          
+
           // Check if session data is expired
           if (this.isStateExpired(sessionData.timestamp)) {
             await AsyncStorage.removeItem(sessionKey);
@@ -225,7 +227,7 @@ class NavigationPersistence {
       this.sessionData = restoredSessions;
       return restoredSessions;
     } catch (error) {
-      console.error('❌ Failed to restore session data:', error);
+      console.error("❌ Failed to restore session data:", error);
       return {};
     }
   }
@@ -237,19 +239,21 @@ class NavigationPersistence {
     try {
       const keys = Object.values(STORAGE_KEYS);
       await AsyncStorage.multiRemove(keys);
-      
+
       // Clear session data for all types
       const sessionTypes = Object.values(PRESERVABLE_SESSIONS);
-      const sessionKeys = sessionTypes.map(type => `${STORAGE_KEYS.SESSION_DATA}_${type}`);
+      const sessionKeys = sessionTypes.map(
+        (type) => `${STORAGE_KEYS.SESSION_DATA}_${type}`,
+      );
       await AsyncStorage.multiRemove(sessionKeys);
 
       this.currentState = null;
       this.sessionData = {};
       this.accessibilityHistory = [];
 
-      console.log('✅ Navigation state cleared successfully');
+      console.log("✅ Navigation state cleared successfully");
     } catch (error) {
-      console.error('❌ Failed to clear navigation state:', error);
+      console.error("❌ Failed to clear navigation state:", error);
     }
   }
 
@@ -278,10 +282,10 @@ class NavigationPersistence {
 
       await AsyncStorage.setItem(
         STORAGE_KEYS.ACCESSIBILITY_HISTORY,
-        JSON.stringify(this.accessibilityHistory)
+        JSON.stringify(this.accessibilityHistory),
       );
     } catch (error) {
-      console.error('❌ Failed to save accessibility history:', error);
+      console.error("❌ Failed to save accessibility history:", error);
     }
   }
 
@@ -290,10 +294,12 @@ class NavigationPersistence {
    */
   async getAccessibilityHistory() {
     try {
-      const storedHistory = await AsyncStorage.getItem(STORAGE_KEYS.ACCESSIBILITY_HISTORY);
+      const storedHistory = await AsyncStorage.getItem(
+        STORAGE_KEYS.ACCESSIBILITY_HISTORY,
+      );
       return storedHistory ? JSON.parse(storedHistory) : [];
     } catch (error) {
-      console.error('❌ Failed to get accessibility history:', error);
+      console.error("❌ Failed to get accessibility history:", error);
       return [];
     }
   }
@@ -305,9 +311,9 @@ class NavigationPersistence {
     try {
       // Parse deep link
       const { screenName, params } = this.parseDeepLink(url);
-      
+
       if (!screenName) {
-        console.warn('⚠️ Invalid deep link:', url);
+        console.warn("⚠️ Invalid deep link:", url);
         return false;
       }
 
@@ -322,15 +328,15 @@ class NavigationPersistence {
         CommonActions.navigate({
           name: screenName,
           params,
-        })
+        }),
       );
 
       // Save accessibility history
-      this.saveAccessibilityHistory(screenName, 'DEEP_LINK', { url });
+      this.saveAccessibilityHistory(screenName, "DEEP_LINK", { url });
 
       return true;
     } catch (error) {
-      console.error('❌ Failed to handle deep link:', error);
+      console.error("❌ Failed to handle deep link:", error);
       return false;
     }
   }
@@ -338,7 +344,7 @@ class NavigationPersistence {
   /**
    * Get navigation reset action for clean start
    */
-  getResetAction(routeName = 'Home') {
+  getResetAction(routeName = "Home") {
     return CommonActions.reset({
       index: 0,
       routes: [{ name: routeName }],
@@ -356,12 +362,12 @@ class NavigationPersistence {
     }
 
     const sanitizedState = { ...state };
-    
+
     if (!this.options.persistPrivateScreens) {
-      sanitizedState.routes = state.routes.filter(route => 
-        !PRIVATE_SCREENS.includes(route.name)
+      sanitizedState.routes = state.routes.filter(
+        (route) => !PRIVATE_SCREENS.includes(route.name),
       );
-      
+
       // Adjust index if necessary
       if (sanitizedState.index >= sanitizedState.routes.length) {
         sanitizedState.index = Math.max(0, sanitizedState.routes.length - 1);
@@ -375,15 +381,15 @@ class NavigationPersistence {
    * Sanitize session data for privacy
    */
   sanitizeSessionData(data) {
-    if (!data || typeof data !== 'object') {
+    if (!data || typeof data !== "object") {
       return data;
     }
 
     // Remove sensitive fields
-    const sensitiveFields = ['password', 'token', 'creditCard', 'ssn'];
+    const sensitiveFields = ["password", "token", "creditCard", "ssn"];
     const sanitized = { ...data };
 
-    sensitiveFields.forEach(field => {
+    sensitiveFields.forEach((field) => {
       if (field in sanitized) {
         delete sanitized[field];
       }
@@ -405,9 +411,9 @@ class NavigationPersistence {
   isValidState(state) {
     return (
       state &&
-      typeof state === 'object' &&
+      typeof state === "object" &&
       Array.isArray(state.routes) &&
-      typeof state.index === 'number' &&
+      typeof state.index === "number" &&
       state.index >= 0 &&
       state.index < state.routes.length
     );
@@ -449,14 +455,14 @@ class NavigationPersistence {
   parseDeepLink(url) {
     try {
       const urlObj = new URL(url);
-      const pathSegments = urlObj.pathname.split('/').filter(Boolean);
-      
+      const pathSegments = urlObj.pathname.split("/").filter(Boolean);
+
       return {
         screenName: pathSegments[0],
         params: Object.fromEntries(urlObj.searchParams),
       };
     } catch (error) {
-      console.error('❌ Failed to parse deep link:', error);
+      console.error("❌ Failed to parse deep link:", error);
       return { screenName: null, params: {} };
     }
   }
@@ -466,14 +472,14 @@ class NavigationPersistence {
    */
   getSessionTypeForScreen(screenName) {
     const sessionTypeMap = {
-      'Therapy': PRESERVABLE_SESSIONS.THERAPY,
-      'TherapySession': PRESERVABLE_SESSIONS.THERAPY,
-      'MoodTracker': PRESERVABLE_SESSIONS.MOOD_TRACKING,
-      'MoodTracking': PRESERVABLE_SESSIONS.MOOD_TRACKING,
-      'Assessment': PRESERVABLE_SESSIONS.ASSESSMENT,
-      'MentalHealthAssessment': PRESERVABLE_SESSIONS.ASSESSMENT,
-      'Journal': PRESERVABLE_SESSIONS.JOURNAL,
-      'JournalEntry': PRESERVABLE_SESSIONS.JOURNAL,
+      Therapy: PRESERVABLE_SESSIONS.THERAPY,
+      TherapySession: PRESERVABLE_SESSIONS.THERAPY,
+      MoodTracker: PRESERVABLE_SESSIONS.MOOD_TRACKING,
+      MoodTracking: PRESERVABLE_SESSIONS.MOOD_TRACKING,
+      Assessment: PRESERVABLE_SESSIONS.ASSESSMENT,
+      MentalHealthAssessment: PRESERVABLE_SESSIONS.ASSESSMENT,
+      Journal: PRESERVABLE_SESSIONS.JOURNAL,
+      JournalEntry: PRESERVABLE_SESSIONS.JOURNAL,
     };
 
     return sessionTypeMap[screenName] || null;
@@ -489,12 +495,12 @@ class NavigationPersistence {
 
     const currentRoute = state.routes[state.index];
     const screenName = currentRoute.name;
-    
+
     // Import FocusManagement dynamically to avoid circular dependencies
-    import('./accessibility').then(({ FocusManagement }) => {
+    import("./accessibility").then(({ FocusManagement }) => {
       FocusManagement.announceForScreenReader(
         `Returning to ${screenName} screen where you left off.`,
-        'polite'
+        "polite",
       );
     });
   }
@@ -525,25 +531,25 @@ class NavigationPersistence {
 const navigationPersistence = new NavigationPersistence();
 
 // Export utility functions
-export const saveNavigationState = (state) => 
+export const saveNavigationState = (state) =>
   navigationPersistence.saveNavigationState(state);
 
-export const restoreNavigationState = () => 
+export const restoreNavigationState = () =>
   navigationPersistence.restoreNavigationState();
 
-export const clearNavigationState = () => 
+export const clearNavigationState = () =>
   navigationPersistence.clearNavigationState();
 
-export const saveSessionData = (sessionType, data) => 
+export const saveSessionData = (sessionType, data) =>
   navigationPersistence.saveSessionData(sessionType, data);
 
-export const restoreSessionData = () => 
+export const restoreSessionData = () =>
   navigationPersistence.restoreSessionData();
 
-export const handleDeepLink = (url, navigationRef) => 
+export const handleDeepLink = (url, navigationRef) =>
   navigationPersistence.handleDeepLink(url, navigationRef);
 
-export const getResetAction = (routeName) => 
+export const getResetAction = (routeName) =>
   navigationPersistence.getResetAction(routeName);
 
 export const saveAccessibilityHistory = (screenName, action, metadata) =>

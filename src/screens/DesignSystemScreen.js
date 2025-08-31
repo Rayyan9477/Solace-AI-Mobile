@@ -14,7 +14,12 @@ const DesignSystemScreen = ({ navigation }) => {
   const { theme } = useTheme();
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background.primary },
+      ]}
+    >
       <View style={styles.content}>
         <MentalHealthIcon
           name="Brain"
@@ -25,15 +30,26 @@ const DesignSystemScreen = ({ navigation }) => {
         <Text style={[styles.title, { color: theme.colors.text.primary }]}>
           Design System
         </Text>
-        <Text style={[styles.description, { color: theme.colors.text.secondary }]}>
-          The design system components have been consolidated into the shared theme system.
-          All design tokens and styling are now managed through the unified theme provider.
+        <Text
+          style={[styles.description, { color: theme.colors.text.secondary }]}
+        >
+          The design system components have been consolidated into the shared
+          theme system. All design tokens and styling are now managed through
+          the unified theme provider.
         </Text>
         <TouchableOpacity
-          style={[styles.backButton, { backgroundColor: theme.colors.primary[500] }]}
+          style={[
+            styles.backButton,
+            { backgroundColor: theme.colors.primary[500] },
+          ]}
           onPress={() => navigation.goBack()}
         >
-          <Text style={[styles.backButtonText, { color: theme.colors.text.inverse }]}>
+          <Text
+            style={[
+              styles.backButtonText,
+              { color: theme.colors.text.inverse },
+            ]}
+          >
             Go Back
           </Text>
         </TouchableOpacity>
@@ -48,8 +64,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 24,
   },
   icon: {
@@ -57,14 +73,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   description: {
     fontSize: 16,
     lineHeight: 24,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 32,
   },
   backButton: {
@@ -74,7 +90,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
 

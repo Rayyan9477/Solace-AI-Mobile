@@ -351,7 +351,13 @@ const ComprehensiveAssessmentScreen = ({ navigation }) => {
         variant="primary"
         size="large"
         onPress={handleNext}
-        icon={<ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+        icon={
+          <ThemedFreudIcon
+            name="chevron-right"
+            size={20}
+            color={freudTheme.colors.text.inverse}
+          />
+        }
         iconPosition="right"
         style={{ marginTop: freudTheme.spacing.lg }}
       />
@@ -490,7 +496,13 @@ const ComprehensiveAssessmentScreen = ({ navigation }) => {
         variant="primary"
         size="large"
         onPress={handleNext}
-        icon={<ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+        icon={
+          <ThemedFreudIcon
+            name="chevron-right"
+            size={20}
+            color={freudTheme.colors.text.inverse}
+          />
+        }
         iconPosition="right"
         style={{ marginTop: freudTheme.spacing.lg }}
       />
@@ -558,7 +570,13 @@ const ComprehensiveAssessmentScreen = ({ navigation }) => {
           variant="primary"
           size="large"
           onPress={handleNext}
-          icon={<ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+          icon={
+            <ThemedFreudIcon
+              name="chevron-right"
+              size={20}
+              color={freudTheme.colors.text.inverse}
+            />
+          }
           iconPosition="right"
           style={{ marginTop: freudTheme.spacing.lg }}
         />
@@ -657,7 +675,13 @@ const ComprehensiveAssessmentScreen = ({ navigation }) => {
         variant="primary"
         size="large"
         onPress={() => navigation.navigate("MainApp")}
-        icon={<ThemedFreudIcon name="chevron-right" size={20} color={freudTheme.colors.text.inverse} />}
+        icon={
+          <ThemedFreudIcon
+            name="chevron-right"
+            size={20}
+            color={freudTheme.colors.text.inverse}
+          />
+        }
         iconPosition="right"
         style={{ marginTop: freudTheme.spacing.lg }}
       />

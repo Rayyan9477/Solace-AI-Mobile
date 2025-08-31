@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -11,77 +12,123 @@ import {
   Modal,
   PanResponder,
   Vibration,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { freudDarkTheme } from '../../shared/theme/freudDarkTheme';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import { freudDarkTheme } from "../../shared/theme/freudDarkTheme";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 // Mindful data
 const MINDFUL_HISTORY = [
   {
     id: 1,
-    type: 'Deep Meditation',
-    date: 'Today',
-    duration: '45:00',
+    type: "Deep Meditation",
+    date: "Today",
+    duration: "45:00",
     progress: 90,
     color: freudDarkTheme.colors.status.success,
   },
   {
     id: 2,
-    type: 'Balanced Sleep',
-    date: 'Yesterday',
-    duration: '20:00',
+    type: "Balanced Sleep",
+    date: "Yesterday",
+    duration: "20:00",
     progress: 75,
-    color: '#8B5CF6',
+    color: "#8B5CF6",
   },
   {
     id: 3,
-    type: 'Deep Meditation',
-    date: '2 days ago',
-    duration: '30:00',
+    type: "Deep Meditation",
+    date: "2 days ago",
+    duration: "30:00",
     progress: 60,
     color: freudDarkTheme.colors.status.success,
   },
 ];
 
 const MINDFUL_STATS = [
-  { category: 'Breathing', time: '2.5h', percentage: 30, color: freudDarkTheme.colors.status.success },
-  { category: 'Mindfulness', time: '1.5h', percentage: 17, color: freudDarkTheme.colors.accent.primary },
-  { category: 'Relax', time: '3.5h', percentage: 42, color: '#8B5CF6' },
-  { category: 'Sleep', time: '0.9h', percentage: 10, color: '#06B6D4' },
+  {
+    category: "Breathing",
+    time: "2.5h",
+    percentage: 30,
+    color: freudDarkTheme.colors.status.success,
+  },
+  {
+    category: "Mindfulness",
+    time: "1.5h",
+    percentage: 17,
+    color: freudDarkTheme.colors.accent.primary,
+  },
+  { category: "Relax", time: "3.5h", percentage: 42, color: "#8B5CF6" },
+  { category: "Sleep", time: "0.9h", percentage: 10, color: "#06B6D4" },
 ];
 
 const EXERCISE_GOALS = [
-  { id: 1, title: 'I want to gain more focus', description: 'Enhance concentration' },
-  { id: 2, title: 'I want to sleep better', description: 'Improve sleep quality' },
-  { id: 3, title: 'I want to build a stronger mindset', description: 'Mental resilience' },
-  { id: 4, title: 'I want to conquer my anxiety', description: 'Anxiety management' },
-  { id: 5, title: 'I want to enjoy the moment', description: 'Present awareness' },
-  { id: 6, title: 'I want to be a happier person', description: 'Overall wellbeing' },
+  {
+    id: 1,
+    title: "I want to gain more focus",
+    description: "Enhance concentration",
+  },
+  {
+    id: 2,
+    title: "I want to sleep better",
+    description: "Improve sleep quality",
+  },
+  {
+    id: 3,
+    title: "I want to build a stronger mindset",
+    description: "Mental resilience",
+  },
+  {
+    id: 4,
+    title: "I want to conquer my anxiety",
+    description: "Anxiety management",
+  },
+  {
+    id: 5,
+    title: "I want to enjoy the moment",
+    description: "Present awareness",
+  },
+  {
+    id: 6,
+    title: "I want to be a happier person",
+    description: "Overall wellbeing",
+  },
 ];
 
 const SOUNDSCAPES = [
-  { id: 1, name: 'Rain', icon: '🌧️', duration: '∞', color: '#06B6D4' },
-  { id: 2, name: 'Zen Garden', icon: '🧘', duration: '∞', color: freudDarkTheme.colors.status.success },
-  { id: 3, name: 'Mountain Stream', icon: '🏔️', duration: '∞', color: '#8B5CF6' },
-  { id: 4, name: 'Ocean Waves', icon: '🌊', duration: '∞', color: '#0EA5E9' },
-  { id: 5, name: 'Forest', icon: '🌲', duration: '∞', color: '#059669' },
-  { id: 6, name: 'Thunderstorm', icon: '⛈️', duration: '∞', color: '#6366F1' },
+  { id: 1, name: "Rain", icon: "🌧️", duration: "∞", color: "#06B6D4" },
+  {
+    id: 2,
+    name: "Zen Garden",
+    icon: "🧘",
+    duration: "∞",
+    color: freudDarkTheme.colors.status.success,
+  },
+  {
+    id: 3,
+    name: "Mountain Stream",
+    icon: "🏔️",
+    duration: "∞",
+    color: "#8B5CF6",
+  },
+  { id: 4, name: "Ocean Waves", icon: "🌊", duration: "∞", color: "#0EA5E9" },
+  { id: 5, name: "Forest", icon: "🌲", duration: "∞", color: "#059669" },
+  { id: 6, name: "Thunderstorm", icon: "⛈️", duration: "∞", color: "#6366F1" },
 ];
 
 export default function DarkMindfulHoursScreen() {
-  const [currentView, setCurrentView] = useState('overview'); // 'overview', 'stats', 'newExercise', 'exerciseSetup', 'breathing', 'complete'
+  const [currentView, setCurrentView] = useState("overview"); // 'overview', 'stats', 'newExercise', 'exerciseSetup', 'breathing', 'complete'
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [exerciseTime, setExerciseTime] = useState(25); // minutes
   const [selectedSoundscape, setSelectedSoundscape] = useState(1);
   const [isBreathing, setIsBreathing] = useState(false);
-  const [breathingPhase, setBreathingPhase] = useState('inhale'); // 'inhale', 'hold', 'exhale'
+  const [breathingPhase, setBreathingPhase] = useState("inhale"); // 'inhale', 'hold', 'exhale'
   const [breathingCount, setBreathingCount] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [totalHours] = useState(5.21);
-  
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const breathAnim = useRef(new Animated.Value(0.8)).current;
   const progressAnim = useRef(new Animated.Value(0)).current;
@@ -102,34 +149,34 @@ export default function DarkMindfulHoursScreen() {
         // Breathing pattern: 4s inhale, 2s hold, 6s exhale
         const cycle = breathingCount % 12;
         if (cycle < 4) {
-          setBreathingPhase('inhale');
+          setBreathingPhase("inhale");
           Animated.timing(breathAnim, {
             toValue: 1.2,
             duration: 4000,
             useNativeDriver: true,
           }).start();
         } else if (cycle < 6) {
-          setBreathingPhase('hold');
+          setBreathingPhase("hold");
         } else {
-          setBreathingPhase('exhale');
+          setBreathingPhase("exhale");
           Animated.timing(breathAnim, {
             toValue: 0.8,
             duration: 6000,
             useNativeDriver: true,
           }).start();
         }
-        setBreathingCount(prev => prev + 1);
+        setBreathingCount((prev) => prev + 1);
       }, 1000);
     }
     return () => clearInterval(breathingInterval);
   }, [isBreathing, breathingCount]);
 
   const startBreathingExercise = () => {
-    setCurrentView('breathing');
+    setCurrentView("breathing");
     setIsBreathing(true);
     setBreathingCount(0);
     setCurrentTime(0);
-    
+
     // Start progress animation
     Animated.timing(progressAnim, {
       toValue: 1,
@@ -137,7 +184,7 @@ export default function DarkMindfulHoursScreen() {
       useNativeDriver: false,
     }).start(() => {
       setIsBreathing(false);
-      setCurrentView('complete');
+      setCurrentView("complete");
     });
 
     // Start pulse animation
@@ -153,32 +200,35 @@ export default function DarkMindfulHoursScreen() {
           duration: 1000,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     );
     pulseAnimation.start();
   };
 
   const stopBreathingExercise = () => {
     setIsBreathing(false);
-    setCurrentView('overview');
+    setCurrentView("overview");
     progressAnim.setValue(0);
     pulseAnim.setValue(1);
   };
 
   const renderOverview = () => (
-    <Animated.ScrollView 
+    <Animated.ScrollView
       style={[styles.container, { opacity: fadeAnim }]}
       showsVerticalScrollIndicator={false}
     >
       {/* Main Stats Card */}
       <View style={styles.mainStatsCard}>
         <LinearGradient
-          colors={[freudDarkTheme.colors.background.secondary, freudDarkTheme.colors.background.tertiary]}
+          colors={[
+            freudDarkTheme.colors.background.secondary,
+            freudDarkTheme.colors.background.tertiary,
+          ]}
           style={styles.mainStatsGradient}
         >
           <Text style={styles.mainStatsNumber}>{totalHours}</Text>
           <Text style={styles.mainStatsLabel}>Mindful Hours</Text>
-          
+
           {/* Progress Circle */}
           <View style={styles.progressCircle}>
             <View style={styles.progressCircleOuter}>
@@ -189,9 +239,12 @@ export default function DarkMindfulHoursScreen() {
       </View>
 
       {/* Action Button */}
-      <TouchableOpacity style={styles.addButton} onPress={() => setCurrentView('newExercise')}>
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => setCurrentView("newExercise")}
+      >
         <LinearGradient
-          colors={[freudDarkTheme.colors.accent.primary, '#F97316']}
+          colors={[freudDarkTheme.colors.accent.primary, "#F97316"]}
           style={styles.addButtonGradient}
         >
           <Text style={styles.addButtonText}>+ </Text>
@@ -204,11 +257,19 @@ export default function DarkMindfulHoursScreen() {
         {MINDFUL_HISTORY.map((item) => (
           <View key={item.id} style={styles.historyItem}>
             <LinearGradient
-              colors={[freudDarkTheme.colors.background.secondary, freudDarkTheme.colors.background.tertiary]}
+              colors={[
+                freudDarkTheme.colors.background.secondary,
+                freudDarkTheme.colors.background.tertiary,
+              ]}
               style={styles.historyItemGradient}
             >
               <View style={styles.historyLeft}>
-                <View style={[styles.historyIndicator, { backgroundColor: item.color }]} />
+                <View
+                  style={[
+                    styles.historyIndicator,
+                    { backgroundColor: item.color },
+                  ]}
+                />
                 <View>
                   <Text style={styles.historyTitle}>{item.type}</Text>
                   <Text style={styles.historyDate}>{item.date}</Text>
@@ -217,7 +278,15 @@ export default function DarkMindfulHoursScreen() {
               <View style={styles.historyRight}>
                 <Text style={styles.historyDuration}>{item.duration}</Text>
                 <View style={styles.progressBar}>
-                  <View style={[styles.progressFill, { width: `${item.progress}%`, backgroundColor: item.color }]} />
+                  <View
+                    style={[
+                      styles.progressFill,
+                      {
+                        width: `${item.progress}%`,
+                        backgroundColor: item.color,
+                      },
+                    ]}
+                  />
                 </View>
               </View>
             </LinearGradient>
@@ -226,7 +295,10 @@ export default function DarkMindfulHoursScreen() {
       </View>
 
       {/* Quick Stats */}
-      <TouchableOpacity style={styles.quickStatsButton} onPress={() => setCurrentView('stats')}>
+      <TouchableOpacity
+        style={styles.quickStatsButton}
+        onPress={() => setCurrentView("stats")}
+      >
         <Text style={styles.quickStatsText}>View Detailed Stats →</Text>
       </TouchableOpacity>
 
@@ -237,7 +309,7 @@ export default function DarkMindfulHoursScreen() {
   const renderStats = () => (
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => setCurrentView('overview')}>
+        <TouchableOpacity onPress={() => setCurrentView("overview")}>
           <Text style={styles.backButton}>← Back</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Mindful Hours Stats</Text>
@@ -247,7 +319,7 @@ export default function DarkMindfulHoursScreen() {
         {/* Total Hours */}
         <View style={styles.totalHoursCard}>
           <LinearGradient
-            colors={[freudDarkTheme.colors.status.success, '#16A34A']}
+            colors={[freudDarkTheme.colors.status.success, "#16A34A"]}
             style={styles.totalHoursGradient}
           >
             <Text style={styles.totalHoursNumber}>8.2h</Text>
@@ -260,24 +332,31 @@ export default function DarkMindfulHoursScreen() {
           {MINDFUL_STATS.map((stat, index) => (
             <View key={stat.category} style={styles.categoryStatItem}>
               <View style={styles.categoryStatLeft}>
-                <View style={[styles.categoryIndicator, { backgroundColor: stat.color }]} />
+                <View
+                  style={[
+                    styles.categoryIndicator,
+                    { backgroundColor: stat.color },
+                  ]}
+                />
                 <Text style={styles.categoryName}>{stat.category}</Text>
               </View>
               <View style={styles.categoryStatRight}>
                 <Text style={styles.categoryTime}>{stat.time}</Text>
-                <Text style={styles.categoryPercentage}>{stat.percentage}%</Text>
+                <Text style={styles.categoryPercentage}>
+                  {stat.percentage}%
+                </Text>
               </View>
             </View>
           ))}
         </View>
 
         {/* Add Session Button */}
-        <TouchableOpacity 
-          style={styles.addSessionButton} 
-          onPress={() => setCurrentView('newExercise')}
+        <TouchableOpacity
+          style={styles.addSessionButton}
+          onPress={() => setCurrentView("newExercise")}
         >
           <LinearGradient
-            colors={[freudDarkTheme.colors.accent.primary, '#F97316']}
+            colors={[freudDarkTheme.colors.accent.primary, "#F97316"]}
             style={styles.addSessionGradient}
           >
             <Text style={styles.addSessionText}>+ Add New Session</Text>
@@ -290,30 +369,34 @@ export default function DarkMindfulHoursScreen() {
   const renderNewExercise = () => (
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => setCurrentView('overview')}>
+        <TouchableOpacity onPress={() => setCurrentView("overview")}>
           <Text style={styles.backButton}>← Back</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>New Exercise</Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={styles.questionTitle}>What's your mindful exercise goal?</Text>
-        
+        <Text style={styles.questionTitle}>
+          What's your mindful exercise goal?
+        </Text>
+
         <View style={styles.goalsGrid}>
           {EXERCISE_GOALS.map((goal) => (
             <TouchableOpacity
               key={goal.id}
               style={[
                 styles.goalCard,
-                selectedGoal === goal.id && styles.selectedGoalCard
+                selectedGoal === goal.id && styles.selectedGoalCard,
               ]}
               onPress={() => setSelectedGoal(goal.id)}
             >
               <View style={styles.goalRadio}>
-                <View style={[
-                  styles.goalRadioInner,
-                  selectedGoal === goal.id && styles.selectedGoalRadio
-                ]} />
+                <View
+                  style={[
+                    styles.goalRadioInner,
+                    selectedGoal === goal.id && styles.selectedGoalRadio,
+                  ]}
+                />
               </View>
               <View style={styles.goalContent}>
                 <Text style={styles.goalTitle}>{goal.title}</Text>
@@ -323,15 +406,19 @@ export default function DarkMindfulHoursScreen() {
           ))}
         </View>
 
-        <TouchableOpacity 
-          style={[styles.continueButton, !selectedGoal && styles.disabledButton]}
-          onPress={() => selectedGoal && setCurrentView('exerciseSetup')}
+        <TouchableOpacity
+          style={[
+            styles.continueButton,
+            !selectedGoal && styles.disabledButton,
+          ]}
+          onPress={() => selectedGoal && setCurrentView("exerciseSetup")}
           disabled={!selectedGoal}
         >
           <LinearGradient
-            colors={selectedGoal ? 
-              [freudDarkTheme.colors.accent.primary, '#F97316'] : 
-              ['#666', '#555']
+            colors={
+              selectedGoal
+                ? [freudDarkTheme.colors.accent.primary, "#F97316"]
+                : ["#666", "#555"]
             }
             style={styles.continueButtonGradient}
           >
@@ -345,7 +432,7 @@ export default function DarkMindfulHoursScreen() {
   const renderExerciseSetup = () => (
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => setCurrentView('newExercise')}>
+        <TouchableOpacity onPress={() => setCurrentView("newExercise")}>
           <Text style={styles.backButton}>← Back</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>New Exercise</Text>
@@ -354,19 +441,21 @@ export default function DarkMindfulHoursScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Time Selection */}
         <View style={styles.setupSection}>
-          <Text style={styles.setupTitle}>How much time do you have for exercise?</Text>
+          <Text style={styles.setupTitle}>
+            How much time do you have for exercise?
+          </Text>
           <View style={styles.timeSelector}>
             <Text style={styles.timeDisplay}>{exerciseTime}:00</Text>
             <Text style={styles.timeLabel}>Minutes</Text>
           </View>
           <View style={styles.timeControls}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.timeButton}
               onPress={() => setExerciseTime(Math.max(1, exerciseTime - 1))}
             >
               <Text style={styles.timeButtonText}>-</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.timeButton}
               onPress={() => setExerciseTime(Math.min(60, exerciseTime + 1))}
             >
@@ -384,7 +473,8 @@ export default function DarkMindfulHoursScreen() {
                 key={sound.id}
                 style={[
                   styles.soundscapeCard,
-                  selectedSoundscape === sound.id && styles.selectedSoundscapeCard
+                  selectedSoundscape === sound.id &&
+                    styles.selectedSoundscapeCard,
                 ]}
                 onPress={() => setSelectedSoundscape(sound.id)}
               >
@@ -396,9 +486,12 @@ export default function DarkMindfulHoursScreen() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.startButton} onPress={startBreathingExercise}>
+        <TouchableOpacity
+          style={styles.startButton}
+          onPress={startBreathingExercise}
+        >
           <LinearGradient
-            colors={[freudDarkTheme.colors.accent.primary, '#F97316']}
+            colors={[freudDarkTheme.colors.accent.primary, "#F97316"]}
             style={styles.startButtonGradient}
           >
             <Text style={styles.startButtonText}>Continue →</Text>
@@ -411,11 +504,12 @@ export default function DarkMindfulHoursScreen() {
   const renderBreathingExercise = () => (
     <Animated.View style={[styles.breathingContainer, { opacity: fadeAnim }]}>
       <LinearGradient
-        colors={breathingPhase === 'inhale' ? 
-          ['#22C55E', '#16A34A'] : 
-          breathingPhase === 'exhale' ?
-          ['#F97316', '#EA580C'] :
-          ['#8B5CF6', '#7C3AED']
+        colors={
+          breathingPhase === "inhale"
+            ? ["#22C55E", "#16A34A"]
+            : breathingPhase === "exhale"
+              ? ["#F97316", "#EA580C"]
+              : ["#8B5CF6", "#7C3AED"]
         }
         style={styles.breathingGradient}
       >
@@ -428,37 +522,36 @@ export default function DarkMindfulHoursScreen() {
 
         {/* Progress */}
         <View style={styles.breathingProgress}>
-          <Animated.View 
+          <Animated.View
             style={[
               styles.breathingProgressBar,
-              { 
+              {
                 width: progressAnim.interpolate({
                   inputRange: [0, 1],
-                  outputRange: ['0%', '100%']
-                })
-              }
+                  outputRange: ["0%", "100%"],
+                }),
+              },
             ]}
           />
         </View>
 
         {/* Breathing Circle */}
         <View style={styles.breathingCenter}>
-          <Animated.View 
+          <Animated.View
             style={[
               styles.breathingCircle,
-              { 
-                transform: [
-                  { scale: breathAnim },
-                  { scale: pulseAnim }
-                ]
-              }
+              {
+                transform: [{ scale: breathAnim }, { scale: pulseAnim }],
+              },
             ]}
           >
             <View style={styles.breathingCircleInner}>
               <Text style={styles.breathingText}>
-                {breathingPhase === 'inhale' ? 'Breathe In...' :
-                 breathingPhase === 'hold' ? 'Hold...' :
-                 'Breathe Out...'}
+                {breathingPhase === "inhale"
+                  ? "Breathe In..."
+                  : breathingPhase === "hold"
+                    ? "Hold..."
+                    : "Breathe Out..."}
               </Text>
             </View>
           </Animated.View>
@@ -469,12 +562,12 @@ export default function DarkMindfulHoursScreen() {
           <TouchableOpacity style={styles.breathingControlButton}>
             <Text style={styles.breathingControlIcon}>↻</Text>
           </TouchableOpacity>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.breathingPlayButton}
             onPress={() => setIsBreathing(!isBreathing)}
           >
             <Text style={styles.breathingPlayIcon}>
-              {isBreathing ? '⏸️' : '▶️'}
+              {isBreathing ? "⏸️" : "▶️"}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.breathingControlButton}>
@@ -488,13 +581,16 @@ export default function DarkMindfulHoursScreen() {
   const renderComplete = () => (
     <Animated.View style={[styles.completeContainer, { opacity: fadeAnim }]}>
       <LinearGradient
-        colors={[freudDarkTheme.colors.background.primary, freudDarkTheme.colors.background.secondary]}
+        colors={[
+          freudDarkTheme.colors.background.primary,
+          freudDarkTheme.colors.background.secondary,
+        ]}
         style={styles.completeGradient}
       >
         {/* Close Button */}
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.completeCloseButton}
-          onPress={() => setCurrentView('overview')}
+          onPress={() => setCurrentView("overview")}
         >
           <Text style={styles.completeCloseText}>×</Text>
         </TouchableOpacity>
@@ -507,23 +603,24 @@ export default function DarkMindfulHoursScreen() {
               <Text style={styles.completeImageText}>💚</Text>
             </View>
           </View>
-          
+
           <Text style={styles.completeTitle}>Exercise Completed!</Text>
           <Text style={styles.completeSubtitle}>
             My Friend Susee. 6.5 min completed!
           </Text>
           <Text style={styles.completeDescription}>
-            Your mental health is improving. Congratulations for your commitment to wellbeing!
+            Your mental health is improving. Congratulations for your commitment
+            to wellbeing!
           </Text>
         </View>
 
         {/* Action Button */}
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.completeButton}
-          onPress={() => setCurrentView('overview')}
+          onPress={() => setCurrentView("overview")}
         >
           <LinearGradient
-            colors={[freudDarkTheme.colors.accent.primary, '#F97316']}
+            colors={[freudDarkTheme.colors.accent.primary, "#F97316"]}
             style={styles.completeButtonGradient}
           >
             <Text style={styles.completeButtonText}>Got It, Thanks!</Text>
@@ -535,33 +632,37 @@ export default function DarkMindfulHoursScreen() {
 
   return (
     <LinearGradient
-      colors={[freudDarkTheme.colors.background.primary, freudDarkTheme.colors.background.secondary]}
+      colors={[
+        freudDarkTheme.colors.background.primary,
+        freudDarkTheme.colors.background.secondary,
+      ]}
       style={styles.screenContainer}
     >
-      <StatusBar 
-        barStyle="light-content" 
+      <StatusBar
+        barStyle="light-content"
         backgroundColor={
-          currentView === 'breathing' ? '#22C55E' : 
-          freudDarkTheme.colors.background.primary
-        } 
+          currentView === "breathing"
+            ? "#22C55E"
+            : freudDarkTheme.colors.background.primary
+        }
       />
       <SafeAreaView style={styles.safeArea}>
         {/* Header for main views */}
-        {(currentView === 'overview') && (
+        {currentView === "overview" && (
           <View style={styles.mainHeader}>
-            <TouchableOpacity onPress={() => console.log('Go back')}>
+            <TouchableOpacity onPress={() => console.log("Go back")}>
               <Text style={styles.mainBackButton}>←</Text>
             </TouchableOpacity>
             <Text style={styles.mainHeaderTitle}>Mindful Hours</Text>
           </View>
         )}
 
-        {currentView === 'overview' && renderOverview()}
-        {currentView === 'stats' && renderStats()}
-        {currentView === 'newExercise' && renderNewExercise()}
-        {currentView === 'exerciseSetup' && renderExerciseSetup()}
-        {currentView === 'breathing' && renderBreathingExercise()}
-        {currentView === 'complete' && renderComplete()}
+        {currentView === "overview" && renderOverview()}
+        {currentView === "stats" && renderStats()}
+        {currentView === "newExercise" && renderNewExercise()}
+        {currentView === "exerciseSetup" && renderExerciseSetup()}
+        {currentView === "breathing" && renderBreathingExercise()}
+        {currentView === "complete" && renderComplete()}
       </SafeAreaView>
     </LinearGradient>
   );
@@ -579,8 +680,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   mainHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 10,
@@ -588,47 +689,47 @@ const styles = StyleSheet.create({
   mainBackButton: {
     fontSize: 24,
     color: freudDarkTheme.colors.text.primary,
-    fontWeight: '600',
+    fontWeight: "600",
     marginRight: 15,
   },
   mainHeaderTitle: {
     fontSize: 28,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 20,
     marginBottom: 30,
   },
   backButton: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.accent.primary,
     marginRight: 20,
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
     flex: 1,
   },
   mainStatsCard: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 20,
     marginBottom: 20,
   },
   mainStatsGradient: {
     borderRadius: 20,
     padding: 40,
-    alignItems: 'center',
-    position: 'relative',
+    alignItems: "center",
+    position: "relative",
   },
   mainStatsNumber: {
     fontSize: 60,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
     marginBottom: 10,
   },
@@ -638,7 +739,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   progressCircle: {
-    position: 'absolute',
+    position: "absolute",
     top: 20,
     right: 20,
   },
@@ -646,9 +747,9 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    alignItems: "center",
+    justifyContent: "center",
   },
   progressCircleInner: {
     width: 40,
@@ -657,7 +758,7 @@ const styles = StyleSheet.create({
     backgroundColor: freudDarkTheme.colors.accent.primary,
   },
   addButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 100,
     left: 40,
     width: 56,
@@ -669,20 +770,20 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   addButtonText: {
     fontSize: 24,
-    fontWeight: '300',
-    color: '#FFFFFF',
+    fontWeight: "300",
+    color: "#FFFFFF",
   },
   historySection: {
     marginTop: 20,
   },
   sectionTitle: {
     fontSize: 22,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.primary,
     marginBottom: 20,
   },
@@ -692,13 +793,13 @@ const styles = StyleSheet.create({
   historyItemGradient: {
     borderRadius: 16,
     padding: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   historyLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   historyIndicator: {
@@ -709,7 +810,7 @@ const styles = StyleSheet.create({
   },
   historyTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.primary,
     marginBottom: 4,
   },
@@ -719,20 +820,20 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   historyRight: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   historyDuration: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
     marginBottom: 8,
   },
   progressBar: {
     width: 80,
     height: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderRadius: 2,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   progressFill: {
     height: 4,
@@ -740,55 +841,55 @@ const styles = StyleSheet.create({
   },
   quickStatsButton: {
     marginTop: 30,
-    alignItems: 'center',
+    alignItems: "center",
     padding: 20,
   },
   quickStatsText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.accent.primary,
   },
   bottomSpacer: {
     height: 120,
   },
-  
+
   // Stats view styles
   totalHoursCard: {
     marginBottom: 30,
-    alignItems: 'center',
+    alignItems: "center",
   },
   totalHoursGradient: {
     borderRadius: 20,
     padding: 30,
-    alignItems: 'center',
+    alignItems: "center",
     minWidth: 120,
   },
   totalHoursNumber: {
     fontSize: 32,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    fontWeight: "700",
+    color: "#FFFFFF",
     marginBottom: 5,
   },
   totalHoursLabel: {
     fontSize: 16,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     opacity: 0.9,
   },
   categoryStats: {
     marginBottom: 30,
   },
   categoryStatItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: freudDarkTheme.colors.background.tertiary,
     borderRadius: 16,
     padding: 20,
     marginBottom: 12,
   },
   categoryStatLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   categoryIndicator: {
@@ -799,15 +900,15 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.primary,
   },
   categoryStatRight: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   categoryTime: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
     marginBottom: 4,
   },
@@ -822,34 +923,34 @@ const styles = StyleSheet.create({
   addSessionGradient: {
     paddingVertical: 16,
     borderRadius: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   addSessionText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
-  
+
   // New exercise styles
   questionTitle: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 30,
   },
   goalsGrid: {
     marginBottom: 30,
   },
   goalCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: freudDarkTheme.colors.background.tertiary,
     borderRadius: 16,
     padding: 20,
     marginBottom: 15,
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: "transparent",
   },
   selectedGoalCard: {
     borderColor: freudDarkTheme.colors.accent.primary,
@@ -860,8 +961,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     borderColor: freudDarkTheme.colors.text.secondary,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 15,
   },
   goalRadioInner: {
@@ -879,7 +980,7 @@ const styles = StyleSheet.create({
   },
   goalTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.primary,
     marginBottom: 4,
   },
@@ -897,32 +998,32 @@ const styles = StyleSheet.create({
   continueButtonGradient: {
     paddingVertical: 16,
     borderRadius: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   continueButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
-  
+
   // Exercise setup styles
   setupSection: {
     marginBottom: 40,
   },
   setupTitle: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 25,
   },
   timeSelector: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   timeDisplay: {
     fontSize: 48,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.accent.primary,
     marginBottom: 5,
   },
@@ -932,8 +1033,8 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   timeControls: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     gap: 40,
   },
   timeButton: {
@@ -941,29 +1042,29 @@ const styles = StyleSheet.create({
     height: 44,
     borderRadius: 22,
     backgroundColor: freudDarkTheme.colors.background.tertiary,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   timeButtonText: {
     fontSize: 24,
-    fontWeight: '300',
+    fontWeight: "300",
     color: freudDarkTheme.colors.text.primary,
   },
   soundscapeGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
   soundscapeCard: {
-    width: '30%',
+    width: "30%",
     aspectRatio: 1,
     backgroundColor: freudDarkTheme.colors.background.tertiary,
     borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 15,
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: "transparent",
   },
   selectedSoundscapeCard: {
     borderColor: freudDarkTheme.colors.accent.primary,
@@ -974,9 +1075,9 @@ const styles = StyleSheet.create({
   },
   soundscapeName: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.text.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 4,
   },
   soundscapeDuration: {
@@ -991,14 +1092,14 @@ const styles = StyleSheet.create({
   startButtonGradient: {
     paddingVertical: 16,
     borderRadius: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   startButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
-  
+
   // Breathing exercise styles
   breathingContainer: {
     flex: 1,
@@ -1010,55 +1111,55 @@ const styles = StyleSheet.create({
   breathingHeader: {
     paddingTop: 20,
     paddingBottom: 10,
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   breathingBackButton: {
     fontSize: 24,
-    color: '#FFFFFF',
-    fontWeight: '300',
+    color: "#FFFFFF",
+    fontWeight: "300",
     padding: 10,
   },
   breathingProgress: {
     height: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
     borderRadius: 2,
     marginBottom: 40,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   breathingProgressBar: {
     height: 4,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 2,
   },
   breathingCenter: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   breathingCircle: {
     width: 200,
     height: 200,
     borderRadius: 100,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    alignItems: "center",
+    justifyContent: "center",
     borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderColor: "rgba(255, 255, 255, 0.4)",
   },
   breathingCircleInner: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   breathingText: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#FFFFFF',
-    textAlign: 'center',
+    fontWeight: "600",
+    color: "#FFFFFF",
+    textAlign: "center",
   },
   breathingControls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingBottom: 40,
     gap: 40,
   },
@@ -1066,27 +1167,27 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    alignItems: "center",
+    justifyContent: "center",
   },
   breathingControlIcon: {
     fontSize: 18,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   breathingPlayButton: {
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    alignItems: "center",
+    justifyContent: "center",
   },
   breathingPlayIcon: {
     fontSize: 20,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
-  
+
   // Complete screen styles
   completeContainer: {
     flex: 1,
@@ -1096,30 +1197,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   completeCloseButton: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     padding: 10,
     paddingTop: 20,
   },
   completeCloseText: {
     fontSize: 24,
     color: freudDarkTheme.colors.text.secondary,
-    fontWeight: '300',
+    fontWeight: "300",
   },
   completeContent: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingBottom: 100,
   },
   completeImageContainer: {
-    position: 'relative',
+    position: "relative",
     marginBottom: 40,
   },
   completeEmoji: {
     fontSize: 80,
   },
   completeImageOverlay: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     right: 0,
     backgroundColor: freudDarkTheme.colors.accent.primary,
@@ -1131,22 +1232,22 @@ const styles = StyleSheet.create({
   },
   completeTitle: {
     fontSize: 28,
-    fontWeight: '700',
+    fontWeight: "700",
     color: freudDarkTheme.colors.text.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 15,
   },
   completeSubtitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     color: freudDarkTheme.colors.accent.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 20,
   },
   completeDescription: {
     fontSize: 16,
     color: freudDarkTheme.colors.text.secondary,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 24,
     paddingHorizontal: 20,
   },
@@ -1156,11 +1257,11 @@ const styles = StyleSheet.create({
   completeButtonGradient: {
     paddingVertical: 16,
     borderRadius: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   completeButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
 });

@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -22,7 +22,7 @@ const { width, height } = Dimensions.get("window");
 
 const DarkAITherapyChatScreen = ({ navigation }) => {
   const { theme, isDarkMode } = useTheme();
-  
+
   // Chat state
   const [messages, setMessages] = useState([
     {
@@ -34,7 +34,7 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
     },
     {
       id: 2,
-      type: "user", 
+      type: "user",
       text: "I've been feeling a bit anxious lately.",
       timestamp: new Date(),
     },
@@ -50,12 +50,12 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
-  
+
   // Animation refs
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
   const typingAnim = useRef(new Animated.Value(0)).current;
-  
+
   // Scroll ref
   const scrollViewRef = useRef(null);
 
@@ -104,7 +104,7 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
             duration: 1000,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       ).start();
     }
   }, [isTyping]);
@@ -119,7 +119,7 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
       timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setInputText("");
     setShowSuggestions(false);
     setIsTyping(true);
@@ -139,9 +139,9 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
         avatar: "🤖",
       };
 
-      setMessages(prev => [...prev, aiResponse]);
+      setMessages((prev) => [...prev, aiResponse]);
       setIsTyping(false);
-      
+
       setTimeout(() => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       }, 100);
@@ -182,23 +182,25 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
 
   const renderHeader = () => (
     <View style={styles.header}>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
         <Text style={styles.backButtonText}>←</Text>
       </TouchableOpacity>
-      
+
       <View style={styles.headerInfo}>
         <View style={styles.aiAvatar}>
           <Text style={styles.aiAvatarText}>🤖</Text>
         </View>
         <View>
           <Text style={styles.headerTitle}>AI Therapist</Text>
-          <Text style={styles.headerSubtitle}>Online • Always here for you</Text>
+          <Text style={styles.headerSubtitle}>
+            Online • Always here for you
+          </Text>
         </View>
       </View>
-      
+
       <TouchableOpacity style={styles.moreButton}>
         <Text style={styles.moreButtonText}>⋯</Text>
       </TouchableOpacity>
@@ -207,7 +209,7 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
 
   const renderMessage = (message) => {
     const isUser = message.type === "user";
-    
+
     return (
       <View
         key={message.id}
@@ -221,7 +223,7 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
             <Text style={styles.messageAvatarText}>{message.avatar}</Text>
           </View>
         )}
-        
+
         <View
           style={[
             styles.messageBubble,
@@ -231,7 +233,9 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
           <Text
             style={[
               styles.messageText,
-              { color: isUser ? "#FFFFFF" : freudDarkTheme.colors.text.primary },
+              {
+                color: isUser ? "#FFFFFF" : freudDarkTheme.colors.text.primary,
+              },
             ]}
           >
             {message.text}
@@ -239,17 +243,20 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
           <Text
             style={[
               styles.messageTime,
-              { 
-                color: isUser 
-                  ? "rgba(255, 255, 255, 0.7)" 
-                  : freudDarkTheme.colors.text.tertiary 
+              {
+                color: isUser
+                  ? "rgba(255, 255, 255, 0.7)"
+                  : freudDarkTheme.colors.text.tertiary,
               },
             ]}
           >
-            {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            {message.timestamp.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </Text>
         </View>
-        
+
         {isUser && (
           <View style={styles.userAvatar}>
             <Text style={styles.userAvatarText}>👤</Text>
@@ -265,11 +272,8 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
         <Text style={styles.messageAvatarText}>🤖</Text>
       </View>
       <View style={[styles.messageBubble, styles.aiMessageBubble]}>
-        <Animated.View 
-          style={[
-            styles.typingIndicator,
-            { opacity: typingAnim },
-          ]}
+        <Animated.View
+          style={[styles.typingIndicator, { opacity: typingAnim }]}
         >
           <View style={styles.typingDots}>
             <View style={styles.typingDot} />
@@ -281,12 +285,12 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
     </View>
   );
 
-  const renderQuickReplies = () => (
+  const renderQuickReplies = () =>
     showSuggestions && (
       <View style={styles.quickRepliesContainer}>
         <Text style={styles.quickRepliesTitle}>Quick replies:</Text>
-        <ScrollView 
-          horizontal 
+        <ScrollView
+          horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.quickRepliesScroll}
         >
@@ -302,8 +306,7 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
           ))}
         </ScrollView>
       </View>
-    )
-  );
+    );
 
   const renderChatTools = () => (
     <View style={styles.chatToolsContainer}>
@@ -323,7 +326,7 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
   const renderInputArea = () => (
     <View style={styles.inputContainer}>
       {renderChatTools()}
-      
+
       <View style={styles.inputRow}>
         <View style={styles.textInputContainer}>
           <TextInput
@@ -336,11 +339,13 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
             maxLength={500}
           />
         </View>
-        
+
         <TouchableOpacity
           style={[
             styles.sendButton,
-            inputText.trim() ? styles.sendButtonActive : styles.sendButtonInactive,
+            inputText.trim()
+              ? styles.sendButtonActive
+              : styles.sendButtonInactive,
           ]}
           onPress={() => sendMessage()}
           disabled={!inputText.trim()}
@@ -361,7 +366,7 @@ const DarkAITherapyChatScreen = ({ navigation }) => {
         translucent
       />
 
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         style={styles.keyboardContainer}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
@@ -414,8 +419,8 @@ const styles = StyleSheet.create({
 
   // Header
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: freudDarkTheme.spacing[6],
     paddingTop: 60,
     paddingBottom: freudDarkTheme.spacing[4],
@@ -427,8 +432,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: freudDarkTheme.colors.card.background,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: freudDarkTheme.spacing[4],
   },
   backButtonText: {
@@ -438,16 +443,16 @@ const styles = StyleSheet.create({
   },
   headerInfo: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   aiAvatar: {
     width: 50,
     height: 50,
     borderRadius: 25,
     backgroundColor: freudDarkTheme.colors.accent.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: freudDarkTheme.spacing[3],
   },
   aiAvatarText: {
@@ -467,8 +472,8 @@ const styles = StyleSheet.create({
   moreButton: {
     width: 40,
     height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   moreButtonText: {
     fontSize: 20,
@@ -488,23 +493,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: freudDarkTheme.spacing[6],
   },
   messageContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: freudDarkTheme.spacing[4],
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   userMessageContainer: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   aiMessageContainer: {
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
   },
   messageAvatar: {
     width: 36,
     height: 36,
     borderRadius: 18,
     backgroundColor: freudDarkTheme.colors.accent.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: freudDarkTheme.spacing[3],
   },
   messageAvatarText: {
@@ -515,8 +520,8 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     backgroundColor: freudDarkTheme.colors.header.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginLeft: freudDarkTheme.spacing[3],
   },
   userAvatarText: {
@@ -542,18 +547,18 @@ const styles = StyleSheet.create({
   },
   messageTime: {
     fontSize: freudDarkTheme.typography.sizes.xs,
-    textAlign: 'right',
+    textAlign: "right",
   },
 
   // Typing Indicator
   typingIndicator: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: freudDarkTheme.spacing[2],
   },
   typingDots: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: freudDarkTheme.spacing[1],
   },
   typingDot: {
@@ -585,8 +590,8 @@ const styles = StyleSheet.create({
     paddingVertical: freudDarkTheme.spacing[3],
     borderRadius: freudDarkTheme.borderRadius.full,
     marginRight: freudDarkTheme.spacing[3],
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
     borderColor: freudDarkTheme.colors.border.primary,
   },
@@ -602,14 +607,14 @@ const styles = StyleSheet.create({
 
   // Chat Tools
   chatToolsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     paddingVertical: freudDarkTheme.spacing[3],
     borderBottomWidth: 1,
     borderBottomColor: freudDarkTheme.colors.border.primary,
   },
   chatTool: {
-    alignItems: 'center',
+    alignItems: "center",
     padding: freudDarkTheme.spacing[2],
     minWidth: 60,
   },
@@ -620,7 +625,7 @@ const styles = StyleSheet.create({
   chatToolLabel: {
     fontSize: freudDarkTheme.typography.sizes.xs,
     color: freudDarkTheme.colors.text.tertiary,
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   // Input Area
@@ -630,8 +635,8 @@ const styles = StyleSheet.create({
     borderTopColor: freudDarkTheme.colors.border.primary,
   },
   inputRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
+    flexDirection: "row",
+    alignItems: "flex-end",
     paddingHorizontal: freudDarkTheme.spacing[6],
     paddingVertical: freudDarkTheme.spacing[4],
     gap: freudDarkTheme.spacing[3],
@@ -650,14 +655,14 @@ const styles = StyleSheet.create({
   textInput: {
     fontSize: freudDarkTheme.typography.sizes.base,
     color: freudDarkTheme.colors.input.text,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   sendButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   sendButtonActive: {
     backgroundColor: freudDarkTheme.colors.accent.primary,

@@ -1,47 +1,52 @@
-import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  StyleSheet, 
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
   ScrollView,
-  FlatList 
-} from 'react-native';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { MentalHealthIcon } from '../icons';
+  FlatList,
+} from "react-native";
 
-const TableCell = ({ 
-  children, 
-  style, 
-  align = 'left', 
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { MentalHealthIcon } from "../icons";
+
+const TableCell = ({
+  children,
+  style,
+  align = "left",
   width,
   onPress,
-  accessibilityLabel 
+  accessibilityLabel,
 }) => {
   const { theme } = useTheme();
-  
+
   const cellContent = (
-    <View 
+    <View
       style={[
         styles.cell,
         {
           backgroundColor: theme.colors.background.card,
           borderColor: theme.colors.border.secondary,
-          width: width,
-          justifyContent: align === 'center' ? 'center' : 
-                         align === 'right' ? 'flex-end' : 'flex-start',
+          width,
+          justifyContent:
+            align === "center"
+              ? "center"
+              : align === "right"
+                ? "flex-end"
+                : "flex-start",
         },
-        style
+        style,
       ]}
     >
-      {typeof children === 'string' ? (
-        <Text 
+      {typeof children === "string" ? (
+        <Text
           style={[
             styles.cellText,
-            { 
+            {
               color: theme.colors.text.primary,
-              textAlign: align 
-            }
+              textAlign: align,
+            },
           ]}
         >
           {children}
@@ -78,38 +83,35 @@ const TableHeader = ({ columns = [], sortConfig, onSort }) => {
           key={column.key || index}
           style={[
             styles.headerCell,
-            { backgroundColor: theme.colors.therapeutic.peaceful[50] }
+            { backgroundColor: theme.colors.therapeutic.peaceful[50] },
           ]}
           width={column.width}
           align={column.align}
           onPress={column.sortable ? () => onSort(column.key) : undefined}
           accessibilityLabel={
-            column.sortable 
-              ? `Sort by ${column.title}` 
-              : column.title
+            column.sortable ? `Sort by ${column.title}` : column.title
           }
         >
           <View style={styles.headerContent}>
-            <Text 
-              style={[
-                styles.headerText,
-                { color: theme.colors.text.primary }
-              ]}
+            <Text
+              style={[styles.headerText, { color: theme.colors.text.primary }]}
             >
               {column.title}
             </Text>
-            
+
             {column.sortable && (
               <View style={styles.sortIcon}>
                 <MentalHealthIcon
                   name="Brain"
                   size={12}
                   color={
-                    sortConfig?.key === column.key 
+                    sortConfig?.key === column.key
                       ? theme.colors.therapeutic.calming[500]
                       : theme.colors.text.tertiary
                   }
-                  variant={sortConfig?.key === column.key ? "filled" : "outline"}
+                  variant={
+                    sortConfig?.key === column.key ? "filled" : "outline"
+                  }
                 />
               </View>
             )}
@@ -120,26 +122,26 @@ const TableHeader = ({ columns = [], sortConfig, onSort }) => {
   );
 };
 
-const TableRow = ({ 
-  data = {}, 
-  columns = [], 
-  index, 
+const TableRow = ({
+  data = {},
+  columns = [],
+  index,
   onRowPress,
-  selected = false
+  selected = false,
 }) => {
   const { theme } = useTheme();
-  
+
   const rowContent = (
-    <View 
+    <View
       style={[
         styles.row,
         {
-          backgroundColor: selected 
+          backgroundColor: selected
             ? theme.colors.therapeutic.calming[50]
-            : index % 2 === 0 
-              ? theme.colors.background.card 
+            : index % 2 === 0
+              ? theme.colors.background.card
               : theme.colors.background.secondary,
-        }
+        },
       ]}
     >
       {columns.map((column, colIndex) => (
@@ -149,10 +151,9 @@ const TableRow = ({
           align={column.align}
           style={styles.bodyCell}
         >
-          {column.render 
+          {column.render
             ? column.render(data[column.key], data, index)
-            : data[column.key] || '-'
-          }
+            : data[column.key] || "-"}
         </TableCell>
       ))}
     </View>
@@ -181,10 +182,10 @@ const Table = ({
   striped = true,
   onRowPress,
   selectedRows = [],
-  emptyMessage = 'No data available',
+  emptyMessage = "No data available",
   loading = false,
   maxHeight,
-  accessibilityLabel = 'Data table'
+  accessibilityLabel = "Data table",
 }) => {
   const { theme } = useTheme();
   const [sortConfig, setSortConfig] = useState(null);
@@ -192,9 +193,13 @@ const Table = ({
   const handleSort = (key) => {
     if (!sortable) return;
 
-    let direction = 'asc';
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
+    let direction = "asc";
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === "asc"
+    ) {
+      direction = "desc";
     }
     setSortConfig({ key, direction });
   };
@@ -206,8 +211,8 @@ const Table = ({
       const aVal = a[sortConfig.key];
       const bVal = b[sortConfig.key];
 
-      if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
-      if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+      if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
       return 0;
     });
   }, [data, sortConfig]);
@@ -220,12 +225,7 @@ const Table = ({
         color={theme.colors.text.tertiary}
         variant="outline"
       />
-      <Text 
-        style={[
-          styles.emptyText,
-          { color: theme.colors.text.secondary }
-        ]}
-      >
+      <Text style={[styles.emptyText, { color: theme.colors.text.secondary }]}>
         {emptyMessage}
       </Text>
     </View>
@@ -239,11 +239,8 @@ const Table = ({
         color={theme.colors.therapeutic.calming[500]}
         variant="filled"
       />
-      <Text 
-        style={[
-          styles.loadingText,
-          { color: theme.colors.text.secondary }
-        ]}
+      <Text
+        style={[styles.loadingText, { color: theme.colors.text.secondary }]}
       >
         Loading...
       </Text>
@@ -251,48 +248,43 @@ const Table = ({
   );
 
   return (
-    <View 
+    <View
       style={[
         styles.container,
-        { 
+        {
           backgroundColor: theme.colors.background.card,
-          borderColor: theme.colors.border.primary 
-        }
+          borderColor: theme.colors.border.primary,
+        },
       ]}
       accessibilityRole="table"
       accessibilityLabel={accessibilityLabel}
     >
       {/* Table Header */}
-      <TableHeader 
-        columns={columns} 
-        sortConfig={sortConfig} 
-        onSort={handleSort} 
+      <TableHeader
+        columns={columns}
+        sortConfig={sortConfig}
+        onSort={handleSort}
       />
 
       {/* Table Body */}
-      <ScrollView 
-        style={[
-          styles.tableBody,
-          maxHeight && { maxHeight }
-        ]}
-        showsVerticalScrollIndicator={true}
+      <ScrollView
+        style={[styles.tableBody, maxHeight && { maxHeight }]}
+        showsVerticalScrollIndicator
       >
-        {loading ? (
-          renderLoadingState()
-        ) : sortedData.length === 0 ? (
-          renderEmptyState()
-        ) : (
-          sortedData.map((rowData, index) => (
-            <TableRow
-              key={rowData.id || index}
-              data={rowData}
-              columns={columns}
-              index={index}
-              onRowPress={onRowPress}
-              selected={selectedRows.includes(rowData.id || index)}
-            />
-          ))
-        )}
+        {loading
+          ? renderLoadingState()
+          : sortedData.length === 0
+            ? renderEmptyState()
+            : sortedData.map((rowData, index) => (
+                <TableRow
+                  key={rowData.id || index}
+                  data={rowData}
+                  columns={columns}
+                  index={index}
+                  onRowPress={onRowPress}
+                  selected={selectedRows.includes(rowData.id || index)}
+                />
+              ))}
       </ScrollView>
     </View>
   );
@@ -302,21 +294,21 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
     borderWidth: 1,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   headerRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   headerCell: {
     borderBottomWidth: 2,
   },
   headerContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   headerText: {
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 14,
   },
   sortIcon: {
@@ -326,14 +318,14 @@ const styles = StyleSheet.create({
     maxHeight: 400,
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   cell: {
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderBottomWidth: 1,
     minHeight: 44,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   bodyCell: {
     // Specific styles for body cells if needed
@@ -342,21 +334,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   emptyState: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 40,
     paddingHorizontal: 20,
   },
   emptyText: {
     fontSize: 16,
     marginTop: 12,
-    textAlign: 'center',
+    textAlign: "center",
   },
   loadingState: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 20,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   loadingText: {
     fontSize: 14,

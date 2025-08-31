@@ -4,16 +4,27 @@
  * Provides both useTheme() and useFreudTheme() hooks for seamless migration
  */
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react";
-import { View } from "react-native";
-import { useColorScheme, AccessibilityInfo, Appearance } from "react-native";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
+import {
+  View,
+  useColorScheme,
+  AccessibilityInfo,
+  Appearance,
+} from "react-native";
 
 // Import optimized theme definitions
-import { 
-  optimizedLightTheme, 
-  optimizedDarkTheme, 
+import {
+  optimizedLightTheme,
+  optimizedDarkTheme,
   figmaAlignedColors,
-  createAccessibleTheme 
+  createAccessibleTheme,
 } from "./OptimizedTheme";
 
 const UnifiedThemeContext = createContext({
@@ -31,9 +42,9 @@ const UnifiedThemeContext = createContext({
   isScreenReaderEnabled: false,
   accessibilitySettings: {},
   updateAccessibilitySettings: () => {},
-  
+
   // FreudThemeProvider API
-  therapeutic: 'balanced',
+  therapeutic: "balanced",
   mood: null,
   timeBasedTheme: true,
   setTherapeutic: () => {},
@@ -42,7 +53,7 @@ const UnifiedThemeContext = createContext({
   getMoodBasedColors: () => ({}),
   getTimeBasedColors: () => ({}),
   therapeuticThemes: {},
-  
+
   // Performance optimized getters
   getThemeValue: () => {},
   getColor: () => {},
@@ -65,9 +76,9 @@ export const UnifiedThemeProvider = ({ children }) => {
   const [isHighContrastEnabled, setIsHighContrastEnabled] = useState(false);
   const [fontScale, setFontScale] = useState(1);
   const [themeLoaded, setThemeLoaded] = useState(false);
-  
+
   // FreudThemeProvider state
-  const [therapeutic, setTherapeutic] = useState('balanced');
+  const [therapeutic, setTherapeutic] = useState("balanced");
   const [mood, setMood] = useState(null);
   const [timeBasedTheme, setTimeBasedTheme] = useState(true);
   const [fontSize, setFontSize] = useState("normal");
@@ -77,7 +88,7 @@ export const UnifiedThemeProvider = ({ children }) => {
   // Memoized theme calculation for performance
   const theme = useMemo(() => {
     const baseTheme = isDarkMode ? optimizedDarkTheme : optimizedLightTheme;
-    
+
     return createAccessibleTheme(baseTheme, {
       isHighContrastEnabled,
       isReducedMotionEnabled,
@@ -86,24 +97,36 @@ export const UnifiedThemeProvider = ({ children }) => {
   }, [isDarkMode, isHighContrastEnabled, isReducedMotionEnabled, fontScale]);
 
   // Performance-optimized theme value getter
-  const getThemeValue = useCallback((path) => {
-    return path.split('.').reduce((obj, key) => obj?.[key], theme);
-  }, [theme]);
+  const getThemeValue = useCallback(
+    (path) => {
+      return path.split(".").reduce((obj, key) => obj?.[key], theme);
+    },
+    [theme],
+  );
 
   // Quick color access
-  const getColor = useCallback((colorPath) => {
-    return getThemeValue(`colors.${colorPath}`) || colorPath;
-  }, [getThemeValue]);
+  const getColor = useCallback(
+    (colorPath) => {
+      return getThemeValue(`colors.${colorPath}`) || colorPath;
+    },
+    [getThemeValue],
+  );
 
-  // Quick spacing access  
-  const getSpacing = useCallback((spacingKey) => {
-    return getThemeValue(`spacing.${spacingKey}`) || 0;
-  }, [getThemeValue]);
+  // Quick spacing access
+  const getSpacing = useCallback(
+    (spacingKey) => {
+      return getThemeValue(`spacing.${spacingKey}`) || 0;
+    },
+    [getThemeValue],
+  );
 
   // Optimized styled component replacement
-  const createThemedStyles = useCallback((styleFunction) => {
-    return styleFunction(theme);
-  }, [theme]);
+  const createThemedStyles = useCallback(
+    (styleFunction) => {
+      return styleFunction(theme);
+    },
+    [theme],
+  );
 
   // Persisted setters defined at top-level (Hooks cannot be called inside useMemo)
   const setFontScaleValue = useCallback(async (scale) => {
@@ -141,11 +164,11 @@ export const UnifiedThemeProvider = ({ children }) => {
       if (savedTheme) {
         setIsDarkMode(savedTheme === "dark");
       }
-      
+
       if (savedFontScale) {
         setFontScale(parseFloat(savedFontScale));
       }
-      
+
       setThemeLoaded(true);
     } catch (error) {
       console.error("Error loading theme preferences:", error);
@@ -167,7 +190,7 @@ export const UnifiedThemeProvider = ({ children }) => {
       // Listen for changes
       const motionSubscription = AccessibilityInfo.addEventListener(
         "reduceMotionChanged",
-        setIsReducedMotionEnabled
+        setIsReducedMotionEnabled,
       );
 
       return () => {
@@ -181,9 +204,12 @@ export const UnifiedThemeProvider = ({ children }) => {
   const toggleTheme = useCallback(async () => {
     const newTheme = !isDarkMode;
     setIsDarkMode(newTheme);
-    
+
     try {
-      await AsyncStorage.setItem("theme_preference", newTheme ? "dark" : "light");
+      await AsyncStorage.setItem(
+        "theme_preference",
+        newTheme ? "dark" : "light",
+      );
     } catch (error) {
       console.error("Error saving theme preference:", error);
     }
@@ -192,7 +218,7 @@ export const UnifiedThemeProvider = ({ children }) => {
   const setTheme = useCallback(async (themeType) => {
     const newIsDark = themeType === "dark";
     setIsDarkMode(newIsDark);
-    
+
     try {
       await AsyncStorage.setItem("theme_preference", themeType);
     } catch (error) {
@@ -201,26 +227,32 @@ export const UnifiedThemeProvider = ({ children }) => {
   }, []);
 
   // Therapeutic theme functions
-  const getMoodBasedColors = useCallback((currentMood) => {
-    // Simple mood to theme mapping for basic functionality
-    return theme.colors || {};
-  }, [theme]);
+  const getMoodBasedColors = useCallback(
+    (currentMood) => {
+      // Simple mood to theme mapping for basic functionality
+      return theme.colors || {};
+    },
+    [theme],
+  );
 
   const getTimeBasedColors = useCallback(() => {
     return theme.colors || {};
   }, [theme]);
 
-  const updateAccessibilitySettings = useCallback(async (newSettings) => {
-    setAccessibilitySettings({ ...accessibilitySettings, ...newSettings });
-    try {
-      await AsyncStorage.setItem(
-        "accessibility_settings",
-        JSON.stringify({ ...accessibilitySettings, ...newSettings })
-      );
-    } catch (error) {
-      console.error("Error saving accessibility settings:", error);
-    }
-  }, [accessibilitySettings]);
+  const updateAccessibilitySettings = useCallback(
+    async (newSettings) => {
+      setAccessibilitySettings({ ...accessibilitySettings, ...newSettings });
+      try {
+        await AsyncStorage.setItem(
+          "accessibility_settings",
+          JSON.stringify({ ...accessibilitySettings, ...newSettings }),
+        );
+      } catch (error) {
+        console.error("Error saving accessibility settings:", error);
+      }
+    },
+    [accessibilitySettings],
+  );
 
   const updateFontSize = useCallback(async (newFontSize) => {
     setFontSize(newFontSize);
@@ -232,45 +264,65 @@ export const UnifiedThemeProvider = ({ children }) => {
   }, []);
 
   // Memoized context value for performance
-  const contextValue = useMemo(() => ({
-    // Original ThemeContext API
-    theme,
-    isDarkMode,
-    toggleTheme,
-    setTheme,
-    isReducedMotionEnabled,
-    isHighContrastEnabled,
-    fontSize,
-    setFontSize: updateFontSize,
-    fontScale,
-    setFontScale: setFontScaleValue,
-    isScreenReaderEnabled,
-    accessibilitySettings,
-    updateAccessibilitySettings,
-    
-    // FreudThemeProvider API
-    therapeutic,
-    mood,
-    timeBasedTheme,
-    setTherapeutic,
-    setMood,
-    setTimeBasedTheme,
-    getMoodBasedColors,
-    getTimeBasedColors,
-    therapeuticThemes: {},
-    
-    // Performance optimized getters
-    getThemeValue,
-    getColor,
-    getSpacing,
-    createThemedStyles,
-  }), [
-    theme, isDarkMode, toggleTheme, setTheme,
-    isReducedMotionEnabled, isHighContrastEnabled, fontSize, updateFontSize,
-    fontScale, setFontScaleValue, isScreenReaderEnabled, accessibilitySettings, updateAccessibilitySettings,
-    therapeutic, mood, timeBasedTheme, getMoodBasedColors, getTimeBasedColors,
-    getThemeValue, getColor, getSpacing, createThemedStyles,
-  ]);
+  const contextValue = useMemo(
+    () => ({
+      // Original ThemeContext API
+      theme,
+      isDarkMode,
+      toggleTheme,
+      setTheme,
+      isReducedMotionEnabled,
+      isHighContrastEnabled,
+      fontSize,
+      setFontSize: updateFontSize,
+      fontScale,
+      setFontScale: setFontScaleValue,
+      isScreenReaderEnabled,
+      accessibilitySettings,
+      updateAccessibilitySettings,
+
+      // FreudThemeProvider API
+      therapeutic,
+      mood,
+      timeBasedTheme,
+      setTherapeutic,
+      setMood,
+      setTimeBasedTheme,
+      getMoodBasedColors,
+      getTimeBasedColors,
+      therapeuticThemes: {},
+
+      // Performance optimized getters
+      getThemeValue,
+      getColor,
+      getSpacing,
+      createThemedStyles,
+    }),
+    [
+      theme,
+      isDarkMode,
+      toggleTheme,
+      setTheme,
+      isReducedMotionEnabled,
+      isHighContrastEnabled,
+      fontSize,
+      updateFontSize,
+      fontScale,
+      setFontScaleValue,
+      isScreenReaderEnabled,
+      accessibilitySettings,
+      updateAccessibilitySettings,
+      therapeutic,
+      mood,
+      timeBasedTheme,
+      getMoodBasedColors,
+      getTimeBasedColors,
+      getThemeValue,
+      getColor,
+      getSpacing,
+      createThemedStyles,
+    ],
+  );
 
   if (!themeLoaded) {
     // Render a minimal fallback to avoid a blank screen while preferences load

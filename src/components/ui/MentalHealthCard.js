@@ -4,54 +4,60 @@
  * Combines accessibility, mental health design patterns, and modern UI
  */
 
-import React from 'react';
-import { View, Text, StyleSheet, Platform, Animated } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { validateThemeAccessibility } from '../../utils/colorContrast';
-import { spacing, borderRadius, shadows, typography } from '../../shared/theme/theme';
+import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
+import { View, Text, StyleSheet, Platform, Animated } from "react-native";
+
+import { useTheme } from "../../shared/theme/ThemeContext";
+import {
+  spacing,
+  borderRadius,
+  shadows,
+  typography,
+} from "../../shared/theme/theme";
+import { validateThemeAccessibility } from "../../utils/colorContrast";
 
 // Card variant configurations for different therapeutic contexts
 const CARD_VARIANTS = {
   default: {
-    backgroundColor: 'background.primary',
-    borderColor: 'gray.200',
+    backgroundColor: "background.primary",
+    borderColor: "gray.200",
     shadow: shadows.sm,
   },
   elevated: {
-    backgroundColor: 'background.primary',
-    borderColor: 'gray.100',
+    backgroundColor: "background.primary",
+    borderColor: "gray.100",
     shadow: shadows.md,
   },
   mood: {
-    backgroundColor: 'therapeutic.calming.50',
-    borderColor: 'therapeutic.calming.200',
+    backgroundColor: "therapeutic.calming.50",
+    borderColor: "therapeutic.calming.200",
     shadow: shadows.sm,
-    gradientColors: ['therapeutic.calming.50', 'therapeutic.calming.100'],
+    gradientColors: ["therapeutic.calming.50", "therapeutic.calming.100"],
   },
   crisis: {
-    backgroundColor: 'error.50',
-    borderColor: 'error.200',
+    backgroundColor: "error.50",
+    borderColor: "error.200",
     shadow: shadows.lg,
-    gradientColors: ['error.50', 'error.100'],
+    gradientColors: ["error.50", "error.100"],
   },
   therapeutic: {
-    backgroundColor: 'therapeutic.nurturing.50',
-    borderColor: 'therapeutic.nurturing.200',
+    backgroundColor: "therapeutic.nurturing.50",
+    borderColor: "therapeutic.nurturing.200",
     shadow: shadows.md,
-    gradientColors: ['therapeutic.nurturing.50', 'therapeutic.nurturing.100'],
+    gradientColors: ["therapeutic.nurturing.50", "therapeutic.nurturing.100"],
   },
   success: {
-    backgroundColor: 'success.50',
-    borderColor: 'success.200',
+    backgroundColor: "success.50",
+    borderColor: "success.200",
     shadow: shadows.sm,
-    gradientColors: ['success.50', 'success.100'],
+    gradientColors: ["success.50", "success.100"],
   },
   insight: {
-    backgroundColor: 'therapeutic.peaceful.50',
-    borderColor: 'therapeutic.peaceful.200',
+    backgroundColor: "therapeutic.peaceful.50",
+    borderColor: "therapeutic.peaceful.200",
     shadow: shadows.sm,
-    gradientColors: ['therapeutic.peaceful.50', 'therapeutic.peaceful.100'],
+    gradientColors: ["therapeutic.peaceful.50", "therapeutic.peaceful.100"],
   },
 };
 
@@ -71,14 +77,14 @@ const CARD_SIZES = {
   },
   xl: {
     padding: spacing.xl,
-    borderRadius: borderRadius['2xl'],
+    borderRadius: borderRadius["2xl"],
   },
 };
 
 export const MentalHealthCard = ({
   children,
-  variant = 'default',
-  size = 'md',
+  variant = "default",
+  size = "md",
   title,
   subtitle,
   icon,
@@ -99,7 +105,7 @@ export const MentalHealthCard = ({
 
   // Get theme colors for the variant
   const getThemeColor = (colorPath) => {
-    const path = colorPath.split('.');
+    const path = colorPath.split(".");
     let color = theme.colors;
     for (const segment of path) {
       color = color[segment];
@@ -109,24 +115,27 @@ export const MentalHealthCard = ({
 
   const backgroundColor = getThemeColor(cardVariant.backgroundColor);
   const borderColor = getThemeColor(cardVariant.borderColor);
-  
+
   // Gradient colors if available
-  const gradientColors = cardVariant.gradientColors 
+  const gradientColors = cardVariant.gradientColors
     ? cardVariant.gradientColors.map(getThemeColor)
     : null;
 
   // Accessibility validation for crisis cards
-  if (variant === 'crisis' && __DEV__) {
+  if (variant === "crisis" && __DEV__) {
     const contrastResult = validateThemeAccessibility(theme);
     if (contrastResult.issues.length > 0) {
-      console.warn('Crisis card may have accessibility issues:', contrastResult.issues);
+      console.warn(
+        "Crisis card may have accessibility issues:",
+        contrastResult.issues,
+      );
     }
   }
 
   const cardStyles = [
     styles.card,
     {
-      backgroundColor: gradientColors ? 'transparent' : backgroundColor,
+      backgroundColor: gradientColors ? "transparent" : backgroundColor,
       borderColor,
       borderWidth: 1,
       borderRadius: cardSize.borderRadius,
@@ -139,9 +148,10 @@ export const MentalHealthCard = ({
 
   const accessibilityProps = {
     accessible: true,
-    accessibilityRole: onPress ? 'button' : 'group',
-    accessibilityLabel: accessibilityLabel || title || 'Mental health card',
-    accessibilityHint: accessibilityHint || (onPress ? 'Double tap to interact' : undefined),
+    accessibilityRole: onPress ? "button" : "group",
+    accessibilityLabel: accessibilityLabel || title || "Mental health card",
+    accessibilityHint:
+      accessibilityHint || (onPress ? "Double tap to interact" : undefined),
     accessibilityState: { disabled },
     testID,
     ...props,
@@ -155,11 +165,11 @@ export const MentalHealthCard = ({
           {icon && <View style={styles.iconContainer}>{icon}</View>}
           <View style={styles.headerText}>
             {title && (
-              <Text 
+              <Text
                 style={[
-                  styles.title, 
+                  styles.title,
                   { color: theme.colors.text.primary },
-                  variant === 'crisis' && styles.crisisTitle
+                  variant === "crisis" && styles.crisisTitle,
                 ]}
                 accessibilityRole="header"
               >
@@ -167,8 +177,11 @@ export const MentalHealthCard = ({
               </Text>
             )}
             {subtitle && (
-              <Text 
-                style={[styles.subtitle, { color: theme.colors.text.secondary }]}
+              <Text
+                style={[
+                  styles.subtitle,
+                  { color: theme.colors.text.secondary },
+                ]}
               >
                 {subtitle}
               </Text>
@@ -178,17 +191,11 @@ export const MentalHealthCard = ({
       )}
 
       {/* Main content */}
-      {children && (
-        <View style={styles.content}>
-          {children}
-        </View>
-      )}
+      {children && <View style={styles.content}>{children}</View>}
 
       {/* Action button */}
       {actionButton && (
-        <View style={styles.actionContainer}>
-          {actionButton}
-        </View>
+        <View style={styles.actionContainer}>{actionButton}</View>
       )}
     </View>
   );
@@ -207,11 +214,7 @@ export const MentalHealthCard = ({
       );
     }
 
-    return (
-      <View style={cardStyles}>
-        {children}
-      </View>
-    );
+    return <View style={cardStyles}>{children}</View>;
   };
 
   if (animated) {
@@ -241,11 +244,11 @@ export const MoodCard = (props) => (
 );
 
 export const CrisisCard = (props) => (
-  <MentalHealthCard 
-    variant="crisis" 
+  <MentalHealthCard
+    variant="crisis"
     accessibilityLabel="Emergency support card"
     accessibilityHint="Crisis support information and emergency actions"
-    {...props} 
+    {...props}
   />
 );
 
@@ -258,18 +261,18 @@ export const SuccessCard = (props) => (
 );
 
 export const InsightCard = (props) => (
-  <MentalHealthCard 
-    variant="insight" 
+  <MentalHealthCard
+    variant="insight"
     accessibilityLabel="Daily insight card"
     accessibilityHint="Personal wellness insight and recommendation"
-    {...props} 
+    {...props}
   />
 );
 
 // Card group for organizing multiple cards
-export const CardGroup = ({ 
-  children, 
-  spacing: cardSpacing = 'md', 
+export const CardGroup = ({
+  children,
+  spacing: cardSpacing = "md",
   style = {},
   animated = true,
   staggerDelay = 100,
@@ -281,42 +284,35 @@ export const CardGroup = ({
       return React.cloneElement(child, {
         animated,
         animationDelay: animated ? index * staggerDelay : 0,
-        style: [
-          child.props.style,
-          index > 0 && { marginTop: spacingValue },
-        ],
+        style: [child.props.style, index > 0 && { marginTop: spacingValue }],
       });
     }
     return child;
   });
 
-  return (
-    <View style={[styles.cardGroup, style]}>
-      {childrenWithProps}
-    </View>
-  );
+  return <View style={[styles.cardGroup, style]}>{childrenWithProps}</View>;
 };
 
 // Progress card for mood tracking
-export const ProgressCard = ({ 
-  title, 
-  progress = 0, 
-  maxValue = 100, 
-  color = 'therapeutic.nurturing.500',
-  ...props 
+export const ProgressCard = ({
+  title,
+  progress = 0,
+  maxValue = 100,
+  color = "therapeutic.nurturing.500",
+  ...props
 }) => {
   const { theme } = useTheme();
-  
+
   // Get theme color helper
   const getThemeColor = (colorPath) => {
-    const path = colorPath.split('.');
+    const path = colorPath.split(".");
     let color = theme.colors;
     for (const segment of path) {
       color = color[segment];
     }
     return color || theme.colors.primary[500];
   };
-  
+
   const progressColor = getThemeColor(color);
 
   return (
@@ -333,12 +329,25 @@ export const ProgressCard = ({
       {...props}
     >
       <View style={styles.progressContainer}>
-        <View style={[styles.progressTrack, { backgroundColor: theme.colors.gray[200] }]}>
+        <View
+          style={[
+            styles.progressTrack,
+            { backgroundColor: theme.colors.gray[200] },
+          ]}
+        >
           <Animated.View
-            style={[styles.progressFill, { backgroundColor: progressColor, width: `${(progress / maxValue) * 100}%` }]}
+            style={[
+              styles.progressFill,
+              {
+                backgroundColor: progressColor,
+                width: `${(progress / maxValue) * 100}%`,
+              },
+            ]}
           />
         </View>
-        <Text style={[styles.progressText, { color: theme.colors.text.secondary }]}>
+        <Text
+          style={[styles.progressText, { color: theme.colors.text.secondary }]}
+        >
           {progress} / {maxValue}
         </Text>
       </View>
@@ -348,16 +357,16 @@ export const ProgressCard = ({
 
 const styles = StyleSheet.create({
   animatedContainer: {
-    width: '100%',
+    width: "100%",
   },
   card: {
-    width: '100%',
-    backgroundColor: '#FFFFFF',
+    width: "100%",
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: "#E5E7EB",
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -366,7 +375,7 @@ const styles = StyleSheet.create({
         elevation: 3,
       },
       web: {
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
       },
     }),
   },
@@ -374,11 +383,11 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   cardContent: {
-    width: '100%',
+    width: "100%",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: spacing.sm,
   },
   iconContainer: {
@@ -392,8 +401,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
   crisisTitle: {
-    fontWeight: '700',
-    color: '#DC2626', // High contrast for crisis situations
+    fontWeight: "700",
+    color: "#DC2626", // High contrast for crisis situations
   },
   subtitle: {
     ...typography.body2,
@@ -403,29 +412,29 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   actionContainer: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
     marginTop: spacing.sm,
   },
   cardGroup: {
-    width: '100%',
+    width: "100%",
   },
   progressContainer: {
     marginTop: spacing.sm,
   },
   progressTrack: {
-    width: '100%',
+    width: "100%",
     height: 8,
     borderRadius: 4,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginBottom: spacing.xs,
   },
   progressFill: {
-    height: '100%',
+    height: "100%",
     borderRadius: 4,
   },
   progressText: {
     ...typography.caption,
-    textAlign: 'right',
+    textAlign: "right",
   },
 });
 

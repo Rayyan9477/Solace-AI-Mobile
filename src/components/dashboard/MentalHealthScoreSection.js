@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,21 +7,21 @@ import {
   TouchableOpacity,
   Animated,
   Alert,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { MentalHealthScoreWidget } from '../ui';
-import { MentalHealthIcon } from '../icons';
-import { useTheme } from '../../shared/theme/ThemeContext';
+} from "react-native";
+
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { MentalHealthIcon } from "../icons";
+import { MentalHealthScoreWidget } from "../ui";
 
 /**
  * Mental Health Score Section Component
- * 
+ *
  * Integrates the Mental Health Score Widget into the dashboard
  * with contextual information and navigation to detailed views.
  */
 const MentalHealthScoreSection = ({
   score = 80,
-  trend = 'stable', // 'improving', 'stable', 'declining'
+  trend = "stable", // 'improving', 'stable', 'declining'
   lastUpdated = new Date(),
   onScorePress,
   onTrendPress,
@@ -54,26 +55,26 @@ const MentalHealthScoreSection = ({
   // Get trend information
   const getTrendInfo = () => {
     switch (trend) {
-      case 'improving':
+      case "improving":
         return {
-          icon: 'progress-tracking',
+          icon: "progress-tracking",
           color: theme.colors.success[600],
-          text: 'Improving',
-          description: 'Your mental health is trending upward',
+          text: "Improving",
+          description: "Your mental health is trending upward",
         };
-      case 'declining':
+      case "declining":
         return {
-          icon: 'crisis-support',
+          icon: "crisis-support",
           color: theme.colors.warning[600],
-          text: 'Needs Attention',
-          description: 'Consider reaching out for support',
+          text: "Needs Attention",
+          description: "Consider reaching out for support",
         };
       default:
         return {
-          icon: 'emotional-balance',
+          icon: "emotional-balance",
           color: theme.colors.therapeutic.nurturing[600],
-          text: 'Stable',
-          description: 'Maintaining consistent mental health',
+          text: "Stable",
+          description: "Maintaining consistent mental health",
         };
     }
   };
@@ -85,7 +86,7 @@ const MentalHealthScoreSection = ({
     if (onScorePress) {
       onScorePress(score);
     } else {
-      navigation.navigate('MentalHealthDetails', { score, trend });
+      navigation.navigate("MentalHealthDetails", { score, trend });
     }
   };
 
@@ -94,7 +95,7 @@ const MentalHealthScoreSection = ({
     if (onTrendPress) {
       onTrendPress(trend);
     } else {
-      navigation.navigate('MentalHealthTrends');
+      navigation.navigate("MentalHealthTrends");
     }
   };
 
@@ -102,8 +103,8 @@ const MentalHealthScoreSection = ({
   const formatLastUpdated = () => {
     const now = new Date();
     const diffInHours = Math.floor((now - lastUpdated) / (1000 * 60 * 60));
-    
-    if (diffInHours < 1) return 'Updated just now';
+
+    if (diffInHours < 1) return "Updated just now";
     if (diffInHours < 24) return `Updated ${diffInHours}h ago`;
     return `Updated ${Math.floor(diffInHours / 24)}d ago`;
   };
@@ -130,10 +131,17 @@ const MentalHealthScoreSection = ({
             therapeuticTheme="nurturing"
           />
           <View style={styles.headerText}>
-            <Text style={[styles.headerTitle, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[styles.headerTitle, { color: theme.colors.text.primary }]}
+            >
               Mental Health Score
             </Text>
-            <Text style={[styles.headerSubtitle, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[
+                styles.headerSubtitle,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
               {formatLastUpdated()}
             </Text>
           </View>
@@ -160,7 +168,7 @@ const MentalHealthScoreSection = ({
         <MentalHealthScoreWidget
           score={score}
           onPress={handleScorePress}
-          animated={true}
+          animated
           style={styles.scoreWidget}
           accessibilityLabel={`Your mental health score is ${score} out of 100`}
           accessibilityHint="Tap to view detailed analysis and recommendations"
@@ -183,10 +191,17 @@ const MentalHealthScoreSection = ({
             therapeuticTheme="nurturing"
           />
           <View style={styles.trendText}>
-            <Text style={[styles.trendTitle, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[styles.trendTitle, { color: theme.colors.text.primary }]}
+            >
               Trend: {trendInfo.text}
             </Text>
-            <Text style={[styles.trendDescription, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[
+                styles.trendDescription,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
               {trendInfo.description}
             </Text>
           </View>
@@ -205,9 +220,9 @@ const MentalHealthScoreSection = ({
         <TouchableOpacity
           style={[
             styles.actionButton,
-            { backgroundColor: theme.colors.therapeutic.calming[50] }
+            { backgroundColor: theme.colors.therapeutic.calming[50] },
           ]}
-          onPress={() => navigation.navigate('MoodTracker')}
+          onPress={() => navigation.navigate("MoodTracker")}
           accessibilityRole="button"
           accessibilityLabel="Log your current mood"
         >
@@ -216,7 +231,12 @@ const MentalHealthScoreSection = ({
             size={18}
             color={theme.colors.therapeutic.calming[600]}
           />
-          <Text style={[styles.actionText, { color: theme.colors.therapeutic.calming[700] }]}>
+          <Text
+            style={[
+              styles.actionText,
+              { color: theme.colors.therapeutic.calming[700] },
+            ]}
+          >
             Log Mood
           </Text>
         </TouchableOpacity>
@@ -224,9 +244,9 @@ const MentalHealthScoreSection = ({
         <TouchableOpacity
           style={[
             styles.actionButton,
-            { backgroundColor: theme.colors.therapeutic.nurturing[50] }
+            { backgroundColor: theme.colors.therapeutic.nurturing[50] },
           ]}
-          onPress={() => navigation.navigate('TherapySession')}
+          onPress={() => navigation.navigate("TherapySession")}
           accessibilityRole="button"
           accessibilityLabel="Start a therapy session"
         >
@@ -235,7 +255,12 @@ const MentalHealthScoreSection = ({
             size={18}
             color={theme.colors.therapeutic.nurturing[600]}
           />
-          <Text style={[styles.actionText, { color: theme.colors.therapeutic.nurturing[700] }]}>
+          <Text
+            style={[
+              styles.actionText,
+              { color: theme.colors.therapeutic.nurturing[700] },
+            ]}
+          >
             Talk Now
           </Text>
         </TouchableOpacity>
@@ -243,9 +268,9 @@ const MentalHealthScoreSection = ({
         <TouchableOpacity
           style={[
             styles.actionButton,
-            { backgroundColor: theme.colors.therapeutic.peaceful[50] }
+            { backgroundColor: theme.colors.therapeutic.peaceful[50] },
           ]}
-          onPress={() => navigation.navigate('Mindfulness')}
+          onPress={() => navigation.navigate("Mindfulness")}
           accessibilityRole="button"
           accessibilityLabel="Start mindfulness exercise"
         >
@@ -254,7 +279,12 @@ const MentalHealthScoreSection = ({
             size={18}
             color={theme.colors.therapeutic.peaceful[600]}
           />
-          <Text style={[styles.actionText, { color: theme.colors.therapeutic.peaceful[700] }]}>
+          <Text
+            style={[
+              styles.actionText,
+              { color: theme.colors.therapeutic.peaceful[700] },
+            ]}
+          >
             Mindful
           </Text>
         </TouchableOpacity>
@@ -269,7 +299,7 @@ const styles = StyleSheet.create({
     padding: 20,
     marginHorizontal: 16,
     marginVertical: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -279,14 +309,14 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
   },
   headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   headerText: {
@@ -295,12 +325,12 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 2,
   },
   headerSubtitle: {
     fontSize: 12,
-    fontWeight: '400',
+    fontWeight: "400",
     opacity: 0.8,
   },
   moreButton: {
@@ -308,27 +338,27 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   scoreContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 24,
   },
   scoreWidget: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     shadowOpacity: 0,
     elevation: 0,
   },
   trendContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 12,
-    backgroundColor: 'rgba(0, 0, 0, 0.02)',
+    backgroundColor: "rgba(0, 0, 0, 0.02)",
     marginBottom: 20,
   },
   trendLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   trendText: {
@@ -337,24 +367,24 @@ const styles = StyleSheet.create({
   },
   trendTitle: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 2,
   },
   trendDescription: {
     fontSize: 12,
-    fontWeight: '400',
+    fontWeight: "400",
     opacity: 0.8,
   },
   actionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     gap: 12,
   },
   actionButton: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 10,
@@ -362,7 +392,7 @@ const styles = StyleSheet.create({
   },
   actionText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 });
 

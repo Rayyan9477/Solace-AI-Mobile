@@ -1,1 +1,1 @@
-export { default as TherapyScreen } from './TherapyScreen';
+export { default as TherapyScreen } from "./TherapyScreen";

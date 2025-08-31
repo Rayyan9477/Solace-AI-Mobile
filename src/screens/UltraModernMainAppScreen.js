@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -8,29 +9,28 @@ import {
   Dimensions,
   Animated,
   RefreshControl,
-} from 'react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 // Enhanced Background System
-import ContextualEnvironment from '../components/backgrounds/ContextualEnvironment';
-import AmbientAnimations from '../components/backgrounds/AmbientAnimations';
+import AmbientAnimations from "../components/backgrounds/AmbientAnimations";
+import ContextualEnvironment from "../components/backgrounds/ContextualEnvironment";
 
 // Modern Components
-import ModernCard from '../components/modern/ModernCard';
-import ModernButton from '../components/modern/ModernButton';
 
 // Enhanced Dashboard Components
-import MoodCheckIn from '../components/dashboard/MoodCheckIn';
-import QuickActions from '../components/dashboard/QuickActions';
-import WelcomeHeader from '../components/dashboard/WelcomeHeader';
-import DailyInsights from '../components/dashboard/DailyInsights';
-import ProgressOverview from '../components/dashboard/ProgressOverview';
-import RecentActivity from '../components/dashboard/RecentActivity';
+import DailyInsights from "../components/dashboard/DailyInsights";
+import MoodCheckIn from "../components/dashboard/MoodCheckIn";
+import ProgressOverview from "../components/dashboard/ProgressOverview";
+import QuickActions from "../components/dashboard/QuickActions";
+import RecentActivity from "../components/dashboard/RecentActivity";
+import WelcomeHeader from "../components/dashboard/WelcomeHeader";
 
 // Icons and Theme
-import { MentalHealthIcon } from '../components/icons';
-import { useTheme } from '../shared/theme/ThemeContext';
+import { MentalHealthIcon } from "../components/icons";
+import ModernButton from "../components/modern/ModernButton";
+import ModernCard from "../components/modern/ModernCard";
+import { useTheme } from "../shared/theme/ThemeContext";
 import {
   modernDarkColors,
   modernTypography,
@@ -38,9 +38,9 @@ import {
   modernBorderRadius,
   modernShadows,
   modernAnimations,
-} from '../shared/theme/darkTheme';
+} from "../shared/theme/darkTheme";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 // Ultra Modern Main App Screen - Advanced atmospheric backgrounds and effects
 // Features contextual environments, ambient animations, and immersive experiences
@@ -49,8 +49,8 @@ const UltraModernMainAppScreen = () => {
   const dispatch = useDispatch();
   const { theme } = useTheme();
   const [refreshing, setRefreshing] = useState(false);
-  const [userState, setUserState] = useState('neutral');
-  const [currentTime, setCurrentTime] = useState('evening');
+  const [userState, setUserState] = useState("neutral");
+  const [currentTime, setCurrentTime] = useState("evening");
 
   // Advanced animation refs
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -63,10 +63,10 @@ const UltraModernMainAppScreen = () => {
   useEffect(() => {
     const updateTimeOfDay = () => {
       const hour = new Date().getHours();
-      if (hour >= 5 && hour < 12) setCurrentTime('morning');
-      else if (hour >= 12 && hour < 17) setCurrentTime('afternoon');
-      else if (hour >= 17 && hour < 22) setCurrentTime('evening');
-      else setCurrentTime('night');
+      if (hour >= 5 && hour < 12) setCurrentTime("morning");
+      else if (hour >= 12 && hour < 17) setCurrentTime("afternoon");
+      else if (hour >= 17 && hour < 22) setCurrentTime("evening");
+      else setCurrentTime("night");
     };
 
     updateTimeOfDay();
@@ -79,11 +79,11 @@ const UltraModernMainAppScreen = () => {
     // In a real app, this would analyze user behavior patterns
     const analyzeUserState = () => {
       const hour = new Date().getHours();
-      if (hour < 9) setUserState('contemplative');
-      else if (hour < 12) setUserState('motivated');
-      else if (hour < 17) setUserState('focused');
-      else if (hour < 20) setUserState('relaxed');
-      else setUserState('peaceful');
+      if (hour < 9) setUserState("contemplative");
+      else if (hour < 12) setUserState("motivated");
+      else if (hour < 17) setUserState("focused");
+      else if (hour < 20) setUserState("relaxed");
+      else setUserState("peaceful");
     };
 
     analyzeUserState();
@@ -109,12 +109,12 @@ const UltraModernMainAppScreen = () => {
         fadeAnim.setValue(0);
         slideAnim.setValue(30);
       };
-    }, [fadeAnim, slideAnim])
+    }, [fadeAnim, slideAnim]),
   );
 
   // Redux state
   const { user, mood, chat, loading } = useSelector((state) => ({
-    user: state.user || { profile: { name: 'Welcome' }, stats: {} },
+    user: state.user || { profile: { name: "Welcome" }, stats: {} },
     mood: state.mood || {
       currentMood: userState,
       insights: [],
@@ -127,30 +127,30 @@ const UltraModernMainAppScreen = () => {
 
   // Navigation handlers
   const handleMoodCheckIn = useCallback(() => {
-    navigation.navigate('Mood');
+    navigation.navigate("Mood");
   }, [navigation]);
 
   const handleStartChat = useCallback(() => {
-    navigation.navigate('Chat');
+    navigation.navigate("Chat");
   }, [navigation]);
 
   const handleTakeAssessment = useCallback(() => {
-    navigation.navigate('Assessment');
+    navigation.navigate("Assessment");
   }, [navigation]);
 
   const handleViewProfile = useCallback(() => {
-    navigation.navigate('Profile');
+    navigation.navigate("Profile");
   }, [navigation]);
 
   const showEmergencyAlert = useCallback(() => {
-    console.log('Emergency support activated');
+    console.log("Emergency support activated");
   }, []);
 
   // Enhanced refresh with state analysis
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
     // Simulate data refresh and state analysis
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     setRefreshing(false);
   }, []);
 
@@ -162,23 +162,27 @@ const UltraModernMainAppScreen = () => {
       listener: (event) => {
         const offsetY = event.nativeEvent.contentOffset.y;
         parallaxAnim.setValue(offsetY);
-        
+
         // Dynamic header opacity with smooth transition
         headerOpacity.setValue(Math.max(0.3, 1 - offsetY / 150));
       },
-    }
+    },
   );
 
   // Time-based greeting with personality
   const getPersonalizedGreeting = () => {
     const hour = new Date().getHours();
     const greetings = {
-      morning: ['Rise and shine', 'Good morning', 'Morning, sunshine'],
-      afternoon: ['Good afternoon', 'Hope your day is going well', 'Afternoon check-in'],
-      evening: ['Good evening', 'Winding down nicely', 'Evening reflections'],
-      night: ['Good night', 'Time to unwind', 'Peaceful evening'],
+      morning: ["Rise and shine", "Good morning", "Morning, sunshine"],
+      afternoon: [
+        "Good afternoon",
+        "Hope your day is going well",
+        "Afternoon check-in",
+      ],
+      evening: ["Good evening", "Winding down nicely", "Evening reflections"],
+      night: ["Good night", "Time to unwind", "Peaceful evening"],
     };
-    
+
     const timeGreetings = greetings[currentTime] || greetings.evening;
     return timeGreetings[Math.floor(Math.random() * timeGreetings.length)];
   };
@@ -196,7 +200,7 @@ const UltraModernMainAppScreen = () => {
               translateY: parallaxAnim.interpolate({
                 inputRange: [0, 200],
                 outputRange: [0, -30],
-                extrapolate: 'clamp',
+                extrapolate: "clamp",
               }),
             },
           ],
@@ -204,13 +208,19 @@ const UltraModernMainAppScreen = () => {
       ]}
     >
       <ModernButton
-        title={userState === 'stressed' ? 'Find Peace' : userState === 'motivated' ? 'Let\'s Talk' : 'Start Session'}
+        title={
+          userState === "stressed"
+            ? "Find Peace"
+            : userState === "motivated"
+              ? "Let's Talk"
+              : "Start Session"
+        }
         variant="neon"
         size="large"
-        animated={true}
-        glowEffect={true}
-        shaderEffect={true}
-        morphEffect={true}
+        animated
+        glowEffect
+        shaderEffect
+        morphEffect
         icon="Therapy"
         onPress={handleStartChat}
         style={styles.fabButton}
@@ -224,39 +234,39 @@ const UltraModernMainAppScreen = () => {
   const DynamicWellnessInsight = () => {
     const insights = {
       contemplative: {
-        icon: '🧘',
-        title: 'Mindful Reflection',
-        tip: 'Your contemplative energy suggests deep introspection. Consider journaling your thoughts.',
+        icon: "🧘",
+        title: "Mindful Reflection",
+        tip: "Your contemplative energy suggests deep introspection. Consider journaling your thoughts.",
         color: modernDarkColors.therapeutic.peaceful.primary,
-        variant: 'zen',
+        variant: "zen",
       },
       motivated: {
-        icon: '⚡',
-        title: 'Energized Momentum',
-        tip: 'Channel this positive energy into goal-setting or creative activities.',
+        icon: "⚡",
+        title: "Energized Momentum",
+        tip: "Channel this positive energy into goal-setting or creative activities.",
         color: modernDarkColors.therapeutic.energizing.primary,
-        variant: 'energy',
+        variant: "energy",
       },
       focused: {
-        icon: '🎯',
-        title: 'Laser Focus',
-        tip: 'Your concentrated state is perfect for tackling important tasks.',
+        icon: "🎯",
+        title: "Laser Focus",
+        tip: "Your concentrated state is perfect for tackling important tasks.",
         color: modernDarkColors.therapeutic.calming.primary,
-        variant: 'neural',
+        variant: "neural",
       },
       relaxed: {
-        icon: '🌊',
-        title: 'Flowing Ease',
-        tip: 'Embrace this peaceful state and let creativity flow naturally.',
+        icon: "🌊",
+        title: "Flowing Ease",
+        tip: "Embrace this peaceful state and let creativity flow naturally.",
         color: modernDarkColors.therapeutic.nurturing.primary,
-        variant: 'organic',
+        variant: "organic",
       },
       peaceful: {
-        icon: '✨',
-        title: 'Serene Balance',
-        tip: 'Perfect time for meditation or connecting with loved ones.',
+        icon: "✨",
+        title: "Serene Balance",
+        tip: "Perfect time for meditation or connecting with loved ones.",
         color: modernDarkColors.therapeutic.peaceful.primary,
-        variant: 'meditation',
+        variant: "meditation",
       },
     };
 
@@ -266,25 +276,46 @@ const UltraModernMainAppScreen = () => {
       <ModernCard
         variant="holographic"
         elevation="floating"
-        animated={true}
-        glowEffect={true}
+        animated
+        glowEffect
         shaderVariant="holographic"
         style={styles.insightCard}
       >
         <View style={styles.insightContent}>
-          <View style={[styles.insightIcon, { backgroundColor: currentInsight.color + '20' }]}>
+          <View
+            style={[
+              styles.insightIcon,
+              { backgroundColor: currentInsight.color + "20" },
+            ]}
+          >
             <Text style={styles.insightEmoji}>{currentInsight.icon}</Text>
           </View>
           <View style={styles.insightText}>
-            <Text style={[styles.insightTitle, { color: modernDarkColors.text.primary }]}>
+            <Text
+              style={[
+                styles.insightTitle,
+                { color: modernDarkColors.text.primary },
+              ]}
+            >
               {currentInsight.title}
             </Text>
-            <Text style={[styles.insightDescription, { color: modernDarkColors.text.secondary }]}>
+            <Text
+              style={[
+                styles.insightDescription,
+                { color: modernDarkColors.text.secondary },
+              ]}
+            >
               {currentInsight.tip}
             </Text>
             <View style={styles.insightMeta}>
-              <Text style={[styles.insightTime, { color: modernDarkColors.text.tertiary }]}>
-                {currentTime.charAt(0).toUpperCase() + currentTime.slice(1)} • Personalized for you
+              <Text
+                style={[
+                  styles.insightTime,
+                  { color: modernDarkColors.text.tertiary },
+                ]}
+              >
+                {currentTime.charAt(0).toUpperCase() + currentTime.slice(1)} •
+                Personalized for you
               </Text>
             </View>
           </View>
@@ -297,19 +328,19 @@ const UltraModernMainAppScreen = () => {
   const ContextualQuickActions = () => {
     const actions = {
       stressed: [
-        { title: 'Breathing Exercise', icon: 'Heart', color: 'calming' },
-        { title: 'Emergency Support', icon: 'Brain', color: 'energizing' },
-        { title: 'Calm Sounds', icon: 'Mindfulness', color: 'peaceful' },
+        { title: "Breathing Exercise", icon: "Heart", color: "calming" },
+        { title: "Emergency Support", icon: "Brain", color: "energizing" },
+        { title: "Calm Sounds", icon: "Mindfulness", color: "peaceful" },
       ],
       motivated: [
-        { title: 'Goal Setting', icon: 'Therapy', color: 'energizing' },
-        { title: 'Progress Review', icon: 'Heart', color: 'nurturing' },
-        { title: 'Achievement Log', icon: 'Journal', color: 'calming' },
+        { title: "Goal Setting", icon: "Therapy", color: "energizing" },
+        { title: "Progress Review", icon: "Heart", color: "nurturing" },
+        { title: "Achievement Log", icon: "Journal", color: "calming" },
       ],
       peaceful: [
-        { title: 'Meditation', icon: 'Mindfulness', color: 'peaceful' },
-        { title: 'Gratitude Journal', icon: 'Journal', color: 'nurturing' },
-        { title: 'Reflection', icon: 'Brain', color: 'grounding' },
+        { title: "Meditation", icon: "Mindfulness", color: "peaceful" },
+        { title: "Gratitude Journal", icon: "Journal", color: "nurturing" },
+        { title: "Reflection", icon: "Brain", color: "grounding" },
       ],
     };
 
@@ -321,9 +352,9 @@ const UltraModernMainAppScreen = () => {
         subtitle={`Tailored for your ${userState} state`}
         variant="neon"
         elevation="high"
-        animated={true}
-        glowEffect={true}
-        interactive={true}
+        animated
+        glowEffect
+        interactive
         shaderVariant="neural"
       >
         <View style={styles.contextualActions}>
@@ -331,9 +362,9 @@ const UltraModernMainAppScreen = () => {
             <ModernButton
               key={action.title}
               title={action.title}
-              variant={index === 0 ? 'neural' : index === 1 ? 'glass' : 'ghost'}
+              variant={index === 0 ? "neural" : index === 1 ? "glass" : "ghost"}
               size="medium"
-              animated={true}
+              animated
               glowEffect={index === 0}
               icon={action.icon}
               onPress={() => console.log(`${action.title} selected`)}
@@ -347,7 +378,11 @@ const UltraModernMainAppScreen = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
 
       {/* Contextual Environment Background */}
       <ContextualEnvironment
@@ -355,9 +390,9 @@ const UltraModernMainAppScreen = () => {
         timeOfDay={currentTime}
         userState={userState}
         intensity={0.8}
-        animated={true}
-        interactive={true}
-        adaptiveEffects={true}
+        animated
+        interactive
+        adaptiveEffects
         style={styles.environmentBackground}
       />
 
@@ -366,9 +401,9 @@ const UltraModernMainAppScreen = () => {
         variant="therapy"
         intensity={0.4}
         speed={1.0}
-        therapeutic={true}
+        therapeutic
         breathingRate={4000}
-        energyFlow={true}
+        energyFlow
         style={styles.ambientLayer}
       />
 
@@ -383,7 +418,7 @@ const UltraModernMainAppScreen = () => {
                 translateY: parallaxAnim.interpolate({
                   inputRange: [0, 150],
                   outputRange: [0, -75],
-                  extrapolate: 'clamp',
+                  extrapolate: "clamp",
                 }),
               },
             ],
@@ -392,7 +427,7 @@ const UltraModernMainAppScreen = () => {
       >
         <WelcomeHeader
           greeting={getPersonalizedGreeting()}
-          userName={user?.profile?.name || 'Friend'}
+          userName={user?.profile?.name || "Friend"}
           onProfilePress={handleViewProfile}
           onEmergencyPress={showEmergencyAlert}
         />
@@ -467,8 +502,8 @@ const UltraModernMainAppScreen = () => {
               subtitle="Personalized mental health analysis"
               variant="neural"
               elevation="high"
-              animated={true}
-              glowEffect={true}
+              animated
+              glowEffect
               shaderVariant="neural"
             >
               <DailyInsights insights={mood?.insights} />
@@ -482,7 +517,7 @@ const UltraModernMainAppScreen = () => {
               subtitle="Your wellness evolution"
               variant="void"
               elevation="medium"
-              animated={true}
+              animated
               shaderVariant="quantum"
             >
               <ProgressOverview
@@ -499,7 +534,7 @@ const UltraModernMainAppScreen = () => {
               subtitle="Your wellness timeline"
               variant="glass"
               elevation="medium"
-              animated={true}
+              animated
               shaderVariant="holographic"
             >
               <RecentActivity
@@ -526,7 +561,7 @@ const styles = StyleSheet.create({
     backgroundColor: modernDarkColors.background.primary,
   },
   environmentBackground: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -534,7 +569,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   ambientLayer: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -561,21 +596,21 @@ const styles = StyleSheet.create({
     marginBottom: modernSpacing[4],
   },
   insightContent: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
   },
   insightIcon: {
     width: 64,
     height: 64,
     borderRadius: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: modernSpacing[4],
     borderWidth: 1,
     borderColor: modernDarkColors.border.glass,
   },
   insightEmoji: {
-    fontSize: modernTypography.sizes['3xl'],
+    fontSize: modernTypography.sizes["3xl"],
   },
   insightText: {
     flex: 1,
@@ -605,7 +640,7 @@ const styles = StyleSheet.create({
     fontWeight: modernTypography.weights.medium,
     fontFamily: modernTypography.fontFamily.sans,
     letterSpacing: modernTypography.letterSpacing.wide,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
     opacity: 0.7,
   },
   contextualActions: {
@@ -621,14 +656,14 @@ const styles = StyleSheet.create({
     marginBottom: modernSpacing[3],
   },
   fab: {
-    position: 'absolute',
+    position: "absolute",
     right: modernSpacing[6],
     bottom: modernSpacing[8],
     zIndex: 25,
   },
   fabButton: {
     minWidth: 180,
-    borderRadius: modernBorderRadius['2xl'],
+    borderRadius: modernBorderRadius["2xl"],
     ...modernShadows.xl,
   },
   bottomSpacing: {

@@ -1,53 +1,50 @@
-import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { NavigationIcon } from '../icons';
-import { typography, spacing } from '../../shared/theme/theme';
-import * as Haptics from 'expo-haptics';
+import * as Haptics from "expo-haptics";
+import React from "react";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+
+import { useTheme } from "../../shared/theme/ThemeContext";
+import { typography, spacing } from "../../shared/theme/theme";
+import { NavigationIcon } from "../icons";
 
 const TAB_ITEMS = [
   {
-    id: 'home',
-    label: 'Home',
-    icon: 'home',
-    activeIcon: 'home',
+    id: "home",
+    label: "Home",
+    icon: "home",
+    activeIcon: "home",
   },
   {
-    id: 'mood',
-    label: 'Mood',
-    icon: 'heart',
-    activeIcon: 'heart',
+    id: "mood",
+    label: "Mood",
+    icon: "heart",
+    activeIcon: "heart",
   },
   {
-    id: 'chat',
-    label: 'Chat',
-    icon: 'chat',
-    activeIcon: 'chat',
+    id: "chat",
+    label: "Chat",
+    icon: "chat",
+    activeIcon: "chat",
   },
   {
-    id: 'journal',
-    label: 'Journal',
-    icon: 'journal',
-    activeIcon: 'journal',
+    id: "journal",
+    label: "Journal",
+    icon: "journal",
+    activeIcon: "journal",
   },
   {
-    id: 'profile',
-    label: 'Profile',
-    icon: 'profile',
-    activeIcon: 'profile',
+    id: "profile",
+    label: "Profile",
+    icon: "profile",
+    activeIcon: "profile",
   },
 ];
 
-const BottomTabBar = ({
-  state,
-  descriptors,
-  navigation,
-}) => {
+const BottomTabBar = ({ state, descriptors, navigation }) => {
   const { theme } = useTheme();
 
   const handlePress = (route, isFocused) => {
     const event = navigation.emit({
-      type: 'tabPress',
+      type: "tabPress",
       target: route.key,
       canPreventDefault: true,
     });
@@ -73,13 +70,15 @@ const BottomTabBar = ({
         const { options } = descriptors[route.key];
         const isFocused = state.index === index;
 
-        const tabItem = TAB_ITEMS.find(item => item.id === route.name.toLowerCase()) || TAB_ITEMS[0];
+        const tabItem =
+          TAB_ITEMS.find((item) => item.id === route.name.toLowerCase()) ||
+          TAB_ITEMS[0];
 
         return (
           <Pressable
             key={route.key}
             onPress={() => handlePress(route, isFocused)}
-            accessible={true}
+            accessible
             accessibilityRole="tab"
             accessibilityLabel={tabItem.label}
             accessibilityHint={`Navigate to ${tabItem.label} screen`}
@@ -90,15 +89,23 @@ const BottomTabBar = ({
               name={isFocused ? tabItem.activeIcon : tabItem.icon}
               size={24}
               variant={isFocused ? "filled" : "outline"}
-              color={isFocused ? theme.colors.primary.main : theme.colors.text.secondary}
+              color={
+                isFocused
+                  ? theme.colors.primary.main
+                  : theme.colors.text.secondary
+              }
             />
             <Text
               style={[
                 styles.label,
                 {
-                  color: isFocused ? theme.colors.primary.main : theme.colors.text.secondary,
+                  color: isFocused
+                    ? theme.colors.primary.main
+                    : theme.colors.text.secondary,
                   fontSize: typography.sizes.xs,
-                  fontWeight: isFocused ? typography.weights.semiBold : typography.weights.medium,
+                  fontWeight: isFocused
+                    ? typography.weights.semiBold
+                    : typography.weights.medium,
                 },
               ]}
             >
@@ -113,13 +120,13 @@ const BottomTabBar = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderTopWidth: 1,
     paddingBottom: spacing[2],
   },
   tab: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: spacing[2],
   },
   label: {

@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -63,22 +63,22 @@ const DarkSignInScreen = ({ navigation, onSignIn = () => {} }) => {
       setEmailError("Email is required");
       return;
     }
-    
+
     if (!validateEmail(email)) {
       setEmailError("Invalid Email Address!!!");
       return;
     }
-    
+
     if (!password.trim()) {
       Alert.alert("Error", "Password is required");
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       onSignIn({ email, password });
     } catch (error) {
       Alert.alert("Error", "Sign in failed. Please try again.");
@@ -88,11 +88,11 @@ const DarkSignInScreen = ({ navigation, onSignIn = () => {} }) => {
   };
 
   const handleForgotPassword = () => {
-    navigation.navigate('DarkForgotPassword');
+    navigation.navigate("DarkForgotPassword");
   };
 
   const handleSignUp = () => {
-    navigation.navigate('DarkSignUp');
+    navigation.navigate("DarkSignUp");
   };
 
   const handleSocialLogin = (provider) => {
@@ -101,8 +101,12 @@ const DarkSignInScreen = ({ navigation, onSignIn = () => {} }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-      
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
+
       {/* Header Gradient - Green like design */}
       <LinearGradient
         colors={freudDarkTheme.colors.header.gradient}
@@ -140,17 +144,21 @@ const DarkSignInScreen = ({ navigation, onSignIn = () => {} }) => {
               {/* Email Input */}
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Email Address</Text>
-                <View style={[
-                  styles.inputWrapper,
-                  emailError ? styles.inputError : null
-                ]}>
+                <View
+                  style={[
+                    styles.inputWrapper,
+                    emailError ? styles.inputError : null,
+                  ]}
+                >
                   <View style={styles.inputIcon}>
                     <Text style={styles.inputIconText}>@</Text>
                   </View>
                   <TextInput
                     style={styles.textInput}
                     placeholder="princess.kaguya@gmail.co"
-                    placeholderTextColor={freudDarkTheme.colors.text.placeholder}
+                    placeholderTextColor={
+                      freudDarkTheme.colors.text.placeholder
+                    }
                     value={email}
                     onChangeText={handleEmailChange}
                     keyboardType="email-address"
@@ -178,7 +186,9 @@ const DarkSignInScreen = ({ navigation, onSignIn = () => {} }) => {
                   <TextInput
                     style={styles.textInput}
                     placeholder="Enter your password..."
-                    placeholderTextColor={freudDarkTheme.colors.text.placeholder}
+                    placeholderTextColor={
+                      freudDarkTheme.colors.text.placeholder
+                    }
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry={!showPassword}
@@ -196,7 +206,10 @@ const DarkSignInScreen = ({ navigation, onSignIn = () => {} }) => {
 
               {/* Sign In Button */}
               <TouchableOpacity
-                style={[styles.signInButton, isLoading && styles.buttonDisabled]}
+                style={[
+                  styles.signInButton,
+                  isLoading && styles.buttonDisabled,
+                ]}
                 onPress={handleSignIn}
                 disabled={isLoading}
               >
@@ -213,14 +226,14 @@ const DarkSignInScreen = ({ navigation, onSignIn = () => {} }) => {
                 >
                   <Text style={styles.socialIcon}>f</Text>
                 </TouchableOpacity>
-                
+
                 <TouchableOpacity
                   style={styles.socialButton}
                   onPress={() => handleSocialLogin("Google")}
                 >
                   <Text style={styles.socialIcon}>G</Text>
                 </TouchableOpacity>
-                
+
                 <TouchableOpacity
                   style={styles.socialButton}
                   onPress={() => handleSocialLogin("Instagram")}
@@ -237,7 +250,7 @@ const DarkSignInScreen = ({ navigation, onSignIn = () => {} }) => {
                     <Text style={styles.linkText}>Sign Up</Text>
                   </Text>
                 </TouchableOpacity>
-                
+
                 <TouchableOpacity
                   style={styles.forgotPasswordButton}
                   onPress={handleForgotPassword}
@@ -263,12 +276,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: freudDarkTheme.colors.background.primary,
   },
-  
+
   // Header
   headerGradient: {
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
   },
@@ -315,8 +328,8 @@ const styles = StyleSheet.create({
     marginBottom: freudDarkTheme.spacing[2],
   },
   inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: freudDarkTheme.colors.input.background,
     borderRadius: freudDarkTheme.borderRadius.lg,
     borderWidth: 1,
@@ -329,7 +342,7 @@ const styles = StyleSheet.create({
   },
   inputIcon: {
     width: 24,
-    alignItems: 'center',
+    alignItems: "center",
     marginRight: freudDarkTheme.spacing[3],
   },
   inputIconText: {
@@ -344,7 +357,7 @@ const styles = StyleSheet.create({
   },
   eyeIcon: {
     width: 24,
-    alignItems: 'center',
+    alignItems: "center",
   },
   eyeIconText: {
     fontSize: 16,
@@ -352,10 +365,10 @@ const styles = StyleSheet.create({
 
   // Error styles
   errorContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: freudDarkTheme.spacing[2],
-    backgroundColor: '#E74C3C20',
+    backgroundColor: "#E74C3C20",
     paddingHorizontal: freudDarkTheme.spacing[4],
     paddingVertical: freudDarkTheme.spacing[2],
     borderRadius: freudDarkTheme.borderRadius.md,
@@ -377,7 +390,7 @@ const styles = StyleSheet.create({
     backgroundColor: freudDarkTheme.colors.button.primary.background,
     borderRadius: freudDarkTheme.borderRadius.lg,
     paddingVertical: freudDarkTheme.spacing[4],
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: freudDarkTheme.spacing[4],
     marginBottom: freudDarkTheme.spacing[8],
     ...freudDarkTheme.shadows.md,
@@ -393,9 +406,9 @@ const styles = StyleSheet.create({
 
   // Social login
   socialContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: freudDarkTheme.spacing[8],
   },
   socialButton: {
@@ -405,8 +418,8 @@ const styles = StyleSheet.create({
     backgroundColor: freudDarkTheme.colors.card.background,
     borderWidth: 1,
     borderColor: freudDarkTheme.colors.border.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginHorizontal: freudDarkTheme.spacing[3],
     ...freudDarkTheme.shadows.sm,
   },
@@ -418,7 +431,7 @@ const styles = StyleSheet.create({
 
   // Footer
   footerContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingBottom: freudDarkTheme.spacing[8],
   },
   footerText: {
@@ -436,7 +449,7 @@ const styles = StyleSheet.create({
 
   // Bottom indicator
   bottomIndicator: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingBottom: freudDarkTheme.spacing[6],
   },
   homeIndicator: {

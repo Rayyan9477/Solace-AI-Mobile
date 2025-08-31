@@ -8,9 +8,7 @@ import {
   Animated,
 } from "react-native";
 
-import SimpleCard from "../ui/SimpleCard";
-
-import { useTheme } from "../../shared/theme/ThemeContext";
+import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
 import {
   colors,
   typography,
@@ -18,6 +16,7 @@ import {
   borderRadius,
   shadows,
 } from "../../shared/theme/theme";
+import SimpleCard from "../ui/SimpleCard";
 
 const WelcomeHeader = ({
   greeting,
@@ -119,7 +118,9 @@ const WelcomeHeader = ({
           accessibilityLabel="View Profile"
           accessibilityHint="Double tap to view your profile"
         >
-          <Text style={[styles.avatarText, { color: theme.colors.text.inverse }]}>
+          <Text
+            style={[styles.avatarText, { color: theme.colors.text.inverse }]}
+          >
             {userName.charAt(0).toUpperCase()}
           </Text>
         </TouchableOpacity>
@@ -138,75 +139,76 @@ const WelcomeHeader = ({
   );
 };
 
-const createStyles = (theme) => StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    paddingHorizontal: spacing[4],
-    paddingVertical: spacing[6],
-    marginHorizontal: spacing[4],
-    marginBottom: spacing[4],
-  },
-  mainContent: {
-    flex: 1,
-    paddingRight: theme.spacing[4],
-  },
-  greetingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: theme.spacing[1],
-  },
-  timeEmoji: {
-    fontSize: theme.typography.sizes.lg,
-    marginRight: theme.spacing[2],
-  },
-  greeting: {
-    fontSize: typography.sizes.base,
-    fontWeight: typography.weights.medium,
-    lineHeight: typography.lineHeights.base,
-  },
-  userName: {
-    fontSize: typography.sizes['3xl'],
-    fontWeight: typography.weights.bold,
-    lineHeight: typography.lineHeights['3xl'],
-    marginBottom: spacing[2],
-  },
-  subtitle: {
-    fontSize: theme.typography.sizes.sm,
-    fontWeight: typography.weights.normal,
-    lineHeight: typography.lineHeights.sm,
-    opacity: 0.8,
-  },
-  headerActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: theme.spacing[2],
-  },
-  avatarButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: theme.colors.primary[500],
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...shadows.md,
-  },
-  avatarText: {
-    fontSize: typography.sizes.xl,
-    fontWeight: typography.weights.bold,
-  },
-  emergencyButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: theme.colors.error[500],
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...shadows.md,
-  },
-  emergencyText: {
-    fontSize: typography.sizes.xl,
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+      paddingHorizontal: spacing[4],
+      paddingVertical: spacing[6],
+      marginHorizontal: spacing[4],
+      marginBottom: spacing[4],
+    },
+    mainContent: {
+      flex: 1,
+      paddingRight: theme.spacing[4],
+    },
+    greetingContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: theme.spacing[1],
+    },
+    timeEmoji: {
+      fontSize: theme.typography.sizes.lg,
+      marginRight: theme.spacing[2],
+    },
+    greeting: {
+      fontSize: typography.sizes.base,
+      fontWeight: typography.weights.medium,
+      lineHeight: typography.lineHeights.base,
+    },
+    userName: {
+      fontSize: typography.sizes["3xl"],
+      fontWeight: typography.weights.bold,
+      lineHeight: typography.lineHeights["3xl"],
+      marginBottom: spacing[2],
+    },
+    subtitle: {
+      fontSize: theme.typography.sizes.sm,
+      fontWeight: typography.weights.normal,
+      lineHeight: typography.lineHeights.sm,
+      opacity: 0.8,
+    },
+    headerActions: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: theme.spacing[2],
+    },
+    avatarButton: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      backgroundColor: theme.colors.primary[500],
+      justifyContent: "center",
+      alignItems: "center",
+      ...shadows.md,
+    },
+    avatarText: {
+      fontSize: typography.sizes.xl,
+      fontWeight: typography.weights.bold,
+    },
+    emergencyButton: {
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: theme.colors.error[500],
+      justifyContent: "center",
+      alignItems: "center",
+      ...shadows.md,
+    },
+    emergencyText: {
+      fontSize: typography.sizes.xl,
+    },
+  });
 
 export default WelcomeHeader;

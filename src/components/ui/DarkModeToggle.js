@@ -70,7 +70,7 @@ const DarkModeToggle = ({ style, showLabel = true, size = "normal" }) => {
   const backgroundColor = animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: [
-      theme.colors?.background?.disabled || '#E5E7EB',
+      theme.colors?.background?.disabled || "#E5E7EB",
       freudDarkTheme.colors.accent.primary,
     ],
   });
@@ -95,7 +95,7 @@ const DarkModeToggle = ({ style, showLabel = true, size = "normal" }) => {
           {isDarkMode ? "Dark Mode" : "Light Mode"}
         </Text>
       )}
-      
+
       <TouchableOpacity
         onPress={handlePress}
         activeOpacity={0.8}
@@ -124,10 +124,7 @@ const DarkModeToggle = ({ style, showLabel = true, size = "normal" }) => {
           >
             {/* Icons inside the toggle circle */}
             <Animated.View
-              style={[
-                styles.iconContainer,
-                { opacity: iconOpacity },
-              ]}
+              style={[styles.iconContainer, { opacity: iconOpacity }]}
             >
               <Text style={[styles.icon, { fontSize: currentSize.fontSize }]}>
                 {isDarkMode ? "🌙" : "☀️"}
@@ -138,12 +135,22 @@ const DarkModeToggle = ({ style, showLabel = true, size = "normal" }) => {
           {/* Background icons */}
           <View style={styles.backgroundIcons}>
             <View style={[styles.backgroundIcon, styles.leftIcon]}>
-              <Text style={[styles.backgroundIconText, { fontSize: currentSize.fontSize - 2 }]}>
+              <Text
+                style={[
+                  styles.backgroundIconText,
+                  { fontSize: currentSize.fontSize - 2 },
+                ]}
+              >
                 ☀️
               </Text>
             </View>
             <View style={[styles.backgroundIcon, styles.rightIcon]}>
-              <Text style={[styles.backgroundIconText, { fontSize: currentSize.fontSize - 2 }]}>
+              <Text
+                style={[
+                  styles.backgroundIconText,
+                  { fontSize: currentSize.fontSize - 2 },
+                ]}
+              >
                 🌙
               </Text>
             </View>

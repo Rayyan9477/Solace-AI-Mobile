@@ -3,106 +3,125 @@
  * Matches Freud UI Kit design exactly with large emojis, gradient backgrounds, and animations
  */
 
-import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  StyleSheet, 
-  Animated, 
+import anime from "animejs";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useEffect, useRef, useState, useMemo } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
   Dimensions,
-  Platform 
-} from 'react-native';
-import { Card, Surface } from 'react-native-paper';
-import LinearGradient from 'expo-linear-gradient';
-import anime from 'animejs';
-import { FreudColors, FreudSpacing, FreudBorderRadius, FreudShadows, FreudTypography } from '../../shared/theme/FreudDesignSystem';
-import { useFreudTheme } from './FreudThemeProvider';
+  Platform,
+} from "react-native";
+import { Card, Surface } from "react-native-paper";
 
-const { width: screenWidth } = Dimensions.get('window');
+import { useFreudTheme } from "./FreudThemeProvider";
+import {
+  FreudColors,
+  FreudSpacing,
+  FreudBorderRadius,
+  FreudShadows,
+  FreudTypography,
+} from "../../shared/theme/FreudDesignSystem";
+
+const { width: screenWidth } = Dimensions.get("window");
 
 // Mood configurations matching Freud UI Kit design references
 const MOOD_CONFIGS = {
   happy: {
-    emoji: '😊',
-    label: 'Happy',
-    description: 'I\'m feeling joyful',
+    emoji: "😊",
+    label: "Happy",
+    description: "I'm feeling joyful",
     colors: FreudColors.zenYellow,
     gradient: [FreudColors.zenYellow[20], FreudColors.zenYellow[10]],
     darkGradient: [FreudColors.zenYellow[60], FreudColors.zenYellow[40]],
-    animation: 'bounce',
+    animation: "bounce",
   },
   sad: {
-    emoji: '😢',
-    label: 'Sad',
-    description: 'I\'m feeling down',
+    emoji: "😢",
+    label: "Sad",
+    description: "I'm feeling down",
     colors: FreudColors.optimisticGray,
     gradient: [FreudColors.optimisticGray[40], FreudColors.optimisticGray[20]],
-    darkGradient: [FreudColors.optimisticGray[70], FreudColors.optimisticGray[50]],
-    animation: 'pulse',
+    darkGradient: [
+      FreudColors.optimisticGray[70],
+      FreudColors.optimisticGray[50],
+    ],
+    animation: "pulse",
   },
   stressed: {
-    emoji: '😰',
-    label: 'Stressed',
-    description: 'I\'m feeling overwhelmed',
+    emoji: "😰",
+    label: "Stressed",
+    description: "I'm feeling overwhelmed",
     colors: FreudColors.empathyOrange,
     gradient: [FreudColors.empathyOrange[30], FreudColors.empathyOrange[10]],
-    darkGradient: [FreudColors.empathyOrange[60], FreudColors.empathyOrange[40]],
-    animation: 'breathe',
+    darkGradient: [
+      FreudColors.empathyOrange[60],
+      FreudColors.empathyOrange[40],
+    ],
+    animation: "breathe",
   },
   calm: {
-    emoji: '😌',
-    label: 'Calm',
-    description: 'I\'m feeling peaceful',
+    emoji: "😌",
+    label: "Calm",
+    description: "I'm feeling peaceful",
     colors: FreudColors.serenityGreen,
     gradient: [FreudColors.serenityGreen[30], FreudColors.serenityGreen[10]],
-    darkGradient: [FreudColors.serenityGreen[60], FreudColors.serenityGreen[40]],
-    animation: 'wave',
+    darkGradient: [
+      FreudColors.serenityGreen[60],
+      FreudColors.serenityGreen[40],
+    ],
+    animation: "wave",
   },
   anxious: {
-    emoji: '😟',
-    label: 'Anxious',
-    description: 'I\'m feeling worried',
+    emoji: "😟",
+    label: "Anxious",
+    description: "I'm feeling worried",
     colors: FreudColors.kindPurple,
     gradient: [FreudColors.kindPurple[30], FreudColors.kindPurple[10]],
     darkGradient: [FreudColors.kindPurple[60], FreudColors.kindPurple[40]],
-    animation: 'energetic',
+    animation: "energetic",
   },
   neutral: {
-    emoji: '😐',
-    label: 'Neutral',
-    description: 'I\'m feeling okay',
+    emoji: "😐",
+    label: "Neutral",
+    description: "I'm feeling okay",
     colors: FreudColors.mindfulBrown,
     gradient: [FreudColors.mindfulBrown[30], FreudColors.mindfulBrown[10]],
     darkGradient: [FreudColors.mindfulBrown[60], FreudColors.mindfulBrown[40]],
-    animation: 'pulse',
+    animation: "pulse",
   },
   excited: {
-    emoji: '🤗',
-    label: 'Excited',
-    description: 'I\'m feeling energetic',
+    emoji: "🤗",
+    label: "Excited",
+    description: "I'm feeling energetic",
     colors: FreudColors.zenYellow,
     gradient: [FreudColors.zenYellow[30], FreudColors.empathyOrange[10]],
     darkGradient: [FreudColors.zenYellow[60], FreudColors.empathyOrange[40]],
-    animation: 'bounce',
+    animation: "bounce",
   },
   tired: {
-    emoji: '😴',
-    label: 'Tired',
-    description: 'I\'m feeling drained',
+    emoji: "😴",
+    label: "Tired",
+    description: "I'm feeling drained",
     colors: FreudColors.optimisticGray,
     gradient: [FreudColors.optimisticGray[30], FreudColors.mindfulBrown[10]],
-    darkGradient: [FreudColors.optimisticGray[60], FreudColors.mindfulBrown[40]],
-    animation: 'breathe',
+    darkGradient: [
+      FreudColors.optimisticGray[60],
+      FreudColors.mindfulBrown[40],
+    ],
+    animation: "breathe",
   },
   content: {
-    emoji: '☺️',
-    label: 'Content',
-    description: 'I\'m feeling satisfied',
+    emoji: "☺️",
+    label: "Content",
+    description: "I'm feeling satisfied",
     colors: FreudColors.serenityGreen,
     gradient: [FreudColors.serenityGreen[20], FreudColors.zenYellow[10]],
     darkGradient: [FreudColors.serenityGreen[50], FreudColors.zenYellow[40]],
-    animation: 'wave',
+    animation: "wave",
   },
 };
 
@@ -110,37 +129,37 @@ const MOOD_CONFIGS = {
 const ANIMATION_CONFIGS = {
   bounce: {
     duration: 1000,
-    easing: 'easeOutElastic(1, .8)',
+    easing: "easeOutElastic(1, .8)",
     loop: true,
-    transform: 'scale',
+    transform: "scale",
     values: [1, 1.1, 1],
   },
   pulse: {
     duration: 2000,
-    easing: 'easeInOutQuad',
+    easing: "easeInOutQuad",
     loop: true,
-    transform: 'scale',
+    transform: "scale",
     values: [1, 1.05, 1],
   },
   breathe: {
     duration: 4000,
-    easing: 'easeInOutSine',
+    easing: "easeInOutSine",
     loop: true,
-    transform: 'scale',
+    transform: "scale",
     values: [1, 1.03, 1],
   },
   wave: {
     duration: 3000,
-    easing: 'easeInOutCubic',
+    easing: "easeInOutCubic",
     loop: true,
-    transform: 'translateY',
+    transform: "translateY",
     values: [0, -5, 0],
   },
   energetic: {
     duration: 600,
-    easing: 'easeOutBounce',
+    easing: "easeOutBounce",
     loop: true,
-    transform: 'rotate',
+    transform: "rotate",
     values: [0, 5, -5, 0],
   },
 };
@@ -149,9 +168,9 @@ const ANIMATION_CONFIGS = {
  * Enhanced Mood Card Component
  */
 export const EnhancedMoodCard = ({
-  mood = 'neutral',
-  size = 'medium',
-  variant = 'gradient',
+  mood = "neutral",
+  size = "medium",
+  variant = "gradient",
   animated = true,
   selected = false,
   onPress,
@@ -167,13 +186,13 @@ export const EnhancedMoodCard = ({
   // Size configurations
   const sizeConfig = useMemo(() => {
     switch (size) {
-      case 'small':
+      case "small":
         return { width: 80, height: 80, fontSize: 32, labelSize: 12 };
-      case 'large':
+      case "large":
         return { width: 140, height: 140, fontSize: 64, labelSize: 16 };
-      case 'xlarge':
+      case "xlarge":
         return { width: 160, height: 160, fontSize: 72, labelSize: 18 };
-      case 'medium':
+      case "medium":
       default:
         return { width: 100, height: 100, fontSize: 48, labelSize: 14 };
     }
@@ -183,9 +202,10 @@ export const EnhancedMoodCard = ({
   useEffect(() => {
     if (!animated) return;
 
-    const animConfig = ANIMATION_CONFIGS[config.animation] || ANIMATION_CONFIGS.pulse;
-    
-    if (Platform.OS === 'web') {
+    const animConfig =
+      ANIMATION_CONFIGS[config.animation] || ANIMATION_CONFIGS.pulse;
+
+    if (Platform.OS === "web") {
       // Use anime.js for web
       const element = animationRef.current;
       if (element) {
@@ -195,24 +215,21 @@ export const EnhancedMoodCard = ({
           duration: animConfig.duration,
           easing: animConfig.easing,
           loop: animConfig.loop,
-          direction: 'alternate',
+          direction: "alternate",
         });
       }
     } else {
       // Use React Native Animated for mobile
       const createAnimation = () => {
-        const animations = animConfig.values.map(value =>
+        const animations = animConfig.values.map((value) =>
           Animated.timing(scaleValue, {
             toValue: value,
             duration: animConfig.duration / animConfig.values.length,
             useNativeDriver: true,
-          })
+          }),
         );
 
-        return Animated.loop(
-          Animated.sequence(animations),
-          { iterations: -1 }
-        );
+        return Animated.loop(Animated.sequence(animations), { iterations: -1 });
       };
 
       const animation = createAnimation();
@@ -244,35 +261,40 @@ export const EnhancedMoodCard = ({
   // Render based on variant
   const renderContent = () => {
     const gradientColors = isDarkMode ? config.darkGradient : config.gradient;
-    const textColor = isDarkMode ? FreudColors.optimisticGray[10] : FreudColors.mindfulBrown[90];
-    const labelColor = isDarkMode ? FreudColors.optimisticGray[30] : FreudColors.optimisticGray[70];
+    const textColor = isDarkMode
+      ? FreudColors.optimisticGray[10]
+      : FreudColors.mindfulBrown[90];
+    const labelColor = isDarkMode
+      ? FreudColors.optimisticGray[30]
+      : FreudColors.optimisticGray[70];
 
     const content = (
       <View style={styles.cardContent}>
-        <Text 
-          style={[
-            styles.emoji, 
-            { fontSize: sizeConfig.fontSize }
-          ]}
-          ref={Platform.OS === 'web' ? animationRef : null}
+        <Text
+          style={[styles.emoji, { fontSize: sizeConfig.fontSize }]}
+          ref={Platform.OS === "web" ? animationRef : null}
         >
           {config.emoji}
         </Text>
-        <Text style={[
-          styles.label, 
-          { 
-            fontSize: sizeConfig.labelSize,
-            color: textColor,
-            fontWeight: selected ? FreudTypography.weights.semiBold : FreudTypography.weights.medium,
-          }
-        ]}>
+        <Text
+          style={[
+            styles.label,
+            {
+              fontSize: sizeConfig.labelSize,
+              color: textColor,
+              fontWeight: selected
+                ? FreudTypography.weights.semiBold
+                : FreudTypography.weights.medium,
+            },
+          ]}
+        >
           {config.label}
         </Text>
       </View>
     );
 
     switch (variant) {
-      case 'gradient':
+      case "gradient":
         return (
           <LinearGradient
             colors={gradientColors}
@@ -280,31 +302,33 @@ export const EnhancedMoodCard = ({
               styles.card,
               sizeConfig,
               selected && styles.selectedCard,
-              style
+              style,
             ]}
           >
             {content}
           </LinearGradient>
         );
 
-      case 'shader':
+      case "shader":
         return (
-          <View style={[
-            styles.card,
-            sizeConfig,
-            { 
-              backgroundColor: gradientColors[1],
-              borderWidth: 2,
-              borderColor: gradientColors[0],
-            },
-            selected && styles.selectedCard,
-            style
-          ]}>
+          <View
+            style={[
+              styles.card,
+              sizeConfig,
+              {
+                backgroundColor: gradientColors[1],
+                borderWidth: 2,
+                borderColor: gradientColors[0],
+              },
+              selected && styles.selectedCard,
+              style,
+            ]}
+          >
             {content}
           </View>
         );
 
-      case 'glass':
+      case "glass":
         return (
           <Surface
             style={[
@@ -312,10 +336,12 @@ export const EnhancedMoodCard = ({
               styles.glassCard,
               sizeConfig,
               {
-                backgroundColor: isDarkMode ? FreudColors.optimisticGray[90] + 'CC' : '#FFFFFF' + 'CC',
+                backgroundColor: isDarkMode
+                  ? FreudColors.optimisticGray[90] + "CC"
+                  : "#FFFFFF" + "CC",
               },
               selected && styles.selectedCard,
-              style
+              style,
             ]}
             elevation={2}
           >
@@ -323,20 +349,28 @@ export const EnhancedMoodCard = ({
           </Surface>
         );
 
-      case 'minimal':
+      case "minimal":
       default:
         return (
-          <View style={[
-            styles.card,
-            styles.minimalCard,
-            sizeConfig,
-            {
-              backgroundColor: isDarkMode ? FreudColors.optimisticGray[90] : '#FFFFFF',
-              borderColor: selected ? config.colors[60] : (isDarkMode ? FreudColors.optimisticGray[70] : FreudColors.optimisticGray[30]),
-            },
-            selected && styles.selectedCard,
-            style
-          ]}>
+          <View
+            style={[
+              styles.card,
+              styles.minimalCard,
+              sizeConfig,
+              {
+                backgroundColor: isDarkMode
+                  ? FreudColors.optimisticGray[90]
+                  : "#FFFFFF",
+                borderColor: selected
+                  ? config.colors[60]
+                  : isDarkMode
+                    ? FreudColors.optimisticGray[70]
+                    : FreudColors.optimisticGray[30],
+              },
+              selected && styles.selectedCard,
+              style,
+            ]}
+          >
             {content}
           </View>
         );
@@ -347,7 +381,7 @@ export const EnhancedMoodCard = ({
     <Animated.View
       style={[
         { transform: [{ scale: scaleValue }] },
-        isPressed && styles.pressed
+        isPressed && styles.pressed,
       ]}
     >
       <TouchableOpacity
@@ -369,29 +403,30 @@ export const EnhancedMoodCard = ({
  * Mood Grid Layout Component
  */
 export const MoodGrid = ({
-  moods = ['happy', 'sad', 'stressed', 'calm', 'anxious', 'neutral'],
+  moods = ["happy", "sad", "stressed", "calm", "anxious", "neutral"],
   selectedMood,
   onMoodSelect,
-  size = 'medium',
-  variant = 'gradient',
+  size = "medium",
+  variant = "gradient",
   animated = true,
   columns = 3,
   style,
 }) => {
-  const gridItemWidth = (screenWidth - FreudSpacing[8] - (FreudSpacing[4] * (columns - 1))) / columns;
-  
+  const gridItemWidth =
+    (screenWidth - FreudSpacing[8] - FreudSpacing[4] * (columns - 1)) / columns;
+
   return (
     <View style={[styles.moodGrid, style]}>
       {moods.map((mood, index) => (
-        <View 
-          key={mood} 
+        <View
+          key={mood}
           style={[
             styles.gridItem,
-            { 
+            {
               width: gridItemWidth,
               marginRight: (index + 1) % columns === 0 ? 0 : FreudSpacing[2],
-              marginBottom: FreudSpacing[4]
-            }
+              marginBottom: FreudSpacing[4],
+            },
           ]}
         >
           <EnhancedMoodCard
@@ -401,7 +436,7 @@ export const MoodGrid = ({
             animated={animated}
             selected={selectedMood === mood}
             onPress={onMoodSelect}
-            style={{ alignSelf: 'center' }}
+            style={{ alignSelf: "center" }}
           />
         </View>
       ))}
@@ -413,11 +448,11 @@ export const MoodGrid = ({
  * Mood Slider Layout Component
  */
 export const MoodSlider = ({
-  moods = ['sad', 'neutral', 'calm', 'happy', 'excited'],
+  moods = ["sad", "neutral", "calm", "happy", "excited"],
   selectedMood,
   onMoodSelect,
-  size = 'large',
-  variant = 'gradient',
+  size = "large",
+  variant = "gradient",
   animated = true,
   style,
 }) => {
@@ -444,12 +479,12 @@ export const MoodSlider = ({
 export const QuickMoodCheck = ({
   selectedMood,
   onMoodSelect,
-  size = 'small',
-  variant = 'minimal',
+  size = "small",
+  variant = "minimal",
   style,
 }) => {
-  const quickMoods = ['sad', 'neutral', 'happy'];
-  
+  const quickMoods = ["sad", "neutral", "happy"];
+
   return (
     <View style={[styles.quickMoodCheck, style]}>
       <Text style={styles.quickMoodTitle}>How are you feeling?</Text>
@@ -474,8 +509,8 @@ const styles = StyleSheet.create({
   // Card Styles
   card: {
     borderRadius: FreudBorderRadius.xl,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     ...FreudShadows.md,
   },
 
@@ -486,16 +521,16 @@ const styles = StyleSheet.create({
   },
 
   minimalCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
     ...FreudShadows.sm,
   },
 
   glassCard: {
     borderRadius: FreudBorderRadius.xl,
-    overflow: 'hidden',
+    overflow: "hidden",
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: "rgba(255, 255, 255, 0.2)",
   },
 
   pressed: {
@@ -504,45 +539,45 @@ const styles = StyleSheet.create({
 
   // Content Styles
   cardContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   emoji: {
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: FreudSpacing[2],
     fontSize: 48,
     lineHeight: 58,
   },
 
   label: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: FreudTypography.sizes.sm,
     fontWeight: FreudTypography.weights.medium,
   },
 
   // Layout Styles
   moodGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
     paddingHorizontal: FreudSpacing[4],
   },
 
   gridItem: {
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   moodSlider: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
     paddingHorizontal: FreudSpacing[4],
     paddingVertical: FreudSpacing[6],
   },
 
   quickMoodCheck: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: FreudSpacing[4],
   },
 
@@ -554,9 +589,9 @@ const styles = StyleSheet.create({
   },
 
   quickMoodOptions: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
     maxWidth: 300,
   },
 });

@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -21,14 +21,14 @@ const { width, height } = Dimensions.get("window");
 
 const DarkMentalHealthJournalScreen = ({ navigation }) => {
   const { theme, isDarkMode } = useTheme();
-  
+
   // State management
   const [currentView, setCurrentView] = useState("overview"); // overview, new, detail
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [showNewEntryModal, setShowNewEntryModal] = useState(false);
   const [newEntryText, setNewEntryText] = useState("");
   const [selectedMood, setSelectedMood] = useState(null);
-  
+
   // Animation refs
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
@@ -40,17 +40,29 @@ const DarkMentalHealthJournalScreen = ({ navigation }) => {
     streak: 5,
     weeklyEntries: [
       { day: "M", hasEntry: true, color: freudDarkTheme.colors.status.success },
-      { day: "T", hasEntry: false, color: freudDarkTheme.colors.border.primary },
+      {
+        day: "T",
+        hasEntry: false,
+        color: freudDarkTheme.colors.border.primary,
+      },
       { day: "W", hasEntry: true, color: freudDarkTheme.colors.accent.primary },
-      { day: "T", hasEntry: false, color: freudDarkTheme.colors.border.primary },
+      {
+        day: "T",
+        hasEntry: false,
+        color: freudDarkTheme.colors.border.primary,
+      },
       { day: "F", hasEntry: true, color: freudDarkTheme.colors.status.success },
       { day: "S", hasEntry: true, color: freudDarkTheme.colors.accent.primary },
-      { day: "S", hasEntry: false, color: freudDarkTheme.colors.border.primary },
+      {
+        day: "S",
+        hasEntry: false,
+        color: freudDarkTheme.colors.border.primary,
+      },
     ],
     monthlyStats: {
       current: 32,
       total: 81,
-    }
+    },
   });
 
   // Sample journal entries
@@ -59,7 +71,8 @@ const DarkMentalHealthJournalScreen = ({ navigation }) => {
       id: 1,
       date: "Today",
       title: "New Mental Health Journal",
-      content: "Today I had a hard time concentrating. I think my negative thoughts started very early in the morning, because of the work mistakes, very angry.",
+      content:
+        "Today I had a hard time concentrating. I think my negative thoughts started very early in the morning, because of the work mistakes, very angry.",
       mood: "😔",
       moodLabel: "Struggling",
       hasAudio: true,
@@ -71,7 +84,8 @@ const DarkMentalHealthJournalScreen = ({ navigation }) => {
       id: 2,
       date: "Yesterday",
       title: "Feeling Bad Again!",
-      content: "It's like everything goes all right at once. I can't seem to get out of this black down. Basically I'm going through a lot of anxiety and I need to resolve it effectively.",
+      content:
+        "It's like everything goes all right at once. I can't seem to get out of this black down. Basically I'm going through a lot of anxiety and I need to resolve it effectively.",
       mood: "😰",
       moodLabel: "Anxious",
       hasAudio: false,
@@ -82,7 +96,8 @@ const DarkMentalHealthJournalScreen = ({ navigation }) => {
       id: 3,
       date: "Dec 15",
       title: "My Journals",
-      content: "Today was better. I managed to complete my meditation session and felt more grounded.",
+      content:
+        "Today was better. I managed to complete my meditation session and felt more grounded.",
       mood: "😊",
       moodLabel: "Better",
       hasAudio: false,
@@ -118,15 +133,15 @@ const DarkMentalHealthJournalScreen = ({ navigation }) => {
 
   const renderHeader = () => (
     <View style={styles.header}>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
         <Text style={styles.backButtonText}>←</Text>
       </TouchableOpacity>
-      
+
       <Text style={styles.headerTitle}>Mental Health Journal</Text>
-      
+
       <TouchableOpacity style={styles.menuButton}>
         <Text style={styles.menuButtonText}>⋯</Text>
       </TouchableOpacity>
@@ -138,19 +153,21 @@ const DarkMentalHealthJournalScreen = ({ navigation }) => {
       <View style={styles.statsCard}>
         <Text style={styles.statsNumber}>{journalStats.totalEntries}</Text>
         <Text style={styles.statsLabel}>{journalStats.thisYear}</Text>
-        
+
         <View style={styles.weeklyProgress}>
           {journalStats.weeklyEntries.map((day, index) => (
             <View key={index} style={styles.weeklyDay}>
               <Text style={styles.weeklyDayLabel}>{day.day}</Text>
-              <View 
+              <View
                 style={[
                   styles.weeklyDayIndicator,
-                  { 
-                    backgroundColor: day.hasEntry ? day.color : freudDarkTheme.colors.border.primary,
+                  {
+                    backgroundColor: day.hasEntry
+                      ? day.color
+                      : freudDarkTheme.colors.border.primary,
                     opacity: day.hasEntry ? 1 : 0.3,
-                  }
-                ]} 
+                  },
+                ]}
               />
             </View>
           ))}
@@ -159,13 +176,20 @@ const DarkMentalHealthJournalScreen = ({ navigation }) => {
 
       <View style={styles.detailStats}>
         <LinearGradient
-          colors={[freudDarkTheme.colors.accent.primary, freudDarkTheme.colors.accent.secondary]}
+          colors={[
+            freudDarkTheme.colors.accent.primary,
+            freudDarkTheme.colors.accent.secondary,
+          ]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.detailStatsCard}
         >
-          <Text style={styles.detailStatsNumber}>{journalStats.monthlyStats.current}</Text>
-          <Text style={styles.detailStatsTotal}>/ {journalStats.monthlyStats.total}</Text>
+          <Text style={styles.detailStatsNumber}>
+            {journalStats.monthlyStats.current}
+          </Text>
+          <Text style={styles.detailStatsTotal}>
+            / {journalStats.monthlyStats.total}
+          </Text>
           <Text style={styles.detailStatsLabel}>This journal</Text>
         </LinearGradient>
       </View>
@@ -174,14 +198,14 @@ const DarkMentalHealthJournalScreen = ({ navigation }) => {
 
   const renderQuickActions = () => (
     <View style={styles.quickActions}>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.quickActionButton}
         onPress={() => setShowNewEntryModal(true)}
       >
         <Text style={styles.quickActionIcon}>📝</Text>
         <Text style={styles.quickActionText}>New Mental Health Journal</Text>
       </TouchableOpacity>
-      
+
       <TouchableOpacity style={styles.quickActionButton}>
         <Text style={styles.quickActionIcon}>🎤</Text>
         <Text style={styles.quickActionText}>Voice Journal</Text>
@@ -211,12 +235,12 @@ const DarkMentalHealthJournalScreen = ({ navigation }) => {
             </View>
             <Text style={styles.entryDate}>{entry.date}</Text>
           </View>
-          
+
           <Text style={styles.entryTitle}>{entry.title}</Text>
           <Text style={styles.entryContent} numberOfLines={2}>
             {entry.content}
           </Text>
-          
+
           <View style={styles.entryFooter}>
             {entry.hasAudio && (
               <View style={styles.audioIndicator}>
@@ -270,7 +294,8 @@ const DarkMentalHealthJournalScreen = ({ navigation }) => {
                   key={index}
                   style={[
                     styles.moodOption,
-                    selectedMood?.emoji === mood.emoji && styles.moodOptionSelected,
+                    selectedMood?.emoji === mood.emoji &&
+                      styles.moodOptionSelected,
                     { borderColor: mood.color },
                   ]}
                   onPress={() => setSelectedMood(mood)}
@@ -284,7 +309,9 @@ const DarkMentalHealthJournalScreen = ({ navigation }) => {
 
           {/* Journal Input */}
           <View style={styles.journalInputSection}>
-            <Text style={styles.journalInputTitle}>Say anything that's on your mind</Text>
+            <Text style={styles.journalInputTitle}>
+              Say anything that's on your mind
+            </Text>
             <TextInput
               style={styles.journalTextInput}
               placeholder="Write your thoughts here..."
@@ -300,7 +327,9 @@ const DarkMentalHealthJournalScreen = ({ navigation }) => {
           <View style={styles.voiceSection}>
             <TouchableOpacity style={styles.voiceRecordButton}>
               <Text style={styles.voiceRecordIcon}>🎤</Text>
-              <Text style={styles.voiceRecordText}>Tap to record voice note</Text>
+              <Text style={styles.voiceRecordText}>
+                Tap to record voice note
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -402,9 +431,9 @@ const styles = StyleSheet.create({
 
   // Header
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: freudDarkTheme.spacing[6],
     paddingTop: 60,
     paddingBottom: freudDarkTheme.spacing[4],
@@ -414,8 +443,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: freudDarkTheme.colors.card.background,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   backButtonText: {
     fontSize: 20,
@@ -430,8 +459,8 @@ const styles = StyleSheet.create({
   menuButton: {
     width: 40,
     height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   menuButtonText: {
     fontSize: 20,
@@ -441,7 +470,7 @@ const styles = StyleSheet.create({
 
   // Stats Section
   statsSection: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: freudDarkTheme.spacing[6],
     marginBottom: freudDarkTheme.spacing[6],
     gap: freudDarkTheme.spacing[4],
@@ -457,22 +486,22 @@ const styles = StyleSheet.create({
     fontSize: freudDarkTheme.typography.sizes["4xl"],
     color: freudDarkTheme.colors.text.primary,
     fontWeight: freudDarkTheme.typography.weights.bold,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: freudDarkTheme.spacing[2],
   },
   statsLabel: {
     fontSize: freudDarkTheme.typography.sizes.sm,
     color: freudDarkTheme.colors.text.secondary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: freudDarkTheme.spacing[4],
   },
   weeklyProgress: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   weeklyDay: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   weeklyDayLabel: {
     fontSize: freudDarkTheme.typography.sizes.xs,
@@ -491,30 +520,30 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: freudDarkTheme.borderRadius.lg,
     padding: freudDarkTheme.spacing[4],
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     ...freudDarkTheme.shadows.md,
   },
   detailStatsNumber: {
     fontSize: freudDarkTheme.typography.sizes["2xl"],
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontWeight: freudDarkTheme.typography.weights.bold,
   },
   detailStatsTotal: {
     fontSize: freudDarkTheme.typography.sizes.base,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     opacity: 0.8,
   },
   detailStatsLabel: {
     fontSize: freudDarkTheme.typography.sizes.xs,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     opacity: 0.7,
     marginTop: freudDarkTheme.spacing[1],
   },
 
   // Quick Actions
   quickActions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: freudDarkTheme.spacing[6],
     marginBottom: freudDarkTheme.spacing[6],
     gap: freudDarkTheme.spacing[4],
@@ -524,9 +553,9 @@ const styles = StyleSheet.create({
     backgroundColor: freudDarkTheme.colors.card.background,
     borderRadius: freudDarkTheme.borderRadius.lg,
     padding: freudDarkTheme.spacing[4],
-    alignItems: 'center',
+    alignItems: "center",
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: "transparent",
     ...freudDarkTheme.shadows.sm,
   },
   quickActionIcon: {
@@ -537,7 +566,7 @@ const styles = StyleSheet.create({
     fontSize: freudDarkTheme.typography.sizes.sm,
     color: freudDarkTheme.colors.text.primary,
     fontWeight: freudDarkTheme.typography.weights.medium,
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   // Entries Section
@@ -545,9 +574,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: freudDarkTheme.spacing[6],
   },
   entriesHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: freudDarkTheme.spacing[4],
   },
   entriesTitle: {
@@ -568,14 +597,14 @@ const styles = StyleSheet.create({
     ...freudDarkTheme.shadows.sm,
   },
   entryHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: freudDarkTheme.spacing[3],
   },
   entryMood: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   entryMoodEmoji: {
     fontSize: 24,
@@ -603,13 +632,13 @@ const styles = StyleSheet.create({
     marginBottom: freudDarkTheme.spacing[3],
   },
   entryFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   audioIndicator: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   audioIcon: {
     fontSize: 16,
@@ -620,7 +649,7 @@ const styles = StyleSheet.create({
     color: freudDarkTheme.colors.text.tertiary,
   },
   entryTags: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: freudDarkTheme.spacing[2],
   },
   tagChip: {
@@ -640,9 +669,9 @@ const styles = StyleSheet.create({
     backgroundColor: freudDarkTheme.colors.background.primary,
   },
   modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: freudDarkTheme.spacing[6],
     paddingTop: 60,
     paddingBottom: freudDarkTheme.spacing[4],
@@ -654,8 +683,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: freudDarkTheme.colors.card.background,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalCloseText: {
     fontSize: 18,
@@ -675,7 +704,7 @@ const styles = StyleSheet.create({
   },
   modalSaveText: {
     fontSize: freudDarkTheme.typography.sizes.base,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontWeight: freudDarkTheme.typography.weights.semibold,
   },
   modalContent: {
@@ -694,18 +723,20 @@ const styles = StyleSheet.create({
     marginBottom: freudDarkTheme.spacing[4],
   },
   moodGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: freudDarkTheme.spacing[3],
   },
   moodOption: {
-    width: (width - freudDarkTheme.spacing[6] * 2 - freudDarkTheme.spacing[3] * 2) / 3,
+    width:
+      (width - freudDarkTheme.spacing[6] * 2 - freudDarkTheme.spacing[3] * 2) /
+      3,
     backgroundColor: freudDarkTheme.colors.card.background,
     borderRadius: freudDarkTheme.borderRadius.lg,
     padding: freudDarkTheme.spacing[4],
-    alignItems: 'center',
+    alignItems: "center",
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: "transparent",
   },
   moodOptionSelected: {
     borderWidth: 2,
@@ -739,7 +770,7 @@ const styles = StyleSheet.create({
     fontSize: freudDarkTheme.typography.sizes.base,
     color: freudDarkTheme.colors.input.text,
     minHeight: 150,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
 
   // Voice Section
@@ -750,12 +781,12 @@ const styles = StyleSheet.create({
     backgroundColor: freudDarkTheme.colors.card.background,
     borderRadius: freudDarkTheme.borderRadius.lg,
     padding: freudDarkTheme.spacing[4],
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     borderWidth: 2,
     borderColor: freudDarkTheme.colors.border.primary,
-    borderStyle: 'dashed',
+    borderStyle: "dashed",
   },
   voiceRecordIcon: {
     fontSize: 24,
@@ -772,8 +803,8 @@ const styles = StyleSheet.create({
     gap: freudDarkTheme.spacing[3],
   },
   optionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: freudDarkTheme.colors.card.background,
     borderRadius: freudDarkTheme.borderRadius.lg,
     padding: freudDarkTheme.spacing[4],

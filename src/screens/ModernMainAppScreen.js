@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -8,26 +9,25 @@ import {
   Dimensions,
   Animated,
   RefreshControl,
-} from 'react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 // Modern Components
-import AdvancedShadersContainer from '../components/advanced/AdvancedShadersContainer';
-import ModernCard from '../components/modern/ModernCard';
-import ModernButton from '../components/modern/ModernButton';
+import AdvancedShadersContainer from "../components/advanced/AdvancedShadersContainer";
 
 // Enhanced Dashboard Components
-import MoodCheckIn from '../components/dashboard/MoodCheckIn';
-import QuickActions from '../components/dashboard/QuickActions';
-import WelcomeHeader from '../components/dashboard/WelcomeHeader';
-import DailyInsights from '../components/dashboard/DailyInsights';
-import ProgressOverview from '../components/dashboard/ProgressOverview';
-import RecentActivity from '../components/dashboard/RecentActivity';
+import DailyInsights from "../components/dashboard/DailyInsights";
+import MoodCheckIn from "../components/dashboard/MoodCheckIn";
+import ProgressOverview from "../components/dashboard/ProgressOverview";
+import QuickActions from "../components/dashboard/QuickActions";
+import RecentActivity from "../components/dashboard/RecentActivity";
+import WelcomeHeader from "../components/dashboard/WelcomeHeader";
 
 // Icons and Theme
-import { MentalHealthIcon } from '../components/icons';
-import { useTheme } from '../shared/theme/ThemeContext';
+import { MentalHealthIcon } from "../components/icons";
+import ModernButton from "../components/modern/ModernButton";
+import ModernCard from "../components/modern/ModernCard";
+import { useTheme } from "../shared/theme/ThemeContext";
 import {
   modernDarkColors,
   modernTypography,
@@ -35,9 +35,9 @@ import {
   modernBorderRadius,
   modernShadows,
   modernAnimations,
-} from '../shared/theme/darkTheme';
+} from "../shared/theme/darkTheme";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 // Modern Main App Screen - Dark, Elegant, and Engaging
 // Features advanced shader effects, micro-interactions, and premium design
@@ -46,7 +46,7 @@ const ModernMainAppScreen = () => {
   const dispatch = useDispatch();
   const { theme } = useTheme();
   const [refreshing, setRefreshing] = useState(false);
-  const [activeSection, setActiveSection] = useState('dashboard');
+  const [activeSection, setActiveSection] = useState("dashboard");
 
   // Advanced animation refs
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -76,12 +76,12 @@ const ModernMainAppScreen = () => {
         fadeAnim.setValue(0);
         slideAnim.setValue(30);
       };
-    }, [fadeAnim, slideAnim])
+    }, [fadeAnim, slideAnim]),
   );
 
   // Redux state
   const { user, mood, chat, loading } = useSelector((state) => ({
-    user: state.user || { profile: { name: 'Welcome' }, stats: {} },
+    user: state.user || { profile: { name: "Welcome" }, stats: {} },
     mood: state.mood || {
       currentMood: null,
       insights: [],
@@ -94,31 +94,31 @@ const ModernMainAppScreen = () => {
 
   // Navigation handlers
   const handleMoodCheckIn = useCallback(() => {
-    navigation.navigate('Mood');
+    navigation.navigate("Mood");
   }, [navigation]);
 
   const handleStartChat = useCallback(() => {
-    navigation.navigate('Chat');
+    navigation.navigate("Chat");
   }, [navigation]);
 
   const handleTakeAssessment = useCallback(() => {
-    navigation.navigate('Assessment');
+    navigation.navigate("Assessment");
   }, [navigation]);
 
   const handleViewProfile = useCallback(() => {
-    navigation.navigate('Profile');
+    navigation.navigate("Profile");
   }, [navigation]);
 
   const showEmergencyAlert = useCallback(() => {
     // Emergency alert implementation
-    console.log('Emergency support activated');
+    console.log("Emergency support activated");
   }, []);
 
   // Refresh handler
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
     // Simulate data refresh
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     setRefreshing(false);
   }, []);
 
@@ -130,19 +130,19 @@ const ModernMainAppScreen = () => {
       listener: (event) => {
         const offsetY = event.nativeEvent.contentOffset.y;
         parallaxAnim.setValue(offsetY);
-        
+
         // Header opacity based on scroll
         headerOpacity.setValue(Math.max(0, 1 - offsetY / 200));
       },
-    }
+    },
   );
 
   // Time-based greeting
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
   };
 
   // Enhanced Floating Action Button
@@ -158,7 +158,7 @@ const ModernMainAppScreen = () => {
               translateY: parallaxAnim.interpolate({
                 inputRange: [0, 100],
                 outputRange: [0, -20],
-                extrapolate: 'clamp',
+                extrapolate: "clamp",
               }),
             },
           ],
@@ -169,10 +169,10 @@ const ModernMainAppScreen = () => {
         title="Start Session"
         variant="neon"
         size="large"
-        animated={true}
-        glowEffect={true}
-        shaderEffect={true}
-        morphEffect={true}
+        animated
+        glowEffect
+        shaderEffect
+        morphEffect
         icon="Therapy"
         onPress={handleStartChat}
         style={styles.fabButton}
@@ -186,51 +186,68 @@ const ModernMainAppScreen = () => {
   const ModernWellnessTip = () => {
     const tips = [
       {
-        icon: '🧠',
-        title: 'Neural Pathways',
-        tip: 'Practice mindful breathing to strengthen emotional regulation pathways',
+        icon: "🧠",
+        title: "Neural Pathways",
+        tip: "Practice mindful breathing to strengthen emotional regulation pathways",
         color: modernDarkColors.therapeutic.peaceful.primary,
       },
       {
-        icon: '✨',
-        title: 'Quantum Healing',
-        tip: 'Small positive actions create ripples of wellbeing throughout your day',
+        icon: "✨",
+        title: "Quantum Healing",
+        tip: "Small positive actions create ripples of wellbeing throughout your day",
         color: modernDarkColors.therapeutic.calming.primary,
       },
       {
-        icon: '🌊',
-        title: 'Flow State',
-        tip: 'Embrace the present moment - it\'s where your power resides',
+        icon: "🌊",
+        title: "Flow State",
+        tip: "Embrace the present moment - it's where your power resides",
         color: modernDarkColors.therapeutic.nurturing.primary,
       },
       {
-        icon: '🔮',
-        title: 'Inner Vision',
-        tip: 'Visualize your ideal mental state for 30 seconds',
+        icon: "🔮",
+        title: "Inner Vision",
+        tip: "Visualize your ideal mental state for 30 seconds",
         color: modernDarkColors.therapeutic.grounding.primary,
       },
     ];
 
-    const [currentTip] = useState(tips[Math.floor(Math.random() * tips.length)]);
+    const [currentTip] = useState(
+      tips[Math.floor(Math.random() * tips.length)],
+    );
 
     return (
       <ModernCard
         variant="holographic"
         elevation="floating"
-        animated={true}
-        glowEffect={true}
+        animated
+        glowEffect
         shaderVariant="holographic"
         style={styles.wellnessTipCard}
       >
         <View style={styles.wellnessTipContent}>
-          <View style={[styles.wellnessTipIcon, { backgroundColor: currentTip.color + '20' }]}>
+          <View
+            style={[
+              styles.wellnessTipIcon,
+              { backgroundColor: currentTip.color + "20" },
+            ]}
+          >
             <Text style={styles.wellnessTipEmoji}>{currentTip.icon}</Text>
           </View>
           <View style={styles.wellnessTipText}>
-            <Text style={[styles.wellnessTipTitle, { color: modernDarkColors.text.primary }]}>
+            <Text
+              style={[
+                styles.wellnessTipTitle,
+                { color: modernDarkColors.text.primary },
+              ]}
+            >
               {currentTip.title}
             </Text>
-            <Text style={[styles.wellnessTipDescription, { color: modernDarkColors.text.secondary }]}>
+            <Text
+              style={[
+                styles.wellnessTipDescription,
+                { color: modernDarkColors.text.secondary },
+              ]}
+            >
               {currentTip.tip}
             </Text>
           </View>
@@ -251,7 +268,7 @@ const ModernMainAppScreen = () => {
       <AdvancedShadersContainer
         variant="aurora"
         intensity={0.3}
-        animated={true}
+        animated
         interactive={false}
         style={styles.backgroundShader}
       />
@@ -267,7 +284,7 @@ const ModernMainAppScreen = () => {
                 translateY: parallaxAnim.interpolate({
                   inputRange: [0, 100],
                   outputRange: [0, -50],
-                  extrapolate: 'clamp',
+                  extrapolate: "clamp",
                 }),
               },
             ],
@@ -276,7 +293,7 @@ const ModernMainAppScreen = () => {
       >
         <WelcomeHeader
           greeting={getGreeting()}
-          userName={user?.profile?.name || 'Welcome'}
+          userName={user?.profile?.name || "Welcome"}
           onProfilePress={handleViewProfile}
           onEmergencyPress={showEmergencyAlert}
         />
@@ -354,8 +371,8 @@ const ModernMainAppScreen = () => {
               subtitle="AI-powered mental wellness analysis"
               variant="neural"
               elevation="high"
-              animated={true}
-              glowEffect={true}
+              animated
+              glowEffect
               shaderVariant="neural"
             >
               <DailyInsights insights={mood?.insights} />
@@ -369,7 +386,7 @@ const ModernMainAppScreen = () => {
               subtitle="Your wellness journey visualization"
               variant="void"
               elevation="medium"
-              animated={true}
+              animated
               shaderVariant="quantum"
             >
               <ProgressOverview
@@ -386,7 +403,7 @@ const ModernMainAppScreen = () => {
               subtitle="Your recent wellness interactions"
               variant="glass"
               elevation="medium"
-              animated={true}
+              animated
               shaderVariant="void"
             >
               <RecentActivity
@@ -413,7 +430,7 @@ const styles = StyleSheet.create({
     backgroundColor: modernDarkColors.background.primary,
   },
   backgroundShader: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -440,21 +457,21 @@ const styles = StyleSheet.create({
     marginBottom: modernSpacing[4],
   },
   wellnessTipContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   wellnessTipIcon: {
     width: 56,
     height: 56,
     borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: modernSpacing[4],
     borderWidth: 1,
     borderColor: modernDarkColors.border.glass,
   },
   wellnessTipEmoji: {
-    fontSize: modernTypography.sizes['2xl'],
+    fontSize: modernTypography.sizes["2xl"],
   },
   wellnessTipText: {
     flex: 1,
@@ -480,14 +497,14 @@ const styles = StyleSheet.create({
     marginBottom: modernSpacing[3],
   },
   fab: {
-    position: 'absolute',
+    position: "absolute",
     right: modernSpacing[6],
     bottom: modernSpacing[8],
     zIndex: 20,
   },
   fabButton: {
     minWidth: 160,
-    borderRadius: modernBorderRadius['2xl'],
+    borderRadius: modernBorderRadius["2xl"],
     ...modernShadows.xl,
   },
   bottomSpacing: {

@@ -1,11 +1,11 @@
 /**
  * Mental Health Accessible Component
- * 
+ *
  * Specialized accessibility wrapper for mental health app interactions
  * with enhanced cognitive accessibility and crisis-sensitive features
  */
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,21 +13,25 @@ import {
   AccessibilityInfo,
   StyleSheet,
   Animated,
-} from 'react-native';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import { WCAG_CONSTANTS, FocusManagement } from '../../shared/utils/accessibility';
+} from "react-native";
+
+import { useTheme } from "../../shared/theme/ThemeContext";
+import {
+  WCAG_CONSTANTS,
+  FocusManagement,
+} from "../../shared/utils/accessibility";
 
 const MentalHealthAccessible = ({
   children,
-  type = 'default', // 'crisis', 'mood', 'therapy', 'assessment', 'default'
-  priority = 'normal', // 'critical', 'high', 'normal', 'low'
+  type = "default", // 'crisis', 'mood', 'therapy', 'assessment', 'default'
+  priority = "normal", // 'critical', 'high', 'normal', 'low'
   cognitiveSupport = true,
   enhancedTouchTarget = false,
   crisisContext = false,
   onPress,
   accessibilityLabel,
   accessibilityHint,
-  accessibilityRole = 'button',
+  accessibilityRole = "button",
   testID,
   ...props
 }) => {
@@ -38,7 +42,7 @@ const MentalHealthAccessible = ({
   // Enhanced touch target sizing for mental health context
   const getTouchTargetSize = () => {
     const baseSize = WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE;
-    
+
     if (crisisContext) return baseSize + 8; // 52x52 for crisis
     if (enhancedTouchTarget) return baseSize + 4; // 48x48 for enhanced
     return baseSize; // 44x44 standard
@@ -55,11 +59,11 @@ const MentalHealthAccessible = ({
     };
 
     // Crisis-specific enhancements
-    if (crisisContext || type === 'crisis') {
+    if (crisisContext || type === "crisis") {
       return {
         ...baseProps,
-        accessibilityLiveRegion: 'assertive',
-        accessibilityRole: 'button',
+        accessibilityLiveRegion: "assertive",
+        accessibilityRole: "button",
         accessibilityHint: `${accessibilityHint} - Crisis support feature`,
         accessibilityState: {
           expanded: false,
@@ -68,16 +72,16 @@ const MentalHealthAccessible = ({
     }
 
     // Therapy-specific context
-    if (type === 'therapy') {
+    if (type === "therapy") {
       return {
         ...baseProps,
         accessibilityHint: `${accessibilityHint} - Therapy session feature`,
-        accessibilityTraits: ['button', 'startsMediaSession'],
+        accessibilityTraits: ["button", "startsMediaSession"],
       };
     }
 
-    // Mood tracking context  
-    if (type === 'mood') {
+    // Mood tracking context
+    if (type === "mood") {
       return {
         ...baseProps,
         accessibilityHint: `${accessibilityHint} - Mood tracking feature`,
@@ -88,7 +92,7 @@ const MentalHealthAccessible = ({
     }
 
     // Assessment context
-    if (type === 'assessment') {
+    if (type === "assessment") {
       return {
         ...baseProps,
         accessibilityHint: `${accessibilityHint} - Mental health assessment feature`,
@@ -105,22 +109,25 @@ const MentalHealthAccessible = ({
     // Haptic feedback for crisis situations
     if (crisisContext) {
       // Stronger haptic feedback for crisis buttons
-      if (typeof Haptics !== 'undefined') {
+      if (typeof Haptics !== "undefined") {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
       }
     }
 
     // Announce action completion
     const actionMessages = {
-      crisis: 'Opening crisis support resources',
-      mood: 'Mood selection recorded',
-      therapy: 'Starting therapy session',
-      assessment: 'Assessment question answered',
-      default: 'Action completed',
+      crisis: "Opening crisis support resources",
+      mood: "Mood selection recorded",
+      therapy: "Starting therapy session",
+      assessment: "Assessment question answered",
+      default: "Action completed",
     };
 
     const message = actionMessages[type] || actionMessages.default;
-    FocusManagement.announceForScreenReader(message, crisisContext ? 'assertive' : 'polite');
+    FocusManagement.announceForScreenReader(
+      message,
+      crisisContext ? "assertive" : "polite",
+    );
 
     onPress();
   };
@@ -128,18 +135,18 @@ const MentalHealthAccessible = ({
   // Enhanced focus handlers
   const handleFocus = () => {
     setIsFocused(true);
-    
+
     // Announce focus with mental health context
     const focusMessages = {
       crisis: `Focused on crisis support: ${accessibilityLabel}`,
-      mood: `Focused on mood option: ${accessibilityLabel}`,  
+      mood: `Focused on mood option: ${accessibilityLabel}`,
       therapy: `Focused on therapy feature: ${accessibilityLabel}`,
       assessment: `Focused on assessment: ${accessibilityLabel}`,
       default: `Focused on: ${accessibilityLabel}`,
     };
 
     const message = focusMessages[type] || focusMessages.default;
-    FocusManagement.announceForScreenReader(message, 'polite');
+    FocusManagement.announceForScreenReader(message, "polite");
   };
 
   const handleBlur = () => {
@@ -161,7 +168,7 @@ const MentalHealthAccessible = ({
       },
       normal: {
         borderColor: theme.colors.primary[200],
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
       },
     };
 
@@ -178,11 +185,11 @@ const MentalHealthAccessible = ({
 
     return {
       borderWidth: WCAG_CONSTANTS.FOCUS_OUTLINE_WIDTH,
-      borderColor: crisisContext 
-        ? theme.colors.error[500] 
+      borderColor: crisisContext
+        ? theme.colors.error[500]
         : theme.colors.primary[500],
-      shadowColor: crisisContext 
-        ? theme.colors.error[500] 
+      shadowColor: crisisContext
+        ? theme.colors.error[500]
         : theme.colors.primary[500],
       shadowOffset: { width: 0, height: 0 },
       shadowOpacity: 0.4,
@@ -219,8 +226,8 @@ const MentalHealthAccessible = ({
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 8,
   },
 });
@@ -228,24 +235,25 @@ const styles = StyleSheet.create({
 export default MentalHealthAccessible;
 
 // Hook for mental health accessibility features
-export const useMentalHealthAccessibility = (type = 'default') => {
-  const announceForMentalHealth = (message, priority = 'polite') => {
-    const contextualMessage = type === 'crisis' 
-      ? `Crisis support: ${message}`
-      : type === 'therapy'
-      ? `Therapy session: ${message}`
-      : message;
+export const useMentalHealthAccessibility = (type = "default") => {
+  const announceForMentalHealth = (message, priority = "polite") => {
+    const contextualMessage =
+      type === "crisis"
+        ? `Crisis support: ${message}`
+        : type === "therapy"
+          ? `Therapy session: ${message}`
+          : message;
 
     FocusManagement.announceForScreenReader(
       contextualMessage,
-      type === 'crisis' ? 'assertive' : priority
+      type === "crisis" ? "assertive" : priority,
     );
   };
 
   const focusWithContext = (ref, message) => {
     if (ref.current) {
       ref.current.focus();
-      announceForMentalHealth(message || 'Focus moved');
+      announceForMentalHealth(message || "Focus moved");
     }
   };
 

@@ -4,13 +4,9 @@
  * Shows all components working together with Freud UI Kit design
  */
 
-import React, { useState } from 'react';
-import {
-  View,
-  ScrollView,
-  StyleSheet,
-  SafeAreaView,
-} from 'react-native';
+import React, { useState } from "react";
+import { View, ScrollView, StyleSheet, SafeAreaView } from "react-native";
+
 import {
   FreudThemeProvider,
   EnhancedDashboard,
@@ -29,16 +25,16 @@ import {
   MentalHealthDashboard,
   MoodTrackingFlow,
   QuickMoodCheck,
-} from './index';
-import { spacing, borderRadius } from '../../shared/theme/theme';
+} from "./index";
+import { spacing, borderRadius } from "../../shared/theme/theme";
 
 /**
  * Main Showcase Component
  */
 export const FreudUIShowcase = () => {
-  const [currentView, setCurrentView] = useState('dashboard');
+  const [currentView, setCurrentView] = useState("dashboard");
   const [selectedMood, setSelectedMood] = useState(null);
-  const [therapeuticTheme, setTherapeuticTheme] = useState('mindful');
+  const [therapeuticTheme, setTherapeuticTheme] = useState("mindful");
 
   const handleMoodSelect = (mood) => {
     setSelectedMood(mood);
@@ -51,7 +47,7 @@ export const FreudUIShowcase = () => {
 
   const renderCurrentView = () => {
     switch (currentView) {
-      case 'dashboard':
+      case "dashboard":
         return (
           <DashboardShowcase
             onNavigate={handleNavigation}
@@ -59,29 +55,29 @@ export const FreudUIShowcase = () => {
             onMoodSelect={handleMoodSelect}
           />
         );
-      case 'moodTracker':
+      case "moodTracker":
         return (
           <MoodTrackerShowcase
             onComplete={(data) => {
-              console.log('Mood tracking completed:', data);
-              setCurrentView('dashboard');
+              console.log("Mood tracking completed:", data);
+              setCurrentView("dashboard");
             }}
-            onCancel={() => setCurrentView('dashboard')}
+            onCancel={() => setCurrentView("dashboard")}
           />
         );
-      case 'quickMood':
+      case "quickMood":
         return (
           <QuickMoodShowcase
             selectedMood={selectedMood}
             onMoodSelect={handleMoodSelect}
-            onBack={() => setCurrentView('dashboard')}
+            onBack={() => setCurrentView("dashboard")}
           />
         );
-      case 'components':
+      case "components":
         return (
           <ComponentsShowcase
             therapeuticTheme={therapeuticTheme}
-            onBack={() => setCurrentView('dashboard')}
+            onBack={() => setCurrentView("dashboard")}
           />
         );
       default:
@@ -95,13 +91,13 @@ export const FreudUIShowcase = () => {
         therapeutic: therapeuticTheme,
         animations: true,
         preferences: {
-          cardStyle: 'gradient',
-          backgroundStyle: 'shader',
-          animationIntensity: 'medium',
+          cardStyle: "gradient",
+          backgroundStyle: "shader",
+          animationIntensity: "medium",
         },
       }}
-      autoTimeAdjust={true}
-      autoMoodAdjust={true}
+      autoTimeAdjust
+      autoMoodAdjust
     >
       <SafeAreaView style={styles.container}>
         {renderCurrentView()}
@@ -115,14 +111,14 @@ export const FreudUIShowcase = () => {
  */
 const DashboardShowcase = ({ onNavigate, selectedMood, onMoodSelect }) => {
   const sampleUser = {
-    name: 'Alex',
+    name: "Alex",
     avatar: null,
   };
 
   const sampleMoodHistory = [
-    { id: '1', mood: 'happy', timestamp: new Date(Date.now() - 86400000) },
-    { id: '2', mood: 'calm', timestamp: new Date(Date.now() - 172800000) },
-    { id: '3', mood: 'stressed', timestamp: new Date(Date.now() - 259200000) },
+    { id: "1", mood: "happy", timestamp: new Date(Date.now() - 86400000) },
+    { id: "2", mood: "calm", timestamp: new Date(Date.now() - 172800000) },
+    { id: "3", mood: "stressed", timestamp: new Date(Date.now() - 259200000) },
   ];
 
   return (
@@ -131,9 +127,9 @@ const DashboardShowcase = ({ onNavigate, selectedMood, onMoodSelect }) => {
       moodHistory={sampleMoodHistory}
       onNavigate={onNavigate}
       onMoodTrack={onMoodSelect}
-      onEmergencyContact={() => console.log('Emergency contact pressed')}
+      onEmergencyContact={() => console.log("Emergency contact pressed")}
       refreshing={false}
-      onRefresh={() => console.log('Dashboard refreshed')}
+      onRefresh={() => console.log("Dashboard refreshed")}
     />
   );
 };
@@ -147,9 +143,9 @@ const MoodTrackerShowcase = ({ onComplete, onCancel }) => {
       onComplete={onComplete}
       onCancel={onCancel}
       initialStep="mood"
-      showProgress={true}
-      animated={true}
-      therapeutic={true}
+      showProgress
+      animated
+      therapeutic
     />
   );
 };
@@ -160,11 +156,15 @@ const MoodTrackerShowcase = ({ onComplete, onCancel }) => {
 const QuickMoodShowcase = ({ selectedMood, onMoodSelect, onBack }) => {
   return (
     <MoodBasedShaderBackground
-      mood={selectedMood || 'calm'}
+      mood={selectedMood || "calm"}
       intensity={0.4}
       style={styles.quickMoodContainer}
     >
-      <FreudContainer therapeutic="zen" variant="solid" style={styles.quickMoodContent}>
+      <FreudContainer
+        therapeutic="zen"
+        variant="solid"
+        style={styles.quickMoodContent}
+      >
         <TherapeuticText
           variant="headline"
           weight="bold"
@@ -173,7 +173,7 @@ const QuickMoodShowcase = ({ selectedMood, onMoodSelect, onBack }) => {
         >
           Quick Mood Check
         </TherapeuticText>
-        
+
         <TherapeuticText
           variant="body"
           align="center"
@@ -183,13 +183,23 @@ const QuickMoodShowcase = ({ selectedMood, onMoodSelect, onBack }) => {
         </TherapeuticText>
 
         <MoodCardGrid
-          moods={['happy', 'sad', 'calm', 'stressed', 'anxious', 'neutral', 'excited', 'tired', 'content']}
+          moods={[
+            "happy",
+            "sad",
+            "calm",
+            "stressed",
+            "anxious",
+            "neutral",
+            "excited",
+            "tired",
+            "content",
+          ]}
           selectedMood={selectedMood}
           onMoodSelect={onMoodSelect}
           columns={3}
           cardSize="small"
           variant="gradient"
-          animated={true}
+          animated
           style={styles.moodGrid}
         />
 
@@ -247,13 +257,13 @@ const ComponentsShowcase = ({ therapeuticTheme, onBack }) => {
               Enhanced Mood Cards
             </TherapeuticText>
             <MoodCardGrid
-              moods={['happy', 'sad', 'calm', 'stressed']}
+              moods={["happy", "sad", "calm", "stressed"]}
               selectedMood={selectedCard}
               onMoodSelect={setSelectedCard}
               columns={2}
               cardSize="medium"
               variant="gradient"
-              animated={true}
+              animated
             />
           </View>
 
@@ -268,12 +278,12 @@ const ComponentsShowcase = ({ therapeuticTheme, onBack }) => {
               Enhanced Dashboard Cards
             </TherapeuticText>
             <DashboardCardGrid
-              cards={['moodTracker', 'journalEntry', 'meditation', 'insights']}
+              cards={["moodTracker", "journalEntry", "meditation", "insights"]}
               onCardPress={(cardType) => console.log(`Pressed: ${cardType}`)}
               columns={2}
               cardSize="medium"
               variant="gradient"
-              animated={true}
+              animated
             />
           </View>
 
@@ -292,7 +302,7 @@ const ComponentsShowcase = ({ therapeuticTheme, onBack }) => {
                 therapeutic="zen"
                 variant="contained"
                 size="medium"
-                onPress={() => console.log('Zen button pressed')}
+                onPress={() => console.log("Zen button pressed")}
                 style={styles.showcaseButton}
               >
                 Zen
@@ -301,7 +311,7 @@ const ComponentsShowcase = ({ therapeuticTheme, onBack }) => {
                 therapeutic="empathy"
                 variant="outlined"
                 size="medium"
-                onPress={() => console.log('Empathy button pressed')}
+                onPress={() => console.log("Empathy button pressed")}
                 style={styles.showcaseButton}
               >
                 Empathy
@@ -312,7 +322,7 @@ const ComponentsShowcase = ({ therapeuticTheme, onBack }) => {
                 therapeutic="serenity"
                 variant="text"
                 size="medium"
-                onPress={() => console.log('Serenity button pressed')}
+                onPress={() => console.log("Serenity button pressed")}
                 style={styles.showcaseButton}
               >
                 Serenity
@@ -321,7 +331,7 @@ const ComponentsShowcase = ({ therapeuticTheme, onBack }) => {
                 therapeutic="kind"
                 variant="contained"
                 size="medium"
-                onPress={() => console.log('Kind button pressed')}
+                onPress={() => console.log("Kind button pressed")}
                 style={styles.showcaseButton}
               >
                 Kind
@@ -349,38 +359,38 @@ const ComponentsShowcase = ({ therapeuticTheme, onBack }) => {
  * Pre-configured Components Showcase
  */
 export const PreConfiguredShowcase = () => {
-  const [currentDemo, setCurrentDemo] = useState('dashboard');
+  const [currentDemo, setCurrentDemo] = useState("dashboard");
   const [selectedMood, setSelectedMood] = useState(null);
 
   const renderDemo = () => {
     switch (currentDemo) {
-      case 'dashboard':
+      case "dashboard":
         return (
           <MentalHealthDashboard
-            user={{ name: 'Demo User' }}
+            user={{ name: "Demo User" }}
             moodHistory={[]}
             onNavigate={(screen) => console.log(`Navigate to: ${screen}`)}
             onMoodTrack={(mood) => setSelectedMood(mood)}
-            onEmergencyContact={() => console.log('Emergency contact')}
+            onEmergencyContact={() => console.log("Emergency contact")}
           />
         );
-      case 'moodTracking':
+      case "moodTracking":
         return (
           <MoodTrackingFlow
             onComplete={(data) => {
-              console.log('Mood tracking completed:', data);
-              setCurrentDemo('dashboard');
+              console.log("Mood tracking completed:", data);
+              setCurrentDemo("dashboard");
             }}
-            onCancel={() => setCurrentDemo('dashboard')}
+            onCancel={() => setCurrentDemo("dashboard")}
           />
         );
-      case 'quickMood':
+      case "quickMood":
         return (
           <QuickMoodCheck
             selectedMood={selectedMood}
             onMoodSelect={(mood) => {
               setSelectedMood(mood);
-              console.log('Mood selected:', mood);
+              console.log("Mood selected:", mood);
             }}
           />
         );
@@ -392,32 +402,32 @@ export const PreConfiguredShowcase = () => {
   return (
     <View style={styles.container}>
       {renderDemo()}
-      
+
       {/* Demo Navigation */}
       <View style={styles.demoNavigation}>
         <TherapeuticButton
           therapeutic="zen"
-          variant={currentDemo === 'dashboard' ? 'contained' : 'outlined'}
+          variant={currentDemo === "dashboard" ? "contained" : "outlined"}
           size="small"
-          onPress={() => setCurrentDemo('dashboard')}
+          onPress={() => setCurrentDemo("dashboard")}
           style={styles.demoButton}
         >
           Dashboard
         </TherapeuticButton>
         <TherapeuticButton
           therapeutic="kind"
-          variant={currentDemo === 'moodTracking' ? 'contained' : 'outlined'}
+          variant={currentDemo === "moodTracking" ? "contained" : "outlined"}
           size="small"
-          onPress={() => setCurrentDemo('moodTracking')}
+          onPress={() => setCurrentDemo("moodTracking")}
           style={styles.demoButton}
         >
           Mood Tracker
         </TherapeuticButton>
         <TherapeuticButton
           therapeutic="empathy"
-          variant={currentDemo === 'quickMood' ? 'contained' : 'outlined'}
+          variant={currentDemo === "quickMood" ? "contained" : "outlined"}
           size="small"
-          onPress={() => setCurrentDemo('quickMood')}
+          onPress={() => setCurrentDemo("quickMood")}
           style={styles.demoButton}
         >
           Quick Mood
@@ -438,7 +448,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[6],
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   quickMoodTitle: {
     marginBottom: spacing[2],
@@ -476,21 +486,21 @@ const styles = StyleSheet.create({
     marginBottom: spacing[4],
   },
   buttonsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     marginBottom: spacing[3],
   },
   showcaseButton: {
     minWidth: 120,
   },
   demoNavigation: {
-    position: 'absolute',
+    position: "absolute",
     bottom: spacing[4],
     left: spacing[4],
     right: spacing[4],
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
     borderRadius: borderRadius.lg,
     padding: spacing[2],
     ...shadows.md,

@@ -59,7 +59,10 @@ const EnhancedMoodTrackerScreen = () => {
       useNativeDriver: true,
     });
 
-    const parallelAnimation = Animated.parallel([fadeAnimation, slideAnimation]);
+    const parallelAnimation = Animated.parallel([
+      fadeAnimation,
+      slideAnimation,
+    ]);
     parallelAnimation.start();
 
     // Cleanup function to stop animations on unmount
@@ -256,8 +259,13 @@ const EnhancedMoodTrackerScreen = () => {
   };
 
   const getStepName = (stepIndex) => {
-    const stepNames = ['Mood Selection', 'Intensity Rating', 'Activities', 'Notes & Triggers'];
-    return stepNames[stepIndex] || 'Unknown Step';
+    const stepNames = [
+      "Mood Selection",
+      "Intensity Rating",
+      "Activities",
+      "Notes & Triggers",
+    ];
+    return stepNames[stepIndex] || "Unknown Step";
   };
 
   const renderProgressBar = () => (
@@ -267,14 +275,14 @@ const EnhancedMoodTrackerScreen = () => {
           styles.progressBar,
           { backgroundColor: theme.colors.gray[200] },
         ]}
-        accessible={true}
+        accessible
         accessibilityRole="progressbar"
         accessibilityLabel="Mood check-in progress"
         accessibilityValue={{
           min: 0,
           max: 4,
           now: currentStep + 1,
-          text: `Step ${currentStep + 1} of 4: ${getStepName(currentStep)}`
+          text: `Step ${currentStep + 1} of 4: ${getStepName(currentStep)}`,
         }}
         accessibilityHint="Progress through mood check-in steps"
       >
@@ -405,10 +413,16 @@ const EnhancedMoodTrackerScreen = () => {
               onPress={() => {
                 setIntensity(level);
                 // Announce intensity change for screen readers
-                const intensityLabels = ['Very mild', 'Mild', 'Moderate', 'Strong', 'Very intense'];
+                const intensityLabels = [
+                  "Very mild",
+                  "Mild",
+                  "Moderate",
+                  "Strong",
+                  "Very intense",
+                ];
                 if (AccessibilityInfo) {
                   AccessibilityInfo.announceForAccessibility(
-                    `Intensity set to ${intensityLabels[level - 1] || level} out of 5`
+                    `Intensity set to ${intensityLabels[level - 1] || level} out of 5`,
                   );
                 }
               }}
