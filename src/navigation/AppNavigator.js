@@ -30,6 +30,7 @@ import DarkComprehensiveAssessmentScreen from "../screens/assessment/DarkCompreh
 import DarkForgotPasswordScreen from "../screens/auth/DarkForgotPasswordScreen";
 import DarkSignInScreen from "../screens/auth/DarkSignInScreen";
 import DarkSignUpScreen from "../screens/auth/DarkSignUpScreen";
+import ForgotPasswordScreen from "../screens/auth/ForgotPasswordScreen";
 import OnboardingScreen from "../screens/auth/OnboardingScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
 import SignInScreen from "../screens/auth/SignInScreen";
@@ -39,16 +40,8 @@ import DarkAITherapyChatScreen from "../screens/chat/DarkAITherapyChatScreen";
 import EnhancedChatScreen from "../screens/chat/EnhancedChatScreen";
 import DarkCommunitySupportScreen from "../screens/community/DarkCommunitySupportScreen";
 import DashboardScreen from "../screens/dashboard/DashboardScreen";
-import EnhancedMoodTrackerScreen from "../screens/mood/EnhancedMoodTrackerScreen";
-import ProfileScreen from "../screens/profile/ProfileScreen";
-import TherapyScreen from "../screens/therapy/TherapyScreen";
-import TherapyTestScreen from "../screens/therapy/TherapyTestScreen";
 
 // Wellness Light Mode Screens
-import SearchScreen from "../screens/search/SearchScreen";
-import NotificationsScreen from "../screens/settings/NotificationsScreen";
-import ErrorUtilitiesScreen from "../screens/utils/ErrorUtilitiesScreen";
-import MindfulHoursScreen from "../screens/wellness/MindfulHoursScreen";
 import MindfulResourcesScreen from "../screens/wellness/MindfulResourcesScreen";
 import SleepQualityScreen from "../screens/wellness/SleepQualityScreen";
 import StressManagementScreen from "../screens/wellness/StressManagementScreen";
@@ -61,10 +54,10 @@ import StressManagementScreen from "../screens/wellness/StressManagementScreen";
 import DarkHomeScreen from "../screens/home/DarkHomeScreen";
 import DarkMentalHealthScoreScreen from "../screens/home/DarkMentalHealthScoreScreen";
 import DarkMentalHealthJournalScreen from "../screens/journal/DarkMentalHealthJournalScreen";
+import JournalScreen from "../screens/journal/JournalScreen";
 import DarkMoodTrackerScreen from "../screens/mood/DarkMoodTrackerScreen";
 
 // Dark Mode Profile & Settings
-import DarkProfileSettingsScreen from "../screens/profile/DarkProfileSettingsScreen";
 import DarkProfileSetupScreen from "../screens/profile/DarkProfileSetupScreen";
 import DarkSearchScreen from "../screens/search/DarkSearchScreen";
 import DarkSmartNotificationsScreen from "../screens/settings/DarkSmartNotificationsScreen";
@@ -74,6 +67,16 @@ import DarkSleepQualityScreen from "../screens/wellness/DarkSleepQualityScreen";
 import DarkStressManagementScreen from "../screens/wellness/DarkStressManagementScreen";
 import DarkMindfulHoursScreen from "../screens/mindfulness/DarkMindfulHoursScreen";
 import DarkMindfulResourcesScreen from "../screens/mindfulness/DarkMindfulResourcesScreen";
+import EnhancedMoodTrackerScreen from "../screens/mood/EnhancedMoodTrackerScreen";
+import DarkProfileSettingsScreen from "../screens/profile/DarkProfileSettingsScreen";
+import ProfileScreen from "../screens/profile/ProfileScreen";
+import ProfileSetupScreen from "../screens/profile/ProfileSetupScreen";
+import SearchScreen from "../screens/search/SearchScreen";
+import NotificationsScreen from "../screens/settings/NotificationsScreen";
+import TherapyScreen from "../screens/therapy/TherapyScreen";
+import TherapyTestScreen from "../screens/therapy/TherapyTestScreen";
+import ErrorUtilitiesScreen from "../screens/utils/ErrorUtilitiesScreen";
+import MindfulHoursScreen from "../screens/wellness/MindfulHoursScreen";
 
 // Dark Mode Community
 import { useTheme } from "../shared/theme/ThemeContext";
@@ -171,7 +174,7 @@ const AuthStack = () => {
       <Stack.Screen
         name="ForgotPassword"
         component={getThemeAwareScreen(
-          SignInScreen,
+          ForgotPasswordScreen,
           DarkForgotPasswordScreen,
           isDarkMode,
         )}
@@ -222,7 +225,7 @@ const ProfileStack = () => {
       <Stack.Screen
         name="ProfileSetup"
         component={getThemeAwareScreen(
-          ProfileScreen,
+          ProfileSetupScreen,
           DarkProfileSetupScreen,
           isDarkMode,
         )}
@@ -305,7 +308,7 @@ const WellnessStack = () => {
       <Stack.Screen
         name="Journal"
         component={getThemeAwareScreen(
-          ChatScreen,
+          JournalScreen,
           DarkMentalHealthJournalScreen,
           isDarkMode,
         )}
@@ -588,61 +591,33 @@ const AppNavigator = () => {
     }
   }, [authState, isAuthenticated, onboardingCompleted, isLoading]);
 
-  // Show splash screen while loading
-  if (isLoading) {
-    console.log("🧭 AppNavigator: Rendering SplashScreen (isLoading=true)");
-    const SplashComponent = getThemeAwareScreen(
-      SplashScreen,
-      DarkSplashScreen,
-      isDarkMode,
-    );
-    return <SplashComponent />;
-  }
-
-  // Show onboarding if not completed (handle undefined/null as false)
-  if (onboardingCompleted !== true) {
-    console.log(
-      "🧭 AppNavigator: Rendering OnboardingScreen (onboardingCompleted=",
-      onboardingCompleted,
-      ")",
-    );
-
-    // Use theme-aware onboarding screens - Professional onboarding for all platforms
-    const lightOnboardingComponent = ProfessionalOnboardingScreen;
-    const OnboardingComponent = getThemeAwareScreen(
-      lightOnboardingComponent,
-      DarkWelcomeScreen,
-      isDarkMode,
-    );
-
-    return (
-      <NavigationErrorBoundary>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Onboarding" component={OnboardingComponent} />
-        </Stack.Navigator>
-      </NavigationErrorBoundary>
-    );
-  }
-
-  // Show authentication screens if not authenticated (handle undefined/null as false)
-  if (isAuthenticated !== true) {
-    console.log(
-      "🧭 AppNavigator: Rendering AuthStack (isAuthenticated=",
-      isAuthenticated,
-      ")",
-    );
-    return (
-      <NavigationErrorBoundary>
-        <AuthStack />
-      </NavigationErrorBoundary>
-    );
-  }
-
-  // Show main app if authenticated and onboarding completed
-  console.log("🧭 AppNavigator: Rendering MainTabs (fully authenticated)");
   return (
     <NavigationErrorBoundary>
-      <MainTabs />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {isLoading ? (
+          <Stack.Screen
+            name="Splash"
+            component={getThemeAwareScreen(
+              SplashScreen,
+              DarkSplashScreen,
+              isDarkMode,
+            )}
+          />
+        ) : !onboardingCompleted ? (
+          <Stack.Screen
+            name="Onboarding"
+            component={getThemeAwareScreen(
+              ProfessionalOnboardingScreen,
+              DarkWelcomeScreen,
+              isDarkMode,
+            )}
+          />
+        ) : !isAuthenticated ? (
+          <Stack.Screen name="Auth" component={AuthStack} />
+        ) : (
+          <Stack.Screen name="Main" component={MainTabs} />
+        )}
+      </Stack.Navigator>
     </NavigationErrorBoundary>
   );
 };

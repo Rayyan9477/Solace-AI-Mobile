@@ -31,6 +31,18 @@ config.resolver = {
   // Prevent resolver issues that can break hot reload
   unstable_enableSymlinks: false,
   unstable_enablePackageExports: false,
+  // Handle platform-specific module exclusions
+  resolveRequest: (context, moduleName, platform) => {
+    // Skip expo-image-picker on web platform
+    if (platform === "web" && moduleName === "expo-image-picker") {
+      return {
+        filePath: require.resolve("./src/utils/webPolyfills.js"),
+        type: "sourceFile",
+      };
+    }
+    // Let Metro resolve normally
+    return context.resolveRequest(context, moduleName, platform);
+  },
 };
 
 // Configure transformer for better hot reload compatibility

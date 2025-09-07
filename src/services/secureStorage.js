@@ -57,18 +57,19 @@ class SecureStorageService {
           );
 
           let storedKey = sessionStorage.getItem("__secure_session_key__");
-        if (!storedKey) {
-          // Generate secure key for session
-          const keyArray = new Uint8Array(32);
-          crypto.getRandomValues(keyArray);
-          storedKey = Array.from(keyArray)
-            .map((b) => b.toString(16).padStart(2, "0"))
-            .join("");
+          if (!storedKey) {
+            // Generate secure key for session
+            const keyArray = new Uint8Array(32);
+            crypto.getRandomValues(keyArray);
+            storedKey = Array.from(keyArray)
+              .map((b) => b.toString(16).padStart(2, "0"))
+              .join("");
 
-          sessionStorage.setItem("__secure_session_key__", storedKey);
+            sessionStorage.setItem("__secure_session_key__", storedKey);
+          }
+
+          this.encryptionKey = storedKey;
         }
-
-        this.encryptionKey = storedKey;
       }
 
       this.keyInitialized = true;

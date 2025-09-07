@@ -2,7 +2,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Platform,
+} from "react-native";
 
 import { MentalHealthIcon } from "../components/icons";
 import { useTheme } from "../shared/theme/UnifiedThemeProvider";

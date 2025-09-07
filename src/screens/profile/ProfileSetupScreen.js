@@ -1,4 +1,3 @@
-import * as ImagePicker from "expo-image-picker";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState, useEffect, useRef } from "react";
 import {
@@ -12,7 +11,14 @@ import {
   Alert,
   Animated,
   SafeAreaView,
+  Platform,
 } from "react-native";
+
+// Platform-specific imports
+let ImagePicker = null;
+if (Platform.OS !== "web") {
+  ImagePicker = require("expo-image-picker");
+}
 
 import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
 import { useTheme } from "../../shared/theme/ThemeContext";
@@ -117,6 +123,33 @@ const ProfileSetupScreen = ({ navigation, route }) => {
   }, [currentStep]);
 
   const handleAvatarPick = async () => {
+    if (Platform.OS === "web") {
+      // Web fallback - use HTML file input
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            setProfileData((prev) => ({
+              ...prev,
+              avatar: reader.result,
+            }));
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+      input.click();
+      return;
+    }
+
+    if (!ImagePicker) {
+      Alert.alert("Error", "Image picker not available on this platform.");
+      return;
+    }
+
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (status !== "granted") {

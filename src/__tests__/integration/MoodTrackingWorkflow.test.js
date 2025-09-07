@@ -424,7 +424,7 @@ describe("Mood Tracking Workflow Integration", () => {
         },
       });
 
-      const { getByText } = render(
+      const { getByText, getByTestId } = render(
         <TestWrapper store={storeWithConcern}>
           <EnhancedMoodTrackerScreen />
         </TestWrapper>,

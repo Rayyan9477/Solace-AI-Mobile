@@ -1,6 +1,5 @@
-import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { lazy, Suspense } from "react";
+import React, { lazy, Suspense } from "react";
 import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
 
 import { useBundlePerformance } from "../hooks/usePerformanceMonitor";

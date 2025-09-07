@@ -41,24 +41,24 @@ import MainAppScreen from "../screens/MainAppScreen";
 // Icons with Freud design
 
 // Existing Screens (using working screens)
+import ProfessionalOnboardingScreen from "../screens/ProfessionalOnboardingScreen";
 import SplashScreen from "../screens/SplashScreen";
 import AssessmentScreen from "../screens/assessment/AssessmentScreen";
+import DarkComprehensiveAssessmentScreen from "../screens/assessment/DarkComprehensiveAssessmentScreen";
+import RegisterScreen from "../screens/auth/RegisterScreen";
+import SignInScreen from "../screens/auth/SignInScreen";
+import DarkAITherapyChatScreen from "../screens/chat/DarkAITherapyChatScreen";
 import EnhancedChatScreen from "../screens/chat/EnhancedChatScreen";
-import EnhancedMoodTrackerScreen from "../screens/mood/EnhancedMoodTrackerScreen";
-import ProfileScreen from "../screens/profile/ProfileScreen";
 // Fallback component for debugging
 
 // Auth Screens
-import SignInScreen from "../screens/auth/SignInScreen";
-import RegisterScreen from "../screens/auth/RegisterScreen";
-import ProfessionalOnboardingScreen from "../screens/ProfessionalOnboardingScreen";
 
 // Dark Mode Screens
 import DarkHomeScreen from "../screens/home/DarkHomeScreen";
-import DarkAITherapyChatScreen from "../screens/chat/DarkAITherapyChatScreen";
 import DarkMoodTrackerScreen from "../screens/mood/DarkMoodTrackerScreen";
-import DarkComprehensiveAssessmentScreen from "../screens/assessment/DarkComprehensiveAssessmentScreen";
+import EnhancedMoodTrackerScreen from "../screens/mood/EnhancedMoodTrackerScreen";
 import DarkProfileSettingsScreen from "../screens/profile/DarkProfileSettingsScreen";
+import ProfileScreen from "../screens/profile/ProfileScreen";
 import {
   FreudColors,
   FreudSpacing,

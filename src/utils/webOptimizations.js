@@ -268,7 +268,11 @@ export const WebAccessibilityOptimizations = {
 
   // Enhanced focus management for modals and overlays
   setupFocusManagement: () => {
-    if (Platform.OS !== "web" || typeof window === "undefined" || typeof document === "undefined") {
+    if (
+      Platform.OS !== "web" ||
+      typeof window === "undefined" ||
+      typeof document === "undefined"
+    ) {
       return;
     }
 

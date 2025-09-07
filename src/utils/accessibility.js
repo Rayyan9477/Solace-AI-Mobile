@@ -15,7 +15,11 @@ if (Platform.OS === "web") {
     announceForAccessibility: (message) => {
       console.log(`🔊 Accessibility Announcement: ${message}`);
       // Use native web accessibility APIs when available
-      if (typeof window !== "undefined" && window.speechSynthesis && typeof SpeechSynthesisUtterance !== "undefined") {
+      if (
+        typeof window !== "undefined" &&
+        window.speechSynthesis &&
+        typeof SpeechSynthesisUtterance !== "undefined"
+      ) {
         const utterance = new SpeechSynthesisUtterance(message);
         utterance.volume = 0.1; // Very quiet, just for screen reader hint
         window.speechSynthesis.speak(utterance);

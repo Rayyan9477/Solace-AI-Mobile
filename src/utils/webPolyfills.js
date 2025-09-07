@@ -7,6 +7,24 @@
 
 import { Platform } from "react-native";
 
+// expo-image-picker web polyfill - fallback when module is not available on web
+export const requestMediaLibraryPermissionsAsync = async () => ({
+  status: "granted",
+});
+
+export const launchImageLibraryAsync = async (options = {}) => ({
+  canceled: true,
+  assets: [],
+});
+
+export const MediaTypeOptions = {
+  All: "All",
+  Videos: "Videos",
+  Images: "Images",
+};
+
+// Exports for expo-image-picker compatibility
+
 // React Native SVG Web Compatibility
 if (Platform.OS === "web") {
   // Ensure SVG support for older browsers
@@ -182,6 +200,11 @@ export const initializeWebPolyfills = () => {
 };
 
 export default {
+  // expo-image-picker compatibility
+  requestMediaLibraryPermissionsAsync,
+  launchImageLibraryAsync,
+  MediaTypeOptions,
+  // Web polyfills
   ensureAsyncStorageWeb,
   createWebGradientFallback,
   getWebSafeDimensions,
