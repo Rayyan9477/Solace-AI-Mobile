@@ -14,11 +14,7 @@ import {
   Platform,
 } from "react-native";
 
-// Platform-specific imports
-let ImagePicker = null;
-if (Platform.OS !== "web") {
-  ImagePicker = require("expo-image-picker");
-}
+// Platform-specific imports handled at runtime
 
 import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
 import { useTheme } from "../../shared/theme/ThemeContext";
@@ -145,33 +141,36 @@ const ProfileSetupScreen = ({ navigation, route }) => {
       return;
     }
 
-    if (!ImagePicker) {
+    // Dynamic import for native platforms
+    try {
+      const ImagePicker = await import("expo-image-picker");
+      
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission needed",
+          "We need camera roll permissions to set your profile picture.",
+        );
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled) {
+        setProfileData((prev) => ({
+          ...prev,
+          avatar: result.assets[0].uri,
+        }));
+      }
+    } catch (error) {
+      console.warn("Image picker not available:", error);
       Alert.alert("Error", "Image picker not available on this platform.");
-      return;
-    }
-
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (status !== "granted") {
-      Alert.alert(
-        "Permission needed",
-        "We need camera roll permissions to set your profile picture.",
-      );
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.8,
-    });
-
-    if (!result.canceled) {
-      setProfileData((prev) => ({
-        ...prev,
-        avatar: result.assets[0].uri,
-      }));
     }
   };
 

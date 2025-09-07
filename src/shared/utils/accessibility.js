@@ -8,8 +8,9 @@
  * - Touch target validation
  * - Color contrast helpers
  * - Keyboard navigation support
- * - Mental health app specific patterns
  */
+
+import { Platform, AccessibilityInfo } from 'react-native';
 
 // WCAG 2.1 AA compliant accessibility roles
 export const AccessibilityRoles = {

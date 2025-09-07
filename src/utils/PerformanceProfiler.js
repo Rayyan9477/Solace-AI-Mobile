@@ -419,15 +419,15 @@ const profiler = new PerformanceProfiler();
 
 // React hook for component performance tracking
 export const usePerformanceTracking = (componentName) => {
-  if (!__DEV__) return;
-
   const renderStartRef = React.useRef(0);
 
   React.useEffect(() => {
+    if (!__DEV__) return;
     renderStartRef.current = Date.now();
   });
 
   React.useEffect(() => {
+    if (!__DEV__) return;
     const renderTime = Date.now() - renderStartRef.current;
     profiler.trackComponentRender(componentName, renderTime);
   });

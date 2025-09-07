@@ -8,16 +8,16 @@
 import { Platform } from "react-native";
 
 // expo-image-picker web polyfill - fallback when module is not available on web
-export const requestMediaLibraryPermissionsAsync = async () => ({
+const requestMediaLibraryPermissionsAsync = async () => ({
   status: "granted",
 });
 
-export const launchImageLibraryAsync = async (options = {}) => ({
+const launchImageLibraryAsync = async (options = {}) => ({
   canceled: true,
   assets: [],
 });
 
-export const MediaTypeOptions = {
+const MediaTypeOptions = {
   All: "All",
   Videos: "Videos",
   Images: "Images",
@@ -51,7 +51,7 @@ if (Platform.OS === "web") {
 }
 
 // AsyncStorage Web Compatibility Helpers
-export const ensureAsyncStorageWeb = () => {
+const ensureAsyncStorageWeb = () => {
   if (Platform.OS === "web") {
     // Check if localStorage is available
     try {
@@ -74,7 +74,7 @@ export const ensureAsyncStorageWeb = () => {
 };
 
 // Linear Gradient Web Fallback
-export const createWebGradientFallback = (colors, start, end) => {
+const createWebGradientFallback = (colors, start, end) => {
   if (Platform.OS === "web") {
     const direction = getGradientDirection(start, end);
     return {
@@ -108,7 +108,7 @@ const getGradientDirection = (start = { x: 0, y: 0 }, end = { x: 1, y: 1 }) => {
 };
 
 // Dimensions Web Compatibility
-export const getWebSafeDimensions = () => {
+const getWebSafeDimensions = () => {
   if (Platform.OS === "web") {
     return {
       width: typeof window !== "undefined" ? window.innerWidth : 375,
@@ -122,7 +122,7 @@ export const getWebSafeDimensions = () => {
 };
 
 // Touch Events Web Compatibility
-export const getWebSafeTouchProps = (props = {}) => {
+const getWebSafeTouchProps = (props = {}) => {
   if (Platform.OS === "web") {
     return {
       ...props,
@@ -140,7 +140,7 @@ export const getWebSafeTouchProps = (props = {}) => {
 };
 
 // Animation Web Compatibility
-export const getWebSafeAnimationProps = (animatedProps = {}) => {
+const getWebSafeAnimationProps = (animatedProps = {}) => {
   if (Platform.OS === "web") {
     // Convert React Native animations to web-safe CSS transitions
     const webProps = { ...animatedProps };
@@ -172,7 +172,7 @@ if (Platform.OS === "web" && typeof window !== "undefined" && __DEV__) {
 }
 
 // Export initialization function
-export const initializeWebPolyfills = () => {
+const initializeWebPolyfills = () => {
   if (Platform.OS === "web") {
     console.log("🔧 Initializing React Native Web polyfills...");
 
