@@ -42,9 +42,6 @@ import DarkCommunitySupportScreen from "../screens/community/DarkCommunitySuppor
 import DashboardScreen from "../screens/dashboard/DashboardScreen";
 
 // Wellness Light Mode Screens
-import MindfulResourcesScreen from "../screens/wellness/MindfulResourcesScreen";
-import SleepQualityScreen from "../screens/wellness/SleepQualityScreen";
-import StressManagementScreen from "../screens/wellness/StressManagementScreen";
 
 // Dark Mode Screens
 
@@ -55,69 +52,184 @@ import DarkHomeScreen from "../screens/home/DarkHomeScreen";
 import DarkMentalHealthScoreScreen from "../screens/home/DarkMentalHealthScoreScreen";
 import DarkMentalHealthJournalScreen from "../screens/journal/DarkMentalHealthJournalScreen";
 import JournalScreen from "../screens/journal/JournalScreen";
-import DarkMoodTrackerScreen from "../screens/mood/DarkMoodTrackerScreen";
 
 // Dark Mode Profile & Settings
-import DarkProfileSetupScreen from "../screens/profile/DarkProfileSetupScreen";
-import DarkSearchScreen from "../screens/search/DarkSearchScreen";
-import DarkSmartNotificationsScreen from "../screens/settings/DarkSmartNotificationsScreen";
 
 // Dark Mode Wellness
-import DarkSleepQualityScreen from "../screens/wellness/DarkSleepQualityScreen";
-import DarkStressManagementScreen from "../screens/wellness/DarkStressManagementScreen";
 import DarkMindfulHoursScreen from "../screens/mindfulness/DarkMindfulHoursScreen";
 import DarkMindfulResourcesScreen from "../screens/mindfulness/DarkMindfulResourcesScreen";
+import DarkMoodTrackerScreen from "../screens/mood/DarkMoodTrackerScreen";
 import EnhancedMoodTrackerScreen from "../screens/mood/EnhancedMoodTrackerScreen";
 import DarkProfileSettingsScreen from "../screens/profile/DarkProfileSettingsScreen";
+import DarkProfileSetupScreen from "../screens/profile/DarkProfileSetupScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 import ProfileSetupScreen from "../screens/profile/ProfileSetupScreen";
+import DarkSearchScreen from "../screens/search/DarkSearchScreen";
 import SearchScreen from "../screens/search/SearchScreen";
+import DarkSmartNotificationsScreen from "../screens/settings/DarkSmartNotificationsScreen";
 import NotificationsScreen from "../screens/settings/NotificationsScreen";
 import TherapyScreen from "../screens/therapy/TherapyScreen";
 import TherapyTestScreen from "../screens/therapy/TherapyTestScreen";
 import ErrorUtilitiesScreen from "../screens/utils/ErrorUtilitiesScreen";
+import DarkSleepQualityScreen from "../screens/wellness/DarkSleepQualityScreen";
+import DarkStressManagementScreen from "../screens/wellness/DarkStressManagementScreen";
 import MindfulHoursScreen from "../screens/wellness/MindfulHoursScreen";
+import MindfulResourcesScreen from "../screens/wellness/MindfulResourcesScreen";
+import SleepQualityScreen from "../screens/wellness/SleepQualityScreen";
+import StressManagementScreen from "../screens/wellness/StressManagementScreen";
 
 // Dark Mode Community
-import { useTheme } from "../shared/theme/ThemeContext";
+import { useTheme } from "../shared/theme/UnifiedThemeProvider";
+// Removed NavigationTester import - was causing navigation interference
 
 // Utility Screens
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Theme-aware screen selector utility
+// Enhanced theme-aware screen selector with fallbacks
 const getThemeAwareScreen = (lightScreen, darkScreen, isDarkMode) => {
-  return isDarkMode ? darkScreen : lightScreen;
-};
-
-// Error boundary component for navigation failures
-const NavigationErrorBoundary = ({ children }) => {
-  const { theme } = useTheme();
-
   try {
-    return children;
+    // Validate screen components exist
+    if (!lightScreen && !darkScreen) {
+      console.warn("⚠️ No screens provided to getThemeAwareScreen");
+      return ErrorFallbackScreen;
+    }
+
+    const selectedScreen = isDarkMode ? darkScreen : lightScreen;
+
+    // If selected screen is missing, fallback to the other theme
+    if (!selectedScreen) {
+      console.warn(
+        `⚠️ ${isDarkMode ? "Dark" : "Light"} screen missing, falling back to ${isDarkMode ? "light" : "dark"} screen`,
+      );
+      return isDarkMode ? lightScreen : darkScreen;
+    }
+
+    // If both screens exist, return the selected one
+    return selectedScreen;
   } catch (error) {
-    console.error("Navigation Error:", error);
-    return (
-      <View
-        style={[
-          styles.errorContainer,
-          { backgroundColor: theme.colors.background.primary },
-        ]}
-      >
-        <Text style={[styles.errorText, { color: theme.colors.text.primary }]}>
-          Navigation Error: Unable to load screen
-        </Text>
-        <Text
-          style={[styles.errorSubtext, { color: theme.colors.text.secondary }]}
-        >
-          Please restart the app or contact support
-        </Text>
-      </View>
-    );
+    console.error("🚨 Error in getThemeAwareScreen:", error);
+    return ErrorFallbackScreen;
   }
 };
+
+// Fallback screen component for missing screens
+const ErrorFallbackScreen = () => {
+  const { theme } = useTheme();
+
+  return (
+    <View
+      style={[
+        styles.errorContainer,
+        { backgroundColor: theme?.colors?.background?.primary || "#FFFFFF" },
+      ]}
+    >
+      <Text
+        style={[
+          styles.errorText,
+          { color: theme?.colors?.text?.primary || "#000000" },
+        ]}
+      >
+        Screen Not Available
+      </Text>
+      <Text
+        style={[
+          styles.errorSubtext,
+          { color: theme?.colors?.text?.secondary || "#666666" },
+        ]}
+      >
+        This screen is temporarily unavailable. Please try again later.
+      </Text>
+    </View>
+  );
+};
+
+// Enhanced Error Boundary component for navigation failures
+class NavigationErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("🚨 Navigation Error Boundary:", error, errorInfo);
+    this.setState({
+      error,
+      errorInfo,
+      hasError: true,
+    });
+
+    // Track error in development
+    if (__DEV__) {
+      console.log("📍 Error occurred in navigation component");
+      console.log("Error:", error.message);
+      console.log("Component Stack:", errorInfo.componentStack);
+    }
+  }
+
+  handleRetry = () => {
+    this.setState({ hasError: false, error: null, errorInfo: null });
+  };
+
+  render() {
+    if (this.state.hasError) {
+      // Get theme safely with fallback
+      const theme = this.props.theme || {
+        colors: {
+          background: { primary: "#FFFFFF" },
+          text: { primary: "#000000", secondary: "#666666" },
+          primary: { 500: "#3B82F6" },
+        },
+      };
+
+      return (
+        <View
+          style={[
+            styles.errorContainer,
+            { backgroundColor: theme.colors.background.primary },
+          ]}
+        >
+          <Text
+            style={[styles.errorText, { color: theme.colors.text.primary }]}
+          >
+            Navigation Error: Unable to load screen
+          </Text>
+          <Text
+            style={[
+              styles.errorSubtext,
+              { color: theme.colors.text.secondary },
+            ]}
+          >
+            {this.state.error?.message || "An unexpected error occurred"}
+          </Text>
+          <TouchableOpacity
+            style={[
+              styles.retryButton,
+              { backgroundColor: theme.colors.primary[500] },
+            ]}
+            onPress={this.handleRetry}
+          >
+            <Text style={styles.retryButtonText}>Try Again</Text>
+          </TouchableOpacity>
+          {__DEV__ && (
+            <Text
+              style={[styles.debugInfo, { color: theme.colors.text.secondary }]}
+            >
+              Debug: {this.state.error?.stack?.substring(0, 200)}...
+            </Text>
+          )}
+        </View>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 const styles = StyleSheet.create({
   errorContainer: {
@@ -135,6 +247,25 @@ const styles = StyleSheet.create({
   errorSubtext: {
     fontSize: 14,
     textAlign: "center",
+    marginBottom: 20,
+  },
+  retryButton: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  retryButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  debugInfo: {
+    fontSize: 10,
+    textAlign: "center",
+    fontFamily: Platform.OS === "ios" ? "Courier" : "monospace",
+    marginTop: 10,
   },
 });
 
@@ -571,28 +702,20 @@ const AppNavigator = () => {
   const { isAuthenticated, onboardingCompleted, isLoading } = authState || {};
   const { isDarkMode } = useTheme();
 
-  // Enhanced debugging for web
+  // Simplified navigation state logging (removed complex testing that could interfere)
   React.useEffect(() => {
-    if (Platform.OS === "web") {
-      console.log("🧭 AppNavigator: Auth state received:", authState);
-      console.log("🧭 AppNavigator: isAuthenticated:", isAuthenticated);
-      console.log("🧭 AppNavigator: onboardingCompleted:", onboardingCompleted);
-      console.log("🧭 AppNavigator: isLoading:", isLoading);
-      console.log(
-        "🧭 AppNavigator: Will render:",
-        isLoading
-          ? "SplashScreen"
-          : !onboardingCompleted
-            ? "OnboardingScreen"
-            : !isAuthenticated
-              ? "AuthStack"
-              : "MainTabs",
-      );
+    if (__DEV__) {
+      console.log("🧭 AppNavigator: Auth state:", {
+        isAuthenticated,
+        onboardingCompleted,
+        isLoading,
+        isDarkMode,
+      });
     }
-  }, [authState, isAuthenticated, onboardingCompleted, isLoading]);
+  }, [authState, isAuthenticated, onboardingCompleted, isLoading, isDarkMode]);
 
   return (
-    <NavigationErrorBoundary>
+    <NavigationErrorBoundary theme={isDarkMode ? null : null}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isLoading ? (
           <Stack.Screen

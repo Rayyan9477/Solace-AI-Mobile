@@ -10,7 +10,7 @@
  * - Keyboard navigation support
  */
 
-import { Platform, AccessibilityInfo } from 'react-native';
+import { Platform, AccessibilityInfo } from "react-native";
 
 // WCAG 2.1 AA compliant accessibility roles
 export const AccessibilityRoles = {

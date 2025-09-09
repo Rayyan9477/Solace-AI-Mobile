@@ -1,5 +1,4 @@
-import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
+import React, { memo, useRef, useMemo, useCallback } from "react";
 import {
   View,
   Text,
@@ -17,22 +16,20 @@ import FreudDesignSystem, {
   FreudShadows,
   FreudBorderRadius,
 } from "../../shared/theme/FreudDesignSystem";
-import { useTheme } from "../../shared/theme/ThemeContext";
+import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
 import { MentalHealthIcon } from "../icons";
+import { ActionGradients } from "../ui/OptimizedGradients";
 
 const { width: screenWidth } = Dimensions.get("window");
 
-// Mental health focused actions with therapeutic colors and icons
+// Optimized mental health focused actions
 const QUICK_ACTIONS = [
   {
     id: "chat",
+    actionType: "therapy",
     title: "AI Therapy",
     subtitle: "Talk with Dr. Freud",
     icon: "Therapy",
-    gradientColors: [
-      FreudColors.mindfulBrown[60],
-      FreudColors.mindfulBrown[80],
-    ],
     shadowColor: FreudColors.mindfulBrown[70],
     accessibilityLabel: "Start AI Therapy Session",
     accessibilityHint:
@@ -40,10 +37,10 @@ const QUICK_ACTIONS = [
   },
   {
     id: "assessment",
+    actionType: "assessment",
     title: "Assessment",
     subtitle: "Check your wellness",
     icon: "Brain",
-    gradientColors: [FreudColors.kindPurple[50], FreudColors.kindPurple[70]],
     shadowColor: FreudColors.kindPurple[60],
     accessibilityLabel: "Take Mental Health Assessment",
     accessibilityHint:
@@ -51,40 +48,42 @@ const QUICK_ACTIONS = [
   },
   {
     id: "mood",
+    actionType: "mood",
     title: "Mood Tracker",
     subtitle: "Log how you feel",
     icon: "Heart",
-    gradientColors: [
-      FreudColors.serenityGreen[50],
-      FreudColors.serenityGreen[70],
-    ],
     shadowColor: FreudColors.serenityGreen[60],
     accessibilityLabel: "Open Mood Tracker",
     accessibilityHint: "Record and track your current mood and emotional state",
   },
 ];
 
-// Individual action button component
-const QuickActionButton = ({ action, onPress, isDarkMode }) => {
-  const scaleValue = new Animated.Value(1);
+// Optimized action button component with memoization
+const QuickActionButton = memo(({ action, onPress, isDarkMode }) => {
+  const scaleValue = useRef(new Animated.Value(1)).current;
 
-  const handlePressIn = () => {
+  const handlePressIn = useCallback(() => {
     Animated.spring(scaleValue, {
       toValue: 0.95,
       useNativeDriver: true,
       speed: 20,
       bounciness: 4,
     }).start();
-  };
+  }, [scaleValue]);
 
-  const handlePressOut = () => {
+  const handlePressOut = useCallback(() => {
     Animated.spring(scaleValue, {
       toValue: 1,
       useNativeDriver: true,
       speed: 20,
       bounciness: 4,
     }).start();
-  };
+  }, [scaleValue]);
+
+  // Get the appropriate gradient component for this action
+  const ActionGradientComponent = useMemo(() => {
+    return ActionGradients[action.actionType] || ActionGradients.therapy;
+  }, [action.actionType]);
 
   return (
     <Animated.View
@@ -104,12 +103,7 @@ const QuickActionButton = ({ action, onPress, isDarkMode }) => {
         accessibilityRole="button"
         testID={`quick-action-${action.id}`}
       >
-        <LinearGradient
-          colors={action.gradientColors}
-          style={styles.actionGradient}
-          start={[0, 0]}
-          end={[1, 1]}
-        >
+        <ActionGradientComponent style={styles.actionGradient}>
           <View style={styles.actionContent}>
             <View style={styles.iconContainer}>
               <MentalHealthIcon name={action.icon} size={24} color="#FFFFFF" />
@@ -117,21 +111,23 @@ const QuickActionButton = ({ action, onPress, isDarkMode }) => {
             <Text style={styles.actionTitle}>{action.title}</Text>
             <Text style={styles.actionSubtitle}>{action.subtitle}</Text>
           </View>
-        </LinearGradient>
+        </ActionGradientComponent>
       </TouchableOpacity>
     </Animated.View>
   );
-};
+});
 
-const QuickActions = ({ onStartChat, onTakeAssessment, onMoodTracker }) => {
+QuickActionButton.displayName = 'QuickActionButton';
+
+const QuickActions = memo(({ onStartChat, onTakeAssessment, onMoodTracker }) => {
   const { theme, isDarkMode } = useTheme();
 
-  // Map actions to handlers
-  const actionHandlers = {
+  // Memoize action handlers to prevent recreation
+  const actionHandlers = useMemo(() => ({
     chat: onStartChat,
     assessment: onTakeAssessment,
     mood: onMoodTracker,
-  };
+  }), [onStartChat, onTakeAssessment, onMoodTracker]);
 
   return (
     <View style={styles.container}>
@@ -180,7 +176,9 @@ const QuickActions = ({ onStartChat, onTakeAssessment, onMoodTracker }) => {
       </View>
     </View>
   );
-};
+});
+
+QuickActions.displayName = 'QuickActions';
 
 const styles = StyleSheet.create({
   container: {
@@ -254,5 +252,7 @@ const styles = StyleSheet.create({
     lineHeight: FreudTypography.sizes.xs * FreudTypography.lineHeights.tight,
   },
 });
+
+QuickActions.displayName = 'QuickActions';
 
 export default QuickActions;

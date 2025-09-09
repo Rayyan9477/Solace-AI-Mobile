@@ -1,5 +1,4 @@
-import { LinearGradient } from "expo-linear-gradient";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, memo, useMemo, useCallback } from "react";
 import {
   View,
   Text,
@@ -18,10 +17,11 @@ import FreudDesignSystem, {
 } from "../../shared/theme/FreudDesignSystem";
 import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
 import { MentalHealthIcon } from "../icons";
+import { OptimizedGradient, MoodGradients } from "../ui/OptimizedGradients";
 
 const { width: screenWidth } = Dimensions.get("window");
 
-// Simplified mood options focused on core emotions
+// Optimized mood options with better data structure
 const MOOD_OPTIONS = [
   {
     id: "happy",
@@ -29,7 +29,6 @@ const MOOD_OPTIONS = [
     label: "Happy",
     description: "Feeling joyful and positive",
     color: FreudColors.zenYellow[50],
-    gradientColors: [FreudColors.zenYellow[40], FreudColors.zenYellow[60]],
     icon: "Heart",
   },
   {
@@ -38,10 +37,6 @@ const MOOD_OPTIONS = [
     label: "Calm",
     description: "Peaceful and relaxed",
     color: FreudColors.serenityGreen[50],
-    gradientColors: [
-      FreudColors.serenityGreen[40],
-      FreudColors.serenityGreen[60],
-    ],
     icon: "Mindfulness",
   },
   {
@@ -50,10 +45,6 @@ const MOOD_OPTIONS = [
     label: "Neutral",
     description: "Feeling balanced",
     color: FreudColors.optimisticGray[50],
-    gradientColors: [
-      FreudColors.optimisticGray[40],
-      FreudColors.optimisticGray[60],
-    ],
     icon: "Brain",
   },
   {
@@ -62,10 +53,6 @@ const MOOD_OPTIONS = [
     label: "Anxious",
     description: "Feeling worried or restless",
     color: FreudColors.empathyOrange[50],
-    gradientColors: [
-      FreudColors.empathyOrange[40],
-      FreudColors.empathyOrange[60],
-    ],
     icon: "Therapy",
   },
   {
@@ -74,17 +61,17 @@ const MOOD_OPTIONS = [
     label: "Sad",
     description: "Feeling down or low",
     color: FreudColors.kindPurple[50],
-    gradientColors: [FreudColors.kindPurple[40], FreudColors.kindPurple[60]],
     icon: "Journal",
   },
 ];
 
-// Simple mood button component with gentle animations
-const MoodButton = ({ mood, isSelected, onPress, isDarkMode }) => {
+// Optimized mood button component with memoization
+const MoodButton = memo(({ mood, isSelected, onPress, isDarkMode }) => {
   const scaleValue = useRef(new Animated.Value(1)).current;
   const opacityValue = useRef(new Animated.Value(0.8)).current;
 
-  const handlePress = () => {
+  // Memoize the press handler to prevent recreation
+  const handlePress = useCallback(() => {
     // Gentle bounce animation
     Animated.sequence([
       Animated.timing(scaleValue, {
@@ -101,7 +88,7 @@ const MoodButton = ({ mood, isSelected, onPress, isDarkMode }) => {
     ]).start();
 
     onPress(mood);
-  };
+  }, [mood, onPress, scaleValue, isSelected]);
 
   useEffect(() => {
     Animated.timing(opacityValue, {
@@ -109,7 +96,12 @@ const MoodButton = ({ mood, isSelected, onPress, isDarkMode }) => {
       duration: 200,
       useNativeDriver: true,
     }).start();
-  }, [isSelected]);
+  }, [isSelected, opacityValue]);
+
+  // Get the appropriate gradient component for this mood
+  const MoodGradientComponent = useMemo(() => {
+    return MoodGradients[mood.id] || MoodGradients.neutral;
+  }, [mood.id]);
 
   return (
     <Animated.View
@@ -130,12 +122,7 @@ const MoodButton = ({ mood, isSelected, onPress, isDarkMode }) => {
         accessibilityRole="button"
         accessibilityState={{ selected: isSelected }}
       >
-        <LinearGradient
-          colors={mood.gradientColors}
-          style={styles.moodGradient}
-          start={[0, 0]}
-          end={[1, 1]}
-        >
+        <MoodGradientComponent style={styles.moodGradient}>
           <MentalHealthIcon
             name={mood.icon}
             size={16}
@@ -144,13 +131,15 @@ const MoodButton = ({ mood, isSelected, onPress, isDarkMode }) => {
           />
           <Text style={styles.moodEmoji}>{mood.emoji}</Text>
           <Text style={styles.moodLabel}>{mood.label}</Text>
-        </LinearGradient>
+        </MoodGradientComponent>
       </TouchableOpacity>
     </Animated.View>
   );
-};
+});
 
-const MoodCheckIn = ({
+MoodButton.displayName = 'MoodButton';
+
+const MoodCheckIn = memo(({
   currentMood,
   onCheckIn,
   compact = false,
@@ -169,10 +158,16 @@ const MoodCheckIn = ({
     }).start();
   }, []);
 
-  const handleMoodSelect = (mood) => {
+  // Memoize mood selection handler
+  const handleMoodSelect = useCallback((mood) => {
     setSelectedMood(mood.id);
     onCheckIn?.(mood.id, mood);
-  };
+  }, [onCheckIn]);
+
+  // Memoize selected mood info to prevent recalculation
+  const selectedMoodInfo = useMemo(() => {
+    return MOOD_OPTIONS.find((m) => m.id === selectedMood);
+  }, [selectedMood]);
 
   // Compact version for dashboard
   if (compact) {
@@ -190,15 +185,9 @@ const MoodCheckIn = ({
           ))}
         </View>
 
-        {selectedMood && (
+        {selectedMood && selectedMoodInfo && (
           <View style={styles.selectedMoodDisplay}>
-            <LinearGradient
-              colors={[
-                FreudColors.serenityGreen[20],
-                FreudColors.serenityGreen[10],
-              ]}
-              style={styles.selectedMoodGradient}
-            >
+            <OptimizedGradient variant="serenity" style={styles.selectedMoodGradient}>
               <MentalHealthIcon
                 name="Heart"
                 size={16}
@@ -214,12 +203,9 @@ const MoodCheckIn = ({
                   },
                 ]}
               >
-                Feeling{" "}
-                {MOOD_OPTIONS.find(
-                  (m) => m.id === selectedMood,
-                )?.label?.toLowerCase() || "neutral"}
+                Feeling {selectedMoodInfo.label.toLowerCase()}
               </Text>
-            </LinearGradient>
+            </OptimizedGradient>
           </View>
         )}
       </Animated.View>
@@ -274,15 +260,9 @@ const MoodCheckIn = ({
         ))}
       </View>
 
-      {selectedMood && (
+      {selectedMood && selectedMoodInfo && (
         <View style={styles.selectedMoodDisplay}>
-          <LinearGradient
-            colors={[
-              FreudColors.serenityGreen[20],
-              FreudColors.serenityGreen[10],
-            ]}
-            style={styles.selectedMoodGradient}
-          >
+          <OptimizedGradient variant="serenity" style={styles.selectedMoodGradient}>
             <MentalHealthIcon
               name="Insights"
               size={20}
@@ -299,10 +279,7 @@ const MoodCheckIn = ({
                   },
                 ]}
               >
-                You're feeling{" "}
-                {MOOD_OPTIONS.find(
-                  (m) => m.id === selectedMood,
-                )?.label?.toLowerCase()}
+                You're feeling {selectedMoodInfo.label.toLowerCase()}
               </Text>
               <Text
                 style={[
@@ -314,15 +291,17 @@ const MoodCheckIn = ({
                   },
                 ]}
               >
-                {MOOD_OPTIONS.find((m) => m.id === selectedMood)?.description}
+                {selectedMoodInfo.description}
               </Text>
             </View>
-          </LinearGradient>
+          </OptimizedGradient>
         </View>
       )}
     </Animated.View>
   );
-};
+});
+
+MoodCheckIn.displayName = 'MoodCheckIn';
 
 const styles = StyleSheet.create({
   // Compact version styles
@@ -432,6 +411,8 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
 });
+
+MoodCheckIn.displayName = 'MoodCheckIn';
 
 export default MoodCheckIn;
 

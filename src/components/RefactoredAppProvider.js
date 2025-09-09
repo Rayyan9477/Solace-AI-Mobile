@@ -30,8 +30,7 @@ import EnhancedLoadingScreen from "./LoadingScreen/EnhancedLoadingScreen";
 import useAppInitialization, {
   INIT_STAGES,
 } from "../hooks/useAppInitialization";
-import { ThemeProvider as LegacyThemeProvider } from "../shared/theme/ThemeContext";
-import { UnifiedThemeProvider } from "../shared/theme/UnifiedThemeProvider";
+import { UnifiedThemeProvider as ThemeProvider } from "../shared/theme/UnifiedThemeProvider";
 
 /**
  * Inner App Content - Renders app content based on initialization state
@@ -50,11 +49,13 @@ const AppContent = ({ children, appVersion }) => {
     retryInitialization,
   } = useAppInitialization({
     enablePerformanceTracking: __DEV__,
-    maxRetryAttempts: 3,
-    initializationTimeout: 30000,
+    maxRetryAttempts: 1, // Single retry to fail fast
+    initializationTimeout: 3000, // 3 seconds max before emergency fallback
     onEmergencyFallback: () => {
-      console.log("🚨 Emergency fallback triggered");
-      // Could navigate to emergency screen or show crisis support
+      console.log(
+        "🚨 Emergency fallback triggered - app will start with minimal features",
+      );
+      // App continues with basic functionality
     },
   });
 
@@ -188,14 +189,12 @@ export const RefactoredAppProvider = ({ children, appVersion = "1.0.0" }) => {
         <AccessibilityProvider>
           <MentalHealthProvider>
             {/* 
-              Maintain backward compatibility with dual theme providers
-              This allows gradual migration of components to the unified provider
+              Use UnifiedThemeProvider for consistent theme context
+              Fixes blank screen issues caused by theme provider conflicts
             */}
-            <UnifiedThemeProvider>
-              <LegacyThemeProvider>
-                <AppContent appVersion={appVersion}>{children}</AppContent>
-              </LegacyThemeProvider>
-            </UnifiedThemeProvider>
+            <ThemeProvider>
+              <AppContent appVersion={appVersion}>{children}</AppContent>
+            </ThemeProvider>
           </MentalHealthProvider>
         </AccessibilityProvider>
       </PerformanceProvider>

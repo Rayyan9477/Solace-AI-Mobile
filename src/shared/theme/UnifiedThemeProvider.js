@@ -75,7 +75,7 @@ export const UnifiedThemeProvider = ({ children }) => {
   const [isReducedMotionEnabled, setIsReducedMotionEnabled] = useState(false);
   const [isHighContrastEnabled, setIsHighContrastEnabled] = useState(false);
   const [fontScale, setFontScale] = useState(1);
-  const [themeLoaded, setThemeLoaded] = useState(false);
+  const [themeLoaded, setThemeLoaded] = useState(true); // Start with true to prevent blank screens
 
   // FreudThemeProvider state
   const [therapeutic, setTherapeutic] = useState("balanced");
@@ -324,10 +324,8 @@ export const UnifiedThemeProvider = ({ children }) => {
     ],
   );
 
-  if (!themeLoaded) {
-    // Render a minimal fallback to avoid a blank screen while preferences load
-    return <View style={{ flex: 1, backgroundColor: "#FFFFFF" }} />;
-  }
+  // Always render children immediately to prevent blank screens
+  // Theme preferences will load asynchronously without blocking UI
 
   return (
     <UnifiedThemeContext.Provider value={contextValue}>

@@ -144,8 +144,9 @@ const ProfileSetupScreen = ({ navigation, route }) => {
     // Dynamic import for native platforms
     try {
       const ImagePicker = await import("expo-image-picker");
-      
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (status !== "granted") {
         Alert.alert(

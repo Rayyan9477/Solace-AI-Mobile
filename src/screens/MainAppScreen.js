@@ -1,16 +1,14 @@
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-// Correct named import for expo-linear-gradient (incorrect default import could cause runtime error + blank screen)
-import { LinearGradient } from "expo-linear-gradient";
 import React, {
   useEffect,
   useRef,
   useState,
   useCallback,
   useMemo,
+  memo,
 } from "react";
 import {
   View,
-  Text,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -21,36 +19,32 @@ import {
   Animated,
   Linking,
   SafeAreaView,
+  Text,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
-// Icons and UI Components
-
-// Dashboard Components
+// Optimized Components
 import DailyInsights from "../components/dashboard/DailyInsights";
 import MoodCheckIn from "../components/dashboard/MoodCheckIn";
 import ProgressOverview from "../components/dashboard/ProgressOverview";
 import QuickActions from "../components/dashboard/QuickActions";
 import RecentActivity from "../components/dashboard/RecentActivity";
 import WelcomeHeader from "../components/dashboard/WelcomeHeader";
-import { MentalHealthIcon } from "../components/icons";
-import FloatingActionButton, {
-  TherapyFAB,
-} from "../components/ui/FloatingActionButton";
-import TherapeuticCard, {
-  MindfulCard,
-  EmpathyCard,
-  CalmingCard,
-  WisdomCard,
-} from "../components/ui/TherapeuticCard";
+import DailyTipCard from "../components/dashboard/DailyTipCard";
+import {
+  WelcomeSection,
+  MoodSection,
+  ActionsSection,
+  InsightsSection,
+  ProgressSection,
+  ActivitySection,
+} from "../components/dashboard/DashboardSection";
+import { TherapyFAB } from "../components/ui/FloatingActionButton";
 
 // Theme and Design System
 import FreudDesignSystem, {
   FreudColors,
   FreudSpacing,
-  FreudTypography,
-  FreudShadows,
-  FreudBorderRadius,
 } from "../shared/theme/FreudDesignSystem";
 import { useTheme } from "../shared/theme/UnifiedThemeProvider";
 import { withErrorBoundary } from "../utils/ErrorBoundary";
@@ -91,32 +85,14 @@ const THERAPEUTIC_TIPS = [
 
 // Simple daily tip card component using therapeutic card variants
 
-// Daily tip card component using therapeutic card system
-const DailyTipCard = ({ tip, isDarkMode }) => (
-  <WisdomCard
-    title="Daily Therapeutic Insight"
-    subtitle={tip.category}
-    icon={tip.icon}
-    variant="gradient"
-    gradientColors={[tip.color + "20", tip.color + "10"]}
-    iconColor={tip.color}
-  >
-    <Text
-      style={[
-        styles.tipText,
-        {
-          color: isDarkMode
-            ? FreudDesignSystem.themes.dark.colors.text.primary
-            : FreudDesignSystem.themes.light.colors.text.primary,
-        },
-      ]}
-    >
-      {tip.tip}
-    </Text>
-  </WisdomCard>
-);
+// Memoized tip refresh handler
+const TipRefreshHandler = memo(({ onRefresh }) => {
+  return { onRefresh };
+});
 
-const MainAppScreen = () => {
+TipRefreshHandler.displayName = 'TipRefreshHandler';
+
+const MainAppScreen = memo(() => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { theme, isDarkMode } = useTheme();
@@ -201,6 +177,13 @@ const MainAppScreen = () => {
       setRefreshing(false);
     }
   }, [fetchData]);
+
+  // Handle tip refresh separately for better performance
+  const handleTipRefresh = useCallback(() => {
+    const randomTip =
+      THERAPEUTIC_TIPS[Math.floor(Math.random() * THERAPEUTIC_TIPS.length)];
+    setCurrentTip(randomTip);
+  }, []);
 
   // Navigation handlers
   const handleMoodCheckIn = useCallback(() => {
@@ -312,72 +295,56 @@ const MainAppScreen = () => {
           showsVerticalScrollIndicator={false}
         >
           {/* Welcome Header */}
-          <TherapeuticCard variant="elevated">
+          <WelcomeSection>
             <WelcomeHeader
               greeting={greeting}
               userName={user?.profile?.name || "Friend"}
               onProfilePress={handleViewProfile}
               onEmergencyPress={showEmergencyAlert}
             />
-          </TherapeuticCard>
+          </WelcomeSection>
 
           {/* Daily Therapeutic Tip */}
-          <DailyTipCard tip={currentTip} isDarkMode={isDarkMode} />
+          <DailyTipCard tip={currentTip} onRefresh={handleTipRefresh} />
 
           {/* Mood Check-in */}
-          <MindfulCard
-            title="How are you feeling today?"
-            subtitle="Take a moment to check in with yourself"
-            icon="Heart"
-          >
+          <MoodSection>
             <MoodCheckIn
               currentMood={mood?.currentMood}
               onCheckIn={handleMoodCheckIn}
               compact
             />
-          </MindfulCard>
+          </MoodSection>
 
           {/* Quick Actions */}
-          <EmpathyCard>
+          <ActionsSection>
             <QuickActions
               onStartChat={handleStartChat}
               onTakeAssessment={handleTakeAssessment}
               onMoodTracker={handleMoodCheckIn}
             />
-          </EmpathyCard>
+          </ActionsSection>
 
           {/* Daily Insights */}
-          <CalmingCard
-            title="Personal Insights"
-            subtitle="Discover patterns in your wellbeing"
-            icon="Insights"
-          >
+          <InsightsSection>
             <DailyInsights insights={mood?.insights} />
-          </CalmingCard>
+          </InsightsSection>
 
           {/* Progress Overview */}
-          <MindfulCard
-            title="Your Progress"
-            subtitle="Celebrating your journey"
-            icon="Brain"
-          >
+          <ProgressSection>
             <ProgressOverview
               weeklyStats={mood?.weeklyStats}
               userStats={user?.stats}
             />
-          </MindfulCard>
+          </ProgressSection>
 
           {/* Recent Activity */}
-          <WisdomCard
-            title="Recent Activity"
-            subtitle="Your wellness timeline"
-            icon="Journal"
-          >
+          <ActivitySection>
             <RecentActivity
               moodHistory={moodHistorySlice}
               chatHistory={chatHistorySlice}
             />
-          </WisdomCard>
+          </ActivitySection>
 
           {/* Bottom spacing for FAB */}
           <View style={styles.bottomSpacing} />
@@ -388,7 +355,9 @@ const MainAppScreen = () => {
       <TherapyFAB onPress={handleStartChat} />
     </SafeAreaView>
   );
-};
+});
+
+MainAppScreen.displayName = 'MainAppScreen';
 
 const styles = StyleSheet.create({
   container: {
@@ -405,20 +374,13 @@ const styles = StyleSheet.create({
     paddingTop: FreudSpacing[2],
     paddingHorizontal: FreudSpacing[4],
   },
-
-  // Daily Tip Card
-  tipText: {
-    fontSize: FreudTypography.sizes.base,
-    lineHeight:
-      FreudTypography.sizes.base * FreudTypography.lineHeights.relaxed,
-    fontWeight: FreudTypography.weights.normal,
-  },
-
   // Spacing
   bottomSpacing: {
     height: 80,
   },
 });
+
+MainAppScreen.displayName = 'MainAppScreen';
 
 export default withErrorBoundary(MainAppScreen, {
   fallback: ({ error, retry, goHome }) => (

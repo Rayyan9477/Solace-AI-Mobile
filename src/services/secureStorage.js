@@ -51,7 +51,11 @@ class SecureStorageService {
         this.encryptionKey = storedKey;
       } else {
         // Web fallback - use secure session storage with warning
-        if (Platform.OS === "web" && typeof window !== "undefined" && typeof sessionStorage !== "undefined") {
+        if (
+          Platform.OS === "web" &&
+          typeof window !== "undefined" &&
+          typeof sessionStorage !== "undefined"
+        ) {
           console.warn(
             "Web platform: Using session storage for encryption key. Consider additional security measures.",
           );
@@ -179,7 +183,11 @@ class SecureStorageService {
         );
       } else {
         // Web fallback with warning
-        if (Platform.OS === "web" && typeof window !== "undefined" && typeof localStorage !== "undefined") {
+        if (
+          Platform.OS === "web" &&
+          typeof window !== "undefined" &&
+          typeof localStorage !== "undefined"
+        ) {
           console.warn("Web platform: Storing encrypted data in localStorage");
           localStorage.setItem(`secure_${key}`, JSON.stringify(secureEntry));
         }
@@ -206,7 +214,11 @@ class SecureStorageService {
           requireAuthentication: options.requireBiometric || false,
         });
       } else {
-        if (Platform.OS === "web" && typeof window !== "undefined" && typeof localStorage !== "undefined") {
+        if (
+          Platform.OS === "web" &&
+          typeof window !== "undefined" &&
+          typeof localStorage !== "undefined"
+        ) {
           storedData = localStorage.getItem(`secure_${key}`);
         }
       }
@@ -238,7 +250,11 @@ class SecureStorageService {
           keychainService: this.serviceName,
         });
       } else {
-        if (Platform.OS === "web" && typeof window !== "undefined" && typeof localStorage !== "undefined") {
+        if (
+          Platform.OS === "web" &&
+          typeof window !== "undefined" &&
+          typeof localStorage !== "undefined"
+        ) {
           localStorage.removeItem(`secure_${key}`);
         }
       }
@@ -333,7 +349,11 @@ class SecureStorageService {
         // This would need to be implemented by tracking stored keys
         console.warn("Clear all secure data: Individual key deletion required");
       } else {
-        if (Platform.OS === "web" && typeof window !== "undefined" && typeof localStorage !== "undefined") {
+        if (
+          Platform.OS === "web" &&
+          typeof window !== "undefined" &&
+          typeof localStorage !== "undefined"
+        ) {
           // Clear all secure items from localStorage
           const keys = Object.keys(localStorage);
           for (const key of keys) {

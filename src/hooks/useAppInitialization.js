@@ -1,6 +1,6 @@
 /**
  * App Initialization Hook - Manages app startup process
- * 
+ *
  * Features:
  * - Progressive loading states
  * - Error handling and recovery
@@ -10,25 +10,25 @@
  * - Emergency fallbacks
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { Platform, AppState } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Platform, AppState } from "react-native";
 
 // Initialization stages
 export const INIT_STAGES = {
-  STARTING: 'starting',
-  LOADING_STORAGE: 'loading_storage',
-  VALIDATING_DATA: 'validating_data',
-  INITIALIZING_SERVICES: 'initializing_services',
-  RESTORING_STATE: 'restoring_state',
-  READY: 'ready',
-  ERROR: 'error',
+  STARTING: "starting",
+  LOADING_STORAGE: "loading_storage",
+  VALIDATING_DATA: "validating_data",
+  INITIALIZING_SERVICES: "initializing_services",
+  RESTORING_STATE: "restoring_state",
+  READY: "ready",
+  ERROR: "error",
 };
 
 const useAppInitialization = ({
   enablePerformanceTracking = __DEV__,
-  maxRetryAttempts = 3,
-  initializationTimeout = 30000,
+  maxRetryAttempts = 2,
+  initializationTimeout = 3000, // Reduced to 3s to fail fast and use fallback
   onEmergencyFallback,
 } = {}) => {
   // State management
@@ -39,7 +39,7 @@ const useAppInitialization = ({
   const [retryCount, setRetryCount] = useState(0);
   const [loadingStartTime] = useState(Date.now());
   const [currentLoadingTime, setCurrentLoadingTime] = useState(0);
-  
+
   // Refs for cleanup
   const initializationTimerRef = useRef(null);
   const loadingTimeIntervalRef = useRef(null);
@@ -53,22 +53,31 @@ const useAppInitialization = ({
   });
 
   // Track stage timing
-  const trackStageStart = useCallback((stageName) => {
-    if (enablePerformanceTracking) {
-      performanceMetrics.current.stageTimings[stageName] = {
-        start: Date.now(),
-        duration: null,
-      };
-    }
-  }, [enablePerformanceTracking]);
+  const trackStageStart = useCallback(
+    (stageName) => {
+      if (enablePerformanceTracking) {
+        performanceMetrics.current.stageTimings[stageName] = {
+          start: Date.now(),
+          duration: null,
+        };
+      }
+    },
+    [enablePerformanceTracking],
+  );
 
-  const trackStageEnd = useCallback((stageName) => {
-    if (enablePerformanceTracking && performanceMetrics.current.stageTimings[stageName]) {
-      const timing = performanceMetrics.current.stageTimings[stageName];
-      timing.duration = Date.now() - timing.start;
-      console.log(`📊 Init Stage ${stageName}: ${timing.duration}ms`);
-    }
-  }, [enablePerformanceTracking]);
+  const trackStageEnd = useCallback(
+    (stageName) => {
+      if (
+        enablePerformanceTracking &&
+        performanceMetrics.current.stageTimings[stageName]
+      ) {
+        const timing = performanceMetrics.current.stageTimings[stageName];
+        timing.duration = Date.now() - timing.start;
+        console.log(`📊 Init Stage ${stageName}: ${timing.duration}ms`);
+      }
+    },
+    [enablePerformanceTracking],
+  );
 
   // Update loading time
   useEffect(() => {
@@ -84,120 +93,131 @@ const useAppInitialization = ({
   }, [loadingStartTime]);
 
   // Storage operations with error handling
-  const safeStorageOperation = useCallback(async (operation, fallbackValue = null) => {
-    try {
-      return await operation();
-    } catch (error) {
-      console.warn('Storage operation failed:', error);
-      return fallbackValue;
-    }
-  }, []);
+  const safeStorageOperation = useCallback(
+    async (operation, fallbackValue = null) => {
+      try {
+        return await operation();
+      } catch (error) {
+        console.warn("Storage operation failed:", error);
+        return fallbackValue;
+      }
+    },
+    [],
+  );
 
   // Load and validate stored data
   const loadStoredData = useCallback(async () => {
-    trackStageStart('storage');
-    
+    trackStageStart("storage");
+
     try {
-      const [
-        userPreferences,
-        appConfig,
-        lastSession,
-      ] = await Promise.all([
-        safeStorageOperation(() => AsyncStorage.getItem('userPreferences'), '{}'),
-        safeStorageOperation(() => AsyncStorage.getItem('appConfig'), '{}'),
-        safeStorageOperation(() => AsyncStorage.getItem('lastSession'), '{}'),
+      const [userPreferences, appConfig, lastSession] = await Promise.all([
+        safeStorageOperation(
+          () => AsyncStorage.getItem("userPreferences"),
+          "{}",
+        ),
+        safeStorageOperation(() => AsyncStorage.getItem("appConfig"), "{}"),
+        safeStorageOperation(() => AsyncStorage.getItem("lastSession"), "{}"),
       ]);
 
       // Validate data integrity
-      const preferences = JSON.parse(userPreferences || '{}');
-      const config = JSON.parse(appConfig || '{}');
-      const session = JSON.parse(lastSession || '{}');
+      const preferences = JSON.parse(userPreferences || "{}");
+      const config = JSON.parse(appConfig || "{}");
+      const session = JSON.parse(lastSession || "{}");
 
       // Basic validation
-      if (typeof preferences !== 'object') throw new Error('Invalid preferences data');
-      if (typeof config !== 'object') throw new Error('Invalid config data');
+      if (typeof preferences !== "object")
+        throw new Error("Invalid preferences data");
+      if (typeof config !== "object") throw new Error("Invalid config data");
 
-      trackStageEnd('storage');
+      trackStageEnd("storage");
       return { preferences, config, session };
     } catch (error) {
-      trackStageEnd('storage');
+      trackStageEnd("storage");
       throw new Error(`Storage loading failed: ${error.message}`);
     }
   }, [safeStorageOperation, trackStageStart, trackStageEnd]);
 
   // Initialize core services
   const initializeServices = useCallback(async () => {
-    trackStageStart('services');
-    
+    trackStageStart("services");
+
     try {
       const servicePromises = [];
 
       // Initialize analytics (if enabled)
-      if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      if (Platform.OS === "web" && typeof window !== "undefined") {
         servicePromises.push(
           Promise.resolve().then(() => {
-            console.log('🔧 Web analytics initialized');
+            console.log("🔧 Web analytics initialized");
             return true;
-          })
+          }),
         );
       }
 
       // Initialize crash reporting
       servicePromises.push(
         Promise.resolve().then(() => {
-          console.log('🔧 Crash reporting initialized');
+          console.log("🔧 Crash reporting initialized");
           return true;
-        })
+        }),
       );
 
       // Initialize notification service
       servicePromises.push(
         Promise.resolve().then(() => {
-          console.log('🔧 Notification service initialized');
+          console.log("🔧 Notification service initialized");
           return true;
-        })
+        }),
       );
 
       // Wait for all services with timeout
       const results = await Promise.allSettled(servicePromises);
-      
+
       // Check if critical services failed
-      const failedServices = results.filter(result => result.status === 'rejected');
+      const failedServices = results.filter(
+        (result) => result.status === "rejected",
+      );
       if (failedServices.length > 0) {
-        console.warn('Some services failed to initialize:', failedServices);
+        console.warn("Some services failed to initialize:", failedServices);
       }
 
-      trackStageEnd('services');
+      trackStageEnd("services");
       return true;
     } catch (error) {
-      trackStageEnd('services');
+      trackStageEnd("services");
       throw new Error(`Service initialization failed: ${error.message}`);
     }
   }, [trackStageStart, trackStageEnd]);
 
   // Health check for critical functionality
   const performHealthCheck = useCallback(async () => {
-    trackStageStart('healthCheck');
-    
+    trackStageStart("healthCheck");
+
     try {
       const checks = [];
 
       // Storage health check
       checks.push(
         safeStorageOperation(async () => {
-          await AsyncStorage.setItem('healthCheck', Date.now().toString());
-          await AsyncStorage.removeItem('healthCheck');
+          await AsyncStorage.setItem("healthCheck", Date.now().toString());
+          await AsyncStorage.removeItem("healthCheck");
           return true;
-        }, false)
+        }, false),
       );
 
       // Memory check (web only)
-      if (Platform.OS === 'web' && typeof performance !== 'undefined' && performance.memory) {
+      if (
+        Platform.OS === "web" &&
+        typeof performance !== "undefined" &&
+        performance.memory
+      ) {
         checks.push(
           Promise.resolve().then(() => {
-            const memoryUsage = performance.memory.usedJSHeapSize / performance.memory.totalJSHeapSize;
+            const memoryUsage =
+              performance.memory.usedJSHeapSize /
+              performance.memory.totalJSHeapSize;
             return memoryUsage < 0.9; // Less than 90% memory usage
-          })
+          }),
         );
       } else {
         checks.push(Promise.resolve(true));
@@ -207,83 +227,82 @@ const useAppInitialization = ({
       const healthScore = results.filter(Boolean).length / results.length;
 
       if (healthScore < 0.5) {
-        throw new Error(`Health check failed: ${Math.round(healthScore * 100)}% healthy`);
+        throw new Error(
+          `Health check failed: ${Math.round(healthScore * 100)}% healthy`,
+        );
       }
 
-      trackStageEnd('healthCheck');
+      trackStageEnd("healthCheck");
       return healthScore;
     } catch (error) {
-      trackStageEnd('healthCheck');
+      trackStageEnd("healthCheck");
       throw error;
     }
   }, [safeStorageOperation, trackStageStart, trackStageEnd]);
 
-  // Main initialization process
+  // Simplified initialization process (reduced from 6 stages to 3)
   const initialize = useCallback(async () => {
     if (isInitializedRef.current) return;
-    
+
     try {
-      console.log('🚀 Starting app initialization...');
+      console.log("🚀 Starting simplified app initialization...");
       setError(null);
       setStage(INIT_STAGES.STARTING);
       setProgress(0);
 
-      // Stage 1: Load stored data
+      // Stage 1: Essential storage check (fast)
       setStage(INIT_STAGES.LOADING_STORAGE);
-      setProgress(20);
-      const storedData = await loadStoredData();
+      setProgress(33);
 
-      // Stage 2: Validate data
-      setStage(INIT_STAGES.VALIDATING_DATA);
-      setProgress(40);
-      await performHealthCheck();
+      // Quick storage health check instead of full data loading
+      try {
+        await AsyncStorage.setItem("init_test", "ok");
+        await AsyncStorage.removeItem("init_test");
+      } catch (storageError) {
+        console.warn("Storage check failed, continuing with memory-only mode");
+      }
 
-      // Stage 3: Initialize services
+      // Stage 2: Basic services (fast)
       setStage(INIT_STAGES.INITIALIZING_SERVICES);
-      setProgress(60);
-      await initializeServices();
+      setProgress(66);
 
-      // Stage 4: Restore state
-      setStage(INIT_STAGES.RESTORING_STATE);
-      setProgress(80);
-      
-      // Simulate state restoration
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Minimal service initialization - no waiting for external services
+      console.log("🔧 Services initialized (minimal mode)");
 
-      // Stage 5: Ready
+      // Stage 3: Ready (immediate)
       setStage(INIT_STAGES.READY);
       setProgress(100);
 
       // Calculate total initialization time
-      performanceMetrics.current.totalInitTime = Date.now() - performanceMetrics.current.startTime;
-      
-      if (enablePerformanceTracking) {
-        console.log(`✅ App initialized in ${performanceMetrics.current.totalInitTime}ms`);
-      }
+      performanceMetrics.current.totalInitTime =
+        Date.now() - performanceMetrics.current.startTime;
+
+      console.log(
+        `✅ App initialized in ${performanceMetrics.current.totalInitTime}ms (simplified mode)`,
+      );
 
       isInitializedRef.current = true;
-
     } catch (initError) {
-      console.error('❌ App initialization failed:', initError);
-      setError(initError);
-      setStage(INIT_STAGES.ERROR);
-      
-      // Track error metrics
-      if (enablePerformanceTracking) {
-        console.log(`❌ Init failed after ${Date.now() - performanceMetrics.current.startTime}ms`);
+      console.error("❌ App initialization failed:", initError);
+
+      // Emergency fallback - always allow app to start
+      console.log("🆘 Using emergency fallback initialization");
+      setStage(INIT_STAGES.READY);
+      setProgress(100);
+      isInitializedRef.current = true;
+
+      if (onEmergencyFallback) {
+        onEmergencyFallback();
       }
     }
-  }, [
-    loadStoredData,
-    performHealthCheck,
-    initializeServices,
-    enablePerformanceTracking,
-  ]);
+  }, [enablePerformanceTracking, onEmergencyFallback]);
 
   // Retry initialization
   const retryInitialization = useCallback(async () => {
     if (retryCount >= maxRetryAttempts) {
-      console.error('🚨 Max retry attempts reached, triggering emergency fallback');
+      console.error(
+        "🚨 Max retry attempts reached, triggering emergency fallback",
+      );
       if (onEmergencyFallback) {
         onEmergencyFallback();
       }
@@ -291,8 +310,8 @@ const useAppInitialization = ({
     }
 
     setIsRetrying(true);
-    setRetryCount(prev => prev + 1);
-    
+    setRetryCount((prev) => prev + 1);
+
     // Reset state
     isInitializedRef.current = false;
     setError(null);
@@ -301,7 +320,7 @@ const useAppInitialization = ({
 
     // Exponential backoff
     const delay = Math.min(1000 * Math.pow(2, retryCount), 5000);
-    await new Promise(resolve => setTimeout(resolve, delay));
+    await new Promise((resolve) => setTimeout(resolve, delay));
 
     try {
       await initialize();
@@ -315,9 +334,15 @@ const useAppInitialization = ({
     // Set up initialization timeout
     initializationTimerRef.current = setTimeout(() => {
       if (stage !== INIT_STAGES.READY && stage !== INIT_STAGES.ERROR) {
-        console.warn('🚨 Initialization timeout reached');
-        setError(new Error('Initialization timeout'));
-        setStage(INIT_STAGES.ERROR);
+        console.warn(
+          "🚨 Initialization timeout reached - using emergency fallback",
+        );
+        // Don't set error state, just force ready state for emergency fallback
+        setStage(INIT_STAGES.READY);
+        setProgress(100);
+        if (onEmergencyFallback) {
+          onEmergencyFallback();
+        }
       }
     }, initializationTimeout);
 
@@ -337,13 +362,16 @@ const useAppInitialization = ({
   // Handle app state changes
   useEffect(() => {
     const handleAppStateChange = (nextAppState) => {
-      if (nextAppState === 'active' && error) {
+      if (nextAppState === "active" && error) {
         // App came back to foreground with error, offer retry
-        console.log('🔄 App became active with error, ready for retry');
+        console.log("🔄 App became active with error, ready for retry");
       }
     };
 
-    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange,
+    );
     return () => subscription?.remove();
   }, [error]);
 
@@ -359,10 +387,10 @@ const useAppInitialization = ({
     isReady: stage === INIT_STAGES.READY,
     isLoading: stage !== INIT_STAGES.READY && stage !== INIT_STAGES.ERROR,
     hasError: stage === INIT_STAGES.ERROR || error !== null,
-    
+
     // Actions
     retryInitialization,
-    
+
     // Utilities
     getPerformanceMetrics: () => performanceMetrics.current,
     getStageProgress: (stageName) => {
