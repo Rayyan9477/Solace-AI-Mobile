@@ -8,7 +8,6 @@ import {
 } from "react-native";
 
 import { useTheme } from "../../shared/theme/ThemeContext";
-import { MentalHealthIcon } from "../icons";
 
 const ThemeToggle = ({ style, showLabel = true }) => {
   const { theme, isDarkMode, toggleTheme } = useTheme();
@@ -49,23 +48,23 @@ const ThemeToggle = ({ style, showLabel = true }) => {
   const switchBackgroundColor = animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: [
-      theme.colors.therapeutic.calming[200],
-      theme.colors.therapeutic.grounding[500],
+      theme.colors.secondary || "#BAE6FD", // Light blue for light mode
+      theme.colors.primary || "#926247", // Brown for dark mode
     ],
   });
 
   const switchThumbColor = animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: [
-      theme.colors.therapeutic.energizing[500],
-      theme.colors.therapeutic.peaceful[200],
+      theme.colors.primary || "#926247", // Brown for light mode
+      theme.colors.secondary || "#7DD44D", // Green for dark mode
     ],
   });
 
   return (
     <View style={[styles.container, style]}>
       {showLabel && (
-        <Text style={[styles.label, { color: theme.colors.text.primary }]}>
+        <Text style={[styles.label, { color: theme.colors.onSurface || "#111827" }]}>
           {isDarkMode ? "Dark Mode" : "Light Mode"}
         </Text>
       )}
@@ -93,16 +92,16 @@ const ThemeToggle = ({ style, showLabel = true }) => {
                 },
               ]}
             >
-              <MentalHealthIcon
-                name={isDarkMode ? "Brain" : "Heart"}
-                size={14}
-                color={
-                  isDarkMode
-                    ? theme.colors.therapeutic.grounding[700]
-                    : theme.colors.therapeutic.energizing[700]
-                }
-                variant="filled"
-              />
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: isDarkMode
+                    ? theme.colors.onSurface || "#FFFFFF"
+                    : theme.colors.onSurface || "#111827"
+                }}
+              >
+                {isDarkMode ? "🌙" : "☀️"}
+              </Text>
             </Animated.View>
           </Animated.View>
         </TouchableOpacity>
@@ -110,7 +109,7 @@ const ThemeToggle = ({ style, showLabel = true }) => {
 
       {showLabel && (
         <Text
-          style={[styles.description, { color: theme.colors.text.secondary }]}
+          style={[styles.description, { color: theme.colors.onSurfaceVariant || "#6B7280" }]}
         >
           {isDarkMode
             ? "Calming dark theme for evening use"

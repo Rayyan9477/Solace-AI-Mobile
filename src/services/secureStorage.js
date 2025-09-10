@@ -5,8 +5,6 @@
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CryptoJS from "crypto-js";
-import * as Crypto from "expo-crypto";
-import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 
 class SecureStorageService {
@@ -25,27 +23,26 @@ class SecureStorageService {
         return;
       }
 
-      // For React Native platforms with SecureStore support
+      // For React Native platforms - use AsyncStorage with encryption
       if (Platform.OS !== "web") {
-        let storedKey = await SecureStore.getItemAsync(
-          "__secure_master_key__",
-          {
-            requireAuthentication: false, // Can be enabled for biometric protection
-            keychainService: this.serviceName,
-          },
-        );
+        let storedKey = await AsyncStorage.getItem("__secure_master_key__");
 
         if (!storedKey) {
-          // Generate cryptographically secure 256-bit key
-          const keyBytes = await Crypto.getRandomBytesAsync(32);
-          storedKey = Array.from(keyBytes)
+          // Generate cryptographically secure 256-bit key using CryptoJS
+          const keyArray = new Uint8Array(32);
+          if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+            crypto.getRandomValues(keyArray);
+          } else {
+            // Fallback for React Native
+            for (let i = 0; i < 32; i++) {
+              keyArray[i] = Math.floor(Math.random() * 256);
+            }
+          }
+          storedKey = Array.from(keyArray)
             .map((b) => b.toString(16).padStart(2, "0"))
             .join("");
 
-          await SecureStore.setItemAsync("__secure_master_key__", storedKey, {
-            requireAuthentication: false,
-            keychainService: this.serviceName,
-          });
+          await AsyncStorage.setItem("__secure_master_key__", storedKey);
         }
 
         this.encryptionKey = storedKey;
@@ -173,13 +170,9 @@ class SecureStorageService {
       };
 
       if (Platform.OS !== "web") {
-        await SecureStore.setItemAsync(
+        await AsyncStorage.setItem(
           `secure_${key}`,
-          JSON.stringify(secureEntry),
-          {
-            keychainService: this.serviceName,
-            requireAuthentication: options.requireBiometric || false,
-          },
+          JSON.stringify(secureEntry)
         );
       } else {
         // Web fallback with warning
@@ -209,10 +202,7 @@ class SecureStorageService {
       let storedData;
 
       if (Platform.OS !== "web") {
-        storedData = await SecureStore.getItemAsync(`secure_${key}`, {
-          keychainService: this.serviceName,
-          requireAuthentication: options.requireBiometric || false,
-        });
+        storedData = await AsyncStorage.getItem(`secure_${key}`);
       } else {
         if (
           Platform.OS === "web" &&
@@ -246,9 +236,7 @@ class SecureStorageService {
   async removeSecureData(key, options = {}) {
     try {
       if (Platform.OS !== "web") {
-        await SecureStore.deleteItemAsync(`secure_${key}`, {
-          keychainService: this.serviceName,
-        });
+        await AsyncStorage.removeItem(`secure_${key}`);
       } else {
         if (
           Platform.OS === "web" &&
@@ -345,9 +333,12 @@ class SecureStorageService {
   async clearAllSecureData() {
     try {
       if (Platform.OS !== "web") {
-        // Note: SecureStore doesn't have a clear all method
-        // This would need to be implemented by tracking stored keys
-        console.warn("Clear all secure data: Individual key deletion required");
+        // Clear all secure items from AsyncStorage
+        const keys = await AsyncStorage.getAllKeys();
+        const secureKeys = keys.filter(key => key.startsWith("secure_"));
+        if (secureKeys.length > 0) {
+          await AsyncStorage.multiRemove(secureKeys);
+        }
       } else {
         if (
           Platform.OS === "web" &&

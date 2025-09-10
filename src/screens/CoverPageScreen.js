@@ -44,28 +44,28 @@ const CoverPageScreen = () => {
         icon: "🧠",
         title: "AI-Powered Support",
         description: "Intelligent conversations that understand your emotions",
-        color: theme.colors.therapeutic.empathy[500],
+        color: theme.colors.primary || "#C96100", // Fallback to primary color
       },
       {
         id: 2,
         icon: "💚",
         title: "Mental Wellness",
         description: "Track your mood and build healthy mental habits",
-        color: theme.colors.therapeutic.zen[500],
+        color: theme.colors.secondary || "#7DD44D", // Fallback to secondary color
       },
       {
         id: 3,
         icon: "🔒",
         title: "Private & Secure",
         description: "Your conversations remain completely confidential",
-        color: theme.colors.therapeutic.kind[500],
+        color: theme.colors.tertiary || "#8965FF", // Fallback to tertiary color
       },
       {
         id: 4,
         icon: "📊",
         title: "Progress Insights",
         description: "Beautiful analytics to track your mental health journey",
-        color: theme.colors.therapeutic.optimistic[500],
+        color: theme.colors.success || "#22C55E", // Fallback to success color
       },
     ],
     [theme],
@@ -159,9 +159,9 @@ const CoverPageScreen = () => {
 
       <LinearGradient
         colors={[
-          theme.colors.therapeutic.empathy[600],
-          theme.colors.therapeutic.zen[500],
-          theme.colors.therapeutic.kind[400],
+          theme.colors.primary || "#926247",
+          theme.colors.secondary || "#7DD44D",
+          theme.colors.tertiary || "#8965FF",
         ]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
@@ -178,8 +178,8 @@ const CoverPageScreen = () => {
             <View style={styles.logoContainer}>
               <LinearGradient
                 colors={[
-                  theme.colors.background.primary,
-                  theme.colors.background.surface,
+                  theme.colors.surface || "#FFFFFF",
+                  theme.colors.background?.secondary || "#F9FAFB",
                 ]}
                 style={styles.logoCircle}
               >
@@ -191,8 +191,8 @@ const CoverPageScreen = () => {
               style={[
                 styles.appTitle,
                 {
-                  color: theme.colors.text.inverse,
-                  textShadowColor: theme.colors.background.overlay,
+                  color: theme.colors.onSurface || "#FFFFFF",
+                  textShadowColor: "rgba(0,0,0,0.3)",
                   textShadowOffset: { width: 0, height: 2 },
                   textShadowRadius: 4,
                 },
@@ -207,8 +207,8 @@ const CoverPageScreen = () => {
               style={[
                 styles.appSubtitle,
                 {
-                  color: theme.colors.text.inverse,
-                  textShadowColor: theme.colors.background.overlay,
+                  color: theme.colors.onSurface || "#FFFFFF",
+                  textShadowColor: "rgba(0,0,0,0.3)",
                   textShadowOffset: { width: 0, height: 1 },
                   textShadowRadius: 3,
                 },
@@ -222,8 +222,8 @@ const CoverPageScreen = () => {
               style={[
                 styles.appDescription,
                 {
-                  color: theme.colors.text.inverse,
-                  textShadowColor: theme.colors.background.overlay,
+                  color: theme.colors.onSurface || "#FFFFFF",
+                  textShadowColor: "rgba(0,0,0,0.3)",
                   textShadowOffset: { width: 0, height: 1 },
                   textShadowRadius: 2,
                 },
@@ -240,7 +240,7 @@ const CoverPageScreen = () => {
             <View
               style={[
                 styles.featureCard,
-                { backgroundColor: theme.colors.background.primary },
+                { backgroundColor: theme.colors.surface || "#FFFFFF" },
                 shadows.lg,
               ]}
             >
@@ -256,7 +256,7 @@ const CoverPageScreen = () => {
               <Text
                 style={[
                   styles.featureTitle,
-                  { color: theme.colors.text.primary },
+                  { color: theme.colors.onSurface || "#111827" },
                 ]}
                 accessibilityRole="header"
               >
@@ -266,7 +266,7 @@ const CoverPageScreen = () => {
               <Text
                 style={[
                   styles.featureDescription,
-                  { color: theme.colors.text.secondary },
+                  { color: theme.colors.onSurfaceVariant || "#6B7280" },
                 ]}
               >
                 {currentFeature.description}
@@ -283,8 +283,8 @@ const CoverPageScreen = () => {
                     {
                       backgroundColor:
                         index === currentFeatureIndex
-                          ? theme.colors.text.inverse
-                          : theme.colors.text.inverse + "40",
+                          ? theme.colors.onSurface || "#FFFFFF"
+                          : (theme.colors.onSurface || "#FFFFFF") + "40",
                     },
                   ]}
                   onPress={() => setCurrentFeatureIndex(index)}
@@ -304,7 +304,7 @@ const CoverPageScreen = () => {
               <TouchableOpacity
                 style={[
                   styles.primaryButton,
-                  { backgroundColor: theme.colors.background.primary },
+                  { backgroundColor: theme.colors.surface || "#FFFFFF" },
                   shadows.md,
                 ]}
                 onPress={handleGetStarted}
@@ -312,12 +312,11 @@ const CoverPageScreen = () => {
                 accessibilityRole="button"
                 accessibilityLabel="Get started with Solace AI"
                 accessibilityHint="Begin your mental wellness journey"
-                {...MentalHealthAccessibility.buttons.primary("Get Started")}
               >
                 <Text
                   style={[
                     styles.primaryButtonText,
-                    { color: theme.colors.primary[600] },
+                    { color: theme.colors.primary || "#926247" },
                   ]}
                 >
                   Get Started
@@ -329,8 +328,8 @@ const CoverPageScreen = () => {
               style={[
                 styles.secondaryButton,
                 {
-                  borderColor: theme.colors.text.inverse + "60",
-                  backgroundColor: theme.colors.background.surface + "20",
+                  borderColor: (theme.colors.onSurface || "#FFFFFF") + "60",
+                  backgroundColor: (theme.colors.surface || "#FFFFFF") + "20",
                 },
               ]}
               onPress={handleLearnMore}
@@ -342,7 +341,7 @@ const CoverPageScreen = () => {
               <Text
                 style={[
                   styles.secondaryButtonText,
-                  { color: theme.colors.text.inverse },
+                  { color: theme.colors.onSurface || "#FFFFFF" },
                 ]}
               >
                 Learn More
@@ -355,7 +354,7 @@ const CoverPageScreen = () => {
             <Text
               style={[
                 styles.footerText,
-                { color: theme.colors.text.inverse + "80" },
+                { color: (theme.colors.onSurface || "#FFFFFF") + "80" },
               ]}
             >
               Start your mental wellness journey today

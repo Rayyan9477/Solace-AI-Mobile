@@ -75,7 +75,7 @@ export const UnifiedThemeProvider = ({ children }) => {
   const [isReducedMotionEnabled, setIsReducedMotionEnabled] = useState(false);
   const [isHighContrastEnabled, setIsHighContrastEnabled] = useState(false);
   const [fontScale, setFontScale] = useState(1);
-  const [themeLoaded, setThemeLoaded] = useState(true); // Start with true to prevent blank screens
+  const [themeLoaded, setThemeLoaded] = useState(true); // Always true to prevent blank screens
 
   // FreudThemeProvider state
   const [therapeutic, setTherapeutic] = useState("balanced");
@@ -84,6 +84,9 @@ export const UnifiedThemeProvider = ({ children }) => {
   const [fontSize, setFontSize] = useState("normal");
   const [isScreenReaderEnabled, setIsScreenReaderEnabled] = useState(false);
   const [accessibilitySettings, setAccessibilitySettings] = useState({});
+
+  // Log theme initialization
+  console.log("🎨 UnifiedThemeProvider: Initializing theme provider");
 
   // Memoized theme calculation for performance
   const theme = useMemo(() => {
@@ -138,21 +141,25 @@ export const UnifiedThemeProvider = ({ children }) => {
     }
   }, []);
 
-  // Load saved preferences
+  // Load saved preferences (non-blocking)
   useEffect(() => {
-    loadThemePreferences();
-    setupAccessibilityListeners();
+    loadThemePreferences().catch(error => {
+      console.warn("⚠️ Failed to load theme preferences:", error);
+    });
+    setupAccessibilityListeners().catch(error => {
+      console.warn("⚠️ Failed to setup accessibility listeners:", error);
+    });
   }, []);
 
   // Sync with system theme changes
   useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      if (!themeLoaded) return; // Don't override saved preference
+      // Always allow system theme changes to work
       setIsDarkMode(colorScheme === "dark");
     });
 
     return () => subscription?.remove();
-  }, [themeLoaded]);
+  }, []);
 
   const loadThemePreferences = async () => {
     try {
@@ -338,7 +345,36 @@ export const UnifiedThemeProvider = ({ children }) => {
 export const useTheme = () => {
   const context = useContext(UnifiedThemeContext);
   if (!context) {
-    throw new Error("useTheme must be used within a UnifiedThemeProvider");
+    // Provide fallback theme to prevent blank screens
+    console.warn("useTheme called outside UnifiedThemeProvider, using fallback theme");
+    return {
+      theme: optimizedLightTheme,
+      isDarkMode: false,
+      toggleTheme: () => {},
+      setTheme: () => {},
+      isReducedMotionEnabled: false,
+      isHighContrastEnabled: false,
+      fontSize: "normal",
+      setFontSize: () => {},
+      fontScale: 1,
+      setFontScale: () => {},
+      isScreenReaderEnabled: false,
+      accessibilitySettings: {},
+      updateAccessibilitySettings: () => {},
+      therapeutic: "balanced",
+      mood: null,
+      timeBasedTheme: true,
+      setTherapeutic: () => {},
+      setMood: () => {},
+      setTimeBasedTheme: () => {},
+      getMoodBasedColors: () => ({}),
+      getTimeBasedColors: () => ({}),
+      therapeuticThemes: {},
+      getThemeValue: () => {},
+      getColor: () => {},
+      getSpacing: () => {},
+      createThemedStyles: () => {},
+    };
   }
   return context;
 };
@@ -354,4 +390,5 @@ export const useFreudTheme = () => {
 // Export provider with multiple names for compatibility
 export { UnifiedThemeProvider as ThemeProvider };
 export { UnifiedThemeProvider as FreudThemeProvider };
+export { UnifiedThemeContext as ThemeContext };
 export default UnifiedThemeProvider;

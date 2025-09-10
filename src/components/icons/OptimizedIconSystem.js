@@ -4,7 +4,7 @@
 import React from "react";
 
 import { WebSafeSvg as Svg, Path, Circle, Rect, Polygon } from "./WebSafeSvg";
-import { useTheme } from "../../shared/theme/ThemeContext";
+import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
 
 // Base icon component with proper tree-shaking support
 const OptimizedIcon = ({

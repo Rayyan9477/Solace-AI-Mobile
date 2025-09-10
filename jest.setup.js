@@ -163,6 +163,14 @@ jest.mock("react-native", () => {
 
   return {
     ...RN,
+    Platform: {
+      ...RN.Platform,
+      OS: "ios",
+      getConstants: jest.fn(() => ({
+        isDisableAnimations: false,
+        isTesting: true,
+      })),
+    },
     AccessibilityInfo: {
       isScreenReaderEnabled: jest.fn(() => Promise.resolve(false)),
       isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),

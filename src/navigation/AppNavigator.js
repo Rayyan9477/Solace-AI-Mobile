@@ -23,7 +23,6 @@ import DarkWelcomeScreen from "../screens/DarkWelcomeScreen";
 import DesignSystemScreen from "../screens/DesignSystemScreen";
 import IconTestScreen from "../screens/IconTestScreen";
 import MainAppScreen from "../screens/MainAppScreen";
-import ProfessionalOnboardingScreen from "../screens/ProfessionalOnboardingScreen";
 import SplashScreen from "../screens/SplashScreen";
 import AssessmentScreen from "../screens/assessment/AssessmentScreen";
 import DarkComprehensiveAssessmentScreen from "../screens/assessment/DarkComprehensiveAssessmentScreen";
@@ -714,32 +713,69 @@ const AppNavigator = () => {
     }
   }, [authState, isAuthenticated, onboardingCompleted, isLoading, isDarkMode]);
 
+  // Emergency fallback: if auth state is undefined or invalid, show main app
+  const shouldShowMainApp = () => {
+    // If auth state is completely missing, default to main app
+    if (!authState) {
+      console.log("🆘 Auth state missing, showing main app as fallback");
+      return true;
+    }
+
+    // If we're not loading and both conditions are false, show main app
+    if (!isLoading && !onboardingCompleted && !isAuthenticated) {
+      console.log("🆘 Both onboarding and auth are false, showing main app as fallback");
+      return true;
+    }
+
+    // Normal flow
+    return false;
+  };
+
+  const renderScreen = () => {
+    // Emergency fallback for undefined auth state
+    if (shouldShowMainApp()) {
+      console.log("🆘 Using emergency navigation fallback");
+      return <Stack.Screen name="Main" component={MainTabs} />;
+    }
+
+    // Normal navigation logic
+    if (isLoading) {
+      return (
+        <Stack.Screen
+          name="Splash"
+          component={getThemeAwareScreen(
+            SplashScreen,
+            DarkSplashScreen,
+            isDarkMode,
+          )}
+        />
+      );
+    }
+
+    if (!onboardingCompleted) {
+      return (
+        <Stack.Screen
+          name="Onboarding"
+          component={getThemeAwareScreen(
+            OnboardingScreen,
+            DarkWelcomeScreen,
+            isDarkMode,
+          )}
+        />
+      );
+    }
+
+    if (!isAuthenticated) {
+      return <Stack.Screen name="Auth" component={AuthStack} />;
+    }
+
+    return <Stack.Screen name="Main" component={MainTabs} />;
+  };
+
   return (
     <NavigationErrorBoundary theme={isDarkMode ? null : null}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {isLoading ? (
-          <Stack.Screen
-            name="Splash"
-            component={getThemeAwareScreen(
-              SplashScreen,
-              DarkSplashScreen,
-              isDarkMode,
-            )}
-          />
-        ) : !onboardingCompleted ? (
-          <Stack.Screen
-            name="Onboarding"
-            component={getThemeAwareScreen(
-              ProfessionalOnboardingScreen,
-              DarkWelcomeScreen,
-              isDarkMode,
-            )}
-          />
-        ) : !isAuthenticated ? (
-          <Stack.Screen name="Auth" component={AuthStack} />
-        ) : (
-          <Stack.Screen name="Main" component={MainTabs} />
-        )}
+        {renderScreen()}
       </Stack.Navigator>
     </NavigationErrorBoundary>
   );

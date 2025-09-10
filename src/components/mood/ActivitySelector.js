@@ -60,7 +60,7 @@ const ActivitySelector = ({ selectedActivities, onActivityToggle }) => {
           return (
             <TouchableOpacity
               key={activity.id}
-              style={[[
+              style={[
                 styles.activityItem,
                 {
                   backgroundColor: isSelected 
@@ -69,15 +69,11 @@ const ActivitySelector = ({ selectedActivities, onActivityToggle }) => {
                   borderColor: isSelected 
                     ? theme.colors.primary[500] 
                     : theme.colors.gray[300],
-                , { minWidth: 44, minHeight: 44 }]}
+                },
+                { minWidth: 44, minHeight: 44 }
               ]}
-              onPress={() =
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="{activity.emoji}"
-        accessibilityHint="Double tap to activate"
-      > handleActivityToggle(activity.id)}
-              activeOpacity={0.7}
+              onPress={() => handleActivityToggle(activity.id)}
+              accessible={true}
               accessibilityRole="checkbox"
               accessibilityLabel={`${activity.label} activity`}
               accessibilityHint={isSelected 
@@ -86,6 +82,7 @@ const ActivitySelector = ({ selectedActivities, onActivityToggle }) => {
               accessibilityState={{
                 checked: isSelected,
               }}
+              activeOpacity={0.7}
               {...createListItemAccessibility(
                 activity.label,
                 index + 1,
@@ -157,16 +154,16 @@ const styles = StyleSheet.create({
   activityItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 123],
-    paddingVertical: 122],
-    borderRadius: 8full,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    borderRadius: 8,
     borderWidth: 1,
-    marginBottom: 122],
-    ...theme.shadows.sm,
+    marginBottom: 12,
+    ...shadows.sm,
   },
   activityEmoji: {
-    fontSize: 14base,
-    marginRight: 122],
+    fontSize: 14,
+    marginRight: 12,
   },
   activityLabel: {
     fontSize: 14,
@@ -174,15 +171,15 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   selectedContainer: {
-    marginTop: 124],
+    marginTop: 12,
     width: '100%',
     alignItems: 'center',
   },
   selectedTitle: {
-    fontSize: 14base,
+    fontSize: 14,
     fontWeight: '600',
-    lineHeight: theme.typography.lineHeights.base,
-    marginBottom: 123],
+    lineHeight: 20,
+    marginBottom: 12,
   },
   selectedList: {
     flexDirection: 'row',
@@ -193,19 +190,19 @@ const styles = StyleSheet.create({
   selectedItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 122],
-    paddingVertical: 121],
-    backgroundColor: theme.colors.gray[100],
-    borderRadius: 8sm,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    backgroundColor: colors.gray[100],
+    borderRadius: 8,
   },
   selectedEmoji: {
     fontSize: 14,
-    marginRight: 121],
+    marginRight: 12,
   },
   selectedLabel: {
-    fontSize: 14xs,
+    fontSize: 14,
     fontWeight: '400',
-    lineHeight: theme.typography.lineHeights.xs,
+    lineHeight: 18,
   },
 });
 

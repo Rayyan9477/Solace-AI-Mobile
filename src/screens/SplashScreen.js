@@ -11,7 +11,7 @@ import {
 
 import { MentalHealthIcon } from "../components/icons";
 import { FreudLogo } from "../components/icons/FreudIcons";
-import { useTheme } from "../shared/theme/ThemeContext";
+import { useTheme } from "../shared/theme/UnifiedThemeProvider";
 import { freudTheme } from "../shared/theme/freudTheme";
 import {
   spacing,

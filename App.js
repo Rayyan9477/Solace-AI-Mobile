@@ -1,17 +1,13 @@
 /**
  * Solace AI Mobile - Mental Health Support App
- * Main App Entry Point - REFACTORED VERSION
+ * Main App Entry Point - FIXED VERSION
  *
- * Provides comprehensive mental health support through AI-powered conversations,
- * mood tracking, therapeutic activities, and crisis intervention resources.
- *
- * REFACTORING IMPROVEMENTS:
- * - Modern React patterns with hooks and performance optimizations
- * - Clean separation of concerns with dedicated providers
- * - Enhanced error handling with therapeutic design
- * - Progressive loading with mental health focused messaging
- * - Better provider architecture with reduced nesting
- * - Comprehensive accessibility and performance monitoring
+ * Fixes for blank screen issues:
+ * - Simplified initialization flow
+ * - Removed complex async theme loading
+ * - Added immediate rendering with fallbacks
+ * - Streamlined provider architecture
+ * - Emergency fallback for failed initializations
  */
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -29,14 +25,8 @@ import { RefactoredAppProvider } from "./src/components/RefactoredAppProvider";
 import AppNavigator from "./src/navigation/AppNavigator";
 import { store, persistor } from "./src/store/store";
 
-// Navigation
-
-// Refactored App Provider
-
-// Enhanced Loading Screen
-
 // Get app version from package.json
-const APP_VERSION = "1.0.0"; // Could be imported from package.json in a real app
+const APP_VERSION = "1.0.0";
 
 /**
  * Redux Persistence Loading Component
@@ -79,21 +69,23 @@ const AppRoot = ({ children }) => {
   // Log app startup
   useEffect(() => {
     console.log(
-      "🌟 Solace AI Mobile: Starting refactored mental health support app...",
+      "🌟 Solace AI Mobile: Starting mental health support app...",
     );
     console.log(`📊 Platform: ${Platform.OS}`);
     console.log(`📱 Version: ${APP_VERSION}`);
-
-    if (__DEV__) {
-      console.log("🛠️ Development mode: Enhanced debugging enabled");
-    }
   }, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <Provider store={store}>
-          <PersistGate loading={<ReduxLoadingScreen />} persistor={persistor}>
+          <PersistGate
+            loading={<ReduxLoadingScreen />}
+            persistor={persistor}
+            onBeforeLift={() => {
+              console.log("🔄 Redux store rehydrated");
+            }}
+          >
             {children}
           </PersistGate>
         </Provider>
@@ -122,6 +114,9 @@ const NavigationWrapper = ({ children }) => {
     <NavigationContainer
       onStateChange={onNavigationStateChange}
       onReady={onNavigationReady}
+      onError={(error) => {
+        console.error("🧭 Navigation error:", error);
+      }}
     >
       <StatusBar style="auto" />
       {children}
@@ -154,43 +149,3 @@ const App = () => {
 
 // Performance optimization: wrap in React.memo to prevent unnecessary re-renders
 export default React.memo(App);
-
-/**
- * REFACTORING SUMMARY:
- *
- * ✅ ARCHITECTURE IMPROVEMENTS:
- * - Separated concerns into focused components (AppRoot, NavigationWrapper, App)
- * - Reduced provider nesting complexity with better organization
- * - Introduced RefactoredAppProvider with clean separation of concerns
- * - Added proper component memoization for performance
- *
- * ✅ ERROR HANDLING:
- * - Comprehensive error boundary with mental health focus
- * - Progressive error recovery with retry mechanisms
- * - Emergency support integration throughout error states
- * - Therapeutic error messaging and UI design
- *
- * ✅ LOADING & PERFORMANCE:
- * - Enhanced loading screens with therapeutic design
- * - Progressive loading stages with meaningful messages
- * - Performance monitoring and metrics tracking
- * - App state change handling for better lifecycle management
- *
- * ✅ MENTAL HEALTH FOCUS:
- * - Crisis intervention keyboard shortcuts
- * - Privacy protection features
- * - Accessibility enhancements for screen readers
- * - Therapeutic color schemes and animations
- *
- * ✅ MODERN REACT PATTERNS:
- * - Functional components with hooks
- * - Proper dependency arrays and effect cleanup
- * - Component memoization and performance optimizations
- * - Modern context patterns with provider composition
- *
- * ✅ DEVELOPER EXPERIENCE:
- * - Comprehensive logging and debugging
- * - Clear code organization and documentation
- * - Performance metrics in development mode
- * - Error tracking integration ready
- */

@@ -59,14 +59,11 @@ const Header = ({
         {rightAction}
         {showProfile && (
           <Pressable
-            onPress={() =
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="Button"
-        accessibilityHint="Double tap to activate"
-      > navigation.navigate('Profile')}
-            accessibilityLabel="Go to profile"
+            onPress={() => navigation.navigate('Profile')}
+            accessible={true}
             accessibilityRole="button"
+            accessibilityLabel="Go to profile"
+            accessibilityHint="Double tap to activate"
           >
             <Avatar
               size="small"

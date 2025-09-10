@@ -14,7 +14,8 @@ import userSlice from "./slices/userSlice";
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["auth", "user", "mood", "enhancedMood", "assessment", "therapy"], // Only persist these reducers
+  whitelist: ["auth", "user"], // Reduced whitelist to prevent hanging
+  timeout: 3000, // Add timeout to prevent infinite hanging
 };
 
 const rootReducer = combineReducers({

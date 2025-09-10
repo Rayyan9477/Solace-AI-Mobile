@@ -240,36 +240,17 @@ const useAppInitialization = ({
     }
   }, [safeStorageOperation, trackStageStart, trackStageEnd]);
 
-  // Simplified initialization process (reduced from 6 stages to 3)
+  // Ultra-simplified initialization process - never hangs
   const initialize = useCallback(async () => {
     if (isInitializedRef.current) return;
 
     try {
-      console.log("🚀 Starting simplified app initialization...");
+      console.log("🚀 Starting ultra-simplified app initialization...");
       setError(null);
       setStage(INIT_STAGES.STARTING);
       setProgress(0);
 
-      // Stage 1: Essential storage check (fast)
-      setStage(INIT_STAGES.LOADING_STORAGE);
-      setProgress(33);
-
-      // Quick storage health check instead of full data loading
-      try {
-        await AsyncStorage.setItem("init_test", "ok");
-        await AsyncStorage.removeItem("init_test");
-      } catch (storageError) {
-        console.warn("Storage check failed, continuing with memory-only mode");
-      }
-
-      // Stage 2: Basic services (fast)
-      setStage(INIT_STAGES.INITIALIZING_SERVICES);
-      setProgress(66);
-
-      // Minimal service initialization - no waiting for external services
-      console.log("🔧 Services initialized (minimal mode)");
-
-      // Stage 3: Ready (immediate)
+      // Immediate ready state - no async operations that could hang
       setStage(INIT_STAGES.READY);
       setProgress(100);
 
@@ -278,7 +259,7 @@ const useAppInitialization = ({
         Date.now() - performanceMetrics.current.startTime;
 
       console.log(
-        `✅ App initialized in ${performanceMetrics.current.totalInitTime}ms (simplified mode)`,
+        `✅ App initialized in ${performanceMetrics.current.totalInitTime}ms (ultra-simplified mode)`,
       );
 
       isInitializedRef.current = true;
