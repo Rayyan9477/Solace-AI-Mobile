@@ -175,6 +175,7 @@ const authSlice = createSlice({
       })
       .addCase(restoreAuthState.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.authChecked = true;
         if (action.payload.isAuthenticated) {
           state.isAuthenticated = true;
           state.user = action.payload.user;
@@ -188,6 +189,7 @@ const authSlice = createSlice({
       })
       .addCase(restoreAuthState.rejected, (state) => {
         state.isLoading = false;
+        state.authChecked = true;
         state.isAuthenticated = false;
         state.user = null;
         state.token = null;

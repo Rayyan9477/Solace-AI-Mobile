@@ -89,59 +89,16 @@ const Tab = createBottomTabNavigator();
 // Enhanced theme-aware screen selector with fallbacks
 const getThemeAwareScreen = (lightScreen, darkScreen, isDarkMode) => {
   try {
-    // Validate screen components exist
-    if (!lightScreen && !darkScreen) {
-      console.warn("⚠️ No screens provided to getThemeAwareScreen");
-      return ErrorFallbackScreen;
-    }
-
     const selectedScreen = isDarkMode ? darkScreen : lightScreen;
-
-    // If selected screen is missing, fallback to the other theme
     if (!selectedScreen) {
-      console.warn(
-        `⚠️ ${isDarkMode ? "Dark" : "Light"} screen missing, falling back to ${isDarkMode ? "light" : "dark"} screen`,
-      );
-      return isDarkMode ? lightScreen : darkScreen;
+      throw new Error("No screen available for theme");
     }
-
-    // If both screens exist, return the selected one
     return selectedScreen;
   } catch (error) {
     console.error("🚨 Error in getThemeAwareScreen:", error);
-    return ErrorFallbackScreen;
+    // Return a simple placeholder instead of FallbackScreen
+    return () => <View><Text>Loading Screen...</Text></View>;
   }
-};
-
-// Fallback screen component for missing screens
-const ErrorFallbackScreen = () => {
-  const { theme } = useTheme();
-
-  return (
-    <View
-      style={[
-        styles.errorContainer,
-        { backgroundColor: theme?.colors?.background?.primary || "#FFFFFF" },
-      ]}
-    >
-      <Text
-        style={[
-          styles.errorText,
-          { color: theme?.colors?.text?.primary || "#000000" },
-        ]}
-      >
-        Screen Not Available
-      </Text>
-      <Text
-        style={[
-          styles.errorSubtext,
-          { color: theme?.colors?.text?.secondary || "#666666" },
-        ]}
-      >
-        This screen is temporarily unavailable. Please try again later.
-      </Text>
-    </View>
-  );
 };
 
 // Enhanced Error Boundary component for navigation failures
@@ -698,7 +655,7 @@ const MainTabs = () => {
 
 const AppNavigator = () => {
   const authState = useSelector((state) => state.auth);
-  const { isAuthenticated, onboardingCompleted, isLoading } = authState || {};
+  const { isAuthenticated, onboardingCompleted, isLoading, authChecked } = authState || {};
   const { isDarkMode } = useTheme();
 
   // Simplified navigation state logging (removed complex testing that could interfere)
@@ -713,68 +670,39 @@ const AppNavigator = () => {
     }
   }, [authState, isAuthenticated, onboardingCompleted, isLoading, isDarkMode]);
 
-  // Emergency fallback: if auth state is undefined or invalid, show main app
-  const shouldShowMainApp = () => {
-    // If auth state is completely missing, default to main app
-    if (!authState) {
-      console.log("🆘 Auth state missing, showing main app as fallback");
-      return true;
-    }
+  // Replace FallbackScreen with simple loading view
+  const LoadingScreen = () => <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><Text>Loading...</Text></View>;
 
-    // If we're not loading and both conditions are false, show main app
-    if (!isLoading && !onboardingCompleted && !isAuthenticated) {
-      console.log("🆘 Both onboarding and auth are false, showing main app as fallback");
-      return true;
-    }
-
-    // Normal flow
-    return false;
-  };
-
+  // Remove forcing and restore proper logic
   const renderScreen = () => {
-    // Emergency fallback for undefined auth state
-    if (shouldShowMainApp()) {
-      console.log("🆘 Using emergency navigation fallback");
-      return <Stack.Screen name="Main" component={MainTabs} />;
+    if (!authChecked) {
+      return <Stack.Screen name="AuthLoading" component={LoadingScreen} options={{ headerShown: false }} />;
     }
 
-    // Normal navigation logic
     if (isLoading) {
-      return (
-        <Stack.Screen
-          name="Splash"
-          component={getThemeAwareScreen(
-            SplashScreen,
-            DarkSplashScreen,
-            isDarkMode,
-          )}
-        />
-      );
-    }
-
-    if (!onboardingCompleted) {
-      return (
-        <Stack.Screen
-          name="Onboarding"
-          component={getThemeAwareScreen(
-            OnboardingScreen,
-            DarkWelcomeScreen,
-            isDarkMode,
-          )}
-        />
-      );
+      return <Stack.Screen name="AuthLoading" component={LoadingScreen} options={{ headerShown: false }} />;
     }
 
     if (!isAuthenticated) {
-      return <Stack.Screen name="Auth" component={AuthStack} />;
+      return <Stack.Screen name="Auth" component={AuthStack} options={{ headerShown: false }} />;
     }
 
-    return <Stack.Screen name="Main" component={MainTabs} />;
+    if (!onboardingCompleted) {
+      return <Stack.Screen name="Onboarding" component={getThemeAwareScreen(OnboardingScreen, DarkWelcomeScreen, isDarkMode)} options={{ headerShown: false }} />;
+    }
+
+    return <Stack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />;
   };
 
   return (
     <NavigationErrorBoundary theme={isDarkMode ? null : null}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          gestureEnabled: true,
+          animationEnabled: true
+        }}
+      >
         {renderScreen()}
       </Stack.Navigator>
     </NavigationErrorBoundary>

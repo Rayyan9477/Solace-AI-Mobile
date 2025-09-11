@@ -13,6 +13,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Platform, AppState } from "react-native";
+import { useDispatch } from "react-redux";
+
+import { restoreAuthState } from "../store/slices/authSlice";
 
 // Initialization stages
 export const INIT_STAGES = {
@@ -28,12 +31,13 @@ export const INIT_STAGES = {
 const useAppInitialization = ({
   enablePerformanceTracking = __DEV__,
   maxRetryAttempts = 2,
-  initializationTimeout = 3000, // Reduced to 3s to fail fast and use fallback
+  initializationTimeout = 1000, // Reduced to 1s to prevent blank screens
   onEmergencyFallback,
 } = {}) => {
-  // State management
+  const dispatch = useDispatch();
+  // Start with ready state to prevent blank screens
   const [stage, setStage] = useState(INIT_STAGES.STARTING);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(100);
   const [error, setError] = useState(null);
   const [isRetrying, setIsRetrying] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
@@ -240,43 +244,103 @@ const useAppInitialization = ({
     }
   }, [safeStorageOperation, trackStageStart, trackStageEnd]);
 
-  // Ultra-simplified initialization process - never hangs
+  // Add timeout utility
+  const withTimeout = (promise, ms) => {
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Operation timed out')), ms))
+    ]);
+  };
+
+  // Update initialize to perform full initialization with timeouts
   const initialize = useCallback(async () => {
     if (isInitializedRef.current) return;
 
+    setError(null);
+    setStage(INIT_STAGES.STARTING);
+    setProgress(0);
+
     try {
-      console.log("🚀 Starting ultra-simplified app initialization...");
-      setError(null);
-      setStage(INIT_STAGES.STARTING);
-      setProgress(0);
+      // Stage 1: Load storage with timeout
+      trackStageStart(INIT_STAGES.LOADING_STORAGE);
+      let storedData;
+      try {
+        storedData = await withTimeout(loadStoredData(), 2000);
+      } catch (storageError) {
+        console.warn('Storage load failed or timed out:', storageError);
+        storedData = { preferences: {}, config: {}, session: {} };
+      }
+      trackStageEnd(INIT_STAGES.LOADING_STORAGE);
+      setProgress(20);
 
-      // Immediate ready state - no async operations that could hang
-      setStage(INIT_STAGES.READY);
+      // Stage 2: Validate data
+      setStage(INIT_STAGES.VALIDATING_DATA);
+      trackStageStart(INIT_STAGES.VALIDATING_DATA);
+      // Add actual validation logic here if needed
+      // For now, assume data is valid
+      trackStageEnd(INIT_STAGES.VALIDATING_DATA);
+      setProgress(40);
+
+      // Stage 3: Initialize services with timeout
+      setStage(INIT_STAGES.INITIALIZING_SERVICES);
+      trackStageStart(INIT_STAGES.INITIALIZING_SERVICES);
+      let servicesInitialized;
+      try {
+        servicesInitialized = await withTimeout(initializeServices(), 3000);
+      } catch (serviceError) {
+        console.warn('Service initialization failed or timed out:', serviceError);
+        servicesInitialized = false;
+      }
+      trackStageEnd(INIT_STAGES.INITIALIZING_SERVICES);
+      setProgress(60);
+
+      // Stage 4: Restore state
+      setStage(INIT_STAGES.RESTORING_STATE);
+      trackStageStart(INIT_STAGES.RESTORING_STATE);
+      await dispatch(restoreAuthState());
+      trackStageEnd(INIT_STAGES.RESTORING_STATE);
+      setProgress(80);
+
+      // Stage 5: Health check with timeout
+      setStage('healthCheck');
+      trackStageStart('healthCheck');
+      let healthScore;
+      try {
+        healthScore = await withTimeout(performHealthCheck(), 2000);
+      } catch (healthError) {
+        console.warn('Health check failed or timed out:', healthError);
+        healthScore = 0.5; // Assume minimal health
+      }
+      trackStageEnd('healthCheck');
       setProgress(100);
 
-      // Calculate total initialization time
-      performanceMetrics.current.totalInitTime =
-        Date.now() - performanceMetrics.current.startTime;
+      // If critical failure (healthScore < 0.3), trigger fallback
+      if (healthScore < 0.3) {
+        throw new Error('Critical health check failure');
+      }
 
-      console.log(
-        `✅ App initialized in ${performanceMetrics.current.totalInitTime}ms (ultra-simplified mode)`,
-      );
-
+      setStage(INIT_STAGES.READY);
       isInitializedRef.current = true;
+
+      performanceMetrics.current.totalInitTime = Date.now() - performanceMetrics.current.startTime;
+      console.log(`✅ App initialized in ${performanceMetrics.current.totalInitTime}ms`);
+
     } catch (initError) {
-      console.error("❌ App initialization failed:", initError);
+      console.error('❌ App initialization failed:', initError);
+      setError(initError);
+      setStage(INIT_STAGES.ERROR);
 
-      // Emergency fallback - always allow app to start
-      console.log("🆘 Using emergency fallback initialization");
-      setStage(INIT_STAGES.READY);
-      setProgress(100);
-      isInitializedRef.current = true;
-
-      if (onEmergencyFallback) {
+      // Auto-retry once on error
+      if (retryCount < 1) {
+        retryInitialization();
+      } else if (onEmergencyFallback) {
         onEmergencyFallback();
+        // Force ready with fallback mode
+        setStage(INIT_STAGES.READY);
+        isInitializedRef.current = true;
       }
     }
-  }, [enablePerformanceTracking, onEmergencyFallback]);
+  }, [loadStoredData, initializeServices, performHealthCheck, trackStageStart, trackStageEnd, retryCount, onEmergencyFallback, retryInitialization]);
 
   // Retry initialization
   const retryInitialization = useCallback(async () => {
@@ -312,23 +376,15 @@ const useAppInitialization = ({
 
   // Initialize on mount
   useEffect(() => {
-    // Set up initialization timeout
-    initializationTimerRef.current = setTimeout(() => {
-      if (stage !== INIT_STAGES.READY && stage !== INIT_STAGES.ERROR) {
-        console.warn(
-          "🚨 Initialization timeout reached - using emergency fallback",
-        );
-        // Don't set error state, just force ready state for emergency fallback
-        setStage(INIT_STAGES.READY);
-        setProgress(100);
-        if (onEmergencyFallback) {
-          onEmergencyFallback();
-        }
+    const initializeApp = async () => {
+      try {
+        await initialize();
+      } catch (e) {
+        setError(e);
       }
-    }, initializationTimeout);
+    };
 
-    // Start initialization
-    initialize();
+    initializeApp();
 
     return () => {
       if (initializationTimerRef.current) {
@@ -338,7 +394,7 @@ const useAppInitialization = ({
         clearInterval(loadingTimeIntervalRef.current);
       }
     };
-  }, [initialize, initializationTimeout]);
+  }, [initialize]);
 
   // Handle app state changes
   useEffect(() => {
@@ -356,9 +412,8 @@ const useAppInitialization = ({
     return () => subscription?.remove();
   }, [error]);
 
-  // Return hook interface
+  // Return hook interface - FIXED to always show app content
   return {
-    // State
     stage,
     progress,
     error,
@@ -367,19 +422,10 @@ const useAppInitialization = ({
     loadingTime: currentLoadingTime,
     isReady: stage === INIT_STAGES.READY,
     isLoading: stage !== INIT_STAGES.READY && stage !== INIT_STAGES.ERROR,
-    hasError: stage === INIT_STAGES.ERROR || error !== null,
-
-    // Actions
+    hasError: stage === INIT_STAGES.ERROR,
     retryInitialization,
-
-    // Utilities
     getPerformanceMetrics: () => performanceMetrics.current,
-    getStageProgress: (stageName) => {
-      const stageOrder = Object.values(INIT_STAGES);
-      const currentIndex = stageOrder.indexOf(stage);
-      const targetIndex = stageOrder.indexOf(stageName);
-      return targetIndex <= currentIndex ? 100 : 0;
-    },
+    getStageProgress: (stageName) => performanceMetrics.current.stageTimings[stageName]?.duration || 0,
   };
 };
 

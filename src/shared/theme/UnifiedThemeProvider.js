@@ -75,7 +75,7 @@ export const UnifiedThemeProvider = ({ children }) => {
   const [isReducedMotionEnabled, setIsReducedMotionEnabled] = useState(false);
   const [isHighContrastEnabled, setIsHighContrastEnabled] = useState(false);
   const [fontScale, setFontScale] = useState(1);
-  const [themeLoaded, setThemeLoaded] = useState(true); // Always true to prevent blank screens
+  const [themeLoaded, setThemeLoaded] = useState(false); // Changed to false for proper loading flow
 
   // FreudThemeProvider state
   const [therapeutic, setTherapeutic] = useState("balanced");
@@ -278,6 +278,7 @@ export const UnifiedThemeProvider = ({ children }) => {
       isDarkMode,
       toggleTheme,
       setTheme,
+      themeLoaded, // Export themeLoaded
       isReducedMotionEnabled,
       isHighContrastEnabled,
       fontSize,
@@ -310,6 +311,7 @@ export const UnifiedThemeProvider = ({ children }) => {
       isDarkMode,
       toggleTheme,
       setTheme,
+      themeLoaded, // Add themeLoaded to dependency array
       isReducedMotionEnabled,
       isHighContrastEnabled,
       fontSize,
