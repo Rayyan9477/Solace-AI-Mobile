@@ -63,31 +63,39 @@ export const restoreAuthState = createAsyncThunk(
   "auth/restoreAuthState",
   async (_, { rejectWithValue }) => {
     try {
+      console.log("≡ƒöä restoreAuthState: Starting authentication state restoration...");
       // Check if user is authenticated
       const isAuthenticated = await tokenService.isAuthenticated();
+      console.log("≡ƒöä restoreAuthState: isAuthenticated =", isAuthenticated);
 
       if (!isAuthenticated) {
+        console.log("≡ƒöä restoreAuthState: User not authenticated, returning false");
         return { isAuthenticated: false };
       }
 
       // Get tokens
       const tokens = await tokenService.getTokens();
+      console.log("≡ƒöä restoreAuthState: Tokens retrieved =", !!tokens);
 
       // Get user data
       const user = await secureStorage.getSecureData("user_profile");
+      console.log("≡ƒöä restoreAuthState: User data retrieved =", !!user);
 
       if (!tokens || !user) {
         // Clear inconsistent state
+        console.log("≡ƒöä restoreAuthState: Missing tokens or user data, clearing state");
         await tokenService.clearTokens();
         return { isAuthenticated: false };
       }
 
+      console.log("≡ƒöä restoreAuthState: Authentication state restored successfully");
       return {
         isAuthenticated: true,
         user,
         token: tokens.accessToken,
       };
     } catch (error) {
+      console.error("≡ƒöä restoreAuthState: Error during restoration:", error);
       // Clear potentially corrupted state
       await tokenService.clearTokens();
       return { isAuthenticated: false };
@@ -171,9 +179,12 @@ const authSlice = createSlice({
 
       // Restore auth state cases
       .addCase(restoreAuthState.pending, (state) => {
+        console.log("≡ƒöä restoreAuthState.pending: Setting isLoading = true");
         state.isLoading = true;
       })
       .addCase(restoreAuthState.fulfilled, (state, action) => {
+        console.log("≡ƒöä restoreAuthState.fulfilled: Auth state restored, setting authChecked = true");
+        console.log("≡ƒöä restoreAuthState.fulfilled: isAuthenticated =", action.payload.isAuthenticated);
         state.isLoading = false;
         state.authChecked = true;
         if (action.payload.isAuthenticated) {
@@ -188,6 +199,7 @@ const authSlice = createSlice({
         }
       })
       .addCase(restoreAuthState.rejected, (state) => {
+        console.log("≡ƒöä restoreAuthState.rejected: Auth restoration failed, setting authChecked = true");
         state.isLoading = false;
         state.authChecked = true;
         state.isAuthenticated = false;

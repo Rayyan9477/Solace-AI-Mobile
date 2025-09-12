@@ -96,7 +96,7 @@ const AppContent = ({ children, appVersion }) => {
   }, [stage]);
 
   // Update the if condition for loading/error
-  if (isLoading || !themeLoaded || (hasError && retryCount >= 1)) { // Changed maxRetryAttempts to 1 for single retry
+  if (!themeLoaded || (hasError && retryCount >= 1)) { // Changed maxRetryAttempts to 1 for single retry
     return (
       <EnhancedLoadingScreen
         message={hasError ? 'Initialization encountered an issue. Proceed with default settings?' : getStageMessage}

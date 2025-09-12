@@ -665,10 +665,17 @@ const AppNavigator = () => {
         isAuthenticated,
         onboardingCompleted,
         isLoading,
+        authChecked,
         isDarkMode,
       });
+      console.log("≡ƒº¡ AppNavigator: Navigation decision based on:", {
+        authChecked,
+        isLoading,
+        isAuthenticated,
+        onboardingCompleted
+      });
     }
-  }, [authState, isAuthenticated, onboardingCompleted, isLoading, isDarkMode]);
+  }, [authState, isAuthenticated, onboardingCompleted, isLoading, authChecked, isDarkMode]);
 
   // Replace FallbackScreen with simple loading view
   const LoadingScreen = () => <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><Text>Loading...</Text></View>;
