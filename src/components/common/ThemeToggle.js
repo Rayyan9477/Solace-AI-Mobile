@@ -64,7 +64,9 @@ const ThemeToggle = ({ style, showLabel = true }) => {
   return (
     <View style={[styles.container, style]}>
       {showLabel && (
-        <Text style={[styles.label, { color: theme.colors.onSurface || "#111827" }]}>
+        <Text
+          style={[styles.label, { color: theme.colors.onSurface || "#111827" }]}
+        >
           {isDarkMode ? "Dark Mode" : "Light Mode"}
         </Text>
       )}
@@ -97,7 +99,7 @@ const ThemeToggle = ({ style, showLabel = true }) => {
                   fontSize: 12,
                   color: isDarkMode
                     ? theme.colors.onSurface || "#FFFFFF"
-                    : theme.colors.onSurface || "#111827"
+                    : theme.colors.onSurface || "#111827",
                 }}
               >
                 {isDarkMode ? "🌙" : "☀️"}
@@ -109,7 +111,10 @@ const ThemeToggle = ({ style, showLabel = true }) => {
 
       {showLabel && (
         <Text
-          style={[styles.description, { color: theme.colors.onSurfaceVariant || "#6B7280" }]}
+          style={[
+            styles.description,
+            { color: theme.colors.onSurfaceVariant || "#6B7280" },
+          ]}
         >
           {isDarkMode
             ? "Calming dark theme for evening use"

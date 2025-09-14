@@ -30,7 +30,10 @@ import EnhancedLoadingScreen from "./LoadingScreen/EnhancedLoadingScreen";
 import useAppInitialization, {
   INIT_STAGES,
 } from "../hooks/useAppInitialization";
-import { UnifiedThemeProvider as ThemeProvider, useTheme } from "../shared/theme/UnifiedThemeProvider";
+import {
+  UnifiedThemeProvider as ThemeProvider,
+  useTheme,
+} from "../shared/theme/UnifiedThemeProvider";
 
 /**
  * Inner App Content - Renders app content based on initialization state
@@ -96,17 +99,22 @@ const AppContent = ({ children, appVersion }) => {
   }, [stage]);
 
   // Update the if condition for loading/error
-  if (!themeLoaded || (hasError && retryCount >= 1)) { // Changed maxRetryAttempts to 1 for single retry
+  if (!themeLoaded || (hasError && retryCount >= 1)) {
+    // Changed maxRetryAttempts to 1 for single retry
     return (
       <EnhancedLoadingScreen
-        message={hasError ? 'Initialization encountered an issue. Proceed with default settings?' : getStageMessage}
+        message={
+          hasError
+            ? "Initialization encountered an issue. Proceed with default settings?"
+            : getStageMessage
+        }
         progress={progress}
         stage={stage}
         error={hasError ? error : null}
         isRetrying={isRetrying}
         loadingTime={loadingTime}
         onEmergencyPress={handleEmergencySupport}
-        onRetry={hasError ? null : retryInitialization}  // Disable retry if max attempts reached
+        onRetry={hasError ? null : retryInitialization} // Disable retry if max attempts reached
         onProceed={() => {
           // Force ready state with defaults
           // setStage(INIT_STAGES.READY); // This line was removed from the original file, so it's removed here.

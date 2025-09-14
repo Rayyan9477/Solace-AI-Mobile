@@ -30,7 +30,7 @@ class SecureStorageService {
         if (!storedKey) {
           // Generate cryptographically secure 256-bit key using CryptoJS
           const keyArray = new Uint8Array(32);
-          if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+          if (typeof crypto !== "undefined" && crypto.getRandomValues) {
             crypto.getRandomValues(keyArray);
           } else {
             // Fallback for React Native
@@ -172,7 +172,7 @@ class SecureStorageService {
       if (Platform.OS !== "web") {
         await AsyncStorage.setItem(
           `secure_${key}`,
-          JSON.stringify(secureEntry)
+          JSON.stringify(secureEntry),
         );
       } else {
         // Web fallback with warning
@@ -335,7 +335,7 @@ class SecureStorageService {
       if (Platform.OS !== "web") {
         // Clear all secure items from AsyncStorage
         const keys = await AsyncStorage.getAllKeys();
-        const secureKeys = keys.filter(key => key.startsWith("secure_"));
+        const secureKeys = keys.filter((key) => key.startsWith("secure_"));
         if (secureKeys.length > 0) {
           await AsyncStorage.multiRemove(secureKeys);
         }

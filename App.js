@@ -12,41 +12,40 @@
  */
 
 // Global polyfills - must be defined before any other imports
-if (typeof global !== 'undefined' && typeof global.compact === 'undefined') {
-  global.compact = function(arr) {
-    return arr ? arr.filter(item => item != null) : [];
-  };
-}
-
-if (typeof window !== 'undefined' && typeof window.compact === 'undefined') {
-  window.compact = function(arr) {
-    return arr ? arr.filter(item => item != null) : [];
-  };
-}
-
-// Ensure Array.prototype.compact exists
-if (typeof Array !== 'undefined' && !Array.prototype.compact) {
-  Array.prototype.compact = function() {
-    return this.filter(item => item != null);
-  };
-}
-
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useMemo, useCallback } from "react";
 import { Platform, AppState } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
 // Redux Store
 import EnhancedLoadingScreen from "./src/components/LoadingScreen/EnhancedLoadingScreen";
 import { RefactoredAppProvider } from "./src/components/RefactoredAppProvider";
 import AppNavigator from "./src/navigation/AppNavigator";
-import { store, persistor } from "./src/store/store";
-import { useDispatch } from "react-redux";
 import { restoreAuthState } from "./src/store/slices/authSlice";
+import { store, persistor } from "./src/store/store";
+
+if (typeof global !== "undefined" && typeof global.compact === "undefined") {
+  global.compact = function (arr) {
+    return arr ? arr.filter((item) => item != null) : [];
+  };
+}
+
+if (typeof window !== "undefined" && typeof window.compact === "undefined") {
+  window.compact = function (arr) {
+    return arr ? arr.filter((item) => item != null) : [];
+  };
+}
+
+// Ensure Array.prototype.compact exists
+if (typeof Array !== "undefined" && !Array.prototype.compact) {
+  Array.prototype.compact = function () {
+    return this.filter((item) => item != null);
+  };
+}
 
 // Get app version from package.json
 const APP_VERSION = "1.0.0";
@@ -60,13 +59,20 @@ const BackupAuthInitializer = ({ children }) => {
   useEffect(() => {
     // Backup initialization: dispatch restoreAuthState as fallback
     // This ensures auth state is initialized even if RefactoredAppProvider fails
-    console.log("≡ƒÜÇ BackupAuthInitializer: Starting backup auth initialization...");
+    console.log(
+      "≡ƒÜÇ BackupAuthInitializer: Starting backup auth initialization...",
+    );
     const backupInitializeAuth = async () => {
       try {
         await dispatch(restoreAuthState());
-        console.log("≡ƒÜÇ BackupAuthInitializer: Backup auth initialization completed");
+        console.log(
+          "≡ƒÜÇ BackupAuthInitializer: Backup auth initialization completed",
+        );
       } catch (error) {
-        console.error("≡ƒÜÇ BackupAuthInitializer: Backup auth initialization failed:", error);
+        console.error(
+          "≡ƒÜÇ BackupAuthInitializer: Backup auth initialization failed:",
+          error,
+        );
       }
     };
 
@@ -98,9 +104,7 @@ const AppRoot = ({ children }) => {
 
   // Log app startup
   useEffect(() => {
-    console.log(
-      "🌟 Solace AI Mobile: Starting mental health support app...",
-    );
+    console.log("🌟 Solace AI Mobile: Starting mental health support app...");
     console.log(`📊 Platform: ${Platform.OS}`);
     console.log(`📱 Version: ${APP_VERSION}`);
   }, []);
@@ -109,9 +113,7 @@ const AppRoot = ({ children }) => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <Provider store={store}>
-          <BackupAuthInitializer>
-            {children}
-          </BackupAuthInitializer>
+          <BackupAuthInitializer>{children}</BackupAuthInitializer>
         </Provider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
@@ -152,7 +154,9 @@ const NavigationWrapper = ({ children }) => {
  * Main App Component - Clean, modern, and performant
  */
 const App = () => {
-  console.log("🌟 App: Main App component rendering with RefactoredAppProvider");
+  console.log(
+    "🌟 App: Main App component rendering with RefactoredAppProvider",
+  );
   return (
     <AppRoot>
       <PersistGate loading={null} persistor={persistor}>

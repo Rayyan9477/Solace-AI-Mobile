@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
+
 import { restoreAuthState } from "../store/slices/authSlice";
 
 // Simplified initialization stages
@@ -23,7 +24,9 @@ const useAppInitialization = () => {
     console.log("≡ƒÜÇ useAppInitialization: Starting app initialization...");
     const initializeApp = async () => {
       try {
-        console.log("≡ƒöä useAppInitialization: Dispatching restoreAuthState...");
+        console.log(
+          "≡ƒöä useAppInitialization: Dispatching restoreAuthState...",
+        );
         // Restore authentication state from storage
         await dispatch(restoreAuthState());
         console.log("≡ƒöä useAppInitialization: restoreAuthState completed");
@@ -33,7 +36,6 @@ const useAppInitialization = () => {
           setStage(INIT_STAGES.READY);
           console.log("✅ App initialized and ready.");
         }, 500); // A short delay can help prevent race conditions
-
       } catch (error) {
         console.error("❌ App initialization failed:", error);
         // Even if initialization fails, we move to ready to avoid a blank screen.

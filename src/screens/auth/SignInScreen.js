@@ -18,11 +18,10 @@ import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
 import { FreudLogo, ThemedFreudIcon } from "../../components/icons/FreudIcons";
 import FreudButton from "../../components/ui/FreudButton";
 import { useTheme } from "../../shared/theme/ThemeContext";
-import { freudTheme } from "../../shared/theme/freudTheme";
 
 const { width } = Dimensions.get("window");
 
-const SignInScreen = ({ navigation }) => {
+const SignInScreen = ({ navigation, onSignIn = () => {} }) => {
   const { theme, isDarkMode } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

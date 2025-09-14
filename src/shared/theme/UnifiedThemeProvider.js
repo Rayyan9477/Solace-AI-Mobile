@@ -143,10 +143,10 @@ export const UnifiedThemeProvider = ({ children }) => {
 
   // Load saved preferences (non-blocking)
   useEffect(() => {
-    loadThemePreferences().catch(error => {
+    loadThemePreferences().catch((error) => {
       console.warn("⚠️ Failed to load theme preferences:", error);
     });
-    setupAccessibilityListeners().catch(error => {
+    setupAccessibilityListeners().catch((error) => {
       console.warn("⚠️ Failed to setup accessibility listeners:", error);
     });
   }, []);
@@ -348,7 +348,9 @@ export const useTheme = () => {
   const context = useContext(UnifiedThemeContext);
   if (!context) {
     // Provide fallback theme to prevent blank screens
-    console.warn("useTheme called outside UnifiedThemeProvider, using fallback theme");
+    console.warn(
+      "useTheme called outside UnifiedThemeProvider, using fallback theme",
+    );
     return {
       theme: optimizedLightTheme,
       isDarkMode: false,

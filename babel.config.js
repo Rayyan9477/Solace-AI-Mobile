@@ -5,10 +5,13 @@ module.exports = function (api) {
     plugins: [
       "react-native-reanimated/plugin",
       // Add transform runtime for better compatibility
-      ["@babel/plugin-transform-runtime", {
-        "helpers": true,
-        "regenerator": true
-      }],
+      [
+        "@babel/plugin-transform-runtime",
+        {
+          helpers: true,
+          regenerator: true,
+        },
+      ],
       // Add web-specific transformations
       ...(process.env.EXPO_PLATFORM === "web"
         ? [

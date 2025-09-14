@@ -25,11 +25,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 // Optimized Components
 import DailyInsights from "../components/dashboard/DailyInsights";
-import MoodCheckIn from "../components/dashboard/MoodCheckIn";
-import ProgressOverview from "../components/dashboard/ProgressOverview";
-import QuickActions from "../components/dashboard/QuickActions";
-import RecentActivity from "../components/dashboard/RecentActivity";
-import WelcomeHeader from "../components/dashboard/WelcomeHeader";
 import DailyTipCard from "../components/dashboard/DailyTipCard";
 import {
   WelcomeSection,
@@ -39,6 +34,11 @@ import {
   ProgressSection,
   ActivitySection,
 } from "../components/dashboard/DashboardSection";
+import MoodCheckIn from "../components/dashboard/MoodCheckIn";
+import ProgressOverview from "../components/dashboard/ProgressOverview";
+import QuickActions from "../components/dashboard/QuickActions";
+import RecentActivity from "../components/dashboard/RecentActivity";
+import WelcomeHeader from "../components/dashboard/WelcomeHeader";
 import { TherapyFAB } from "../components/ui/FloatingActionButton";
 
 // Theme and Design System
@@ -90,7 +90,7 @@ const TipRefreshHandler = memo(({ onRefresh }) => {
   return { onRefresh };
 });
 
-TipRefreshHandler.displayName = 'TipRefreshHandler';
+TipRefreshHandler.displayName = "TipRefreshHandler";
 
 const MainAppScreen = memo(() => {
   const navigation = useNavigation();
@@ -357,7 +357,7 @@ const MainAppScreen = memo(() => {
   );
 });
 
-MainAppScreen.displayName = 'MainAppScreen';
+MainAppScreen.displayName = "MainAppScreen";
 
 const styles = StyleSheet.create({
   container: {
@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
   },
 });
 
-MainAppScreen.displayName = 'MainAppScreen';
+MainAppScreen.displayName = "MainAppScreen";
 
 export default withErrorBoundary(MainAppScreen, {
   fallback: ({ error, retry, goHome }) => (

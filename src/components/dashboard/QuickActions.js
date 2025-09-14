@@ -117,68 +117,73 @@ const QuickActionButton = memo(({ action, onPress, isDarkMode }) => {
   );
 });
 
-QuickActionButton.displayName = 'QuickActionButton';
+QuickActionButton.displayName = "QuickActionButton";
 
-const QuickActions = memo(({ onStartChat, onTakeAssessment, onMoodTracker }) => {
-  const { theme, isDarkMode } = useTheme();
+const QuickActions = memo(
+  ({ onStartChat, onTakeAssessment, onMoodTracker }) => {
+    const { theme, isDarkMode } = useTheme();
 
-  // Memoize action handlers to prevent recreation
-  const actionHandlers = useMemo(() => ({
-    chat: onStartChat,
-    assessment: onTakeAssessment,
-    mood: onMoodTracker,
-  }), [onStartChat, onTakeAssessment, onMoodTracker]);
+    // Memoize action handlers to prevent recreation
+    const actionHandlers = useMemo(
+      () => ({
+        chat: onStartChat,
+        assessment: onTakeAssessment,
+        mood: onMoodTracker,
+      }),
+      [onStartChat, onTakeAssessment, onMoodTracker],
+    );
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <MentalHealthIcon
-          name="Therapy"
-          size={24}
-          color={FreudColors.mindfulBrown[70]}
-        />
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <MentalHealthIcon
+            name="Therapy"
+            size={24}
+            color={FreudColors.mindfulBrown[70]}
+          />
+          <Text
+            style={[
+              styles.title,
+              {
+                color: isDarkMode
+                  ? FreudDesignSystem.themes.dark.colors.text.primary
+                  : FreudDesignSystem.themes.light.colors.text.primary,
+              },
+            ]}
+          >
+            Quick Wellness Actions
+          </Text>
+        </View>
+
         <Text
           style={[
-            styles.title,
+            styles.subtitle,
             {
               color: isDarkMode
-                ? FreudDesignSystem.themes.dark.colors.text.primary
-                : FreudDesignSystem.themes.light.colors.text.primary,
+                ? FreudDesignSystem.themes.dark.colors.text.secondary
+                : FreudDesignSystem.themes.light.colors.text.secondary,
             },
           ]}
         >
-          Quick Wellness Actions
+          Choose what feels right for you today
         </Text>
+
+        <View style={styles.actionsGrid}>
+          {QUICK_ACTIONS.map((action, index) => (
+            <QuickActionButton
+              key={action.id}
+              action={action}
+              onPress={actionHandlers[action.id]}
+              isDarkMode={isDarkMode}
+            />
+          ))}
+        </View>
       </View>
+    );
+  },
+);
 
-      <Text
-        style={[
-          styles.subtitle,
-          {
-            color: isDarkMode
-              ? FreudDesignSystem.themes.dark.colors.text.secondary
-              : FreudDesignSystem.themes.light.colors.text.secondary,
-          },
-        ]}
-      >
-        Choose what feels right for you today
-      </Text>
-
-      <View style={styles.actionsGrid}>
-        {QUICK_ACTIONS.map((action, index) => (
-          <QuickActionButton
-            key={action.id}
-            action={action}
-            onPress={actionHandlers[action.id]}
-            isDarkMode={isDarkMode}
-          />
-        ))}
-      </View>
-    </View>
-  );
-});
-
-QuickActions.displayName = 'QuickActions';
+QuickActions.displayName = "QuickActions";
 
 const styles = StyleSheet.create({
   container: {
@@ -253,6 +258,6 @@ const styles = StyleSheet.create({
   },
 });
 
-QuickActions.displayName = 'QuickActions';
+QuickActions.displayName = "QuickActions";
 
 export default QuickActions;

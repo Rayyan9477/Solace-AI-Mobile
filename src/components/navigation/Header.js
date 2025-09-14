@@ -1,9 +1,10 @@
-import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '../../shared/theme/ThemeContext';
-import Icon from '../common/Icon';
-import Avatar from '../common/Avatar';
+import { useNavigation } from "@react-navigation/native";
+import React from "react";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+
+import { useTheme } from "../../shared/theme/ThemeContext";
+import Avatar from "../common/Avatar";
+import Icon from "../common/Icon";
 
 const Header = ({
   title,
@@ -31,7 +32,7 @@ const Header = ({
           <Pressable
             onPress={() => navigation.goBack()}
             style={styles.backButton}
-            accessible={true}
+            accessible
             accessibilityRole="button"
             accessibilityLabel="Go back"
             accessibilityHint="Double tap to go back"
@@ -46,10 +47,7 @@ const Header = ({
       </View>
 
       <Text
-        style={[
-          styles.title,
-          { color: theme.colors.text.primary },
-        ]}
+        style={[styles.title, { color: theme.colors.text.primary }]}
         numberOfLines={1}
       >
         {title}
@@ -59,17 +57,13 @@ const Header = ({
         {rightAction}
         {showProfile && (
           <Pressable
-            onPress={() => navigation.navigate('Profile')}
-            accessible={true}
+            onPress={() => navigation.navigate("Profile")}
+            accessible
             accessibilityRole="button"
             accessibilityLabel="Go to profile"
             accessibilityHint="Double tap to activate"
           >
-            <Avatar
-              size="small"
-              name="John Doe"
-              style={styles.avatar}
-            />
+            <Avatar size="small" name="John Doe" style={styles.avatar} />
           </Pressable>
         )}
       </View>
@@ -79,16 +73,16 @@ const Header = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     height: 56,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
   },
   leftAction: {
     flex: 1,
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
   },
   backButton: {
     padding: 8,
@@ -97,14 +91,14 @@ const styles = StyleSheet.create({
   title: {
     flex: 2,
     fontSize: 18,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
   },
   rightAction: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   avatar: {
     marginLeft: 8,

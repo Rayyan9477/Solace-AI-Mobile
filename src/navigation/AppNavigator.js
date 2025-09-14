@@ -17,27 +17,20 @@ import { useSelector } from "react-redux";
 
 // Light Mode Screens
 import CoverPageScreen from "../screens/CoverPageScreen";
-import DarkModeShowcaseScreen from "../screens/DarkModeShowcaseScreen";
 import DarkSplashScreen from "../screens/DarkSplashScreen";
 import DarkWelcomeScreen from "../screens/DarkWelcomeScreen";
 import DesignSystemScreen from "../screens/DesignSystemScreen";
-import IconTestScreen from "../screens/IconTestScreen";
 import MainAppScreen from "../screens/MainAppScreen";
 import SplashScreen from "../screens/SplashScreen";
 import AssessmentScreen from "../screens/assessment/AssessmentScreen";
 import DarkComprehensiveAssessmentScreen from "../screens/assessment/DarkComprehensiveAssessmentScreen";
-import DarkForgotPasswordScreen from "../screens/auth/DarkForgotPasswordScreen";
-import DarkSignInScreen from "../screens/auth/DarkSignInScreen";
-import DarkSignUpScreen from "../screens/auth/DarkSignUpScreen";
 import ForgotPasswordScreen from "../screens/auth/ForgotPasswordScreen";
 import OnboardingScreen from "../screens/auth/OnboardingScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
 import SignInScreen from "../screens/auth/SignInScreen";
 import SimpleOnboardingScreen from "../screens/auth/SimpleOnboardingScreen";
 import ChatScreen from "../screens/chat/ChatScreen";
-import DarkAITherapyChatScreen from "../screens/chat/DarkAITherapyChatScreen";
 import EnhancedChatScreen from "../screens/chat/EnhancedChatScreen";
-import DarkCommunitySupportScreen from "../screens/community/DarkCommunitySupportScreen";
 import DashboardScreen from "../screens/dashboard/DashboardScreen";
 
 // Wellness Light Mode Screens
@@ -47,8 +40,6 @@ import DashboardScreen from "../screens/dashboard/DashboardScreen";
 // Dark Mode Authentication
 
 // Dark Mode Main Screens
-import DarkHomeScreen from "../screens/home/DarkHomeScreen";
-import DarkMentalHealthScoreScreen from "../screens/home/DarkMentalHealthScoreScreen";
 import DarkMentalHealthJournalScreen from "../screens/journal/DarkMentalHealthJournalScreen";
 import JournalScreen from "../screens/journal/JournalScreen";
 
@@ -57,10 +48,7 @@ import JournalScreen from "../screens/journal/JournalScreen";
 // Dark Mode Wellness
 import DarkMindfulHoursScreen from "../screens/mindfulness/DarkMindfulHoursScreen";
 import DarkMindfulResourcesScreen from "../screens/mindfulness/DarkMindfulResourcesScreen";
-import DarkMoodTrackerScreen from "../screens/mood/DarkMoodTrackerScreen";
 import EnhancedMoodTrackerScreen from "../screens/mood/EnhancedMoodTrackerScreen";
-import DarkProfileSettingsScreen from "../screens/profile/DarkProfileSettingsScreen";
-import DarkProfileSetupScreen from "../screens/profile/DarkProfileSetupScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 import ProfileSetupScreen from "../screens/profile/ProfileSetupScreen";
 import DarkSearchScreen from "../screens/search/DarkSearchScreen";
@@ -68,7 +56,6 @@ import SearchScreen from "../screens/search/SearchScreen";
 import DarkSmartNotificationsScreen from "../screens/settings/DarkSmartNotificationsScreen";
 import NotificationsScreen from "../screens/settings/NotificationsScreen";
 import TherapyScreen from "../screens/therapy/TherapyScreen";
-import TherapyTestScreen from "../screens/therapy/TherapyTestScreen";
 import ErrorUtilitiesScreen from "../screens/utils/ErrorUtilitiesScreen";
 import DarkSleepQualityScreen from "../screens/wellness/DarkSleepQualityScreen";
 import DarkStressManagementScreen from "../screens/wellness/DarkStressManagementScreen";
@@ -97,7 +84,11 @@ const getThemeAwareScreen = (lightScreen, darkScreen, isDarkMode) => {
   } catch (error) {
     console.error("🚨 Error in getThemeAwareScreen:", error);
     // Return a simple placeholder instead of FallbackScreen
-    return () => <View><Text>Loading Screen...</Text></View>;
+    return () => (
+      <View>
+        <Text>Loading Screen...</Text>
+      </View>
+    );
   }
 };
 
@@ -242,29 +233,17 @@ const AuthStack = () => {
     >
       <Stack.Screen
         name="SignIn"
-        component={getThemeAwareScreen(
-          SignInScreen,
-          DarkSignInScreen,
-          isDarkMode,
-        )}
+        component={SignInScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Register"
-        component={getThemeAwareScreen(
-          RegisterScreen,
-          DarkSignUpScreen,
-          isDarkMode,
-        )}
+        component={RegisterScreen}
         options={{ title: "Create Account" }}
       />
       <Stack.Screen
         name="ForgotPassword"
-        component={getThemeAwareScreen(
-          ForgotPasswordScreen,
-          DarkForgotPasswordScreen,
-          isDarkMode,
-        )}
+        component={ForgotPasswordScreen}
         options={{ title: "Reset Password" }}
       />
     </Stack.Navigator>
@@ -288,11 +267,7 @@ const ProfileStack = () => {
     >
       <Stack.Screen
         name="ProfileMain"
-        component={getThemeAwareScreen(
-          ProfileScreen,
-          DarkProfileSettingsScreen,
-          isDarkMode,
-        )}
+        component={ProfileScreen}
         options={{ title: "Profile" }}
       />
       <Stack.Screen
@@ -311,11 +286,7 @@ const ProfileStack = () => {
       />
       <Stack.Screen
         name="ProfileSetup"
-        component={getThemeAwareScreen(
-          ProfileSetupScreen,
-          DarkProfileSetupScreen,
-          isDarkMode,
-        )}
+        component={ProfileSetupScreen}
         options={{ title: "Complete Profile", headerShown: false }}
       />
     </Stack.Navigator>
@@ -379,11 +350,6 @@ const WellnessStack = () => {
         options={{ title: "Therapy Session", headerShown: false }}
       />
       <Stack.Screen
-        name="TherapyTest"
-        component={TherapyTestScreen}
-        options={{ title: "Therapy System Test", headerShown: false }}
-      />
-      <Stack.Screen
         name="Community"
         component={getThemeAwareScreen(
           ChatScreen,
@@ -433,11 +399,6 @@ const UtilityStack = () => {
         name="ErrorUtilities"
         component={ErrorUtilitiesScreen}
         options={{ title: "Help & Support", headerShown: false }}
-      />
-      <Stack.Screen
-        name="DarkModeShowcase"
-        component={DarkModeShowcaseScreen}
-        options={{ title: "Dark Mode Demo", headerShown: false }}
       />
     </Stack.Navigator>
   );
@@ -539,11 +500,7 @@ const MainTabs = () => {
       />
       <Tab.Screen
         name="Home"
-        component={getThemeAwareScreen(
-          MainAppScreen,
-          DarkHomeScreen,
-          isDarkMode,
-        )}
+        component={MainAppScreen}
         options={{
           title: "Dashboard",
           tabBarLabel: "Home",
@@ -557,11 +514,7 @@ const MainTabs = () => {
       />
       <Tab.Screen
         name="Chat"
-        component={getThemeAwareScreen(
-          EnhancedChatScreen,
-          DarkAITherapyChatScreen,
-          isDarkMode,
-        )}
+        component={EnhancedChatScreen}
         options={{
           title: "Chat",
           tabBarLabel: "Chat",
@@ -574,11 +527,7 @@ const MainTabs = () => {
       />
       <Tab.Screen
         name="Mood"
-        component={getThemeAwareScreen(
-          EnhancedMoodTrackerScreen,
-          DarkMoodTrackerScreen,
-          isDarkMode,
-        )}
+        component={EnhancedMoodTrackerScreen}
         options={{
           title: "Mood",
           tabBarLabel: "Mood",
@@ -655,7 +604,8 @@ const MainTabs = () => {
 
 const AppNavigator = () => {
   const authState = useSelector((state) => state.auth);
-  const { isAuthenticated, onboardingCompleted, isLoading, authChecked } = authState || {};
+  const { isAuthenticated, onboardingCompleted, isLoading, authChecked } =
+    authState || {};
   const { isDarkMode } = useTheme();
 
   // Simplified navigation state logging (removed complex testing that could interfere)
@@ -672,33 +622,78 @@ const AppNavigator = () => {
         authChecked,
         isLoading,
         isAuthenticated,
-        onboardingCompleted
+        onboardingCompleted,
       });
     }
-  }, [authState, isAuthenticated, onboardingCompleted, isLoading, authChecked, isDarkMode]);
+  }, [
+    authState,
+    isAuthenticated,
+    onboardingCompleted,
+    isLoading,
+    authChecked,
+    isDarkMode,
+  ]);
 
   // Replace FallbackScreen with simple loading view
-  const LoadingScreen = () => <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><Text>Loading...</Text></View>;
+  const LoadingScreen = () => (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>Loading...</Text>
+    </View>
+  );
 
   // Remove forcing and restore proper logic
   const renderScreen = () => {
     if (!authChecked) {
-      return <Stack.Screen name="AuthLoading" component={LoadingScreen} options={{ headerShown: false }} />;
+      return (
+        <Stack.Screen
+          name="AuthLoading"
+          component={LoadingScreen}
+          options={{ headerShown: false }}
+        />
+      );
     }
 
     if (isLoading) {
-      return <Stack.Screen name="AuthLoading" component={LoadingScreen} options={{ headerShown: false }} />;
+      return (
+        <Stack.Screen
+          name="AuthLoading"
+          component={LoadingScreen}
+          options={{ headerShown: false }}
+        />
+      );
     }
 
     if (!isAuthenticated) {
-      return <Stack.Screen name="Auth" component={AuthStack} options={{ headerShown: false }} />;
+      return (
+        <Stack.Screen
+          name="Auth"
+          component={AuthStack}
+          options={{ headerShown: false }}
+        />
+      );
     }
 
     if (!onboardingCompleted) {
-      return <Stack.Screen name="Onboarding" component={getThemeAwareScreen(OnboardingScreen, DarkWelcomeScreen, isDarkMode)} options={{ headerShown: false }} />;
+      return (
+        <Stack.Screen
+          name="Onboarding"
+          component={getThemeAwareScreen(
+            OnboardingScreen,
+            DarkWelcomeScreen,
+            isDarkMode,
+          )}
+          options={{ headerShown: false }}
+        />
+      );
     }
 
-    return <Stack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />;
+    return (
+      <Stack.Screen
+        name="Main"
+        component={MainTabs}
+        options={{ headerShown: false }}
+      />
+    );
   };
 
   return (
@@ -707,7 +702,7 @@ const AppNavigator = () => {
         screenOptions={{
           headerShown: false,
           gestureEnabled: true,
-          animationEnabled: true
+          animationEnabled: true,
         }}
       >
         {renderScreen()}

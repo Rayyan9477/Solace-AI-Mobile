@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useRef, memo, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  memo,
+  useMemo,
+  useCallback,
+} from "react";
 import {
   View,
   Text,
@@ -137,43 +144,120 @@ const MoodButton = memo(({ mood, isSelected, onPress, isDarkMode }) => {
   );
 });
 
-MoodButton.displayName = 'MoodButton';
+MoodButton.displayName = "MoodButton";
 
-const MoodCheckIn = memo(({
-  currentMood,
-  onCheckIn,
-  compact = false,
-  disabled = false,
-}) => {
-  const { theme, isDarkMode } = useTheme();
-  const [selectedMood, setSelectedMood] = useState(currentMood);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+const MoodCheckIn = memo(
+  ({ currentMood, onCheckIn, compact = false, disabled = false }) => {
+    const { theme, isDarkMode } = useTheme();
+    const [selectedMood, setSelectedMood] = useState(currentMood);
+    const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    // Gentle entrance animation
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 600,
-      useNativeDriver: true,
-    }).start();
-  }, []);
+    useEffect(() => {
+      // Gentle entrance animation
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }).start();
+    }, []);
 
-  // Memoize mood selection handler
-  const handleMoodSelect = useCallback((mood) => {
-    setSelectedMood(mood.id);
-    onCheckIn?.(mood.id, mood);
-  }, [onCheckIn]);
+    // Memoize mood selection handler
+    const handleMoodSelect = useCallback(
+      (mood) => {
+        setSelectedMood(mood.id);
+        onCheckIn?.(mood.id, mood);
+      },
+      [onCheckIn],
+    );
 
-  // Memoize selected mood info to prevent recalculation
-  const selectedMoodInfo = useMemo(() => {
-    return MOOD_OPTIONS.find((m) => m.id === selectedMood);
-  }, [selectedMood]);
+    // Memoize selected mood info to prevent recalculation
+    const selectedMoodInfo = useMemo(() => {
+      return MOOD_OPTIONS.find((m) => m.id === selectedMood);
+    }, [selectedMood]);
 
-  // Compact version for dashboard
-  if (compact) {
+    // Compact version for dashboard
+    if (compact) {
+      return (
+        <Animated.View style={[styles.compactContainer, { opacity: fadeAnim }]}>
+          <View style={styles.compactMoodGrid}>
+            {MOOD_OPTIONS.map((mood) => (
+              <MoodButton
+                key={mood.id}
+                mood={mood}
+                isSelected={selectedMood === mood.id}
+                onPress={handleMoodSelect}
+                isDarkMode={isDarkMode}
+              />
+            ))}
+          </View>
+
+          {selectedMood && selectedMoodInfo && (
+            <View style={styles.selectedMoodDisplay}>
+              <OptimizedGradient
+                variant="serenity"
+                style={styles.selectedMoodGradient}
+              >
+                <MentalHealthIcon
+                  name="Heart"
+                  size={16}
+                  color={FreudColors.serenityGreen[70]}
+                />
+                <Text
+                  style={[
+                    styles.selectedMoodText,
+                    {
+                      color: isDarkMode
+                        ? FreudDesignSystem.themes.dark.colors.text.primary
+                        : FreudDesignSystem.themes.light.colors.text.primary,
+                    },
+                  ]}
+                >
+                  Feeling {selectedMoodInfo.label.toLowerCase()}
+                </Text>
+              </OptimizedGradient>
+            </View>
+          )}
+        </Animated.View>
+      );
+    }
+
+    // Full version for dedicated mood tracking
     return (
-      <Animated.View style={[styles.compactContainer, { opacity: fadeAnim }]}>
-        <View style={styles.compactMoodGrid}>
+      <Animated.View style={[styles.fullContainer, { opacity: fadeAnim }]}>
+        <View style={styles.header}>
+          <MentalHealthIcon
+            name="Heart"
+            size={24}
+            color={FreudColors.mindfulBrown[70]}
+          />
+          <Text
+            style={[
+              styles.title,
+              {
+                color: isDarkMode
+                  ? FreudDesignSystem.themes.dark.colors.text.primary
+                  : FreudDesignSystem.themes.light.colors.text.primary,
+              },
+            ]}
+          >
+            How are you feeling?
+          </Text>
+        </View>
+
+        <Text
+          style={[
+            styles.subtitle,
+            {
+              color: isDarkMode
+                ? FreudDesignSystem.themes.dark.colors.text.secondary
+                : FreudDesignSystem.themes.light.colors.text.secondary,
+            },
+          ]}
+        >
+          Tap the mood that best describes how you feel right now
+        </Text>
+
+        <View style={styles.fullMoodGrid}>
           {MOOD_OPTIONS.map((mood) => (
             <MoodButton
               key={mood.id}
@@ -187,121 +271,50 @@ const MoodCheckIn = memo(({
 
         {selectedMood && selectedMoodInfo && (
           <View style={styles.selectedMoodDisplay}>
-            <OptimizedGradient variant="serenity" style={styles.selectedMoodGradient}>
+            <OptimizedGradient
+              variant="serenity"
+              style={styles.selectedMoodGradient}
+            >
               <MentalHealthIcon
-                name="Heart"
-                size={16}
+                name="Insights"
+                size={20}
                 color={FreudColors.serenityGreen[70]}
               />
-              <Text
-                style={[
-                  styles.selectedMoodText,
-                  {
-                    color: isDarkMode
-                      ? FreudDesignSystem.themes.dark.colors.text.primary
-                      : FreudDesignSystem.themes.light.colors.text.primary,
-                  },
-                ]}
-              >
-                Feeling {selectedMoodInfo.label.toLowerCase()}
-              </Text>
+              <View style={styles.selectedMoodInfo}>
+                <Text
+                  style={[
+                    styles.selectedMoodLabel,
+                    {
+                      color: isDarkMode
+                        ? FreudDesignSystem.themes.dark.colors.text.primary
+                        : FreudDesignSystem.themes.light.colors.text.primary,
+                    },
+                  ]}
+                >
+                  You're feeling {selectedMoodInfo.label.toLowerCase()}
+                </Text>
+                <Text
+                  style={[
+                    styles.selectedMoodDescription,
+                    {
+                      color: isDarkMode
+                        ? FreudDesignSystem.themes.dark.colors.text.secondary
+                        : FreudDesignSystem.themes.light.colors.text.secondary,
+                    },
+                  ]}
+                >
+                  {selectedMoodInfo.description}
+                </Text>
+              </View>
             </OptimizedGradient>
           </View>
         )}
       </Animated.View>
     );
-  }
+  },
+);
 
-  // Full version for dedicated mood tracking
-  return (
-    <Animated.View style={[styles.fullContainer, { opacity: fadeAnim }]}>
-      <View style={styles.header}>
-        <MentalHealthIcon
-          name="Heart"
-          size={24}
-          color={FreudColors.mindfulBrown[70]}
-        />
-        <Text
-          style={[
-            styles.title,
-            {
-              color: isDarkMode
-                ? FreudDesignSystem.themes.dark.colors.text.primary
-                : FreudDesignSystem.themes.light.colors.text.primary,
-            },
-          ]}
-        >
-          How are you feeling?
-        </Text>
-      </View>
-
-      <Text
-        style={[
-          styles.subtitle,
-          {
-            color: isDarkMode
-              ? FreudDesignSystem.themes.dark.colors.text.secondary
-              : FreudDesignSystem.themes.light.colors.text.secondary,
-          },
-        ]}
-      >
-        Tap the mood that best describes how you feel right now
-      </Text>
-
-      <View style={styles.fullMoodGrid}>
-        {MOOD_OPTIONS.map((mood) => (
-          <MoodButton
-            key={mood.id}
-            mood={mood}
-            isSelected={selectedMood === mood.id}
-            onPress={handleMoodSelect}
-            isDarkMode={isDarkMode}
-          />
-        ))}
-      </View>
-
-      {selectedMood && selectedMoodInfo && (
-        <View style={styles.selectedMoodDisplay}>
-          <OptimizedGradient variant="serenity" style={styles.selectedMoodGradient}>
-            <MentalHealthIcon
-              name="Insights"
-              size={20}
-              color={FreudColors.serenityGreen[70]}
-            />
-            <View style={styles.selectedMoodInfo}>
-              <Text
-                style={[
-                  styles.selectedMoodLabel,
-                  {
-                    color: isDarkMode
-                      ? FreudDesignSystem.themes.dark.colors.text.primary
-                      : FreudDesignSystem.themes.light.colors.text.primary,
-                  },
-                ]}
-              >
-                You're feeling {selectedMoodInfo.label.toLowerCase()}
-              </Text>
-              <Text
-                style={[
-                  styles.selectedMoodDescription,
-                  {
-                    color: isDarkMode
-                      ? FreudDesignSystem.themes.dark.colors.text.secondary
-                      : FreudDesignSystem.themes.light.colors.text.secondary,
-                  },
-                ]}
-              >
-                {selectedMoodInfo.description}
-              </Text>
-            </View>
-          </OptimizedGradient>
-        </View>
-      )}
-    </Animated.View>
-  );
-});
-
-MoodCheckIn.displayName = 'MoodCheckIn';
+MoodCheckIn.displayName = "MoodCheckIn";
 
 const styles = StyleSheet.create({
   // Compact version styles
@@ -412,7 +425,7 @@ const styles = StyleSheet.create({
   },
 });
 
-MoodCheckIn.displayName = 'MoodCheckIn';
+MoodCheckIn.displayName = "MoodCheckIn";
 
 export default MoodCheckIn;
 

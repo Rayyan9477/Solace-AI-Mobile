@@ -7,11 +7,11 @@ const simpleEncrypt = (data, key) => {
   const dataStr = JSON.stringify(data);
   const keyBytes = key.split("").map((c) => c.charCodeAt(0));
   const dataBytes = dataStr.split("").map((c) => c.charCodeAt(0));
-  
+
   const encrypted = dataBytes.map(
     (byte, i) => byte ^ keyBytes[i % keyBytes.length],
   );
-  
+
   return btoa(String.fromCharCode(...encrypted));
 };
 
@@ -20,11 +20,11 @@ const simpleDecrypt = (encryptedData, key) => {
   const encryptedBytes = Array.from(atob(encryptedData)).map((c) =>
     c.charCodeAt(0),
   );
-  
+
   const decrypted = encryptedBytes.map(
     (byte, i) => byte ^ keyBytes[i % keyBytes.length],
   );
-  
+
   const decryptedStr = String.fromCharCode(...decrypted);
   return JSON.parse(decryptedStr);
 };
@@ -81,8 +81,9 @@ const secureTokenManager = {
       let key = await AsyncStorage.getItem(ENCRYPTION_KEY);
       if (!key) {
         // Generate a simple encryption key
-        key = Math.random().toString(36).substring(2, 15) + 
-              Math.random().toString(36).substring(2, 15);
+        key =
+          Math.random().toString(36).substring(2, 15) +
+          Math.random().toString(36).substring(2, 15);
         await AsyncStorage.setItem(ENCRYPTION_KEY, key);
       }
       return key;

@@ -8,7 +8,6 @@ import {
   Animated,
 } from "react-native";
 
-import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
 import FreudDesignSystem, {
   FreudColors,
   FreudSpacing,
@@ -16,77 +15,87 @@ import FreudDesignSystem, {
   FreudShadows,
   FreudBorderRadius,
 } from "../../shared/theme/FreudDesignSystem";
+import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
 import { OptimizedGradient } from "../ui/OptimizedGradients";
 
-const WelcomeHeader = memo(({
-  greeting,
-  userName,
-  onProfilePress,
-  onEmergencyPress,
-}) => {
-  const { theme, isDarkMode, isReducedMotionEnabled } = useTheme();
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(-20)).current;
+const WelcomeHeader = memo(
+  ({ greeting, userName, onProfilePress, onEmergencyPress }) => {
+    const { theme, isDarkMode, isReducedMotionEnabled } = useTheme();
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const slideAnim = useRef(new Animated.Value(-20)).current;
 
-  useEffect(() => {
-    if (isReducedMotionEnabled) {
-      // Skip animations for reduced motion
-      fadeAnim.setValue(1);
-      slideAnim.setValue(0);
-      return;
-    }
+    useEffect(() => {
+      if (isReducedMotionEnabled) {
+        // Skip animations for reduced motion
+        fadeAnim.setValue(1);
+        slideAnim.setValue(0);
+        return;
+      }
 
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [fadeAnim, slideAnim, isReducedMotionEnabled]);
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }, [fadeAnim, slideAnim, isReducedMotionEnabled]);
 
-  // Memoize time-based elements to prevent unnecessary recalculations
-  const timeBasedEmoji = useMemo(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "🌅";
-    if (hour < 17) return "☀️";
-    return "🌙";
-  }, []);
+    // Memoize time-based elements to prevent unnecessary recalculations
+    const timeBasedEmoji = useMemo(() => {
+      const hour = new Date().getHours();
+      if (hour < 12) return "🌅";
+      if (hour < 17) return "☀️";
+      return "🌙";
+    }, []);
 
-  // Memoize callback handlers
-  const handleProfilePress = useCallback(() => {
-    onProfilePress?.();
-  }, [onProfilePress]);
+    // Memoize callback handlers
+    const handleProfilePress = useCallback(() => {
+      onProfilePress?.();
+    }, [onProfilePress]);
 
-  const handleEmergencyPress = useCallback(() => {
-    onEmergencyPress?.();
-  }, [onEmergencyPress]);
+    const handleEmergencyPress = useCallback(() => {
+      onEmergencyPress?.();
+    }, [onEmergencyPress]);
 
-  // Memoize styles based on theme
-  const styles = useMemo(() => createStyles(isDarkMode), [isDarkMode]);
+    // Memoize styles based on theme
+    const styles = useMemo(() => createStyles(isDarkMode), [isDarkMode]);
 
-  return (
-    <View style={styles.container}>
-      <OptimizedGradient variant="subtle" style={styles.backgroundGradient}>
-        <Animated.View
-          style={[
-            styles.mainContent,
-            {
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }],
-            },
-          ]}
-        >
-          <View style={styles.greetingContainer}>
-            <Text style={styles.timeEmoji}>{timeBasedEmoji}</Text>
+    return (
+      <View style={styles.container}>
+        <OptimizedGradient variant="subtle" style={styles.backgroundGradient}>
+          <Animated.View
+            style={[
+              styles.mainContent,
+              {
+                opacity: fadeAnim,
+                transform: [{ translateY: slideAnim }],
+              },
+            ]}
+          >
+            <View style={styles.greetingContainer}>
+              <Text style={styles.timeEmoji}>{timeBasedEmoji}</Text>
+              <Text
+                style={[
+                  styles.greeting,
+                  {
+                    color: isDarkMode
+                      ? FreudDesignSystem.themes.dark.colors.text.primary
+                      : FreudDesignSystem.themes.light.colors.text.primary,
+                  },
+                ]}
+              >
+                {greeting}
+              </Text>
+            </View>
             <Text
               style={[
-                styles.greeting,
+                styles.userName,
                 {
                   color: isDarkMode
                     ? FreudDesignSystem.themes.dark.colors.text.primary
@@ -94,72 +103,60 @@ const WelcomeHeader = memo(({
                 },
               ]}
             >
-              {greeting}
+              {userName}
             </Text>
-          </View>
-          <Text
+            <Text
+              style={[
+                styles.subtitle,
+                {
+                  color: isDarkMode
+                    ? FreudDesignSystem.themes.dark.colors.text.secondary
+                    : FreudDesignSystem.themes.light.colors.text.secondary,
+                },
+              ]}
+            >
+              How are you feeling today?
+            </Text>
+          </Animated.View>
+
+          <Animated.View
             style={[
-              styles.userName,
+              styles.headerActions,
               {
-                color: isDarkMode
-                  ? FreudDesignSystem.themes.dark.colors.text.primary
-                  : FreudDesignSystem.themes.light.colors.text.primary,
+                opacity: fadeAnim,
+                transform: [{ translateY: slideAnim }],
               },
             ]}
           >
-            {userName}
-          </Text>
-          <Text
-            style={[
-              styles.subtitle,
-              {
-                color: isDarkMode
-                  ? FreudDesignSystem.themes.dark.colors.text.secondary
-                  : FreudDesignSystem.themes.light.colors.text.secondary,
-              },
-            ]}
-          >
-            How are you feeling today?
-          </Text>
-        </Animated.View>
+            <TouchableOpacity
+              onPress={handleProfilePress}
+              style={styles.avatarButton}
+              testID="profile-button"
+              accessibilityLabel="View Profile"
+              accessibilityHint="Double tap to view your profile"
+            >
+              <Text style={styles.avatarText}>
+                {userName.charAt(0).toUpperCase()}
+              </Text>
+            </TouchableOpacity>
 
-        <Animated.View
-          style={[
-            styles.headerActions,
-            {
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }],
-            },
-          ]}
-        >
-          <TouchableOpacity
-            onPress={handleProfilePress}
-            style={styles.avatarButton}
-            testID="profile-button"
-            accessibilityLabel="View Profile"
-            accessibilityHint="Double tap to view your profile"
-          >
-            <Text style={styles.avatarText}>
-              {userName.charAt(0).toUpperCase()}
-            </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleEmergencyPress}
+              style={styles.emergencyButton}
+              testID="emergency-button"
+              accessibilityLabel="Emergency Crisis Support"
+              accessibilityHint="Double tap for immediate crisis support"
+            >
+              <Text style={styles.emergencyText}>🚨</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </OptimizedGradient>
+      </View>
+    );
+  },
+);
 
-          <TouchableOpacity
-            onPress={handleEmergencyPress}
-            style={styles.emergencyButton}
-            testID="emergency-button"
-            accessibilityLabel="Emergency Crisis Support"
-            accessibilityHint="Double tap for immediate crisis support"
-          >
-            <Text style={styles.emergencyText}>🚨</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      </OptimizedGradient>
-    </View>
-  );
-});
-
-WelcomeHeader.displayName = 'WelcomeHeader';
+WelcomeHeader.displayName = "WelcomeHeader";
 
 const createStyles = (isDarkMode) =>
   StyleSheet.create({
@@ -191,18 +188,21 @@ const createStyles = (isDarkMode) =>
     greeting: {
       fontSize: FreudTypography.sizes.base,
       fontWeight: FreudTypography.weights.medium,
-      lineHeight: FreudTypography.sizes.base * FreudTypography.lineHeights.normal,
+      lineHeight:
+        FreudTypography.sizes.base * FreudTypography.lineHeights.normal,
     },
     userName: {
       fontSize: FreudTypography.sizes["3xl"],
       fontWeight: FreudTypography.weights.bold,
-      lineHeight: FreudTypography.sizes["3xl"] * FreudTypography.lineHeights.tight,
+      lineHeight:
+        FreudTypography.sizes["3xl"] * FreudTypography.lineHeights.tight,
       marginBottom: FreudSpacing[2],
     },
     subtitle: {
       fontSize: FreudTypography.sizes.sm,
       fontWeight: FreudTypography.weights.normal,
-      lineHeight: FreudTypography.sizes.sm * FreudTypography.lineHeights.relaxed,
+      lineHeight:
+        FreudTypography.sizes.sm * FreudTypography.lineHeights.relaxed,
       opacity: 0.8,
     },
     headerActions: {
@@ -238,6 +238,6 @@ const createStyles = (isDarkMode) =>
     },
   });
 
-WelcomeHeader.displayName = 'WelcomeHeader';
+WelcomeHeader.displayName = "WelcomeHeader";
 
 export default WelcomeHeader;
