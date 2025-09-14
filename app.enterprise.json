@@ -1,0 +1,173 @@
+{
+  "expo": {
+    "name": "Solace AI Enterprise",
+    "slug": "solace-ai-enterprise",
+    "version": "2.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon-enterprise.png",
+    "userInterfaceStyle": "automatic",
+    "primaryColor": "#7D944D",
+    "description": "Enterprise-grade mental health and wellness platform with advanced therapeutic features",
+    "platforms": ["ios", "android", "web"],
+    "splash": {
+      "image": "./assets/splash-enterprise.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#7D944D"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "plugins": [
+      "expo-font",
+      "expo-secure-store",
+      "expo-av",
+      "expo-image-picker",
+      "expo-haptics",
+      "expo-linear-gradient",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "flipper": false,
+            "useFrameworks": "static"
+          },
+          "android": {
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "useLegacyPackaging": false
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "tsconfigPaths": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "solace-ai-enterprise"
+      },
+      "enterprise": {
+        "theme": "therapeutic",
+        "analytics": true,
+        "encryption": true,
+        "offline": true
+      }
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "./scripts/post-publish.js",
+          "config": {}
+        }
+      ]
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.solace.ai.enterprise",
+      "buildNumber": "2.0.0",
+      "requireFullScreen": false,
+      "userInterfaceStyle": "automatic",
+      "deploymentTarget": "13.0",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Solace AI Enterprise uses microphone access for therapeutic voice interactions and mood analysis.",
+        "NSSpeechRecognitionUsageDescription": "This app uses speech recognition to enhance AI therapy sessions and provide better mental health support.",
+        "NSCameraUsageDescription": "Camera access is used for profile pictures and optional visual mood tracking features.",
+        "NSFaceIDUsageDescription": "Face ID is used to securely access your personal mental health data.",
+        "NSHealthShareUsageDescription": "Integration with Health app to track wellness metrics and mindfulness sessions.",
+        "NSHealthUpdateUsageDescription": "Updates Health app with meditation and wellness activity data.",
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLName": "solace-ai-enterprise",
+            "CFBundleURLSchemes": ["solace-enterprise"]
+          }
+        ],
+        "UIBackgroundModes": ["background-fetch", "background-processing"]
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "associatedDomains": ["applinks:solace-ai.com", "applinks:app.solace-ai.com"]
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon-enterprise.png",
+        "backgroundColor": "#7D944D",
+        "monochromeImage": "./assets/adaptive-icon-monochrome.png"
+      },
+      "package": "com.solace.ai.enterprise",
+      "versionCode": 20000,
+      "userInterfaceStyle": "automatic",
+      "compileSdkVersion": 34,
+      "targetSdkVersion": 34,
+      "minSdkVersion": 21,
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.VIBRATE",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.WAKE_LOCK",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "https",
+              "host": "solace-ai.com",
+              "pathPrefix": "/app"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ],
+      "config": {
+        "googleServicesFile": "./google-services.json"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon-enterprise.png",
+      "bundler": "metro",
+      "output": "static",
+      "lang": "en",
+      "name": "Solace AI Enterprise",
+      "shortName": "Solace AI",
+      "description": "Enterprise mental health platform",
+      "themeColor": "#7D944D",
+      "backgroundColor": "#F2F5EB",
+      "display": "standalone",
+      "orientation": "portrait",
+      "scope": "/",
+      "startUrl": "/",
+      "meta": {
+        "apple-mobile-web-app-capable": "yes",
+        "apple-mobile-web-app-status-bar-style": "default",
+        "apple-mobile-web-app-title": "Solace AI",
+        "mobile-web-app-capable": "yes",
+        "msapplication-TileColor": "#7D944D",
+        "msapplication-tap-highlight": "no"
+      },
+      "config": {
+        "firebase": {
+          "apiKey": "your-firebase-api-key",
+          "authDomain": "solace-ai-enterprise.firebaseapp.com",
+          "projectId": "solace-ai-enterprise",
+          "storageBucket": "solace-ai-enterprise.appspot.com",
+          "messagingSenderId": "123456789",
+          "appId": "1:123456789:web:abc123def456"
+        }
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/solace-ai-enterprise"
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    }
+  }
+}
