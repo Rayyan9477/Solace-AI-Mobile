@@ -1,78 +1,85 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
-import { RefreshControl, Alert, Linking } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useNavigation } from "@react-navigation/native";
+import React, { useState, useCallback, useMemo } from "react";
+import { RefreshControl, Alert, Linking } from "react-native";
+import {
+  useTheme,
+  Avatar,
+  IconButton,
+  ProgressBar,
+  FAB,
+} from "react-native-paper";
+import { useSelector } from "react-redux";
 
-import {
-  Container,
-  Section,
-  Grid,
-  Spacer
-} from '../design-system/components/Layout';
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardActions
-} from '../design-system/components/Card';
-import {
-  Button,
-  ButtonGroup
-} from '../design-system/components/Button';
-import {
-  Heading,
-  Body,
-  TherapeuticText
-} from '../design-system/components/Typography';
-import {
-  TherapeuticGradient,
-  OrganicShape,
-  MentalHealthPatterns
-} from '../design-system/backgrounds/PaperShaders';
 import {
   FloatingElement,
   PulseElement,
   AnimatedCounter,
   staggerContainer,
-  staggerItem
-} from '../design-system/animations/TherapeuticAnimations';
-import { Avatar, IconButton, ProgressBar, FAB } from 'react-native-paper';
+  staggerItem,
+} from "../design-system/animations/TherapeuticAnimations";
+import {
+  TherapeuticGradient,
+  OrganicShape,
+  MentalHealthPatterns,
+} from "../design-system/backgrounds/PaperShaders";
+import { Button, ButtonGroup } from "../design-system/components/Button";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
+} from "../design-system/components/Card";
+import {
+  Container,
+  Section,
+  Grid,
+  Spacer,
+} from "../design-system/components/Layout";
+import {
+  Heading,
+  Body,
+  TherapeuticText,
+} from "../design-system/components/Typography";
 
 const THERAPEUTIC_TIPS = [
   {
     tip: "Take three deep breaths and notice how your body feels in this moment",
     category: "Mindfulness",
     icon: "meditation",
-    emotion: "calm"
+    emotion: "calm",
   },
   {
     tip: "Practice the 5-4-3-2-1 grounding technique to center yourself",
     category: "Grounding",
     icon: "nature",
-    emotion: "anxiety"
+    emotion: "anxiety",
   },
   {
     tip: "Remember: it's okay to not be okay. Your feelings are valid",
     category: "Self-Compassion",
     icon: "heart",
-    emotion: "depression"
+    emotion: "depression",
   },
   {
     tip: "Journal three things you're grateful for today",
     category: "Gratitude",
     icon: "book",
-    emotion: "positive"
+    emotion: "positive",
   },
   {
     tip: "Connect with someone you care about today",
     category: "Connection",
     icon: "account-group",
-    emotion: "positive"
-  }
+    emotion: "positive",
+  },
 ];
 
-const WelcomeCard = ({ userName, greeting, onProfilePress, onEmergencyPress }) => {
+const WelcomeCard = ({
+  userName,
+  greeting,
+  onProfilePress,
+  onEmergencyPress,
+}) => {
   const theme = useTheme();
 
   return (
@@ -109,9 +116,7 @@ const DailyTipCard = ({ tip, onRefresh }) => (
   <Card therapeuticColor="mindfulBrown" animationType="fade">
     <CardHeader
       title="Daily Wellness Tip"
-      action={
-        <IconButton icon="refresh" onPress={onRefresh} />
-      }
+      action={<IconButton icon="refresh" onPress={onRefresh} />}
     />
     <CardContent>
       <TherapeuticText emotion={tip.emotion} emphasize>
@@ -127,18 +132,35 @@ const DailyTipCard = ({ tip, onRefresh }) => (
 
 const MoodCheckInCard = ({ currentMood, onCheckIn }) => {
   const moodOptions = [
-    { label: 'Great', value: 5, color: 'serenityGreen', icon: 'emoticon-excited' },
-    { label: 'Good', value: 4, color: 'zenYellow', icon: 'emoticon-happy' },
-    { label: 'Okay', value: 3, color: 'empathyOrange', icon: 'emoticon-neutral' },
-    { label: 'Low', value: 2, color: 'kindPurple', icon: 'emoticon-sad' },
-    { label: 'Difficult', value: 1, color: 'mindfulBrown', icon: 'emoticon-cry' }
+    {
+      label: "Great",
+      value: 5,
+      color: "serenityGreen",
+      icon: "emoticon-excited",
+    },
+    { label: "Good", value: 4, color: "zenYellow", icon: "emoticon-happy" },
+    {
+      label: "Okay",
+      value: 3,
+      color: "empathyOrange",
+      icon: "emoticon-neutral",
+    },
+    { label: "Low", value: 2, color: "kindPurple", icon: "emoticon-sad" },
+    {
+      label: "Difficult",
+      value: 1,
+      color: "mindfulBrown",
+      icon: "emoticon-cry",
+    },
   ];
 
   return (
     <Card therapeuticColor="serenityGreen" animationType="hover">
       <CardHeader
         title="Mood Check-in"
-        subtitle={currentMood ? `Current: ${currentMood.label}` : "How are you feeling?"}
+        subtitle={
+          currentMood ? `Current: ${currentMood.label}` : "How are you feeling?"
+        }
       />
       <CardContent>
         <ButtonGroup orientation="horizontal">
@@ -216,23 +238,25 @@ const ProgressCard = ({ weeklyStats, userStats }) => {
       <CardHeader title="Your Progress" />
       <CardContent>
         <Section spacing={16}>
-          <div style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <div style={{ alignItems: 'center' }}>
+          <div
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <div style={{ alignItems: "center" }}>
               <AnimatedCounter from={0} to={moodScore} />
               <Body size="small">Weekly Mood</Body>
             </div>
-            <div style={{ alignItems: 'center' }}>
+            <div style={{ alignItems: "center" }}>
               <AnimatedCounter from={0} to={streakDays} />
               <Body size="small">Day Streak</Body>
             </div>
-            <div style={{ alignItems: 'center' }}>
+            <div style={{ alignItems: "center" }}>
               <AnimatedCounter from={0} to={totalSessions} />
               <Body size="small">Sessions</Body>
             </div>
           </div>
           <ProgressBar
             progress={moodScore / 5}
-            color={moodScore > 3 ? '#7D944D' : '#C96100'}
+            color={moodScore > 3 ? "#7D944D" : "#C96100"}
           />
         </Section>
       </CardContent>
@@ -252,9 +276,9 @@ const EnterpriseMainScreen = () => {
       currentMood: null,
       insights: [],
       weeklyStats: {},
-      moodHistory: []
+      moodHistory: [],
     },
-    chat: state.chat || { conversations: [] }
+    chat: state.chat || { conversations: [] },
   }));
 
   const greeting = useMemo(() => {
@@ -266,19 +290,24 @@ const EnterpriseMainScreen = () => {
 
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
-    const randomTip = THERAPEUTIC_TIPS[Math.floor(Math.random() * THERAPEUTIC_TIPS.length)];
+    const randomTip =
+      THERAPEUTIC_TIPS[Math.floor(Math.random() * THERAPEUTIC_TIPS.length)];
     setCurrentTip(randomTip);
     setTimeout(() => setRefreshing(false), 1000);
   }, []);
 
   const handleTipRefresh = useCallback(() => {
-    const randomTip = THERAPEUTIC_TIPS[Math.floor(Math.random() * THERAPEUTIC_TIPS.length)];
+    const randomTip =
+      THERAPEUTIC_TIPS[Math.floor(Math.random() * THERAPEUTIC_TIPS.length)];
     setCurrentTip(randomTip);
   }, []);
 
-  const handleMoodCheckIn = useCallback((mood) => {
-    navigation.navigate("Mood", { selectedMood: mood });
-  }, [navigation]);
+  const handleMoodCheckIn = useCallback(
+    (mood) => {
+      navigation.navigate("Mood", { selectedMood: mood });
+    },
+    [navigation],
+  );
 
   const handleStartChat = useCallback(() => {
     navigation.navigate("Chat");
@@ -308,17 +337,23 @@ const EnterpriseMainScreen = () => {
                 await Linking.openURL("tel:988");
               }
             } catch (error) {
-              Alert.alert("Call Error", "Please dial 988 manually for immediate assistance.");
+              Alert.alert(
+                "Call Error",
+                "Please dial 988 manually for immediate assistance.",
+              );
             }
-          }
-        }
-      ]
+          },
+        },
+      ],
     );
   }, []);
 
   return (
     <TherapeuticGradient therapeuticColor="serenityGreen" intensity="subtle">
-      <MentalHealthPatterns pattern="breathing" therapeuticColor="serenityGreen">
+      <MentalHealthPatterns
+        pattern="breathing"
+        therapeuticColor="serenityGreen"
+      >
         <OrganicShape
           therapeuticColor="empathyOrange"
           size={150}
@@ -377,11 +412,11 @@ const EnterpriseMainScreen = () => {
         <FAB
           icon="chat"
           style={{
-            position: 'absolute',
+            position: "absolute",
             margin: 16,
             right: 0,
             bottom: 0,
-            backgroundColor: theme.colors.serenityGreen[60]
+            backgroundColor: theme.colors.serenityGreen[60],
           }}
           onPress={handleStartChat}
         />

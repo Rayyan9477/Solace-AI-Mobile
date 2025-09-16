@@ -1,8 +1,8 @@
-import React from 'react';
-import { View, ScrollView, SafeAreaView, StatusBar } from 'react-native';
-import { useTheme } from 'react-native-paper';
-import { motion } from 'framer-motion/native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
+import { motion } from "framer-motion/native";
+import React from "react";
+import { View, ScrollView, SafeAreaView, StatusBar } from "react-native";
+import { useTheme } from "react-native-paper";
 
 const AnimatedView = motion(View);
 const AnimatedScrollView = motion(ScrollView);
@@ -15,7 +15,7 @@ export const Container = ({
   padding = 16,
   safe = true,
   scrollable = false,
-  animationType = 'default',
+  animationType = "default",
   style,
   ...props
 }) => {
@@ -24,7 +24,10 @@ export const Container = ({
   const getBackgroundColor = () => {
     if (therapeuticColor && theme.colors[therapeuticColor]) {
       return gradient
-        ? [theme.colors[therapeuticColor][10], theme.colors[therapeuticColor][20]]
+        ? [
+            theme.colors[therapeuticColor][10],
+            theme.colors[therapeuticColor][20],
+          ]
         : theme.colors[therapeuticColor][10];
     }
     return gradient
@@ -34,33 +37,33 @@ export const Container = ({
 
   const getAnimationProps = () => {
     switch (animationType) {
-      case 'slide':
+      case "slide":
         return {
           initial: { opacity: 0, x: -50 },
           animate: { opacity: 1, x: 0 },
           exit: { opacity: 0, x: 50 },
-          transition: { duration: 0.3 }
+          transition: { duration: 0.3 },
         };
-      case 'fade':
+      case "fade":
         return {
           initial: { opacity: 0 },
           animate: { opacity: 1 },
           exit: { opacity: 0 },
-          transition: { duration: 0.4 }
+          transition: { duration: 0.4 },
         };
-      case 'scale':
+      case "scale":
         return {
           initial: { opacity: 0, scale: 0.95 },
           animate: { opacity: 1, scale: 1 },
           exit: { opacity: 0, scale: 0.95 },
-          transition: { duration: 0.3 }
+          transition: { duration: 0.3 },
         };
       default:
         return {
           initial: { opacity: 0, y: 20 },
           animate: { opacity: 1, y: 0 },
           exit: { opacity: 0, y: -20 },
-          transition: { duration: 0.3 }
+          transition: { duration: 0.3 },
         };
     }
   };
@@ -81,14 +84,14 @@ export const Container = ({
         {
           flex: 1,
           padding,
-          ...(gradient ? {} : { backgroundColor })
+          ...(gradient ? {} : { backgroundColor }),
         },
-        style
+        style,
       ]}
       {...(scrollable && {
         contentContainerStyle: { flexGrow: 1 },
         showsVerticalScrollIndicator: false,
-        showsHorizontalScrollIndicator: false
+        showsHorizontalScrollIndicator: false,
       })}
       {...props}
     >
@@ -105,7 +108,7 @@ export const Container = ({
         end={{ x: 1, y: 1 }}
       >
         <StatusBar
-          barStyle={theme.dark ? 'light-content' : 'dark-content'}
+          barStyle={theme.dark ? "light-content" : "dark-content"}
           backgroundColor={backgroundColor[0]}
         />
         {content}
@@ -116,7 +119,7 @@ export const Container = ({
   return (
     <>
       <StatusBar
-        barStyle={theme.dark ? 'light-content' : 'dark-content'}
+        barStyle={theme.dark ? "light-content" : "dark-content"}
         backgroundColor={backgroundColor}
       />
       {content}
@@ -130,7 +133,7 @@ export const Section = ({
   spacing = 16,
   horizontal = false,
   wrap = false,
-  animationType = 'stagger',
+  animationType = "stagger",
   style,
   ...props
 }) => {
@@ -138,26 +141,26 @@ export const Section = ({
 
   const getAnimationProps = () => {
     switch (animationType) {
-      case 'stagger':
+      case "stagger":
         return {
           initial: { opacity: 0 },
           animate: { opacity: 1 },
           transition: {
             staggerChildren: 0.1,
-            delayChildren: 0.1
-          }
+            delayChildren: 0.1,
+          },
         };
-      case 'fade':
+      case "fade":
         return {
           initial: { opacity: 0 },
           animate: { opacity: 1 },
-          transition: { duration: 0.4 }
+          transition: { duration: 0.4 },
         };
       default:
         return {
           initial: { opacity: 0, y: 20 },
           animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.3 }
+          transition: { duration: 0.3 },
         };
     }
   };
@@ -169,9 +172,9 @@ export const Section = ({
       {...animationProps}
       style={[
         {
-          marginVertical: spacing / 2
+          marginVertical: spacing / 2,
         },
-        style
+        style,
       ]}
       {...props}
     >
@@ -184,8 +187,8 @@ export const Section = ({
             theme.fonts.headingSmall,
             {
               color: theme.colors.onSurface,
-              marginBottom: spacing
-            }
+              marginBottom: spacing,
+            },
           ]}
         >
           {title}
@@ -193,9 +196,9 @@ export const Section = ({
       )}
       <View
         style={{
-          flexDirection: horizontal ? 'row' : 'column',
+          flexDirection: horizontal ? "row" : "column",
           gap: spacing,
-          ...(wrap && { flexWrap: 'wrap' })
+          ...(wrap && { flexWrap: "wrap" }),
         }}
       >
         {React.Children.map(children, (child, index) => (
@@ -217,26 +220,26 @@ export const Grid = ({
   children,
   columns = 2,
   spacing = 16,
-  animationType = 'stagger',
+  animationType = "stagger",
   style,
   ...props
 }) => {
   const getAnimationProps = () => {
     switch (animationType) {
-      case 'stagger':
+      case "stagger":
         return {
           initial: { opacity: 0 },
           animate: { opacity: 1 },
           transition: {
             staggerChildren: 0.1,
-            delayChildren: 0.2
-          }
+            delayChildren: 0.2,
+          },
         };
       default:
         return {
           initial: { opacity: 0 },
           animate: { opacity: 1 },
-          transition: { duration: 0.3 }
+          transition: { duration: 0.3 },
         };
     }
   };
@@ -248,12 +251,12 @@ export const Grid = ({
       {...animationProps}
       style={[
         {
-          flexDirection: 'row',
-          flexWrap: 'wrap',
+          flexDirection: "row",
+          flexWrap: "wrap",
           gap: spacing,
-          justifyContent: 'space-between'
+          justifyContent: "space-between",
         },
-        style
+        style,
       ]}
       {...props}
     >
@@ -264,12 +267,12 @@ export const Grid = ({
           animate={{ opacity: 1, scale: 1 }}
           transition={{
             delay: index * 0.1,
-            type: 'spring',
-            stiffness: 300
+            type: "spring",
+            stiffness: 300,
           }}
           style={{
             width: `${(100 - (columns - 1) * (spacing / 2)) / columns}%`,
-            minWidth: 150
+            minWidth: 150,
           }}
         >
           {child}
@@ -283,7 +286,7 @@ export const Spacer = ({ size = 16, horizontal = false }) => {
   return (
     <View
       style={{
-        [horizontal ? 'width' : 'height']: size
+        [horizontal ? "width" : "height"]: size,
       }}
     />
   );

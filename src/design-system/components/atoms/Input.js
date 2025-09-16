@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import { TextInput as PaperTextInput, HelperText, useTheme } from 'react-native-paper';
-import { motion } from 'framer-motion/native';
-import { View } from 'react-native';
+import { motion } from "framer-motion/native";
+import React, { useState } from "react";
+import { View } from "react-native";
+import {
+  TextInput as PaperTextInput,
+  HelperText,
+  useTheme,
+} from "react-native-paper";
 
 const AnimatedView = motion(View);
 const AnimatedTextInput = motion(PaperTextInput);
@@ -14,9 +18,9 @@ export const TextInput = ({
   error = false,
   helperText,
   therapeuticColor,
-  variant = 'outlined',
-  size = 'medium',
-  animationType = 'default',
+  variant = "outlined",
+  size = "medium",
+  animationType = "default",
   style,
   ...props
 }) => {
@@ -32,7 +36,7 @@ export const TextInput = ({
         activeUnderlineColor: colorPalette[60],
         underlineColor: colorPalette[40],
         placeholderTextColor: colorPalette[50],
-        selectionColor: colorPalette[30]
+        selectionColor: colorPalette[30],
       };
     }
     return {
@@ -41,49 +45,49 @@ export const TextInput = ({
       activeUnderlineColor: theme.colors.primary,
       underlineColor: theme.colors.onSurfaceVariant,
       placeholderTextColor: theme.colors.onSurfaceVariant,
-      selectionColor: theme.colors.primaryContainer
+      selectionColor: theme.colors.primaryContainer,
     };
   };
 
   const getSizeProps = () => {
     switch (size) {
-      case 'small':
+      case "small":
         return {
           contentStyle: { height: 40 },
-          style: { fontSize: 12 }
+          style: { fontSize: 12 },
         };
-      case 'large':
+      case "large":
         return {
           contentStyle: { height: 64 },
-          style: { fontSize: 16 }
+          style: { fontSize: 16 },
         };
       default:
         return {
           contentStyle: { height: 56 },
-          style: { fontSize: 14 }
+          style: { fontSize: 14 },
         };
     }
   };
 
   const getAnimationProps = () => {
     switch (animationType) {
-      case 'slide':
+      case "slide":
         return {
           initial: { opacity: 0, x: -20 },
           animate: { opacity: 1, x: 0 },
-          transition: { duration: 0.3 }
+          transition: { duration: 0.3 },
         };
-      case 'fade':
+      case "fade":
         return {
           initial: { opacity: 0 },
           animate: { opacity: 1 },
-          transition: { duration: 0.4 }
+          transition: { duration: 0.4 },
         };
       default:
         return {
           initial: { opacity: 0, y: 20 },
           animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.3 }
+          transition: { duration: 0.3 },
         };
     }
   };
@@ -108,37 +112,37 @@ export const TextInput = ({
         style={[
           {
             backgroundColor: theme.colors.surface,
-            borderRadius: variant === 'outlined' ? 12 : 0
+            borderRadius: variant === "outlined" ? 12 : 0,
           },
-          sizeProps.style
+          sizeProps.style,
         ]}
         contentStyle={[
           sizeProps.contentStyle,
           {
-            paddingHorizontal: 16
-          }
+            paddingHorizontal: 16,
+          },
         ]}
         animate={{
-          scale: isFocused ? 1.02 : 1
+          scale: isFocused ? 1.02 : 1,
         }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
         {...props}
       />
       {helperText && (
         <motion.View
           initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
+          animate={{ opacity: 1, height: "auto" }}
           transition={{ duration: 0.2 }}
         >
           <HelperText
-            type={error ? 'error' : 'info'}
+            type={error ? "error" : "info"}
             visible={!!helperText}
             style={{
               color: error
                 ? theme.colors.error
                 : therapeuticColor && theme.colors[therapeuticColor]
                   ? theme.colors[therapeuticColor][60]
-                  : theme.colors.onSurfaceVariant
+                  : theme.colors.onSurfaceVariant,
             }}
           >
             {helperText}
@@ -153,8 +157,8 @@ export const SearchInput = ({
   value,
   onChangeText,
   onSubmit,
-  placeholder = 'Search...',
-  therapeuticColor = 'serenityGreen',
+  placeholder = "Search...",
+  therapeuticColor = "serenityGreen",
   style,
   ...props
 }) => {
@@ -177,7 +181,7 @@ export const SearchInput = ({
           value ? (
             <PaperTextInput.Icon
               icon="close"
-              onPress={() => onChangeText('')}
+              onPress={() => onChangeText("")}
             />
           ) : null
         }
@@ -214,9 +218,9 @@ export const TextArea = ({
         style={[
           {
             minHeight: rows * 24,
-            textAlignVertical: 'top'
+            textAlignVertical: "top",
           },
-          style
+          style,
         ]}
         {...props}
       />

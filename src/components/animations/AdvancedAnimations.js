@@ -14,13 +14,9 @@ import {
   Dimensions,
   Platform,
 } from "react-native";
-import * as Animatable from "react-native-animatable";
+// Removed react-native-animatable - using React Native's built-in Animated API instead
 
-import {
-  FreudColors,
-  FreudSpacing,
-  FreudBorderRadius,
-} from "../../shared/theme/FreudDesignSystem";
+// Removed import from deleted FreudDesignSystem - using theme from context instead
 import { useTheme } from "../../shared/theme/ThemeContext";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");

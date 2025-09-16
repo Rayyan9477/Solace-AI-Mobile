@@ -1,19 +1,19 @@
-import React from 'react';
-import { Card as PaperCard, useTheme } from 'react-native-paper';
-import { motion } from 'framer-motion/native';
-import { View } from 'react-native';
+import { motion } from "framer-motion/native";
+import React from "react";
+import { View } from "react-native";
+import { Card as PaperCard, useTheme } from "react-native-paper";
 
 const AnimatedCard = motion(PaperCard);
 const AnimatedView = motion(View);
 
 export const Card = ({
   children,
-  variant = 'elevated',
+  variant = "elevated",
   therapeuticColor,
   gradient = false,
   padding = 16,
   borderRadius = 12,
-  animationType = 'default',
+  animationType = "default",
   onPress,
   style,
   ...props
@@ -25,40 +25,40 @@ export const Card = ({
       const colorPalette = theme.colors[therapeuticColor];
       return {
         backgroundColor: colorPalette[10],
-        borderColor: colorPalette[30]
+        borderColor: colorPalette[30],
       };
     }
     return {
       backgroundColor: theme.colors.surface,
-      borderColor: theme.colors.outline
+      borderColor: theme.colors.outline,
     };
   };
 
   const getAnimationProps = () => {
     switch (animationType) {
-      case 'hover':
+      case "hover":
         return {
           whileHover: { scale: 1.02, y: -2 },
           whileTap: { scale: 0.98 },
-          transition: { type: 'spring', stiffness: 300, damping: 20 }
+          transition: { type: "spring", stiffness: 300, damping: 20 },
         };
-      case 'slide':
+      case "slide":
         return {
           initial: { opacity: 0, x: -20 },
           animate: { opacity: 1, x: 0 },
-          transition: { duration: 0.3 }
+          transition: { duration: 0.3 },
         };
-      case 'fade':
+      case "fade":
         return {
           initial: { opacity: 0 },
           animate: { opacity: 1 },
-          transition: { duration: 0.4 }
+          transition: { duration: 0.4 },
         };
       default:
         return {
           initial: { opacity: 0, y: 20 },
           animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.3 }
+          transition: { duration: 0.3 },
         };
     }
   };
@@ -78,12 +78,12 @@ export const Card = ({
           borderRadius,
           padding,
           ...cardColors,
-          ...(variant === 'outlined' && {
+          ...(variant === "outlined" && {
             borderWidth: 1,
-            elevation: 0
-          })
+            elevation: 0,
+          }),
         },
-        style
+        style,
       ]}
       {...props}
     >
@@ -102,18 +102,18 @@ export const CardHeader = ({ title, subtitle, avatar, action, style }) => {
       transition={{ delay: 0.1 }}
       style={[
         {
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginBottom: 12
+          flexDirection: "row",
+          alignItems: "center",
+          marginBottom: 12,
         },
-        style
+        style,
       ]}
     >
       {avatar && (
         <motion.View
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: 'spring' }}
+          transition={{ delay: 0.2, type: "spring" }}
           style={{ marginRight: 12 }}
         >
           {avatar}
@@ -125,7 +125,10 @@ export const CardHeader = ({ title, subtitle, avatar, action, style }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            style={[theme.fonts.headingSmall, { color: theme.colors.onSurface }]}
+            style={[
+              theme.fonts.headingSmall,
+              { color: theme.colors.onSurface },
+            ]}
           >
             {title}
           </motion.Text>
@@ -135,7 +138,10 @@ export const CardHeader = ({ title, subtitle, avatar, action, style }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            style={[theme.fonts.bodyMedium, { color: theme.colors.onSurfaceVariant }]}
+            style={[
+              theme.fonts.bodyMedium,
+              { color: theme.colors.onSurfaceVariant },
+            ]}
           >
             {subtitle}
           </motion.Text>
@@ -167,7 +173,7 @@ export const CardContent = ({ children, style }) => {
   );
 };
 
-export const CardActions = ({ children, alignment = 'right', style }) => {
+export const CardActions = ({ children, alignment = "right", style }) => {
   return (
     <motion.View
       initial={{ opacity: 0, y: 10 }}
@@ -175,12 +181,17 @@ export const CardActions = ({ children, alignment = 'right', style }) => {
       transition={{ delay: 0.3 }}
       style={[
         {
-          flexDirection: 'row',
-          justifyContent: alignment === 'left' ? 'flex-start' : alignment === 'center' ? 'center' : 'flex-end',
+          flexDirection: "row",
+          justifyContent:
+            alignment === "left"
+              ? "flex-start"
+              : alignment === "center"
+                ? "center"
+                : "flex-end",
           marginTop: 16,
-          gap: 8
+          gap: 8,
         },
-        style
+        style,
       ]}
     >
       {children}

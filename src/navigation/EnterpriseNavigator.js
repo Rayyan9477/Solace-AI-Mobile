@@ -1,22 +1,23 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useTheme } from 'react-native-paper';
-import { TherapeuticPageTransition } from '../design-system/animations/TherapeuticAnimations';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import React from "react";
+import { useTheme } from "react-native-paper";
+
+import { TherapeuticPageTransition } from "../design-system/animations/TherapeuticAnimations";
 
 // Screens
-import EnterpriseMainScreen from '../screens/EnterpriseMainScreen';
-import ChatScreen from '../screens/chat/ChatScreen';
-import MoodScreen from '../screens/mood/MoodTrackerScreen';
-import AssessmentScreen from '../screens/assessment/AssessmentScreen';
-import ProfileScreen from '../screens/profile/ProfileScreen';
-import WellnessScreen from '../screens/wellness/WellnessScreen';
+import EnterpriseMainScreen from "../screens/EnterpriseMainScreen";
+import AssessmentScreen from "../screens/assessment/AssessmentScreen";
+import SignInScreen from "../screens/auth/SignInScreen";
+import SignUpScreen from "../screens/auth/SignUpScreen";
+import WelcomeScreen from "../screens/auth/WelcomeScreen";
+import ChatScreen from "../screens/chat/ChatScreen";
+import MoodScreen from "../screens/mood/MoodTrackerScreen";
+import ProfileScreen from "../screens/profile/ProfileScreen";
+import WellnessScreen from "../screens/wellness/WellnessScreen";
 
 // Auth Screens
-import WelcomeScreen from '../screens/auth/WelcomeScreen';
-import SignInScreen from '../screens/auth/SignInScreen';
-import SignUpScreen from '../screens/auth/SignUpScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -40,16 +41,16 @@ const MainTabNavigator = () => {
           shadowOffset: { width: 0, height: -2 },
           paddingBottom: 8,
           paddingTop: 8,
-          height: 70
+          height: 70,
         },
         tabBarLabelStyle: {
           fontSize: 12,
-          fontFamily: 'Urbanist-Medium',
-          marginTop: 4
+          fontFamily: "Urbanist-Medium",
+          marginTop: 4,
         },
         tabBarIconStyle: {
-          marginTop: 4
-        }
+          marginTop: 4,
+        },
       }}
     >
       <Tab.Screen
@@ -59,7 +60,7 @@ const MainTabNavigator = () => {
           tabBarIcon: ({ color, size }) => (
             <Icon name="home" size={size} color={color} />
           ),
-          tabBarLabel: "Home"
+          tabBarLabel: "Home",
         }}
       />
       <Tab.Screen
@@ -69,7 +70,7 @@ const MainTabNavigator = () => {
           tabBarIcon: ({ color, size }) => (
             <Icon name="heart" size={size} color={color} />
           ),
-          tabBarLabel: "Mood"
+          tabBarLabel: "Mood",
         }}
       />
       <Tab.Screen
@@ -79,7 +80,7 @@ const MainTabNavigator = () => {
           tabBarIcon: ({ color, size }) => (
             <Icon name="chat" size={size} color={color} />
           ),
-          tabBarLabel: "Therapy"
+          tabBarLabel: "Therapy",
         }}
       />
       <Tab.Screen
@@ -89,7 +90,7 @@ const MainTabNavigator = () => {
           tabBarIcon: ({ color, size }) => (
             <Icon name="meditation" size={size} color={color} />
           ),
-          tabBarLabel: "Wellness"
+          tabBarLabel: "Wellness",
         }}
       />
       <Tab.Screen
@@ -99,7 +100,7 @@ const MainTabNavigator = () => {
           tabBarIcon: ({ color, size }) => (
             <Icon name="account" size={size} color={color} />
           ),
-          tabBarLabel: "Profile"
+          tabBarLabel: "Profile",
         }}
       />
     </Tab.Navigator>
@@ -149,7 +150,7 @@ const MainStackNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        presentation: 'card',
+        presentation: "card",
         cardStyleInterpolator: ({ current, layouts }) => {
           return {
             cardStyle: {
@@ -183,24 +184,26 @@ const RootNavigator = ({ isAuthenticated }) => {
 };
 
 // Simple Icon component fallback
-const Icon = ({ name, size = 24, color = '#000' }) => {
+const Icon = ({ name, size = 24, color = "#000" }) => {
   const iconMap = {
-    home: '🏠',
-    heart: '💚',
-    chat: '💬',
-    meditation: '🧘',
-    account: '👤'
+    home: "🏠",
+    heart: "💚",
+    chat: "💬",
+    meditation: "🧘",
+    account: "👤",
   };
 
   return (
-    <div style={{
-      fontSize: size,
-      color,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      {iconMap[name] || '●'}
+    <div
+      style={{
+        fontSize: size,
+        color,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {iconMap[name] || "●"}
     </div>
   );
 };
