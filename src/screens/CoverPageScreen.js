@@ -13,15 +13,7 @@ import {
   StatusBar,
 } from "react-native";
 
-import ThemeToggle from "../components/common/ThemeToggle";
-import { useTheme } from "../shared/theme/ThemeContext";
-import {
-  spacing,
-  typography,
-  borderRadius,
-  shadows,
-} from "../shared/theme/theme";
-import { MentalHealthAccessibility } from "../shared/utils/accessibility";
+import { useTheme } from "../design-system/theme/ThemeProvider";
 
 const { width, height } = Dimensions.get("window");
 
@@ -152,9 +144,9 @@ const CoverPageScreen = () => {
         translucent
       />
 
-      {/* Theme Toggle */}
+      {/* Theme Toggle - Simplified */}
       <View style={styles.themeToggleContainer}>
-        <ThemeToggle showLabel={false} />
+        <Text style={{ color: "#FFF", fontSize: 16 }}>🌙</Text>
       </View>
 
       <LinearGradient
@@ -381,85 +373,87 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: spacing[5],
-    paddingBottom: spacing[10],
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
   heroSection: {
     alignItems: "center",
-    paddingTop: spacing[16],
-    paddingBottom: spacing[8],
+    paddingTop: 64,
+    paddingBottom: 32,
     minHeight: height * 0.5,
     justifyContent: "center",
   },
   logoContainer: {
-    marginBottom: spacing[6],
+    marginBottom: 24,
     alignItems: "center",
   },
   logoCircle: {
-    width: spacing[30],
-    height: spacing[30],
-    borderRadius: spacing[15],
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     justifyContent: "center",
     alignItems: "center",
-    ...shadows.xl,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 20 },
+    shadowOpacity: 0.1,
+    shadowRadius: 25,
+    elevation: 12,
   },
   logoEmoji: {
-    fontSize: typography.sizes["6xl"],
+    fontSize: 64,
   },
   appTitle: {
-    fontSize: typography.sizes["5xl"],
-    fontWeight: typography.weights.bold,
-    lineHeight: typography.lineHeights["5xl"],
+    fontSize: 48,
+    fontWeight: "700",
     textAlign: "center",
-    marginBottom: spacing[3],
+    marginBottom: 12,
   },
   appSubtitle: {
-    fontSize: typography.sizes.xl,
-    fontWeight: typography.weights.medium,
-    lineHeight: typography.lineHeights.xl,
+    fontSize: 20,
+    fontWeight: "500",
     textAlign: "center",
-    marginBottom: spacing[4],
+    marginBottom: 16,
     opacity: 0.9,
   },
   appDescription: {
-    fontSize: typography.sizes.base,
-    lineHeight: typography.lineHeights.lg,
+    fontSize: 16,
+    lineHeight: 24,
     textAlign: "center",
     opacity: 0.8,
     maxWidth: width * 0.85,
-    paddingHorizontal: spacing[4],
+    paddingHorizontal: 16,
   },
   featureSection: {
     alignItems: "center",
-    marginBottom: spacing[10],
+    marginBottom: 40,
   },
   featureCard: {
     width: width * 0.85,
-    padding: spacing[6],
-    borderRadius: borderRadius.xl,
+    padding: 24,
+    borderRadius: 12,
     alignItems: "center",
-    marginBottom: spacing[6],
+    marginBottom: 24,
   },
   featureIconContainer: {
-    width: spacing[20],
-    height: spacing[20],
-    borderRadius: spacing[10],
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: spacing[4],
+    marginBottom: 16,
   },
   featureIcon: {
-    fontSize: typography.sizes["5xl"],
+    fontSize: 48,
   },
   featureTitle: {
-    fontSize: typography.sizes["2xl"],
-    fontWeight: typography.weights.bold,
+    fontSize: 24,
+    fontWeight: "700",
     textAlign: "center",
-    marginBottom: spacing[3],
+    marginBottom: 12,
   },
   featureDescription: {
-    fontSize: typography.sizes.base,
-    lineHeight: typography.lineHeights.lg,
+    fontSize: 16,
+    lineHeight: 24,
     textAlign: "center",
     maxWidth: width * 0.7,
   },
@@ -467,48 +461,48 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    gap: spacing[2],
+    gap: 8,
   },
   dot: {
-    width: spacing[2],
-    height: spacing[2],
-    borderRadius: spacing[1],
+    width: 8,
+    height: 8,
+    borderRadius: 4,
   },
   ctaSection: {
     alignItems: "center",
-    paddingHorizontal: spacing[4],
-    marginBottom: spacing[8],
+    paddingHorizontal: 16,
+    marginBottom: 32,
   },
   primaryButton: {
     width: width * 0.8,
-    paddingVertical: spacing[4],
-    paddingHorizontal: spacing[8],
-    borderRadius: borderRadius.xl,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 12,
     alignItems: "center",
-    marginBottom: spacing[4],
+    marginBottom: 16,
   },
   primaryButtonText: {
-    fontSize: typography.sizes.lg,
-    fontWeight: typography.weights.semiBold,
+    fontSize: 18,
+    fontWeight: "600",
   },
   secondaryButton: {
     width: width * 0.8,
-    paddingVertical: spacing[4],
-    paddingHorizontal: spacing[8],
-    borderRadius: borderRadius.xl,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 12,
     alignItems: "center",
     borderWidth: 2,
   },
   secondaryButtonText: {
-    fontSize: typography.sizes.lg,
-    fontWeight: typography.weights.medium,
+    fontSize: 18,
+    fontWeight: "500",
   },
   footer: {
     alignItems: "center",
-    paddingTop: spacing[6],
+    paddingTop: 24,
   },
   footerText: {
-    fontSize: typography.sizes.sm,
+    fontSize: 14,
     textAlign: "center",
   },
 });

@@ -7,9 +7,14 @@ import {
   Text,
   View,
 } from "react-native";
+import { Card, Surface, IconButton } from "react-native-paper";
+import { motion } from "framer-motion/native";
 
-import { useTheme } from "../../shared/theme/ThemeContext";
+import { useTheme } from "../../design-system/theme/ThemeProvider";
 import Icon from "../common/Icon";
+
+const AnimatedCard = motion(Card);
+const AnimatedSurface = motion(Surface);
 
 const ChatBubble = ({
   message,
@@ -19,7 +24,7 @@ const ChatBubble = ({
   accessibilityLabel,
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
-  const { theme } = useTheme();
+  const { theme, isDarkMode } = useTheme();
 
   const handleSpeak = async () => {
     setIsLoading(true);
@@ -46,99 +51,119 @@ const ChatBubble = ({
     minute: "2-digit",
   });
 
+  // Get therapeutic colors based on user/assistant role
+  const getBubbleColors = () => {
+    if (isUser) {
+      return {
+        backgroundColor: theme.palette.therapeutic.growth,
+        textColor: '#FFFFFF',
+        timestampColor: 'rgba(255, 255, 255, 0.8)',
+      };
+    } else {
+      return {
+        backgroundColor: isDarkMode
+          ? theme.colors.background.secondary
+          : '#FFFFFF',
+        textColor: theme.colors.text.primary,
+        timestampColor: theme.colors.text.tertiary,
+      };
+    }
+  };
+
+  const colors = getBubbleColors();
+
   return (
     <>
       {isLoading && (
         <View
           style={[
             styles.loadingOverlay,
-            { backgroundColor: theme.colors.background.overlay },
+            { backgroundColor: 'rgba(0,0,0,0.4)' },
           ]}
         >
-          <ActivityIndicator size="large" color={theme.colors.primary.main} />
+          <ActivityIndicator size="large" color={theme.palette.therapeutic.growth} />
         </View>
       )}
-      <View
+      <AnimatedCard
+        mode="contained"
+        initial={{ opacity: 0, y: 20, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 20,
+          delay: 0.1
+        }}
         style={[
           styles.container,
           isUser ? styles.userContainer : styles.botContainer,
         ]}
       >
-        <Pressable
-          onLongPress={onLongPress}
+        <Surface
+          mode="flat"
+          elevation={2}
           style={[
             styles.bubble,
             {
-              backgroundColor: isUser
-                ? theme.colors.primary.main
-                : theme.colors.background.surface,
-              borderColor: isUser
-                ? theme.colors.primary.main
-                : theme.colors.border.main,
+              backgroundColor: colors.backgroundColor,
             },
+            isUser ? styles.userBubble : styles.assistantBubble,
           ]}
-          accessibilityLabel={
-            accessibilityLabel ||
-            `${isUser ? "Your" : "Assistant"} message: ${message}`
-          }
-          accessibilityRole="text"
-          accessibilityHint="Double tap to hear message spoken aloud"
         >
-          <Text
-            style={[
-              styles.message,
-              {
-                color: isUser
-                  ? theme.colors.text.onPrimary
-                  : theme.colors.text.primary,
-              },
-            ]}
+          <Pressable
+            onLongPress={onLongPress}
+            style={styles.bubbleContent}
+            accessibilityLabel={
+              accessibilityLabel ||
+              `${isUser ? "Your" : "Assistant"} message: ${message}`
+            }
+            accessibilityRole="text"
+            accessibilityHint="Double tap to hear message spoken aloud"
           >
-            {message}
-          </Text>
-
-          <View style={styles.footer}>
             <Text
               style={[
-                styles.timestamp,
+                styles.message,
                 {
-                  color: isUser
-                    ? theme.colors.text.onPrimary
-                    : theme.colors.text.secondary,
+                  color: colors.textColor,
                 },
               ]}
             >
-              {formattedTime}
+              {message}
             </Text>
 
-            <Pressable
-              onPress={handleSpeak}
-              style={styles.speakButton}
-              accessibilityLabel="Speak message aloud"
-              accessibilityRole="button"
-            >
-              <Icon
-                name="volume-high"
+            <View style={styles.footer}>
+              <Text
+                style={[
+                  styles.timestamp,
+                  {
+                    color: colors.timestampColor,
+                  },
+                ]}
+              >
+                {formattedTime}
+              </Text>
+
+              <IconButton
+                icon="volume-high"
                 size={16}
-                color={
-                  isUser
-                    ? theme.colors.text.onPrimary
-                    : theme.colors.text.secondary
-                }
+                iconColor={colors.timestampColor}
+                onPress={handleSpeak}
+                accessibilityLabel="Speak message aloud"
+                style={styles.speakButton}
               />
-            </Pressable>
-          </View>
-        </Pressable>
-      </View>
+            </View>
+          </Pressable>
+        </Surface>
+      </AnimatedCard>
     </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 4,
-    marginHorizontal: 8,
-    maxWidth: "80%",
+    marginVertical: 6,
+    marginHorizontal: 12,
+    maxWidth: "85%",
   },
   userContainer: {
     alignSelf: "flex-end",
@@ -147,27 +172,36 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   bubble: {
-    borderRadius: 22,
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  userBubble: {
+    borderBottomRightRadius: 8,
+  },
+  assistantBubble: {
+    borderBottomLeftRadius: 8,
+  },
+  bubbleContent: {
     paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderWidth: 1,
+    paddingVertical: 12,
   },
   message: {
     fontSize: 16,
-    lineHeight: 24,
+    lineHeight: 22,
+    fontWeight: '400',
   },
   footer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-end",
-    marginTop: 4,
+    justifyContent: "space-between",
+    marginTop: 8,
   },
   timestamp: {
-    fontSize: 12,
-    marginRight: 8,
+    fontSize: 11,
+    fontWeight: '500',
   },
   speakButton: {
-    padding: 4,
+    margin: 0,
   },
   loadingOverlay: {
     position: "absolute",

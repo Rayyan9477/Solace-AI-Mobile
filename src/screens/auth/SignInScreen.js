@@ -14,10 +14,8 @@ import {
   Platform,
 } from "react-native";
 
-import { MentalHealthIcon, NavigationIcon } from "../../components/icons";
-import { FreudLogo, ThemedFreudIcon } from "../../components/icons/FreudIcons";
-import FreudButton from "../../components/ui/FreudButton";
-import { useTheme } from "../../shared/theme/ThemeContext";
+// import { MentalHealthIcon, NavigationIcon } from "../../components/icons"; // Temporarily disabled
+import { useTheme } from "../../design-system/theme/ThemeProvider";
 
 const { width } = Dimensions.get("window");
 
@@ -81,8 +79,8 @@ const SignInScreen = ({ navigation, onSignIn = () => {} }) => {
   };
 
   const backgroundColors = [
-    freudTheme.colors.green[60], // Serenity Green from design reference
-    freudTheme.colors.green[50],
+    theme.palette.therapeutic.growth, // Growth green from design system
+    theme.palette.secondary[400],
   ];
 
   return (
@@ -102,9 +100,11 @@ const SignInScreen = ({ navigation, onSignIn = () => {} }) => {
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
-          {/* Header Curve with Freud Logo */}
+          {/* Header Curve with Logo */}
           <View style={styles.headerCurve}>
-            <FreudLogo size={64} primaryColor="#FFFFFF" />
+            <View style={[styles.logoContainer, { backgroundColor: theme.colors.background.primary }]}>
+              <Text style={styles.logoText}>Solace AI</Text>
+            </View>
           </View>
 
           {/* Content Container */}
@@ -122,7 +122,7 @@ const SignInScreen = ({ navigation, onSignIn = () => {} }) => {
               <Text
                 style={[styles.title, { color: theme.colors.text.primary }]}
               >
-                Sign In To freud.ai
+                Sign In To Solace AI
               </Text>
 
               {/* Email Input */}
@@ -146,11 +146,7 @@ const SignInScreen = ({ navigation, onSignIn = () => {} }) => {
                     },
                   ]}
                 >
-                  <ThemedFreudIcon
-                    name="heart"
-                    size={20}
-                    color={freudTheme.colors.text.tertiary}
-                  />
+                  <Text style={{ fontSize: 18 }}>📧</Text>
                   <TextInput
                     style={[
                       styles.textInput,
@@ -170,12 +166,7 @@ const SignInScreen = ({ navigation, onSignIn = () => {} }) => {
                 </View>
                 {emailError ? (
                   <View style={styles.errorContainer}>
-                    <MentalHealthIcon
-                      name="Heart"
-                      size={16}
-                      color={theme.colors.error[500]}
-                      variant="filled"
-                    />
+                    <Text style={{ fontSize: 16, color: theme.colors.error[500] }}>⚠️</Text>
                     <Text
                       style={[
                         styles.errorText,
@@ -207,11 +198,7 @@ const SignInScreen = ({ navigation, onSignIn = () => {} }) => {
                     },
                   ]}
                 >
-                  <ThemedFreudIcon
-                    name="brain"
-                    size={20}
-                    color={freudTheme.colors.text.tertiary}
-                  />
+                  <Text style={{ fontSize: 18 }}>🔒</Text>
                   <TextInput
                     style={[
                       styles.textInput,
@@ -228,39 +215,32 @@ const SignInScreen = ({ navigation, onSignIn = () => {} }) => {
                     style={styles.eyeButton}
                     onPress={() => setShowPassword(!showPassword)}
                   >
-                    <ThemedFreudIcon
-                      name="mindfulness"
-                      size={20}
-                      color={freudTheme.colors.text.tertiary}
-                    />
+                    <Text style={{ fontSize: 18 }}>{showPassword ? "🙈" : "👁️"}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
 
               {/* Sign In Button */}
-              <FreudButton
-                title={isLoading ? "Signing In..." : "Sign In"}
-                variant="primary"
-                size="large"
-                fullWidth
-                loading={isLoading}
-                disabled={!email.trim() || !password.trim() || emailError}
+              <TouchableOpacity
+                style={[
+                  styles.signInButton,
+                  { 
+                    backgroundColor: theme.palette.primary[500],
+                    opacity: (!email.trim() || !password.trim() || emailError) ? 0.5 : 1,
+                  }
+                ]}
                 onPress={handleSignIn}
-                icon={
-                  !isLoading && (
-                    <ThemedFreudIcon
-                      name="chevron-right"
-                      size={20}
-                      color={freudTheme.colors.text.inverse}
-                    />
-                  )
-                }
-                iconPosition="right"
-                style={{
-                  marginTop: freudTheme.spacing.xl,
-                  marginBottom: freudTheme.spacing["2xl"],
-                }}
-              />
+                disabled={!email.trim() || !password.trim() || emailError || isLoading}
+              >
+                <View style={styles.signInContent}>
+                  <Text style={styles.signInButtonText}>
+                    {isLoading ? "Signing In..." : "Sign In"}
+                  </Text>
+                  {!isLoading && (
+                    <Text style={{ fontSize: 20, color: "#FFFFFF" }}>→</Text>
+                  )}
+                </View>
+              </TouchableOpacity>
 
               {/* Social Sign In */}
               <View style={styles.socialContainer}>
@@ -361,23 +341,31 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 30,
   },
+  logoContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  logoText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#0ea5e9",
+  },
   title: {
-    fontSize: freudTheme.typography.fontSize.headingXl,
-    fontWeight: freudTheme.typography.fontWeight.bold,
-    fontFamily: freudTheme.typography.fontFamily.primary,
+    fontSize: 32,
+    fontWeight: "bold",
     textAlign: "center",
-    marginBottom: freudTheme.spacing["4xl"],
-    color: freudTheme.colors.text.primary,
+    marginBottom: 32,
   },
   inputContainer: {
     marginBottom: 20,
   },
   inputLabel: {
-    fontSize: freudTheme.typography.fontSize.textMd,
-    fontWeight: freudTheme.typography.fontWeight.medium,
-    fontFamily: freudTheme.typography.fontFamily.primary,
-    marginBottom: freudTheme.spacing.sm,
-    color: freudTheme.colors.text.primary,
+    fontSize: 16,
+    fontWeight: "500",
+    marginBottom: 8,
   },
   inputWrapper: {
     flexDirection: "row",
@@ -415,6 +403,9 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     marginTop: 20,
     marginBottom: 30,
+    minHeight: 44,
+    justifyContent: "center",
+    alignItems: "center",
   },
   signInContent: {
     flexDirection: "row",
@@ -429,6 +420,7 @@ const styles = StyleSheet.create({
   signInButtonText: {
     fontSize: 16,
     fontWeight: "600",
+    color: "#FFFFFF",
   },
   socialContainer: {
     flexDirection: "row",

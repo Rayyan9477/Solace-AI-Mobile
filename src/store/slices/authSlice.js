@@ -1,8 +1,62 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import apiService from "../../services/api";
-import secureStorage from "../../services/secureStorage";
-import tokenService from "../../services/tokenService";
+// Mock services for development
+const mockApiService = {
+  auth: {
+    async login(email, password) {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      if (email && password) {
+        return {
+          user: { id: '1', name: 'Test User', email },
+          access_token: 'mock_token_123',
+        };
+      }
+      throw new Error('Invalid credentials');
+    }
+  }
+};
+
+const mockSecureStorage = {
+  async storeSecureData(key, data) {
+    console.log(`Storing secure data for key: ${key}`);
+    return true;
+  },
+  async getSecureData(key) {
+    console.log(`Getting secure data for key: ${key}`);
+    if (key === 'user_profile') {
+      return { id: '1', name: 'Test User', email: 'test@example.com' };
+    }
+    return null;
+  },
+  async removeSecureData(key) {
+    console.log(`Removing secure data for key: ${key}`);
+    return true;
+  },
+};
+
+const mockTokenService = {
+  async isAuthenticated() {
+    return false; // Start as not authenticated for proper flow
+  },
+  async getTokens() {
+    return null; // Start with no tokens
+  },
+  async clearTokens() {
+    console.log('Clearing tokens');
+    return true;
+  },
+  async invalidateSession() {
+    console.log('Invalidating session');
+    return true;
+  },
+};
+
+// Use actual services in production, mock in development
+const apiService = __DEV__ ? mockApiService : require("../../services/api").default;
+const secureStorage = __DEV__ ? mockSecureStorage : require("../../services/secureStorage").default;
+const tokenService = __DEV__ ? mockTokenService : require("../../services/tokenService").default;
 
 // Async thunk for secure login
 export const secureLogin = createAsyncThunk(

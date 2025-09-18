@@ -1,54 +1,69 @@
 /**
  * Solace AI Mobile - Mental Health Support App
- * Main App Entry Point - FIXED VERSION
+ * Main App Entry Point - Expo Compatible
  *
- * Fixes for blank screen issues:
- * - Simplified initialization flow
- * - Removed complex async theme loading
- * - Added immediate rendering with fallbacks
- * - Streamlined provider architecture
- * - Emergency fallback for failed initializations
- * - FIXED: Added global polyfills for "compact" function
+ * Features:
+ * - Full Expo SDK compatibility
+ * - Cross-platform support (iOS, Android, Web)
+ * - Material Design 3 UI system
+ * - Therapeutic animations with Framer Motion
+ * - Paper shaders for backgrounds
+ * - Feature-based architecture
  */
 
-// Global polyfills - must be defined before any other imports
-import { NavigationContainer } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useMemo, useCallback } from "react";
-import { Platform, AppState } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Provider, useDispatch } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
+// Expo compatibility layer
+import 'expo-dev-client';
 
-// Redux Store
-import EnhancedLoadingScreen from "./src/components/LoadingScreen/EnhancedLoadingScreen";
-import { RefactoredAppProvider } from "./src/components/RefactoredAppProvider";
-import AppNavigator from "./src/navigation/AppNavigator";
-import { restoreAuthState } from "./src/store/slices/authSlice";
-import { store, persistor } from "./src/store/store";
+// Core React Native and Expo imports
+import { NavigationContainer } from '@react-navigation/native';
+import React, { useEffect, useCallback } from 'react';
+import { Platform, AppState } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider, useDispatch } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
-if (typeof global !== "undefined" && typeof global.compact === "undefined") {
+// Expo modules
+import { StatusBar, SplashScreen } from './src/shared/expo';
+import { platform } from './src/shared/utils/platform';
+
+// App modules
+import { ThemeProvider } from './src/design-system/theme/ThemeProvider';
+import AppNavigator from './src/navigation/AppNavigator';
+import { restoreAuthState } from './src/store/slices/authSlice';
+import { store, persistor } from './src/store/store';
+import { APP_CONFIG } from './src/shared/constants';
+import { validateApp } from './src/shared/utils/validation';
+
+// Global polyfills for cross-platform compatibility
+if (typeof global !== 'undefined' && typeof global.compact === 'undefined') {
   global.compact = function (arr) {
     return arr ? arr.filter((item) => item != null) : [];
   };
 }
 
-if (typeof window !== "undefined" && typeof window.compact === "undefined") {
+if (platform.isWeb && typeof window !== 'undefined' && typeof window.compact === 'undefined') {
   window.compact = function (arr) {
     return arr ? arr.filter((item) => item != null) : [];
   };
 }
 
-// Ensure Array.prototype.compact exists
-if (typeof Array !== "undefined" && !Array.prototype.compact) {
+// Ensure Array.prototype.compact exists (with proper type safety)
+if (typeof Array !== 'undefined' && !Array.prototype.compact) {
   Array.prototype.compact = function () {
     return this.filter((item) => item != null);
   };
 }
 
-// Get app version from package.json
-const APP_VERSION = "1.0.0";
+// Prevent splash screen from auto-hiding
+if (SplashScreen) {
+  SplashScreen.preventAutoHideAsync().catch(() => {
+    // Splash screen might not be available in all environments
+  });
+}
+
+// App configuration
+const APP_VERSION = APP_CONFIG.version;
 
 /**
  * Backup Auth Initializer - Ensures auth state is initialized even if main provider fails
@@ -102,11 +117,29 @@ const AppRoot = ({ children }) => {
     return () => subscription?.remove();
   }, []);
 
-  // Log app startup
+  // Log app startup with comprehensive validation
   useEffect(() => {
-    console.log("🌟 Solace AI Mobile: Starting mental health support app...");
-    console.log(`📊 Platform: ${Platform.OS}`);
+    console.log('🌟 Solace AI Mobile: Starting mental health support app...');
+    console.log(`📊 Platform: ${Platform.OS} ${Platform.Version}`);
     console.log(`📱 Version: ${APP_VERSION}`);
+    console.log(`🔧 Expo: ${platform.isExpoGo ? 'Expo Go' : 'Standalone'}`);
+    console.log(`🖥️  Device: ${platform.getDeviceType()}`);
+
+    // Run comprehensive app validation
+    const validationResults = validateApp();
+
+    if (!validationResults.overall.isValid) {
+      console.warn('⚠️ App validation failed - some features may not work correctly');
+    }
+
+    // Hide splash screen after initialization
+    if (SplashScreen) {
+      setTimeout(() => {
+        SplashScreen.hideAsync().catch(() => {
+          // Splash screen might not be available
+        });
+      }, 1000);
+    }
   }, []);
 
   return (
@@ -160,11 +193,11 @@ const App = () => {
   return (
     <AppRoot>
       <PersistGate loading={null} persistor={persistor}>
-        <RefactoredAppProvider appVersion={APP_VERSION}>
+        <ThemeProvider>
           <NavigationWrapper>
             <AppNavigator />
           </NavigationWrapper>
-        </RefactoredAppProvider>
+        </ThemeProvider>
       </PersistGate>
     </AppRoot>
   );

@@ -15,57 +15,64 @@ import { useSelector } from "react-redux";
 // import { useMotionAccessibility } from "../utils/motionAccessibility";
 // import { MentalHealthAccessibility } from "../utils/accessibility";
 
-// Light Mode Screens
+// Screen Imports - Light Mode
 import CoverPageScreen from "../screens/CoverPageScreen";
-import DarkSplashScreen from "../screens/DarkSplashScreen";
-import DarkWelcomeScreen from "../screens/DarkWelcomeScreen";
 import DesignSystemScreen from "../screens/DesignSystemScreen";
 import MainAppScreen from "../screens/MainAppScreen";
 import SplashScreen from "../screens/SplashScreen";
+import WelcomeScreen from "../screens/WelcomeScreen";
+
+// Assessment Screens
 import AssessmentScreen from "../screens/assessment/AssessmentScreen";
-import DarkComprehensiveAssessmentScreen from "../screens/assessment/DarkComprehensiveAssessmentScreen";
+import ComprehensiveAssessmentScreen from "../screens/assessment/ComprehensiveAssessmentScreen";
+
+// Auth Screens
 import ForgotPasswordScreen from "../screens/auth/ForgotPasswordScreen";
 import OnboardingScreen from "../screens/auth/OnboardingScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
 import SignInScreen from "../screens/auth/SignInScreen";
 import SimpleOnboardingScreen from "../screens/auth/SimpleOnboardingScreen";
+
+// Chat Screens
 import ChatScreen from "../screens/chat/ChatScreen";
 import EnhancedChatScreen from "../screens/chat/EnhancedChatScreen";
+
+// Dashboard Screens
 import DashboardScreen from "../screens/dashboard/DashboardScreen";
 
-// Wellness Light Mode Screens
-
-// Dark Mode Screens
-
-// Dark Mode Authentication
-
-// Dark Mode Main Screens
-import DarkMentalHealthJournalScreen from "../screens/journal/DarkMentalHealthJournalScreen";
+// Journal Screens
 import JournalScreen from "../screens/journal/JournalScreen";
+import MentalHealthJournalScreen from "../screens/journal/MentalHealthJournalScreen";
 
-// Dark Mode Profile & Settings
-
-// Dark Mode Wellness
-import DarkMindfulHoursScreen from "../screens/mindfulness/DarkMindfulHoursScreen";
-import DarkMindfulResourcesScreen from "../screens/mindfulness/DarkMindfulResourcesScreen";
+// Mood Screens
 import EnhancedMoodTrackerScreen from "../screens/mood/EnhancedMoodTrackerScreen";
+import MoodTrackerScreen from "../screens/mood/MoodTrackerScreen";
+
+// Profile Screens
 import ProfileScreen from "../screens/profile/ProfileScreen";
 import ProfileSetupScreen from "../screens/profile/ProfileSetupScreen";
-import DarkSearchScreen from "../screens/search/DarkSearchScreen";
+
+// Search Screens
 import SearchScreen from "../screens/search/SearchScreen";
-import DarkSmartNotificationsScreen from "../screens/settings/DarkSmartNotificationsScreen";
+
+// Settings Screens
 import NotificationsScreen from "../screens/settings/NotificationsScreen";
+import SettingsScreen from "../screens/settings/SettingsScreen";
+
+// Therapy Screens
 import TherapyScreen from "../screens/therapy/TherapyScreen";
+
+// Utility Screens
 import ErrorUtilitiesScreen from "../screens/utils/ErrorUtilitiesScreen";
-import DarkSleepQualityScreen from "../screens/wellness/DarkSleepQualityScreen";
-import DarkStressManagementScreen from "../screens/wellness/DarkStressManagementScreen";
+
+// Wellness Screens
 import MindfulHoursScreen from "../screens/wellness/MindfulHoursScreen";
 import MindfulResourcesScreen from "../screens/wellness/MindfulResourcesScreen";
 import SleepQualityScreen from "../screens/wellness/SleepQualityScreen";
 import StressManagementScreen from "../screens/wellness/StressManagementScreen";
 
-// Dark Mode Community
-import { useTheme } from "../shared/theme/UnifiedThemeProvider";
+// Theme import
+import { useTheme } from "../design-system/theme/ThemeProvider";
 // Removed NavigationTester import - was causing navigation interference
 
 // Utility Screens
@@ -277,11 +284,7 @@ const ProfileStack = () => {
       />
       <Stack.Screen
         name="Notifications"
-        component={getThemeAwareScreen(
-          NotificationsScreen,
-          DarkSmartNotificationsScreen,
-          isDarkMode,
-        )}
+        component={NotificationsScreen}
         options={{ title: "Notifications", headerShown: false }}
       />
       <Stack.Screen
@@ -310,38 +313,22 @@ const WellnessStack = () => {
     >
       <Stack.Screen
         name="MindfulResources"
-        component={getThemeAwareScreen(
-          MindfulResourcesScreen,
-          DarkMindfulResourcesScreen,
-          isDarkMode,
-        )}
+        component={MindfulResourcesScreen}
         options={{ title: "Wellness Hub", headerShown: false }}
       />
       <Stack.Screen
         name="MindfulHours"
-        component={getThemeAwareScreen(
-          MindfulHoursScreen,
-          DarkMindfulHoursScreen,
-          isDarkMode,
-        )}
+        component={MindfulHoursScreen}
         options={{ title: "Mindful Hours", headerShown: false }}
       />
       <Stack.Screen
         name="SleepQuality"
-        component={getThemeAwareScreen(
-          SleepQualityScreen,
-          DarkSleepQualityScreen,
-          isDarkMode,
-        )}
+        component={SleepQualityScreen}
         options={{ title: "Sleep Quality", headerShown: false }}
       />
       <Stack.Screen
         name="StressManagement"
-        component={getThemeAwareScreen(
-          StressManagementScreen,
-          DarkStressManagementScreen,
-          isDarkMode,
-        )}
+        component={StressManagementScreen}
         options={{ title: "Stress Management", headerShown: false }}
       />
       <Stack.Screen
@@ -351,20 +338,12 @@ const WellnessStack = () => {
       />
       <Stack.Screen
         name="Community"
-        component={getThemeAwareScreen(
-          ChatScreen,
-          DarkCommunitySupportScreen,
-          isDarkMode,
-        )}
+        component={ChatScreen}
         options={{ title: "Community Support", headerShown: false }}
       />
       <Stack.Screen
         name="Journal"
-        component={getThemeAwareScreen(
-          JournalScreen,
-          DarkMentalHealthJournalScreen,
-          isDarkMode,
-        )}
+        component={JournalScreen}
         options={{ title: "Mental Health Journal", headerShown: false }}
       />
     </Stack.Navigator>
@@ -388,11 +367,7 @@ const UtilityStack = () => {
     >
       <Stack.Screen
         name="Search"
-        component={getThemeAwareScreen(
-          SearchScreen,
-          DarkSearchScreen,
-          isDarkMode,
-        )}
+        component={SearchScreen}
         options={{ title: "Search", headerShown: false }}
       />
       <Stack.Screen
@@ -482,11 +457,7 @@ const MainTabs = () => {
     >
       <Tab.Screen
         name="Cover"
-        component={getThemeAwareScreen(
-          CoverPageScreen,
-          DarkWelcomeScreen,
-          isDarkMode,
-        )}
+        component={CoverPageScreen}
         options={{
           title: "Welcome",
           tabBarLabel: "Welcome",
@@ -541,11 +512,7 @@ const MainTabs = () => {
       />
       <Tab.Screen
         name="Assessment"
-        component={getThemeAwareScreen(
-          AssessmentScreen,
-          DarkComprehensiveAssessmentScreen,
-          isDarkMode,
-        )}
+        component={AssessmentScreen}
         options={{
           title: "Assessment",
           tabBarLabel: "Assessment",
@@ -677,11 +644,7 @@ const AppNavigator = () => {
       return (
         <Stack.Screen
           name="Onboarding"
-          component={getThemeAwareScreen(
-            OnboardingScreen,
-            DarkWelcomeScreen,
-            isDarkMode,
-          )}
+          component={OnboardingScreen}
           options={{ headerShown: false }}
         />
       );
