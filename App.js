@@ -22,6 +22,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider, useDispatch } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+<<<<<<< HEAD
  * Solace AI Mobile - Mental Health Support App
  * Main App Entry Point - Expo Compatible
  *
@@ -46,6 +47,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider, useDispatch } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
+=======
+
+>>>>>>> origin/main
 // Expo modules
 import { StatusBar, SplashScreen } from './src/shared/expo';
 import { platform } from './src/shared/utils/platform';
@@ -222,6 +226,7 @@ const App = () => {
             <AppNavigator />
           </NavigationWrapper>
         </ThemeProvider>
+<<<<<<< HEAD
       </PersistGate>
     </AppRoot>
     <AppRoot>
@@ -231,6 +236,8 @@ const App = () => {
             <AppNavigator />
           </NavigationWrapper>
         </ThemeProvider>
+=======
+>>>>>>> origin/main
       </PersistGate>
     </AppRoot>
   );

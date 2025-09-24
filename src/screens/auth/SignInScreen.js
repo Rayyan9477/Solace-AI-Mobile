@@ -15,9 +15,14 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
+<<<<<<< HEAD
 import { useTheme } from "../../design-system/theme/ThemeProvider";
 // import { MentalHealthIcon, NavigationIcon } from "../../components/icons"; // Temporarily disabled
 import { secureLogin } from "../../store/slices/authSlice";
+=======
+// import { MentalHealthIcon, NavigationIcon } from "../../components/icons"; // Temporarily disabled
+import { useTheme } from "../../design-system/theme/ThemeProvider";
+>>>>>>> origin/main
 
 const { width } = Dimensions.get("window");
 

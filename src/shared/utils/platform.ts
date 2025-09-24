@@ -24,12 +24,15 @@ export const platform = {
 
   // Platform-specific selections
   select: Platform.select,
+<<<<<<< HEAD
 
   // Device type method
   getDeviceType,
 
   // Expo detection
   isExpoGo,
+=======
+>>>>>>> origin/main
 } as const;
 
 /**

@@ -3,9 +3,12 @@
  * Validates app configuration and dependencies
  */
 
+<<<<<<< HEAD
 import { Platform } from 'react-native';
 import { APP_CONFIG } from '../constants';
 
+=======
+>>>>>>> origin/main
 export interface ValidationResult {
   isValid: boolean;
   errors: string[];
@@ -50,6 +53,7 @@ export const validateDependencies = (): ValidationResult => {
     warnings.push('Some Expo modules may not be available');
   }
 
+<<<<<<< HEAD
   // Check critical dependencies
   const criticalDeps = [
     '@react-navigation/native',
@@ -65,6 +69,8 @@ export const validateDependencies = (): ValidationResult => {
     }
   });
 
+=======
+>>>>>>> origin/main
   return {
     isValid: errors.length === 0,
     errors,
@@ -79,6 +85,7 @@ export const validateConfiguration = (): ValidationResult => {
   const errors: string[] = [];
   const warnings: string[] = [];
 
+<<<<<<< HEAD
   // Validate APP_CONFIG
   if (!APP_CONFIG.version) {
     errors.push('App version not configured');
@@ -93,6 +100,8 @@ export const validateConfiguration = (): ValidationResult => {
     warnings.push('Analytics enabled but key not configured');
   }
 
+=======
+>>>>>>> origin/main
   // Check environment
   if (typeof __DEV__ === 'undefined') {
     warnings.push('Development mode not properly configured');
@@ -112,6 +121,7 @@ export const validatePlatform = (): ValidationResult => {
   const errors: string[] = [];
   const warnings: string[] = [];
 
+<<<<<<< HEAD
   // Check React Native version compatibility
   if (Platform.OS === 'web') {
     // Web-specific validations
@@ -125,6 +135,8 @@ export const validatePlatform = (): ValidationResult => {
     }
   }
 
+=======
+>>>>>>> origin/main
   // Check React Native
   try {
     require('react-native');
@@ -143,6 +155,7 @@ export const validatePlatform = (): ValidationResult => {
  * Comprehensive app validation
  */
 export const validateApp = (): AppValidationResult => {
+<<<<<<< HEAD
   const platform = validatePlatform();
   const dependencies = validateDependencies();
   const configuration = validateConfiguration();
@@ -157,6 +170,22 @@ export const validateApp = (): AppValidationResult => {
     ...platform.warnings,
     ...dependencies.warnings,
     ...configuration.warnings,
+=======
+  const dependencies = validateDependencies();
+  const configuration = validateConfiguration();
+  const platform = validatePlatform();
+
+  const allErrors = [
+    ...dependencies.errors,
+    ...configuration.errors,
+    ...platform.errors,
+  ];
+
+  const allWarnings = [
+    ...dependencies.warnings,
+    ...configuration.warnings,
+    ...platform.warnings,
+>>>>>>> origin/main
   ];
 
   const overall: ValidationResult = {
@@ -167,8 +196,16 @@ export const validateApp = (): AppValidationResult => {
 
   return {
     overall,
+<<<<<<< HEAD
     platform,
     dependencies,
     configuration,
   };
 };
+=======
+    dependencies,
+    configuration,
+    platform,
+  };
+};
+>>>>>>> origin/main
