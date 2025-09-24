@@ -9,7 +9,12 @@
       "mcp__puppeteer__puppeteer_screenshot",
       "mcp__puppeteer__puppeteer_evaluate",
       "Bash(convert:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run lint:*)",
+      "Bash(npm start:*)",
+      "Bash(npm test)"
     ],
     "deny": [],
     "ask": []

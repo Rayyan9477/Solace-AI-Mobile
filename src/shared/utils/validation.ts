@@ -1,56 +1,54 @@
 /**
  * App Validation Utilities
+ * Validates app configuration and dependencies
  */
 
 import { Platform } from 'react-native';
 import { APP_CONFIG } from '../constants';
 
-interface ValidationResult {
+export interface ValidationResult {
   isValid: boolean;
   errors: string[];
   warnings: string[];
 }
 
-interface AppValidationResult {
+export interface AppValidationResult {
   overall: ValidationResult;
-  platform: ValidationResult;
   dependencies: ValidationResult;
   configuration: ValidationResult;
-}
-
-/**
- * Validate platform compatibility
- */
-function validatePlatform(): ValidationResult {
-  const errors: string[] = [];
-  const warnings: string[] = [];
-
-  // Check React Native version compatibility
-  if (Platform.OS === 'web') {
-    // Web-specific validations
-    if (typeof window === 'undefined') {
-      errors.push('Window object not available in web environment');
-    }
-  } else {
-    // Native-specific validations
-    if (!Platform.Version) {
-      warnings.push('Platform version not detected');
-    }
-  }
-
-  return {
-    isValid: errors.length === 0,
-    errors,
-    warnings,
-  };
+  platform: ValidationResult;
 }
 
 /**
  * Validate app dependencies
  */
-function validateDependencies(): ValidationResult {
+export const validateDependencies = (): ValidationResult => {
   const errors: string[] = [];
   const warnings: string[] = [];
+
+  // Check for React Navigation
+  try {
+    require('@react-navigation/native');
+    require('@react-navigation/stack');
+    require('@react-navigation/bottom-tabs');
+  } catch (error) {
+    errors.push('React Navigation dependencies missing');
+  }
+
+  // Check for Redux
+  try {
+    require('react-redux');
+    require('@reduxjs/toolkit');
+  } catch (error) {
+    errors.push('Redux dependencies missing');
+  }
+
+  // Check for Expo
+  try {
+    require('expo-status-bar');
+  } catch (error) {
+    warnings.push('Some Expo modules may not be available');
+  }
 
   // Check critical dependencies
   const criticalDeps = [
@@ -72,12 +70,12 @@ function validateDependencies(): ValidationResult {
     errors,
     warnings,
   };
-}
+};
 
 /**
  * Validate app configuration
  */
-function validateConfiguration(): ValidationResult {
+export const validateConfiguration = (): ValidationResult => {
   const errors: string[] = [];
   const warnings: string[] = [];
 
@@ -95,33 +93,76 @@ function validateConfiguration(): ValidationResult {
     warnings.push('Analytics enabled but key not configured');
   }
 
+  // Check environment
+  if (typeof __DEV__ === 'undefined') {
+    warnings.push('Development mode not properly configured');
+  }
+
   return {
     isValid: errors.length === 0,
     errors,
     warnings,
   };
-}
+};
+
+/**
+ * Validate platform support
+ */
+export const validatePlatform = (): ValidationResult => {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  // Check React Native version compatibility
+  if (Platform.OS === 'web') {
+    // Web-specific validations
+    if (typeof window === 'undefined') {
+      errors.push('Window object not available in web environment');
+    }
+  } else {
+    // Native-specific validations
+    if (!Platform.Version) {
+      warnings.push('Platform version not detected');
+    }
+  }
+
+  // Check React Native
+  try {
+    require('react-native');
+  } catch (error) {
+    errors.push('React Native not available');
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+    warnings,
+  };
+};
 
 /**
  * Comprehensive app validation
  */
-export function validateApp(): AppValidationResult {
+export const validateApp = (): AppValidationResult => {
   const platform = validatePlatform();
   const dependencies = validateDependencies();
   const configuration = validateConfiguration();
 
+  const allErrors = [
+    ...platform.errors,
+    ...dependencies.errors,
+    ...configuration.errors,
+  ];
+
+  const allWarnings = [
+    ...platform.warnings,
+    ...dependencies.warnings,
+    ...configuration.warnings,
+  ];
+
   const overall: ValidationResult = {
-    isValid: platform.isValid && dependencies.isValid && configuration.isValid,
-    errors: [
-      ...platform.errors,
-      ...dependencies.errors,
-      ...configuration.errors,
-    ],
-    warnings: [
-      ...platform.warnings,
-      ...dependencies.warnings,
-      ...configuration.warnings,
-    ],
+    isValid: allErrors.length === 0,
+    errors: allErrors,
+    warnings: allWarnings,
   };
 
   return {
@@ -130,4 +171,4 @@ export function validateApp(): AppValidationResult {
     dependencies,
     configuration,
   };
-}
+};

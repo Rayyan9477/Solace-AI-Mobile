@@ -16,6 +16,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import { useTheme } from "../../design-system/theme/ThemeProvider";
+// import { MentalHealthIcon, NavigationIcon } from "../../components/icons"; // Temporarily disabled
 import { secureLogin } from "../../store/slices/authSlice";
 
 const { width } = Dimensions.get("window");
