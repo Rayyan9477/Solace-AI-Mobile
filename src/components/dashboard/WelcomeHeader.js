@@ -7,6 +7,8 @@ import {
   Alert,
   Animated,
 } from "react-native";
+import { Card, Surface, Avatar, IconButton } from "react-native-paper";
+import { motion } from "framer-motion/native";
 
 import FreudDesignSystem, {
   FreudColors,
@@ -17,6 +19,9 @@ import FreudDesignSystem, {
 } from "../../shared/theme/FreudDesignSystem";
 import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
 import { OptimizedGradient } from "../ui/OptimizedGradients";
+
+const AnimatedCard = motion(Card);
+const AnimatedSurface = motion(Surface);
 
 const WelcomeHeader = memo(
   ({ greeting, userName, onProfilePress, onEmergencyPress }) => {
@@ -67,22 +72,51 @@ const WelcomeHeader = memo(
     const styles = useMemo(() => createStyles(isDarkMode), [isDarkMode]);
 
     return (
-      <View style={styles.container}>
-        <OptimizedGradient variant="subtle" style={styles.backgroundGradient}>
-          <Animated.View
-            style={[
-              styles.mainContent,
-              {
-                opacity: fadeAnim,
-                transform: [{ translateY: slideAnim }],
-              },
-            ]}
-          >
-            <View style={styles.greetingContainer}>
-              <Text style={styles.timeEmoji}>{timeBasedEmoji}</Text>
+      <AnimatedCard
+        mode="contained"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 25,
+          delay: 0.2
+        }}
+        style={styles.container}
+      >
+        <Surface
+          mode="flat"
+          elevation={3}
+          style={styles.surface}
+        >
+          <OptimizedGradient variant="subtle" style={styles.backgroundGradient}>
+            <Animated.View
+              style={[
+                styles.mainContent,
+                {
+                  opacity: fadeAnim,
+                  transform: [{ translateY: slideAnim }],
+                },
+              ]}
+            >
+              <View style={styles.greetingContainer}>
+                <Text style={styles.timeEmoji}>{timeBasedEmoji}</Text>
+                <Text
+                  style={[
+                    styles.greeting,
+                    {
+                      color: isDarkMode
+                        ? FreudDesignSystem.themes.dark.colors.text.primary
+                        : FreudDesignSystem.themes.light.colors.text.primary,
+                    },
+                  ]}
+                >
+                  {greeting}
+                </Text>
+              </View>
               <Text
                 style={[
-                  styles.greeting,
+                  styles.userName,
                   {
                     color: isDarkMode
                       ? FreudDesignSystem.themes.dark.colors.text.primary
@@ -90,68 +124,54 @@ const WelcomeHeader = memo(
                   },
                 ]}
               >
-                {greeting}
+                {userName}
               </Text>
-            </View>
-            <Text
+              <Text
+                style={[
+                  styles.subtitle,
+                  {
+                    color: isDarkMode
+                      ? FreudDesignSystem.themes.dark.colors.text.secondary
+                      : FreudDesignSystem.themes.light.colors.text.secondary,
+                  },
+                ]}
+              >
+                How are you feeling today?
+              </Text>
+            </Animated.View>
+
+            <Animated.View
               style={[
-                styles.userName,
+                styles.headerActions,
                 {
-                  color: isDarkMode
-                    ? FreudDesignSystem.themes.dark.colors.text.primary
-                    : FreudDesignSystem.themes.light.colors.text.primary,
+                  opacity: fadeAnim,
+                  transform: [{ translateY: slideAnim }],
                 },
               ]}
             >
-              {userName}
-            </Text>
-            <Text
-              style={[
-                styles.subtitle,
-                {
-                  color: isDarkMode
-                    ? FreudDesignSystem.themes.dark.colors.text.secondary
-                    : FreudDesignSystem.themes.light.colors.text.secondary,
-                },
-              ]}
-            >
-              How are you feeling today?
-            </Text>
-          </Animated.View>
+              <Avatar.Text
+                size={52}
+                label={userName.charAt(0).toUpperCase()}
+                style={styles.avatarButton}
+                labelStyle={styles.avatarText}
+                onPress={handleProfilePress}
+              />
 
-          <Animated.View
-            style={[
-              styles.headerActions,
-              {
-                opacity: fadeAnim,
-                transform: [{ translateY: slideAnim }],
-              },
-            ]}
-          >
-            <TouchableOpacity
-              onPress={handleProfilePress}
-              style={styles.avatarButton}
-              testID="profile-button"
-              accessibilityLabel="View Profile"
-              accessibilityHint="Double tap to view your profile"
-            >
-              <Text style={styles.avatarText}>
-                {userName.charAt(0).toUpperCase()}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={handleEmergencyPress}
-              style={styles.emergencyButton}
-              testID="emergency-button"
-              accessibilityLabel="Emergency Crisis Support"
-              accessibilityHint="Double tap for immediate crisis support"
-            >
-              <Text style={styles.emergencyText}>🚨</Text>
-            </TouchableOpacity>
-          </Animated.View>
-        </OptimizedGradient>
-      </View>
+              <IconButton
+                icon="alert-circle"
+                iconColor="#FFFFFF"
+                size={28}
+                mode="contained"
+                containerColor={FreudColors.empathyOrange[60]}
+                style={styles.emergencyButton}
+                onPress={handleEmergencyPress}
+                testID="emergency-button"
+                accessibilityLabel="Emergency Crisis Support"
+              />
+            </Animated.View>
+          </OptimizedGradient>
+        </Surface>
+      </AnimatedCard>
     );
   },
 );
@@ -162,14 +182,16 @@ const createStyles = (isDarkMode) =>
   StyleSheet.create({
     container: {
       marginBottom: FreudSpacing[4],
-      borderRadius: FreudBorderRadius.xl,
+      marginHorizontal: FreudSpacing[3],
+    },
+    surface: {
+      borderRadius: 24,
       overflow: "hidden",
-      ...FreudShadows.sm,
     },
     backgroundGradient: {
       flexDirection: "row",
       alignItems: "flex-start",
-      paddingHorizontal: FreudSpacing[4],
+      paddingHorizontal: FreudSpacing[5],
       paddingVertical: FreudSpacing[6],
     },
     mainContent: {
@@ -179,45 +201,39 @@ const createStyles = (isDarkMode) =>
     greetingContainer: {
       flexDirection: "row",
       alignItems: "center",
-      marginBottom: FreudSpacing[1],
-    },
-    timeEmoji: {
-      fontSize: FreudTypography.sizes.lg,
-      marginRight: FreudSpacing[2],
-    },
-    greeting: {
-      fontSize: FreudTypography.sizes.base,
-      fontWeight: FreudTypography.weights.medium,
-      lineHeight:
-        FreudTypography.sizes.base * FreudTypography.lineHeights.normal,
-    },
-    userName: {
-      fontSize: FreudTypography.sizes["3xl"],
-      fontWeight: FreudTypography.weights.bold,
-      lineHeight:
-        FreudTypography.sizes["3xl"] * FreudTypography.lineHeights.tight,
       marginBottom: FreudSpacing[2],
     },
+    timeEmoji: {
+      fontSize: FreudTypography.sizes.xl,
+      marginRight: FreudSpacing[3],
+    },
+    greeting: {
+      fontSize: FreudTypography.sizes.lg,
+      fontWeight: FreudTypography.weights.medium,
+      lineHeight:
+        FreudTypography.sizes.lg * FreudTypography.lineHeights.normal,
+    },
+    userName: {
+      fontSize: FreudTypography.sizes["4xl"],
+      fontWeight: FreudTypography.weights.bold,
+      lineHeight:
+        FreudTypography.sizes["4xl"] * FreudTypography.lineHeights.tight,
+      marginBottom: FreudSpacing[3],
+    },
     subtitle: {
-      fontSize: FreudTypography.sizes.sm,
+      fontSize: FreudTypography.sizes.base,
       fontWeight: FreudTypography.weights.normal,
       lineHeight:
-        FreudTypography.sizes.sm * FreudTypography.lineHeights.relaxed,
+        FreudTypography.sizes.base * FreudTypography.lineHeights.relaxed,
       opacity: 0.8,
     },
     headerActions: {
-      flexDirection: "row",
+      flexDirection: "column",
       alignItems: "center",
-      gap: FreudSpacing[2],
+      gap: FreudSpacing[3],
     },
     avatarButton: {
-      width: 48,
-      height: 48,
-      borderRadius: 24,
       backgroundColor: FreudColors.mindfulBrown[70],
-      justifyContent: "center",
-      alignItems: "center",
-      ...FreudShadows.md,
     },
     avatarText: {
       fontSize: FreudTypography.sizes.xl,
@@ -225,16 +241,7 @@ const createStyles = (isDarkMode) =>
       color: "#FFFFFF",
     },
     emergencyButton: {
-      width: 56,
-      height: 56,
       borderRadius: 28,
-      backgroundColor: FreudColors.empathyOrange[60],
-      justifyContent: "center",
-      alignItems: "center",
-      ...FreudShadows.md,
-    },
-    emergencyText: {
-      fontSize: FreudTypography.sizes.xl,
     },
   });
 

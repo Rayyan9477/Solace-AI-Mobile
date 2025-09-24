@@ -1,36 +1,36 @@
-import React from 'react';
-import { motion } from 'framer-motion/native';
-import anime from 'animejs/lib/anime.es.js';
+import anime from "animejs/lib/anime.es.js";
+import { motion } from "framer-motion/native";
+import React from "react";
 
 export const therapeuticTransitions = {
   gentle: {
-    type: 'spring',
+    type: "spring",
     stiffness: 300,
     damping: 30,
-    mass: 0.8
+    mass: 0.8,
   },
   calm: {
-    type: 'spring',
+    type: "spring",
     stiffness: 200,
     damping: 25,
-    mass: 1
+    mass: 1,
   },
   energetic: {
-    type: 'spring',
+    type: "spring",
     stiffness: 400,
     damping: 20,
-    mass: 0.6
+    mass: 0.6,
   },
   soothing: {
-    type: 'tween',
+    type: "tween",
     duration: 0.8,
-    ease: 'easeOut'
+    ease: "easeOut",
   },
   mindful: {
-    type: 'tween',
+    type: "tween",
     duration: 1.2,
-    ease: 'easeInOut'
-  }
+    ease: "easeInOut",
+  },
 };
 
 export const breathingAnimation = {
@@ -39,8 +39,8 @@ export const breathingAnimation = {
   transition: {
     duration: 4,
     repeat: Infinity,
-    ease: 'easeInOut'
-  }
+    ease: "easeInOut",
+  },
 };
 
 export const meditationRipple = {
@@ -49,15 +49,15 @@ export const meditationRipple = {
   transition: {
     duration: 2,
     repeat: Infinity,
-    ease: 'easeOut'
-  }
+    ease: "easeOut",
+  },
 };
 
 export const moodTransition = {
   initial: { scale: 0.8, opacity: 0 },
   animate: { scale: 1, opacity: 1 },
   exit: { scale: 1.2, opacity: 0 },
-  transition: therapeuticTransitions.gentle
+  transition: therapeuticTransitions.gentle,
 };
 
 export const staggerContainer = {
@@ -66,9 +66,9 @@ export const staggerContainer = {
     opacity: 1,
     transition: {
       staggerChildren: 0.1,
-      delayChildren: 0.2
-    }
-  }
+      delayChildren: 0.2,
+    },
+  },
 };
 
 export const staggerItem = {
@@ -76,35 +76,39 @@ export const staggerItem = {
   animate: {
     y: 0,
     opacity: 1,
-    transition: therapeuticTransitions.calm
-  }
+    transition: therapeuticTransitions.calm,
+  },
 };
 
-export const FloatingElement = ({ children, intensity = 'gentle', delay = 0 }) => {
+export const FloatingElement = ({
+  children,
+  intensity = "gentle",
+  delay = 0,
+}) => {
   const getFloatingAnimation = () => {
     switch (intensity) {
-      case 'gentle':
+      case "gentle":
         return {
           y: [0, -8, 0],
           transition: {
             duration: 3,
             repeat: Infinity,
-            ease: 'easeInOut',
-            delay
-          }
+            ease: "easeInOut",
+            delay,
+          },
         };
-      case 'moderate':
+      case "moderate":
         return {
           y: [0, -15, 0],
           x: [0, 5, 0],
           transition: {
             duration: 4,
             repeat: Infinity,
-            ease: 'easeInOut',
-            delay
-          }
+            ease: "easeInOut",
+            delay,
+          },
         };
-      case 'active':
+      case "active":
         return {
           y: [0, -20, 0],
           x: [0, 8, 0],
@@ -112,52 +116,52 @@ export const FloatingElement = ({ children, intensity = 'gentle', delay = 0 }) =
           transition: {
             duration: 2.5,
             repeat: Infinity,
-            ease: 'easeInOut',
-            delay
-          }
+            ease: "easeInOut",
+            delay,
+          },
         };
       default:
         return {};
     }
   };
 
-  return (
-    <motion.View animate={getFloatingAnimation()}>
-      {children}
-    </motion.View>
-  );
+  return <motion.View animate={getFloatingAnimation()}>{children}</motion.View>;
 };
 
-export const PulseElement = ({ children, therapeuticMode = 'calm', size = 1.05 }) => {
+export const PulseElement = ({
+  children,
+  therapeuticMode = "calm",
+  size = 1.05,
+}) => {
   const getPulseAnimation = () => {
     switch (therapeuticMode) {
-      case 'calm':
+      case "calm":
         return {
           scale: [1, size, 1],
           transition: {
             duration: 2,
             repeat: Infinity,
-            ease: 'easeInOut'
-          }
+            ease: "easeInOut",
+          },
         };
-      case 'stress':
+      case "stress":
         return {
           scale: [1, size * 1.1, 1],
           transition: {
             duration: 1.5,
             repeat: Infinity,
-            ease: 'easeInOut'
-          }
+            ease: "easeInOut",
+          },
         };
-      case 'anxiety':
+      case "anxiety":
         return {
           scale: [1, size, 1],
           opacity: [0.8, 1, 0.8],
           transition: {
             duration: 1,
             repeat: Infinity,
-            ease: 'easeInOut'
-          }
+            ease: "easeInOut",
+          },
         };
       default:
         return {
@@ -165,20 +169,19 @@ export const PulseElement = ({ children, therapeuticMode = 'calm', size = 1.05 }
           transition: {
             duration: 2,
             repeat: Infinity,
-            ease: 'easeInOut'
-          }
+            ease: "easeInOut",
+          },
         };
     }
   };
 
-  return (
-    <motion.View animate={getPulseAnimation()}>
-      {children}
-    </motion.View>
-  );
+  return <motion.View animate={getPulseAnimation()}>{children}</motion.View>;
 };
 
-export const BreathingCircle = ({ size = 100, therapeuticColor = '#7D944D' }) => {
+export const BreathingCircle = ({
+  size = 100,
+  therapeuticColor = "#7D944D",
+}) => {
   return (
     <motion.View
       animate={breathingAnimation}
@@ -187,57 +190,66 @@ export const BreathingCircle = ({ size = 100, therapeuticColor = '#7D944D' }) =>
         height: size,
         borderRadius: size / 2,
         backgroundColor: therapeuticColor,
-        alignItems: 'center',
-        justifyContent: 'center'
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <motion.View
         animate={{
           scale: [0.8, 1.2, 0.8],
-          opacity: [0.3, 0.1, 0.3]
+          opacity: [0.3, 0.1, 0.3],
         }}
         transition={{
           duration: 4,
           repeat: Infinity,
-          ease: 'easeInOut',
-          delay: 0.5
+          ease: "easeInOut",
+          delay: 0.5,
         }}
         style={{
           width: size * 0.8,
           height: size * 0.8,
           borderRadius: (size * 0.8) / 2,
           backgroundColor: therapeuticColor,
-          position: 'absolute'
+          position: "absolute",
         }}
       />
     </motion.View>
   );
 };
 
-export const MoodWave = ({ width = 300, height = 60, therapeuticColor = '#7D944D' }) => {
+export const MoodWave = ({
+  width = 300,
+  height = 60,
+  therapeuticColor = "#7D944D",
+}) => {
   return (
     <motion.View
       animate={{
         scaleX: [1, 1.1, 1],
-        y: [0, -5, 0]
+        y: [0, -5, 0],
       }}
       transition={{
         duration: 3,
         repeat: Infinity,
-        ease: 'easeInOut'
+        ease: "easeInOut",
       }}
       style={{
         width,
         height,
         backgroundColor: therapeuticColor,
         borderRadius: height / 2,
-        opacity: 0.6
+        opacity: 0.6,
       }}
     />
   );
 };
 
-export const AnimatedCounter = ({ from, to, duration = 1000, therapeuticMode = 'calm' }) => {
+export const AnimatedCounter = ({
+  from,
+  to,
+  duration = 1000,
+  therapeuticMode = "calm",
+}) => {
   const [count, setCount] = React.useState(from);
 
   React.useEffect(() => {
@@ -245,10 +257,10 @@ export const AnimatedCounter = ({ from, to, duration = 1000, therapeuticMode = '
       targets: { value: from },
       value: to,
       duration,
-      easing: therapeuticMode === 'calm' ? 'easeOutQuad' : 'easeOutCubic',
-      update: function(anim) {
+      easing: therapeuticMode === "calm" ? "easeOutQuad" : "easeOutCubic",
+      update(anim) {
         setCount(Math.round(anim.animations[0].currentValue));
-      }
+      },
     });
 
     return () => animation.pause();
@@ -258,25 +270,27 @@ export const AnimatedCounter = ({ from, to, duration = 1000, therapeuticMode = '
     <motion.Text
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      transition={therapeuticTransitions[therapeuticMode] || therapeuticTransitions.calm}
+      transition={
+        therapeuticTransitions[therapeuticMode] || therapeuticTransitions.calm
+      }
     >
       {count}
     </motion.Text>
   );
 };
 
-export const EmotionRipple = ({ therapeuticColor = '#7D944D', size = 200 }) => {
+export const EmotionRipple = ({ therapeuticColor = "#7D944D", size = 200 }) => {
   return (
     <motion.View
       style={{
-        position: 'absolute',
+        position: "absolute",
         width: size,
         height: size,
         borderRadius: size / 2,
         borderWidth: 2,
         borderColor: therapeuticColor,
-        alignItems: 'center',
-        justifyContent: 'center'
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       {[...Array(3)].map((_, i) => (
@@ -285,10 +299,10 @@ export const EmotionRipple = ({ therapeuticColor = '#7D944D', size = 200 }) => {
           animate={meditationRipple}
           transition={{
             ...meditationRipple.transition,
-            delay: i * 0.6
+            delay: i * 0.6,
           }}
           style={{
-            position: 'absolute',
+            position: "absolute",
             width: size * 0.8,
             height: size * 0.8,
             borderRadius: (size * 0.8) / 2,
@@ -301,23 +315,26 @@ export const EmotionRipple = ({ therapeuticColor = '#7D944D', size = 200 }) => {
   );
 };
 
-export const TherapeuticPageTransition = ({ children, direction = 'horizontal' }) => {
+export const TherapeuticPageTransition = ({
+  children,
+  direction = "horizontal",
+}) => {
   return (
     <motion.View
       initial={{
         opacity: 0,
-        x: direction === 'horizontal' ? 50 : 0,
-        y: direction === 'vertical' ? 50 : 0
+        x: direction === "horizontal" ? 50 : 0,
+        y: direction === "vertical" ? 50 : 0,
       }}
       animate={{
         opacity: 1,
         x: 0,
-        y: 0
+        y: 0,
       }}
       exit={{
         opacity: 0,
-        x: direction === 'horizontal' ? -50 : 0,
-        y: direction === 'vertical' ? -50 : 0
+        x: direction === "horizontal" ? -50 : 0,
+        y: direction === "vertical" ? -50 : 0,
       }}
       transition={therapeuticTransitions.mindful}
       style={{ flex: 1 }}
@@ -327,23 +344,23 @@ export const TherapeuticPageTransition = ({ children, direction = 'horizontal' }
   );
 };
 
-export const LoadingSpinner = ({ therapeuticColor = '#7D944D', size = 40 }) => {
+export const LoadingSpinner = ({ therapeuticColor = "#7D944D", size = 40 }) => {
   return (
     <motion.View
       animate={{ rotate: 360 }}
       transition={{
         duration: 2,
         repeat: Infinity,
-        ease: 'linear'
+        ease: "linear",
       }}
       style={{
         width: size,
         height: size,
         borderRadius: size / 2,
         borderWidth: 3,
-        borderColor: 'transparent',
+        borderColor: "transparent",
         borderTopColor: therapeuticColor,
-        borderRightColor: therapeuticColor
+        borderRightColor: therapeuticColor,
       }}
     />
   );
@@ -363,5 +380,5 @@ export default {
   AnimatedCounter,
   EmotionRipple,
   TherapeuticPageTransition,
-  LoadingSpinner
+  LoadingSpinner,
 };

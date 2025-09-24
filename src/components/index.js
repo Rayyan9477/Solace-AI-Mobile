@@ -79,9 +79,7 @@ export {
 // Common Components (consolidated)
 export { default as LoadingScreen } from "./LoadingScreen";
 
-// Deprecated component mappings for backward compatibility
-// TODO: Remove these after full migration
-export { TherapeuticButton as AccessibleButton } from "./ui/TherapeuticButton";
-export { MentalHealthCard as FeatureCard } from "./ui/MentalHealthCard";
+// Modern component exports - clean architecture
+// All deprecated mappings removed for production
 export { LoadingScreen as FixedLoadingScreen } from "./LoadingScreen";
 export { LoadingScreen as FixedSplashScreen } from "./LoadingScreen";

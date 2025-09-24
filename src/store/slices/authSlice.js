@@ -1,8 +1,62 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import apiService from "../../services/api";
-import secureStorage from "../../services/secureStorage";
-import tokenService from "../../services/tokenService";
+// Mock services for development
+const mockApiService = {
+  auth: {
+    async login(email, password) {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      if (email && password) {
+        return {
+          user: { id: '1', name: 'Test User', email },
+          access_token: 'mock_token_123',
+        };
+      }
+      throw new Error('Invalid credentials');
+    }
+  }
+};
+
+const mockSecureStorage = {
+  async storeSecureData(key, data) {
+    console.log(`Storing secure data for key: ${key}`);
+    return true;
+  },
+  async getSecureData(key) {
+    console.log(`Getting secure data for key: ${key}`);
+    if (key === 'user_profile') {
+      return { id: '1', name: 'Test User', email: 'test@example.com' };
+    }
+    return null;
+  },
+  async removeSecureData(key) {
+    console.log(`Removing secure data for key: ${key}`);
+    return true;
+  },
+};
+
+const mockTokenService = {
+  async isAuthenticated() {
+    return false; // Start as not authenticated for proper flow
+  },
+  async getTokens() {
+    return null; // Start with no tokens
+  },
+  async clearTokens() {
+    console.log('Clearing tokens');
+    return true;
+  },
+  async invalidateSession() {
+    console.log('Invalidating session');
+    return true;
+  },
+};
+
+// Use actual services in production, mock in development
+const apiService = __DEV__ ? mockApiService : require("../../services/api").default;
+const secureStorage = __DEV__ ? mockSecureStorage : require("../../services/secureStorage").default;
+const tokenService = __DEV__ ? mockTokenService : require("../../services/tokenService").default;
 
 // Async thunk for secure login
 export const secureLogin = createAsyncThunk(
@@ -58,7 +112,7 @@ export const secureLogout = createAsyncThunk(
   },
 );
 
-// Async thunk to restore authentication state
+// Async thunk to restore authentication state with timeout
 export const restoreAuthState = createAsyncThunk(
   "auth/restoreAuthState",
   async (_, { rejectWithValue }) => {
@@ -66,46 +120,63 @@ export const restoreAuthState = createAsyncThunk(
       console.log(
         "≡ƒöä restoreAuthState: Starting authentication state restoration...",
       );
-      // Check if user is authenticated
-      const isAuthenticated = await tokenService.isAuthenticated();
-      console.log("≡ƒöä restoreAuthState: isAuthenticated =", isAuthenticated);
 
-      if (!isAuthenticated) {
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Auth restoration timeout')), 5000);
+      });
+
+      const authCheckPromise = async () => {
+        // Check if user is authenticated
+        const isAuthenticated = await tokenService.isAuthenticated();
+        console.log("≡ƒöä restoreAuthState: isAuthenticated =", isAuthenticated);
+
+        if (!isAuthenticated) {
+          console.log(
+            "≡ƒöä restoreAuthState: User not authenticated, returning false",
+          );
+          return { isAuthenticated: false };
+        }
+
+        // Get tokens
+        const tokens = await tokenService.getTokens();
+        console.log("≡ƒöä restoreAuthState: Tokens retrieved =", !!tokens);
+
+        // Get user data
+        const user = await secureStorage.getSecureData("user_profile");
+        console.log("≡ƒöä restoreAuthState: User data retrieved =", !!user);
+
+        if (!tokens || !user) {
+          // Clear inconsistent state
+          console.log(
+            "≡ƒöä restoreAuthState: Missing tokens or user data, clearing state",
+          );
+          await tokenService.clearTokens();
+          return { isAuthenticated: false };
+        }
+
         console.log(
-          "≡ƒöä restoreAuthState: User not authenticated, returning false",
+          "≡ƒöä restoreAuthState: Authentication state restored successfully",
         );
-        return { isAuthenticated: false };
-      }
-
-      // Get tokens
-      const tokens = await tokenService.getTokens();
-      console.log("≡ƒöä restoreAuthState: Tokens retrieved =", !!tokens);
-
-      // Get user data
-      const user = await secureStorage.getSecureData("user_profile");
-      console.log("≡ƒöä restoreAuthState: User data retrieved =", !!user);
-
-      if (!tokens || !user) {
-        // Clear inconsistent state
-        console.log(
-          "≡ƒöä restoreAuthState: Missing tokens or user data, clearing state",
-        );
-        await tokenService.clearTokens();
-        return { isAuthenticated: false };
-      }
-
-      console.log(
-        "≡ƒöä restoreAuthState: Authentication state restored successfully",
-      );
-      return {
-        isAuthenticated: true,
-        user,
-        token: tokens.accessToken,
+        return {
+          isAuthenticated: true,
+          user,
+          token: tokens.accessToken,
+        };
       };
+
+      // Race between auth check and timeout
+      return await Promise.race([authCheckPromise(), timeoutPromise]);
+
     } catch (error) {
       console.error("≡ƒöä restoreAuthState: Error during restoration:", error);
       // Clear potentially corrupted state
-      await tokenService.clearTokens();
+      try {
+        await tokenService.clearTokens();
+      } catch (clearError) {
+        console.warn("Failed to clear tokens:", clearError);
+      }
+      // Always return a valid state instead of rejecting
       return { isAuthenticated: false };
     }
   },

@@ -1,0 +1,5 @@
+Dark[[:space:]]Mode.pdf filter=lfs diff=lfs merge=lfs -text
+Light[[:space:]]Mode.pdf filter=lfs diff=lfs merge=lfs -text
+Dashboard[[:space:]]and[[:space:]]Title[[:space:]]Page.pdf filter=lfs diff=lfs merge=lfs -text
+Font filter=lfs diff=lfs merge=lfs -text
+Color[[:space:]]and[[:space:]]Icons[[:space:]].pdf filter=lfs diff=lfs merge=lfs -text

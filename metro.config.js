@@ -1,41 +1,49 @@
-// Add web-specific transformer config
-const { getDefaultConfig } = require("@expo/metro-config");
+/**
+ * Metro Configuration for Expo
+ * Optimized for cross-platform development with proper module resolution
+ */
+
+const { getDefaultConfig } = require('expo/metro-config');
 
 const config = getDefaultConfig(__dirname);
 
-// Configure resolver for better web support
-config.resolver.sourceExts = ["js", "json", "ts", "tsx", "jsx", "cjs", "mjs"];
-config.resolver.assetExts = ["glb", "gltf", "png", "jpg", "svg", "ttf", "otf"];
+// Add support for TypeScript files
+config.resolver.sourceExts.push('ts', 'tsx');
 
-// Web-specific configuration
-if (process.env.EXPO_PLATFORM === "web") {
-  // Add extra node modules for web compatibility
-  config.resolver.extraNodeModules = {
-    ...config.resolver.extraNodeModules,
-    // Ensure web-specific modules are available
-    "react-native-web": require.resolve("react-native-web"),
-  };
+// Add support for platform-specific files
+config.resolver.platforms = ['native', 'ios', 'android', 'web'];
 
-  // Configure transformer for web
-  config.transformer = {
-    ...config.transformer,
-    babelTransformerPath: require.resolve(
-      "metro-react-native-babel-transformer",
-    ),
-    getTransformOptions: async () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: false,
-        unstable_transformProfile: "default",
-      },
-    }),
-  };
+// Ensure proper module resolution for shared components
+config.resolver.alias = {
+  '@': './src',
+  '@shared': './src/shared',
+  '@features': './src/features',
+  '@components': './src/shared/ui',
+  '@utils': './src/shared/utils',
+  '@theme': './src/shared/theme',
+  '@expo': './src/shared/expo',
+};
 
-  // Add web-specific resolver aliases
-  config.resolver.alias = {
-    ...config.resolver.alias,
-    "react-native": "react-native-web",
-  };
+// Add transformer for framer-motion and other animations
+config.transformer.babelTransformerPath = require.resolve(
+  'metro-react-native-babel-transformer'
+);
+
+// Enable experimental features for better performance
+config.transformer.experimentalImportSupport = false;
+config.transformer.inlineRequires = true;
+
+// Optimize bundle size
+config.transformer.minifierConfig = {
+  mangle: {
+    keep_fnames: true, // Important for React components
+  },
+};
+
+// Web-specific optimizations
+if (process.env.EXPO_PLATFORM === 'web') {
+  config.resolver.alias['react-native$'] = 'react-native-web';
+  config.resolver.alias['react-native-svg'] = 'react-native-svg-web';
 }
 
 module.exports = config;

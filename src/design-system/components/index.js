@@ -1,9 +1,18 @@
-// Core Components
-export { Button, ButtonGroup } from './Button';
-export { Card, CardHeader, CardContent, CardActions } from './Card';
-export { TextInput, SearchInput, TextArea } from './Input';
-export { Typography, Heading, Body, Label, TherapeuticText } from './Typography';
-export { Container, Section, Grid, Spacer } from './Layout';
+// Atomic Design Components
+// Atoms - Basic building blocks
+export { Button, ButtonGroup } from "./atoms/Button";
+export { Card, CardHeader, CardContent, CardActions } from "./atoms/Card";
+export { TextInput, SearchInput, TextArea } from "./atoms/Input";
+export {
+  Typography,
+  Heading,
+  Body,
+  Label,
+  TherapeuticText,
+} from "./atoms/Typography";
+
+// Organisms - Complex components
+export { Container, Section, Grid, Spacer } from "./organisms/Layout";
 
 // Re-export Paper components with our theming
 export {
@@ -26,5 +35,5 @@ export {
   Snackbar,
   Surface,
   Switch,
-  Tooltip
-} from 'react-native-paper';
+  Tooltip,
+} from "react-native-paper";

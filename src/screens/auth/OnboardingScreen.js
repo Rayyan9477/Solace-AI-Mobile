@@ -14,10 +14,9 @@ import {
 } from "react-native";
 import { useDispatch } from "react-redux";
 
-import { WebSafeLinearGradient as LinearGradient } from "../../components/common/WebSafeLinearGradient";
-import { useTheme } from "../../shared/theme/ThemeContext";
-import { MentalHealthAccessibility } from "../../shared/utils/accessibility";
-import { completeOnboarding, loginSuccess } from "../../store/slices/authSlice";
+import { LinearGradient } from "expo-linear-gradient";
+import { useTheme } from "../../design-system/theme/ThemeProvider";
+import { completeOnboarding } from "../../store/slices/authSlice";
 
 const { width, height } = Dimensions.get("window");
 
@@ -41,7 +40,7 @@ const OnboardingScreen = () => {
         subtitle:
           "Your mindful mental health AI companion for everyone, anywhere ✨",
         illustration: "🧠",
-        backgroundColor: [theme.colors.primary[100], theme.colors.primary[50]],
+        backgroundColor: [theme.colors.primary || "#6366f1", theme.colors.primaryContainer || "#e0e7ff"],
         buttonText: "Get Started",
         stepLabel: "Step One",
       },
@@ -51,10 +50,7 @@ const OnboardingScreen = () => {
         subtitle:
           "AI-powered insights to understand your mental wellness journey",
         illustration: "🌱",
-        backgroundColor: [
-          theme.colors.secondary[100],
-          theme.colors.secondary[50],
-        ],
+        backgroundColor: [theme.colors.secondary || "#22c55e", theme.colors.secondaryContainer || "#dcfce7"],
         buttonText: "Continue",
         stepLabel: "Step Two",
       },

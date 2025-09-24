@@ -1,4 +1,32 @@
-*.pdf
+# Expo
+.expo/
+dist/
+web-build/
+.next/
+
+# Dependencies
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+
+# MacOS
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
 
 # Environment variables
 .env
@@ -7,75 +35,35 @@
 .env.test.local
 .env.production.local
 
-# API Keys and secrets
-**/config/secrets.*
-**/config/keys.*
-**/*api-key*
-**/*secret*
-**/*token*
-**/credentials.*
-auth.json
-secrets.json
-
-# Figma-specific sensitive files
-figma-config.json
-.figma-token
-figma-credentials.*
-
-# MCP server configurations with sensitive data
-mcp-config.json
-mcp-secrets.*
-
-# Node modules
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Local cache
+.cache/
 
 # Build outputs
-dist/
 build/
-*.tgz
-*.tar.gz
 
-# IDE files
-.vscode/settings.json
-.idea/
+# Temporary folders
+tmp/
+temp/
+
+# Testing
+.playwright-mcp/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 *.swp
 *.swo
 
-# OS files
-.DS_Store
-Thumbs.db
-
-# Logs
-logs
-*.log
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# Dependency directories
-jspm_packages/
-
-# Optional npm cache directory
-.npm
-
-# Optional eslint cache
-.eslintcache
-
-coverage
-
-.claude
-mcp.json
-.cursor
-
-.bmad-core
-.bmad-core/
-
-test-reports
-test-results
-nul
+# React Native
+android/
+ios/

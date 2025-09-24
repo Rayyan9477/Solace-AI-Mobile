@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__playwright__browser_navigate",
+      "Bash(npm start)",
+      "mcp__sequential-thinking__sequentialthinking",
+      "Bash(npm run web:*)",
+      "mcp__puppeteer__puppeteer_navigate",
+      "Bash(npm test)",
+      "Bash(node:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(npx expo start:*)",
+      "mcp__puppeteer__puppeteer_screenshot",
+      "mcp__puppeteer__puppeteer_evaluate",
+      "Bash(CI=1 npx expo start --web --port 19006)",
+      "Bash(powershell:*)",
+      "Read(//r/Solace-AI-Mobile/**)",
+      "Bash(npm start:*)",
+      "Bash(npm ls:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
