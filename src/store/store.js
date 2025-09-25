@@ -6,7 +6,6 @@ import { persistStore, persistReducer } from "redux-persist";
 import assessmentSlice from "./slices/assessmentSlice";
 import authSlice from "./slices/authSlice";
 import chatSlice from "./slices/chatSlice";
-import enhancedMoodSlice from "./slices/enhancedMoodSlice";
 import moodSlice from "./slices/moodSlice";
 import therapySlice from "./slices/therapySlice";
 import userSlice from "./slices/userSlice";
@@ -24,7 +23,6 @@ const rootReducer = combineReducers({
   user: userSlice,
   assessment: assessmentSlice,
   mood: moodSlice,
-  enhancedMood: enhancedMoodSlice,
   therapy: therapySlice,
 });
 

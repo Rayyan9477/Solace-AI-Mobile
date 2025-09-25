@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Card, Surface, IconButton } from "react-native-paper";
-import { motion } from "framer-motion/native";
+import { motion } from "framer-motion";
 
 import { useTheme } from "../shared/theme/UnifiedThemeProvider";
 import { FreudColors, FreudSpacing, FreudTypography } from "../shared/theme/FreudDesignSystem";

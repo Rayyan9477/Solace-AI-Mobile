@@ -1,4 +1,4 @@
-import { motion } from "framer-motion/native";
+import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { View } from "react-native";
 import {

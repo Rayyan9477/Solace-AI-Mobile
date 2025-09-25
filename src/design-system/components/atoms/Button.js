@@ -1,4 +1,4 @@
-import { motion } from "framer-motion/native";
+import { motion } from "framer-motion";
 import React from "react";
 import { Button as PaperButton, useTheme } from "react-native-paper";
 

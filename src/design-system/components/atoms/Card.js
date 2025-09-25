@@ -1,4 +1,4 @@
-import { motion } from "framer-motion/native";
+import { motion } from "framer-motion";
 import React from "react";
 import { View } from "react-native";
 import { Card as PaperCard, useTheme } from "react-native-paper";

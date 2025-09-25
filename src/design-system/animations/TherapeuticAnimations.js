@@ -1,5 +1,5 @@
-import anime from "animejs/lib/anime.es.js";
-import { motion } from "framer-motion/native";
+import anime from "animejs";
+import { motion } from "framer-motion";
 import React from "react";
 
 export const therapeuticTransitions = {

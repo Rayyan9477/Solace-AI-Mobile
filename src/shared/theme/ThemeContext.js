@@ -1,14 +1,14 @@
 /**
  * Theme Context for Solace AI Mental Health App
- * Backward compatibility wrapper for UnifiedThemeProvider
+ * Backward compatibility wrapper - redirects to main ThemeProvider
  */
 
-// Re-export everything from UnifiedThemeProvider for backward compatibility
+// Re-export everything from the main ThemeProvider for backward compatibility
 export {
-  UnifiedThemeProvider as ThemeProvider,
-  UnifiedThemeContext as ThemeContext,
+  ThemeProvider,
+  ThemeContext,
   useTheme,
-} from "./UnifiedThemeProvider";
+} from "../../design-system/theme/ThemeProvider";
 
-// Also export the old theme definitions for any components that might need them
-export { lightTheme, darkTheme } from "./theme";
+// Also export the theme definitions for any components that might need them
+export { lightTheme, darkTheme } from "../../design-system/theme";

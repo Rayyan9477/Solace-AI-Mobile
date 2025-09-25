@@ -11,7 +11,7 @@ import {
   Pressable,
 } from 'react-native';
 import { Card, Surface, IconButton } from 'react-native-paper';
-import { motion } from 'framer-motion/native';
+import { motion } from 'framer-motion';
 
 import { Speech } from '../../../shared/expo';
 import { platform } from '../../../shared/utils/platform';

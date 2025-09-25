@@ -168,15 +168,29 @@ const withErrorBoundary = (Component, options = {}) => {
       return <Component {...props} ref={ref} />;
     } catch (error) {
       console.error('Component error:', error);
-      return options.fallback ? 
-        options.fallback({ error, retry: () => window.location.reload() }) :
+      const retryAction = () => {
+        if (typeof window !== 'undefined' && window.location?.reload) {
+          // Web environment
+          window.location.reload();
+        } else {
+          // React Native environment - force re-render by updating state
+          console.log('🔄 MainAppScreen: Component error recovery triggered');
+          // This will force the parent to re-render
+          if (options.onRetry) {
+            options.onRetry();
+          }
+        }
+      };
+
+      return options.fallback ?
+        options.fallback({ error, retry: retryAction }) :
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
           <Text style={{ fontSize: 18, textAlign: 'center', marginBottom: 20 }}>Something went wrong</Text>
-          <TouchableOpacity 
-            onPress={() => window.location?.reload?.()}
+          <TouchableOpacity
+            onPress={retryAction}
             style={{ padding: 12, backgroundColor: '#3b82f6', borderRadius: 8 }}
           >
-            <Text style={{ color: 'white', fontWeight: 'bold' }}>Reload</Text>
+            <Text style={{ color: 'white', fontWeight: 'bold' }}>Try Again</Text>
           </TouchableOpacity>
         </View>;
     }

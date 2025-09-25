@@ -5,7 +5,7 @@ import { Provider as ReduxProvider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
 import { LoadingSpinner } from "../design-system/animations/TherapeuticAnimations";
-import { Container } from "../design-system/components/Layout";
+import { Container } from "../design-system/components/organisms/Layout";
 import { lightTheme, darkTheme } from "../design-system/theme/MaterialTheme";
 import { store, persistor } from "../store/store";
 

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion/native";
+import { motion } from "framer-motion";
 import React from "react";
 import { Text } from "react-native";
 import { useTheme } from "react-native-paper";

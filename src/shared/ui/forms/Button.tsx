@@ -6,7 +6,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Button as PaperButton } from 'react-native-paper';
-import { motion } from 'framer-motion/native';
+import { motion } from 'framer-motion';
 
 import { platform } from '../../utils/platform';
 import { useTheme } from '../../theme/UnifiedThemeProvider';

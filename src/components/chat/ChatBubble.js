@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 import { Card, Surface, IconButton } from "react-native-paper";
-import { motion } from "framer-motion/native";
+import { motion } from "framer-motion";
 
 import { useTheme } from "../../design-system/theme/ThemeProvider";
 import Icon from "../common/Icon";

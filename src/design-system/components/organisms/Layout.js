@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { motion } from "framer-motion/native";
+import { motion } from "framer-motion";
 import React from "react";
 import { View, ScrollView, SafeAreaView, StatusBar } from "react-native";
 import { useTheme } from "react-native-paper";

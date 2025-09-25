@@ -8,7 +8,7 @@ import {
   Animated,
 } from "react-native";
 import { Card, Surface, Avatar, IconButton } from "react-native-paper";
-import { motion } from "framer-motion/native";
+import { motion } from "framer-motion";
 
 import FreudDesignSystem, {
   FreudColors,
