@@ -4,128 +4,65 @@
  */
 
 // Theme System
+export { ThemeProvider } from "../../design-system/theme/ThemeProvider";
+export { useTheme } from "../../design-system/theme/ThemeProvider";
+
+// UI Components
 export {
-  FreudThemeProvider,
-  useFreudTheme,
-  withFreudTheme,
-} from "./FreudThemeProvider";
+  Button,
+  Card,
+  TextInput,
+  Typography,
+} from "../../design-system/components";
 
-// Background Components
+// Enhanced Components
 export {
-  PageShaderBackground,
-  CalmingBackground,
-  NurturingBackground,
-  PeacefulBackground,
-  GroundingBackground,
-  EnergizingBackground,
-  ZenBackground,
-  TherapeuticBackground,
-  WelcomingBackground,
-} from "./PageShaderBackground";
+  MentalHealthCard,
+  MoodCard,
+  CrisisCard,
+  TherapeuticCard,
+  SuccessCard,
+  InsightCard,
+  CardGroup,
+  ProgressCard,
+} from "./MentalHealthCard";
 
-// Mood Components
+// Therapeutic Button System
 export {
-  EnhancedMoodCard,
-  MoodGrid,
-  MoodSlider,
-  QuickMoodCheck,
-} from "./EnhancedMoodCard";
-
-// Enhanced Dashboard Components (to be created)
-export { EnhancedDashboard, EnhancedDashboardCard } from "./EnhancedDashboard";
-
-// Enhanced Mood Tracker (to be created)
-export { EnhancedMoodTracker } from "./EnhancedMoodTracker";
-
-// Core UI Components
-export {
-  FreudCard,
-  TherapeuticSurface,
-  FreudButton,
   TherapeuticButton,
-  FreudText,
-  TherapeuticText,
-  ResponsiveView,
-  FreudContainer,
-} from "./FreudUISystem";
+  PrimaryButton,
+  SecondaryButton,
+  GhostButton,
+  CrisisButton,
+  SuccessButton,
+  CalmingButton,
+  TherapeuticActionButton,
+  ButtonGroup,
+} from "./TherapeuticButton";
 
-// Showcase Component
-export { FreudUIShowcase } from "./FreudUIShowcase";
+// Loading Components
+export { default as LoadingScreen } from "../../screens/LoadingScreen";
+export {
+  TherapeuticLoadingScreen,
+  CrisisLoadingScreen,
+  MinimalLoadingScreen,
+} from "../../screens/LoadingScreen";
 
-// Pre-configured Component Combinations
-export const MentalHealthDashboard = ({
-  user,
-  onNavigate,
-  onMoodTrack,
-  ...props
-}) => {
-  const EnhancedDashboard = require("./EnhancedDashboard").EnhancedDashboard;
-  return (
-    <EnhancedDashboard
-      user={user}
-      onNavigate={onNavigate}
-      onMoodTrack={onMoodTrack}
-      {...props}
-    />
-  );
-};
-
-export const MoodTrackingFlow = ({ onComplete, onCancel, ...props }) => {
-  const EnhancedMoodTracker =
-    require("./EnhancedMoodTracker").EnhancedMoodTracker;
-  return (
-    <EnhancedMoodTracker
-      onComplete={onComplete}
-      onCancel={onCancel}
-      {...props}
-    />
-  );
-};
-
-// Utility Functions
-export const getFreudThemeColors = (
-  therapeutic = "balanced",
-  isDarkMode = false,
-) => {
-  const { FreudColors } = require("../../shared/theme/FreudDesignSystem");
-
-  const therapeuticThemes = {
-    calming: FreudColors.serenityGreen,
-    nurturing: FreudColors.empathyOrange,
-    peaceful: FreudColors.optimisticGray,
-    grounding: FreudColors.mindfulBrown,
-    energizing: FreudColors.zenYellow,
-    zen: FreudColors.kindPurple,
-    balanced: FreudColors.mindfulBrown,
-  };
-
-  return therapeuticThemes[therapeutic] || therapeuticThemes.balanced;
-};
-
-export const getShaderConfig = (shader = "therapeutic") => {
-  return (
-    {
-      therapeutic: {
-        colors: ["#E5EAD7", "#F2F5EB", "#FFF6E2"],
-        type: "gradient",
-      },
-      calming: { colors: ["#E5EAD7", "#F2F5EB"], type: "wave" },
-      nurturing: { colors: ["#FFF6E2", "#FFC89E"], type: "gradient" },
-      peaceful: { colors: ["#F5F5F5", "#E1E1E0"], type: "noise" },
-      grounding: { colors: ["#F7F4F2", "#FFF6E2"], type: "wave" },
-      energizing: { colors: ["#FFF4E0", "#EAEFFF"], type: "gradient" },
-      zen: { colors: ["#EAEFFF", "#E5EAD7"], type: "wave" },
-    }[shader] || { colors: ["#E5EAD7", "#F2F5EB"], type: "gradient" }
-  );
-};
+// Common UI Elements
+export {
+  Checkbox,
+  Dropdown,
+  FloatingActionButton,
+  Modal,
+  Slider,
+  Table,
+  Tag,
+  Tooltip,
+} from "./";
 
 export default {
-  FreudThemeProvider,
-  PageShaderBackground,
-  EnhancedMoodCard,
-  MoodGrid,
-  MoodSlider,
-  QuickMoodCheck,
-  MentalHealthDashboard,
-  MoodTrackingFlow,
+  ThemeProvider,
+  MentalHealthCard,
+  TherapeuticButton,
+  LoadingScreen,
 };

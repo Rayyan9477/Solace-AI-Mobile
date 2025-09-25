@@ -1,25 +1,20 @@
 /**
- * Main src index - Central exports for the entire application
- * Following feature-based architecture and Expo conventions
+ * Main src index - Central exports for the reorganized application
+ * Following feature-based architecture and best practices
  */
 
-// App-level exports
-export * from './app';
+// UI System - Main design system exports
+export * from "./ui";
 
-// Feature exports
-export * from './features/auth';
-export * from './features/chat';
-export * from './features/mood';
-export * from './features/dashboard';
-
-// Shared exports
-export * from './shared/ui';
-export * from './shared/theme';
-export * from './shared/utils';
-export * from './shared/expo';
+// App-level providers and configuration
+export { default as AppProvider } from "./app/providers/AppProvider";
+export { default as RefactoredAppProvider } from "./app/providers/RefactoredAppProvider";
 
 // Navigation
-export { default as AppNavigator } from './navigation/AppNavigator';
+export { default as AppNavigator } from "./app/navigation/AppNavigator";
 
 // Store
-export { store, persistor } from './store/store';
+export { store, persistor } from "./app/store/store";
+
+// Core utilities
+export { platform } from "./shared/utils/platform";

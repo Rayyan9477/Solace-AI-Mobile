@@ -14,7 +14,15 @@
       "Bash(npm run lint)",
       "Bash(npm run lint:*)",
       "Bash(npm start:*)",
-      "Bash(npm test)"
+      "Bash(npm test)",
+      "Bash(tree:*)",
+      "Bash(npx tsc:*)",
+      "Bash(find:*)",
+      "Bash(npx expo start:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run web:*)",
+      "Bash(xargs sed:*)",
+      "Bash(npx expo r:*)"
     ],
     "deny": [],
     "ask": []

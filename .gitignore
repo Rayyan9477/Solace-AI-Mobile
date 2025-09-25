@@ -67,3 +67,6 @@ Thumbs.db
 # React Native
 android/
 ios/
+
+#Ignore cursor AI rules
+.cursor\rules\codacy.mdc

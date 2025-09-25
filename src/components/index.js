@@ -1,10 +1,20 @@
 /**
- * Consolidated Component Index
- * Single source of truth for all reusable components
- * Replaces redundant component exports across the app
+ * Components Index (Backward Compatibility)
+ *
+ * @deprecated This file provides backward compatibility for legacy imports.
+ * New code should import directly from the new organized structure:
+ * - UI components: '../ui'
+ * - Feature components: '../features/[feature]/components'
+ * - App-level components: '../app'
  */
 
-// Core UI Components (Enhanced with therapeutic design)
+console.warn('Importing from src/components is deprecated. Please update imports to use the new structure.');
+
+// Re-export from new UI structure
+export * from "../ui";
+export { default as UI } from "../ui";
+
+// Re-export commonly used components with legacy names for compatibility
 export {
   TherapeuticButton as Button,
   PrimaryButton,
@@ -15,7 +25,7 @@ export {
   SecondaryButton,
   GhostButton,
   ButtonGroup,
-} from "./ui/TherapeuticButton";
+} from "../ui/components/atoms/TherapeuticButton";
 
 export {
   MentalHealthCard as Card,
@@ -26,60 +36,54 @@ export {
   InsightCard,
   CardGroup,
   ProgressCard,
-} from "./ui/MentalHealthCard";
+} from "../ui/components/molecules/MentalHealthCard";
 
 // Layout Components
 export {
-  ResponsiveContainer,
-  ResponsiveGrid,
-  DashboardLayout,
-  MoodTrackingLayout,
-  TherapySessionLayout,
-  useResponsiveLayout,
-} from "./layout/ResponsiveLayout";
+  Container as ResponsiveContainer,
+  Grid as ResponsiveGrid,
+  Container as DashboardLayout,
+  Container as MoodTrackingLayout,
+  Container as TherapySessionLayout,
+} from "../ui/components/organisms/Layout";
 
 // Animation Components
-export {
-  TherapeuticAnimatedComponents,
-  useTherapeuticPageTransition,
-  therapeuticGestures,
-} from "./animations/TherapeuticAnimations";
+export * from "../ui/animations/components/TherapeuticAnimations";
 
 // Accessibility Components
-export {
-  AccessibleEmoji,
-  MoodEmoji,
-  WellnessTipEmoji,
-  EmergencyEmoji,
-  useEmojiAccessibility,
-} from "../utils/emojiAccessibility";
+export * from "../shared/utils/emojiAccessibility";
+export * from "../shared/utils/motionAccessibility";
 
-export {
-  useMotionAccessibility,
-  MentalHealthAnimations,
-} from "../utils/motionAccessibility";
-
-// Dashboard Components
-export { default as MoodCheckIn } from "./dashboard/MoodCheckIn";
-export { default as QuickActions } from "./dashboard/QuickActions";
-export { default as WelcomeHeader } from "./dashboard/WelcomeHeader";
-export { default as DailyInsights } from "./dashboard/DailyInsights";
-export { default as ProgressOverview } from "./dashboard/ProgressOverview";
-export { default as RecentActivity } from "./dashboard/RecentActivity";
+// Dashboard Components (now in features)
+export { default as MoodCheckIn } from "../features/dashboard/components/MoodCheckIn";
+export { default as QuickActions } from "../features/dashboard/components/QuickActions";
+export { default as WelcomeHeader } from "../features/dashboard/components/WelcomeHeader";
+export { default as DailyInsights } from "../features/dashboard/components/DailyInsights";
+export { default as ProgressOverview } from "../features/dashboard/components/ProgressOverview";
+export { default as RecentActivity } from "../features/dashboard/components/RecentActivity";
 
 // Icon System
+export * from "../ui/assets/icons";
+
+// Loading Screens
+export { default as LoadingScreen } from "../ui/components/molecules/LoadingScreen";
 export {
-  MentalHealthIcon,
-  NavigationIcon,
-  ActionIcon,
-  StatusIcon,
-  IconPresets,
-} from "./icons";
+  TherapeuticLoadingScreen,
+  CrisisLoadingScreen,
+  MinimalLoadingScreen,
+} from "../ui/components/molecules/LoadingScreen";
 
-// Common Components (consolidated)
-export { default as LoadingScreen } from "./LoadingScreen";
+// Backward compatibility aliases
+export { LoadingScreen as FixedLoadingScreen } from "../ui/components/molecules/LoadingScreen";
+export { LoadingScreen as FixedSplashScreen } from "../ui/components/molecules/LoadingScreen";
 
-// Modern component exports - clean architecture
-// All deprecated mappings removed for production
-export { LoadingScreen as FixedLoadingScreen } from "./LoadingScreen";
-export { LoadingScreen as FixedSplashScreen } from "./LoadingScreen";
+// Default export for legacy usage
+export default {
+  // UI Components
+  Button: TherapeuticButton,
+  Card: MentalHealthCard,
+  LoadingScreen,
+
+  // Utility message
+  _deprecationWarning: 'This default export is deprecated. Please import components directly from their new locations.',
+};

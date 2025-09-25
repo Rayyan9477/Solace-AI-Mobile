@@ -3,36 +3,67 @@
  * Cross-platform compatibility helpers for Expo apps
  */
 
-import { Platform, Dimensions } from 'react-native';
+import { Platform, Dimensions } from "react-native";
+
+/**
+ * Check if running in Expo Go
+ */
+export const isExpoGo = (() => {
+  try {
+    return !!require("expo-constants").default?.executionEnvironment;
+  } catch {
+    return false;
+  }
+})();
+
+/**
+ * Get device type based on screen dimensions
+ */
+export function getDeviceType() {
+  const { width, height } = Dimensions.get("window");
+  const aspectRatio = width / height;
+
+  if (Platform.OS === "web") {
+    if (width >= 1200) return "desktop";
+    if (width >= 768) return "tablet";
+    return "mobile";
+  }
+
+  if (
+    (Platform.OS === "ios" && Platform.isPad) ||
+    (width >= 768 && aspectRatio > 1.2)
+  ) {
+    return "tablet";
+  }
+
+  return "mobile";
+}
 
 export const platform = {
-  isIOS: Platform.OS === 'ios',
-  isAndroid: Platform.OS === 'android',
-  isWeb: Platform.OS === 'web',
-  isNative: Platform.OS !== 'web',
+  isIOS: Platform.OS === "ios",
+  isAndroid: Platform.OS === "android",
+  isWeb: Platform.OS === "web",
+  isNative: Platform.OS !== "web",
 
   // Platform versions
   version: Platform.Version,
 
   // Device info
-  isPad: Platform.OS === 'ios' && Platform.isPad,
+  isPad: Platform.OS === "ios" && Platform.isPad,
   isTv: Platform.isTV,
 
   // Screen dimensions
-  screen: Dimensions.get('screen'),
-  window: Dimensions.get('window'),
+  screen: Dimensions.get("screen"),
+  window: Dimensions.get("window"),
 
   // Platform-specific selections
   select: Platform.select,
-<<<<<<< HEAD
 
   // Device type method
   getDeviceType,
 
   // Expo detection
   isExpoGo,
-=======
->>>>>>> origin/main
 } as const;
 
 /**
@@ -58,17 +89,6 @@ export function selectPlatform<T>(options: {
 export const isDev = __DEV__;
 
 /**
- * Check if running in Expo Go
- */
-export const isExpoGo = (() => {
-  try {
-    return !!require('expo-constants').default?.executionEnvironment;
-  } catch {
-    return false;
-  }
-})();
-
-/**
  * Get safe area insets for cross-platform layouts
  */
 export function getSafeAreaInsets() {
@@ -78,26 +98,6 @@ export function getSafeAreaInsets() {
 
   // For native platforms, this should be used with SafeAreaProvider
   return { top: 20, bottom: 0, left: 0, right: 0 };
-}
-
-/**
- * Get device type based on screen dimensions
- */
-export function getDeviceType() {
-  const { width, height } = Dimensions.get('window');
-  const aspectRatio = width / height;
-
-  if (platform.isWeb) {
-    if (width >= 1200) return 'desktop';
-    if (width >= 768) return 'tablet';
-    return 'mobile';
-  }
-
-  if (platform.isPad || (width >= 768 && aspectRatio > 1.2)) {
-    return 'tablet';
-  }
-
-  return 'mobile';
 }
 
 /**
