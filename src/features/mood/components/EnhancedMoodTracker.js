@@ -20,8 +20,8 @@ import { Card, Button, Chip, TextInput, ProgressBar } from "react-native-paper";
 
 import { EnhancedMoodCard, MoodCardGrid } from "./EnhancedMoodCard";
 import { TherapeuticButton } from "./TherapeuticButton";
-import { Typography } from "../../design-system/components";
-import { therapeuticColors } from "../../design-system/theme/MaterialTheme";
+import { Typography } from "@/design-system/components";
+import { therapeuticColors } from "@ui/theme/MaterialTheme";
 import {
   PageShaderBackground,
   MoodBasedShaderBackground,
@@ -32,7 +32,7 @@ import {
   borderRadius,
   shadows,
   typography,
-} from "../../shared/theme/theme";
+} from "@theme/theme";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 

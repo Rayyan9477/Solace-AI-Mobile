@@ -18,7 +18,17 @@
       "Bash(powershell:*)",
       "Read(//r/Solace-AI-Mobile/**)",
       "Bash(npm start:*)",
-      "Bash(npm ls:*)"
+      "Bash(npm ls:*)",
+      "Bash(cat:*)",
+      "Bash(awk:*)",
+      "Bash(xargs:*)",
+      "Bash(for:*)",
+      "Bash(do echo \"Checking: $path\" ls -la \"/r/Solace-AI-Mobile/$path\"*)",
+      "Bash(tasklist:*)",
+      "Bash(find:*)",
+      "Bash(sed:*)",
+      "Bash(rm:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

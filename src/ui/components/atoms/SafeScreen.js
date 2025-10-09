@@ -6,9 +6,9 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import EnhancedErrorBoundary from './ErrorBoundary/EnhancedErrorBoundary';
-import { useTheme } from '../design-system/theme/ThemeProvider';
-import { usePerformanceOptimizer } from '../utils/PerformanceOptimizer';
-import { useAccessibility } from '../utils/AccessibilityEnhancer';
+import { useTheme } from '@theme/ThemeProvider';
+import { usePerformanceOptimizer } from '@utils/PerformanceOptimizer';
+import { useAccessibility } from '@utils/AccessibilityEnhancer';
 
 const SafeScreen = ({ 
   children, 

@@ -19,8 +19,8 @@ import {
 import { Card, Surface, IconButton } from "react-native-paper";
 
 import { TherapeuticButton } from "./TherapeuticButton";
-import { Typography } from "../../design-system/components";
-import { therapeuticColors } from "../../design-system/theme/MaterialTheme";
+import { Typography } from "@/design-system/components";
+import { therapeuticColors } from "@ui/theme/MaterialTheme";
 import { PageShaderBackground } from "./PageShaderBackground";
 import {
   colors,
@@ -28,7 +28,7 @@ import {
   borderRadius,
   shadows,
   typography,
-} from "../../shared/theme/theme";
+} from "@theme/theme";
 
 const { width: screenWidth } = Dimensions.get("window");
 

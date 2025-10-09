@@ -16,14 +16,14 @@ import Svg, {
   Stop,
 } from "react-native-svg";
 
-import { useTheme } from "../../shared/theme/ThemeContext";
+import { useTheme } from "@theme/ThemeContext";
 import {
   spacing,
   typography,
   borderRadius,
   shadows,
-} from "../../shared/theme/theme";
-import { MentalHealthIcon } from "../icons";
+} from "@theme/theme";
+import { MentalHealthIcon } from "@/components/icons";
 
 const { width } = Dimensions.get("window");
 

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import apiService from "../../services/api";
+import apiService from "@/services/api";
 
 // Async thunk for logging mood
 export const logMood = createAsyncThunk(

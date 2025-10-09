@@ -1,4 +1,38 @@
 {
-  "compilerOptions": {},
-  "extends": "expo/tsconfig.base"
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "jsx": "react-native",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@features/*": ["./src/features/*"],
+      "@components/*": ["./src/shared/ui/*"],
+      "@utils/*": ["./src/shared/utils/*"],
+      "@theme/*": ["./src/shared/theme/*"],
+      "@expo/*": ["./src/shared/expo/*"],
+      "@app/*": ["./src/app/*"],
+      "@ui/*": ["./src/ui/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "App.js",
+    "app.json"
+  ],
+  "exclude": [
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js"
+  ]
 }

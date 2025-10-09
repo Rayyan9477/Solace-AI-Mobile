@@ -10,8 +10,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import { useTheme } from "../../../core/utils/shared/theme/ThemeContext";
-import { useAccessibility } from "../../../app/providers/AppProvider";
+import { useTheme } from "@theme/ThemeContext";
+import { useAccessibility } from "@app/providers/AppProvider";
 
 const { width, height } = Dimensions.get("window");
 

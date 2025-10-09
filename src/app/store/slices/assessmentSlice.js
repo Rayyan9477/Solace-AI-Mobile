@@ -1,12 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { assessmentAPI } from "@shared/services/api";
 
 // Async thunk for starting an assessment
 export const startAssessment = createAsyncThunk(
   "assessment/startAssessment",
   async (assessmentType, { rejectWithValue }) => {
     try {
-      // TODO: Replace with actual API call to fetch assessment questions
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Try to fetch from API first
+      try {
+        const assessment = await assessmentAPI.getAssessmentQuestions(assessmentType);
+        return assessment;
+      } catch (apiError) {
+        // Fallback to mock data if API fails
+        console.warn('[Assessment] API unavailable, using mock data');
+      }
+
+      // Mock assessment data (fallback for offline use)
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Mock assessment data
       const mockAssessments = {
@@ -159,8 +169,17 @@ export const submitAssessment = createAsyncThunk(
   "assessment/submitAssessment",
   async ({ assessmentId, responses }, { rejectWithValue }) => {
     try {
-      // TODO: Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Try to submit to API first
+      try {
+        const result = await assessmentAPI.submitAssessment(assessmentId, responses);
+        return result;
+      } catch (apiError) {
+        // Fallback to local calculation if API fails
+        console.warn('[Assessment] API unavailable, calculating locally');
+      }
+
+      // Local calculation (fallback for offline use)
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Calculate score based on responses
       const totalScore = Object.values(responses).reduce(
@@ -183,6 +202,7 @@ export const submitAssessment = createAsyncThunk(
                 ? "Moderate"
                 : "Severe",
         recommendations: generateRecommendations(totalScore, assessmentId),
+        _offline: true, // Mark as calculated offline
       };
 
       return result;

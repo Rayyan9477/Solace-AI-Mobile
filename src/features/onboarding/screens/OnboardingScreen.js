@@ -11,9 +11,9 @@ import {
 import { useDispatch } from "react-redux";
 import styled from "styled-components/native";
 
-import { useTheme } from "../shared/theme/ThemeContext";
-import { lightTheme } from "../shared/theme/theme";
-import { completeOnboarding } from "../store/slices/authSlice";
+import { useTheme } from "@theme/ThemeContext";
+import { lightTheme } from "@theme/theme";
+import { completeOnboarding } from "@app/store/slices/authSlice";
 
 const { width, height } = Dimensions.get("window");
 

@@ -25,10 +25,10 @@ import {
   QuickActionCards,
 } from "./EnhancedDashboardCard";
 import { EnhancedMoodCard, MoodCardSlider } from "./EnhancedMoodCard";
-import { useTheme } from "../../design-system/theme/ThemeProvider";
+import { useTheme } from "@theme/ThemeProvider";
 import { TherapeuticButton } from "./TherapeuticButton";
-import { Typography } from "../../design-system/components";
-import { Container } from "../../design-system/components/organisms/Layout";
+import { Typography } from "@/design-system/components";
+import { Container } from "@/design-system/components/organisms/Layout";
 import {
   TimeBasedShaderBackground,
   MoodBasedShaderBackground,
@@ -39,7 +39,7 @@ import {
   borderRadius,
   shadows,
   typography,
-} from "../../shared/theme/theme";
+} from "@theme/theme";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 

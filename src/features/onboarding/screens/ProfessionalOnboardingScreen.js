@@ -14,9 +14,9 @@ import {
 import { useDispatch } from "react-redux";
 import styled from "styled-components/native";
 
-import { MentalHealthIcon, IconPresets } from "../components/icons";
-import { useTheme } from "../shared/theme/ThemeContext";
-import { completeOnboarding } from "../store/slices/authSlice";
+import { MentalHealthIcon, IconPresets } from "@/components/icons";
+import { useTheme } from "@theme/ThemeContext";
+import { completeOnboarding } from "@app/store/slices/authSlice";
 
 const { width, height } = Dimensions.get("window");
 

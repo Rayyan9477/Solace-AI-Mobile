@@ -22,6 +22,8 @@ config.resolver.alias = {
   '@utils': './src/shared/utils',
   '@theme': './src/shared/theme',
   '@expo': './src/shared/expo',
+  '@app': './src/app',
+  '@ui': './src/ui',
 };
 
 // Add transformer for framer-motion and other animations

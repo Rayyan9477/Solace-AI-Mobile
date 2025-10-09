@@ -17,7 +17,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../design-system/theme/ThemeProvider';
+import { useTheme } from "@theme/ThemeProvider";
 
 export const SignupScreen = ({ navigation }: any) => {
   const { theme } = useTheme();

@@ -13,10 +13,10 @@ import {
 import { Card, Surface, IconButton } from 'react-native-paper';
 import { motion } from 'framer-motion';
 
-import { Speech } from '../../../shared/expo';
-import { platform } from '../../../shared/utils/platform';
-import { useTheme } from '../../../shared/theme/UnifiedThemeProvider';
-import { FreudColors } from '../../../shared/theme/FreudDesignSystem';
+import { Speech } from '@expo';
+import { platform } from '@utils/platform';
+import { useTheme } from '@theme/UnifiedThemeProvider';
+import { FreudColors } from '@theme/FreudDesignSystem';
 
 const AnimatedCard = motion(Card);
 

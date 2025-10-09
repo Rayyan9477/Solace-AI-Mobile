@@ -19,10 +19,10 @@ import { Provider as ReduxProvider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { LoadingSpinner } from "../../ui/animations/TherapeuticAnimations";
-import { Container } from "../../ui/components/organisms/Layout";
-import { lightTheme, darkTheme } from "../../ui/theme/MaterialTheme";
-import { store, persistor } from "../store/store";
+import { LoadingSpinner } from "@ui/animations";
+import { Container } from "@ui/components/organisms";
+import { lightTheme, darkTheme } from "@ui/theme/MaterialTheme";
+import { store, persistor } from "@app/store/store";
 
 // Accessibility Context
 const AccessibilityContext = createContext({

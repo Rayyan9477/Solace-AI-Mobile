@@ -10,11 +10,12 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 
 // Import existing providers
-import { ThemeProvider } from "../../ui/theme/ThemeProvider";
+import { ThemeProvider } from "@theme/ThemeProvider";
 import { AppProvider } from "./AppProvider";
+import { logger } from "@utils/logger";
 
 // Auth initialization
-import { restoreAuthState } from "../store/slices/authSlice";
+import { restoreAuthState } from "@app/store/slices/authSlice";
 
 /**
  * App Initialization Component
@@ -27,7 +28,7 @@ const AppInitializer = ({ children }) => {
 
   const initializeApp = useCallback(async () => {
     try {
-      console.log("🚀 RefactoredAppProvider: Starting app initialization...");
+      logger.info("Starting app initialization...");
 
       // Use Promise.race to add timeout protection
       await Promise.race([
@@ -40,21 +41,14 @@ const AppInitializer = ({ children }) => {
         ),
       ]);
 
-      console.log(
-        "✅ RefactoredAppProvider: App initialization completed successfully",
-      );
+      logger.info("App initialization completed successfully");
       setInitializationComplete(true);
     } catch (error) {
-      console.error(
-        "❌ RefactoredAppProvider: App initialization failed:",
-        error,
-      );
+      logger.error("App initialization failed:", error);
       setInitializationError(error);
 
       // Force complete to prevent hanging - better to show login than blank screen
-      console.log(
-        "🔄 RefactoredAppProvider: Forcing initialization completion to prevent blank screen",
-      );
+      logger.info("Forcing initialization completion to prevent blank screen");
       setInitializationComplete(true);
     }
   }, [dispatch]);
@@ -137,7 +131,7 @@ class ProviderErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error("🚨 Provider Error Boundary:", error, errorInfo);
+    logger.error("Provider Error Boundary:", error);
     this.setState({
       error,
       errorInfo,
@@ -146,9 +140,9 @@ class ProviderErrorBoundary extends React.Component {
 
     // Track error in development
     if (__DEV__) {
-      console.log("📍 Error occurred in provider component");
-      console.log("Error:", error.message);
-      console.log("Component Stack:", errorInfo.componentStack);
+      logger.debug("Error occurred in provider component");
+      logger.debug("Error:", error.message);
+      logger.debug("Component Stack:", errorInfo.componentStack);
     }
   }
 
@@ -241,7 +235,7 @@ class ProviderErrorBoundary extends React.Component {
  * 5. AppInitializer - Auth and app state initialization
  */
 export const RefactoredAppProvider = ({ children }) => {
-  console.log("🌟 RefactoredAppProvider: Initializing app providers...");
+  logger.debug("Initializing app providers...");
 
   return (
     <ProviderErrorBoundary>

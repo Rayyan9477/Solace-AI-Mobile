@@ -17,8 +17,8 @@ import {
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../design-system/theme/ThemeProvider';
-import { secureLogin } from '../../store/slices/authSlice';
+import { useTheme } from "@theme/ThemeProvider";
+import { secureLogin } from '@app/store/slices/authSlice';
 
 export const LoginScreen = ({ navigation }: any) => {
   const { theme } = useTheme();

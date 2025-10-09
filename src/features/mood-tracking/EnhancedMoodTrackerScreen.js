@@ -17,16 +17,16 @@ import {
 } from "react-native";
 import { useDispatch } from "react-redux";
 
-import { MentalHealthIcon, ActionIcon } from "../../components/icons";
-import { useTheme } from "../../shared/theme/ThemeContext";
+import { MentalHealthIcon, ActionIcon } from "@/components/icons";
+import { useTheme } from "@theme/ThemeContext";
 import {
   colors,
   typography,
   spacing,
   borderRadius,
   shadows,
-} from "../../shared/theme/theme";
-import { MentalHealthAccessibility } from "../../utils/accessibility";
+} from "@theme/theme";
+import { MentalHealthAccessibility } from "@utils/accessibility";
 
 const { width, height } = Dimensions.get("window");
 

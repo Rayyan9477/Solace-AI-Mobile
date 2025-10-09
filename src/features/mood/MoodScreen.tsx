@@ -12,7 +12,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from 'react-native';
-import { useTheme } from '../../design-system/theme/ThemeProvider';
+import { useTheme } from "@theme/ThemeProvider";
 
 interface MoodEntry {
   mood: string;

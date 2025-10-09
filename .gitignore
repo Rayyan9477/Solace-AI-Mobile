@@ -70,3 +70,6 @@ ios/
 
 #Ignore cursor AI rules
 .cursor\rules\codacy.mdc
+.claude/
+.cursor/
+.claude

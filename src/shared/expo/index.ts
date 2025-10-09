@@ -3,6 +3,8 @@
  * Centralized exports for Expo modules with fallbacks
  */
 
+import { logger } from '@utils/logger';
+
 // Status Bar
 export { StatusBar } from 'expo-status-bar';
 
@@ -11,7 +13,7 @@ let SplashScreen: any = null;
 try {
   SplashScreen = require('expo-splash-screen');
 } catch (error) {
-  console.warn('SplashScreen not available');
+  logger.warn('SplashScreen not available');
   // Provide fallback methods
   SplashScreen = {
     preventAutoHideAsync: () => Promise.resolve(),

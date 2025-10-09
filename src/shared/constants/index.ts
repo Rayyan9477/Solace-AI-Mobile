@@ -1,6 +1,6 @@
 /**
  * Global App Constants
- * Platform-aware constants for Expo apps
+ * Unified constants for Expo apps with environment variable support
  */
 
 import { Platform } from 'react-native';
@@ -9,14 +9,37 @@ export const APP_CONFIG = {
   name: 'Solace AI Mobile',
   version: '1.0.0',
   description: 'Your empathetic digital confidant',
+  environment: process.env.NODE_ENV || 'development',
   supportedPlatforms: ['ios', 'android', 'web'] as const,
+
+  // App Version
+  appVersion: process.env.APP_VERSION || '1.0.0',
+  minSupportedVersion: process.env.MIN_SUPPORTED_VERSION || '1.0.0',
+
+  // Feature Flags
+  features: {
+    analytics: process.env.ENABLE_ANALYTICS === 'true',
+    crashReporting: process.env.ENABLE_CRASH_REPORTING === 'true',
+    voiceChat: process.env.ENABLE_VOICE_CHAT === 'true',
+    crisisDetection: process.env.ENABLE_CRISIS_DETECTION !== 'false', // Enabled by default
+    offlineMode: process.env.ENABLE_OFFLINE_MODE === 'true',
+  },
+
+  // Security
+  jwt: {
+    secretKey: process.env.JWT_SECRET_KEY || 'fallback-secret-key',
+  },
+
+  encryption: {
+    key: process.env.ENCRYPTION_KEY || 'fallback-encryption-key',
+  },
 } as const;
 
 export const API_CONFIG = {
-  baseURL: __DEV__
+  baseURL: process.env.API_BASE_URL || (__DEV__
     ? 'http://localhost:3000/api'
-    : 'https://api.solace-ai.com',
-  timeout: 30000,
+    : 'https://api.solace-ai.com'),
+  timeout: parseInt(process.env.API_TIMEOUT || '30000'),
   retryAttempts: 3,
 } as const;
 
@@ -63,7 +86,7 @@ export const THERAPEUTIC_COLORS = {
 
 export const CRISIS_RESOURCES = {
   suicide: {
-    number: '988',
+    number: process.env.CRISIS_HOTLINE_NUMBER || '988',
     name: 'National Suicide Prevention Lifeline',
   },
   crisis: {
@@ -74,6 +97,7 @@ export const CRISIS_RESOURCES = {
     number: '911',
     name: 'Emergency Services',
   },
+  emergencyEmail: process.env.EMERGENCY_CONTACT_EMAIL || 'help@solace-ai.com',
 } as const;
 
 export const MOOD_SCALE = {
