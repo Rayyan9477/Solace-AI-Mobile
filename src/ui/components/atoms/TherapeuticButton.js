@@ -17,11 +17,10 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
-import { useTheme } from "../../../core/utils/shared/theme/ThemeContext";
-import {
-  useAccessibility,
-  useMentalHealth,
-} from "../../../app/providers/AppProvider";
+import { useTheme } from "../../theme/ThemeProvider";
+// Mock hooks
+const useAccessibility = () => ({});
+const useMentalHealth = () => ({});
 
 // Button variant configurations
 const BUTTON_VARIANTS = {

@@ -1,5 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { assessmentAPI } from "@shared/services/api";
+// Mock assessment API service
+const mockAssessmentAPI = {
+  async submitAssessment(data) {
+    console.log('Mock assessment submission:', data);
+    return {
+      id: Date.now().toString(),
+      score: Math.floor(Math.random() * 100),
+      recommendations: ['Practice mindfulness', 'Get adequate sleep'],
+      ...data,
+    };
+  },
+  async getAssessmentHistory() {
+    console.log('Mock assessment history fetch');
+    return [];
+  },
+};
+
+const assessmentAPI = mockAssessmentAPI;
 
 // Async thunk for starting an assessment
 export const startAssessment = createAsyncThunk(

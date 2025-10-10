@@ -1,19 +1,13 @@
 /**
- * Shared Module Exports
- * Common utilities, components, and services used across features
+ * Shared Module Exports - Simplified version
+ * Basic shared utilities and services
  */
-
-// UI Components
-export * from './ui';
 
 // Theme System
 export * from './theme';
 
 // Utilities
 export * from './utils';
-
-// Expo Integration
-export * from './expo';
 
 // Services
 export * from './services';

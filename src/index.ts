@@ -1,10 +1,7 @@
 /**
- * Main src index - Central exports for the reorganized application
- * Following feature-based architecture and best practices
+ * Main src index - Simplified version
+ * Basic exports without complex dependencies
  */
-
-// UI System - Main design system exports
-export * from "./ui";
 
 // App-level providers and configuration
 export { default as AppProvider } from "./app/providers/AppProvider";

@@ -13,10 +13,16 @@ import {
 import { Card, Surface, IconButton } from 'react-native-paper';
 import { motion } from 'framer-motion';
 
-import { Speech } from '@expo';
-import { platform } from '@utils/platform';
-import { useTheme } from '@theme/UnifiedThemeProvider';
-import { FreudColors } from '@theme/FreudDesignSystem';
+// Mock imports for now
+const Speech = { speak: () => console.log('Mock speech') };
+const platform = { isWeb: true, isNative: false };
+import { useTheme } from '../../../shared/theme/ThemeProvider';
+// Mock FreudColors for now
+const FreudColors = {
+  primary: '#007AFF',
+  secondary: '#34C759',
+  text: '#2D3748',
+};
 
 const AnimatedCard = motion(Card);
 

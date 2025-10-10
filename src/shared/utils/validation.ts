@@ -4,7 +4,7 @@
  */
 
 import { Platform } from 'react-native';
-import { APP_CONFIG } from '@shared/constants';
+import { APP_CONFIG } from '../constants';
 export interface ValidationResult {
   isValid: boolean;
   errors: string[];
@@ -56,13 +56,9 @@ export const validateDependencies = (): ValidationResult => {
     'expo-linear-gradient',
   ];
 
-  criticalDeps.forEach(dep => {
-    try {
-      require(dep);
-    } catch (e) {
-      warnings.push(`Optional dependency missing: ${dep}`);
-    }
-  });
+  // Note: Dynamic require() calls are not supported in Metro bundler
+  // These dependencies should be checked at build time instead
+  warnings.push('Dependency validation skipped in runtime');
 
   return {
     isValid: errors.length === 0,

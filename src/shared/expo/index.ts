@@ -3,7 +3,7 @@
  * Centralized exports for Expo modules with fallbacks
  */
 
-import { logger } from '@utils/logger';
+import { logger } from '../utils/logger';
 
 // Status Bar
 export { StatusBar } from 'expo-status-bar';

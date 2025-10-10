@@ -5,10 +5,12 @@
 
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import EnhancedErrorBoundary from './ErrorBoundary/EnhancedErrorBoundary';
-import { useTheme } from '@theme/ThemeProvider';
-import { usePerformanceOptimizer } from '@utils/PerformanceOptimizer';
-import { useAccessibility } from '@utils/AccessibilityEnhancer';
+// Mock error boundary
+const EnhancedErrorBoundary = ({ children, ...props }) => children;
+import { useTheme } from '../../../shared/theme/ThemeProvider';
+// Mock utilities
+const usePerformanceOptimizer = () => ({});
+const useAccessibility = () => ({});
 
 const SafeScreen = ({ 
   children, 

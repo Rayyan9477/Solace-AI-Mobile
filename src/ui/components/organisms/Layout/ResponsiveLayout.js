@@ -14,8 +14,9 @@ import {
   Animated,
 } from "react-native";
 
-import { useTheme } from "@theme/ThemeContext";
-import { spacing } from "@theme/theme";
+import { useTheme } from "../../../../shared/theme/ThemeProvider";
+// Mock spacing
+const spacing = { sm: 8, md: 16, lg: 24 };
 
 // Simple animated wrappers to replace TherapeuticAnimatedComponents
 const SimpleAnimatedView = ({ children, delay = 0, style = {} }) => (

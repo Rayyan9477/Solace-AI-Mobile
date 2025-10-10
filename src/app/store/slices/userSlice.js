@@ -1,6 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import apiService from "@/services/api";
+// Mock API service for user management
+const mockApiService = {
+  user: {
+    async getProfile() {
+      console.log('Mock user profile fetch');
+      return { id: '1', name: 'Test User', email: 'test@example.com' };
+    },
+    async updateProfile(data) {
+      console.log('Mock user profile update:', data);
+      return { ...data, updatedAt: new Date().toISOString() };
+    },
+  },
+};
+
+const apiService = mockApiService;
 
 // Async thunk for updating user profile
 export const updateUserProfile = createAsyncThunk(

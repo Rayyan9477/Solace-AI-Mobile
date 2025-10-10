@@ -16,14 +16,13 @@ import Svg, {
   Stop,
 } from "react-native-svg";
 
-import { useTheme } from "@theme/ThemeContext";
-import {
-  spacing,
-  typography,
-  borderRadius,
-  shadows,
-} from "@theme/theme";
-import { MentalHealthIcon } from "@/components/icons";
+import { useTheme } from "../../../shared/theme/ThemeProvider";
+import { MentalHealthIcon } from "../../../components/icons";
+// Mock theme constants
+const spacing = { sm: 8, md: 16, lg: 24 };
+const borderRadius = { sm: 4, md: 8, lg: 12 };
+const shadows = { sm: { elevation: 2 }, md: { elevation: 4 } };
+const typography = { fontSize: { sm: 12, md: 16, lg: 20 } };
 
 const { width } = Dimensions.get("window");
 

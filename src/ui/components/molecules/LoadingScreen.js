@@ -10,8 +10,9 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import { useTheme } from "@theme/ThemeContext";
-import { useAccessibility } from "@app/providers/AppProvider";
+import { useTheme } from "../../../shared/theme/ThemeProvider";
+// Mock accessibility hook
+const useAccessibility = () => ({});
 
 const { width, height } = Dimensions.get("window");
 

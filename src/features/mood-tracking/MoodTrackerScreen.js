@@ -12,8 +12,8 @@ import {
   Modal,
 } from "react-native";
 
-import { MentalHealthIcon, NavigationIcon } from "@/components/icons";
-import { useTheme } from "@theme/ThemeContext";
+import { MentalHealthIcon } from "../../../components/icons";
+import { useTheme } from "../../../shared/theme/ThemeProvider";
 
 const { width, height } = Dimensions.get("window");
 

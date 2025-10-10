@@ -1,6 +1,24 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import apiService from "@/services/api";
+// Mock API service for mood tracking
+const mockApiService = {
+  mood: {
+    async logMood(data) {
+      console.log('Mock mood logging:', data);
+      return {
+        id: Date.now().toString(),
+        ...data,
+        createdAt: new Date().toISOString(),
+      };
+    },
+    async getMoodHistory() {
+      console.log('Mock mood history fetch');
+      return [];
+    },
+  },
+};
+
+const apiService = mockApiService;
 
 // Async thunk for logging mood
 export const logMood = createAsyncThunk(
