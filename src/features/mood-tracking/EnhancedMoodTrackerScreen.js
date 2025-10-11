@@ -19,7 +19,7 @@ import { useDispatch } from "react-redux";
 
 // Mock icon component
 const MentalHealthIcon = ({ size = 24, color = '#007AFF' }) => null;
-import { useTheme } from "../../../shared/theme/ThemeProvider";
+import { useTheme } from "@theme/ThemeProvider";
 // Mock theme constants
 const colors = { primary: '#007AFF', secondary: '#34C759' };
 const spacing = { sm: 8, md: 16, lg: 24 };
@@ -640,7 +640,7 @@ const EnhancedMoodTrackerScreen = () => {
             accessibilityRole="button"
             accessibilityLabel="Go back"
           >
-            <ActionIcon name="Back" size="md" colorScheme="primary" />
+            <Text style={{ fontSize: 24, color: theme.colors.text.primary }}>←</Text>
           </TouchableOpacity>
           <Text
             style={[styles.headerTitle, { color: theme.colors.text.primary }]}

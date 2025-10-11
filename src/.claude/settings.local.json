@@ -28,7 +28,9 @@
       "Bash(find:*)",
       "Bash(sed:*)",
       "Bash(rm:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(npm install:*)",
+      "mcp__playwright__browser_install"
     ],
     "deny": [],
     "ask": []

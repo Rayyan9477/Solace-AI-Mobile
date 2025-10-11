@@ -10,11 +10,11 @@ import {
   Animated,
 } from "react-native";
 
-import { MentalHealthIcon } from "../../../components/icons";
-import { FreudLogo, ThemedFreudIcon } from "../../../components/icons/FreudIcons";
-import FreudButton from "../../../components/ui/FreudButton";
-import { useTheme } from "../../../shared/theme/ThemeProvider";
-import { freudTheme } from "../../../shared/theme/freudTheme";
+import { MentalHealthIcon } from "@/components/icons";
+import { FreudLogo, ThemedFreudIcon } from "@/components/icons/FreudIcons";
+import FreudButton from "@/components/ui/FreudButton";
+import { useTheme } from "@theme/ThemeProvider";
+import { freudTheme } from "@theme/freudTheme";
 
 const { width, height } = Dimensions.get("window");
 
