@@ -1,2 +1,116 @@
 /**
- * Platform-Specific Animation Utilities\n * Ensures optimal animation performance across iOS, Android, and Web\n */\n\nimport { platform } from '../utils/platform';\n\n/**\n * Get platform-optimized animation configuration\n */\nexport function getPlatformAnimationConfig() {\n  return platform.select({\n    ios: {\n      useNativeDriver: true,\n      enableVectorDrawables: false,\n      shouldRasterizeIOS: true,\n      renderToHardwareTextureAndroid: false,\n    },\n    android: {\n      useNativeDriver: true,\n      enableVectorDrawables: true,\n      shouldRasterizeIOS: false,\n      renderToHardwareTextureAndroid: true,\n    },\n    web: {\n      useNativeDriver: false,\n      enableVectorDrawables: false,\n      shouldRasterizeIOS: false,\n      renderToHardwareTextureAndroid: false,\n    },\n    default: {\n      useNativeDriver: platform.isNative,\n      enableVectorDrawables: platform.isAndroid,\n      shouldRasterizeIOS: platform.isIOS,\n      renderToHardwareTextureAndroid: platform.isAndroid,\n    },\n  });\n}\n\n/**\n * Get platform-specific duration multipliers\n */\nexport function getPlatformDurationMultiplier(): number {\n  return platform.select({\n    ios: 1.0,        // iOS has smooth 60fps animations\n    android: 1.2,    // Android might need slightly longer durations\n    web: 0.8,        // Web can be faster with CSS transitions\n    default: 1.0,\n  });\n}\n\n/**\n * Check if platform supports advanced animations\n */\nexport function supportsAdvancedAnimations(): boolean {\n  return platform.select({\n    ios: true,\n    android: true,\n    web: typeof window !== 'undefined' && 'requestAnimationFrame' in window,\n    default: platform.isNative,\n  });\n}\n\n/**\n * Get platform-specific easing functions\n */\nexport const platformEasing = {\n  ios: {\n    standard: 'cubic-bezier(0.4, 0.0, 0.2, 1)',\n    decelerate: 'cubic-bezier(0.0, 0.0, 0.2, 1)',\n    accelerate: 'cubic-bezier(0.4, 0.0, 1, 1)',\n    sharp: 'cubic-bezier(0.4, 0.0, 0.6, 1)',\n  },\n  android: {\n    standard: 'cubic-bezier(0.4, 0.0, 0.2, 1)',\n    decelerate: 'cubic-bezier(0.0, 0.0, 0.2, 1)',\n    accelerate: 'cubic-bezier(0.4, 0.0, 1, 1)',\n    sharp: 'cubic-bezier(0.4, 0.0, 0.6, 1)',\n  },\n  web: {\n    standard: 'ease',\n    decelerate: 'ease-out',\n    accelerate: 'ease-in',\n    sharp: 'ease-in-out',\n  },\n};\n\n/**\n * Therapeutic animation timing for mental health apps\n */\nexport const therapeuticTiming = {\n  breathing: platform.select({\n    ios: 4000,\n    android: 4200,\n    web: 3800,\n    default: 4000,\n  }),\n  heartbeat: platform.select({\n    ios: 800,\n    android: 850,\n    web: 750,\n    default: 800,\n  }),\n  gentle: platform.select({\n    ios: 600,\n    android: 650,\n    web: 550,\n    default: 600,\n  }),\n  calming: platform.select({\n    ios: 1200,\n    android: 1300,\n    web: 1100,\n    default: 1200,\n  }),\n};
+ * Platform-Specific Animation Utilities
+ * Ensures optimal animation performance across iOS, Android, and Web
+ */
+
+import { platform } from '../utils/platform';
+
+/**
+ * Get platform-optimized animation configuration
+ */
+export function getPlatformAnimationConfig() {
+	return platform.select({
+		ios: {
+			useNativeDriver: true,
+			enableVectorDrawables: false,
+			shouldRasterizeIOS: true,
+			renderToHardwareTextureAndroid: false,
+		},
+		android: {
+			useNativeDriver: true,
+			enableVectorDrawables: true,
+			shouldRasterizeIOS: false,
+			renderToHardwareTextureAndroid: true,
+		},
+		web: {
+			useNativeDriver: false,
+			enableVectorDrawables: false,
+			shouldRasterizeIOS: false,
+			renderToHardwareTextureAndroid: false,
+		},
+		default: {
+			useNativeDriver: platform.isNative,
+			enableVectorDrawables: platform.isAndroid,
+			shouldRasterizeIOS: platform.isIOS,
+			renderToHardwareTextureAndroid: platform.isAndroid,
+		},
+	});
+}
+
+/**
+ * Get platform-specific duration multipliers
+ */
+export function getPlatformDurationMultiplier(): number {
+	return platform.select({
+		ios: 1.0, // iOS has smooth 60fps animations
+		android: 1.2, // Android might need slightly longer durations
+		web: 0.8, // Web can be faster with CSS transitions
+		default: 1.0,
+	});
+}
+
+/**
+ * Check if platform supports advanced animations
+ */
+export function supportsAdvancedAnimations(): boolean {
+	return platform.select({
+		ios: true,
+		android: true,
+		web: typeof window !== 'undefined' && 'requestAnimationFrame' in window,
+		default: platform.isNative,
+	});
+}
+
+/**
+ * Get platform-specific easing functions
+ */
+export const platformEasing = {
+	ios: {
+		standard: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
+		decelerate: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+		accelerate: 'cubic-bezier(0.4, 0.0, 1, 1)',
+		sharp: 'cubic-bezier(0.4, 0.0, 0.6, 1)',
+	},
+	android: {
+		standard: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
+		decelerate: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+		accelerate: 'cubic-bezier(0.4, 0.0, 1, 1)',
+		sharp: 'cubic-bezier(0.4, 0.0, 0.6, 1)',
+	},
+	web: {
+		standard: 'ease',
+		decelerate: 'ease-out',
+		accelerate: 'ease-in',
+		sharp: 'ease-in-out',
+	},
+};
+
+/**
+ * Therapeutic animation timing for mental health apps
+ */
+export const therapeuticTiming = {
+	breathing: platform.select({
+		ios: 4000,
+		android: 4200,
+		web: 3800,
+		default: 4000,
+	}),
+	heartbeat: platform.select({
+		ios: 800,
+		android: 850,
+		web: 750,
+		default: 800,
+	}),
+	gentle: platform.select({
+		ios: 600,
+		android: 650,
+		web: 550,
+		default: 600,
+	}),
+	calming: platform.select({
+		ios: 1200,
+		android: 1300,
+		web: 1100,
+		default: 1200,
+	}),
+};

@@ -1,19 +1,9 @@
 /**
- * UI System Index - Simplified version
- * Basic UI system exports without complex dependencies
+ * UI System Index - Re-exports
  */
 
-// Theme System
-export { ThemeProvider, useTheme } from './theme/ThemeProvider';
-export { lightTheme, darkTheme } from './theme/MaterialTheme';
+// Theme System: defer to shared theme as single source of truth
+export { ThemeProvider, useTheme, lightTheme, darkTheme } from '../shared/theme/ThemeContext';
 
-// Components - Simplified
+// Components
 export * from './components';
-
-// Default export
-export default {
-  ThemeProvider,
-  useTheme,
-  lightTheme,
-  darkTheme,
-};

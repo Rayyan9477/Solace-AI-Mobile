@@ -5,8 +5,8 @@
 
 // Card Components
 export { default as MentalHealthCard } from './MentalHealthCard';
+// Export unique named variants only (avoid duplicating default name)
 export {
-  MentalHealthCard,
   MoodCard,
   CrisisCard,
   TherapeuticCard,
@@ -19,7 +19,6 @@ export {
 // Screen Components
 export { default as LoadingScreen } from './LoadingScreen';
 export {
-  LoadingScreen,
   TherapeuticLoadingScreen,
   CrisisLoadingScreen,
   MinimalLoadingScreen,

@@ -517,3 +517,9 @@ export const AppProvider = ({ children }) => {
 };
 
 export default AppProvider;
+// Re-export named hooks and contexts for stable imports
+export {
+  AccessibilityContext,
+  MentalHealthContext,
+  PerformanceContext,
+};

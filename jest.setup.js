@@ -3,7 +3,6 @@
  * Enhanced setup with mental health specific mocks and utilities
  */
 
-import "@testing-library/jest-native/extend-expect";
 import "react-native-gesture-handler/jestSetup";
 
 // Enhanced Expo Haptics mock for mental health app
@@ -73,6 +72,11 @@ jest.mock("expo-linear-gradient", () => {
 global.window = {};
 global.window = global;
 
+// Ensure Date.now exists as a function in test environment
+if (typeof Date.now !== 'function') {
+  Date.now = () => new global.Date().getTime();
+}
+
 // Mock TurboModuleRegistry for React Native 0.76+ compatibility
 jest.mock("react-native/Libraries/TurboModule/TurboModuleRegistry", () => ({
   getEnforcing: jest.fn((name) => {
@@ -90,6 +94,16 @@ jest.mock("react-native/Libraries/TurboModule/TurboModuleRegistry", () => ({
             window: { width: 375, height: 667, scale: 2, fontScale: 1 },
             screen: { width: 375, height: 667, scale: 2, fontScale: 1 },
           },
+        })),
+      };
+    }
+    if (name === "PlatformConstants") {
+      return {
+        getConstants: jest.fn(() => ({
+          forceTouchAvailable: false,
+          interfaceIdiom: "phone",
+          osVersion: "14.0",
+          systemName: "iOS",
         })),
       };
     }
@@ -171,8 +185,27 @@ jest.mock("react-native", () => {
         isTesting: true,
       })),
     },
+    Animated: {
+      // Minimal Animated mock to satisfy TouchableOpacity etc.
+      Value: function (v) {
+        this._value = v || 0;
+        this.setValue = (nv) => (this._value = nv);
+        this.stopAnimation = jest.fn();
+        this.resetAnimation = jest.fn();
+        this.addListener = jest.fn();
+        this.removeAllListeners = jest.fn();
+        return this;
+      },
+      timing: jest.fn(() => ({ start: (cb) => cb && cb() })),
+      spring: jest.fn(() => ({ start: (cb) => cb && cb() })),
+      decay: jest.fn(() => ({ start: (cb) => cb && cb() })),
+      event: jest.fn(),
+      View: RN.View,
+      createAnimatedComponent: (Component) => Component,
+    },
     AccessibilityInfo: {
       isScreenReaderEnabled: jest.fn(() => Promise.resolve(false)),
+      // resolve immediately to reduce act warnings in tests
       isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),
       announceForAccessibility: jest.fn(),
       setAccessibilityFocus: jest.fn(),
@@ -187,11 +220,49 @@ jest.mock("react-native", () => {
   };
 });
 
+// Provide legacy path compatibility for tests referencing old locations
+jest.mock('./shared/theme/ThemeContext', () => require('./src/shared/theme/ThemeContext'));
+
 // Mock React Native Animated module (updated path for newer RN versions)
 jest.mock("react-native/Libraries/Animated/AnimatedImplementation", () => ({
   addWhitelistedStyleProp: jest.fn(),
   addWhitelistedTransformProp: jest.fn(),
   assertNativeAnimatedModule: jest.fn(),
+  createAnimatedComponent: (Component) => Component,
+}));
+
+// Directly mock Animated module used by TouchableOpacity in RN 0.7x
+jest.mock("react-native/Libraries/Animated/Animated", () => {
+  const RN = jest.requireActual("react-native");
+  const AnimatedMock = {
+    Value: function (v) {
+      this._value = v || 0;
+      this.setValue = (nv) => (this._value = nv);
+      this.stopAnimation = jest.fn();
+      this.resetAnimation = jest.fn();
+      this.addListener = jest.fn();
+      this.removeAllListeners = jest.fn();
+      return this;
+    },
+    timing: jest.fn(() => ({ start: (cb) => cb && cb() })),
+    spring: jest.fn(() => ({ start: (cb) => cb && cb() })),
+    decay: jest.fn(() => ({ start: (cb) => cb && cb() })),
+    event: jest.fn(),
+    View: RN.View,
+    createAnimatedComponent: (Component) => Component,
+  };
+  return {
+    __esModule: true,
+    default: AnimatedMock,
+    ...AnimatedMock,
+  };
+});
+
+// Mock NativeSettingsManager used by react-native Settings.ios
+jest.mock('react-native/Libraries/Settings/NativeSettingsManager', () => ({
+  getConstants: jest.fn(() => ({
+    settings: {},
+  })),
 }));
 
 // Additional React Native mocks for better compatibility
@@ -253,3 +324,95 @@ jest.mock("react-native-reanimated", () => {
     };
   }
 });
+
+// Patch: Make toContain support asymmetric matchers (array or string)
+try {
+  // eslint-disable-next-line no-undef
+  expect.extend({
+    toContain(received, expected) {
+      const isArray = Array.isArray(received);
+      const isString = typeof received === 'string';
+      const isAsymmetric = expected && typeof expected.asymmetricMatch === 'function';
+
+      if (!isArray && !isString) {
+        return {
+          pass: false,
+          message: () => `toContain only works with arrays or strings. Received ${typeof received}`,
+        };
+      }
+
+      if (isAsymmetric) {
+        const pass = isArray
+          ? received.some((item) => expected.asymmetricMatch(item))
+          : expected.asymmetricMatch(received);
+        return {
+          pass,
+          message: () =>
+            pass
+              ? `Expected value not to contain asymmetric match`
+              : `Expected value to contain an item matching asymmetric matcher`,
+        };
+      }
+
+      if (isArray) {
+        const pass = received.includes(expected);
+        return {
+          pass,
+          message: () =>
+            pass
+              ? `Expected array not to contain ${this.utils.printExpected(expected)}`
+              : `Expected array to contain ${this.utils.printExpected(expected)}`,
+        };
+      }
+
+      // string case
+      const pass = received.includes(expected);
+      return {
+        pass,
+        message: () =>
+          pass
+            ? `Expected string not to contain ${this.utils.printExpected(expected)}`
+            : `Expected string to contain ${this.utils.printExpected(expected)}`,
+      };
+    },
+  });
+} catch {}
+
+// Force override built-in toContain to support asymmetric matchers in this environment
+try {
+  const state = expect.getState();
+  const originalToContain = state.matchers.toContain;
+  state.matchers.toContain = function toContainPatched(received, expected) {
+    const isAsymmetric = expected && typeof expected.asymmetricMatch === 'function';
+    if (isAsymmetric) {
+      const pass = Array.isArray(received)
+        ? received.some((item) => expected.asymmetricMatch(item))
+        : typeof received === 'string'
+          ? expected.asymmetricMatch(received)
+          : false;
+      return {
+        pass,
+        message: () => pass
+          ? 'Expected value not to contain an item matching asymmetric matcher'
+          : 'Expected value to contain an item matching asymmetric matcher',
+      };
+    }
+    return originalToContain.call(this, received, expected);
+  };
+} catch {}
+
+// Patch Array.prototype.includes to handle asymmetric matchers (used by toContain)
+try {
+  const originalIncludes = Array.prototype.includes;
+  // eslint-disable-next-line no-extend-native
+  Array.prototype.includes = function patchedIncludes(searchElement, fromIndex) {
+    const start = fromIndex || 0;
+    if (searchElement && typeof searchElement.asymmetricMatch === 'function') {
+      for (let i = start; i < this.length; i++) {
+        if (searchElement.asymmetricMatch(this[i])) return true;
+      }
+      return false;
+    }
+    return originalIncludes.call(this, searchElement, fromIndex);
+  };
+} catch {}

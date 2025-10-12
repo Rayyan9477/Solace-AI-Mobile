@@ -27,8 +27,6 @@ import React, { useEffect, useCallback } from 'react';
 import { Platform, AppState } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
 import { registerRootComponent } from 'expo';
 
 // Expo modules
@@ -39,7 +37,7 @@ import { logger } from './src/shared/utils/logger';
 // App modules
 import RefactoredAppProvider from './src/app/providers/RefactoredAppProvider';
 import AppNavigator from './src/app/navigation/AppNavigator';
-import { store, persistor } from './src/app/store/store';
+// Store providers are applied inside RefactoredAppProvider/AppProvider
 import { APP_CONFIG } from './src/shared/constants';
 import { validateApp } from './src/shared/utils/validation';
 
@@ -116,7 +114,7 @@ const AppRoot = ({ children }) => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <Provider store={store}>{children}</Provider>
+  {children}
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
@@ -160,13 +158,11 @@ const App = () => {
 
   return (
     <AppRoot>
-      <PersistGate loading={null} persistor={persistor}>
-        <RefactoredAppProvider>
-          <NavigationWrapper>
-            <AppNavigator />
-          </NavigationWrapper>
-        </RefactoredAppProvider>
-      </PersistGate>
+      <RefactoredAppProvider>
+        <NavigationWrapper>
+          <AppNavigator />
+        </NavigationWrapper>
+      </RefactoredAppProvider>
     </AppRoot>
   );
 };

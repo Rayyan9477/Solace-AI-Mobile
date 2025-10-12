@@ -4,9 +4,10 @@
  */
 
 // Basic UI Elements
+// Buttons
 export { default as TherapeuticButton } from './TherapeuticButton';
+// Avoid duplicate named exports; only export unique non-defaults if needed
 export {
-  TherapeuticButton,
   PrimaryButton,
   SecondaryButton,
   GhostButton,

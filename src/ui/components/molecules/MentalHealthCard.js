@@ -8,14 +8,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { View, Text, StyleSheet, Platform, Animated } from "react-native";
 
-import { useTheme } from "../../../core/utils/shared/theme/ThemeContext";
-import {
-  spacing,
-  borderRadius,
-  shadows,
-  typography,
-} from "../../../core/utils/shared/theme/theme";
-import { validateThemeAccessibility } from "../../../core/utils/colorContrast";
+import { useTheme } from "../../../shared/theme/ThemeContext";
+import { enhancedTheme as themeTokens } from "../../../shared/theme/enhancedTheme";
+import { validateThemeAccessibility } from "../../../shared/utils/accessibility";
+
+const { spacing, borderRadius, shadows, typography } = themeTokens;
 
 // Card variant configurations for different therapeutic contexts
 const CARD_VARIANTS = {
