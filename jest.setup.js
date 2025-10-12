@@ -63,9 +63,9 @@ jest.mock("react-native-svg", () => {
 
 jest.mock("expo-linear-gradient", () => {
   const React = require("react");
-  return {
-    LinearGradient: React.View,
-  };
+  const { View } = require("react-native");
+  const LinearGradient = React.forwardRef((props, ref) => React.createElement(View, { ref, ...props }));
+  return { LinearGradient, default: LinearGradient };
 });
 
 // Mental Health App Specific Setup
@@ -174,6 +174,7 @@ global.testUtils = {
 // Enhanced accessibility mocking
 jest.mock("react-native", () => {
   const RN = jest.requireActual("react-native");
+  const React = require('react');
 
   return {
     ...RN,
@@ -190,25 +191,68 @@ jest.mock("react-native", () => {
       Value: function (v) {
         this._value = v || 0;
         this.setValue = (nv) => (this._value = nv);
+        this.interpolate = jest.fn(({ inputRange = [0, 1], outputRange = [0, 1] } = {}) => {
+          try {
+            const first = inputRange[0];
+            const last = inputRange[inputRange.length - 1];
+            if (this._value <= first) return outputRange[0];
+            if (this._value >= last) return outputRange[outputRange.length - 1];
+            // simple linear mapping for tests
+            const ratio = (this._value - first) / (last - first || 1);
+            const outFirst = outputRange[0];
+            const outLast = outputRange[outputRange.length - 1];
+            if (typeof outFirst === 'number' && typeof outLast === 'number') {
+              return outFirst + ratio * (outLast - outFirst);
+            }
+            return outputRange[0];
+          } catch {
+            return outputRange && outputRange[0];
+          }
+        });
         this.stopAnimation = jest.fn();
         this.resetAnimation = jest.fn();
         this.addListener = jest.fn();
         this.removeAllListeners = jest.fn();
         return this;
       },
-      timing: jest.fn(() => ({ start: (cb) => cb && cb() })),
+  timing: jest.fn(() => ({ start: (cb) => cb && cb(), stop: jest.fn() })),
+      parallel: jest.fn((animations = []) => ({
+        start: (cb) => {
+          animations.forEach((a) => a && a.start && a.start());
+          cb && cb();
+        },
+        stop: jest.fn(),
+      })),
+  sequence: jest.fn(() => ({ start: (cb) => cb && cb() })),
+  stagger: jest.fn(() => ({ start: (cb) => cb && cb() })),
       spring: jest.fn(() => ({ start: (cb) => cb && cb() })),
       decay: jest.fn(() => ({ start: (cb) => cb && cb() })),
       event: jest.fn(),
       View: RN.View,
       createAnimatedComponent: (Component) => Component,
     },
+    KeyboardAvoidingView: React.forwardRef(({ children, ...rest }, ref) =>
+      // Render children directly; avoids event subscriptions and layout calculations
+      React.createElement(React.Fragment, null, children)
+    ),
     AccessibilityInfo: {
       isScreenReaderEnabled: jest.fn(() => Promise.resolve(false)),
       // resolve immediately to reduce act warnings in tests
       isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),
       announceForAccessibility: jest.fn(),
       setAccessibilityFocus: jest.fn(),
+    },
+    Dimensions: {
+      ...RN.Dimensions,
+      addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+      removeEventListener: jest.fn(),
+      get: RN.Dimensions.get,
+      set: RN.Dimensions.set || jest.fn(),
+    },
+    Keyboard: {
+      addListener: jest.fn(() => ({ remove: jest.fn() })),
+      removeListener: jest.fn(),
+      dismiss: jest.fn(),
     },
     Alert: {
       alert: jest.fn(),
@@ -238,13 +282,39 @@ jest.mock("react-native/Libraries/Animated/Animated", () => {
     Value: function (v) {
       this._value = v || 0;
       this.setValue = (nv) => (this._value = nv);
+      this.interpolate = jest.fn(({ inputRange = [0, 1], outputRange = [0, 1] } = {}) => {
+        try {
+          const first = inputRange[0];
+          const last = inputRange[inputRange.length - 1];
+          if (this._value <= first) return outputRange[0];
+          if (this._value >= last) return outputRange[outputRange.length - 1];
+          const ratio = (this._value - first) / (last - first || 1);
+          const outFirst = outputRange[0];
+          const outLast = outputRange[outputRange.length - 1];
+          if (typeof outFirst === 'number' && typeof outLast === 'number') {
+            return outFirst + ratio * (outLast - outFirst);
+          }
+          return outputRange[0];
+        } catch {
+          return outputRange && outputRange[0];
+        }
+      });
       this.stopAnimation = jest.fn();
       this.resetAnimation = jest.fn();
       this.addListener = jest.fn();
       this.removeAllListeners = jest.fn();
       return this;
     },
-    timing: jest.fn(() => ({ start: (cb) => cb && cb() })),
+  timing: jest.fn(() => ({ start: (cb) => cb && cb(), stop: jest.fn() })),
+    parallel: jest.fn((animations = []) => ({
+      start: (cb) => {
+        animations.forEach((a) => a && a.start && a.start());
+        cb && cb();
+      },
+      stop: jest.fn(),
+    })),
+  sequence: jest.fn(() => ({ start: (cb) => cb && cb() })),
+  stagger: jest.fn(() => ({ start: (cb) => cb && cb() })),
     spring: jest.fn(() => ({ start: (cb) => cb && cb() })),
     decay: jest.fn(() => ({ start: (cb) => cb && cb() })),
     event: jest.fn(),
@@ -264,6 +334,18 @@ jest.mock('react-native/Libraries/Settings/NativeSettingsManager', () => ({
     settings: {},
   })),
 }));
+
+// Simplify KeyboardAvoidingView to avoid platform-specific event subscriptions in tests
+// Important: Avoid requiring('react-native') here to prevent circular requires with the main RN mock
+jest.mock('react-native/Libraries/Components/Keyboard/KeyboardAvoidingView', () => {
+  const React = require('react');
+  const KeyboardAvoidingView = React.forwardRef(({ children, ...rest }, ref) =>
+    // Passthrough: render children directly to avoid RN-specific listeners/subscriptions in tests
+    React.createElement(React.Fragment, null, children)
+  );
+  KeyboardAvoidingView.displayName = 'KeyboardAvoidingViewMock';
+  return KeyboardAvoidingView;
+});
 
 // Additional React Native mocks for better compatibility
 jest.mock("react-native/Libraries/EventEmitter/NativeEventEmitter", () => {
@@ -414,5 +496,21 @@ try {
       return false;
     }
     return originalIncludes.call(this, searchElement, fromIndex);
+  };
+} catch {}
+
+// Patch Array.prototype.indexOf to handle asymmetric matchers
+try {
+  const originalIndexOf = Array.prototype.indexOf;
+  // eslint-disable-next-line no-extend-native
+  Array.prototype.indexOf = function patchedIndexOf(searchElement, fromIndex) {
+    const start = fromIndex || 0;
+    if (searchElement && typeof searchElement.asymmetricMatch === 'function') {
+      for (let i = start; i < this.length; i++) {
+        if (searchElement.asymmetricMatch(this[i])) return i;
+      }
+      return -1;
+    }
+    return originalIndexOf.call(this, searchElement, fromIndex);
   };
 } catch {}

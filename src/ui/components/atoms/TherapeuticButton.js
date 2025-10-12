@@ -250,12 +250,6 @@ export const TherapeuticButton = ({
   // Flatten styles so consumers/tests see a resolved object (not a mix of IDs/arrays)
   const mergedButtonStyle = useMemo(() => StyleSheet.flatten(buttonStyles), [buttonStyles]);
 
-  if (process?.env?.JEST_WORKER_ID) {
-    try {
-      // eslint-disable-next-line no-console
-      console.log('TherapeuticButton style debug', JSON.stringify(mergedButtonStyle));
-    } catch {}
-  }
 
   return (
     <TouchableOpacity
@@ -274,11 +268,6 @@ export const TherapeuticButton = ({
       testID={testID || (title ? `button-${title}` : undefined)}
       {...props}
     >
-      {process?.env?.JEST_WORKER_ID && (
-        // Minimal debug info to verify style composition in tests
-        // eslint-disable-next-line react/no-unescaped-entities
-        <Text style={{ display: 'none' }} testID={`__dbg-fw-${fullWidth ? '1' : '0'}`}></Text>
-      )}
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator

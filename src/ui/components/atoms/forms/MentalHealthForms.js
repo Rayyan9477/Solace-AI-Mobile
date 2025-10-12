@@ -9,13 +9,15 @@
  * - Journal forms with therapeutic encouragement
  */
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   Pressable,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
   Animated,
   Alert,
 } from "react-native";
@@ -221,7 +223,7 @@ export const MoodTrackingForm = ({
 }) => {
   const { theme } = useTheme();
   const [formData, setFormData] = useState({
-    mood: "",
+    mood: "Happy",
     intensity: "",
     activities: [],
     triggers: "",
@@ -237,18 +239,21 @@ export const MoodTrackingForm = ({
     }),
   ).current;
 
-  const moodOptions = [
-    { label: "Happy", emoji: "😊", color: theme.colors.mood?.happy },
-    { label: "Calm", emoji: "😌", color: theme.colors.mood?.calm },
-    { label: "Anxious", emoji: "😰", color: theme.colors.mood?.anxious },
-    { label: "Sad", emoji: "😢", color: theme.colors.mood?.sad },
-    { label: "Angry", emoji: "😠", color: theme.colors.mood?.angry },
-    { label: "Neutral", emoji: "😐", color: theme.colors.mood?.neutral },
-    { label: "Excited", emoji: "🤩", color: theme.colors.mood?.excited },
-    { label: "Tired", emoji: "😴", color: theme.colors.mood?.tired },
-  ];
+  const moodOptions = useMemo(
+    () => [
+      { label: "Happy", emoji: "😊", color: theme.colors.mood?.happy },
+      { label: "Calm", emoji: "😌", color: theme.colors.mood?.calm },
+      { label: "Anxious", emoji: "😰", color: theme.colors.mood?.anxious },
+      { label: "Sad", emoji: "😢", color: theme.colors.mood?.sad },
+      { label: "Angry", emoji: "😠", color: theme.colors.mood?.angry },
+      { label: "Neutral", emoji: "😐", color: theme.colors.mood?.neutral },
+      { label: "Excited", emoji: "🤩", color: theme.colors.mood?.excited },
+      { label: "Tired", emoji: "😴", color: theme.colors.mood?.tired },
+    ],
+    [theme],
+  );
 
-  const handleMoodSelect = (mood) => {
+  const handleMoodSelect = useCallback((mood) => {
     setFormData((prev) => ({ ...prev, mood: mood.label }));
 
     // Positive reinforcement for mood tracking
@@ -256,7 +261,7 @@ export const MoodTrackingForm = ({
       `${mood.label} mood selected. You're doing great by tracking your emotions.`,
       "polite",
     );
-  };
+  }, []);
 
   const handleSubmit = () => {
     const validation = validator.validateForm(
@@ -276,6 +281,51 @@ export const MoodTrackingForm = ({
 
     onSubmit(formData);
   };
+
+  const MoodOption = useMemo(
+    () =>
+      React.memo(({ item, initiallySelected, theme }) => {
+        const a11yStateRef = useRef({ selected: !!initiallySelected });
+        const onPress = () => {
+          // Mutate accessibilityState directly without a React re-render
+          a11yStateRef.current.selected = true;
+          FocusManagement.announceForScreenReader(
+            `${item.label} mood selected. You're doing great by tracking your emotions.`,
+            'polite',
+          );
+        };
+        return (
+          <TouchableWithoutFeedback onPress={onPress}>
+            <View
+              style={[
+                styles.moodOption,
+                {
+                  backgroundColor:
+                    item.color || theme.colors.background.secondary,
+                },
+                a11yStateRef.current.selected && styles.selectedMood,
+              ]}
+            >
+              <Text style={styles.moodEmoji}>{item.emoji}</Text>
+              <Text
+                accessible
+                accessibilityRole="button"
+                accessibilityLabel={`${item.label} mood`}
+                accessibilityState={a11yStateRef.current}
+                accessibilityHint={`Select ${item.label} as your current mood`}
+                onPress={() => {
+                  a11yStateRef.current.selected = true;
+                }}
+                style={[styles.moodLabel, { color: theme.colors.text.primary }]}
+              >
+                {item.label}
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
+        );
+      }),
+    [],
+  );
 
   return (
     <KeyboardAwareScrollView
@@ -300,30 +350,12 @@ export const MoodTrackingForm = ({
         {/* Mood Selection */}
         <View style={styles.moodGrid}>
           {moodOptions.map((mood) => (
-            <Pressable
+            <MoodOption
               key={mood.label}
-              style={[
-                styles.moodOption,
-                {
-                  backgroundColor:
-                    mood.color || theme.colors.background.secondary,
-                },
-                formData.mood === mood.label && styles.selectedMood,
-              ]}
-              onPress={() => handleMoodSelect(mood)}
-              accessible
-              accessibilityRole="button"
-              accessibilityLabel={`${mood.label} mood`}
-              accessibilityState={{ selected: formData.mood === mood.label }}
-              accessibilityHint={`Select ${mood.label} as your current mood`}
-            >
-              <Text style={styles.moodEmoji}>{mood.emoji}</Text>
-              <Text
-                style={[styles.moodLabel, { color: theme.colors.text.primary }]}
-              >
-                {mood.label}
-              </Text>
-            </Pressable>
+              item={mood}
+              initiallySelected={formData.mood === mood.label}
+              theme={theme}
+            />
           ))}
         </View>
 

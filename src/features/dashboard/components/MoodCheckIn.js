@@ -1,25 +1,79 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Animated } from "react-native";
 
-const MoodCheckIn = ({ currentMood, onCheckIn = () => {}, testID = "mood-check-in", accessibilityLabel, accessibilityHint }) => {
+const MoodCheckIn = ({
+  currentMood,
+  onCheckIn = () => {},
+  testID = "mood-check-in",
+  accessibilityLabel,
+  accessibilityHint,
+  reducedMotion = false,
+  performanceTracker,
+  onPerformanceIssue,
+  onUnmount,
+  size = "medium",
+  crisisMode = false,
+}) => {
+  const scale = useRef(new Animated.Value(reducedMotion || crisisMode ? 1 : 0.9)).current;
+  const opacity = useRef(new Animated.Value(reducedMotion || crisisMode ? 1 : 0)).current;
+
+  useEffect(() => {
+    const start = performance.now();
+    performanceTracker && performanceTracker.trackAnimation && performanceTracker.trackAnimation({ type: "mount_start", at: start });
+
+    const animations = [
+      Animated.timing(scale, { toValue: 1, duration: crisisMode ? 0 : 300, useNativeDriver: true }),
+      Animated.timing(opacity, { toValue: 1, duration: crisisMode ? 0 : 250, useNativeDriver: true }),
+    ];
+
+    const run = reducedMotion || crisisMode
+      ? { start: (cb) => cb && cb(), stop: () => {} }
+      : Animated.parallel(animations);
+
+    run.start(() => {
+      const end = performance.now();
+      performanceTracker && performanceTracker.trackAnimation && performanceTracker.trackAnimation({ type: "mount_end", at: end, duration: end - start });
+      if (end - start > 150 && onPerformanceIssue) {
+        onPerformanceIssue({ type: "slow_render", duration: end - start });
+      }
+    });
+
+    return () => {
+      run.stop && run.stop();
+      onUnmount && onUnmount();
+    };
+  }, [scale, opacity, reducedMotion, crisisMode, performanceTracker, onPerformanceIssue, onUnmount]);
+
+  const buttonScale = scale.interpolate({ inputRange: [0.9, 1], outputRange: [0.98, 1] });
+
+  const dimensions = {
+    small: { height: 40, fontSize: 14 },
+    medium: { height: 48, fontSize: 16 },
+    large: { height: 56, fontSize: 18 },
+  }[size] || { height: 48, fontSize: 16 };
+
   return (
-    <View
+    <Animated.View
       testID={testID}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel || "Mood check-in component"}
       accessibilityHint={accessibilityHint || "Select your current mood to track your emotional state"}
       accessibilityValue={{ text: currentMood || "" }}
-      style={styles.container}
+      style={[styles.container, { opacity, transform: [{ scale }] }]}
     >
       <Text style={styles.title}>How are you feeling?</Text>
-      <TouchableOpacity
-        testID="mood-check-in-button"
-        onPress={() => onCheckIn(currentMood || "happy")}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Log Mood</Text>
-      </TouchableOpacity>
-    </View>
+      <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
+        <TouchableOpacity
+          testID="mood-check-in-button"
+          onPress={() => onCheckIn(currentMood || "happy")}
+          style={[styles.button, { minHeight: dimensions.height }]}
+          onPressIn={() => !reducedMotion && Animated.timing(scale, { toValue: 0.97, duration: 80, useNativeDriver: true }).start()}
+          onPressOut={() => !reducedMotion && Animated.timing(scale, { toValue: 1, duration: 120, useNativeDriver: true }).start()}
+        >
+          <Text style={[styles.buttonText, { fontSize: dimensions.fontSize }]}>Log Mood</Text>
+        </TouchableOpacity>
+      </Animated.View>
+    </Animated.View>
   );
 };
 
