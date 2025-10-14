@@ -24,13 +24,11 @@ jest.mock("expo-haptics", () => ({
   },
 }));
 
-jest.mock("@react-navigation/native", () => ({
-  useNavigation: () => ({
-    navigate: jest.fn(),
-    push: jest.fn(),
-    goBack: jest.fn(),
-  }),
-}));
+jest.mock("@react-navigation/native", () => {
+  const navObj = { navigate: jest.fn(), push: jest.fn(), goBack: jest.fn() };
+  const useNavigation = jest.fn(() => navObj);
+  return { useNavigation, __mockedNav: navObj };
+});
 
 const mockTheme = {
   colors: {
@@ -144,28 +142,28 @@ describe("QuickActions Component", () => {
     it("includes therapy session action", () => {
       const { getByTestId } = renderQuickActions();
       const therapyAction =
-        getByTestId("action-therapy") || getByTestId("action-card-therapy");
+        (typeof queryByTestId === 'function' && queryByTestId("action-therapy")) || getByTestId("action-card-therapy");
       expect(therapyAction).toBeTruthy();
     });
 
     it("includes journaling action", () => {
       const { getByTestId } = renderQuickActions();
       const journalAction =
-        getByTestId("action-journal") || getByTestId("action-card-journal");
+        (typeof queryByTestId === 'function' && queryByTestId("action-journal")) || getByTestId("action-card-journal");
       expect(journalAction).toBeTruthy();
     });
 
     it("includes mindfulness action", () => {
       const { getByTestId } = renderQuickActions();
       const mindfulAction =
-        getByTestId("action-mindful") || getByTestId("action-card-mindful");
+        (typeof queryByTestId === 'function' && queryByTestId("action-mindful")) || getByTestId("action-card-mindful");
       expect(mindfulAction).toBeTruthy();
     });
 
     it("includes crisis support access", () => {
       const { getByTestId, getByText } = renderQuickActions();
       const crisisAction =
-        getByTestId("action-crisis") ||
+        (typeof queryByTestId === 'function' && queryByTestId("action-crisis")) ||
         getByTestId("action-card-crisis") ||
         getByText(/crisis/i) ||
         getByText(/emergency/i);
@@ -195,11 +193,11 @@ describe("QuickActions Component", () => {
       const mockNavigate = jest.fn();
       useNavigation.mockReturnValue({ navigate: mockNavigate });
 
-      const { getByTestId } = renderQuickActions();
+  const { getByTestId, queryByTestId } = renderQuickActions();
 
       // Test therapy action navigation
       const therapyAction =
-        getByTestId("action-therapy") || getByTestId("action-card-therapy");
+        (typeof queryByTestId === 'function' && queryByTestId("action-therapy")) || getByTestId("action-card-therapy");
       if (therapyAction) {
         fireEvent.press(therapyAction);
         await waitFor(() => {
@@ -410,12 +408,12 @@ describe("QuickActions Component", () => {
   describe("Integration with Mental Health Features", () => {
     it("integrates with crisis intervention system", async () => {
       const mockOnActionPress = jest.fn();
-      const { getByTestId } = renderQuickActions({
+      const { getByTestId, queryByTestId } = renderQuickActions({
         onActionPress: mockOnActionPress,
       });
 
       const crisisAction =
-        getByTestId("action-crisis") || getByTestId("action-card-crisis");
+        (typeof queryByTestId === 'function' && queryByTestId("action-crisis")) || getByTestId("action-card-crisis");
       if (crisisAction) {
         fireEvent.press(crisisAction);
 

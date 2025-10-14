@@ -54,7 +54,7 @@ describe("App Navigation", () => {
   describe("Tab Navigation", () => {
     it("renders all main navigation tabs", () => {
       const { getByText } = render(
-        <MentalHealthTestWrapper>
+          <MentalHealthTestWrapper>
           <AppNavigator />
         </MentalHealthTestWrapper>,
       );
@@ -68,8 +68,8 @@ describe("App Navigation", () => {
     });
 
     it("navigates between tabs correctly", async () => {
-      const { getByText } = render(
-        <MentalHealthTestWrapper>
+        const { getAllByText, getByText } = render(
+          <MentalHealthTestWrapper>
           <AppNavigator />
         </MentalHealthTestWrapper>,
       );
@@ -87,7 +87,7 @@ describe("App Navigation", () => {
 
     it("shows active tab indicator", () => {
       const { getByTestId } = render(
-        <MentalHealthTestWrapper>
+          <MentalHealthTestWrapper>
           <BottomTabBar
             state={{ index: 0, routes: [{ name: "Home", key: "home" }] }}
             descriptors={{}}
@@ -104,7 +104,7 @@ describe("App Navigation", () => {
 
     it("uses appropriate icons for mental health context", () => {
       const { getByTestId } = render(
-        <MentalHealthTestWrapper>
+          <MentalHealthTestWrapper>
           <BottomTabBar
             state={{
               index: 0,
@@ -421,14 +421,17 @@ describe("App Navigation", () => {
 
   describe("Mental Health Specific Navigation", () => {
     it("provides easy access to mood tracking from any screen", () => {
-      const { getByText } = render(
+      const { getAllByText } = render(
         <MentalHealthTestWrapper>
           <AppNavigator />
         </MentalHealthTestWrapper>,
       );
 
       // Should have quick access to mood tracking
-      const moodAccess = getByText(/mood|feeling|track/i);
+      const allMoodMatches = (() => {
+        try { return getAllByText(/mood|feeling|track/i); } catch { return []; }
+      })();
+      const moodAccess = allMoodMatches[0];
       expect(moodAccess).toBeTruthy();
     });
 
@@ -453,14 +456,16 @@ describe("App Navigation", () => {
         needsSupport: true,
       };
 
-      const { getByText } = render(
+      const { getAllByText, getByText } = render(
         <MentalHealthTestWrapper>
           <AppNavigator userContext={userContext} />
         </MentalHealthTestWrapper>,
       );
 
       // Should provide contextual navigation
-      expect(getByText(/support|help|calm/i) || getByText("Home")).toBeTruthy();
+  const allSupportMatches = (() => { try { return getAllByText(/support|help|calm/i); } catch { return []; } })();
+  const supportEl = allSupportMatches[0] || getByText("Home");
+  expect(supportEl).toBeTruthy();
     });
 
     it("supports therapeutic navigation patterns", () => {

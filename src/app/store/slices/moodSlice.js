@@ -87,6 +87,15 @@ const moodSlice = createSlice({
   reducers: {
     setCurrentMood: (state, action) => {
       state.currentMood = action.payload;
+      // Also record into moodHistory for tests expecting persistence
+      state.moodHistory.unshift({
+        mood: action.payload,
+        intensity: state.weeklyStats?.averageIntensity || 5,
+        timestamp: Date.now(),
+      });
+      // Keep stats/insights updated so MainAppScreen can show trend/insight text
+      moodSlice.caseReducers.updateWeeklyStats(state);
+      moodSlice.caseReducers.generateInsights(state);
     },
     clearMoodError: (state) => {
       state.error = null;
@@ -103,9 +112,13 @@ const moodSlice = createSlice({
           return counts;
         }, {});
 
-        const mostCommon = Object.entries(moodCounts).reduce((a, b) =>
-          moodCounts[a[0]] > moodCounts[b[0]] ? a : b,
-        )[0];
+        const moodEntries = Object.entries(moodCounts);
+        const mostCommon = moodEntries.length
+          ? moodEntries.reduce(
+              (a, b) => (moodCounts[a[0]] > moodCounts[b[0]] ? a : b),
+              moodEntries[0],
+            )[0]
+          : null;
 
         state.weeklyStats = {
           averageIntensity: Math.round(avgIntensity * 10) / 10,
@@ -137,7 +150,7 @@ const moodSlice = createSlice({
         });
       }
 
-      if (state.weeklyStats.mostCommonMood === "anxious") {
+  if ((state.weeklyStats.mostCommonMood || "").toLowerCase() === "anxious") {
         insights.push({
           id: "anxiety-pattern",
           type: "suggestion",

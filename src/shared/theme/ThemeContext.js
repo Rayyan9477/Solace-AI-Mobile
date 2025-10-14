@@ -116,7 +116,11 @@ const CompatBridge = ({ children, theme: forcedTheme, value, crisisMode, moodCon
     [adaptedTheme, colors, isReducedMotionEnabled, base?.toggleTheme, base?.setTheme]
   );
 
-  return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={contextValue}>
+      {children}
+    </ThemeContext.Provider>
+  );
 };
 
 export const ThemeProvider = ({ children, ...props }) => (

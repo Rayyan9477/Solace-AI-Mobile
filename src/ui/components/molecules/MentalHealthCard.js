@@ -7,6 +7,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { View, Text, StyleSheet, Platform, Animated } from "react-native";
+import PropTypes from "prop-types";
 
 import { useTheme } from "../../../shared/theme/ThemeContext";
 import { enhancedTheme as themeTokens } from "../../../shared/theme/enhancedTheme";
@@ -15,6 +16,8 @@ import { validateThemeAccessibility } from "../../../shared/utils/accessibility"
 const { spacing, borderRadius, shadows, typography } = themeTokens;
 
 // Card variant configurations for different therapeutic contexts
+// Note: Uses logical color paths that may not exist in all theme shapes;
+// color resolution below handles fallbacks safely.
 const CARD_VARIANTS = {
   default: {
     backgroundColor: "background.primary",
@@ -25,6 +28,22 @@ const CARD_VARIANTS = {
     backgroundColor: "background.primary",
     borderColor: "gray.100",
     shadow: shadows.md,
+  },
+  // Legacy/compat variants used by older tests and components
+  outlined: {
+    backgroundColor: "background.primary",
+    borderColor: "gray.200",
+    shadow: shadows.xs,
+  },
+  flat: {
+    backgroundColor: "background.primary",
+    borderColor: "gray.100",
+    shadow: {},
+  },
+  filled: {
+    backgroundColor: "therapeutic.nurturing.50",
+    borderColor: "therapeutic.nurturing.200",
+    shadow: shadows.sm,
   },
   mood: {
     backgroundColor: "therapeutic.calming.50",
@@ -94,20 +113,43 @@ export const MentalHealthCard = ({
   accessibilityHint,
   onPress,
   disabled = false,
+  loading = false,
+  padding,
+  borderRadius: borderRadiusOverride,
   ...props
 }) => {
   const { theme } = useTheme();
-  const cardVariant = CARD_VARIANTS[variant];
+  const cardVariant = CARD_VARIANTS[variant] || CARD_VARIANTS.default;
   const cardSize = CARD_SIZES[size];
 
-  // Get theme colors for the variant
+  // Fallback palette for compatibility with minimal theme mocks in tests
+  const fallbackPalette = {
+    background: { primary: "#FFFFFF" },
+    text: { primary: "#111827", secondary: "#6B7280" },
+    gray: { 50: "#F9FAFB", 100: "#F3F4F6", 200: "#E5E7EB" },
+    error: { 50: "#FEF2F2", 100: "#FEE2E2", 200: "#FECACA" },
+    success: { 50: "#F0FDF4", 100: "#DCFCE7", 200: "#BBF7D0" },
+  };
+
+  const resolvePath = (obj, path) => {
+    if (!obj) return undefined;
+    return path.split(".").reduce((acc, seg) => (acc ? acc[seg] : undefined), obj);
+  };
+
+  // Get theme colors for the variant with robust fallbacks
   const getThemeColor = (colorPath) => {
-    const path = colorPath.split(".");
-    let color = theme.colors;
-    for (const segment of path) {
-      color = color[segment];
-    }
-    return color;
+    if (!colorPath) return undefined;
+    // 1) Try current theme
+    const fromTheme = resolvePath(theme?.colors || {}, colorPath);
+    if (fromTheme) return fromTheme;
+    // 2) Try enhanced theme tokens
+    const fromTokens = resolvePath(themeTokens?.colors || {}, colorPath);
+    if (fromTokens) return fromTokens;
+    // 3) Try fallback palette
+    const fromFallback = resolvePath(fallbackPalette, colorPath);
+    if (fromFallback) return fromFallback;
+    // 4) If it looks like a hex/rgb, return as-is
+    return typeof colorPath === "string" ? colorPath : undefined;
   };
 
   const backgroundColor = getThemeColor(cardVariant.backgroundColor);
@@ -135,8 +177,8 @@ export const MentalHealthCard = ({
       backgroundColor: gradientColors ? "transparent" : backgroundColor,
       borderColor,
       borderWidth: 1,
-      borderRadius: cardSize.borderRadius,
-      padding: cardSize.padding,
+      borderRadius: borderRadiusOverride ?? cardSize.borderRadius,
+      padding: typeof padding === "number" ? padding : cardSize.padding,
       ...cardVariant.shadow,
     },
     disabled && styles.disabled,
@@ -149,11 +191,15 @@ export const MentalHealthCard = ({
     accessibilityLabel: accessibilityLabel || title || "Mental health card",
     accessibilityHint:
       accessibilityHint || (onPress ? "Double tap to interact" : undefined),
-    accessibilityState: { disabled },
+    accessibilityState: { disabled: disabled || loading, busy: !!loading },
     testID,
     ...props,
   };
-
+  const BaseWrapper = View;
+  const handlePress = React.useCallback(() => {
+    if (disabled || loading) return;
+    if (typeof onPress === "function") onPress();
+  }, [disabled, loading, onPress]);
   const CardContent = () => (
     <View style={styles.cardContent}>
       {/* Header section */}
@@ -165,7 +211,7 @@ export const MentalHealthCard = ({
               <Text
                 style={[
                   styles.title,
-                  { color: theme.colors.text.primary },
+                  { color: getThemeColor("text.primary") },
                   variant === "crisis" && styles.crisisTitle,
                 ]}
                 accessibilityRole="header"
@@ -177,7 +223,7 @@ export const MentalHealthCard = ({
               <Text
                 style={[
                   styles.subtitle,
-                  { color: theme.colors.text.secondary },
+                  { color: getThemeColor("text.secondary") },
                 ]}
               >
                 {subtitle}
@@ -218,9 +264,12 @@ export const MentalHealthCard = ({
     return (
       <Animated.View style={styles.animatedContainer}>
         <CardWrapper>
-          <View {...accessibilityProps}>
+          <BaseWrapper
+            {...accessibilityProps}
+            onPress={onPress ? handlePress : undefined}
+          >
             <CardContent />
-          </View>
+          </BaseWrapper>
         </CardWrapper>
       </Animated.View>
     );
@@ -228,9 +277,12 @@ export const MentalHealthCard = ({
 
   return (
     <CardWrapper>
-      <View {...accessibilityProps}>
+      <BaseWrapper
+        {...accessibilityProps}
+        onPress={onPress ? handlePress : undefined}
+      >
         <CardContent />
-      </View>
+      </BaseWrapper>
     </CardWrapper>
   );
 };
@@ -300,14 +352,18 @@ export const ProgressCard = ({
 }) => {
   const { theme } = useTheme();
 
-  // Get theme color helper
+  // Get theme color helper (robust)
+  const resolvePath = (obj, path) => {
+    if (!obj) return undefined;
+    return path.split(".").reduce((acc, seg) => (acc ? acc[seg] : undefined), obj);
+  };
   const getThemeColor = (colorPath) => {
-    const path = colorPath.split(".");
-    let color = theme.colors;
-    for (const segment of path) {
-      color = color[segment];
-    }
-    return color || theme.colors.primary[500];
+    const fromTheme = resolvePath(theme?.colors || {}, colorPath);
+    if (fromTheme) return fromTheme;
+    const fromTokens = resolvePath(themeTokens?.colors || {}, colorPath);
+    if (fromTokens) return fromTokens;
+    // fallback to a safe green
+    return "#22c55e";
   };
 
   const progressColor = getThemeColor(color);
@@ -329,7 +385,7 @@ export const ProgressCard = ({
         <View
           style={[
             styles.progressTrack,
-            { backgroundColor: theme.colors.gray[200] },
+            { backgroundColor: getThemeColor("gray.200") },
           ]}
         >
           <Animated.View
@@ -343,7 +399,7 @@ export const ProgressCard = ({
           />
         </View>
         <Text
-          style={[styles.progressText, { color: theme.colors.text.secondary }]}
+          style={[styles.progressText, { color: getThemeColor("text.secondary") }]}
         >
           {progress} / {maxValue}
         </Text>
@@ -434,6 +490,42 @@ const styles = StyleSheet.create({
     textAlign: "right",
   },
 });
+
+MentalHealthCard.propTypes = {
+  children: PropTypes.node,
+  variant: PropTypes.string,
+  size: PropTypes.string,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  icon: PropTypes.node,
+  actionButton: PropTypes.node,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  animated: PropTypes.bool,
+  animationDelay: PropTypes.number,
+  testID: PropTypes.string,
+  accessibilityLabel: PropTypes.string,
+  accessibilityHint: PropTypes.string,
+  onPress: PropTypes.func,
+  disabled: PropTypes.bool,
+  loading: PropTypes.bool,
+  padding: PropTypes.number,
+  borderRadius: PropTypes.number,
+};
+
+CardGroup.propTypes = {
+  children: PropTypes.node,
+  spacing: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  animated: PropTypes.bool,
+  staggerDelay: PropTypes.number,
+};
+
+ProgressCard.propTypes = {
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  progress: PropTypes.number,
+  maxValue: PropTypes.number,
+  color: PropTypes.string,
+};
 
 export default {
   MentalHealthCard,

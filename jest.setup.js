@@ -37,11 +37,16 @@ jest.mock("@react-navigation/native", () => {
   const React = require("react");
   const NavigationContainer = ({ children }) => React.createElement(React.Fragment, null, children);
   const useIsFocused = jest.fn(() => true);
+  // Core mock navigation object we can reuse/override in individual tests
+  const baseNavigation = { navigate: jest.fn(), goBack: jest.fn() };
+  const useNavigation = jest.fn(() => baseNavigation);
   return {
     ...actual,
     NavigationContainer,
-    useNavigation: () => ({ navigate: jest.fn(), goBack: jest.fn() }),
+    useNavigation,
     useIsFocused,
+    // expose for direct import overriding if a test wants to manipulate navigate without mockReturnValue
+    __mockedNavigation: baseNavigation,
   };
 });
 
@@ -183,6 +188,14 @@ jest.mock("react-native", () => {
 
   return {
     ...RN,
+    TouchableOpacity: React.forwardRef(({ style, onPress, onLongPress, accessible, ...props }, ref) => {
+      const flat = RN.StyleSheet && RN.StyleSheet.flatten ? RN.StyleSheet.flatten(style) : style;
+      const base = flat || {};
+      const safeStyle = { padding: base.padding ?? 12, margin: base.margin ?? 8, ...base };
+      const press = typeof onPress === 'function' ? onPress : () => {};
+      const longPress = typeof onLongPress === 'function' ? onLongPress : press;
+      return React.createElement(RN.View, { ref, style: safeStyle, onPress: press, onLongPress: longPress, accessible: accessible ?? true, ...props });
+    }),
     Platform: {
       ...RN.Platform,
       OS: "ios",

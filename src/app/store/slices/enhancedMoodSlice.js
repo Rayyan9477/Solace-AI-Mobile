@@ -169,6 +169,15 @@ const initialState = {
   moodHistory: [],
   offlineQueue: [],
 
+  // UI flow state expected by integration tests
+  currentStep: 1, // 1-indexed in tests
+  selectedMood: null,
+  intensity: 5,
+  activities: [],
+  notes: "",
+  triggers: [],
+  isSubmitting: false,
+
   // Analytics and insights
   weeklyStats: {
     averageIntensity: 0,
@@ -205,6 +214,36 @@ const enhancedMoodSlice = createSlice({
   name: "mood",
   initialState,
   reducers: {
+    // Simple UI state setters used by tests
+    setCurrentStep: (state, action) => {
+      state.currentStep = action.payload;
+    },
+    setSelectedMood: (state, action) => {
+      state.selectedMood = action.payload;
+      state.currentMood = action.payload;
+    },
+    setIntensity: (state, action) => {
+      state.intensity = action.payload;
+    },
+    toggleActivity: (state, action) => {
+      const id = action.payload;
+      if (state.activities.includes(id)) {
+        state.activities = state.activities.filter((a) => a !== id);
+      } else {
+        state.activities.push(id);
+      }
+    },
+    setNotes: (state, action) => {
+      state.notes = action.payload;
+    },
+    toggleTrigger: (state, action) => {
+      const id = action.payload;
+      if (state.triggers.includes(id)) {
+        state.triggers = state.triggers.filter((t) => t !== id);
+      } else {
+        state.triggers.push(id);
+      }
+    },
     // Optimistic updates
     addMoodEntryOptimistic: (state, action) => {
       state.moodHistory.unshift(action.payload);
@@ -263,8 +302,10 @@ const enhancedMoodSlice = createSlice({
           return counts;
         }, {});
 
-        const mostCommon = Object.entries(moodCounts).reduce((a, b) =>
-          moodCounts[a[0]] > moodCounts[b[0]] ? a : b,
+        const moodEntries = Object.entries(moodCounts);
+        const mostCommon = moodEntries.reduce(
+          (a, b) => (moodCounts[a[0]] > moodCounts[b[0]] ? a : b),
+          moodEntries[0],
         )[0];
 
         state.weeklyStats = {
@@ -350,8 +391,10 @@ const enhancedMoodSlice = createSlice({
             return acc;
           }, {});
 
-          const topMood = Object.entries(dominantMood).reduce((a, b) =>
-            dominantMood[a[0]] > dominantMood[b[0]] ? a : b,
+          const domEntries = Object.entries(dominantMood);
+          const topMood = domEntries.reduce(
+            (a, b) => (dominantMood[a[0]] > dominantMood[b[0]] ? a : b),
+            domEntries[0],
           )[0];
 
           if (avgIntensity < 2.5) {
@@ -487,7 +530,7 @@ const enhancedMoodSlice = createSlice({
     // Personalized recommendations
     generateRecommendations: (state) => {
       const recommendations = [];
-      const { currentMood, weeklyStats, patterns } = state;
+  const { currentMood, patterns } = state;
 
       // Mood-specific recommendations
       if (currentMood) {
@@ -636,6 +679,12 @@ const enhancedMoodSlice = createSlice({
 });
 
 export const {
+  setCurrentStep,
+  setSelectedMood,
+  setIntensity,
+  toggleActivity,
+  setNotes,
+  toggleTrigger,
   addMoodEntryOptimistic,
   markMoodSynced,
   addToOfflineQueue,

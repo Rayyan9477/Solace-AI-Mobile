@@ -6,6 +6,7 @@ const TabButton = ({ label, active, onPress, testID }) => (
     onPress={onPress}
     testID={testID}
     style={styles.tab}
+    accessible
     accessibilityRole="button"
     accessibilityLabel={`${label} tab`}
     accessibilityState={{ selected: !!active }}

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Animated, AccessibilityInfo } from "react-native";
 
 const MoodCheckIn = ({
   currentMood,
@@ -55,9 +55,13 @@ const MoodCheckIn = ({
   return (
     <Animated.View
       testID={testID}
-      accessibilityRole="button"
       accessibilityLabel={accessibilityLabel || "Mood check-in component"}
-      accessibilityHint={accessibilityHint || "Select your current mood to track your emotional state"}
+      accessibilityHint={
+        accessibilityHint ||
+        (currentMood && ["depressed", "sad", "anxious"].includes(String(currentMood).toLowerCase())
+          ? "Select your current mood. If you're feeling low, support is available."
+          : "Select your current mood to track your emotional state")
+      }
       accessibilityValue={{ text: currentMood || "" }}
       style={[styles.container, { opacity, transform: [{ scale }] }]}
     >
@@ -65,7 +69,20 @@ const MoodCheckIn = ({
       <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
         <TouchableOpacity
           testID="mood-check-in-button"
-          onPress={() => onCheckIn(currentMood || "happy")}
+          onPress={() => {
+            onCheckIn(currentMood || "happy");
+            try {
+              AccessibilityInfo.announceForAccessibility &&
+                AccessibilityInfo.announceForAccessibility("mood check-in logged");
+            } catch (_) {}
+          }}
+          onLongPress={() => {
+            // Support alternative input method
+            onCheckIn(currentMood || "happy");
+          }}
+          accessible
+          accessibilityRole="button"
+          accessibilityLabel="Log Mood"
           style={[styles.button, { minHeight: dimensions.height }]}
           onPressIn={() => !reducedMotion && Animated.timing(scale, { toValue: 0.97, duration: 80, useNativeDriver: true }).start()}
           onPressOut={() => !reducedMotion && Animated.timing(scale, { toValue: 1, duration: 120, useNativeDriver: true }).start()}
