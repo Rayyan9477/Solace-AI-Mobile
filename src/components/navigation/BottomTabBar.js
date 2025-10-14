@@ -2,7 +2,14 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const TabButton = ({ label, active, onPress, testID }) => (
-  <TouchableOpacity onPress={onPress} testID={testID} style={styles.tab}>
+  <TouchableOpacity
+    onPress={onPress}
+    testID={testID}
+    style={styles.tab}
+    accessibilityRole="button"
+    accessibilityLabel={`${label} tab`}
+    accessibilityState={{ selected: !!active }}
+  >
     <Text testID={`icon-${label.toLowerCase()}`} style={[styles.label, active && styles.active]}>
       {label}
     </Text>

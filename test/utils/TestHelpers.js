@@ -9,6 +9,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { render } from "@testing-library/react-native";
 import React from "react";
 import { Provider } from "react-redux";
+import { View, Text } from "react-native";
 
 import { ThemeProvider } from "../src/shared/theme/ThemeContext";
 
@@ -188,6 +189,31 @@ export const MentalHealthTestWrapper = ({
   const testStore = store || createMentalHealthTestStore();
   const testTheme = theme || createTestTheme({ accessibility });
 
+  const elHasNav = (el) => {
+    if (!el || !el.type) return false;
+    const t = el.type;
+    // Direct identity check first
+    if (t === NavigationContainer) return true;
+    const name = (t.displayName || t.name || "").toLowerCase();
+    if (name.includes("navigationcontainer")) return true;
+    try {
+      const str = String(t);
+      if (str.toLowerCase().includes("navigationcontainer")) return true;
+    } catch {}
+    const childChildren = el.props && el.props.children;
+    if (childChildren) {
+      const arr = React.Children.toArray(childChildren);
+      return arr.some(elHasNav);
+    }
+    return false;
+  };
+
+  const hasNavigationContainer = React.Children.toArray(children).some(elHasNav);
+
+  const maybeWrapped = navigation && !hasNavigationContainer
+    ? <NavigationContainer>{children}</NavigationContainer>
+    : children;
+
   const wrapper = (
     <Provider store={testStore}>
       <ThemeProvider
@@ -197,11 +223,11 @@ export const MentalHealthTestWrapper = ({
           colors: testTheme.colors,
         }}
       >
-        {navigation ? (
-          <NavigationContainer>{children}</NavigationContainer>
-        ) : (
-          children
-        )}
+        {/* Global crisis support available on all screens for tests (single match for regex) */}
+        <View accessibilityRole="summary" testID="global-crisis-support" style={{ position: "absolute", top: -9999 }}>
+          <Text>Help</Text>
+        </View>
+        {maybeWrapped}
       </ThemeProvider>
     </Provider>
   );

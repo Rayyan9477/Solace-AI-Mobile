@@ -32,13 +32,18 @@ jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
 );
 
-jest.mock("@react-navigation/native", () => ({
-  ...jest.requireActual("@react-navigation/native"),
-  useNavigation: () => ({
-    navigate: jest.fn(),
-    goBack: jest.fn(),
-  }),
-}));
+jest.mock("@react-navigation/native", () => {
+  const actual = jest.requireActual("@react-navigation/native");
+  const React = require("react");
+  const NavigationContainer = ({ children }) => React.createElement(React.Fragment, null, children);
+  const useIsFocused = jest.fn(() => true);
+  return {
+    ...actual,
+    NavigationContainer,
+    useNavigation: () => ({ navigate: jest.fn(), goBack: jest.fn() }),
+    useIsFocused,
+  };
+});
 
 // Mock additional animation and UI libraries
 jest.mock("react-native-svg", () => {
@@ -260,6 +265,9 @@ jest.mock("react-native", () => {
     Linking: {
       openURL: jest.fn(() => Promise.resolve()),
       canOpenURL: jest.fn(() => Promise.resolve(true)),
+      addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+      removeEventListener: jest.fn(),
+      getInitialURL: jest.fn(() => Promise.resolve(null)),
     },
   };
 });
