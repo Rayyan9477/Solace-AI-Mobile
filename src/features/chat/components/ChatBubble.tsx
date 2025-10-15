@@ -14,14 +14,20 @@ import { Card, Surface, IconButton } from 'react-native-paper';
 import { motion } from 'framer-motion';
 
 // Mock imports for now
-const Speech = { speak: () => console.log('Mock speech') };
-const platform = { isWeb: true, isNative: false };
+import * as Speech from 'expo-speech';
+import { platform } from '../../../shared/utils/platform';
 import { useTheme } from '../../../shared/theme/ThemeProvider';
 // Mock FreudColors for now
 const FreudColors = {
-  primary: '#007AFF',
-  secondary: '#34C759',
-  text: '#2D3748',
+  serenityGreen: {
+    60: '#34C759',
+  },
+  optimisticGray: {
+    10: '#F7FAFC',
+    40: '#A0AEC0',
+    60: '#718096',
+    90: '#2D3748',
+  },
 };
 
 const AnimatedCard = motion(Card);
@@ -42,29 +48,34 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
   accessibilityLabel,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { theme, isDarkMode } = useTheme();
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const { isDarkMode } = useTheme();
 
   // Handle speech synthesis with Expo compatibility
   const handleSpeak = async () => {
-    if (!Speech) {
-      console.warn('Text-to-speech not available on this platform');
+    if (!Speech || isLoading || isSpeaking) {
       return;
     }
 
     setIsLoading(true);
     try {
-      const isSpeaking = await Speech.isSpeakingAsync();
-      if (isSpeaking) {
+      const currentlySpeaking = await Speech.isSpeakingAsync();
+      if (currentlySpeaking) {
         await Speech.stop();
+        setIsSpeaking(false);
       } else {
-        await Speech.speak(message, {
+        setIsSpeaking(true);
+        await Promise.resolve(Speech.speak(message, {
           language: 'en',
           pitch: 1.0,
           rate: 0.9,
-        });
+        }));
+        // Reset speaking state after a short delay (speech duration estimate)
+        setTimeout(() => setIsSpeaking(false), 1000);
       }
     } catch (error) {
       console.error('Error in handleSpeak:', error);
+      setIsSpeaking(false);
     } finally {
       setIsLoading(false);
     }

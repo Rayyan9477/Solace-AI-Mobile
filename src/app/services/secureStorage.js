@@ -99,22 +99,34 @@ class SecureStorage {
         return null;
       }
 
+      // Try to parse as JSON first
       let parsedData;
       try {
-        // Try to decrypt first (for encrypted data)
-        const decrypted = this._decrypt(storedData);
-        parsedData = JSON.parse(decrypted);
-      } catch {
-        // If decryption fails, try parsing as plain JSON (backwards compatibility)
         parsedData = JSON.parse(storedData);
+        
+        // Check if it's the new format with data wrapper
+        if (parsedData && typeof parsedData === 'object' && 'data' in parsedData) {
+          return parsedData.data;
+        }
+        
+        // Assume it's old format (just the data)
+        return parsedData;
+      } catch {
+        // If parsing fails, try decrypting (for encrypted new format)
+        try {
+          const decrypted = this._decrypt(storedData);
+          parsedData = JSON.parse(decrypted);
+          
+          // Validate data structure
+          if (!parsedData || typeof parsedData !== 'object' || !('data' in parsedData)) {
+            return null;
+          }
+          
+          return parsedData.data;
+        } catch {
+          return null;
+        }
       }
-
-      // Validate data structure
-      if (!parsedData || typeof parsedData !== 'object') {
-        return null;
-      }
-
-      return parsedData.data;
     } catch (error) {
       console.warn('Failed to retrieve secure data:', error);
       return null;

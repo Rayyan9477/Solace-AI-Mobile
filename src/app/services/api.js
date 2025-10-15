@@ -98,10 +98,15 @@ async function authenticatedFetch(url, options = {}) {
     if (response.status === 401 && tokens?.refreshToken) {
       try {
         const newTokens = await refreshAccessToken(tokens.refreshToken);
-        await tokenService.storeTokens(newTokens);
+        const transformedTokens = {
+          accessToken: newTokens.access_token,
+          refreshToken: newTokens.refresh_token || tokens.refreshToken,
+          expiresAt: Date.now() + (newTokens.expires_in || 3600) * 1000,
+        };
+        await tokenService.storeTokens(transformedTokens);
 
         // Retry original request with new token
-        return await retryWithNewToken(url, options, newTokens);
+        return await retryWithNewToken(url, options, transformedTokens);
       } catch (refreshError) {
         console.warn('Token refresh failed:', refreshError);
         // Fall through to original error handling

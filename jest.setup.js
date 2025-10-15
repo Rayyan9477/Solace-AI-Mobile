@@ -205,6 +205,27 @@ jest.mock("./src/features/crisisIntervention/CrisisManager", () => {
   }));
 });
 
+// Global fetch mock for API testing
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({}),
+    text: () => Promise.resolve(''),
+  })
+);
+
+// Make fetch available globally (for environments where it's not available)
+if (typeof fetch === 'undefined') {
+  globalThis.fetch = global.fetch;
+}
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({}),
+    text: () => Promise.resolve(''),
+  })
+);
+
 // Mental health testing utilities
 global.testUtils = {
   createMoodEntry: (mood = "happy", intensity = 7) => ({

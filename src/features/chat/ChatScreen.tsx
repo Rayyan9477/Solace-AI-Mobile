@@ -79,7 +79,7 @@ export const ChatScreen = () => {
       ...theme.getShadow('sm'),
     },
     userBubble: {
-      backgroundColor: theme.palette.therapeutic.growth,
+      backgroundColor: theme.colors.therapeutic.nurturing[500],
     },
     botBubble: {
       backgroundColor: theme.colors.background.secondary,
@@ -122,7 +122,7 @@ export const ChatScreen = () => {
       backgroundColor: theme.colors.background.secondary,
     },
     sendButton: {
-      backgroundColor: theme.palette.therapeutic.growth,
+      backgroundColor: theme.colors.therapeutic.nurturing[500],
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,

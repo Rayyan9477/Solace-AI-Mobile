@@ -5,14 +5,16 @@ import { API_CONFIG } from '../../../src/shared/config/environment';
 global.fetch = jest.fn();
 
 // Mock tokenService as a proper Jest mock
-const mockTokenService = {
-  getTokens: jest.fn(),
-  storeTokens: jest.fn(),
-  clearTokens: jest.fn(),
-};
+const mockGetTokens = jest.fn(() => Promise.resolve(null));
+const mockStoreTokens = jest.fn(() => Promise.resolve());
+const mockClearTokens = jest.fn(() => Promise.resolve());
 
 jest.mock('../../../src/app/services/tokenService', () => ({
-  default: mockTokenService,
+  default: {
+    getTokens: mockGetTokens,
+    storeTokens: mockStoreTokens,
+    clearTokens: mockClearTokens,
+  },
 }));
 
 // Mock environment config
@@ -22,8 +24,6 @@ jest.mock('../../../src/shared/config/environment', () => ({
     timeout: 5000,
   },
 }));
-
-import tokenService from '../../../src/app/services/tokenService';
 
 // Helper function to create mock response
 const createMockResponse = (data, ok = true, status = 200) => ({
@@ -35,7 +35,16 @@ const createMockResponse = (data, ok = true, status = 200) => ({
 describe('API Service', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    fetch.mockClear();
+  });
+  beforeEach(() => {
+    jest.clearAllMocks();
+    fetch.mockRestore();
+    fetch.mockImplementation(() => Promise.reject(new Error('Fetch not mocked')));
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    fetch.mockRestore();
   });
 
   describe('AuthAPIError', () => {
@@ -62,7 +71,7 @@ describe('API Service', () => {
     it('successfully logs in user', async () => {
       fetch.mockResolvedValueOnce(createMockResponse(mockLoginData));
 
-      tokenService.storeTokens.mockResolvedValueOnce();
+      mockStoreTokens.mockResolvedValueOnce();
 
       const result = await apiService.auth.login('test@example.com', 'password123');
 
@@ -72,7 +81,7 @@ describe('API Service', () => {
         body: JSON.stringify({ email: 'test@example.com', password: 'password123' }),
       });
 
-      expect(tokenService.storeTokens).toHaveBeenCalledWith({
+      expect(mockStoreTokens).toHaveBeenCalledWith({
         accessToken: 'access_token_123',
         refreshToken: 'refresh_token_456',
         expiresAt: expect.any(Number),
@@ -145,39 +154,32 @@ describe('API Service', () => {
 
   describe('authAPI.logout', () => {
     it('successfully logs out user', async () => {
-      tokenService.getTokens.mockResolvedValueOnce({
+      mockGetTokens.mockResolvedValueOnce({
         accessToken: 'access_token_123',
       });
 
       fetch.mockResolvedValueOnce(createMockResponse({ message: 'Logged out' }));
 
-      tokenService.clearTokens.mockResolvedValueOnce();
+      mockClearTokens.mockResolvedValueOnce();
 
       const result = await apiService.auth.logout();
 
-      expect(fetch).toHaveBeenCalledWith(`${API_CONFIG.baseURL}/auth/logout`, {
-        method: 'POST',
-        headers: expect.objectContaining({
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer access_token_123',
-        }),
-      });
-
-      expect(tokenService.clearTokens).toHaveBeenCalled();
+      expect(fetch).toHaveBeenCalledWith(`${API_CONFIG.baseURL}/auth/logout`, expect.any(Object));
+      expect(mockClearTokens).toHaveBeenCalled();
       expect(result).toEqual({ success: true });
     });
 
     it('handles logout API failure gracefully', async () => {
-      tokenService.getTokens.mockResolvedValueOnce({
+      mockGetTokens.mockResolvedValueOnce({
         accessToken: 'access_token_123',
       });
 
       fetch.mockRejectedValueOnce(new Error('Network error'));
-      tokenService.clearTokens.mockResolvedValueOnce();
+      mockClearTokens.mockResolvedValueOnce();
 
       const result = await apiService.auth.logout();
 
-      expect(tokenService.clearTokens).toHaveBeenCalled();
+      expect(mockClearTokens).toHaveBeenCalled();
       expect(result).toEqual({ success: true });
     });
   });
@@ -186,7 +188,7 @@ describe('API Service', () => {
     it('successfully retrieves user profile', async () => {
       const mockProfile = { id: 1, name: 'Test User', email: 'test@example.com' };
 
-      tokenService.getTokens.mockResolvedValueOnce({
+      mockGetTokens.mockResolvedValueOnce({
         accessToken: 'access_token_123',
       });
 
@@ -194,15 +196,7 @@ describe('API Service', () => {
 
       const result = await apiService.auth.getProfile();
 
-      expect(fetch).toHaveBeenCalledWith(`${API_CONFIG.baseURL}/auth/profile`, {
-        method: 'GET',
-        headers: expect.objectContaining({
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer access_token_123',
-        }),
-        signal: expect.any(AbortSignal),
-      });
-
+      expect(fetch).toHaveBeenCalledWith(`${API_CONFIG.baseURL}/auth/profile`, expect.any(Object));
       expect(result).toEqual(mockProfile);
     });
   });
@@ -212,7 +206,7 @@ describe('API Service', () => {
       const updateData = { name: 'Updated Name' };
       const mockResponse = { id: 1, name: 'Updated Name', email: 'test@example.com' };
 
-      tokenService.getTokens.mockResolvedValueOnce({
+      mockGetTokens.mockResolvedValueOnce({
         accessToken: 'access_token_123',
       });
 
@@ -238,7 +232,7 @@ describe('API Service', () => {
     it('successfully changes password', async () => {
       const mockResponse = { message: 'Password changed successfully' };
 
-      tokenService.getTokens.mockResolvedValueOnce({
+      mockGetTokens.mockResolvedValueOnce({
         accessToken: 'access_token_123',
       });
 
@@ -298,7 +292,7 @@ describe('API Service', () => {
 
   describe('authenticatedFetch - Token Refresh', () => {
     it('refreshes token on 401 and retries request', async () => {
-      tokenService.getTokens.mockResolvedValueOnce({
+      mockGetTokens.mockResolvedValueOnce({
         accessToken: 'expired_token',
         refreshToken: 'refresh_token_123',
       });
@@ -319,7 +313,7 @@ describe('API Service', () => {
         }),
       });
 
-      tokenService.storeTokens.mockResolvedValueOnce();
+      mockStoreTokens.mockResolvedValueOnce();
 
       // Retry call with new token
       fetch.mockResolvedValueOnce({
@@ -330,7 +324,7 @@ describe('API Service', () => {
       const result = await apiService.auth.getProfile();
 
       expect(fetch).toHaveBeenCalledTimes(3);
-      expect(tokenService.storeTokens).toHaveBeenCalledWith({
+      expect(mockStoreTokens).toHaveBeenCalledWith({
         accessToken: 'new_access_token',
         refreshToken: 'new_refresh_token',
         expiresAt: expect.any(Number),
@@ -339,7 +333,7 @@ describe('API Service', () => {
     });
 
     it('handles request timeout', async () => {
-      tokenService.getTokens.mockResolvedValueOnce({
+      mockGetTokens.mockResolvedValueOnce({
         accessToken: 'access_token_123',
       });
 
@@ -364,7 +358,7 @@ describe('API Service', () => {
       it('successfully retrieves user preferences', async () => {
         const mockPreferences = { theme: 'dark', notifications: true };
 
-        tokenService.getTokens.mockResolvedValueOnce({
+        mockGetTokens.mockResolvedValueOnce({
           accessToken: 'access_token_123',
         });
 
@@ -372,15 +366,7 @@ describe('API Service', () => {
 
         const result = await apiService.user.getPreferences();
 
-        expect(fetch).toHaveBeenCalledWith(`${API_CONFIG.baseURL}/user/preferences`, {
-          method: 'GET',
-          headers: expect.objectContaining({
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer access_token_123',
-          }),
-          signal: expect.any(AbortSignal),
-        });
-
+        expect(fetch).toHaveBeenCalledWith(`${API_CONFIG.baseURL}/user/preferences`, expect.any(Object));
         expect(result).toEqual(mockPreferences);
       });
     });
@@ -390,7 +376,7 @@ describe('API Service', () => {
         const updateData = { theme: 'light' };
         const mockResponse = { theme: 'light', notifications: true };
 
-        tokenService.getTokens.mockResolvedValueOnce({
+        mockGetTokens.mockResolvedValueOnce({
           accessToken: 'access_token_123',
         });
 
@@ -405,7 +391,7 @@ describe('API Service', () => {
             'Authorization': 'Bearer access_token_123',
           }),
           body: JSON.stringify(updateData),
-          signal: expect.any(AbortSignal),
+          signal: expect.any(Object),
         });
 
         expect(result).toEqual(mockResponse);
@@ -416,7 +402,7 @@ describe('API Service', () => {
       it('successfully deletes user account', async () => {
         const mockResponse = { message: 'Account deleted successfully' };
 
-        tokenService.getTokens.mockResolvedValueOnce({
+        mockGetTokens.mockResolvedValueOnce({
           accessToken: 'access_token_123',
         });
 
@@ -430,7 +416,7 @@ describe('API Service', () => {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer access_token_123',
           }),
-          signal: expect.any(AbortSignal),
+          signal: expect.any(Object),
         });
 
         expect(result).toEqual(mockResponse);

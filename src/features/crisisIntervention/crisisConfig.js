@@ -200,14 +200,13 @@ export const SAFETY_PLAN_TEMPLATE = {
  *
  * @returns {Promise<Object>} Updated crisis configuration
  */
-export async function loadRemoteCrisisConfig() {
+export async function loadRemoteCrisisConfig(apiUrl = process.env.EXPO_PUBLIC_API_URL) {
   try {
-    const apiUrl = process.env.EXPO_PUBLIC_API_URL;
     if (!apiUrl) {
       return null;
     }
 
-    const response = await fetch(`${apiUrl}/config/crisis-keywords`, {
+    const response = await global.fetch(`${apiUrl}/config/crisis-keywords`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

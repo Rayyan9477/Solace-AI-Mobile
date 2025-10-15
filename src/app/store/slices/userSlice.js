@@ -108,6 +108,7 @@ const initialState = {
   achievements: [],
   loading: false,
   error: null,
+  _idCounter: 0, // For testing purposes to ensure unique IDs
 };
 
 const userSlice = createSlice({
@@ -115,7 +116,9 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUserProfile: (state, action) => {
-      state.profile = { ...state.profile, ...action.payload };
+      const payload = action.payload || {};
+      const { password, token, apiKey, ...safeData } = payload;
+      state.profile = { ...state.profile, ...safeData };
     },
     updatePreferences: (state, action) => {
       state.preferences = { ...state.preferences, ...action.payload };
@@ -124,8 +127,9 @@ const userSlice = createSlice({
       state.preferences.theme = action.payload;
     },
     addGoal: (state, action) => {
+      state._idCounter += 1;
       state.goals.push({
-        id: Date.now().toString(),
+        id: `goal-${state._idCounter}`,
         ...action.payload,
         createdAt: new Date().toISOString(),
         completed: false,
@@ -142,8 +146,9 @@ const userSlice = createSlice({
       state.goals = state.goals.filter((goal) => goal.id !== action.payload);
     },
     addAchievement: (state, action) => {
+      state._idCounter += 1;
       state.achievements.push({
-        id: Date.now().toString(),
+        id: `achievement-${state._idCounter}`,
         ...action.payload,
         earnedAt: new Date().toISOString(),
       });
@@ -163,6 +168,7 @@ const userSlice = createSlice({
       })
       .addCase(updateUserProfile.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         state.profile = { ...state.profile, ...action.payload };
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
@@ -175,6 +181,7 @@ const userSlice = createSlice({
       })
       .addCase(fetchUserStats.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         state.stats = action.payload;
       })
       .addCase(fetchUserStats.rejected, (state, action) => {
