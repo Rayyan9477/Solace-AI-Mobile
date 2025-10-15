@@ -11,6 +11,8 @@ try {
 		label = 'Button',
 		title,
 		onPress,
+		onFocus,
+		onBlur,
 		accessibilityLabel,
 		accessibilityHint,
 		disabled = false,
@@ -29,8 +31,9 @@ try {
 			if (autoFocus) {
 				// announce for accessibility to simulate focus behavior
 				AccessibilityInfo.setAccessibilityFocus && AccessibilityInfo.setAccessibilityFocus({ nativeID: testID || `accessible-button-${resolvedLabel}` });
+				AccessibilityInfo.announceForAccessibility && AccessibilityInfo.announceForAccessibility(`${resolvedLabel} focused`);
 			}
-		}, [autoFocus]);
+		}, [autoFocus, resolvedLabel, testID]);
 
 		const handlePress = () => {
 			AccessibilityInfo.announceForAccessibility && AccessibilityInfo.announceForAccessibility(`${resolvedLabel} button activated`);
@@ -44,6 +47,12 @@ try {
 				accessibilityHint={accessibilityHint}
 				testID={testID || `accessible-button-${resolvedLabel}`}
 				onPress={handlePress}
+				onAccessibilityTap={handlePress}
+				onFocus={(e) => {
+					onFocus && onFocus(e);
+					AccessibilityInfo.announceForAccessibility && AccessibilityInfo.announceForAccessibility(`${resolvedLabel} focused`);
+				}}
+				onBlur={(e) => onBlur && onBlur(e)}
 				disabled={disabled}
 				accessibilityState={{ disabled, busy: !!loading, selected: false }}
 				focusable

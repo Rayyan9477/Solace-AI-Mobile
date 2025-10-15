@@ -6,6 +6,8 @@ const ACCESSIBILITY_HISTORY_KEY = '@solace_accessibility_history';
 // In-memory session cache stores the latest data with timestamps per type
 let __sessionCache = {};
 
+export { __sessionCache };
+
 export const saveNavigationState = async (state) => {
   const payload = {
     state,
@@ -37,6 +39,8 @@ export const clearNavigationState = async () => {
     SESSION_DATA_KEY_PREFIX,
     ACCESSIBILITY_HISTORY_KEY,
   ]);
+  // Also clear in-memory session cache to avoid stale test data leaking between tests
+  __sessionCache = {};
 };
 
 export const saveSessionData = async (type, data) => {
@@ -73,21 +77,22 @@ export const restoreSessionData = async () => {
     }
   }
 
-  // For each type, choose the freshest between in-memory and persisted
+  // For each type, prefer the freshest source between persisted and in-memory cache
   for (const t of types) {
     const mem = __sessionCache[t];
-    const memTs = mem?.timestamp ?? -1;
     const memData = mem?.data;
     const per = persisted[t];
-    const perTs = per?.timestamp ?? -1;
     const perData = per?.data;
+    const memTs = mem?.timestamp ?? 0;
+    const perTs = per?.timestamp ?? 0;
 
-    if (memData != null || perData != null) {
-      if (memTs >= perTs) {
-        result[t] = memData ?? perData;
-      } else {
-        result[t] = perData ?? memData;
-      }
+    if (memData != null && memTs >= perTs) {
+      result[t] = memData;
+      continue;
+    }
+    if (perData != null) {
+      result[t] = perData;
+      continue;
     }
   }
 

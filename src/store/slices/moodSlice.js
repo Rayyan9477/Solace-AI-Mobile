@@ -1,7 +1,6 @@
-// Compatibility bridge: expose an object with `.reducer` so tests can call `moodSlice.reducer`
-import reducer from "../../app/store/slices/moodSlice";
+// Compatibility bridge: expose the reducer function for tests
+import moodSlice from "../../app/store/slices/moodSlice";
 
-const sliceCompat = { reducer };
+const sliceCompat = moodSlice;
 
 export default sliceCompat;
-export * from "../../app/store/slices/moodSlice";

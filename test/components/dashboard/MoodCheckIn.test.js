@@ -22,14 +22,18 @@ jest.mock("expo-linear-gradient", () => ({
   LinearGradient: ({ children, ...props }) => children,
 }));
 
-jest.mock("expo-haptics", () => ({
-  impactAsync: jest.fn(),
-  ImpactFeedbackStyle: {
-    Light: "light",
-    Medium: "medium",
-    Heavy: "heavy",
-  },
-}));
+jest.mock("expo-haptics", () => {
+  const mod = {
+    impactAsync: jest.fn(),
+    ImpactFeedbackStyle: {
+      Light: "light",
+      Medium: "medium",
+      Heavy: "heavy",
+    },
+  };
+  // Support both default import and named { Haptics } destructure
+  return { __esModule: true, default: mod, Haptics: mod, ...mod };
+});
 
 // Mock theme context
 const mockTheme = {
@@ -284,7 +288,7 @@ describe("MoodCheckIn Component", () => {
     });
 
     it("responds to press with haptic feedback", async () => {
-      const { Haptics } = require("expo-haptics");
+  const { Haptics } = require("expo-haptics");
       const { getByTestId } = renderMoodCheckIn();
       const button = getByTestId("mood-check-in-button");
 

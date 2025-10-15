@@ -5,6 +5,25 @@
 
 import "react-native-gesture-handler/jestSetup";
 
+// Keep a stable reference to the real Date constructor for fallback usage
+const __RealDate = Date;
+
+function __ensureDateNow() {
+  try {
+    if (typeof Date.now !== 'function') {
+      Object.defineProperty(Date, 'now', {
+        configurable: true,
+        writable: true,
+        value: () => new __RealDate().getTime(),
+      });
+    }
+  } catch {
+    // last resort
+    // eslint-disable-next-line no-undef
+    Date.now = () => new __RealDate().getTime();
+  }
+}
+
 // Enhanced Expo Haptics mock for mental health app
 jest.mock("expo-haptics", () => ({
   impactAsync: jest.fn(),
@@ -82,10 +101,20 @@ jest.mock("expo-linear-gradient", () => {
 global.window = {};
 global.window = global;
 
-// Ensure Date.now exists as a function in test environment
-if (typeof Date.now !== 'function') {
-  Date.now = () => new global.Date().getTime();
-}
+// Ensure Date.now is a function (some tests stub Date which can clobber now)
+__ensureDateNow();
+// Guard against tests that mock global Date constructor without now; re-attach now if missing
+try {
+  // eslint-disable-next-line no-undef
+  __ensureDateNow();
+} catch {}
+
+// Re-attach Date.now before each test in case a test mocked global Date without preserving now
+try {
+  beforeEach(() => {
+    __ensureDateNow();
+  });
+} catch {}
 
 // Mock TurboModuleRegistry for React Native 0.76+ compatibility
 jest.mock("react-native/Libraries/TurboModule/TurboModuleRegistry", () => ({

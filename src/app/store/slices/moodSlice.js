@@ -205,4 +205,6 @@ export const {
   generateInsights,
 } = moodSlice.actions;
 
-export default moodSlice.reducer;
+export { apiService };
+
+export default moodSlice;

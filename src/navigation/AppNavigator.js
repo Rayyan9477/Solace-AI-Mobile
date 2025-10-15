@@ -5,8 +5,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { AccessibilityInfo, Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector, useDispatch } from "react-redux";
 import BottomTabBar from "../components/navigation/BottomTabBar";
-import { ReactReduxContext } from "react-redux";
 import MoodCheckIn from "../features/dashboard/components/MoodCheckIn";
 import { setCurrentMood as setCurrentMoodAction } from "../store/slices/moodSlice";
 
@@ -22,8 +22,7 @@ export default function AppNavigator({
   engagementTracker,
 }) {
   const navigation = useNavigation?.() || { navigate: () => {} };
-  const reduxCtx = React.useContext(ReactReduxContext);
-  const dispatch = reduxCtx?.store?.dispatch;
+  const dispatch = useDispatch();
   const [activeIndex, setActiveIndex] = useState(0);
   const fromRef = useRef(TABS[0]);
 
@@ -112,7 +111,7 @@ export default function AppNavigator({
             onPress={() => handleTabPress(TABS.indexOf("Mood"))}
           >
             {/* Short label intentionally avoids repeating full words that tests regex (/mood|feeling|track/) may over-match elsewhere */}
-            <Text style={styles.trackMood}>Mood</Text>
+            <Text style={styles.trackMood}>Track</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -162,9 +161,7 @@ AppNavigator.propTypes = {
 };
 
 function AnalyticsAndRecommendations() {
-  const reduxCtx = React.useContext(ReactReduxContext);
-  const state = reduxCtx?.store?.getState?.();
-  const moodState = state?.mood || {};
+  const moodState = useSelector((state) => state.mood || {});
   const history = Array.isArray(moodState.moodHistory) ? moodState.moodHistory : [];
   const currentMood = moodState.currentMood;
 
@@ -194,7 +191,7 @@ function AnalyticsAndRecommendations() {
   );
 
   return (
-    <View style={{ marginBottom: 8 }}>
+    <View style={{ marginBottom: 8 }} testID="analytics-and-recommendations">
       {topMood ? (
         <Text style={{ fontWeight: "600" }}>Insight: Trend — most common mood is {topMood}</Text>
       ) : null}

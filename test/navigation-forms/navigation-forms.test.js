@@ -42,6 +42,7 @@ import {
   saveSessionData,
   restoreSessionData,
   NavigationPersistence,
+  __sessionCache,
 } from "../../utils/navigationPersistence";
 
 // Mock dependencies
@@ -120,6 +121,8 @@ describe("Navigation and Forms Test Suite", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     AsyncStorage.clear();
+    // Clear in-memory session cache to prevent test data leakage
+    Object.keys(__sessionCache).forEach(key => delete __sessionCache[key]);
   });
 
   describe("KeyboardAwareScrollView", () => {

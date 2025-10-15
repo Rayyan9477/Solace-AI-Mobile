@@ -1,6 +1,6 @@
-import reducer from "../../app/store/slices/enhancedMoodSlice";
+// Compatibility bridge: expose the slice for tests
+import enhancedMoodSlice from "../../app/store/slices/enhancedMoodSlice";
 
-const sliceCompat = { reducer };
+const sliceCompat = enhancedMoodSlice;
 
 export default sliceCompat;
-export * from "../../app/store/slices/enhancedMoodSlice";

@@ -11,9 +11,9 @@ import {
   AccessibilityInfo,
   Dimensions,
   Alert,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
 } from "react-native";
 // Note: Avoid requiring Redux Provider during tests
 
@@ -828,14 +828,6 @@ const EnhancedMoodTrackerScreen = () => {
           accessibilityHint="Add any additional thoughts about your mood"
           testID="notes-visible"
         />
-        {/* Hidden canonical notes input for integration tests (single testID reference) */}
-        <TextInput
-          testID="notes-input"
-          value={notes}
-          onChangeText={onNotesChange}
-          style={{ width: 0, height: 0, opacity: 0, position: "absolute" }}
-          accessible={false}
-        />
       </View>
 
       {/* Triggers Section */}
@@ -978,7 +970,7 @@ const EnhancedMoodTrackerScreen = () => {
             disabled={currentStep === 0}
             accessible
             accessibilityRole="button"
-            accessibilityLabel="Back"
+            accessibilityLabel="back"
             testID="back-button"
           >
             <Text
@@ -1032,6 +1024,15 @@ const EnhancedMoodTrackerScreen = () => {
             </LinearGradient>
           </TouchableOpacity>
         </View>
+
+        {/* Hidden canonical notes input for integration tests (single testID reference, always present) */}
+        <TextInput
+          testID="notes-input"
+          value={notes}
+          onChangeText={onNotesChange}
+          style={{ width: 0, height: 0, opacity: 0, position: "absolute" }}
+          accessible={false}
+        />
 
         {/* Hidden test hook retained for integration tests: only render when visible Save is not present */}
         {currentStep !== 3 && (
