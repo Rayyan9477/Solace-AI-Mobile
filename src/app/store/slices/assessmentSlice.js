@@ -3,12 +3,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const mockAssessmentAPI = {
   async submitAssessment(data) {
     console.log('Mock assessment submission:', data);
-    return {
-      id: Date.now().toString(),
-      score: Math.floor(Math.random() * 100),
-      recommendations: ['Practice mindfulness', 'Get adequate sleep'],
-      ...data,
-    };
+    throw new Error('API not available'); // Force fallback to local calculation
+  },
+  async getAssessmentQuestions(assessmentType) {
+    console.log('Mock assessment questions fetch for:', assessmentType);
+    throw new Error('API not available'); // Force fallback to local mock data
   },
   async getAssessmentHistory() {
     console.log('Mock assessment history fetch');
@@ -204,20 +203,24 @@ export const submitAssessment = createAsyncThunk(
         0,
       );
 
+      let severity;
+      if (totalScore < 5) {
+        severity = "Minimal";
+      } else if (totalScore < 10) {
+        severity = "Mild";
+      } else if (totalScore < 15) {
+        severity = "Moderate";
+      } else {
+        severity = "Severe";
+      }
+
       const result = {
         id: Date.now().toString(),
         assessmentId,
         responses,
         totalScore,
         completedAt: new Date().toISOString(),
-        severity:
-          totalScore < 5
-            ? "Minimal"
-            : totalScore < 10
-              ? "Mild"
-              : totalScore < 15
-                ? "Moderate"
-                : "Severe",
+        severity,
         recommendations: generateRecommendations(totalScore, assessmentId),
         _offline: true, // Mark as calculated offline
       };

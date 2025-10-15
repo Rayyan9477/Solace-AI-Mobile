@@ -1,6 +1,18 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Haptics from "expo-haptics";
 import { Alert, Linking, Platform } from "react-native";
+import {
+  CRISIS_KEYWORDS,
+  KEYWORD_WEIGHTS,
+  DANGEROUS_COMBINATIONS,
+  COMBINATION_SCORE,
+  RISK_THRESHOLDS,
+  EMERGENCY_RESOURCES,
+  SUPPORT_RESOURCES,
+  SAFETY_PLAN_TEMPLATE,
+  loadRemoteCrisisConfig,
+  mergeCrisisConfig,
+} from "./crisisConfig";
 
 /**
  * Crisis Intervention Manager
@@ -10,105 +22,52 @@ import { Alert, Linking, Platform } from "react-native";
 
 class CrisisManager {
   constructor() {
-    this.crisisKeywords = [
-      // Suicide-related
-      "suicide",
-      "kill myself",
-      "end my life",
-      "want to die",
-      "better off dead",
-      "no point living",
-      "end it all",
-      "take my life",
-      "not worth living",
-
-      // Self-harm
-      "hurt myself",
-      "self harm",
-      "cut myself",
-      "harm myself",
-      "punish myself",
-
-      // Crisis indicators
-      "give up",
-      "no hope",
-      "cant go on",
-      "can't take it",
-      "overwhelming pain",
-      "unbearable",
-      "desperate",
-      "trapped",
-      "hopeless",
-      "worthless",
-
-      // Immediate danger
-      "right now",
-      "tonight",
-      "today",
-      "plan to",
-      "going to",
-    ];
-
-    this.emergencyResources = [
-      {
-        id: "suicide_prevention_lifeline",
-        name: "988 Suicide & Crisis Lifeline",
-        number: "988",
-        description: "24/7 free and confidential crisis support",
-        type: "voice",
-        priority: 1,
-        country: "US",
-      },
-      {
-        id: "crisis_text_line",
-        name: "Crisis Text Line",
-        number: "741741",
-        keyword: "HOME",
-        description: "Text HOME to 741741 for crisis counseling",
-        type: "text",
-        priority: 2,
-        country: "US",
-      },
-      {
-        id: "emergency_services",
-        name: "Emergency Services",
-        number: "911",
-        description: "For immediate life-threatening emergencies",
-        type: "emergency",
-        priority: 3,
-        country: "US",
-      },
-      {
-        id: "trevor_project",
-        name: "The Trevor Project",
-        number: "1-866-488-7386",
-        description: "24/7 crisis support for LGBTQ+ youth",
-        type: "voice",
-        priority: 4,
-        specialty: "lgbtq",
-        country: "US",
-      },
-      {
-        id: "veterans_crisis_line",
-        name: "Veterans Crisis Line",
-        number: "1-800-273-8255",
-        description: "Crisis support for veterans and their families",
-        type: "voice",
-        priority: 5,
-        specialty: "veterans",
-        country: "US",
-      },
-    ];
-
-    this.safetyPlanTemplate = {
-      warningSignsPersonal: [],
-      warningSignsEnvironmental: [],
-      copingStrategies: [],
-      socialSupports: [],
-      professionalContacts: [],
-      safeEnvironment: [],
-      emergencyContacts: [],
+    // Use configuration from crisisConfig
+    this.config = {
+      keywords: CRISIS_KEYWORDS,
+      weights: KEYWORD_WEIGHTS,
+      combinations: DANGEROUS_COMBINATIONS,
+      thresholds: RISK_THRESHOLDS,
+      resources: EMERGENCY_RESOURCES,
     };
+
+    this.emergencyResources = EMERGENCY_RESOURCES.US || [];
+    this.safetyPlanTemplate = SAFETY_PLAN_TEMPLATE;
+    this.configLoaded = false;
+
+    // Load remote configuration asynchronously
+    this.loadConfiguration();
+  }
+
+  /**
+   * Load and merge remote configuration with local defaults
+   */
+  async loadConfiguration() {
+    try {
+      const remoteConfig = await loadRemoteCrisisConfig();
+      if (remoteConfig) {
+        this.config = mergeCrisisConfig(remoteConfig);
+        this.emergencyResources = this.config.resources.US || EMERGENCY_RESOURCES.US;
+        console.log('Crisis configuration updated from remote source');
+      }
+      this.configLoaded = true;
+    } catch (error) {
+      console.warn('Failed to load remote crisis configuration:', error);
+      this.configLoaded = true;
+    }
+  }
+
+  /**
+   * Get all crisis keywords as a flat array
+   */
+  getCrisisKeywords() {
+    const { keywords } = this.config;
+    return [
+      ...keywords.critical,
+      ...keywords.high,
+      ...keywords.moderate,
+      ...keywords.urgency,
+    ];
   }
 
   /**
@@ -125,63 +84,41 @@ class CrisisManager {
     const detectedKeywords = [];
     let totalScore = 0;
 
-    // Check for crisis keywords
-    this.crisisKeywords.forEach((keyword) => {
-      if (normalizedText.includes(keyword)) {
-        detectedKeywords.push(keyword);
+    const { keywords, weights, combinations, thresholds } = this.config;
 
-        // Weight scoring based on severity
-        if (
-          ["suicide", "kill myself", "end my life", "want to die"].includes(
-            keyword,
-          )
-        ) {
-          totalScore += 10; // Highest severity
-        } else if (
-          ["hurt myself", "self harm", "give up", "no hope"].includes(keyword)
-        ) {
-          totalScore += 7; // High severity
-        } else if (
-          ["right now", "tonight", "today", "plan to"].includes(keyword)
-        ) {
-          totalScore += 5; // Urgency indicators
-        } else {
-          totalScore += 3; // Other concerning language
+    // Check for crisis keywords by category
+    Object.entries(keywords).forEach(([category, keywordList]) => {
+      keywordList.forEach((keyword) => {
+        if (normalizedText.includes(keyword.toLowerCase())) {
+          detectedKeywords.push(keyword);
+          totalScore += weights[category] || 3;
         }
-      }
+      });
     });
 
     // Check for combination patterns (more concerning)
-    const dangerousCombinations = [
-      ["plan", "suicide"],
-      ["tonight", "end"],
-      ["ready", "die"],
-      ["cant", "anymore"],
-      ["give up", "life"],
-      ["no point", "living"],
-    ];
-
-    dangerousCombinations.forEach(([word1, word2]) => {
-      if (normalizedText.includes(word1) && normalizedText.includes(word2)) {
-        totalScore += 8;
+    combinations.forEach(([word1, word2]) => {
+      if (normalizedText.includes(word1.toLowerCase()) &&
+          normalizedText.includes(word2.toLowerCase())) {
+        totalScore += COMBINATION_SCORE;
         detectedKeywords.push(`${word1} + ${word2}`);
       }
     });
 
-    // Determine risk level
+    // Determine risk level based on configurable thresholds
     let riskLevel = "none";
     let confidence = 0;
 
-    if (totalScore >= 15) {
+    if (totalScore >= thresholds.critical) {
       riskLevel = "critical";
       confidence = Math.min(totalScore / 20, 1.0);
-    } else if (totalScore >= 8) {
+    } else if (totalScore >= thresholds.high) {
       riskLevel = "high";
       confidence = Math.min(totalScore / 15, 0.9);
-    } else if (totalScore >= 4) {
+    } else if (totalScore >= thresholds.moderate) {
       riskLevel = "moderate";
       confidence = Math.min(totalScore / 10, 0.7);
-    } else if (totalScore >= 1) {
+    } else if (totalScore >= thresholds.low) {
       riskLevel = "low";
       confidence = Math.min(totalScore / 5, 0.5);
     }
@@ -459,30 +396,7 @@ class CrisisManager {
    * @returns {Array} Support resources
    */
   getSupportResources() {
-    return [
-      {
-        id: "samhsa_helpline",
-        name: "SAMHSA National Helpline",
-        number: "1-800-662-4357",
-        description: "Treatment referral and information service",
-        type: "voice",
-        hours: "24/7",
-      },
-      {
-        id: "warm_line",
-        name: "Mental Health Warm Line",
-        description: "Non-crisis peer support when you need someone to talk to",
-        type: "resource",
-        url: "https://warmline.org",
-      },
-      {
-        id: "online_chat",
-        name: "Crisis Chat",
-        description: "Online crisis chat support",
-        type: "chat",
-        url: "https://suicidepreventionlifeline.org/chat",
-      },
-    ];
+    return SUPPORT_RESOURCES;
   }
 
   /**

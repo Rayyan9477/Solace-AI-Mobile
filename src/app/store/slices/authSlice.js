@@ -54,7 +54,7 @@ const mockTokenService = {
 };
 
 // Safe service loading with fallbacks
-const getApiService = () => {
+export const getApiService = () => {
   try {
     return __DEV__ ? mockApiService : require("../../services/api").default;
   } catch (error) {
@@ -63,7 +63,7 @@ const getApiService = () => {
   }
 };
 
-const getSecureStorage = () => {
+export const getSecureStorage = () => {
   try {
     return __DEV__ ? mockSecureStorage : require("../../services/secureStorage").default;
   } catch (error) {
@@ -72,7 +72,7 @@ const getSecureStorage = () => {
   }
 };
 
-const getTokenService = () => {
+export const getTokenService = () => {
   try {
     return __DEV__ ? mockTokenService : require("../../services/tokenService").default;
   } catch (error) {
@@ -94,6 +94,10 @@ export const secureLogin = createAsyncThunk(
       if (!email || !password) {
         throw new Error("Email and password are required");
       }
+
+      // Get services dynamically
+      const apiService = getApiService();
+      const secureStorage = getSecureStorage();
 
       // Real API call using the actual API service
       const response = await apiService.auth.login(email, password);
@@ -123,6 +127,10 @@ export const secureLogout = createAsyncThunk(
   "auth/secureLogout",
   async (_, { rejectWithValue }) => {
     try {
+      // Get services dynamically
+      const tokenService = getTokenService();
+      const secureStorage = getSecureStorage();
+
       // Clear tokens securely
       await tokenService.clearTokens();
 
@@ -154,6 +162,10 @@ export const restoreAuthState = createAsyncThunk(
       });
 
       const authCheckPromise = async () => {
+        // Get services dynamically
+        const tokenService = getTokenService();
+        const secureStorage = getSecureStorage();
+
         // Check if user is authenticated
         const isAuthenticated = await tokenService.isAuthenticated();
         console.log("≡ƒöä restoreAuthState: isAuthenticated =", isAuthenticated);
@@ -199,6 +211,8 @@ export const restoreAuthState = createAsyncThunk(
       console.error("≡ƒöä restoreAuthState: Error during restoration:", error);
       // Clear potentially corrupted state
       try {
+        // Get services dynamically for cleanup
+        const tokenService = getTokenService();
         await tokenService.clearTokens();
       } catch (clearError) {
         console.warn("Failed to clear tokens:", clearError);

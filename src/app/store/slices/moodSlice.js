@@ -81,6 +81,80 @@ const initialState = {
   error: null,
 };
 
+// Helper function to calculate weekly stats (pure function)
+const calculateWeeklyStats = (moodHistory) => {
+  const recentEntries = moodHistory.slice(-7);
+
+  if (recentEntries.length === 0) {
+    return {
+      averageIntensity: 0,
+      mostCommonMood: null,
+      totalEntries: 0,
+    };
+  }
+
+  const avgIntensity =
+    recentEntries.reduce((sum, entry) => sum + entry.intensity, 0) /
+    recentEntries.length;
+
+  const moodCounts = recentEntries.reduce((counts, entry) => {
+    counts[entry.mood] = (counts[entry.mood] || 0) + 1;
+    return counts;
+  }, {});
+
+  const moodEntries = Object.entries(moodCounts);
+  const mostCommon = moodEntries.length
+    ? moodEntries.reduce(
+        (a, b) => (moodCounts[a[0]] > moodCounts[b[0]] ? a : b),
+        moodEntries[0],
+      )[0]
+    : null;
+
+  return {
+    averageIntensity: Math.round(avgIntensity * 10) / 10,
+    mostCommonMood: mostCommon,
+    totalEntries: recentEntries.length,
+  };
+};
+
+// Helper function to generate insights (pure function)
+const generateInsights = (weeklyStats) => {
+  const insights = [];
+
+  // Generate insights based on mood patterns
+  if (weeklyStats.averageIntensity > 4) {
+    insights.push({
+      id: "positive-trend",
+      type: "positive",
+      title: "Great Progress!",
+      message: "Your mood has been consistently positive this week.",
+      icon: "🌟",
+    });
+  } else if (weeklyStats.averageIntensity < 2) {
+    insights.push({
+      id: "low-mood",
+      type: "suggestion",
+      title: "Self-Care Reminder",
+      message:
+        "Consider trying some relaxation techniques or speaking with a professional.",
+      icon: "🧘",
+    });
+  }
+
+  if ((weeklyStats.mostCommonMood || "").toLowerCase() === "anxious") {
+    insights.push({
+      id: "anxiety-pattern",
+      type: "suggestion",
+      title: "Anxiety Management",
+      message:
+        "Try deep breathing exercises or progressive muscle relaxation.",
+      icon: "🫁",
+    });
+  }
+
+  return insights;
+};
+
 const moodSlice = createSlice({
   name: "mood",
   initialState,
@@ -93,75 +167,18 @@ const moodSlice = createSlice({
         intensity: state.weeklyStats?.averageIntensity || 5,
         timestamp: Date.now(),
       });
-      // Keep stats/insights updated so MainAppScreen can show trend/insight text
-      moodSlice.caseReducers.updateWeeklyStats(state);
-      moodSlice.caseReducers.generateInsights(state);
+      // Update stats and insights using helper functions
+      state.weeklyStats = calculateWeeklyStats(state.moodHistory);
+      state.insights = generateInsights(state.weeklyStats);
     },
     clearMoodError: (state) => {
       state.error = null;
     },
     updateWeeklyStats: (state) => {
-      const recentEntries = state.moodHistory.slice(-7);
-
-      if (recentEntries.length > 0) {
-        const avgIntensity =
-          recentEntries.reduce((sum, entry) => sum + entry.intensity, 0) /
-          recentEntries.length;
-        const moodCounts = recentEntries.reduce((counts, entry) => {
-          counts[entry.mood] = (counts[entry.mood] || 0) + 1;
-          return counts;
-        }, {});
-
-        const moodEntries = Object.entries(moodCounts);
-        const mostCommon = moodEntries.length
-          ? moodEntries.reduce(
-              (a, b) => (moodCounts[a[0]] > moodCounts[b[0]] ? a : b),
-              moodEntries[0],
-            )[0]
-          : null;
-
-        state.weeklyStats = {
-          averageIntensity: Math.round(avgIntensity * 10) / 10,
-          mostCommonMood: mostCommon,
-          totalEntries: recentEntries.length,
-        };
-      }
+      state.weeklyStats = calculateWeeklyStats(state.moodHistory);
     },
-    generateInsights: (state) => {
-      const insights = [];
-
-      // Generate insights based on mood patterns
-      if (state.weeklyStats.averageIntensity > 4) {
-        insights.push({
-          id: "positive-trend",
-          type: "positive",
-          title: "Great Progress!",
-          message: "Your mood has been consistently positive this week.",
-          icon: "🌟",
-        });
-      } else if (state.weeklyStats.averageIntensity < 2) {
-        insights.push({
-          id: "low-mood",
-          type: "suggestion",
-          title: "Self-Care Reminder",
-          message:
-            "Consider trying some relaxation techniques or speaking with a professional.",
-          icon: "🧘",
-        });
-      }
-
-  if ((state.weeklyStats.mostCommonMood || "").toLowerCase() === "anxious") {
-        insights.push({
-          id: "anxiety-pattern",
-          type: "suggestion",
-          title: "Anxiety Management",
-          message:
-            "Try deep breathing exercises or progressive muscle relaxation.",
-          icon: "🫁",
-        });
-      }
-
-      state.insights = insights;
+    updateInsights: (state) => {
+      state.insights = generateInsights(state.weeklyStats);
     },
   },
   extraReducers: (builder) => {
@@ -174,8 +191,8 @@ const moodSlice = createSlice({
         state.loading = false;
         state.moodHistory.unshift(action.payload);
         state.currentMood = action.payload.mood;
-        moodSlice.caseReducers.updateWeeklyStats(state);
-        moodSlice.caseReducers.generateInsights(state);
+        state.weeklyStats = calculateWeeklyStats(state.moodHistory);
+        state.insights = generateInsights(state.weeklyStats);
       })
       .addCase(logMood.rejected, (state, action) => {
         state.loading = false;
@@ -188,8 +205,8 @@ const moodSlice = createSlice({
       .addCase(fetchMoodHistory.fulfilled, (state, action) => {
         state.loading = false;
         state.moodHistory = action.payload;
-        moodSlice.caseReducers.updateWeeklyStats(state);
-        moodSlice.caseReducers.generateInsights(state);
+        state.weeklyStats = calculateWeeklyStats(state.moodHistory);
+        state.insights = generateInsights(state.weeklyStats);
       })
       .addCase(fetchMoodHistory.rejected, (state, action) => {
         state.loading = false;
@@ -202,7 +219,7 @@ export const {
   setCurrentMood,
   clearMoodError,
   updateWeeklyStats,
-  generateInsights,
+  updateInsights,
 } = moodSlice.actions;
 
 export { apiService };

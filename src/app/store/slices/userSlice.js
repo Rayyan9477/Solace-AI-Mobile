@@ -11,10 +11,24 @@ const mockApiService = {
       console.log('Mock user profile update:', data);
       return { ...data, updatedAt: new Date().toISOString() };
     },
+    async getStats() {
+      console.log('Mock user stats fetch');
+      return {
+        totalSessions: 10,
+        streakDays: 5,
+        assessmentsCompleted: 3,
+        moodEntriesCount: 25,
+        favoriteActivities: ['meditation', 'walking'],
+        joinDate: '2023-01-01T00:00:00.000Z',
+      };
+    },
   },
 };
 
 const apiService = mockApiService;
+
+// Export apiService for testing purposes
+export { apiService };
 
 // Async thunk for updating user profile
 export const updateUserProfile = createAsyncThunk(

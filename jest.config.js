@@ -9,6 +9,7 @@ module.exports = {
   ],
   moduleNameMapper: {
     "\\.svg": "<rootDir>/__mocks__/svgMock.js",
+    "^src/(.*)$": "<rootDir>/src/$1",
   },
   setupFiles: ["./jest.setup.js"],
   collectCoverage: true,

@@ -4,6 +4,8 @@
  * Focuses on mental health specific accessibility requirements
  */
 
+import { NavigationContainer } from "@react-navigation/native";
+import { configureStore } from "@reduxjs/toolkit";
 import {
   render,
   fireEvent,
@@ -11,6 +13,7 @@ import {
   screen,
 } from "@testing-library/react-native";
 import React from "react";
+import { Provider } from "react-redux";
 import { AccessibilityInfo } from "react-native";
 
 import MoodCheckIn from "../../components/dashboard/MoodCheckIn";
@@ -24,6 +27,8 @@ import {
   FocusManagement,
   MentalHealthAccessibility,
 } from "../../utils/accessibility";
+import enhancedMoodSlice from "../../src/store/slices/enhancedMoodSlice";
+import moodSlice from "../../src/store/slices/moodSlice";
 
 // Mock dependencies
 jest.mock("react-native", () => ({
@@ -39,6 +44,35 @@ jest.mock("react-native", () => ({
     get: jest.fn(() => ({ width: 375, height: 812 })),
   },
 }));
+
+// Create test store
+const createTestStore = (initialState = {}) => {
+  return configureStore({
+    reducer: {
+      mood: moodSlice.reducer,
+      enhancedMood: enhancedMoodSlice.reducer,
+    },
+    preloadedState: {
+      mood: {
+        currentMood: null,
+        moodHistory: [],
+        loading: false,
+        error: null,
+        ...initialState.mood,
+      },
+      enhancedMood: {
+        currentStep: 1,
+        selectedMood: null,
+        intensity: 5,
+        activities: [],
+        notes: "",
+        triggers: [],
+        isSubmitting: false,
+        ...initialState.enhancedMood,
+      },
+    },
+  });
+};
 
 const mockTheme = {
   colors: {
@@ -68,6 +102,7 @@ const AccessibilityTestWrapper = ({
   children,
   isScreenReaderEnabled = false,
   isReducedMotion = false,
+  store = createTestStore(),
 }) => {
   AccessibilityInfo.isScreenReaderEnabled.mockResolvedValue(
     isScreenReaderEnabled,
@@ -75,15 +110,17 @@ const AccessibilityTestWrapper = ({
   AccessibilityInfo.isReduceMotionEnabled.mockResolvedValue(isReducedMotion);
 
   return (
-    <ThemeProvider
-      value={{
-        theme: mockTheme,
-        isReducedMotionEnabled: isReducedMotion,
-        colors: mockTheme.colors,
-      }}
-    >
-      {children}
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider
+        value={{
+          theme: mockTheme,
+          isReducedMotionEnabled: isReducedMotion,
+          colors: mockTheme.colors,
+        }}
+      >
+        <NavigationContainer>{children}</NavigationContainer>
+      </ThemeProvider>
+    </Provider>
   );
 };
 

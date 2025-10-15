@@ -155,4 +155,5 @@ const styles = StyleSheet.create({
   },
 });
 
+export { PlaceholderScreen, MainTabs };
 export default AppNavigator;

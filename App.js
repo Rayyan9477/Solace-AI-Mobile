@@ -41,27 +41,6 @@ import AppNavigator from './src/app/navigation/AppNavigator';
 import { APP_CONFIG } from './src/shared/constants';
 import { validateApp } from './src/shared/utils/validation';
 
-// Global polyfills for cross-platform compatibility
-if (typeof global !== 'undefined' && typeof global.compact === 'undefined') {
-  global.compact = function (arr) {
-    return arr ? arr.filter((item) => item != null) : [];
-  };
-}
-
-if (platform.isWeb && typeof window !== 'undefined' && typeof window.compact === 'undefined') {
-  window.compact = function (arr) {
-    return arr ? arr.filter((item) => item != null) : [];
-  };
-}
-
-// Ensure Array.prototype.compact exists (with proper type safety)
-if (typeof Array !== 'undefined' && !Array.prototype.compact) {
-  // eslint-disable-next-line no-extend-native
-  Array.prototype.compact = function () {
-    return this.filter((item) => item != null);
-  };
-}
-
 // Prevent splash screen from auto-hiding
 if (SplashScreen) {
   SplashScreen.preventAutoHideAsync().catch(() => {
@@ -88,27 +67,32 @@ const AppRoot = ({ children }) => {
 
   // Log app startup with comprehensive validation
   useEffect(() => {
-    logger.info('Starting mental health support app...');
-    logger.info(`Platform: ${Platform.OS} ${Platform.Version}`);
-    logger.info(`Version: ${APP_VERSION}`);
-    logger.info(`Expo: ${platform.isExpoGo ? 'Expo Go' : 'Standalone'}`);
-    logger.info(`Device: ${platform.getDeviceType()}`);
+    const initializeApp = async () => {
+      logger.info('Starting mental health support app...');
+      logger.info(`Platform: ${Platform.OS} ${Platform.Version}`);
+      logger.info(`Version: ${APP_VERSION}`);
+      logger.info(`Expo: ${platform.isExpoGo ? 'Expo Go' : 'Standalone'}`);
+      logger.info(`Device: ${platform.getDeviceType()}`);
 
-    // Run comprehensive app validation
-    const validationResults = validateApp();
+      // Run comprehensive app validation
+      const validationResults = validateApp();
 
-    if (!validationResults.overall.isValid) {
-      logger.warn('App validation failed - some features may not work correctly');
-    }
+      if (!validationResults.overall.isValid) {
+        logger.warn('App validation failed - some features may not work correctly');
+      }
 
-    // Hide splash screen after initialization
-    if (SplashScreen) {
-      setTimeout(() => {
-        SplashScreen.hideAsync().catch(() => {
+      // Hide splash screen after initialization is complete
+      if (SplashScreen) {
+        try {
+          await SplashScreen.hideAsync();
+        } catch (error) {
           // Splash screen might not be available
-        });
-      }, 1000);
-    }
+          logger.debug('Splash screen hide failed:', error);
+        }
+      }
+    };
+
+    initializeApp();
   }, []);
 
   return (

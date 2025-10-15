@@ -118,8 +118,8 @@ describe("Mood Tracking Workflow Integration", () => {
       const moodCheckIn = getByTestId("mood-check-in");
       expect(moodCheckIn).toBeTruthy();
 
-      // Select a mood
-      const checkInButton = getByTestId("mood-check-in-button");
+      // Select a mood - find button by text instead of testID
+      const checkInButton = getByText("Log Mood");
       fireEvent.press(checkInButton);
 
       await waitFor(() => {

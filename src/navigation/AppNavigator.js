@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import BottomTabBar from "../components/navigation/BottomTabBar";
 import MoodCheckIn from "../features/dashboard/components/MoodCheckIn";
-import { setCurrentMood as setCurrentMoodAction } from "../store/slices/moodSlice";
+import { setCurrentMood as setCurrentMoodAction } from "../app/store/slices/moodSlice";
 
 const TABS = ["Home", "Chat", "Mood", "Assessment", "Profile"];
 
@@ -34,9 +34,13 @@ export default function AppNavigator({
   const navigateSafe = (route) => {
     try {
       navigation?.navigate?.(route);
-    } catch (e) {
-      // swallow navigation errors in tests but log for visibility
-  console?.warn?.("Navigation error (ignored in tests)", e);
+    } catch (error) {
+      // Log navigation errors with full details for debugging
+      console.error("Navigation error:", error);
+      // In a mental health app, we should handle navigation errors gracefully
+      // to prevent crashes that could distress users
+      console.error('Failed to navigate to:', route, error);
+      // Don't re-throw in any environment to maintain app stability
     }
   };
 

@@ -54,12 +54,6 @@ const withSpacingAliases = (theme) => {
   };
 };
 
-// Optional adaptation for mood/crisis; keep simple for tests
-const adaptThemeByContext = (theme, { crisisMode, moodContext } = {}) => {
-  if (!crisisMode && !moodContext) return theme;
-  // No-op adaptation for now; hook for future enhancements
-  return theme;
-};
 
 export const ThemeContext = createContext({
   theme: baseLightTheme,
@@ -69,7 +63,7 @@ export const ThemeContext = createContext({
   setTheme: () => {},
 });
 
-const CompatBridge = ({ children, theme: forcedTheme, value, crisisMode, moodContext }) => {
+const CompatBridge = ({ children, theme: forcedTheme, value }) => {
   const base = useBaseTheme();
 
   // Determine active theme (forced via prop, explicit via value, or from base provider)
@@ -79,8 +73,7 @@ const CompatBridge = ({ children, theme: forcedTheme, value, crisisMode, moodCon
   if (value?.theme) activeTheme = value.theme;
 
   // Ensure required tokens/aliases exist
-  const compatibleTheme = withSpacingAliases(activeTheme || freudTheme);
-  const adaptedTheme = adaptThemeByContext(compatibleTheme, { crisisMode, moodContext });
+  const adaptedTheme = withSpacingAliases(activeTheme || freudTheme);
 
   // Accessibility: reduced motion
   const [isReducedMotionEnabled, setReducedMotion] = useState(false);

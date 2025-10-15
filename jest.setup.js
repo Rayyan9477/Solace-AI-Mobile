@@ -5,6 +5,21 @@
 
 import "react-native-gesture-handler/jestSetup";
 
+// Suppress specific React Native deprecation warnings that are not relevant to our codebase
+const originalWarn = console.warn;
+console.warn = (...args) => {
+  const message = args.join(' ');
+  // Suppress warnings about deprecated React Native components we're not using
+  if (
+    message.includes('ProgressBarAndroid has been extracted from react-native core') ||
+    message.includes('Clipboard has been extracted from react-native core') ||
+    message.includes('PushNotificationIOS has been extracted from react-native core')
+  ) {
+    return;
+  }
+  originalWarn.apply(console, args);
+};
+
 // Keep a stable reference to the real Date constructor for fallback usage
 const __RealDate = Date;
 
