@@ -48,12 +48,12 @@ export const LoginScreen = ({ navigation }: any) => {
       backgroundColor: '#FFFFFF',
       justifyContent: 'center',
       alignItems: 'center',
-      ...theme.getShadow('md'),
+      ...theme.shadows.md,
     },
     logoText: {
       fontSize: 24,
       fontWeight: 'bold',
-      color: theme.palette.therapeutic.growth,
+      color: theme.colors.therapeutic.nurturing[600] || '#16a34a',
     },
     content: {
       flex: 1,
@@ -110,12 +110,12 @@ export const LoginScreen = ({ navigation }: any) => {
       color: theme.colors.text.tertiary,
     },
     loginButton: {
-      backgroundColor: theme.palette.therapeutic.growth,
+      backgroundColor: theme.colors.therapeutic.nurturing[600] || '#16a34a',
       borderRadius: 12,
       paddingVertical: 16,
       alignItems: 'center',
       marginTop: 24,
-      ...theme.getShadow('sm'),
+      ...theme.shadows.sm,
     },
     disabledButton: {
       opacity: 0.6,
@@ -131,7 +131,7 @@ export const LoginScreen = ({ navigation }: any) => {
       padding: 8,
     },
     forgotPasswordText: {
-      color: theme.palette.therapeutic.growth,
+      color: theme.colors.therapeutic.nurturing[600] || '#16a34a',
       fontSize: 16,
       fontWeight: '500',
     },
@@ -152,14 +152,14 @@ export const LoginScreen = ({ navigation }: any) => {
     },
     signupButtonText: {
       fontSize: 16,
-      color: theme.palette.therapeutic.growth,
+      color: theme.colors.therapeutic.nurturing[600] || '#16a34a',
       fontWeight: '600',
     },
   });
 
   const backgroundColors = [
-    theme.palette.therapeutic.growth,
-    theme.palette.therapeutic.calm,
+    theme.colors.therapeutic.nurturing[600] || '#16a34a',
+    theme.colors.therapeutic.calming[500] || '#0ea5e9',
   ];
 
   const validateForm = () => {

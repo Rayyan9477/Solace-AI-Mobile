@@ -23,7 +23,9 @@
       "Bash(npm run web:*)",
       "Bash(xargs sed:*)",
       "Bash(npx expo r:*)",
-      "Bash(npm run test:coverage:*)"
+      "Bash(npm run test:coverage:*)",
+      "Bash(cat:*)",
+      "Bash(awk:*)"
     ],
     "deny": [],
     "ask": []

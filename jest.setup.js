@@ -177,7 +177,7 @@ jest.mock("react-native/src/private/specs/modules/NativeDeviceInfo", () => ({
 }));
 
 // Mock Crisis Manager for safety testing
-jest.mock("./src/features/crisisIntervention/CrisisManager", () => {
+jest.mock("./src/features/crisis/CrisisManager", () => {
   return jest.fn().mockImplementation(() => ({
     detectCrisis: jest.fn((text) => ({
       isCrisis:
@@ -350,8 +350,8 @@ jest.mock("react-native", () => {
   };
 });
 
-// Provide legacy path compatibility for tests referencing old locations
-jest.mock('./shared/theme/ThemeContext', () => require('./src/shared/theme/ThemeContext'));
+// Legacy path compatibility removed - all code now in src/
+// Tests should import directly from src/shared/theme/ThemeContext
 
 // Mock React Native Animated module (updated path for newer RN versions)
 jest.mock("react-native/Libraries/Animated/AnimatedImplementation", () => ({

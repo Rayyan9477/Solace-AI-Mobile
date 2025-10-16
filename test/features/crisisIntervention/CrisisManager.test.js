@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Haptics from "expo-haptics";
 import { Alert, Linking } from "react-native";
 
-import CrisisManager from "../../../features/crisisIntervention/CrisisManager";
+import CrisisManager from "../../../src/features/crisis/CrisisManager";
 
 // Mock dependencies
 jest.mock("react-native", () => ({

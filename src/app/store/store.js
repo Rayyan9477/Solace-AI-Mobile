@@ -13,8 +13,13 @@ import userSlice from "./slices/userSlice";
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["auth", "user"], // Reduced whitelist to prevent hanging
-  timeout: 3000, // Add timeout to prevent infinite hanging
+  whitelist: ["auth", "user"], // Persist only essential state
+  timeout: 10000, // 10 seconds - increased from 3s for slower devices
+  debug: __DEV__, // Enable debug in development
+  // Handle migration errors gracefully
+  migrate: (state) => {
+    return Promise.resolve(state);
+  },
 };
 
 const rootReducer = combineReducers({
@@ -33,12 +38,25 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+        ignoredActions: [
+          "persist/PERSIST",
+          "persist/REHYDRATE",
+          "persist/REGISTER",
+          "persist/PURGE",
+        ],
+        // Ignore these paths in state for serialization checks
+        ignoredPaths: ["auth.lastActivity"],
       },
+      // Increase immutability check threshold for better performance
+      immutableCheck: { warnAfter: 128 },
     }),
 });
 
-export const persistor = persistStore(store);
+export const persistor = persistStore(store, null, () => {
+  if (__DEV__) {
+    console.log('✅ Redux store rehydration complete');
+  }
+});
 
 // For TypeScript projects, uncomment these type exports:
 // export type RootState = ReturnType<typeof store.getState>;

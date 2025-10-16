@@ -25,13 +25,13 @@ export const APP_CONFIG = {
     offlineMode: process.env.ENABLE_OFFLINE_MODE === 'true',
   },
 
-  // Security
+  // Security - These MUST be set via environment variables
   jwt: {
-    secretKey: process.env.JWT_SECRET_KEY || 'fallback-secret-key',
+    secretKey: process.env.JWT_SECRET_KEY || (__DEV__ ? 'dev-only-secret-key' : ''),
   },
 
   encryption: {
-    key: process.env.ENCRYPTION_KEY || 'fallback-encryption-key',
+    key: process.env.ENCRYPTION_KEY || (__DEV__ ? 'dev-only-encryption-key' : ''),
   },
 } as const;
 

@@ -41,31 +41,71 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Core Structure
 
+The codebase follows a **feature-based architecture** with shared components following the **Atomic Design Pattern**.
+
 ```
 src/
-├── components/          # Reusable UI components
-│   ├── common/         # Basic components (Button, Card, etc.)
-│   ├── dashboard/      # Dashboard-specific components
-│   ├── chat/          # Chat and messaging components
-│   ├── mood/          # Mood tracking components
-│   └── RefactoredAppProvider.js  # Main app provider
-├── screens/            # Screen components
-│   ├── auth/          # Authentication screens
-│   ├── chat/          # Chat screens
-│   ├── mood/          # Mood tracking screens
-│   ├── wellness/      # Wellness and mindfulness screens
-│   └── MainAppScreen.js  # Primary dashboard screen
-├── navigation/         # Navigation configuration
-│   └── AppNavigator.js # Main navigation setup
-├── shared/theme/       # Theme system
-│   ├── UnifiedThemeProvider.js  # Main theme provider
-│   └── ThemeContext.js # Theme context (backward compatibility)
-├── store/             # Redux state management
-│   ├── store.js       # Redux store configuration
-│   └── slices/        # Redux slices for different features
-├── hooks/             # Custom React hooks
-├── services/          # External services (API, storage)
-└── utils/             # Utility functions
+├── app/                          # App-level configuration
+│   ├── navigation/              # Navigation configuration (AppNavigator.js)
+│   ├── providers/               # App-level providers (Redux, Theme)
+│   ├── services/                # App-level services (API, auth)
+│   └── store/                   # Redux store and slices
+│       ├── slices/              # Feature slices (auth, mood, chat, etc.)
+│       └── store.js             # Store configuration with persistence
+│
+├── features/                     # Feature-based modules (Domain logic)
+│   ├── auth/                    # Authentication feature
+│   │   ├── screens/             # LoginScreen, SignupScreen
+│   │   └── services/            # Auth-specific services
+│   ├── mood/                    # Mood tracking feature
+│   │   ├── components/          # MoodSelector, IntensitySlider
+│   │   └── screens/             # MoodScreen
+│   ├── chat/                    # AI therapy chat feature
+│   ├── assessment/              # Mental health assessments
+│   ├── crisis/                  # Crisis intervention (consolidated)
+│   ├── wellness/                # Wellness and mindfulness
+│   ├── profile/                 # User profile management
+│   ├── dashboard/               # Main dashboard
+│   │   ├── components/          # QuickActions, MoodCheckIn
+│   │   └── screens/             # MainAppScreen
+│   └── onboarding/              # User onboarding flow
+│
+├── shared/                       # Shared across all features
+│   ├── components/              # Shared UI components (Atomic Design)
+│   │   ├── atoms/               # Basic components (Button, Input, etc.)
+│   │   ├── molecules/           # Component combinations (Card, Modal)
+│   │   ├── organisms/           # Complex components (Layout, Navigation)
+│   │   └── forms/               # Form components
+│   ├── hooks/                   # Custom React hooks
+│   ├── utils/                   # Utility functions
+│   ├── services/                # Shared services (API, storage, tokens)
+│   ├── config/                  # App configuration
+│   ├── constants/               # App constants
+│   ├── theme/                   # Theme system (UnifiedThemeProvider)
+│   ├── types/                   # TypeScript types/interfaces
+│   └── assets/                  # Static assets (images, fonts)
+│
+└── components/                   # Legacy - being migrated to features/shared
+```
+
+### Import Aliases (Babel Configuration)
+
+Use these aliases for cleaner imports:
+
+- `@app/*` → `src/app/*`
+- `@features/*` → `src/features/*`
+- `@shared/*` → `src/shared/*`
+- `@components/*` → `src/shared/components/*`
+- `@theme/*` → `src/shared/theme/*`
+- `@utils/*` → `src/shared/utils/*`
+
+Example:
+```javascript
+// Instead of: import { Button } from '../../../shared/components/atoms/Button'
+import { Button } from '@shared/components/atoms/Button';
+
+// Instead of: import { useAuth } from '../../hooks/useAuth'
+import { useAuth } from '@shared/hooks/useAuth';
 ```
 
 ### Key Architectural Patterns

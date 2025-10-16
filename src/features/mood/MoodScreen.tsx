@@ -94,11 +94,11 @@ export const MoodScreen = () => {
       borderRadius: 12,
       marginBottom: 12,
       alignItems: 'center',
-      ...theme.getShadow('sm'),
+      ...theme.shadows.sm,
     },
     selectedMoodButton: {
       borderWidth: 2,
-      borderColor: theme.palette.therapeutic.growth,
+      borderColor: theme.colors.therapeutic.nurturing[600] || '#16a34a',
     },
     moodEmoji: {
       fontSize: 32,
@@ -120,10 +120,10 @@ export const MoodScreen = () => {
       backgroundColor: theme.colors.background.secondary,
       justifyContent: 'center',
       alignItems: 'center',
-      ...theme.getShadow('sm'),
+      ...theme.shadows.sm,
     },
     selectedIntensityButton: {
-      backgroundColor: theme.palette.therapeutic.growth,
+      backgroundColor: theme.colors.therapeutic.nurturing[600] || '#16a34a',
     },
     intensityText: {
       fontSize: 18,
@@ -134,7 +134,7 @@ export const MoodScreen = () => {
       color: '#FFFFFF',
     },
     saveButton: {
-      backgroundColor: theme.palette.therapeutic.growth,
+      backgroundColor: theme.colors.therapeutic.nurturing[600] || '#16a34a',
       padding: 16,
       borderRadius: 12,
       alignItems: 'center',
@@ -153,7 +153,7 @@ export const MoodScreen = () => {
       padding: 16,
       borderRadius: 12,
       marginBottom: 12,
-      ...theme.getShadow('sm'),
+      ...theme.shadows.sm,
     },
     historyHeader: {
       flexDirection: 'row',

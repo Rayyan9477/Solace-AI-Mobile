@@ -659,6 +659,162 @@ export class IntegrationTestingHelpers {
   }
 }
 
+/**
+ * Console Output Suppression Helpers
+ * Use these to reduce test noise from expected warnings/errors
+ */
+export class ConsoleHelpers {
+  static suppressedSpies = {};
+
+  static suppressConsole(methods = ['warn', 'error', 'log']) {
+    methods.forEach(method => {
+      this.suppressedSpies[method] = jest.spyOn(console, method).mockImplementation(() => {});
+    });
+  }
+
+  static restoreConsole() {
+    Object.values(this.suppressedSpies).forEach(spy => {
+      if (spy && spy.mockRestore) spy.mockRestore();
+    });
+    this.suppressedSpies = {};
+  }
+
+  static suppressEnvironmentWarnings() {
+    const originalWarn = console.warn;
+    jest.spyOn(console, 'warn').mockImplementation((...args) => {
+      const msg = args[0];
+      // Suppress environment config warnings during tests
+      if (msg?.includes?.('Environment configuration warnings') ||
+          msg?.includes?.('API_CONFIG.baseURL is using default')) {
+        return;
+      }
+      originalWarn.apply(console, args);
+    });
+  }
+}
+
+/**
+ * API Mock Helpers
+ * Simplified creation of API response mocks
+ */
+export class APITestHelpers {
+  static mockSuccessResponse(data) {
+    return {
+      ok: true,
+      json: async () => data,
+    };
+  }
+
+  static mock5xxError(message = 'Server error', count = 3) {
+    const mocks = [];
+    for (let i = 0; i < count; i++) {
+      mocks.push({
+        ok: false,
+        status: 500,
+        statusText: 'Internal Server Error',
+        json: async () => ({ message }),
+      });
+    }
+    return mocks;
+  }
+
+  static mock4xxError(status = 404, message = 'Not found') {
+    return {
+      ok: false,
+      status,
+      statusText: this.getStatusText(status),
+      json: async () => ({ message }),
+    };
+  }
+
+  static mockNetworkError(message = 'Network error') {
+    const error = new Error(message);
+    error.name = 'NetworkError';
+    return Promise.reject(error);
+  }
+
+  static mockAbortError() {
+    const error = new Error('Request aborted');
+    error.name = 'AbortError';
+    return Promise.reject(error);
+  }
+
+  static getStatusText(status) {
+    const statusTexts = {
+      400: 'Bad Request',
+      401: 'Unauthorized',
+      403: 'Forbidden',
+      404: 'Not Found',
+      422: 'Unprocessable Entity',
+      500: 'Internal Server Error',
+      502: 'Bad Gateway',
+      503: 'Service Unavailable',
+      504: 'Gateway Timeout',
+    };
+    return statusTexts[status] || 'Error';
+  }
+
+  static setupFetchMock() {
+    global.fetch = jest.fn();
+    return global.fetch;
+  }
+
+  static mockFetchSequence(...responses) {
+    const fetch = this.setupFetchMock();
+    responses.forEach(response => {
+      fetch.mockResolvedValueOnce(response);
+    });
+    return fetch;
+  }
+}
+
+/**
+ * Test Data Fixtures
+ */
+export const TestFixtures = {
+  mood: {
+    entry: {
+      id: 1,
+      mood: 'happy',
+      intensity: 8,
+      notes: 'Feeling great today',
+      timestamp: '2025-01-16T12:00:00Z',
+      activities: ['exercise', 'meditation'],
+    },
+    history: [
+      { id: 1, mood: 'happy', intensity: 8, timestamp: '2025-01-16T12:00:00Z' },
+      { id: 2, mood: 'anxious', intensity: 6, timestamp: '2025-01-15T12:00:00Z' },
+      { id: 3, mood: 'calm', intensity: 7, timestamp: '2025-01-14T12:00:00Z' },
+      { id: 4, mood: 'sad', intensity: 4, timestamp: '2025-01-13T12:00:00Z' },
+      { id: 5, mood: 'happy', intensity: 9, timestamp: '2025-01-12T12:00:00Z' },
+      { id: 6, mood: 'neutral', intensity: 5, timestamp: '2025-01-11T12:00:00Z' },
+      { id: 7, mood: 'happy', intensity: 8, timestamp: '2025-01-10T12:00:00Z' },
+    ],
+  },
+  assessment: {
+    phq9: {
+      id: 'phq9',
+      name: 'PHQ-9 Depression Assessment',
+      questions: [
+        { id: 'q1', text: 'Little interest or pleasure in doing things', type: 'scale' },
+        { id: 'q2', text: 'Feeling down, depressed, or hopeless', type: 'scale' },
+      ],
+    },
+  },
+  user: {
+    profile: {
+      id: 'user123',
+      email: 'test@example.com',
+      name: 'Test User',
+      preferences: {
+        theme: 'light',
+        notifications: true,
+        reducedMotion: false,
+      },
+    },
+  },
+};
+
 // Export all helpers
 export default {
   MENTAL_HEALTH_TEST_CONSTANTS,
@@ -672,4 +828,7 @@ export default {
   PerformanceTestingHelpers,
   AnimationTestingHelpers,
   IntegrationTestingHelpers,
+  ConsoleHelpers,
+  APITestHelpers,
+  TestFixtures,
 };

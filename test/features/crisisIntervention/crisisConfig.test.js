@@ -14,7 +14,7 @@ import {
   SAFETY_PLAN_TEMPLATE,
   loadRemoteCrisisConfig,
   mergeCrisisConfig,
-} from '../../../src/features/crisisIntervention/crisisConfig';
+} from '../../../src/features/crisis/crisisConfig';
 
 // Mock fetch at the module level
 const mockFetch = jest.fn();
@@ -279,15 +279,13 @@ describe('Crisis Configuration', () => {
     });
 
     it('should fetch from correct endpoint', async () => {
-      process.env.EXPO_PUBLIC_API_URL = 'https://api.example.com';
-      console.log('ENV VAR SET:', process.env.EXPO_PUBLIC_API_URL); // Debug
+      const testApiUrl = 'https://api.example.com';
       global.fetch.mockResolvedValue({
         ok: true,
         json: async () => ({ keywords: { critical: ['test'] } }),
       });
 
-      const result = await loadRemoteCrisisConfig();
-      console.log('RESULT:', result); // Debug
+      await loadRemoteCrisisConfig(testApiUrl);
 
       expect(global.fetch).toHaveBeenCalledWith(
         'https://api.example.com/config/crisis-keywords',
@@ -299,14 +297,14 @@ describe('Crisis Configuration', () => {
     });
 
     it('should return parsed config on success', async () => {
-      process.env.EXPO_PUBLIC_API_URL = 'https://api.example.com';
+      const testApiUrl = 'https://api.example.com';
       const mockConfig = { keywords: { critical: ['test'] } };
       global.fetch.mockResolvedValue({
         ok: true,
         json: async () => mockConfig,
       });
 
-      const result = await loadRemoteCrisisConfig();
+      const result = await loadRemoteCrisisConfig(testApiUrl);
 
       expect(result).toEqual(mockConfig);
     });

@@ -6,7 +6,7 @@ const mockApiService = {
     async login(email, password) {
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       if (email && password) {
         return {
           user: { id: '1', name: 'Test User', email },
@@ -20,18 +20,18 @@ const mockApiService = {
 
 const mockSecureStorage = {
   async storeSecureData(key, data) {
-    console.log(`Storing secure data for key: ${key}`);
+    if (__DEV__) console.log(`Storing secure data for key: ${key}`);
     return true;
   },
   async getSecureData(key) {
-    console.log(`Getting secure data for key: ${key}`);
+    if (__DEV__) console.log(`Getting secure data for key: ${key}`);
     if (key === 'user_profile') {
       return { id: '1', name: 'Test User', email: 'test@example.com' };
     }
     return null;
   },
   async removeSecureData(key) {
-    console.log(`Removing secure data for key: ${key}`);
+    if (__DEV__) console.log(`Removing secure data for key: ${key}`);
     return true;
   },
 };
@@ -44,46 +44,20 @@ const mockTokenService = {
     return null; // Start with no tokens
   },
   async clearTokens() {
-    console.log('Clearing tokens');
+    if (__DEV__) console.log('Clearing tokens');
     return true;
   },
   async invalidateSession() {
-    console.log('Invalidating session');
+    if (__DEV__) console.log('Invalidating session');
     return true;
   },
 };
 
-// Safe service loading with fallbacks
-export const getApiService = () => {
-  try {
-    return __DEV__ ? mockApiService : require("../../services/api").default;
-  } catch (error) {
-    console.warn('🚨 API service not found, using mock service:', error.message);
-    return mockApiService;
-  }
-};
-
-export const getSecureStorage = () => {
-  try {
-    return __DEV__ ? mockSecureStorage : require("../../services/secureStorage").default;
-  } catch (error) {
-    console.warn('🚨 Secure storage service not found, using mock service:', error.message);
-    return mockSecureStorage;
-  }
-};
-
-export const getTokenService = () => {
-  try {
-    return __DEV__ ? mockTokenService : require("../../services/tokenService").default;
-  } catch (error) {
-    console.warn('🚨 Token service not found, using mock service:', error.message);
-    return mockTokenService;
-  }
-};
-
-const apiService = getApiService();
-const secureStorage = getSecureStorage();
-const tokenService = getTokenService();
+// Services - use mocks in development for now
+// TODO: Replace with real service imports when they are implemented
+const apiService = mockApiService;
+const secureStorage = mockSecureStorage;
+const tokenService = mockTokenService;
 
 // Async thunk for secure login
 export const secureLogin = createAsyncThunk(
@@ -94,10 +68,6 @@ export const secureLogin = createAsyncThunk(
       if (!email || !password) {
         throw new Error("Email and password are required");
       }
-
-      // Get services dynamically
-      const apiService = getApiService();
-      const secureStorage = getSecureStorage();
 
       // Real API call using the actual API service
       const response = await apiService.auth.login(email, password);
@@ -127,10 +97,6 @@ export const secureLogout = createAsyncThunk(
   "auth/secureLogout",
   async (_, { rejectWithValue }) => {
     try {
-      // Get services dynamically
-      const tokenService = getTokenService();
-      const secureStorage = getSecureStorage();
-
       // Clear tokens securely
       await tokenService.clearTokens();
 
@@ -162,10 +128,6 @@ export const restoreAuthState = createAsyncThunk(
       });
 
       const authCheckPromise = async () => {
-        // Get services dynamically
-        const tokenService = getTokenService();
-        const secureStorage = getSecureStorage();
-
         // Check if user is authenticated
         const isAuthenticated = await tokenService.isAuthenticated();
         console.log("≡ƒöä restoreAuthState: isAuthenticated =", isAuthenticated);
@@ -211,8 +173,6 @@ export const restoreAuthState = createAsyncThunk(
       console.error("≡ƒöä restoreAuthState: Error during restoration:", error);
       // Clear potentially corrupted state
       try {
-        // Get services dynamically for cleanup
-        const tokenService = getTokenService();
         await tokenService.clearTokens();
       } catch (clearError) {
         console.warn("Failed to clear tokens:", clearError);
