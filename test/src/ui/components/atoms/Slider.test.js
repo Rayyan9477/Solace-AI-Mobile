@@ -1,7 +1,7 @@
 import React from "react";
 import { render } from "@testing-library/react-native";
 
-import Slider from "src/ui/components/atoms/Slider";
+import Slider from "src/shared/components/atoms/Slider";
 
 // Mock theme context
 const mockTheme = {

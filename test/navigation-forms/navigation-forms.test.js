@@ -47,7 +47,7 @@ import {
 
 // Mock dependencies
 jest.mock("@react-native-async-storage/async-storage");
-jest.mock("../../contexts/ThemeContext", () => ({
+jest.mock("../../src/shared/theme/ThemeContext", () => ({
   useTheme: () => ({
     theme: {
       colors: {
@@ -87,7 +87,7 @@ jest.mock("react-native-safe-area-context", () => ({
   useSafeAreaInsets: () => ({ top: 44, bottom: 34, left: 0, right: 0 }),
 }));
 
-jest.mock("../../utils/accessibility", () => ({
+jest.mock("../../src/shared/utils/accessibility", () => ({
   FocusManagement: {
     announceForScreenReader: jest.fn(),
   },

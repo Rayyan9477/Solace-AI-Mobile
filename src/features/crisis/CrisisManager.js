@@ -636,6 +636,138 @@ class CrisisManager {
 
     return responsiveActions / highRiskEvents.length;
   }
+
+  /**
+   * Get crisis history for user
+   * @returns {Promise<Array>} Crisis history
+   */
+  async getCrisisHistory() {
+    try {
+      const events = await AsyncStorage.getItem("crisis_events");
+      return events ? JSON.parse(events) : [];
+    } catch (error) {
+      console.error("Error getting crisis history:", error);
+      return [];
+    }
+  }
+
+  /**
+   * Anonymize crisis data for privacy
+   * @param {Object} data - Crisis data to anonymize
+   * @returns {Object} Anonymized data
+   */
+  anonymizeCrisisData(data) {
+    const anonymized = { ...data };
+
+    // Remove or hash sensitive personal information
+    delete anonymized.userId;
+    delete anonymized.originalText;
+    delete anonymized.personalDetails;
+
+    // Add anonymization timestamp
+    anonymized.anonymizedAt = new Date().toISOString();
+    anonymized.privacyLevel = "anonymized";
+
+    return anonymized;
+  }
+
+  /**
+   * Prepare crisis data for healthcare provider sharing
+   * @param {Object} crisisData - Crisis event data
+   * @returns {Object} Formatted provider report
+   */
+  prepareProviderReport(crisisData) {
+    const anonymizedData = this.anonymizeCrisisData(crisisData);
+
+    return {
+      crisis_events: [anonymizedData],
+      intervention_history: [],
+      risk_assessment: {
+        current_risk: anonymizedData.riskLevel,
+        confidence: anonymizedData.confidence,
+        indicators: anonymizedData.indicators,
+      },
+      recommendations: this.generateProviderRecommendations(anonymizedData),
+      report_generated: new Date().toISOString(),
+    };
+  }
+
+  /**
+   * Schedule follow-up care
+   * @param {Object} followUpData - Follow-up scheduling data
+   * @returns {Promise<Object>} Scheduled follow-up
+   */
+  async scheduleFollowUp(followUpData) {
+    const followUp = {
+      id: `followup_${Date.now()}`,
+      type: followUpData.type || "crisis_followup",
+      scheduled_time: followUpData.scheduledTime || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Default to 24 hours
+      provider: followUpData.provider || "crisis_team",
+      priority: followUpData.priority || "high",
+      notes: followUpData.notes || "",
+      reminder_set: true,
+      created_at: new Date().toISOString(),
+    };
+
+    try {
+      const existingFollowUps = await AsyncStorage.getItem("scheduled_followups");
+      const followUps = existingFollowUps ? JSON.parse(existingFollowUps) : [];
+
+      followUps.push(followUp);
+      await AsyncStorage.setItem("scheduled_followups", JSON.stringify(followUps));
+
+      return followUp;
+    } catch (error) {
+      console.error("Error scheduling follow-up:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Generate recommendations for healthcare providers
+   * @param {Object} crisisData - Anonymized crisis data
+   * @returns {Array} Provider recommendations
+   */
+  generateProviderRecommendations(crisisData) {
+    const recommendations = [];
+
+    switch (crisisData.riskLevel) {
+      case "critical":
+        recommendations.push(
+          "Immediate psychiatric evaluation recommended",
+          "Consider inpatient stabilization",
+          "Monitor for suicidal ideation",
+          "Coordinate with emergency services"
+        );
+        break;
+      case "high":
+        recommendations.push(
+          "Schedule urgent mental health assessment",
+          "Consider crisis intervention therapy",
+          "Monitor medication compliance",
+          "Establish safety plan"
+        );
+        break;
+      case "moderate":
+        recommendations.push(
+          "Schedule outpatient therapy appointment",
+          "Consider medication evaluation",
+          "Implement coping strategies",
+          "Regular follow-up monitoring"
+        );
+        break;
+      case "low":
+        recommendations.push(
+          "Continue supportive therapy",
+          "Monitor symptom progression",
+          "Reinforce coping skills",
+          "Regular wellness check-ins"
+        );
+        break;
+    }
+
+    return recommendations;
+  }
 }
 
 export default new CrisisManager();

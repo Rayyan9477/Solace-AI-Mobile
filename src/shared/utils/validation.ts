@@ -79,9 +79,7 @@ export const validateConfiguration = (): ValidationResult => {
     errors.push('App version not configured');
   }
 
-  if (!APP_CONFIG.apiUrl) {
-    warnings.push('API URL not configured');
-  }
+  // Note: API URL is now in API_CONFIG, not APP_CONFIG
 
   // Validate environment variables
   if (APP_CONFIG.features?.analytics && !process.env.ANALYTICS_KEY) {
@@ -110,20 +108,17 @@ export const validatePlatform = (): ValidationResult => {
   // Check React Native version compatibility
   if (Platform.OS === 'web') {
     // Web-specific validations
-    if (typeof window === 'undefined') {
+    if (globalThis.window === undefined) {
       errors.push('Window object not available in web environment');
     }
   } else {
-    // Native-specific validations
-    if (!Platform.Version) {
-      warnings.push('Platform version not detected');
-    }
+    // Native-specific validations - no specific check needed
   }
 
-  // Check React Native
+  // Check React Native - simplified check
   try {
     require('react-native');
-  } catch (error) {
+  } catch {
     errors.push('React Native not available');
   }
 

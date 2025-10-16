@@ -17,7 +17,7 @@ const persistConfig = {
   timeout: 10000, // 10 seconds - increased from 3s for slower devices
   debug: __DEV__, // Enable debug in development
   // Handle migration errors gracefully
-  migrate: (state) => {
+  migrate: (state: any) => {
     return Promise.resolve(state);
   },
 };

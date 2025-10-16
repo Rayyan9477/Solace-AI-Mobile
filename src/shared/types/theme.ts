@@ -220,4 +220,4 @@ export type TherapeuticColorKey = keyof TherapeuticColors;
 export type ColorShade = keyof ColorScale;
 
 // Export enhanced colors for use in components
-export type { EnhancedColors };
+// export type { EnhancedColors }; // Removed to avoid conflict

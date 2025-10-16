@@ -439,4 +439,7 @@ export const modernDarkTheme = {
   shadows: modernShadows,
   animations: modernAnimations,
   isDark: true,
+
+  // Helper functions
+  getShadow: (size) => modernShadows[size] || modernShadows.md,
 };

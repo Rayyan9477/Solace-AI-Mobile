@@ -9,13 +9,11 @@ import { Button as PaperButton } from 'react-native-paper';
 import { motion } from 'framer-motion';
 
 import { platform } from '../../utils/platform';
-import { useTheme } from '../../theme/UnifiedThemeProvider';
-import { FreudColors } from '../../theme/FreudDesignSystem';
 
 const AnimatedButton = motion(PaperButton);
 
 export interface ButtonProps {
-  variant?: 'filled' | 'outlined' | 'text';
+  variant?: 'contained' | 'outlined' | 'text';
   size?: 'small' | 'medium' | 'large';
   children: React.ReactNode;
   onPress?: () => void;
@@ -24,12 +22,11 @@ export interface ButtonProps {
   icon?: string;
   style?: any;
   testID?: string;
-  therapeuticColor?: keyof typeof FreudColors;
   fullWidth?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
-  variant = 'filled',
+  variant = 'contained',
   size = 'medium',
   children,
   onPress,
@@ -38,41 +35,9 @@ const Button: React.FC<ButtonProps> = ({
   icon,
   style,
   testID,
-  therapeuticColor,
   fullWidth = false,
   ...props
 }) => {
-  const { theme, isDarkMode } = useTheme();
-
-  // Get therapeutic colors
-  const getTherapeuticColors = () => {
-    if (!therapeuticColor) return {};
-
-    const colorPalette = FreudColors[therapeuticColor];
-    if (!colorPalette) return {};
-
-    switch (variant) {
-      case 'filled':
-        return {
-          buttonColor: colorPalette[60],
-          textColor: '#FFFFFF',
-        };
-      case 'outlined':
-        return {
-          buttonColor: 'transparent',
-          textColor: colorPalette[60],
-          borderColor: colorPalette[60],
-        };
-      case 'text':
-        return {
-          buttonColor: 'transparent',
-          textColor: colorPalette[60],
-        };
-      default:
-        return {};
-    }
-  };
-
   // Get size-specific styles
   const getSizeStyles = () => {
     switch (size) {
@@ -119,7 +84,6 @@ const Button: React.FC<ButtonProps> = ({
     return disabled ? {} : config;
   };
 
-  const therapeuticColors = getTherapeuticColors();
   const sizeStyles = getSizeStyles();
   const animationProps = getAnimationProps();
 
@@ -131,18 +95,13 @@ const Button: React.FC<ButtonProps> = ({
       loading={loading}
       icon={icon}
       testID={testID}
-      {...therapeuticColors}
       {...sizeStyles}
       {...animationProps}
       style={[
         styles.button,
         fullWidth && styles.fullWidth,
-        variant === 'outlined' && therapeuticColors.borderColor && {
-          borderColor: therapeuticColors.borderColor,
-          borderWidth: 1,
-        },
         style,
-      ]}
+      ] as any}
       {...props}
     >
       {children}

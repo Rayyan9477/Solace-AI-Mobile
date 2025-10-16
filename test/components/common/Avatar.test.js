@@ -41,7 +41,7 @@ const MockThemeProvider = ({ children }) => {
 };
 
 // Mock useTheme hook
-jest.mock("../../../src/contexts/ThemeContext", () => ({
+jest.mock("../../shared/theme/ThemeContext", () => ({
   useTheme: () => ({ theme: mockTheme }),
 }));
 

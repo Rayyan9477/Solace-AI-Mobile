@@ -8,7 +8,7 @@ import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import { useTheme } from "@theme/ThemeProvider";
 
 export const DashboardScreen = () => {
-  const { theme, isDarkMode } = useTheme();
+  const { theme } = useTheme();
 
   const styles = StyleSheet.create({
     container: {

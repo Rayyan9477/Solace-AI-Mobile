@@ -12,11 +12,11 @@ import {
 } from 'react-native';
 import { Card, Surface, IconButton } from 'react-native-paper';
 import { motion } from 'framer-motion';
+import { useTheme } from "@theme/ThemeProvider";
 
 // Mock imports for now
 import * as Speech from 'expo-speech';
 import { platform } from '../../../shared/utils/platform';
-import { useTheme } from '../../../shared/theme/ThemeProvider';
 // Mock FreudColors for now
 const FreudColors = {
   serenityGreen: {
@@ -49,7 +49,8 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const { isDarkMode } = useTheme();
+  const { isDark: isDarkMode } = useTheme();
+
 
   // Handle speech synthesis with Expo compatibility
   const handleSpeak = async () => {
@@ -67,7 +68,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
         setIsSpeaking(true);
         await Promise.resolve(Speech.speak(message, {
           language: 'en',
-          pitch: 1.0,
+          pitch: 1,
           rate: 0.9,
         }));
         // Reset speaking state after a short delay (speech duration estimate)
@@ -116,7 +117,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
       initial: { opacity: 0, y: 20, scale: 0.9 },
       animate: { opacity: 1, y: 0, scale: 1 },
       transition: {
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 300,
         damping: 20,
         delay: 0.1,
@@ -126,7 +127,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
       initial: { opacity: 0, x: isUser ? 50 : -50 },
       animate: { opacity: 1, x: 0 },
       transition: {
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 250,
         damping: 25,
         delay: 0.1,
@@ -141,7 +142,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
       initial: { opacity: 0, y: 20, scale: 0.9 },
       animate: { opacity: 1, y: 0, scale: 1 },
       transition: {
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 300,
         damping: 20,
         delay: 0.1,
@@ -156,7 +157,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
       style={[
         styles.container,
         isUser ? styles.userContainer : styles.botContainer,
-      ]}
+      ] as any}
     >
       <Surface
         mode="flat"

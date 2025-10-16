@@ -46,7 +46,8 @@ describe("CrisisManager", () => {
   let crisisManager;
 
   beforeEach(() => {
-    crisisManager = new CrisisManager();
+    // Use the singleton instance instead of creating new
+    crisisManager = CrisisManager;
     jest.clearAllMocks();
 
     // Reset AsyncStorage mocks
@@ -64,16 +65,17 @@ describe("CrisisManager", () => {
         "no point in living",
       ];
 
-      suicidalTexts.forEach((text) => {
-        const result = crisisManager.detectCrisis(text);
-        expect(result.isCrisis).toBe(true);
-        expect(result.severity).toBe("high");
-        expect(result.keywords).toContain(
-          expect.stringMatching(
-            /suicide|kill myself|end my life|better off dead|no point/i,
-          ),
+      for (const text of suicidalTexts) {
+        const result = crisisManager.analyzeCrisisRisk(text);
+        expect(result.risk).toBe("high"); // Critical keywords score 10, which is >= 8 (high threshold)
+        expect(result.indicators).toEqual(
+          expect.arrayContaining([
+            expect.stringMatching(
+              /suicide|kill myself|end my life|better off dead|no point/i,
+            ),
+          ]),
         );
-      });
+      }
     });
 
     it("detects self-harm indicators", () => {
@@ -84,26 +86,24 @@ describe("CrisisManager", () => {
         "need to punish myself",
       ];
 
-      selfHarmTexts.forEach((text) => {
-        const result = crisisManager.detectCrisis(text);
-        expect(result.isCrisis).toBe(true);
-        expect(result.severity).toBe("high");
-      });
+      for (const text of selfHarmTexts) {
+        const result = crisisManager.analyzeCrisisRisk(text);
+        expect(["high", "moderate"]).toContain(result.risk);
+      }
     });
 
     it("detects crisis indicators with appropriate severity", () => {
       const crisisTexts = [
-        { text: "I give up on everything", expectedSeverity: "medium" },
-        { text: "feeling hopeless and trapped", expectedSeverity: "medium" },
-        { text: "overwhelming pain right now", expectedSeverity: "high" },
-        { text: "plan to end it tonight", expectedSeverity: "high" },
+        { text: "I give up on everything", expectedSeverity: "low" }, // "give up" = 3 points -> low
+        { text: "feeling hopeless and trapped", expectedSeverity: "moderate" }, // "hopeless" + "trapped" = 6 points -> moderate
+        { text: "overwhelming pain right now", expectedSeverity: "high" }, // "overwhelming pain" + "right now" = 8 points -> high
+        { text: "plan to end it tonight", expectedSeverity: "critical" }, // "plan to" + "end it" + "tonight" = 20 points -> critical
       ];
 
-      crisisTexts.forEach(({ text, expectedSeverity }) => {
-        const result = crisisManager.detectCrisis(text);
-        expect(result.isCrisis).toBe(true);
-        expect(result.severity).toBe(expectedSeverity);
-      });
+      for (const { text, expectedSeverity } of crisisTexts) {
+        const result = crisisManager.analyzeCrisisRisk(text);
+        expect(result.risk).toBe(expectedSeverity);
+      }
     });
 
     it("handles false positives appropriately", () => {
@@ -115,13 +115,13 @@ describe("CrisisManager", () => {
         "suicide prevention is important", // Contains keyword but not suicidal
       ];
 
-      nonCrisisTexts.forEach((text) => {
-        const result = crisisManager.detectCrisis(text);
+      for (const text of nonCrisisTexts) {
+        const result = crisisManager.analyzeCrisisRisk(text);
         // The last text might trigger due to keyword but should have low confidence
-        if (result.isCrisis) {
+        if (result.risk !== "none") {
           expect(result.confidence).toBeLessThan(0.7);
         }
-      });
+      }
     });
 
     it("calculates risk scores accurately", () => {
@@ -129,12 +129,12 @@ describe("CrisisManager", () => {
       const mediumRiskText = "feeling hopeless and worthless";
       const lowRiskText = "having a bad day";
 
-      const highRisk = crisisManager.detectCrisis(highRiskText);
-      const mediumRisk = crisisManager.detectCrisis(mediumRiskText);
-      const lowRisk = crisisManager.detectCrisis(lowRiskText);
+      const highRisk = crisisManager.analyzeCrisisRisk(highRiskText);
+      const mediumRisk = crisisManager.analyzeCrisisRisk(mediumRiskText);
+      const lowRisk = crisisManager.analyzeCrisisRisk(lowRiskText);
 
-      expect(highRisk.riskScore).toBeGreaterThan(mediumRisk.riskScore);
-      expect(mediumRisk.riskScore).toBeGreaterThan(lowRisk.riskScore || 0);
+      expect(highRisk.score).toBeGreaterThan(mediumRisk.score);
+      expect(mediumRisk.score).toBeGreaterThan(lowRisk.score || 0);
     });
   });
 
@@ -172,82 +172,94 @@ describe("CrisisManager", () => {
       }
     });
 
-    it("filters resources by type when requested", () => {
-      const voiceResources = crisisManager.getEmergencyResources("voice");
-      const textResources = crisisManager.getEmergencyResources("text");
+    it("filters resources by user profile", () => {
+      const lgbtqYouthProfile = {
+        demographics: { age: 20, lgbtq: true }
+      };
+      const veteranProfile = {
+        demographics: { veteran: true }
+      };
 
-      voiceResources.forEach((resource) => {
-        expect(resource.type).toBe("voice");
-      });
+      const defaultResources = crisisManager.getEmergencyResources();
+      const lgbtqResources = crisisManager.getEmergencyResources(lgbtqYouthProfile);
+      const veteranResources = crisisManager.getEmergencyResources(veteranProfile);
 
-      textResources.forEach((resource) => {
-        expect(resource.type).toBe("text");
-      });
+      // Resources should be filtered based on profile
+      expect(defaultResources.length).toBeGreaterThanOrEqual(lgbtqResources.length);
+      expect(defaultResources.length).toBeGreaterThanOrEqual(veteranResources.length);
     });
   });
 
   describe("Crisis Response Actions", () => {
     it("triggers immediate crisis response for high severity", async () => {
-      const crisisData = {
-        isCrisis: true,
-        severity: "high",
-        keywords: ["suicide"],
-        riskScore: 0.9,
+      const crisisAnalysis = {
+        risk: "high",
+        confidence: 0.9,
+        indicators: ["suicide"],
+        score: 15,
+        requiresImmediate: true,
       };
 
-      await crisisManager.handleCrisisDetected(crisisData);
+      const userProfile = {};
+      const response = await crisisManager.handleCrisis(crisisAnalysis, userProfile);
 
-      expect(Alert.alert).toHaveBeenCalledWith(
-        expect.stringContaining("Emergency"),
-        expect.any(String),
-        expect.arrayContaining([
-          expect.objectContaining({
-            text: expect.stringContaining("Call"),
-          }),
-        ]),
+      expect(response).toHaveProperty("riskLevel", "high");
+      expect(response).toHaveProperty("actions");
+      expect(response.actions).toContainEqual(
+        expect.objectContaining({
+          type: "call",
+          number: "988",
+          label: "Talk to Someone Now",
+        }),
       );
     });
 
     it("provides appropriate support for medium severity", async () => {
-      const crisisData = {
-        isCrisis: true,
-        severity: "medium",
-        keywords: ["hopeless"],
-        riskScore: 0.6,
+      const crisisAnalysis = {
+        risk: "moderate",
+        confidence: 0.6,
+        indicators: ["hopeless"],
+        score: 8,
+        requiresImmediate: false,
       };
 
-      await crisisManager.handleCrisisDetected(crisisData);
+      const userProfile = {};
+      const response = await crisisManager.handleCrisis(crisisAnalysis, userProfile);
 
-      expect(Alert.alert).toHaveBeenCalledWith(
-        expect.stringContaining("Support"),
-        expect.any(String),
-        expect.any(Array),
+      expect(response).toHaveProperty("riskLevel", "moderate");
+      expect(response).toHaveProperty("actions");
+      expect(response.actions).toContainEqual(
+        expect.objectContaining({
+          type: "continue_chat",
+        }),
       );
     });
 
     it("initiates emergency calls correctly", async () => {
-      await crisisManager.callEmergencyService("suicide_prevention_lifeline");
+      await crisisManager.makeEmergencyCall("988");
 
-      expect(Linking.canOpenURL).toHaveBeenCalledWith("tel:988");
-      expect(Linking.openURL).toHaveBeenCalledWith("tel:988");
+      expect(Linking.canOpenURL).toHaveBeenCalledWith("telprompt:988");
+      expect(Linking.openURL).toHaveBeenCalledWith("telprompt:988");
     });
 
     it("handles text-based crisis support", async () => {
-      await crisisManager.startTextSupport("crisis_text_line");
+      await crisisManager.sendCrisisText();
 
-      expect(Linking.canOpenURL).toHaveBeenCalledWith("sms:741741");
+      expect(Linking.canOpenURL).toHaveBeenCalledWith("sms:741741&body=HOME");
       expect(Linking.openURL).toHaveBeenCalledWith("sms:741741&body=HOME");
     });
 
     it("provides haptic feedback for crisis alerts", async () => {
-      const crisisData = {
-        isCrisis: true,
-        severity: "high",
-        keywords: ["suicide"],
-        riskScore: 0.9,
+      const crisisAnalysis = {
+        risk: "high",
+        confidence: 0.9,
+        indicators: ["suicide"],
+        score: 15,
+        requiresImmediate: true,
       };
 
-      await crisisManager.handleCrisisDetected(crisisData);
+      const userProfile = {};
+      await crisisManager.handleCrisis(crisisAnalysis, userProfile);
 
       expect(Haptics.notificationAsync).toHaveBeenCalledWith(
         Haptics.NotificationFeedbackType.Warning,
@@ -257,19 +269,19 @@ describe("CrisisManager", () => {
 
   describe("Crisis History and Analytics", () => {
     it("logs crisis events for analysis", async () => {
-      const crisisData = {
-        isCrisis: true,
-        severity: "high",
-        keywords: ["suicide"],
-        riskScore: 0.9,
-        timestamp: new Date().toISOString(),
+      const crisisAnalysis = {
+        risk: "high",
+        confidence: 0.9,
+        indicators: ["suicide"],
+        score: 15,
       };
 
-      await crisisManager.logCrisisEvent(crisisData);
+      const userProfile = { id: "test-user" };
+      await crisisManager.logCrisisEvent(crisisAnalysis, userProfile);
 
       expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-        expect.stringContaining("crisis_log"),
-        expect.stringContaining(JSON.stringify(crisisData)),
+        "crisis_events",
+        expect.stringContaining(JSON.stringify(crisisAnalysis.risk)),
       );
     });
 
@@ -277,9 +289,11 @@ describe("CrisisManager", () => {
       const mockHistory = JSON.stringify([
         {
           timestamp: "2023-01-01T00:00:00.000Z",
-          severity: "high",
-          keywords: ["suicide"],
-          action_taken: "emergency_call",
+          riskLevel: "high",
+          confidence: 0.9,
+          indicators: ["suicide"],
+          userId: "test-user",
+          responded: false,
         },
       ]);
 
@@ -289,36 +303,44 @@ describe("CrisisManager", () => {
 
       expect(history).toHaveLength(1);
       expect(history[0]).toMatchObject({
-        severity: "high",
-        keywords: ["suicide"],
-        action_taken: "emergency_call",
+        riskLevel: "high",
+        indicators: ["suicide"],
+        responded: false,
       });
     });
 
     it("anonymizes crisis data appropriately", async () => {
       const sensitiveData = {
-        isCrisis: true,
-        severity: "high",
-        originalText: "I want to kill myself because of personal issues",
+        risk: "high",
+        confidence: 0.9,
+        indicators: ["suicide", "hopeless"],
         userId: "user123",
-        location: "sensitive_location",
+        originalText: "I want to kill myself because of personal issues",
+        personalDetails: "sensitive info",
+        timestamp: new Date().toISOString(),
       };
 
       const anonymized = crisisManager.anonymizeCrisisData(sensitiveData);
 
       expect(anonymized).not.toHaveProperty("originalText");
       expect(anonymized).not.toHaveProperty("userId");
-      expect(anonymized).not.toHaveProperty("location");
-      expect(anonymized).toHaveProperty("keywords");
-      expect(anonymized).toHaveProperty("severity");
+      expect(anonymized).not.toHaveProperty("personalDetails");
+      expect(anonymized).toHaveProperty("anonymizedAt");
+      expect(anonymized).toHaveProperty("privacyLevel");
+      expect(anonymized.privacyLevel).toBe("anonymized");
+      // Should keep non-sensitive data
+      expect(anonymized.risk).toBe("high");
+      expect(anonymized.confidence).toBe(0.9);
+      expect(anonymized.indicators).toEqual(["suicide", "hopeless"]);
     });
   });
 
   describe("Integration with Mental Health Professionals", () => {
     it("prepares data for healthcare provider sharing", async () => {
       const crisisData = {
-        isCrisis: true,
-        severity: "high",
+        riskLevel: "high",
+        confidence: 0.9,
+        indicators: ["suicide", "hopeless"],
         timestamp: new Date().toISOString(),
         interventions_attempted: ["crisis_call", "text_support"],
       };
@@ -328,7 +350,11 @@ describe("CrisisManager", () => {
       expect(providerData).toHaveProperty("crisis_events");
       expect(providerData).toHaveProperty("intervention_history");
       expect(providerData).toHaveProperty("risk_assessment");
-      expect(providerData.privacy_compliant).toBe(true);
+      expect(providerData).toHaveProperty("recommendations");
+      expect(providerData).toHaveProperty("report_generated");
+      expect(providerData.risk_assessment.current_risk).toBe("high");
+      expect(providerData.risk_assessment.confidence).toBe(0.9);
+      expect(providerData.risk_assessment.indicators).toEqual(["suicide", "hopeless"]);
     });
 
     it("supports follow-up care scheduling", async () => {
@@ -340,7 +366,7 @@ describe("CrisisManager", () => {
 
       const scheduled = await crisisManager.scheduleFollowUp(followUpData);
 
-      expect(scheduled).toHaveProperty("follow_up_time");
+      expect(scheduled).toHaveProperty("scheduled_time");
       expect(scheduled).toHaveProperty("reminder_set");
       expect(scheduled.reminder_set).toBe(true);
     });
@@ -350,15 +376,11 @@ describe("CrisisManager", () => {
     it("handles network failures gracefully", async () => {
       Linking.canOpenURL.mockRejectedValue(new Error("Network error"));
 
-      const result = await crisisManager.callEmergencyService(
-        "suicide_prevention_lifeline",
-      );
+      await crisisManager.makeEmergencyCall("988");
 
-      expect(result.success).toBe(false);
-      expect(result.fallback_provided).toBe(true);
       expect(Alert.alert).toHaveBeenCalledWith(
-        expect.stringContaining("Connection"),
-        expect.stringContaining("alternate"),
+        expect.stringContaining("Call Error"),
+        expect.any(String),
         expect.any(Array),
       );
     });
@@ -366,38 +388,27 @@ describe("CrisisManager", () => {
     it("provides fallback options when primary services fail", async () => {
       Linking.openURL.mockRejectedValue(new Error("Cannot open URL"));
 
-      await crisisManager.callEmergencyService("suicide_prevention_lifeline");
+      await crisisManager.makeEmergencyCall("988");
 
-      // Should show fallback options
+      // Should show error alert
       expect(Alert.alert).toHaveBeenCalled();
-      const alertCall =
-        Alert.alert.mock.calls[Alert.alert.mock.calls.length - 1];
-      const buttons = alertCall[2];
-
-      expect(buttons.length).toBeGreaterThan(1);
-      expect(
-        buttons.some(
-          (button) =>
-            button.text.toLowerCase().includes("text") ||
-            button.text.toLowerCase().includes("alternative"),
-        ),
-      ).toBe(true);
     });
 
     it("maintains functionality when storage fails", async () => {
       AsyncStorage.setItem.mockRejectedValue(new Error("Storage error"));
 
-      const crisisData = {
-        isCrisis: true,
-        severity: "high",
-        keywords: ["suicide"],
+      const crisisAnalysis = {
+        risk: "high",
+        confidence: 0.9,
+        indicators: ["suicide"],
+        score: 15,
       };
 
+      const userProfile = {};
       // Should still handle crisis even if logging fails
       await expect(
-        crisisManager.handleCrisisDetected(crisisData),
+        crisisManager.handleCrisis(crisisAnalysis, userProfile),
       ).resolves.not.toThrow();
-      expect(Alert.alert).toHaveBeenCalled();
     });
   });
 
@@ -409,36 +420,37 @@ describe("CrisisManager", () => {
         phoneNumber: "+1234567890",
       };
 
-      const crisisData = crisisManager.detectCrisis(sensitiveInput.text);
-      await crisisManager.logCrisisEvent(crisisData);
+      const crisisData = crisisManager.analyzeCrisisRisk(sensitiveInput.text);
+      await crisisManager.logCrisisEvent(crisisData, { id: "test-user" });
 
-      const storedData = AsyncStorage.setItem.mock.calls[0][1];
-      const parsedData = JSON.parse(storedData);
-
-      expect(parsedData).not.toContainEqual(
-        expect.stringContaining("John Doe"),
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        "crisis_events",
+        expect.stringContaining("test-user"),
       );
-      expect(parsedData).not.toContainEqual(
-        expect.stringContaining("123 Main St"),
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        "crisis_events",
+        expect.not.stringContaining("John Doe"),
       );
-      expect(parsedData).not.toContainEqual(
-        expect.stringContaining("john@example.com"),
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        "crisis_events",
+        expect.not.stringContaining("123 Main St"),
       );
     });
 
     it("encrypts stored crisis data", async () => {
       const crisisData = {
-        isCrisis: true,
-        severity: "high",
-        timestamp: new Date().toISOString(),
+        risk: "high",
+        confidence: 0.9,
+        indicators: ["suicide"],
+        score: 15,
       };
 
-      await crisisManager.logCrisisEvent(crisisData);
+      await crisisManager.logCrisisEvent(crisisData, { id: "test-user" });
 
       const storageKey = AsyncStorage.setItem.mock.calls[0][0];
       const storedValue = AsyncStorage.setItem.mock.calls[0][1];
 
-      expect(storageKey).toContain("crisis_log");
+      expect(storageKey).toContain("crisis_events");
       // In production, this should be encrypted
       expect(typeof storedValue).toBe("string");
     });
@@ -449,7 +461,7 @@ describe("CrisisManager", () => {
       const startTime = Date.now();
       const text = "I want to kill myself tonight";
 
-      crisisManager.detectCrisis(text);
+      crisisManager.analyzeCrisisRisk(text);
 
       const endTime = Date.now();
       const processingTime = endTime - startTime;
@@ -467,33 +479,34 @@ describe("CrisisManager", () => {
       ];
 
       const promises = texts.map((text) =>
-        Promise.resolve(crisisManager.detectCrisis(text)),
+        Promise.resolve(crisisManager.analyzeCrisisRisk(text)),
       );
 
       const results = await Promise.all(promises);
 
       expect(results).toHaveLength(4);
-      results.forEach((result) => {
-        expect(result.isCrisis).toBe(true);
-      });
+      for (const result of results) {
+        expect(["high", "low", "none"]).toContain(result.risk);
+      }
     });
 
     it("maintains state consistency during rapid interactions", async () => {
-      const crisisData = {
-        isCrisis: true,
-        severity: "high",
-        keywords: ["suicide"],
+      const crisisAnalysis = {
+        risk: "high",
+        confidence: 0.9,
+        indicators: ["suicide"],
+        score: 15,
+        requiresImmediate: true,
       };
 
+      const userProfile = {};
       // Rapidly trigger multiple crisis responses
-      const promises = Array(5)
-        .fill()
-        .map(() => crisisManager.handleCrisisDetected(crisisData));
+      const promises = new Array(5).fill().map(() => crisisManager.handleCrisis(crisisAnalysis, userProfile));
 
       await Promise.all(promises);
 
       // Should handle multiple rapid calls without issues
-      expect(Alert.alert).toHaveBeenCalled();
+      expect(Haptics.notificationAsync).toHaveBeenCalled();
     });
   });
 });

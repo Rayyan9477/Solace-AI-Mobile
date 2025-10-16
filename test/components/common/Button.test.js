@@ -7,18 +7,35 @@ import Button from "../../../src/components/common/Button";
 jest.mock("expo-haptics");
 
 // Mock the useTheme hook
-jest.mock("../../../src/contexts/ThemeContext", () => {
-  const { lightTheme } = require("../../../src/styles/theme");
+jest.mock("../../../src/shared/theme/ThemeContext", () => ({
+  useTheme: () => ({ theme: mockTheme }),
+}));
 
-  return {
-    useTheme: () => ({
-      theme: lightTheme,
-      isDarkMode: false,
-      isScreenReaderEnabled: false,
-    }),
-    ThemeProvider: ({ children }) => children,
-  };
-});
+const mockTheme = {
+  colors: {
+    background: {
+      surface: "#FFFFFF",
+      secondary: "#F5F5F5",
+    },
+    border: {
+      main: "#E0E0E0",
+    },
+    shadow: "#000000",
+    primary: {
+      main: "#007AFF",
+      light: "#E3F2FD",
+    },
+    text: {
+      primary: "#333333",
+      secondary: "#666666",
+      inverse: "#FFFFFF",
+    },
+  },
+};
+
+const MockThemeProvider = ({ children }) => {
+  return children;
+};
 
 describe("Button Component", () => {
   const mockOnPress = jest.fn();

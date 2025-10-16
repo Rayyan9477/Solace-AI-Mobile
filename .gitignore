@@ -73,9 +73,10 @@ ios/
 .claude/*
 .codacy/*
 .codacy
-.cursor
+.cursor/
 .claude
 .expo
+.husky
 
 # Examine main navigation and routing logic for issues
 # Check error boundaries and loading states implementation

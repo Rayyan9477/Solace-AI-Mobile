@@ -177,33 +177,33 @@ jest.mock("react-native/src/private/specs/modules/NativeDeviceInfo", () => ({
 }));
 
 // Mock Crisis Manager for safety testing
-jest.mock("./src/features/crisis/CrisisManager", () => {
-  return jest.fn().mockImplementation(() => ({
-    detectCrisis: jest.fn((text) => ({
-      isCrisis:
-        text.toLowerCase().includes("suicide") ||
-        text.toLowerCase().includes("hurt myself"),
-      severity: "high",
-      keywords: ["suicide", "hurt myself"].filter((k) =>
-        text.toLowerCase().includes(k),
-      ),
-      riskScore: 0.9,
-      timestamp: new Date().toISOString(),
-    })),
-    handleCrisisDetected: jest.fn(),
-    getEmergencyResources: jest.fn(() => [
-      {
-        id: "suicide_prevention_lifeline",
-        name: "988 Suicide & Crisis Lifeline",
-        number: "988",
-        type: "voice",
-        priority: 1,
-      },
-    ]),
-    callEmergencyService: jest.fn(),
-    logCrisisEvent: jest.fn(),
-  }));
-});
+// jest.mock("./src/features/crisis/CrisisManager", () => {
+//   return jest.fn().mockImplementation(() => ({
+//     detectCrisis: jest.fn((text) => ({
+//       isCrisis:
+//         text.toLowerCase().includes("suicide") ||
+//         text.toLowerCase().includes("hurt myself"),
+//       severity: "high",
+//       keywords: ["suicide", "hurt myself"].filter((k) =>
+//         text.toLowerCase().includes(k),
+//       ),
+//       riskScore: 0.9,
+//       timestamp: new Date().toISOString(),
+//     })),
+//     handleCrisisDetected: jest.fn(),
+//     getEmergencyResources: jest.fn(() => [
+//       {
+//         id: "suicide_prevention_lifeline",
+//         name: "988 Suicide & Crisis Lifeline",
+//         number: "988",
+//         type: "voice",
+//         priority: 1,
+//       },
+//     ]),
+//     callEmergencyService: jest.fn(),
+//     logCrisisEvent: jest.fn(),
+//   }));
+// });
 
 // Global fetch mock for API testing
 global.fetch = jest.fn(() =>

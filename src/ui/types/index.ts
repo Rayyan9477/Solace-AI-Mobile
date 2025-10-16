@@ -1,8 +1,9 @@
 // Design System Type Definitions
-export * from '../components/atoms/Button.types';
-export * from '../components/atoms/Card.types';
-export * from '../components/atoms/Input.types';
-export * from '../components/atoms/Typography.types';
+// Note: Component type files not yet created
+// export * from '../components/atoms/Button.types';
+// export * from '../components/atoms/Card.types';
+// export * from '../components/atoms/Input.types';
+// export * from '../components/atoms/Typography.types';
 
 // Common types used across design system
 export type TherapeuticColorPalette =

@@ -20,7 +20,7 @@ import {
   WCAG_CONSTANTS,
   AccessibilityValidators,
   TouchTargetHelpers,
-} from "../../utils/accessibility";
+} from "../../src/shared/utils/accessibility";
 import AccessibilityTester, {
   MentalHealthAccessibilityTesting,
   ACCESSIBILITY_TESTING_CONFIG,
@@ -40,7 +40,7 @@ const mockTheme = {
 
 const MockThemeProvider = ({ children }) => children;
 
-jest.mock("../../contexts/ThemeContext", () => ({
+jest.mock("../../src/shared/theme/ThemeContext", () => ({
   useTheme: () => ({ theme: mockTheme, isReducedMotionEnabled: false }),
 }));
 

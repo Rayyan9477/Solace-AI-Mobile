@@ -15,18 +15,18 @@ import {
   Platform,
   Alert,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '@app/store';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from "@theme/ThemeProvider";
 import { secureLogin } from '@app/store/slices/authSlice';
 
 export const LoginScreen = ({ navigation }: any) => {
   const { theme } = useTheme();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => (state as any).auth);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const styles = StyleSheet.create({
     container: {
@@ -160,7 +160,7 @@ export const LoginScreen = ({ navigation }: any) => {
   const backgroundColors = [
     theme.colors.therapeutic.nurturing[600] || '#16a34a',
     theme.colors.therapeutic.calming[500] || '#0ea5e9',
-  ];
+  ] as const;
 
   const validateForm = () => {
     if (!email.trim()) {
@@ -178,21 +178,12 @@ export const LoginScreen = ({ navigation }: any) => {
     return true;
   };
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     if (!validateForm()) return;
 
-    setIsLoading(true);
-    try {
-      await dispatch(secureLogin({ email, password })).unwrap();
-      // Navigation will be handled by auth state change
-    } catch (error: any) {
-      Alert.alert(
-        'Login Failed',
-        error.message || 'Please check your credentials and try again'
-      );
-    } finally {
-      setIsLoading(false);
-    }
+    dispatch((secureLogin as any)({ email, password }));
+    // Navigation will be handled by auth state change
+    // Loading and error states are managed by the auth slice
   };
 
   const canLogin = email.trim() && password.trim() && !isLoading;

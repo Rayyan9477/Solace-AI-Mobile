@@ -6,8 +6,9 @@
 
 import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
 import React from "react";
+import PropTypes from "prop-types";
 
-import { ThemeProvider } from "../../../shared/theme/ThemeContext";
+import { ThemeProvider } from "../../../src/shared/theme/ThemeContext";
 import QuickActions from "../../../src/components/dashboard/QuickActions";
 
 // Mock dependencies
@@ -62,17 +63,12 @@ const mockTheme = {
   },
 };
 
-const MockThemeProvider = ({ children }) => (
-  <ThemeProvider
-    value={{
-      theme: mockTheme,
-      isReducedMotionEnabled: false,
-      colors: mockTheme.colors,
-    }}
-  >
-    {children}
-  </ThemeProvider>
-);
+const MockThemeProvider = ({ children }) => {
+  return children;
+};
+MockThemeProvider.propTypes = {
+  children: PropTypes.node,
+};
 
 describe("QuickActions Component", () => {
   const defaultProps = {
@@ -120,9 +116,9 @@ describe("QuickActions Component", () => {
       const actionCards = getAllByTestId(/action-card/i);
 
       expect(actionCards.length).toBeGreaterThan(0);
-      actionCards.forEach((card) => {
+      for (const card of actionCards) {
         expect(card).toBeTruthy();
-      });
+      }
     });
 
     it("applies staggered animations correctly", async () => {
@@ -189,11 +185,10 @@ describe("QuickActions Component", () => {
     });
 
     it("navigates to correct screens for each action", async () => {
-      const { useNavigation } = require("@react-navigation/native");
-      const mockNavigate = jest.fn();
-      useNavigation.mockReturnValue({ navigate: mockNavigate });
-
-  const { getByTestId, queryByTestId } = renderQuickActions();
+      const mockOnActionPress = jest.fn();
+      const { getByTestId, queryByTestId } = renderQuickActions({
+        onActionPress: mockOnActionPress,
+      });
 
       // Test therapy action navigation
       const therapyAction =
@@ -201,15 +196,18 @@ describe("QuickActions Component", () => {
       if (therapyAction) {
         fireEvent.press(therapyAction);
         await waitFor(() => {
-          expect(mockNavigate).toHaveBeenCalledWith(
-            expect.stringContaining("Therapy"),
+          expect(mockOnActionPress).toHaveBeenCalledWith(
+            expect.objectContaining({
+              type: "therapy",
+              id: "therapy",
+            }),
           );
         });
       }
     });
 
     it("provides haptic feedback on action press", async () => {
-      const { Haptics } = require("expo-haptics");
+      const Haptics = require("expo-haptics");
       const { getAllByTestId } = renderQuickActions();
       const actionCards = getAllByTestId(/action-card/i);
 
@@ -228,19 +226,19 @@ describe("QuickActions Component", () => {
       const { getAllByTestId } = renderQuickActions();
       const actionCards = getAllByTestId(/action-card/i);
 
-      actionCards.forEach((card) => {
+      for (const card of actionCards) {
         expect(card.props.accessibilityLabel).toBeTruthy();
         expect(card.props.accessibilityRole).toBe("button");
-      });
+      }
     });
 
     it("provides meaningful accessibility hints", () => {
       const { getAllByTestId } = renderQuickActions();
       const actionCards = getAllByTestId(/action-card/i);
 
-      actionCards.forEach((card) => {
+      for (const card of actionCards) {
         expect(card.props.accessibilityHint).toBeTruthy();
-      });
+      }
     });
 
     it("meets minimum touch target requirements", () => {
@@ -248,12 +246,12 @@ describe("QuickActions Component", () => {
       const actionCards = getAllByTestId(/action-card/i);
       const minTouchTarget = 44;
 
-      actionCards.forEach((card) => {
+      for (const card of actionCards) {
         const style = card.props.style;
         expect(style.minHeight || style.height).toBeGreaterThanOrEqual(
           minTouchTarget,
         );
-      });
+      }
     });
 
     it("supports screen reader navigation", () => {
@@ -271,9 +269,9 @@ describe("QuickActions Component", () => {
       const actionCards = getAllByTestId(/action-card/i);
 
       // Each card should have therapeutic styling
-      actionCards.forEach((card) => {
+      for (const card of actionCards) {
         expect(card).toBeTruthy();
-      });
+      }
     });
 
     it("displays encouraging and supportive text", () => {
@@ -331,6 +329,9 @@ describe("QuickActions Component", () => {
           {children}
         </ThemeProvider>
       );
+      ReducedMotionProvider.propTypes = {
+        children: PropTypes.node,
+      };
 
       const { getByTestId } = render(
         <ReducedMotionProvider>

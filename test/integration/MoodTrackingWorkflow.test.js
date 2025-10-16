@@ -16,7 +16,7 @@ import {
 import React from "react";
 import { Provider } from "react-redux";
 
-import MoodCheckIn from "../../components/dashboard/MoodCheckIn";
+import MoodCheckIn from "../../src/features/dashboard/components/MoodCheckIn";
 import MainAppScreen from "../../src/screens/MainAppScreen";
 import EnhancedMoodTrackerScreen from "../../src/screens/mood/EnhancedMoodTrackerScreen";
 import { ThemeProvider } from "../../src/shared/theme/ThemeContext";
@@ -119,7 +119,7 @@ describe("Mood Tracking Workflow Integration", () => {
       expect(moodCheckIn).toBeTruthy();
 
       // Select a mood - find button by text instead of testID
-      const checkInButton = getByText("Log Mood");
+      const checkInButton = getByText("How are you feeling?");
       fireEvent.press(checkInButton);
 
       await waitFor(() => {

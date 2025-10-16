@@ -1,6 +1,9 @@
 // Enhanced theme system with Paper Design and shadcn/ui principles
 // Provides comprehensive design tokens for modern, elegant interfaces
 
+// Enhanced theme system with Paper Design and shadcn/ui principles
+// Provides comprehensive design tokens for modern, elegant interfaces
+
 export const enhancedColors = {
   // Modern neutral palette inspired by shadcn/ui
   neutral: {
@@ -124,6 +127,23 @@ export const enhancedColors = {
     darkMedium: "rgba(0, 0, 0, 0.1)",
     therapeutic: "rgba(34, 197, 94, 0.2)",
     calming: "rgba(14, 165, 233, 0.2)",
+    primary: "rgba(0, 0, 0, 0.1)",
+  },
+
+  // Background colors
+  background: {
+    primary: "#ffffff",
+    secondary: "#f8fafc",
+    tertiary: "#f1f5f9",
+    accent: "#e0f2fe",
+  },
+
+  // Text colors
+  text: {
+    primary: "#0f172a",
+    secondary: "#475569",
+    tertiary: "#64748b",
+    accent: "#0ea5e9",
   },
 };
 
@@ -405,4 +425,7 @@ export const enhancedTheme = {
   animations: enhancedAnimations,
   breakpoints: enhancedBreakpoints,
   variants: componentVariants,
+
+  // Helper functions
+  getShadow: (size) => enhancedShadows[size] || enhancedShadows.md,
 };

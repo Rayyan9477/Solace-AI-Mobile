@@ -173,7 +173,7 @@ export const SignupScreen = ({ navigation }: any) => {
   const backgroundColors = [
     theme.colors.therapeutic.energizing[500] || '#f97316',
     theme.colors.therapeutic.nurturing[600] || '#16a34a',
-  ];
+  ] as const;
 
   const updateFormData = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));

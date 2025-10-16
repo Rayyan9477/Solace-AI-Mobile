@@ -5,4 +5,4 @@
 
 export { platform } from './platform';
 export { logger } from './logger';
-export { validateAppConfig } from './validation';
+export { validateApp as validateAppConfig } from './validation';
