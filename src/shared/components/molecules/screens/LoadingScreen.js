@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import { useTheme } from "../../../shared/theme/ThemeProvider";
+import { useTheme } from "@theme/ThemeProvider";
 // Mock accessibility hook
 const useAccessibility = () => ({});
 

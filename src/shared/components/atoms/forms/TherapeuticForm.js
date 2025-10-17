@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
 
-import { useTheme } from "../../shared/theme/ThemeContext";
-import { hapticUtils, styleUtils } from "../../utils/platformOptimizations";
-import Button from "../common/Button";
-import Input from "../common/Input";
+import { useTheme } from "@theme/ThemeProvider";
+import { hapticUtils, styleUtils } from "@shared/utils/platformOptimizations";
+import Button from "@shared/components/atoms/buttons/TherapeuticButton";
+import Input from "@shared/components/atoms/forms/EnhancedInput";
 
 // Supportive validation messages for mental health context
 const THERAPEUTIC_MESSAGES = {

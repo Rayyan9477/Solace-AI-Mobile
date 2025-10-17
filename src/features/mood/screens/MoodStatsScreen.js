@@ -11,8 +11,8 @@ import {
   SafeAreaView,
 } from "react-native";
 
-import { MentalHealthIcon } from "../../../components/icons";
-import { useTheme } from "../../../shared/theme/ThemeProvider";
+import { MentalHealthIcon, NavigationIcon } from "@shared/components/icons";
+import { useTheme } from "@theme/ThemeProvider";
 
 const { width } = Dimensions.get("window");
 

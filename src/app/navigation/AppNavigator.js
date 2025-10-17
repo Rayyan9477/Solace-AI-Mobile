@@ -15,7 +15,7 @@ import SignupScreen from "@features/auth/SignupScreen";
 import DashboardScreen from "@features/dashboard/DashboardScreen";
 import ChatScreen from "@features/chat/ChatScreen";
 import MoodScreen from "@features/mood/MoodScreen";
-import EnhancedMoodTrackerScreen from "@features/mood-tracking/EnhancedMoodTrackerScreen";
+import EnhancedMoodTrackerScreen from "@features/mood/screens/EnhancedMoodTrackerScreen";
 import OnboardingScreen from "@features/onboarding/screens/OnboardingScreen";
 import WelcomeScreen from "@features/onboarding/screens/WelcomeScreen";
 

@@ -9,9 +9,9 @@ import React from "react";
 import { View, Text, StyleSheet, Platform, Animated } from "react-native";
 import PropTypes from "prop-types";
 
-import { useTheme } from "../../../shared/theme/ThemeContext";
-import { enhancedTheme as themeTokens } from "../../../shared/theme/enhancedTheme";
-import { validateThemeAccessibility } from "../../../shared/utils/accessibility";
+import { useTheme } from "@theme/ThemeProvider";
+import { enhancedTheme as themeTokens } from "@theme/enhancedTheme";
+import { validateThemeAccessibility } from "@shared/utils/accessibility";
 
 const { spacing, borderRadius, shadows, typography } = themeTokens;
 

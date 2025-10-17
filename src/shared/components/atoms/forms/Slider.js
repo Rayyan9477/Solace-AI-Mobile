@@ -9,8 +9,8 @@ import {
   Platform,
 } from "react-native";
 
-import { getTherapeuticColor } from "../../../shared/theme/ColorPalette";
-import { useTheme } from "../../../shared/theme/ThemeContext";
+import { getTherapeuticColor } from "@theme/ColorPalette";
+import { useTheme } from "@theme/ThemeProvider";
 
 // For React Native without Reanimated, we'll use a simpler implementation
 const { width: screenWidth } = Dimensions.get("window");

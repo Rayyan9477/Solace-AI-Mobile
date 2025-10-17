@@ -10,12 +10,12 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 
 // Import existing providers
-import { ThemeProvider } from "../../shared/theme/ThemeProvider";
+import { ThemeProvider } from "@theme/ThemeProvider";
 import { AppProvider } from "./AppProvider";
-import { logger } from "../../shared/utils/logger";
+import { logger } from "@shared/utils/logger";
 
 // Auth initialization
-import { restoreAuthState } from "../store/slices/authSlice";
+import { restoreAuthState } from "@app/store/slices/authSlice";
 
 /**
  * App Initialization Component

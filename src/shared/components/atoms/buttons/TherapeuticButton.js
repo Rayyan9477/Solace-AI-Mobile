@@ -17,11 +17,9 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { useTheme } from "@theme/ThemeProvider";
+import { useAccessibility, useMentalHealth } from "@app/providers/AppProvider";
 import * as Haptics from "expo-haptics";
-// Mock hooks
-const useAccessibility = () => ({});
-const useMentalHealth = () => ({});
 
 // Button variant configurations
 const BUTTON_VARIANTS = {

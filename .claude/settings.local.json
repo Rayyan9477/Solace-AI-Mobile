@@ -25,7 +25,11 @@
       "Bash(npx expo r:*)",
       "Bash(npm run test:coverage:*)",
       "Bash(cat:*)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(git rm:*)",
+      "Bash(git mv:*)",
+      "Bash(test:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

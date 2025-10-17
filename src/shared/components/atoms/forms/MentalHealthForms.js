@@ -23,16 +23,16 @@ import {
 } from "react-native";
 
 import EnhancedInput from "./EnhancedInput";
-import { useTheme } from "../../shared/theme/ThemeContext";
-import { FocusManagement } from "../../utils/accessibility";
+import { useTheme } from "@theme/ThemeProvider";
+import { FocusManagement } from "@shared/utils/accessibility";
 import {
   createValidator,
   FORM_CONTEXTS,
   VALIDATION_SCHEMAS,
   VALIDATION_TYPES,
-} from "../../utils/formValidation";
-import AccessibleButton from "../common/AccessibleButton";
-import KeyboardAwareScrollView from "../common/KeyboardAwareScrollView";
+} from "@shared/utils/formValidation";
+import AccessibleButton from "@shared/components/atoms/buttons/TherapeuticButton";
+import KeyboardAwareScrollView from "@shared/components/molecules/screens/KeyboardAwareScrollView";
 
 // Therapy Session Form
 export const TherapySessionForm = ({

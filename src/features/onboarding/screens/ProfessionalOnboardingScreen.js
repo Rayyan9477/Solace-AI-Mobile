@@ -17,8 +17,8 @@ import {
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../../../shared/theme/ThemeProvider';
-import { completeOnboarding } from '../../../app/store/slices/authSlice';
+import { useTheme } from '@theme/ThemeProvider';
+import { completeOnboarding } from '@app/store/slices/authSlice';
 
 const { width, height } = Dimensions.get('window');
 

@@ -7,7 +7,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Platform } from "react-native";
 
-import { useTheme } from "../../../shared/theme/ThemeProvider";
+import { useTheme } from "@theme/ThemeProvider";
 
 class WebCompatibilityErrorBoundary extends React.Component {
   constructor(props) {

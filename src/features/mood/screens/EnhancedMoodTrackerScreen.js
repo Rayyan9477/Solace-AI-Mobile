@@ -27,7 +27,7 @@ import {
   toggleActivity as toggleActivityAction,
   setNotes as setNotesAction,
   toggleTrigger as toggleTriggerAction,
-} from "../../app/store/slices/enhancedMoodSlice";
+} from "@app/store/slices/enhancedMoodSlice";
 // Build a safe theme object with defaults for tests without ThemeProvider
 const buildSafeTheme = (maybeThemeCtx) => {
   const maybeTheme = maybeThemeCtx?.theme || maybeThemeCtx || {};

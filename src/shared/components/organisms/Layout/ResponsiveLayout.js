@@ -14,7 +14,7 @@ import {
   Animated,
 } from "react-native";
 
-import { useTheme } from "../../../../shared/theme/ThemeProvider";
+import { useTheme } from "@theme/ThemeProvider";
 // Mock spacing
 const spacing = { sm: 8, md: 16, lg: 24 };
 

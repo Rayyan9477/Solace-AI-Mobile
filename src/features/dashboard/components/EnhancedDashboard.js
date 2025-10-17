@@ -14,7 +14,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { Card, FAB, Avatar, IconButton, Snackbar } from 'react-native-paper';
-import { useTheme } from '../../../shared/theme/ThemeProvider';
+import { useTheme } from '@theme/ThemeProvider';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 

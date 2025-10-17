@@ -10,8 +10,8 @@ import {
   Dimensions,
 } from "react-native";
 
-import { useTheme } from "../../shared/theme/ThemeContext";
-import { MentalHealthIcon } from "../icons";
+import { useTheme } from "@theme/ThemeProvider";
+import { MentalHealthIcon } from "@shared/components/icons";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 

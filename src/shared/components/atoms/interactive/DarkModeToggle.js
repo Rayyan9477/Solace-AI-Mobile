@@ -7,8 +7,8 @@ import {
   Animated,
 } from "react-native";
 
-import { useTheme } from "../../shared/theme/ThemeContext";
-import { freudDarkTheme } from "../../shared/theme/freudDarkTheme";
+import { useTheme } from "@theme/ThemeProvider";
+import { freudDarkTheme } from "@theme/freudDarkTheme";
 
 const DarkModeToggle = ({ style, showLabel = true, size = "normal" }) => {
   const { theme, isDarkMode, toggleTheme } = useTheme();

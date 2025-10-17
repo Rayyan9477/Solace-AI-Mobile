@@ -7,7 +7,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 // Mock error boundary
 const EnhancedErrorBoundary = ({ children, ...props }) => children;
-import { useTheme } from '../../../shared/theme/ThemeProvider';
+import { useTheme } from '@theme/ThemeProvider';
 // Mock utilities
 const usePerformanceOptimizer = () => ({});
 const useAccessibility = () => ({});
