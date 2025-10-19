@@ -25,7 +25,7 @@ module.exports = function (api) {
             '@': './src',
             '@shared': './src/shared',
             '@features': './src/features',
-            '@components': './src/shared/ui',
+            '@components': './src/shared/components',
             '@utils': './src/shared/utils',
             '@theme': './src/shared/theme',
             '@expo': './src/shared/expo',

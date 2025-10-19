@@ -1,16 +1,12 @@
 /**
- * Shared Module Exports - Simplified version
- * Basic shared utilities and services
+ * Shared Module
+ * Common code shared across all features
  */
 
-// Theme System
-export * from './theme';
-
-// Utilities
+export * from './components';
+export * from './hooks';
 export * from './utils';
-
-// Services
 export * from './services';
-
-// Constants
+export * from './config';
 export * from './constants';
+export * from './theme';

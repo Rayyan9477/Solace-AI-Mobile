@@ -10,13 +10,17 @@ import {
   Animated,
 } from "react-native";
 
-import { MentalHealthIcon } from "@/components/icons";
-import { FreudLogo, ThemedFreudIcon } from "@/components/icons/FreudIcons";
-import FreudButton from "@/components/ui/FreudButton";
+import { MentalHealthIcon, FreudLogo } from "@components/icons";
+import { TherapeuticButton } from "@components/atoms/buttons/TherapeuticButton";
 import { useTheme } from "@theme/ThemeProvider";
 import { freudTheme } from "@theme/freudTheme";
 
 const { width, height } = Dimensions.get("window");
+
+// Simple icon wrapper using MentalHealthIcon
+const ThemedIcon = ({ name, size, color }) => (
+  <MentalHealthIcon name={name} size={size} color={color} />
+);
 
 // Welcome flow steps matching the exact design reference
 const WELCOME_STEPS = [
@@ -167,7 +171,7 @@ const WelcomeScreen = ({ navigation }) => {
         setIsAnimating(false);
       });
     } else {
-      navigation.navigate("Register");
+      navigation.navigate("Signup");
     }
   };
 
@@ -180,7 +184,7 @@ const WelcomeScreen = ({ navigation }) => {
   };
 
   const handleSkip = () => {
-    navigation.navigate("Register");
+    navigation.navigate("Signup");
   };
 
   const renderIllustration = (type) => {
@@ -202,7 +206,7 @@ const WelcomeScreen = ({ navigation }) => {
           <Animated.View
             style={[styles.illustrationContainer, illustrationStyle]}
           >
-            <FreudLogo size={120} primaryColor={freudTheme.colors.brown[80]} />
+            <FreudLogo size={120} />
             <View style={styles.welcomeIcons}>
               <View
                 style={[
@@ -210,7 +214,7 @@ const WelcomeScreen = ({ navigation }) => {
                   { backgroundColor: freudTheme.colors.orange[40] },
                 ]}
               >
-                <ThemedFreudIcon name="brain" size={16} color="#FFFFFF" />
+                <ThemedIcon name="Brain" size={16} color="#FFFFFF" />
               </View>
               <View
                 style={[
@@ -226,7 +230,7 @@ const WelcomeScreen = ({ navigation }) => {
                   { backgroundColor: freudTheme.colors.purple[50] },
                 ]}
               >
-                <ThemedFreudIcon name="heart" size={16} color="#FFFFFF" />
+                <ThemedIcon name="Heart" size={16} color="#FFFFFF" />
               </View>
             </View>
           </Animated.View>
@@ -427,50 +431,28 @@ const WelcomeScreen = ({ navigation }) => {
             {currentStep === 0 ? (
               // Welcome screen buttons
               <View style={styles.welcomeActions}>
-                <FreudButton
+                <TherapeuticButton
                   title="Get Started"
-                  variant="primary"
-                  size="large"
-                  icon={
-                    <ThemedFreudIcon
-                      name="chevron-right"
-                      size={20}
-                      color={freudTheme.colors.text.inverse}
-                    />
-                  }
-                  iconPosition="right"
                   onPress={handleGetStarted}
-                  fullWidth
-                  style={{ marginBottom: freudTheme.spacing.lg }}
+                  style={{ marginBottom: freudTheme.spacing.lg, width: "100%" }}
                 />
 
-                <FreudButton
+                <TherapeuticButton
                   title="Already have an account? Sign In"
-                  variant="outline"
-                  size="medium"
+                  variant="secondary"
                   onPress={handleSignIn}
                 />
               </View>
             ) : (
               // Onboarding flow buttons
               <View style={styles.onboardingActions}>
-                <FreudButton
+                <TherapeuticButton
                   title="Skip"
-                  variant="outline"
-                  size="medium"
+                  variant="secondary"
                   onPress={handleSkip}
                 />
 
-                <FreudButton
-                  variant="primary"
-                  size="medium"
-                  icon={
-                    <ThemedFreudIcon
-                      name="chevron-right"
-                      size={20}
-                      color={freudTheme.colors.text.inverse}
-                    />
-                  }
+                <TherapeuticButton
                   onPress={handleNext}
                   style={{
                     width: 56,
@@ -478,6 +460,7 @@ const WelcomeScreen = ({ navigation }) => {
                     borderRadius: 28,
                     paddingHorizontal: 0,
                   }}
+                  title="→"
                 />
               </View>
             )}

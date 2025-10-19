@@ -54,10 +54,10 @@ const APP_VERSION = APP_CONFIG.version;
 /**
  * App Root - Contains only essential providers that need to wrap everything
  */
-const AppRoot = ({ children }) => {
+const AppRoot: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Handle app state changes for better performance
   useEffect(() => {
-    const handleAppStateChange = (nextAppState) => {
+    const handleAppStateChange = (nextAppState: string) => {
       logger.debug(`App state changed to: ${nextAppState}`);
     };
 
@@ -107,9 +107,9 @@ const AppRoot = ({ children }) => {
 /**
  * Navigation Wrapper - Handles navigation-specific concerns
  */
-const NavigationWrapper = ({ children }) => {
+const NavigationWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Navigation state change handler
-  const onNavigationStateChange = useCallback((state) => {
+  const onNavigationStateChange = useCallback((state: any) => {
     if (state) {
       logger.debug('Navigation state changed:', state);
     }
@@ -124,9 +124,6 @@ const NavigationWrapper = ({ children }) => {
     <NavigationContainer
       onStateChange={onNavigationStateChange}
       onReady={onNavigationReady}
-      onError={(error) => {
-        logger.error('Navigation error:', error);
-      }}
     >
       <StatusBar style="auto" />
       {children}

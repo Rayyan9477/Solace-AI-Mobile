@@ -1,8 +1,5 @@
-/**
- * Utils Module Exports
- * Common utility functions and services
- */
-
-export { platform } from './platform';
+// Re-export typed utilities with named exports for JS consumers
+export * from './index';
 export { logger } from './logger';
-export { validateApp as validateAppConfig } from './validation';
+export { platform } from './platform';
+export * from './validation';

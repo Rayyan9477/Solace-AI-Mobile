@@ -13,19 +13,68 @@ import {
   Linking,
   Platform,
   AppState,
+  View,
+  Text,
 } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { Provider as ReduxProvider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { LoadingSpinner } from "../../ui/animations";
-import { Container } from "../../ui/components/organisms";
-import { lightTheme, darkTheme } from "../../ui/theme/MaterialTheme";
 import { store, persistor } from "@app/store/store";
+import { lightTheme, darkTheme } from "@theme/ThemeProvider";
+
+// Type definitions
+interface AccessibilityContextType {
+  isScreenReaderEnabled: boolean;
+  isReduceMotionEnabled: boolean;
+  isHighContrastEnabled: boolean;
+  fontScale: number;
+  announceForAccessibility: (message: string) => void;
+  setAccessibilityFocus: (reactTag: number) => void;
+  toggleReduceMotion: () => void;
+  toggleHighContrast: () => void;
+}
+
+interface SafetyPlan {
+  immediateSteps?: string;
+  [key: string]: any;
+}
+
+interface MentalHealthContextType {
+  isCrisisMode: boolean;
+  crisisLevel: string;
+  emergencyContacts: any[];
+  safetyPlan: SafetyPlan | null;
+  isInTherapySession: boolean;
+  sessionType: string | null;
+  triggerCrisisMode: (level?: string, context?: any) => Promise<void>;
+  exitCrisisMode: () => void;
+  callEmergencyServices: () => void;
+  contactCrisisHotline: () => void;
+  updateSafetyPlan: (planData: SafetyPlan) => Promise<void>;
+  executeSafetyPlan: () => void;
+  startTherapySession: (type?: string) => void;
+  endTherapySession: () => void;
+}
+
+interface PerformanceContextType {
+  memoryUsage: number;
+  frameRate: number;
+  renderTime: number;
+  isLowMemoryMode: boolean;
+  isOptimizedMode: boolean;
+  backgroundTasksActive: boolean;
+  enableLowMemoryMode: () => void;
+  disableLowMemoryMode: () => void;
+  enableOptimizedMode: () => void;
+  disableOptimizedMode: () => void;
+  measureRenderTime: (componentName: string, renderFn: () => any) => any;
+  cleanupMemory: () => void;
+}
 
 // Accessibility Context
-const AccessibilityContext = createContext({
+const AccessibilityContext = createContext<AccessibilityContextType>({
   isScreenReaderEnabled: false,
   isReduceMotionEnabled: false,
   isHighContrastEnabled: false,
@@ -37,25 +86,25 @@ const AccessibilityContext = createContext({
 });
 
 // Mental Health Context
-const MentalHealthContext = createContext({
+const MentalHealthContext = createContext<MentalHealthContextType>({
   isCrisisMode: false,
   crisisLevel: "low",
   emergencyContacts: [],
   safetyPlan: null,
   isInTherapySession: false,
   sessionType: null,
-  triggerCrisisMode: () => {},
+  triggerCrisisMode: async () => {},
   exitCrisisMode: () => {},
   callEmergencyServices: () => {},
   contactCrisisHotline: () => {},
-  updateSafetyPlan: () => {},
+  updateSafetyPlan: async () => {},
   executeSafetyPlan: () => {},
   startTherapySession: () => {},
   endTherapySession: () => {},
 });
 
 // Performance Context
-const PerformanceContext = createContext({
+const PerformanceContext = createContext<PerformanceContextType>({
   memoryUsage: 0,
   frameRate: 60,
   renderTime: 0,
@@ -66,7 +115,7 @@ const PerformanceContext = createContext({
   disableLowMemoryMode: () => {},
   enableOptimizedMode: () => {},
   disableOptimizedMode: () => {},
-  measureRenderTime: () => {},
+  measureRenderTime: () => null,
   cleanupMemory: () => {},
 });
 
@@ -115,21 +164,21 @@ const STORAGE_KEYS = {
   CRISIS_HISTORY: "mental_health_crisis_history",
 };
 
-const EnterpriseLoadingScreen = () => (
-  <Container
-    therapeuticColor="serenityGreen"
-    animationType="fade"
+const EnterpriseLoadingScreen: React.FC = () => (
+  <View
     style={{
+      flex: 1,
       justifyContent: "center",
       alignItems: "center",
+      backgroundColor: "#fff",
     }}
   >
-    <LoadingSpinner therapeuticColor="#7D944D" size={60} />
-  </Container>
+    <Text>Loading Solace AI...</Text>
+  </View>
 );
 
 // Enhanced Provider Components
-const AccessibilityProvider = ({ children }) => {
+const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isScreenReaderEnabled, setIsScreenReaderEnabled] = useState(false);
   const [isReduceMotionEnabled, setIsReduceMotionEnabled] = useState(false);
   const [isHighContrastEnabled, setIsHighContrastEnabled] = useState(false);
@@ -238,13 +287,13 @@ const AccessibilityProvider = ({ children }) => {
   );
 };
 
-const MentalHealthProvider = ({ children }) => {
+const MentalHealthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isCrisisMode, setIsCrisisMode] = useState(false);
   const [crisisLevel, setCrisisLevel] = useState("low");
-  const [emergencyContacts, setEmergencyContacts] = useState([]);
-  const [safetyPlan, setSafetyPlan] = useState(null);
+  const [emergencyContacts, setEmergencyContacts] = useState<any[]>([]);
+  const [safetyPlan, setSafetyPlan] = useState<SafetyPlan | null>(null);
   const [isInTherapySession, setIsInTherapySession] = useState(false);
-  const [sessionType, setSessionType] = useState(null);
+  const [sessionType, setSessionType] = useState<string | null>(null);
 
   useEffect(() => {
     loadStoredData();
@@ -401,7 +450,7 @@ const MentalHealthProvider = ({ children }) => {
   );
 };
 
-const PerformanceProvider = ({ children }) => {
+const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [memoryUsage, setMemoryUsage] = useState(0);
   const [frameRate, setFrameRate] = useState(60);
   const [renderTime, setRenderTime] = useState(0);
@@ -497,7 +546,7 @@ const PerformanceProvider = ({ children }) => {
   );
 };
 
-export const AppProvider = ({ children }) => {
+export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
 

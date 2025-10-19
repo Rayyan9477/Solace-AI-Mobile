@@ -21,10 +21,10 @@ import { restoreAuthState } from "@app/store/slices/authSlice";
  * App Initialization Component
  * Handles the initialization of auth state and other critical app setup
  */
-const AppInitializer = ({ children }) => {
+const AppInitializer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const dispatch = useDispatch();
   const [initializationComplete, setInitializationComplete] = useState(false);
-  const [initializationError, setInitializationError] = useState(null);
+  const [initializationError, setInitializationError] = useState<Error | null>(null);
 
   const initializeApp = useCallback(async () => {
     try {
