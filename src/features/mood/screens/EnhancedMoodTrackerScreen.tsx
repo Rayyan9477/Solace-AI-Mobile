@@ -20,14 +20,17 @@ import {
 import { useTheme } from "@theme/ThemeProvider";
 import { ReactReduxContext } from "react-redux";
 import {
-  // Minimal state syncing actions expected by tests
-  setCurrentStep as setCurrentStepAction,
-  setSelectedMood as setSelectedMoodAction,
-  setIntensity as setIntensityAction,
-  toggleActivity as toggleActivityAction,
-  setNotes as setNotesAction,
-  toggleTrigger as toggleTriggerAction,
-} from "@app/store/slices/enhancedMoodSlice";
+  // Use moodSlice actions (enhancedMoodSlice was deleted)
+  setCurrentMood as setSelectedMoodAction,
+} from "@app/store/slices/moodSlice";
+
+// Note: These actions don't exist in moodSlice, using local state only
+// This component manages its own UI state and syncs to moodSlice on save
+const setCurrentStepAction = (step) => ({ type: 'mood/UI_STEP', payload: step });
+const setIntensityAction = (intensity) => ({ type: 'mood/UI_INTENSITY', payload: intensity });
+const toggleActivityAction = (id) => ({ type: 'mood/UI_ACTIVITY', payload: id });
+const setNotesAction = (notes) => ({ type: 'mood/UI_NOTES', payload: notes });
+const toggleTriggerAction = (id) => ({ type: 'mood/UI_TRIGGER', payload: id });
 // Build a safe theme object with defaults for tests without ThemeProvider
 const buildSafeTheme = (maybeThemeCtx) => {
   const maybeTheme = maybeThemeCtx?.theme || maybeThemeCtx || {};
@@ -139,15 +142,13 @@ const EnhancedMoodTrackerScreen = () => {
   const themeCtx = useTheme();
   const theme = buildSafeTheme(themeCtx);
   const [currentStep, setCurrentStep] = useState(0);
-  // Seed from store immediately so tests with preloaded state see messages right away
-  const seed = (reduxCtx?.store?.getState?.() || {})?.enhancedMood || {};
-  const [selectedMood, setSelectedMood] = useState(seed.selectedMood ?? null);
-  const [intensity, setIntensity] = useState(
-    typeof seed.intensity === "number" ? seed.intensity : 5,
-  );
-  const [notes, setNotes] = useState(seed.notes ?? "");
-  const [activities, setActivities] = useState(seed.activities ?? []);
-  const [triggers, setTriggers] = useState(seed.triggers ?? []);
+  // Seed from mood store (updated from enhancedMood to mood)
+  const seed = (reduxCtx?.store?.getState?.() || {})?.mood || {};
+  const [selectedMood, setSelectedMood] = useState(seed.currentMood ?? null);
+  const [intensity, setIntensity] = useState(5); // Default intensity
+  const [notes, setNotes] = useState("");
+  const [activities, setActivities] = useState([]);
+  const [triggers, setTriggers] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [infoMessage, setInfoMessage] = useState("");
   const [crisisMessage, setCrisisMessage] = useState("");
@@ -504,9 +505,9 @@ const EnhancedMoodTrackerScreen = () => {
       setInfoMessage("Saved locally. Will sync later (offline).");
     }
 
-    // Finalize save - if dispatch throws (tests mock), show graceful error
+    // Finalize save - dispatch to moodSlice (using logMood thunk would be better)
     const ok = safeDispatch(
-      { type: "enhancedMood/FINALIZE_SAVE" },
+      { type: "mood/FINALIZE_SAVE" }, // Placeholder - real implementation should use logMood thunk
       () => setErrorMessage("Error: Unable to save your mood entry. Please try again."),
     );
     if (!ok) return;

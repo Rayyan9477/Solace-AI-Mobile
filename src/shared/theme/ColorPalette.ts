@@ -3,7 +3,13 @@
  * Provides dynamic color selection for therapeutic UI components
  */
 
-import { enhancedColors } from './enhancedTheme';
+import { colors } from './colors';
+
+// Map to new color structure for backwards compatibility
+const enhancedColors = {
+  therapeutic: colors.therapeutic,
+  gradients: colors.gradients,
+};
 
 /**
  * Get therapeutic color based on mood, shade, and theme mode

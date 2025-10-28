@@ -6,23 +6,11 @@
 import React, { createContext, useState, useContext, useEffect, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { enhancedTheme } from './enhancedTheme';
-import { modernDarkTheme } from './darkTheme';
+import { lightTheme, darkTheme } from './theme';
 
-// Create theme aliases for backward compatibility
-export const lightTheme = {
-  ...enhancedTheme,
-  isDark: false,
-  name: 'light',
-};
-
-export const darkTheme = {
-  ...modernDarkTheme,
-  isDark: true,
-  name: 'dark',
-};
-
-export const therapeuticColors = enhancedTheme.colors.therapeutic;
+// Re-export themes for convenience
+export { lightTheme, darkTheme } from './theme';
+export { colors, therapeuticColors } from './colors';
 
 // Theme Context
 export const ThemeContext = createContext({

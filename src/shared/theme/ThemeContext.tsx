@@ -15,8 +15,7 @@ import {
   lightTheme as baseLightTheme,
   darkTheme as baseDarkTheme,
 } from './ThemeProvider';
-import { enhancedTheme } from './enhancedTheme';
-import { freudTheme } from './freudTheme';
+import { lightTheme as enhancedTheme } from './theme'; // Use new unified theme
 
 // Derive therapeutic color arrays from theme tokens or fallbacks
 const deriveTherapeuticColors = (theme) => {
@@ -73,7 +72,7 @@ const CompatBridge = ({ children, theme: forcedTheme, value }) => {
   if (value?.theme) activeTheme = value.theme;
 
   // Ensure required tokens/aliases exist
-  const adaptedTheme = withSpacingAliases(activeTheme || freudTheme);
+  const adaptedTheme = withSpacingAliases(activeTheme || baseLightTheme);
 
   // Accessibility: reduced motion
   const [isReducedMotionEnabled, setReducedMotion] = useState(false);

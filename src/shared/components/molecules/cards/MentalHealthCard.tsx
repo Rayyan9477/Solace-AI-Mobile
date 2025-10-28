@@ -10,7 +10,7 @@ import { View, Text, StyleSheet, Platform, Animated } from "react-native";
 import PropTypes from "prop-types";
 
 import { useTheme } from "@theme/ThemeProvider";
-import { enhancedTheme as themeTokens } from "@theme/enhancedTheme";
+import { lightTheme as themeTokens } from "@theme/theme";
 import { validateThemeAccessibility } from "@shared/utils/accessibility";
 
 const { spacing, borderRadius, shadows, typography } = themeTokens;

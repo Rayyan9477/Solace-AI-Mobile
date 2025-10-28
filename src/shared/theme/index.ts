@@ -1,9 +1,8 @@
 /**
  * Theme Module Exports
- * Central theme system exports
+ * Central theme system exports - Updated for Freud Design System v1.2
  */
 
-export { ThemeProvider, useTheme } from './ThemeProvider';
-export { lightTheme } from './enhancedTheme';
-export { darkTheme } from './darkTheme';
-export { freudTheme } from './freudTheme';
+export { ThemeProvider, useTheme, lightTheme, darkTheme } from './ThemeProvider';
+export { colors, therapeuticColors } from './colors';
+export * from './theme';
