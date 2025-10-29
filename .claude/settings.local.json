@@ -4,7 +4,11 @@
       "Bash(do mv \"$f\" \"$f%.js.ts\")",
       "Bash(do [ -f \"$f\" ])",
       "Bash([ -f \"store.js\" ])",
-      "Bash([ -f \"NotificationManager.js\" ])"
+      "Bash([ -f \"NotificationManager.js\" ])",
+      "Bash(rm:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []

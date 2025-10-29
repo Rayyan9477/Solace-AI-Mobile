@@ -18,6 +18,12 @@ import MoodScreen from "@features/mood/MoodScreen";
 import EnhancedMoodTrackerScreen from "@features/mood/screens/EnhancedMoodTrackerScreen";
 import OnboardingScreen from "@features/onboarding/screens/OnboardingScreen";
 import WelcomeScreen from "@features/onboarding/screens/WelcomeScreen";
+import { JournalListScreen, JournalDetailScreen, JournalCreateScreen } from "@features/journal";
+import { MindfulHoursScreen, BreathingExerciseScreen } from "@features/mindfulness";
+import { SleepQualityScreen, StressManagementScreen } from "@features/wellness";
+import { CommunitySupportScreen, CreatePostScreen } from "@features/community";
+import { ProfileSettingsScreen } from "@features/profile";
+import { SearchScreen } from "@features/search";
 
 // Theme import
 import { useTheme } from "@theme/ThemeProvider";
@@ -58,7 +64,7 @@ const MainTabs = () => {
           backgroundColor: theme.colors.background?.secondary || '#FFFFFF',
           borderTopColor: theme.colors.border?.light || '#E2E8F0',
         },
-        tabBarActiveTintColor: theme.colors.therapeutic?.calming?.[600] || '#0284c7',
+        tabBarActiveTintColor: theme.colors.brown?.[70] || '#704A33',
         tabBarInactiveTintColor: theme.colors.text?.tertiary || '#A0AEC0',
       }}
     >
@@ -131,6 +137,22 @@ const AppNavigator = () => {
         <>
           <Stack.Screen name="MainTabs" component={MainTabs} />
           <Stack.Screen name="MoodTracker" component={EnhancedMoodTrackerScreen} />
+          <Stack.Screen name="JournalList" component={JournalListScreen} />
+          <Stack.Screen name="MindfulHours" component={MindfulHoursScreen} />
+          <Stack.Screen name="FreudScore" component={PlaceholderScreen} initialParams={{ name: 'Freud Score' }} />
+          <Stack.Screen name="MoodStats" component={PlaceholderScreen} initialParams={{ name: 'Mood Stats' }} />
+          <Stack.Screen name="SleepQuality" component={SleepQualityScreen} />
+          <Stack.Screen name="StressLevel" component={StressManagementScreen} />
+          <Stack.Screen name="StressStats" component={PlaceholderScreen} initialParams={{ name: 'Stress Stats' }} />
+          <Stack.Screen name="JournalDetail" component={JournalDetailScreen} />
+          <Stack.Screen name="JournalCreate" component={JournalCreateScreen} />
+          <Stack.Screen name="ExerciseCreate" component={BreathingExerciseScreen} />
+          <Stack.Screen name="CommunitySupport" component={CommunitySupportScreen} />
+          <Stack.Screen name="CreatePost" component={CreatePostScreen} />
+          <Stack.Screen name="PostDetail" component={PlaceholderScreen} initialParams={{ name: 'Post Detail' }} />
+          <Stack.Screen name="CommunityNotifications" component={PlaceholderScreen} initialParams={{ name: 'Notifications' }} />
+          <Stack.Screen name="ProfileSettings" component={ProfileSettingsScreen} />
+          <Stack.Screen name="Search" component={SearchScreen} />
         </>
       )}
     </Stack.Navigator>

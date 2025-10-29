@@ -10,6 +10,7 @@ export { default } from './MoodScreen';
 export { default as MoodTrackerScreen } from './screens/MoodTrackerScreen';
 export { default as MoodStatsScreen } from './screens/MoodStatsScreen';
 export { default as EnhancedMoodTrackerScreen } from './screens/EnhancedMoodTrackerScreen';
+export { MoodSelectionScreen } from './screens/MoodSelectionScreen';
 
 // Components
 export { default as EnhancedMoodTracker } from './components/EnhancedMoodTracker';

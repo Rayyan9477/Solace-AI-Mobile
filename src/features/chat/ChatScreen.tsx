@@ -1,9 +1,10 @@
 /**
  * Chat Screen - AI Therapy Chat Interface
  * Provides supportive conversation with AI therapist
+ * Enhanced with avatars, voice input, and message reactions
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -14,27 +15,54 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
+  Animated,
 } from 'react-native';
 import { useTheme } from "@theme/ThemeProvider";
+import { MentalHealthIcon } from '@components/icons';
+import { FreudLogo } from '@components/icons/FreudIcons';
 
 interface Message {
   id: string;
   text: string;
   isUser: boolean;
   timestamp: Date;
+  reaction?: string;
 }
 
-export const ChatScreen = () => {
+export const ChatScreen = ({ navigation, route }: any) => {
   const { theme } = useTheme();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hello! I'm here to support you on your mental health journey. How are you feeling today?",
+      text: "Hello Shinomiya! Thanks for your professional response. I can help you explore this further. What specific aspect would you like to work on today?",
       isUser: false,
-      timestamp: new Date(),
+      timestamp: new Date(Date.now() - 120000),
+      reaction: '👍',
+    },
+    {
+      id: '2',
+      text: "I've been feeling really overwhelmed with everything lately. Work, relationships, just everything piling up.",
+      isUser: true,
+      timestamp: new Date(Date.now() - 60000),
+    },
+    {
+      id: '3',
+      text: "Shinomiya, I'm sorry you're going through this challenging time. Feeling overwhelmed when multiple stressors combine is very human. Let's explore these one at a time. When you think about what's weighing on you most heavily right now, what comes to mind first? 💚",
+      isUser: false,
+      timestamp: new Date(Date.now() - 30000),
+    },
+    {
+      id: '4',
+      text: "Honestly, I don't think I'm doing anything I should be doing.",
+      isUser: true,
+      timestamp: new Date(Date.now() - 10000),
     },
   ]);
   const [inputText, setInputText] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const pulseAnim = useRef(new Animated.Value(1)).current;
 
   const styles = StyleSheet.create({
     container: {
@@ -42,98 +70,181 @@ export const ChatScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
       padding: 16,
       paddingTop: 8,
       borderBottomWidth: 1,
       borderBottomColor: theme.colors.border.primary,
     },
+    backButton: {
+      width: 40,
+      height: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    headerCenter: {
+      flex: 1,
+      alignItems: 'center',
+    },
     headerTitle: {
-      fontSize: 20,
+      fontSize: 16,
       fontWeight: '600',
       color: theme.colors.text.primary,
-      textAlign: 'center',
     },
     headerSubtitle: {
-      fontSize: 14,
+      fontSize: 12,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
-      marginTop: 4,
+      marginTop: 2,
+    },
+    searchButton: {
+      width: 40,
+      height: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     chatContainer: {
       flex: 1,
       padding: 16,
     },
-    messageContainer: {
-      marginBottom: 16,
+    messageWrapper: {
+      marginBottom: 20,
     },
-    userMessageContainer: {
-      alignSelf: 'flex-end',
+    botMessageWrapper: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
     },
-    botMessageContainer: {
-      alignSelf: 'flex-start',
+    userMessageWrapper: {
+      flexDirection: 'row-reverse',
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+    },
+    avatar: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginHorizontal: 8,
+    },
+    botAvatar: {
+      backgroundColor: theme.colors.green[20],
+    },
+    userAvatar: {
+      backgroundColor: theme.colors.orange[20],
+    },
+    messageContent: {
+      flex: 1,
     },
     messageBubble: {
-      maxWidth: '80%',
-      padding: 12,
-      borderRadius: 16,
-      ...theme.getShadow('sm'),
-    },
-    userBubble: {
-      backgroundColor: theme.colors.therapeutic.nurturing[500],
+      padding: 16,
+      borderRadius: 20,
+      maxWidth: '85%',
     },
     botBubble: {
-      backgroundColor: theme.colors.background.secondary,
+      backgroundColor: theme.colors.brown[20],
+      borderTopLeftRadius: 4,
+    },
+    userBubble: {
+      backgroundColor: theme.colors.orange[40],
+      borderTopRightRadius: 4,
+      alignSelf: 'flex-end',
     },
     messageText: {
-      fontSize: 16,
+      fontSize: 15,
       lineHeight: 22,
-    },
-    userMessageText: {
-      color: '#FFFFFF',
     },
     botMessageText: {
       color: theme.colors.text.primary,
     },
+    userMessageText: {
+      color: '#FFFFFF',
+    },
+    messageFooter: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 6,
+      paddingHorizontal: 4,
+    },
     timestamp: {
-      fontSize: 12,
-      marginTop: 4,
-      opacity: 0.7,
+      fontSize: 11,
+      color: theme.colors.text.tertiary,
+    },
+    reaction: {
+      marginLeft: 8,
+      fontSize: 14,
+    },
+    typingIndicator: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      marginBottom: 20,
+    },
+    typingBubble: {
+      backgroundColor: theme.colors.brown[20],
+      padding: 16,
+      borderRadius: 20,
+      borderTopLeftRadius: 4,
+      flexDirection: 'row',
+      gap: 4,
+    },
+    typingDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: theme.colors.text.tertiary,
     },
     inputContainer: {
       flexDirection: 'row',
-      alignItems: 'flex-end',
+      alignItems: 'center',
       padding: 16,
       paddingTop: 12,
       borderTopWidth: 1,
       borderTopColor: theme.colors.border.primary,
       backgroundColor: theme.colors.background.primary,
+      gap: 8,
     },
-    textInput: {
-      flex: 1,
-      borderWidth: 1,
-      borderColor: theme.colors.border.primary,
-      borderRadius: 20,
-      paddingHorizontal: 16,
-      paddingVertical: 8,
-      marginRight: 12,
-      maxHeight: 100,
-      fontSize: 16,
-      color: theme.colors.text.primary,
+    voiceButton: {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
       backgroundColor: theme.colors.background.secondary,
-    },
-    sendButton: {
-      backgroundColor: theme.colors.therapeutic.nurturing[500],
-      paddingHorizontal: 16,
-      paddingVertical: 8,
-      borderRadius: 20,
-      minHeight: 36,
       justifyContent: 'center',
       alignItems: 'center',
     },
-    sendButtonText: {
-      color: '#FFFFFF',
-      fontWeight: '600',
-      fontSize: 16,
+    voiceButtonRecording: {
+      backgroundColor: theme.colors.red[40],
+    },
+    textInputWrapper: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: theme.colors.border.primary,
+      borderRadius: 24,
+      paddingHorizontal: 16,
+      paddingVertical: 10,
+      backgroundColor: theme.colors.background.secondary,
+    },
+    textInput: {
+      flex: 1,
+      maxHeight: 100,
+      fontSize: 15,
+      color: theme.colors.text.primary,
+    },
+    emojiButton: {
+      marginLeft: 8,
+    },
+    sendButton: {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      backgroundColor: theme.colors.orange[40],
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    sendButtonDisabled: {
+      opacity: 0.5,
     },
   });
 
@@ -148,15 +259,15 @@ export const ChatScreen = () => {
 
       setMessages(prev => [...prev, newMessage]);
       setInputText('');
+      setIsTyping(true);
 
-      // Simulate AI response
+      // Simulate AI response with typing indicator
       setTimeout(() => {
+        setIsTyping(false);
         const responses = [
-          "I understand how you're feeling. It's completely normal to have these emotions.",
-          "Thank you for sharing that with me. Let's explore this feeling together.",
-          "That sounds challenging. Remember that you're not alone in this journey.",
-          "I appreciate your openness. How has this been affecting your daily life?",
-          "It takes courage to express these feelings. What coping strategies have you tried?",
+          "Shinomiya, I hear you. That feeling of being stuck is really tough. Can you tell me more about what 'should be doing' means to you? Sometimes our 'shoulds' come from external pressures rather than our own values.",
+          "I understand. It sounds like you're experiencing self-doubt and maybe some guilt. These feelings are valid. Let's explore what's behind them - what would it look like if you were doing what you 'should' be doing?",
+          "Thank you for being honest about that. Many people struggle with this feeling. What if we reframed it - instead of focusing on 'should,' what do you actually want to be doing? What matters to you?",
         ];
 
         const aiResponse: Message = {
@@ -167,53 +278,136 @@ export const ChatScreen = () => {
         };
 
         setMessages(prev => [...prev, aiResponse]);
-      }, 1000);
+      }, 2000);
+    }
+  };
+
+  const toggleRecording = () => {
+    setIsRecording(!isRecording);
+    if (!isRecording) {
+      // Start pulse animation
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 1.2,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    } else {
+      pulseAnim.setValue(1);
     }
   };
 
   const renderMessage = ({ item }: { item: Message }) => (
     <View
       style={[
-        styles.messageContainer,
-        item.isUser ? styles.userMessageContainer : styles.botMessageContainer,
+        styles.messageWrapper,
+        item.isUser ? styles.userMessageWrapper : styles.botMessageWrapper,
       ]}
     >
+      {/* Avatar */}
       <View
         style={[
-          styles.messageBubble,
-          item.isUser ? styles.userBubble : styles.botBubble,
+          styles.avatar,
+          item.isUser ? styles.userAvatar : styles.botAvatar,
         ]}
       >
-        <Text
+        {item.isUser ? (
+          <Text style={{ fontSize: 18 }}>👤</Text>
+        ) : (
+          <FreudLogo size={20} primaryColor={theme.colors.green[60]} />
+        )}
+      </View>
+
+      {/* Message Content */}
+      <View style={styles.messageContent}>
+        <View
           style={[
-            styles.messageText,
-            item.isUser ? styles.userMessageText : styles.botMessageText,
+            styles.messageBubble,
+            item.isUser ? styles.userBubble : styles.botBubble,
           ]}
         >
-          {item.text}
-        </Text>
-        <Text
-          style={[
-            styles.timestamp,
-            item.isUser ? styles.userMessageText : styles.botMessageText,
-          ]}
-        >
-          {item.timestamp.toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
-        </Text>
+          <Text
+            style={[
+              styles.messageText,
+              item.isUser ? styles.userMessageText : styles.botMessageText,
+            ]}
+          >
+            {item.text}
+          </Text>
+        </View>
+
+        {/* Message Footer */}
+        <View style={styles.messageFooter}>
+          <Text style={styles.timestamp}>
+            {item.timestamp.toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </Text>
+          {item.reaction && (
+            <Text style={styles.reaction}>{item.reaction}</Text>
+          )}
+        </View>
+      </View>
+    </View>
+  );
+
+  const renderTypingIndicator = () => (
+    <View style={styles.typingIndicator}>
+      <View style={[styles.avatar, styles.botAvatar]}>
+        <FreudLogo size={20} primaryColor={theme.colors.green[60]} />
+      </View>
+      <View style={styles.typingBubble}>
+        <View style={styles.typingDot} />
+        <View style={styles.typingDot} />
+        <View style={styles.typingDot} />
       </View>
     </View>
   );
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar
+        barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+        backgroundColor="transparent"
+        translucent
+      />
+
+      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>AI Therapist</Text>
-        <Text style={styles.headerSubtitle}>
-          Safe space for your mental wellness
-        </Text>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <MentalHealthIcon
+            name="ChevronLeft"
+            size={24}
+            color={theme.colors.text.primary}
+          />
+        </TouchableOpacity>
+
+        <View style={styles.headerCenter}>
+          <Text style={styles.headerTitle}>Doctor Freud AI</Text>
+          <Text style={styles.headerSubtitle}>
+            Get Doctor AI with Freud v1.7
+          </Text>
+        </View>
+
+        <TouchableOpacity style={styles.searchButton}>
+          <MentalHealthIcon
+            name="Search"
+            size={20}
+            color={theme.colors.text.primary}
+          />
+        </TouchableOpacity>
       </View>
 
       <KeyboardAvoidingView
@@ -224,27 +418,58 @@ export const ChatScreen = () => {
           data={messages}
           renderItem={renderMessage}
           keyExtractor={item => item.id}
-          style={styles.chatContainer}
+          contentContainerStyle={styles.chatContainer}
           showsVerticalScrollIndicator={false}
+          ListFooterComponent={isTyping ? renderTypingIndicator : null}
         />
 
+        {/* Input Container */}
         <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.textInput}
-            value={inputText}
-            onChangeText={setInputText}
-            placeholder="Share your thoughts..."
-            placeholderTextColor={theme.colors.text.tertiary}
-            multiline
-            onSubmitEditing={sendMessage}
-            returnKeyType="send"
-          />
+          {/* Voice Button */}
+          <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
+            <TouchableOpacity
+              style={[
+                styles.voiceButton,
+                isRecording && styles.voiceButtonRecording,
+              ]}
+              onPress={toggleRecording}
+            >
+              <MentalHealthIcon
+                name="Mic"
+                size={20}
+                color={
+                  isRecording ? '#FFFFFF' : theme.colors.text.primary
+                }
+              />
+            </TouchableOpacity>
+          </Animated.View>
+
+          {/* Text Input */}
+          <View style={styles.textInputWrapper}>
+            <TextInput
+              style={styles.textInput}
+              value={inputText}
+              onChangeText={setInputText}
+              placeholder="Type to start chatting..."
+              placeholderTextColor={theme.colors.text.tertiary}
+              multiline
+              maxLength={1000}
+            />
+            <TouchableOpacity style={styles.emojiButton}>
+              <Text style={{ fontSize: 20 }}>😊</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Send Button */}
           <TouchableOpacity
-            style={styles.sendButton}
+            style={[
+              styles.sendButton,
+              !inputText.trim() && styles.sendButtonDisabled,
+            ]}
             onPress={sendMessage}
             disabled={!inputText.trim()}
           >
-            <Text style={styles.sendButtonText}>Send</Text>
+            <MentalHealthIcon name="Send" size={20} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

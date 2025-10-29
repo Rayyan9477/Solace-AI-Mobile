@@ -3,6 +3,8 @@
  */
 
 export { ChatScreen } from './ChatScreen';
+export { ConversationListScreen } from './ConversationListScreen';
+export { NewConversationScreen } from './NewConversationScreen';
 export { default } from './ChatScreen';
 
 // Components

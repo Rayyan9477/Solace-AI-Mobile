@@ -1,6 +1,6 @@
 /**
  * Login Screen - User Authentication
- * Clean and accessible login interface
+ * Matches Freud UI design with brown therapeutic theme
  */
 
 import React, { useState } from 'react';
@@ -14,10 +14,13 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  StatusBar,
 } from 'react-native';
 import { useAppDispatch, useAppSelector } from '@app/store';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from "@theme/ThemeProvider";
+import { FreudLogo } from '@components/icons/FreudIcons';
+import { MentalHealthIcon } from '@components/icons';
 import { secureLogin } from '@app/store/slices/authSlice';
 
 export const LoginScreen = ({ navigation }: any) => {
@@ -31,136 +34,135 @@ export const LoginScreen = ({ navigation }: any) => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.colors.background.primary,
+      backgroundColor: theme.isDark ? '#2D1B0E' : '#8B7355',
     },
     gradient: {
       flex: 1,
     },
     header: {
-      height: 200,
-      justifyContent: 'center',
+      paddingTop: 60,
+      paddingBottom: 40,
       alignItems: 'center',
     },
-    logo: {
-      width: 80,
-      height: 80,
-      borderRadius: 40,
-      backgroundColor: '#FFFFFF',
-      justifyContent: 'center',
-      alignItems: 'center',
-      ...theme.shadows.md,
-    },
-    logoText: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      color: theme.colors.therapeutic.nurturing[600] || '#16a34a',
+    logoContainer: {
+      marginBottom: 24,
     },
     content: {
       flex: 1,
-      backgroundColor: theme.colors.background.primary,
-      borderTopLeftRadius: 30,
-      borderTopRightRadius: 30,
-      paddingTop: 40,
-      paddingHorizontal: 30,
+      backgroundColor: theme.isDark ? '#3D2817' : '#4A3426',
+      borderTopLeftRadius: 32,
+      borderTopRightRadius: 32,
+      paddingTop: 48,
+      paddingHorizontal: 24,
     },
     title: {
-      fontSize: 28,
-      fontWeight: 'bold',
-      color: theme.colors.text.primary,
+      fontSize: 32,
+      fontWeight: '700',
+      color: '#FFFFFF',
+      marginBottom: 40,
       textAlign: 'center',
-      marginBottom: 8,
-    },
-    subtitle: {
-      fontSize: 16,
-      color: theme.colors.text.secondary,
-      textAlign: 'center',
-      marginBottom: 32,
     },
     inputContainer: {
       marginBottom: 20,
     },
     inputLabel: {
-      fontSize: 16,
+      fontSize: 14,
       fontWeight: '500',
-      color: theme.colors.text.primary,
+      color: '#E5DDD5',
       marginBottom: 8,
+      letterSpacing: 0.3,
     },
     inputWrapper: {
       flexDirection: 'row',
       alignItems: 'center',
-      borderWidth: 1,
-      borderColor: theme.colors.border.primary,
-      borderRadius: 12,
-      backgroundColor: theme.colors.background.secondary,
-      paddingHorizontal: 16,
-      paddingVertical: 12,
+      borderWidth: 1.5,
+      borderColor: '#6B5444',
+      borderRadius: 24,
+      backgroundColor: 'rgba(45, 27, 14, 0.5)',
+      paddingHorizontal: 20,
+      paddingVertical: 14,
+    },
+    inputIcon: {
+      marginRight: 12,
     },
     input: {
       flex: 1,
       fontSize: 16,
-      color: theme.colors.text.primary,
+      color: '#FFFFFF',
       paddingVertical: 0,
     },
     eyeButton: {
       padding: 4,
       marginLeft: 8,
     },
-    eyeButtonText: {
-      fontSize: 16,
-      color: theme.colors.text.tertiary,
-    },
     loginButton: {
-      backgroundColor: theme.colors.therapeutic.nurturing[600] || '#16a34a',
-      borderRadius: 12,
+      backgroundColor: '#A67C52',
+      borderRadius: 24,
       paddingVertical: 16,
       alignItems: 'center',
-      marginTop: 24,
-      ...theme.shadows.sm,
+      marginTop: 32,
+      flexDirection: 'row',
+      justifyContent: 'center',
     },
     disabledButton: {
-      opacity: 0.6,
+      opacity: 0.5,
     },
     loginButtonText: {
       color: '#FFFFFF',
-      fontSize: 18,
+      fontSize: 16,
+      fontWeight: '600',
+      marginRight: 8,
+    },
+    socialContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      gap: 16,
+      marginTop: 32,
+    },
+    socialButton: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      borderWidth: 1,
+      borderColor: '#6B5444',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    socialIcon: {
+      fontSize: 20,
+    },
+    footer: {
+      alignItems: 'center',
+      marginTop: 24,
+      marginBottom: 32,
+    },
+    footerText: {
+      fontSize: 14,
+      color: '#B8A99A',
+    },
+    signupButton: {
+      marginTop: 4,
+    },
+    signupText: {
+      fontSize: 14,
+      color: '#E8A872',
       fontWeight: '600',
     },
     forgotPassword: {
       alignSelf: 'center',
       marginTop: 16,
-      padding: 8,
     },
     forgotPasswordText: {
-      color: theme.colors.therapeutic.nurturing[600] || '#16a34a',
-      fontSize: 16,
+      color: '#E8A872',
+      fontSize: 14,
       fontWeight: '500',
-    },
-    footer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 32,
-      marginBottom: 32,
-    },
-    footerText: {
-      fontSize: 16,
-      color: theme.colors.text.secondary,
-    },
-    signupButton: {
-      padding: 8,
-      marginLeft: 4,
-    },
-    signupButtonText: {
-      fontSize: 16,
-      color: theme.colors.therapeutic.nurturing[600] || '#16a34a',
-      fontWeight: '600',
     },
   });
 
-  const backgroundColors = [
-    theme.colors.therapeutic.nurturing[600] || '#16a34a',
-    theme.colors.therapeutic.calming[500] || '#0ea5e9',
-  ] as const;
+  const backgroundColors = theme.isDark
+    ? ['#8B7355', '#6B5444']
+    : ['#A67C52', '#8B6F47'];
 
   const validateForm = () => {
     if (!email.trim()) {
@@ -180,16 +182,14 @@ export const LoginScreen = ({ navigation }: any) => {
 
   const handleLogin = () => {
     if (!validateForm()) return;
-
     dispatch((secureLogin as any)({ email, password }));
-    // Navigation will be handled by auth state change
-    // Loading and error states are managed by the auth slice
   };
 
   const canLogin = email.trim() && password.trim() && !isLoading;
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -198,29 +198,27 @@ export const LoginScreen = ({ navigation }: any) => {
           colors={backgroundColors}
           style={styles.gradient}
           start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
+          end={{ x: 0.5, y: 1 }}
         >
           <View style={styles.header}>
-            <View style={styles.logo}>
-              <Text style={styles.logoText}>SA</Text>
+            <View style={styles.logoContainer}>
+              <FreudLogo size={64} primaryColor="#FFFFFF" />
             </View>
           </View>
 
           <View style={styles.content}>
-            <Text style={styles.title}>Welcome Back</Text>
-            <Text style={styles.subtitle}>
-              Sign in to continue your mental wellness journey
-            </Text>
+            <Text style={styles.title}>Sign In To freud.ai</Text>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Email</Text>
+              <Text style={styles.inputLabel}>Email Address</Text>
               <View style={styles.inputWrapper}>
+                <MentalHealthIcon name="Mail" size={20} color="#B8A99A" style={styles.inputIcon} />
                 <TextInput
                   style={styles.input}
                   value={email}
                   onChangeText={setEmail}
-                  placeholder="Enter your email"
-                  placeholderTextColor={theme.colors.text.tertiary}
+                  placeholder="princesskaguya@gmail.com"
+                  placeholderTextColor="#6B5444"
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoComplete="email"
@@ -231,12 +229,13 @@ export const LoginScreen = ({ navigation }: any) => {
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Password</Text>
               <View style={styles.inputWrapper}>
+                <MentalHealthIcon name="Lock" size={20} color="#B8A99A" style={styles.inputIcon} />
                 <TextInput
                   style={styles.input}
                   value={password}
                   onChangeText={setPassword}
-                  placeholder="Enter your password"
-                  placeholderTextColor={theme.colors.text.tertiary}
+                  placeholder="Enter your password..."
+                  placeholderTextColor="#6B5444"
                   secureTextEntry={!showPassword}
                   autoComplete="password"
                 />
@@ -244,9 +243,11 @@ export const LoginScreen = ({ navigation }: any) => {
                   style={styles.eyeButton}
                   onPress={() => setShowPassword(!showPassword)}
                 >
-                  <Text style={styles.eyeButtonText}>
-                    {showPassword ? '🙈' : '👁️'}
-                  </Text>
+                  <MentalHealthIcon
+                    name={showPassword ? "EyeOff" : "Eye"}
+                    size={20}
+                    color="#B8A99A"
+                  />
                 </TouchableOpacity>
               </View>
             </View>
@@ -262,24 +263,36 @@ export const LoginScreen = ({ navigation }: any) => {
               <Text style={styles.loginButtonText}>
                 {isLoading ? 'Signing In...' : 'Sign In'}
               </Text>
+              <Text style={{ color: '#FFFFFF', fontSize: 18 }}>→</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.forgotPassword}
-              onPress={() => navigation?.navigate?.('ForgotPassword')}
-            >
-              <Text style={styles.forgotPasswordText}>
-                Forgot Password?
-              </Text>
-            </TouchableOpacity>
+            <View style={styles.socialContainer}>
+              <TouchableOpacity style={styles.socialButton}>
+                <Text style={styles.socialIcon}>f</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.socialButton}>
+                <Text style={styles.socialIcon}>G</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.socialButton}>
+                <Text style={styles.socialIcon}>📷</Text>
+              </TouchableOpacity>
+            </View>
 
             <View style={styles.footer}>
-              <Text style={styles.footerText}>Don't have an account?</Text>
+              <Text style={styles.footerText}>
+                Don't have an account?{' '}
+                <Text
+                  style={styles.signupText}
+                  onPress={() => navigation?.navigate?.('Signup')}
+                >
+                  Sign Up
+                </Text>
+              </Text>
               <TouchableOpacity
-                style={styles.signupButton}
-                onPress={() => navigation?.navigate?.('Signup')}
+                style={styles.forgotPassword}
+                onPress={() => navigation?.navigate?.('ForgotPassword')}
               >
-                <Text style={styles.signupButtonText}>Sign Up</Text>
+                <Text style={styles.forgotPasswordText}>Forgot Password</Text>
               </TouchableOpacity>
             </View>
           </View>

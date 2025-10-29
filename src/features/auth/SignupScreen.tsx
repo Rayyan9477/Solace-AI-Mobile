@@ -1,6 +1,6 @@
 /**
  * Signup Screen - User Registration
- * Clean and accessible registration interface
+ * Matches Freud UI design with brown therapeutic theme
  */
 
 import React, { useState } from 'react';
@@ -15,187 +15,166 @@ import {
   Platform,
   Alert,
   ScrollView,
+  StatusBar,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from "@theme/ThemeProvider";
+import { FreudLogo } from '@components/icons/FreudIcons';
+import { MentalHealthIcon } from '@components/icons';
 
 export const SignupScreen = ({ navigation }: any) => {
   const { theme } = useTheme();
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [emailError, setEmailError] = useState('');
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.colors.background.primary,
+      backgroundColor: theme.isDark ? '#2D1B0E' : '#8B7355',
     },
     gradient: {
       flex: 1,
     },
     header: {
-      height: 160,
-      justifyContent: 'center',
+      paddingTop: 60,
+      paddingBottom: 40,
       alignItems: 'center',
     },
-    logo: {
-      width: 80,
-      height: 80,
-      borderRadius: 40,
-      backgroundColor: '#FFFFFF',
-      justifyContent: 'center',
-      alignItems: 'center',
-      ...theme.shadows.md,
-    },
-    logoText: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      color: theme.colors.therapeutic.nurturing[600] || '#16a34a',
+    logoContainer: {
+      marginBottom: 24,
     },
     content: {
       flex: 1,
-      backgroundColor: theme.colors.background.primary,
-      borderTopLeftRadius: 30,
-      borderTopRightRadius: 30,
-      paddingTop: 30,
-      paddingHorizontal: 30,
+      backgroundColor: theme.isDark ? '#3D2817' : '#4A3426',
+      borderTopLeftRadius: 32,
+      borderTopRightRadius: 32,
+      paddingTop: 48,
+      paddingHorizontal: 24,
     },
     scrollContent: {
       flexGrow: 1,
+      paddingBottom: 32,
     },
     title: {
-      fontSize: 28,
-      fontWeight: 'bold',
-      color: theme.colors.text.primary,
+      fontSize: 32,
+      fontWeight: '700',
+      color: '#FFFFFF',
+      marginBottom: 40,
       textAlign: 'center',
-      marginBottom: 8,
-    },
-    subtitle: {
-      fontSize: 16,
-      color: theme.colors.text.secondary,
-      textAlign: 'center',
-      marginBottom: 24,
-    },
-    row: {
-      flexDirection: 'row',
-      gap: 12,
     },
     inputContainer: {
-      marginBottom: 16,
-      flex: 1,
+      marginBottom: 20,
     },
     inputLabel: {
-      fontSize: 16,
+      fontSize: 14,
       fontWeight: '500',
-      color: theme.colors.text.primary,
+      color: '#E5DDD5',
       marginBottom: 8,
+      letterSpacing: 0.3,
     },
     inputWrapper: {
       flexDirection: 'row',
       alignItems: 'center',
-      borderWidth: 1,
-      borderColor: theme.colors.border.primary,
-      borderRadius: 12,
-      backgroundColor: theme.colors.background.secondary,
-      paddingHorizontal: 16,
-      paddingVertical: 12,
+      borderWidth: 1.5,
+      borderColor: '#6B5444',
+      borderRadius: 24,
+      backgroundColor: 'rgba(45, 27, 14, 0.5)',
+      paddingHorizontal: 20,
+      paddingVertical: 14,
+    },
+    inputWrapperError: {
+      borderColor: '#E8A872',
+    },
+    inputIcon: {
+      marginRight: 12,
     },
     input: {
       flex: 1,
       fontSize: 16,
-      color: theme.colors.text.primary,
+      color: '#FFFFFF',
       paddingVertical: 0,
     },
     eyeButton: {
       padding: 4,
       marginLeft: 8,
     },
-    eyeButtonText: {
-      fontSize: 16,
-      color: theme.colors.text.tertiary,
+    errorText: {
+      fontSize: 12,
+      color: '#E8A872',
+      marginTop: 4,
+      marginLeft: 20,
+    },
+    errorBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: 'rgba(232, 168, 114, 0.2)',
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      borderRadius: 12,
+      marginTop: 8,
+    },
+    errorBadgeText: {
+      fontSize: 12,
+      color: '#E8A872',
+      marginLeft: 6,
     },
     signupButton: {
-      backgroundColor: theme.colors.therapeutic.nurturing[600] || '#16a34a',
-      borderRadius: 12,
+      backgroundColor: '#A67C52',
+      borderRadius: 24,
       paddingVertical: 16,
       alignItems: 'center',
-      marginTop: 24,
-      ...theme.shadows.sm,
+      marginTop: 32,
+      flexDirection: 'row',
+      justifyContent: 'center',
     },
     disabledButton: {
-      opacity: 0.6,
+      opacity: 0.5,
     },
     signupButtonText: {
       color: '#FFFFFF',
-      fontSize: 18,
+      fontSize: 16,
       fontWeight: '600',
+      marginRight: 8,
     },
     footer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
       alignItems: 'center',
       marginTop: 24,
-      marginBottom: 32,
     },
     footerText: {
-      fontSize: 16,
-      color: theme.colors.text.secondary,
-    },
-    loginButton: {
-      padding: 8,
-      marginLeft: 4,
-    },
-    loginButtonText: {
-      fontSize: 16,
-      color: theme.colors.therapeutic.nurturing[600] || '#16a34a',
-      fontWeight: '600',
-    },
-    termsText: {
       fontSize: 14,
-      color: theme.colors.text.tertiary,
-      textAlign: 'center',
-      lineHeight: 20,
-      marginTop: 16,
+      color: '#B8A99A',
     },
-    linkText: {
-      color: theme.colors.therapeutic.nurturing[600] || '#16a34a',
-      fontWeight: '500',
+    loginText: {
+      fontSize: 14,
+      color: '#E8A872',
+      fontWeight: '600',
     },
   });
 
-  const backgroundColors = [
-    theme.colors.therapeutic.energizing[500] || '#f97316',
-    theme.colors.therapeutic.nurturing[600] || '#16a34a',
-  ] as const;
+  const backgroundColors = theme.isDark
+    ? ['#8B7355', '#6B5444']
+    : ['#A67C52', '#8B6F47'];
 
-  const updateFormData = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const validateEmail = (email: string) => {
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailError('Invalid Email Address!!!');
+      return false;
+    }
+    setEmailError('');
+    return true;
   };
 
   const validateForm = () => {
-    const { firstName, lastName, email, password, confirmPassword } = formData;
-
-    if (!firstName.trim()) {
-      Alert.alert('Error', 'Please enter your first name');
-      return false;
-    }
-    if (!lastName.trim()) {
-      Alert.alert('Error', 'Please enter your last name');
-      return false;
-    }
     if (!email.trim()) {
       Alert.alert('Error', 'Please enter your email address');
       return false;
     }
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      Alert.alert('Error', 'Please enter a valid email address');
+    if (!validateEmail(email)) {
       return false;
     }
     if (!password.trim()) {
@@ -218,11 +197,10 @@ export const SignupScreen = ({ navigation }: any) => {
 
     setIsLoading(true);
     try {
-      // Here you would call your signup API
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
       Alert.alert(
         'Success',
-        'Account created successfully! Please check your email to verify your account.',
+        'Account created successfully!',
         [
           {
             text: 'OK',
@@ -240,10 +218,11 @@ export const SignupScreen = ({ navigation }: any) => {
     }
   };
 
-  const canSignup = Object.values(formData).every(value => value.trim()) && !isLoading;
+  const canSignup = email.trim() && password.trim() && confirmPassword.trim() && !isLoading && !emailError;
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -252,11 +231,11 @@ export const SignupScreen = ({ navigation }: any) => {
           colors={backgroundColors}
           style={styles.gradient}
           start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
+          end={{ x: 0.5, y: 1 }}
         >
           <View style={styles.header}>
-            <View style={styles.logo}>
-              <Text style={styles.logoText}>SA</Text>
+            <View style={styles.logoContainer}>
+              <FreudLogo size={64} primaryColor="#FFFFFF" />
             </View>
           </View>
 
@@ -265,66 +244,45 @@ export const SignupScreen = ({ navigation }: any) => {
               contentContainerStyle={styles.scrollContent}
               showsVerticalScrollIndicator={false}
             >
-              <Text style={styles.title}>Create Account</Text>
-              <Text style={styles.subtitle}>
-                Join us on your mental wellness journey
-              </Text>
+              <Text style={styles.title}>Sign Up For Free</Text>
 
-              <View style={styles.row}>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.inputLabel}>First Name</Text>
-                  <View style={styles.inputWrapper}>
-                    <TextInput
-                      style={styles.input}
-                      value={formData.firstName}
-                      onChangeText={(text) => updateFormData('firstName', text)}
-                      placeholder="First name"
-                      placeholderTextColor={theme.colors.text.tertiary}
-                      autoComplete="given-name"
-                    />
-                  </View>
-                </View>
-
-                <View style={styles.inputContainer}>
-                  <Text style={styles.inputLabel}>Last Name</Text>
-                  <View style={styles.inputWrapper}>
-                    <TextInput
-                      style={styles.input}
-                      value={formData.lastName}
-                      onChangeText={(text) => updateFormData('lastName', text)}
-                      placeholder="Last name"
-                      placeholderTextColor={theme.colors.text.tertiary}
-                      autoComplete="family-name"
-                    />
-                  </View>
-                </View>
-              </View>
-
-              <View style={[styles.inputContainer, { flex: undefined }]}>
-                <Text style={styles.inputLabel}>Email</Text>
-                <View style={styles.inputWrapper}>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Email Address</Text>
+                <View style={[styles.inputWrapper, emailError && styles.inputWrapperError]}>
+                  <MentalHealthIcon name="Mail" size={20} color="#B8A99A" style={styles.inputIcon} />
                   <TextInput
                     style={styles.input}
-                    value={formData.email}
-                    onChangeText={(text) => updateFormData('email', text)}
-                    placeholder="Enter your email"
-                    placeholderTextColor={theme.colors.text.tertiary}
+                    value={email}
+                    onChangeText={(text) => {
+                      setEmail(text);
+                      if (emailError && text.trim()) validateEmail(text);
+                    }}
+                    onBlur={() => email.trim() && validateEmail(email)}
+                    placeholder="Enter your email..."
+                    placeholderTextColor="#6B5444"
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoComplete="email"
                   />
                 </View>
+                {emailError ? (
+                  <View style={styles.errorBadge}>
+                    <MentalHealthIcon name="AlertCircle" size={14} color="#E8A872" />
+                    <Text style={styles.errorBadgeText}>{emailError}</Text>
+                  </View>
+                ) : null}
               </View>
 
-              <View style={[styles.inputContainer, { flex: undefined }]}>
+              <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Password</Text>
                 <View style={styles.inputWrapper}>
+                  <MentalHealthIcon name="Lock" size={20} color="#B8A99A" style={styles.inputIcon} />
                   <TextInput
                     style={styles.input}
-                    value={formData.password}
-                    onChangeText={(text) => updateFormData('password', text)}
-                    placeholder="Create a password"
-                    placeholderTextColor={theme.colors.text.tertiary}
+                    value={password}
+                    onChangeText={setPassword}
+                    placeholder="Enter your password..."
+                    placeholderTextColor="#6B5444"
                     secureTextEntry={!showPassword}
                     autoComplete="new-password"
                   />
@@ -332,22 +290,25 @@ export const SignupScreen = ({ navigation }: any) => {
                     style={styles.eyeButton}
                     onPress={() => setShowPassword(!showPassword)}
                   >
-                    <Text style={styles.eyeButtonText}>
-                      {showPassword ? '🙈' : '👁️'}
-                    </Text>
+                    <MentalHealthIcon
+                      name={showPassword ? "EyeOff" : "Eye"}
+                      size={20}
+                      color="#B8A99A"
+                    />
                   </TouchableOpacity>
                 </View>
               </View>
 
-              <View style={[styles.inputContainer, { flex: undefined }]}>
-                <Text style={styles.inputLabel}>Confirm Password</Text>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Password Confirmation</Text>
                 <View style={styles.inputWrapper}>
+                  <MentalHealthIcon name="Lock" size={20} color="#B8A99A" style={styles.inputIcon} />
                   <TextInput
                     style={styles.input}
-                    value={formData.confirmPassword}
-                    onChangeText={(text) => updateFormData('confirmPassword', text)}
-                    placeholder="Confirm your password"
-                    placeholderTextColor={theme.colors.text.tertiary}
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    placeholder="Enter your password..."
+                    placeholderTextColor="#6B5444"
                     secureTextEntry={!showConfirmPassword}
                     autoComplete="new-password"
                   />
@@ -355,9 +316,11 @@ export const SignupScreen = ({ navigation }: any) => {
                     style={styles.eyeButton}
                     onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
-                    <Text style={styles.eyeButtonText}>
-                      {showConfirmPassword ? '🙈' : '👁️'}
-                    </Text>
+                    <MentalHealthIcon
+                      name={showConfirmPassword ? "EyeOff" : "Eye"}
+                      size={20}
+                      color="#B8A99A"
+                    />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -371,24 +334,21 @@ export const SignupScreen = ({ navigation }: any) => {
                 disabled={!canSignup}
               >
                 <Text style={styles.signupButtonText}>
-                  {isLoading ? 'Creating Account...' : 'Create Account'}
+                  {isLoading ? 'Creating Account...' : 'Sign Up'}
                 </Text>
+                <Text style={{ color: '#FFFFFF', fontSize: 18 }}>→</Text>
               </TouchableOpacity>
 
-              <Text style={styles.termsText}>
-                By creating an account, you agree to our{' '}
-                <Text style={styles.linkText}>Terms of Service</Text> and{' '}
-                <Text style={styles.linkText}>Privacy Policy</Text>
-              </Text>
-
               <View style={styles.footer}>
-                <Text style={styles.footerText}>Already have an account?</Text>
-                <TouchableOpacity
-                  style={styles.loginButton}
-                  onPress={() => navigation?.navigate?.('Login')}
-                >
-                  <Text style={styles.loginButtonText}>Sign In</Text>
-                </TouchableOpacity>
+                <Text style={styles.footerText}>
+                  Already have an account?{' '}
+                  <Text
+                    style={styles.loginText}
+                    onPress={() => navigation?.navigate?.('Login')}
+                  >
+                    Sign In
+                  </Text>
+                </Text>
               </View>
             </ScrollView>
           </View>
