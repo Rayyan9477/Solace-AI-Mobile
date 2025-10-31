@@ -360,7 +360,7 @@ export const MoodTrackingForm = ({
         </View>
 
         {errors.mood && (
-          <Text style={[styles.errorText, { color: theme.colors.error[500] }]}>
+          <Text style={[styles.errorText, { color: theme.colors.error['500'] }]}>
             {errors.mood[0]?.message}
           </Text>
         )}
@@ -484,7 +484,7 @@ export const AssessmentQuestionForm = ({
               style={[
                 styles.progressFill,
                 {
-                  backgroundColor: theme.colors.primary[500],
+                  backgroundColor: theme.colors.primary['500'],
                   width: `${(questionNumber / totalQuestions) * 100}%`,
                 },
               ]}
@@ -522,7 +522,7 @@ export const AssessmentQuestionForm = ({
                   backgroundColor: theme.colors.background.surface,
                   borderColor:
                     selectedAnswer === option.value
-                      ? theme.colors.primary[500]
+                      ? theme.colors.primary['500']
                       : theme.colors.border.primary,
                 },
                 selectedAnswer === option.value && styles.selectedAnswer,
@@ -539,8 +539,8 @@ export const AssessmentQuestionForm = ({
                   styles.radioButton,
                   { borderColor: theme.colors.border.primary },
                   selectedAnswer === option.value && {
-                    backgroundColor: theme.colors.primary[500],
-                    borderColor: theme.colors.primary[500],
+                    backgroundColor: theme.colors.primary['500'],
+                    borderColor: theme.colors.primary['500'],
                   },
                 ]}
               >
@@ -567,7 +567,7 @@ export const AssessmentQuestionForm = ({
 
         {error && (
           <Text
-            style={[styles.errorText, { color: theme.colors.error[500] }]}
+            style={[styles.errorText, { color: theme.colors.error['500'] }]}
             accessibilityRole="alert"
             accessibilityLiveRegion="assertive"
           >
@@ -653,12 +653,12 @@ export const CrisisSupportForm = ({ onSubmit, isLoading = false }) => {
       contentContainerStyle={styles.container}
     >
       <View
-        style={[styles.formCard, { backgroundColor: theme.colors.error[50] }]}
+        style={[styles.formCard, { backgroundColor: theme.colors.error['50'] }]}
       >
-        <Text style={[styles.formTitle, { color: theme.colors.error[700] }]}>
+        <Text style={[styles.formTitle, { color: theme.colors.error['700'] }]}>
           Crisis Support Information
         </Text>
-        <Text style={[styles.formSubtitle, { color: theme.colors.error[600] }]}>
+        <Text style={[styles.formSubtitle, { color: theme.colors.error['600'] }]}>
           This information helps us provide you with immediate support when
           needed.
         </Text>

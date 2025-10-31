@@ -64,7 +64,7 @@ export const SearchScreen = () => {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -76,7 +76,7 @@ export const SearchScreen = () => {
     searchBar: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 16,
       paddingHorizontal: 16,
       paddingVertical: 12,
@@ -129,7 +129,7 @@ export const SearchScreen = () => {
       gap: 6,
       paddingHorizontal: 12,
       paddingVertical: 6,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 12,
     },
     sortText: {
@@ -147,13 +147,13 @@ export const SearchScreen = () => {
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       flexDirection: 'row',
       alignItems: 'center',
       gap: 6,
     },
     chipActive: {
-      backgroundColor: theme.colors.brown[70],
+      backgroundColor: theme.colors.brown['70'],
     },
     chipIcon: {
       fontSize: 14,
@@ -171,7 +171,7 @@ export const SearchScreen = () => {
       gap: 12,
     },
     resultCard: {
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 16,
       padding: 16,
       flexDirection: 'row',
@@ -230,7 +230,7 @@ export const SearchScreen = () => {
       lineHeight: 20,
     },
     filterModal: {
-      backgroundColor: theme.colors.brown[10],
+      backgroundColor: theme.colors.brown['10'],
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
       padding: 20,
@@ -264,16 +264,16 @@ export const SearchScreen = () => {
       paddingHorizontal: 16,
       paddingVertical: 10,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderWidth: 2,
       borderColor: 'transparent',
     },
     categoryChipActive: {
-      backgroundColor: theme.colors.brown[70],
-      borderColor: theme.colors.brown[70],
+      backgroundColor: theme.colors.brown['70'],
+      borderColor: theme.colors.brown['70'],
     },
     dateSelector: {
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 12,
       padding: 16,
       flexDirection: 'row',
@@ -293,7 +293,7 @@ export const SearchScreen = () => {
     sliderTrack: {
       flex: 1,
       height: 8,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 4,
     },
     sliderFill: {
@@ -308,7 +308,7 @@ export const SearchScreen = () => {
       minWidth: 30,
     },
     applyButton: {
-      backgroundColor: theme.colors.brown[70],
+      backgroundColor: theme.colors.brown['70'],
       paddingVertical: 16,
       borderRadius: 16,
       alignItems: 'center',

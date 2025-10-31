@@ -114,13 +114,13 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
   const getGradientColors = () => {
     if (showQuote) {
       return [
-        freudTheme.colors.orange[50], // Empathy Orange from design reference
-        freudTheme.colors.orange[40],
+        freudtheme.colors.orange['50'], // Empathy Orange from design reference
+        freudtheme.colors.orange['40'],
       ];
     }
     return [
       "#FFFFFF", // Clean white background like design reference
-      freudTheme.colors.gray[10],
+      freudtheme.colors.gray['10'],
     ];
   };
 
@@ -219,7 +219,7 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
         <View style={styles.contentContainer}>
           {/* Logo Section - Freud Design System */}
           <Animated.View style={[styles.logoContainer, logoContainerStyle]}>
-            <FreudLogo size={80} primaryColor={freudTheme.colors.brown[80]} />
+            <FreudLogo size={80} primaryColor={freudtheme.colors.brown['80']} />
 
             <Animated.Text
               style={[
@@ -303,7 +303,7 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
                   style={[
                     styles.progressBar,
                     progressBarStyle,
-                    { backgroundColor: theme.colors.primary[500] },
+                    { backgroundColor: theme.colors.primary['500'] },
                   ]}
                 />
               </View>

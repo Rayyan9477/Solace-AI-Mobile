@@ -147,13 +147,13 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
       marginVertical: 16,
       borderRadius: 20,
       overflow: 'hidden',
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       ...theme.getShadow('md'),
     },
     featuredImage: {
       width: '100%',
       height: 180,
-      backgroundColor: theme.colors.brown[30],
+      backgroundColor: theme.colors.brown['30'],
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -166,7 +166,7 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
     featuredCategory: {
       fontSize: 12,
       fontWeight: '600',
-      color: theme.colors.orange[40],
+      color: theme.colors.orange['40'],
       marginBottom: 8,
     },
     featuredTitle: {
@@ -205,7 +205,7 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
     seeAllText: {
       fontSize: 14,
       fontWeight: '600',
-      color: theme.colors.orange[40],
+      color: theme.colors.orange['40'],
     },
     articleCard: {
       flexDirection: 'row',
@@ -219,7 +219,7 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
     articleImage: {
       width: 80,
       height: 80,
-      backgroundColor: theme.colors.green[20],
+      backgroundColor: theme.colors.green['20'],
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -268,7 +268,7 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
       width: 60,
       height: 60,
       borderRadius: 30,
-      backgroundColor: theme.colors.purple[20],
+      backgroundColor: theme.colors.purple['20'],
       justifyContent: 'center',
       alignItems: 'center',
       marginRight: 12,
@@ -303,7 +303,7 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
     courseRatingText: {
       fontSize: 12,
       fontWeight: '600',
-      color: theme.colors.yellow[50],
+      color: theme.colors.yellow['50'],
     },
     courseStudents: {
       fontSize: 11,
@@ -316,7 +316,7 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
       width: 56,
       height: 56,
       borderRadius: 28,
-      backgroundColor: theme.colors.green[40],
+      backgroundColor: theme.colors.green['40'],
       justifyContent: 'center',
       alignItems: 'center',
       ...theme.getShadow('lg'),

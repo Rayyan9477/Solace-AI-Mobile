@@ -244,7 +244,7 @@ const EnhancedMoodTrackerScreen = () => {
       id: "neutral",
       emoji: "😐",
       label: "Neutral",
-      color: theme.colors.gray[500],
+      color: theme.colors.gray['500'],
       description: "Neither positive nor negative",
     },
     {
@@ -258,7 +258,7 @@ const EnhancedMoodTrackerScreen = () => {
       id: "anxious",
       emoji: "😰",
       label: "Anxious",
-      color: theme.colors.warning[500],
+      color: theme.colors.warning['500'],
       description: "Worried or nervous",
     },
     {
@@ -272,7 +272,7 @@ const EnhancedMoodTrackerScreen = () => {
       id: "angry",
       emoji: "😠",
       label: "Angry",
-      color: theme.colors.error[500],
+      color: theme.colors.error['500'],
       description: "Frustrated or irritated",
     },
   ];
@@ -550,7 +550,7 @@ const EnhancedMoodTrackerScreen = () => {
       <View
         style={[
           styles.progressBar,
-          { backgroundColor: theme.colors.gray[200] },
+          { backgroundColor: theme.colors.gray['200'] },
         ]}
         testID="progress-indicator"
         accessible
@@ -696,7 +696,7 @@ const EnhancedMoodTrackerScreen = () => {
                   backgroundColor:
                     intensity >= level
                       ? theme.colors.therapeutic.calming[500]
-                      : theme.colors.gray[300],
+                      : theme.colors.gray['300'],
                 },
               ]}
               onPress={() => onSetIntensity(level)}
@@ -814,7 +814,7 @@ const EnhancedMoodTrackerScreen = () => {
             {
               backgroundColor: theme.colors.background.secondary,
               color: theme.colors.text.primary,
-              borderColor: theme.colors.gray[300],
+              borderColor: theme.colors.gray['300'],
             },
           ]}
           value={notes}
@@ -843,8 +843,8 @@ const EnhancedMoodTrackerScreen = () => {
               styles.optionCard,
               styles.triggerCard,
               triggers.includes(trigger.id) && {
-                backgroundColor: theme.colors.warning[100],
-                borderColor: theme.colors.warning[400],
+                backgroundColor: theme.colors.warning['100'],
+                borderColor: theme.colors.warning['400'],
                 borderWidth: 2,
               },
             ]}
@@ -938,7 +938,7 @@ const EnhancedMoodTrackerScreen = () => {
         {/* Crisis/Support messages */}
         {Boolean(crisisMessage) && (
           <View accessibilityRole="alert" style={{ paddingHorizontal: spacing[5], paddingVertical: spacing[2] }}>
-            <Text style={{ color: theme.colors.error[500] }}>{crisisMessage}</Text>
+            <Text style={{ color: theme.colors.error['500'] }}>{crisisMessage}</Text>
           </View>
         )}
         {Boolean(supportMessage) && (
@@ -950,7 +950,7 @@ const EnhancedMoodTrackerScreen = () => {
         {/* Error/info message area for accessibility */}
         {Boolean(errorMessage) && (
           <View accessibilityRole="alert" style={{ paddingHorizontal: spacing[5], paddingVertical: spacing[2] }}>
-            <Text accessibilityRole="alert" style={{ color: theme.colors.error[500] }}>{errorMessage}</Text>
+            <Text accessibilityRole="alert" style={{ color: theme.colors.error['500'] }}>{errorMessage}</Text>
           </View>
         )}
         {Boolean(infoMessage) && (
@@ -1010,7 +1010,7 @@ const EnhancedMoodTrackerScreen = () => {
                       theme.colors.therapeutic.calming[500],
                       theme.colors.therapeutic.peaceful[500],
                     ]
-                  : [theme.colors.gray[300], theme.colors.gray[400]]
+                  : [theme.colors.gray['300'], theme.colors.gray['400']]
               }
               style={styles.nextButtonGradient}
             >

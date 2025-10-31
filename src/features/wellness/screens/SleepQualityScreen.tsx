@@ -57,7 +57,7 @@ export const SleepQualityScreen = () => {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -89,7 +89,7 @@ export const SleepQualityScreen = () => {
       color: 'rgba(255,255,255,0.9)',
     },
     sleepOverview: {
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 20,
       padding: 20,
       marginBottom: 24,
@@ -168,7 +168,7 @@ export const SleepQualityScreen = () => {
     },
     periodToggle: {
       flexDirection: 'row',
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 12,
       padding: 4,
     },
@@ -178,7 +178,7 @@ export const SleepQualityScreen = () => {
       borderRadius: 8,
     },
     periodButtonActive: {
-      backgroundColor: theme.colors.brown[70],
+      backgroundColor: theme.colors.brown['70'],
     },
     periodText: {
       fontSize: 12,
@@ -192,7 +192,7 @@ export const SleepQualityScreen = () => {
       gap: 12,
     },
     historyItem: {
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 16,
       padding: 16,
       flexDirection: 'row',
@@ -253,7 +253,7 @@ export const SleepQualityScreen = () => {
             fill={QUALITY_COLORS.REM}
           />
           {/* Center white circle */}
-          <Circle cx={100} cy={100} r={50} fill={theme.colors.brown[10]} />
+          <Circle cx={100} cy={100} r={50} fill={theme.colors.brown['10']} />
         </Svg>
         <View style={{ position: 'absolute', alignItems: 'center' }}>
           <Text style={{ fontSize: 32, fontWeight: '800', color: theme.colors.text.primary }}>

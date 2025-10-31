@@ -174,7 +174,7 @@ export const SmartNotificationsScreen = ({ navigation }: any) => {
       color: theme.colors.text.primary,
     },
     badge: {
-      backgroundColor: theme.colors.orange[40],
+      backgroundColor: theme.colors.orange['40'],
       paddingHorizontal: 8,
       paddingVertical: 4,
       borderRadius: 12,
@@ -189,7 +189,7 @@ export const SmartNotificationsScreen = ({ navigation }: any) => {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -248,7 +248,7 @@ export const SmartNotificationsScreen = ({ navigation }: any) => {
       color: theme.colors.text.tertiary,
     },
     newBadge: {
-      backgroundColor: theme.colors.green[40],
+      backgroundColor: theme.colors.green['40'],
       paddingHorizontal: 6,
       paddingVertical: 2,
       borderRadius: 8,
@@ -471,7 +471,7 @@ export const SmartNotificationsScreen = ({ navigation }: any) => {
           onValueChange={setNotificationsEnabled}
           trackColor={{
             false: theme.colors.border.primary,
-            true: theme.colors.green[40],
+            true: theme.colors.green['40'],
           }}
           thumbColor="#FFFFFF"
         />

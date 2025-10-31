@@ -146,7 +146,7 @@ export const MindfulHoursScreen = () => {
           {HISTORY.map((item) => (
             <View
               key={item.id}
-              style={[styles.historyCard, { backgroundColor: theme.colors.brown[10] }]}
+              style={[styles.historyCard, { backgroundColor: theme.colors.brown['10'] }]}
             >
               <View style={styles.historyLeft}>
                 <View style={[styles.historyDot, { backgroundColor: item.color }]} />
@@ -168,7 +168,7 @@ export const MindfulHoursScreen = () => {
 
         {/* Add Exercise Button */}
         <TouchableOpacity
-          style={[styles.addButton, { backgroundColor: theme.colors.brown[70] }]}
+          style={[styles.addButton, { backgroundColor: theme.colors.brown['70'] }]}
           onPress={() => navigation.navigate('ExerciseCreate')}
         >
           <Text style={styles.addButtonText}>+ New Meditation</Text>

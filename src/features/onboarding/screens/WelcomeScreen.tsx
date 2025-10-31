@@ -29,7 +29,7 @@ const WELCOME_STEPS = [
     title: "Welcome to the ultimate\nfreud UI Kit!",
     subtitle:
       "Your mindful mental health AI companion\nfor everyone, anywhere ✓",
-    backgroundColors: ["#FFFFFF", freudTheme.colors.gray[10]],
+    backgroundColors: ["#FFFFFF", freudtheme.colors.gray['10']],
     illustration: "welcome",
     showGetStarted: true,
   },
@@ -39,8 +39,8 @@ const WELCOME_STEPS = [
     subtitle:
       "Get personalized insights and recommendations based on your unique mental health journey",
     backgroundColors: [
-      freudTheme.colors.green[50],
-      freudTheme.colors.green[40],
+      freudtheme.colors.green['50'],
+      freudtheme.colors.green['40'],
     ],
     illustration: "personalize",
     stepLabel: "Step One",
@@ -51,8 +51,8 @@ const WELCOME_STEPS = [
     subtitle:
       "Track your emotional patterns and receive AI-powered insights to understand your mental state",
     backgroundColors: [
-      freudTheme.colors.orange[30],
-      freudTheme.colors.orange[20],
+      freudtheme.colors.orange['30'],
+      freudtheme.colors.orange['20'],
     ],
     illustration: "mood",
     stepLabel: "Step Two",
@@ -62,7 +62,7 @@ const WELCOME_STEPS = [
     title: "AI Mental Journaling &\nAI Therapy Chatbot",
     subtitle:
       "Express yourself through guided journaling and get support from our therapeutic AI chatbot",
-    backgroundColors: [freudTheme.colors.gray[20], freudTheme.colors.gray[10]],
+    backgroundColors: [freudtheme.colors.gray['20'], freudtheme.colors.gray['10']],
     illustration: "journal",
     stepLabel: "Step Three",
   },
@@ -72,8 +72,8 @@ const WELCOME_STEPS = [
     subtitle:
       "Discover curated mindfulness exercises, meditations, and wellness resources",
     backgroundColors: [
-      freudTheme.colors.yellow[30],
-      freudTheme.colors.yellow[20],
+      freudtheme.colors.yellow['30'],
+      freudtheme.colors.yellow['20'],
     ],
     illustration: "mindful",
     stepLabel: "Step Four",
@@ -84,8 +84,8 @@ const WELCOME_STEPS = [
     subtitle:
       "Connect with others on similar journeys in a safe, supportive environment",
     backgroundColors: [
-      freudTheme.colors.purple[30],
-      freudTheme.colors.purple[20],
+      freudtheme.colors.purple['30'],
+      freudtheme.colors.purple['20'],
     ],
     illustration: "community",
     stepLabel: "Step Five",
@@ -211,7 +211,7 @@ const WelcomeScreen = ({ navigation }) => {
               <View
                 style={[
                   styles.iconBadge,
-                  { backgroundColor: freudTheme.colors.orange[40] },
+                  { backgroundColor: freudtheme.colors.orange['40'] },
                 ]}
               >
                 <ThemedIcon name="Brain" size={16} color="#FFFFFF" />
@@ -219,7 +219,7 @@ const WelcomeScreen = ({ navigation }) => {
               <View
                 style={[
                   styles.iconBadge,
-                  { backgroundColor: freudTheme.colors.green[50] },
+                  { backgroundColor: freudtheme.colors.green['50'] },
                 ]}
               >
                 <Text style={styles.iconText}>✓</Text>
@@ -227,7 +227,7 @@ const WelcomeScreen = ({ navigation }) => {
               <View
                 style={[
                   styles.iconBadge,
-                  { backgroundColor: freudTheme.colors.purple[50] },
+                  { backgroundColor: freudtheme.colors.purple['50'] },
                 ]}
               >
                 <ThemedIcon name="Heart" size={16} color="#FFFFFF" />

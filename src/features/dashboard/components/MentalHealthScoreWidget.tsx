@@ -33,10 +33,10 @@ export const MentalHealthScoreWidget: React.FC<MentalHealthScoreWidgetProps> = (
 
   // Color based on score
   const getScoreColor = () => {
-    if (score >= 80) return theme.colors.green[60]; // Good
-    if (score >= 60) return theme.colors.yellow[60]; // Moderate
-    if (score >= 40) return theme.colors.orange[60]; // Low
-    return theme.colors.orange[70]; // Critical
+    if (score >= 80) return theme.colors.green['60']; // Good
+    if (score >= 60) return theme.colors.yellow['60']; // Moderate
+    if (score >= 40) return theme.colors.orange['60']; // Low
+    return theme.colors.orange['70']; // Critical
   };
 
   const scoreColor = getScoreColor();
@@ -56,7 +56,7 @@ export const MentalHealthScoreWidget: React.FC<MentalHealthScoreWidgetProps> = (
           cx={center}
           cy={center}
           r={radius}
-          stroke={theme.colors.gray[20]}
+          stroke={theme.colors.gray['20']}
           strokeWidth={strokeWidth}
           fill="none"
         />

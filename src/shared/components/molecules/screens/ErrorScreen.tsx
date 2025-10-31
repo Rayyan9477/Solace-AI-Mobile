@@ -97,7 +97,7 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({
       width: 240,
       height: 240,
       borderRadius: 120,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       justifyContent: 'center',
       alignItems: 'center',
       marginBottom: 40,
@@ -122,7 +122,7 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({
     statusCodeBadge: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: theme.colors.orange[10],
+      backgroundColor: theme.colors.orange['10'],
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
@@ -132,7 +132,7 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({
     statusCodeText: {
       fontSize: 13,
       fontWeight: '600',
-      color: theme.colors.orange[60],
+      color: theme.colors.orange['60'],
     },
     footer: {
       paddingHorizontal: 20,
@@ -143,7 +143,7 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: theme.colors.orange[40],
+      backgroundColor: theme.colors.orange['40'],
       paddingVertical: 16,
       borderRadius: 24,
       gap: 8,
@@ -207,7 +207,7 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({
             <MentalHealthIcon
               name="AlertCircle"
               size={16}
-              color={theme.colors.orange[60]}
+              color={theme.colors.orange['60']}
             />
             <Text style={styles.statusCodeText}>{config.statusCode}</Text>
           </View>

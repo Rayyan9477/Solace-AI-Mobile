@@ -1,63 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-// Mock services for development
-const mockApiService = {
-  auth: {
-    async login(email, password) {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      if (email && password) {
-        return {
-          user: { id: '1', name: 'Test User', email },
-          access_token: 'mock_token_123',
-        };
-      }
-      throw new Error('Invalid credentials');
-    }
-  }
-};
-
-const mockSecureStorage = {
-  async storeSecureData(key, data) {
-    if (__DEV__) console.log(`Storing secure data for key: ${key}`);
-    return true;
-  },
-  async getSecureData(key) {
-    if (__DEV__) console.log(`Getting secure data for key: ${key}`);
-    if (key === 'user_profile') {
-      return { id: '1', name: 'Test User', email: 'test@example.com' };
-    }
-    return null;
-  },
-  async removeSecureData(key) {
-    if (__DEV__) console.log(`Removing secure data for key: ${key}`);
-    return true;
-  },
-};
-
-const mockTokenService = {
-  async isAuthenticated() {
-    return false; // Start as not authenticated for proper flow
-  },
-  async getTokens() {
-    return null; // Start with no tokens
-  },
-  async clearTokens() {
-    if (__DEV__) console.log('Clearing tokens');
-    return true;
-  },
-  async invalidateSession() {
-    if (__DEV__) console.log('Invalidating session');
-    return true;
-  },
-};
-
-// Services - use mocks in development for now
-// TODO: Replace with real service imports when they are implemented
-const apiService = mockApiService;
-const secureStorage = mockSecureStorage;
-const tokenService = mockTokenService;
+import apiService from "../../services/api";
+import secureStorage from "../../services/secureStorage";
+import tokenService from "../../services/tokenService";
 
 // Async thunk for secure login
 export const secureLogin = createAsyncThunk(
@@ -72,6 +16,11 @@ export const secureLogin = createAsyncThunk(
       // Real API call using the actual API service
       const response = await apiService.auth.login(email, password);
 
+      // Validate response
+      if (!response?.user) {
+        throw new Error("Invalid API response");
+      }
+
       // Store user data securely
       await secureStorage.storeSecureData("user_profile", response.user, {
         dataType: "user_profile",
@@ -81,7 +30,7 @@ export const secureLogin = createAsyncThunk(
         user: response.user,
         token: response.access_token,
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login error:", error);
       return rejectWithValue(
         error.response?.data?.message ||

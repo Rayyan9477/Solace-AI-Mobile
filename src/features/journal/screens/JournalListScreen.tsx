@@ -71,7 +71,7 @@ export const JournalListScreen = () => {
 
   const renderJournalCard = ({ item }: { item: JournalEntry }) => (
     <TouchableOpacity
-      style={[styles.card, { backgroundColor: theme.colors.brown[10] }]}
+      style={[styles.card, { backgroundColor: theme.colors.brown['10'] }]}
       onPress={() => navigation.navigate('JournalDetail', { id: item.id })}
       accessible
       accessibilityLabel={`Journal entry: ${item.title}`}
@@ -138,7 +138,7 @@ export const JournalListScreen = () => {
             key={day}
             style={[
               styles.dateCircle,
-              index === 0 && { backgroundColor: theme.colors.green[60] },
+              index === 0 && { backgroundColor: theme.colors.green['60'] },
             ]}
           >
             <Text
@@ -158,14 +158,14 @@ export const JournalListScreen = () => {
         <TouchableOpacity
           style={[
             styles.filterButton,
-            filter === 'recent' && { backgroundColor: theme.colors.brown[30] },
+            filter === 'recent' && { backgroundColor: theme.colors.brown['30'] },
           ]}
           onPress={() => setFilter('recent')}
         >
           <Text
             style={[
               styles.filterText,
-              { color: filter === 'recent' ? theme.colors.brown[100] : theme.colors.text.secondary },
+              { color: filter === 'recent' ? theme.colors.brown['100'] : theme.colors.text.secondary },
             ]}
           >
             Recent
@@ -184,7 +184,7 @@ export const JournalListScreen = () => {
 
       {/* Add button */}
       <TouchableOpacity
-        style={[styles.fab, { backgroundColor: theme.colors.brown[70] }]}
+        style={[styles.fab, { backgroundColor: theme.colors.brown['70'] }]}
         onPress={() => navigation.navigate('JournalCreate')}
         accessible
         accessibilityLabel="Create new journal entry"

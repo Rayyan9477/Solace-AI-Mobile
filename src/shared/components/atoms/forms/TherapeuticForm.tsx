@@ -43,7 +43,7 @@ const ProgressIndicator = ({ current, total, label }) => {
       <View
         style={[
           styles.progressBar,
-          { backgroundColor: theme.colors.gray[200] },
+          { backgroundColor: theme.colors.gray['200'] },
         ]}
       >
         <Animated.View

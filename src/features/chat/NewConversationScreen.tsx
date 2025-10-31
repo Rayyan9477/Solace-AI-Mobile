@@ -123,8 +123,8 @@ export const NewConversationScreen = ({ navigation }: any) => {
       backgroundColor: theme.colors.background.secondary,
     },
     modelCardSelected: {
-      borderColor: theme.colors.green[40],
-      backgroundColor: theme.colors.green[10],
+      borderColor: theme.colors.green['40'],
+      backgroundColor: theme.colors.green['10'],
     },
     modelIcon: {
       width: 40,
@@ -141,7 +141,7 @@ export const NewConversationScreen = ({ navigation }: any) => {
       marginBottom: 4,
     },
     modelSelected: {
-      color: theme.colors.green[60],
+      color: theme.colors.green['60'],
     },
     modelDescription: {
       fontSize: 11,
@@ -154,7 +154,7 @@ export const NewConversationScreen = ({ navigation }: any) => {
       width: 20,
       height: 20,
       borderRadius: 10,
-      backgroundColor: theme.colors.green[40],
+      backgroundColor: theme.colors.green['40'],
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -171,8 +171,8 @@ export const NewConversationScreen = ({ navigation }: any) => {
       backgroundColor: theme.colors.background.secondary,
     },
     styleChipSelected: {
-      backgroundColor: theme.colors.orange[40],
-      borderColor: theme.colors.orange[40],
+      backgroundColor: theme.colors.orange['40'],
+      borderColor: theme.colors.orange['40'],
     },
     styleChipText: {
       fontSize: 14,
@@ -211,8 +211,8 @@ export const NewConversationScreen = ({ navigation }: any) => {
       borderColor: theme.colors.border.primary,
     },
     goalChipSelected: {
-      backgroundColor: theme.colors.green[20],
-      borderColor: theme.colors.green[40],
+      backgroundColor: theme.colors.green['20'],
+      borderColor: theme.colors.green['40'],
     },
     goalChipText: {
       fontSize: 13,
@@ -221,14 +221,14 @@ export const NewConversationScreen = ({ navigation }: any) => {
       marginLeft: 6,
     },
     goalChipTextSelected: {
-      color: theme.colors.green[60],
+      color: theme.colors.green['60'],
     },
     createButton: {
       position: 'absolute',
       bottom: 24,
       left: 20,
       right: 20,
-      backgroundColor: theme.colors.orange[40],
+      backgroundColor: theme.colors.orange['40'],
       borderRadius: 24,
       paddingVertical: 16,
       alignItems: 'center',
@@ -250,28 +250,28 @@ export const NewConversationScreen = ({ navigation }: any) => {
       name: 'GPT-4',
       description: 'Most advanced',
       icon: '🧠',
-      color: theme.colors.green[20],
+      color: theme.colors.green['20'],
     },
     {
       id: 'gpt-3-5',
       name: 'GPT-3.5',
       description: 'Fast & efficient',
       icon: '⚡',
-      color: theme.colors.blue[20],
+      color: theme.colors.blue['20'],
     },
     {
       id: 'claude',
       name: 'Claude',
       description: 'Thoughtful',
       icon: '🎭',
-      color: theme.colors.purple[20],
+      color: theme.colors.purple['20'],
     },
     {
       id: 'palm2',
       name: 'PaLM2',
       description: 'Balanced',
       icon: '🌴',
-      color: theme.colors.yellow[20],
+      color: theme.colors.yellow['20'],
     },
   ];
 
@@ -521,7 +521,7 @@ export const NewConversationScreen = ({ navigation }: any) => {
               onValueChange={setMakeChatPublic}
               trackColor={{
                 false: theme.colors.border.primary,
-                true: theme.colors.green[40],
+                true: theme.colors.green['40'],
               }}
               thumbColor="#FFFFFF"
             />

@@ -55,13 +55,13 @@ export const JournalDetailScreen = () => {
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.brown[30],
+      borderBottomColor: theme.colors.brown['30'],
     },
     backButton: {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -102,7 +102,7 @@ export const JournalDetailScreen = () => {
       marginBottom: 24,
     },
     audioSection: {
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 20,
       padding: 20,
       marginBottom: 24,
@@ -157,7 +157,7 @@ export const JournalDetailScreen = () => {
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
     },
     tagText: {
       fontSize: 14,
@@ -185,7 +185,7 @@ export const JournalDetailScreen = () => {
       gap: 12,
     },
     editButton: {
-      backgroundColor: theme.colors.brown[70],
+      backgroundColor: theme.colors.brown['70'],
       paddingVertical: 16,
       borderRadius: 16,
       alignItems: 'center',
@@ -196,7 +196,7 @@ export const JournalDetailScreen = () => {
       color: theme.colors.background.secondary,
     },
     deleteButton: {
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       paddingVertical: 16,
       borderRadius: 16,
       alignItems: 'center',

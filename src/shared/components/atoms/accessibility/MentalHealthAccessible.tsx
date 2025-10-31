@@ -159,15 +159,15 @@ const MentalHealthAccessible = ({
 
     const priorityColors = {
       critical: {
-        borderColor: theme.colors.error[400],
-        backgroundColor: theme.colors.error[50],
+        borderColor: theme.colors.error['400'],
+        backgroundColor: theme.colors.error['50'],
       },
       high: {
-        borderColor: theme.colors.warning[400],
-        backgroundColor: theme.colors.warning[50],
+        borderColor: theme.colors.warning['400'],
+        backgroundColor: theme.colors.warning['50'],
       },
       normal: {
-        borderColor: theme.colors.primary[200],
+        borderColor: theme.colors.primary['200'],
         backgroundColor: "transparent",
       },
     };
@@ -186,11 +186,11 @@ const MentalHealthAccessible = ({
     return {
       borderWidth: WCAG_CONSTANTS.FOCUS_OUTLINE_WIDTH,
       borderColor: crisisContext
-        ? theme.colors.error[500]
-        : theme.colors.primary[500],
+        ? theme.colors.error['500']
+        : theme.colors.primary['500'],
       shadowColor: crisisContext
-        ? theme.colors.error[500]
-        : theme.colors.primary[500],
+        ? theme.colors.error['500']
+        : theme.colors.primary['500'],
       shadowOffset: { width: 0, height: 0 },
       shadowOpacity: 0.4,
       shadowRadius: 4,

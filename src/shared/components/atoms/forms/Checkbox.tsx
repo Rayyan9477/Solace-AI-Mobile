@@ -58,7 +58,7 @@ const Checkbox = ({
   };
 
   const getTherapeuticColor = () => {
-    if (disabled) return theme.colors.gray[400];
+    if (disabled) return theme.colors.gray['400'];
 
     switch (variant) {
       case "calming":
@@ -70,7 +70,7 @@ const Checkbox = ({
       case "grounding":
         return theme.colors.therapeutic.grounding[500];
       default:
-        return theme.colors.primary[500];
+        return theme.colors.primary['500'];
     }
   };
 

@@ -110,7 +110,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
     skipText: {
       fontSize: 14,
       fontWeight: '600',
-      color: theme.colors.orange[40],
+      color: theme.colors.orange['40'],
     },
     progressContainer: {
       paddingHorizontal: 20,
@@ -124,7 +124,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
     },
     progressFill: {
       height: '100%',
-      backgroundColor: theme.colors.green[40],
+      backgroundColor: theme.colors.green['40'],
       borderRadius: 2,
     },
     content: {
@@ -153,7 +153,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       width: 120,
       height: 120,
       borderRadius: 60,
-      backgroundColor: theme.colors.green[20],
+      backgroundColor: theme.colors.green['20'],
       justifyContent: 'center',
       alignItems: 'center',
       marginBottom: 24,
@@ -184,8 +184,8 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       alignItems: 'center',
     },
     avatarOptionSelected: {
-      borderColor: theme.colors.green[40],
-      backgroundColor: theme.colors.green[10],
+      borderColor: theme.colors.green['40'],
+      backgroundColor: theme.colors.green['10'],
     },
     avatarOptionEmoji: {
       fontSize: 32,
@@ -220,7 +220,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
     sliderValue: {
       fontSize: 18,
       fontWeight: '700',
-      color: theme.colors.green[40],
+      color: theme.colors.green['40'],
     },
     slider: {
       height: 40,
@@ -257,8 +257,8 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       backgroundColor: theme.colors.background.secondary,
     },
     otpBoxFilled: {
-      borderColor: theme.colors.green[40],
-      backgroundColor: theme.colors.green[10],
+      borderColor: theme.colors.green['40'],
+      backgroundColor: theme.colors.green['10'],
     },
     otpText: {
       fontSize: 24,
@@ -271,7 +271,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       textAlign: 'center',
     },
     resendLink: {
-      color: theme.colors.orange[40],
+      color: theme.colors.orange['40'],
       fontWeight: '600',
     },
     fingerprintContainer: {
@@ -282,7 +282,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       width: 180,
       height: 180,
       borderRadius: 90,
-      backgroundColor: theme.colors.green[10],
+      backgroundColor: theme.colors.green['10'],
       justifyContent: 'center',
       alignItems: 'center',
       marginBottom: 24,
@@ -351,7 +351,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       bottom: 24,
       left: 20,
       right: 20,
-      backgroundColor: theme.colors.orange[40],
+      backgroundColor: theme.colors.orange['40'],
       borderRadius: 24,
       paddingVertical: 16,
       alignItems: 'center',
@@ -561,7 +561,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
                 }
                 trackColor={{
                   false: theme.colors.border.primary,
-                  true: theme.colors.green[40],
+                  true: theme.colors.green['40'],
                 }}
                 thumbColor="#FFFFFF"
               />
@@ -581,7 +581,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
                 }
                 trackColor={{
                   false: theme.colors.border.primary,
-                  true: theme.colors.green[40],
+                  true: theme.colors.green['40'],
                 }}
                 thumbColor="#FFFFFF"
               />
@@ -601,7 +601,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
                 }
                 trackColor={{
                   false: theme.colors.border.primary,
-                  true: theme.colors.green[40],
+                  true: theme.colors.green['40'],
                 }}
                 thumbColor="#FFFFFF"
               />

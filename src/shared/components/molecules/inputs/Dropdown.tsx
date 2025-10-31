@@ -69,7 +69,7 @@ const Dropdown = ({
       case "grounding":
         return theme.colors.therapeutic.grounding[500];
       default:
-        return theme.colors.primary[500];
+        return theme.colors.primary['500'];
     }
   };
 

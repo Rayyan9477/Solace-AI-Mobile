@@ -129,10 +129,10 @@ export const ChatScreen = ({ navigation, route }: any) => {
       marginHorizontal: 8,
     },
     botAvatar: {
-      backgroundColor: theme.colors.green[20],
+      backgroundColor: theme.colors.green['20'],
     },
     userAvatar: {
-      backgroundColor: theme.colors.orange[20],
+      backgroundColor: theme.colors.orange['20'],
     },
     messageContent: {
       flex: 1,
@@ -143,11 +143,11 @@ export const ChatScreen = ({ navigation, route }: any) => {
       maxWidth: '85%',
     },
     botBubble: {
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderTopLeftRadius: 4,
     },
     userBubble: {
-      backgroundColor: theme.colors.orange[40],
+      backgroundColor: theme.colors.orange['40'],
       borderTopRightRadius: 4,
       alignSelf: 'flex-end',
     },
@@ -181,7 +181,7 @@ export const ChatScreen = ({ navigation, route }: any) => {
       marginBottom: 20,
     },
     typingBubble: {
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       padding: 16,
       borderRadius: 20,
       borderTopLeftRadius: 4,
@@ -213,7 +213,7 @@ export const ChatScreen = ({ navigation, route }: any) => {
       alignItems: 'center',
     },
     voiceButtonRecording: {
-      backgroundColor: theme.colors.red[40],
+      backgroundColor: theme.colors.error,
     },
     textInputWrapper: {
       flex: 1,
@@ -239,7 +239,7 @@ export const ChatScreen = ({ navigation, route }: any) => {
       width: 44,
       height: 44,
       borderRadius: 22,
-      backgroundColor: theme.colors.orange[40],
+      backgroundColor: theme.colors.orange['40'],
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -284,7 +284,11 @@ export const ChatScreen = ({ navigation, route }: any) => {
 
   const toggleRecording = () => {
     setIsRecording(!isRecording);
-    if (!isRecording) {
+    if (isRecording) {
+      // Stop pulse animation
+      pulseAnim.stopAnimation();
+      pulseAnim.setValue(1);
+    } else {
       // Start pulse animation
       Animated.loop(
         Animated.sequence([
@@ -300,8 +304,6 @@ export const ChatScreen = ({ navigation, route }: any) => {
           }),
         ])
       ).start();
-    } else {
-      pulseAnim.setValue(1);
     }
   };
 
@@ -322,7 +324,7 @@ export const ChatScreen = ({ navigation, route }: any) => {
         {item.isUser ? (
           <Text style={{ fontSize: 18 }}>👤</Text>
         ) : (
-          <FreudLogo size={20} primaryColor={theme.colors.green[60]} />
+          <FreudLogo size={20} primaryColor={theme.colors.green['60']} />
         )}
       </View>
 
@@ -363,7 +365,7 @@ export const ChatScreen = ({ navigation, route }: any) => {
   const renderTypingIndicator = () => (
     <View style={styles.typingIndicator}>
       <View style={[styles.avatar, styles.botAvatar]}>
-        <FreudLogo size={20} primaryColor={theme.colors.green[60]} />
+        <FreudLogo size={20} primaryColor={theme.colors.green['60']} />
       </View>
       <View style={styles.typingBubble}>
         <View style={styles.typingDot} />

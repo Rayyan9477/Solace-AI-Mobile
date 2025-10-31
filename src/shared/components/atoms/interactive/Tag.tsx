@@ -22,9 +22,9 @@ const Tag = ({
   const getTagColors = () => {
     if (disabled) {
       return {
-        background: theme.colors.gray[100],
-        text: theme.colors.gray[400],
-        border: theme.colors.gray[200],
+        background: theme.colors.gray['100'],
+        text: theme.colors.gray['400'],
+        border: theme.colors.gray['200'],
       };
     }
 
@@ -181,15 +181,15 @@ const TagGroup = ({
             styles.tag,
             styles.moreTag,
             {
-              backgroundColor: theme.colors.gray[100],
-              borderColor: theme.colors.gray[200],
+              backgroundColor: theme.colors.gray['100'],
+              borderColor: theme.colors.gray['200'],
             },
           ]}
           onPress={onShowMore}
           accessibilityRole="button"
           accessibilityLabel={`Show ${remainingCount} more tags`}
         >
-          <Text style={[styles.tagText, { color: theme.colors.gray[600] }]}>
+          <Text style={[styles.tagText, { color: theme.colors.gray['600'] }]}>
             +{remainingCount}
           </Text>
         </TouchableOpacity>

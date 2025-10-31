@@ -14,7 +14,6 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '@theme/ThemeProvider';
 import { MentalHealthIcon } from '@components/icons';
 import { useNavigation } from '@react-navigation/native';
@@ -24,7 +23,6 @@ const { width } = Dimensions.get('window');
 export const AssessmentResultsScreen = ({ route }: any) => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const answers = route?.params?.answers || {};
 
   // Calculate score based on answers (simplified)
   const calculateScore = () => {
@@ -252,7 +250,7 @@ export const AssessmentResultsScreen = ({ route }: any) => {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <View style={styles.cardIcon}>
-                <MentalHealthIcon name="Activity" size={20} color="#E8A872' />
+                <MentalHealthIcon name="Activity" size={20} color="#E8A872" />
               </View>
               <Text style={styles.cardTitle}>Stress Management</Text>
               <Text style={styles.cardValue}>68%</Text>

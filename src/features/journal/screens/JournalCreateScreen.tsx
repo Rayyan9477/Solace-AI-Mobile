@@ -46,13 +46,13 @@ export const JournalCreateScreen = () => {
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.brown[30],
+      borderBottomColor: theme.colors.brown['30'],
     },
     backButton: {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -65,7 +65,7 @@ export const JournalCreateScreen = () => {
       paddingHorizontal: 20,
       paddingVertical: 10,
       borderRadius: 12,
-      backgroundColor: theme.colors.brown[70],
+      backgroundColor: theme.colors.brown['70'],
     },
     saveButtonText: {
       fontSize: 14,
@@ -87,10 +87,10 @@ export const JournalCreateScreen = () => {
       paddingHorizontal: 20,
       borderRadius: 16,
       alignItems: 'center',
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
     },
     typeButtonActive: {
-      backgroundColor: theme.colors.brown[70],
+      backgroundColor: theme.colors.brown['70'],
     },
     typeButtonText: {
       fontSize: 16,
@@ -110,7 +110,7 @@ export const JournalCreateScreen = () => {
       marginBottom: 12,
     },
     input: {
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 16,
       padding: 16,
       fontSize: 16,
@@ -122,7 +122,7 @@ export const JournalCreateScreen = () => {
       textAlignVertical: 'top',
     },
     voiceRecorder: {
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 20,
       padding: 32,
       alignItems: 'center',
@@ -168,7 +168,7 @@ export const JournalCreateScreen = () => {
     },
     waveBar: {
       width: 3,
-      backgroundColor: theme.colors.brown[70],
+      backgroundColor: theme.colors.brown['70'],
       borderRadius: 2,
       marginHorizontal: 2,
     },
@@ -180,7 +180,7 @@ export const JournalCreateScreen = () => {
     moodButton: {
       flex: 1,
       aspectRatio: 1,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 16,
       justifyContent: 'center',
       alignItems: 'center',
@@ -188,7 +188,7 @@ export const JournalCreateScreen = () => {
       borderColor: 'transparent',
     },
     moodButtonActive: {
-      borderColor: theme.colors.brown[70],
+      borderColor: theme.colors.brown['70'],
     },
     moodEmoji: {
       fontSize: 32,
@@ -208,13 +208,13 @@ export const JournalCreateScreen = () => {
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderWidth: 1,
       borderColor: 'transparent',
     },
     tagButtonActive: {
-      backgroundColor: theme.colors.brown[70],
-      borderColor: theme.colors.brown[70],
+      backgroundColor: theme.colors.brown['70'],
+      borderColor: theme.colors.brown['70'],
     },
     tagText: {
       fontSize: 14,
@@ -228,7 +228,7 @@ export const JournalCreateScreen = () => {
       padding: 20,
     },
     createButton: {
-      backgroundColor: theme.colors.brown[70],
+      backgroundColor: theme.colors.brown['70'],
       paddingVertical: 16,
       borderRadius: 16,
       alignItems: 'center',

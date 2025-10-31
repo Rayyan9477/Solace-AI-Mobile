@@ -57,7 +57,7 @@ export const StressManagementScreen = () => {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -105,7 +105,7 @@ export const StressManagementScreen = () => {
       lineHeight: 20,
     },
     levelSelector: {
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 20,
       padding: 24,
       alignItems: 'center',
@@ -119,7 +119,7 @@ export const StressManagementScreen = () => {
     levelProgress: {
       width: '100%',
       height: 8,
-      backgroundColor: theme.colors.brown[30],
+      backgroundColor: theme.colors.brown['30'],
       borderRadius: 4,
       marginBottom: 16,
       overflow: 'hidden',
@@ -141,7 +141,7 @@ export const StressManagementScreen = () => {
       justifyContent: 'center',
     },
     stressorButton: {
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 20,
       justifyContent: 'center',
       alignItems: 'center',
@@ -173,7 +173,7 @@ export const StressManagementScreen = () => {
       color: '#FFFFFF',
     },
     impactBanner: {
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 16,
       padding: 16,
       flexDirection: 'row',
@@ -190,7 +190,7 @@ export const StressManagementScreen = () => {
       color: theme.colors.text.primary,
     },
     statsSection: {
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 20,
       padding: 20,
     },
@@ -228,7 +228,7 @@ export const StressManagementScreen = () => {
       color: theme.colors.text.tertiary,
     },
     continueButton: {
-      backgroundColor: theme.colors.brown[70],
+      backgroundColor: theme.colors.brown['70'],
       paddingVertical: 16,
       borderRadius: 16,
       alignItems: 'center',
@@ -258,7 +258,7 @@ export const StressManagementScreen = () => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Stress Level</Text>
         <TouchableOpacity onPress={() => navigation.navigate('StressStats')}>
-          <Text style={{ fontSize: 14, fontWeight: '600', color: theme.colors.brown[70] }}>
+          <Text style={{ fontSize: 14, fontWeight: '600', color: theme.colors.brown['70'] }}>
             See All
           </Text>
         </TouchableOpacity>

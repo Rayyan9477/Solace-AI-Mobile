@@ -86,7 +86,7 @@ export const CommunitySupportScreen = () => {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -99,13 +99,13 @@ export const CommunitySupportScreen = () => {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       justifyContent: 'center',
       alignItems: 'center',
     },
     tabs: {
       flexDirection: 'row',
-      backgroundColor: theme.colors.brown[20],
+      backgroundColor: theme.colors.brown['20'],
       borderRadius: 12,
       padding: 4,
     },
@@ -116,7 +116,7 @@ export const CommunitySupportScreen = () => {
       borderRadius: 8,
     },
     tabActive: {
-      backgroundColor: theme.colors.brown[70],
+      backgroundColor: theme.colors.brown['70'],
     },
     tabText: {
       fontSize: 14,
@@ -130,9 +130,9 @@ export const CommunitySupportScreen = () => {
       flex: 1,
     },
     postCard: {
-      backgroundColor: theme.colors.brown[10],
+      backgroundColor: theme.colors.brown['10'],
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.brown[20],
+      borderBottomColor: theme.colors.brown['20'],
       padding: 16,
     },
     postHeader: {
@@ -144,7 +144,7 @@ export const CommunitySupportScreen = () => {
       width: 44,
       height: 44,
       borderRadius: 22,
-      backgroundColor: theme.colors.brown[30],
+      backgroundColor: theme.colors.brown['30'],
       justifyContent: 'center',
       alignItems: 'center',
       marginRight: 12,
@@ -183,7 +183,7 @@ export const CommunitySupportScreen = () => {
       width: '100%',
       height: 200,
       borderRadius: 12,
-      backgroundColor: theme.colors.brown[30],
+      backgroundColor: theme.colors.brown['30'],
       marginBottom: 12,
     },
     postTags: {
@@ -195,7 +195,7 @@ export const CommunitySupportScreen = () => {
     tag: {
       fontSize: 14,
       fontWeight: '600',
-      color: theme.colors.brown[70],
+      color: theme.colors.brown['70'],
     },
     postActions: {
       flexDirection: 'row',
@@ -222,7 +222,7 @@ export const CommunitySupportScreen = () => {
       width: 60,
       height: 60,
       borderRadius: 30,
-      backgroundColor: theme.colors.brown[70],
+      backgroundColor: theme.colors.brown['70'],
       justifyContent: 'center',
       alignItems: 'center',
       shadowColor: '#000',

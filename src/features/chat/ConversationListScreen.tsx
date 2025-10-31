@@ -143,7 +143,7 @@ export const ConversationListScreen = ({ navigation }: any) => {
       color: theme.colors.text.secondary,
     },
     upgradeCard: {
-      backgroundColor: theme.colors.green[20],
+      backgroundColor: theme.colors.green['20'],
       borderRadius: 16,
       padding: 16,
       marginHorizontal: 20,
@@ -159,15 +159,15 @@ export const ConversationListScreen = ({ navigation }: any) => {
     upgradeTitle: {
       fontSize: 14,
       fontWeight: '700',
-      color: theme.colors.green[100],
+      color: theme.colors.green['100'],
       marginBottom: 4,
     },
     upgradeSubtitle: {
       fontSize: 12,
-      color: theme.colors.green[80],
+      color: theme.colors.green['80'],
     },
     upgradeButton: {
-      backgroundColor: theme.colors.green[40],
+      backgroundColor: theme.colors.green['40'],
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
@@ -191,8 +191,8 @@ export const ConversationListScreen = ({ navigation }: any) => {
       borderColor: theme.colors.border.primary,
     },
     filterButtonActive: {
-      backgroundColor: theme.colors.orange[40],
-      borderColor: theme.colors.orange[40],
+      backgroundColor: theme.colors.orange['40'],
+      borderColor: theme.colors.orange['40'],
     },
     filterButtonText: {
       fontSize: 14,
@@ -225,7 +225,7 @@ export const ConversationListScreen = ({ navigation }: any) => {
       backgroundColor: theme.colors.background.secondary,
     },
     conversationCardUnread: {
-      backgroundColor: theme.colors.orange[10],
+      backgroundColor: theme.colors.orange['10'],
     },
     avatarContainer: {
       width: 48,
@@ -268,7 +268,7 @@ export const ConversationListScreen = ({ navigation }: any) => {
       bottom: 24,
       left: 20,
       right: 20,
-      backgroundColor: theme.colors.orange[40],
+      backgroundColor: theme.colors.orange['40'],
       borderRadius: 24,
       paddingVertical: 16,
       flexDirection: 'row',
@@ -302,15 +302,15 @@ export const ConversationListScreen = ({ navigation }: any) => {
   const getMoodColor = (mood: Conversation['mood']) => {
     switch (mood) {
       case 'happy':
-        return theme.colors.green[40];
+        return theme.colors.green['40'];
       case 'neutral':
-        return theme.colors.gray[40];
+        return theme.colors.gray['40'];
       case 'sad':
-        return theme.colors.blue[40];
+        return theme.colors.blue['40'];
       case 'anxious':
-        return theme.colors.yellow[40];
+        return theme.colors.yellow['40'];
       default:
-        return theme.colors.gray[40];
+        return theme.colors.gray['40'];
     }
   };
 
@@ -325,10 +325,10 @@ export const ConversationListScreen = ({ navigation }: any) => {
       <View
         style={[
           styles.avatarContainer,
-          { backgroundColor: theme.colors.green[20] },
+          { backgroundColor: theme.colors.green['20'] },
         ]}
       >
-        <FreudLogo size={24} primaryColor={theme.colors.green[60]} />
+        <FreudLogo size={24} primaryColor={theme.colors.green['60']} />
       </View>
 
       <View style={styles.conversationContent}>
@@ -397,7 +397,7 @@ export const ConversationListScreen = ({ navigation }: any) => {
               <View
                 style={[
                   styles.statIcon,
-                  { backgroundColor: theme.colors.orange[20] },
+                  { backgroundColor: theme.colors.orange['20'] },
                 ]}
               >
                 <Text style={{ fontSize: 20 }}>📊</Text>
@@ -410,7 +410,7 @@ export const ConversationListScreen = ({ navigation }: any) => {
               <View
                 style={[
                   styles.statIcon,
-                  { backgroundColor: theme.colors.blue[20] },
+                  { backgroundColor: theme.colors.blue['20'] },
                 ]}
               >
                 <Text style={{ fontSize: 20 }}>⏱️</Text>
@@ -423,7 +423,7 @@ export const ConversationListScreen = ({ navigation }: any) => {
               <View
                 style={[
                   styles.statIcon,
-                  { backgroundColor: theme.colors.green[20] },
+                  { backgroundColor: theme.colors.green['20'] },
                 ]}
               >
                 <Text style={{ fontSize: 20 }}>✓</Text>
