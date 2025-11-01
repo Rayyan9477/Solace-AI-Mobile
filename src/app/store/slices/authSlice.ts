@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { logger } from "@shared/utils/logger";
 // Note: Use runtime requires so Jest tests with jest.resetModules can still mock these services
 
 // Async thunk for secure login
@@ -32,7 +33,7 @@ export const secureLogin = createAsyncThunk(
         token: response.access_token,
       };
     } catch (error: any) {
-      console.error("Login error:", error);
+      logger.error("Login error:", error);
       return rejectWithValue(
         error.response?.data?.message ||
           error.message ||
@@ -71,8 +72,8 @@ export const restoreAuthState = createAsyncThunk(
   "auth/restoreAuthState",
   async (_, { rejectWithValue }) => {
     try {
-      console.log(
-        "≡ƒöä restoreAuthState: Starting authentication state restoration...",
+      logger.debug(
+        "restoreAuthState: Starting authentication state restoration...",
       );
 
       // Add timeout to prevent hanging
@@ -85,34 +86,34 @@ export const restoreAuthState = createAsyncThunk(
         const secureStorage = require("../../services/secureStorage").default;
         // Check if user is authenticated
   const isAuthenticated = await tokenService.isAuthenticated();
-        console.log("≡ƒöä restoreAuthState: isAuthenticated =", isAuthenticated);
+        logger.debug("restoreAuthState: isAuthenticated =", isAuthenticated);
 
         if (!isAuthenticated) {
-          console.log(
-            "≡ƒöä restoreAuthState: User not authenticated, returning false",
+          logger.debug(
+            "restoreAuthState: User not authenticated, returning false",
           );
           return { isAuthenticated: false };
         }
 
         // Get tokens
   const tokens = await tokenService.getTokens();
-        console.log("≡ƒöä restoreAuthState: Tokens retrieved =", !!tokens);
+        logger.debug("restoreAuthState: Tokens retrieved =", !!tokens);
 
         // Get user data
   const user = await secureStorage.getSecureData("user_profile");
-        console.log("≡ƒöä restoreAuthState: User data retrieved =", !!user);
+        logger.debug("restoreAuthState: User data retrieved =", !!user);
 
         if (!tokens || !user) {
           // Clear inconsistent state
-          console.log(
-            "≡ƒöä restoreAuthState: Missing tokens or user data, clearing state",
+          logger.debug(
+            "restoreAuthState: Missing tokens or user data, clearing state",
           );
           await tokenService.clearTokens();
           return { isAuthenticated: false };
         }
 
-        console.log(
-          "≡ƒöä restoreAuthState: Authentication state restored successfully",
+        logger.debug(
+          "restoreAuthState: Authentication state restored successfully",
         );
         return {
           isAuthenticated: true,
@@ -125,13 +126,13 @@ export const restoreAuthState = createAsyncThunk(
       return await Promise.race([authCheckPromise(), timeoutPromise]);
 
     } catch (error) {
-      console.error("≡ƒöä restoreAuthState: Error during restoration:", error);
+      logger.error("restoreAuthState: Error during restoration:", error);
       // Clear potentially corrupted state
       try {
         const tokenService = require("../../services/tokenService").default;
         await tokenService.clearTokens();
       } catch (clearError) {
-        console.warn("Failed to clear tokens:", clearError);
+        logger.warn("Failed to clear tokens:", clearError);
       }
       // Always return a valid state instead of rejecting
       return { isAuthenticated: false };
@@ -228,15 +229,15 @@ const authSlice = createSlice({
 
       // Restore auth state cases
       .addCase(restoreAuthState.pending, (state) => {
-        console.log("≡ƒöä restoreAuthState.pending: Setting isLoading = true");
+        logger.debug("restoreAuthState.pending: Setting isLoading = true");
         state.isLoading = true;
       })
       .addCase(restoreAuthState.fulfilled, (state, action) => {
-        console.log(
-          "≡ƒöä restoreAuthState.fulfilled: Auth state restored, setting authChecked = true",
+        logger.debug(
+          "restoreAuthState.fulfilled: Auth state restored, setting authChecked = true",
         );
-        console.log(
-          "≡ƒöä restoreAuthState.fulfilled: isAuthenticated =",
+        logger.debug(
+          "restoreAuthState.fulfilled: isAuthenticated =",
           (action.payload as any).isAuthenticated,
         );
         state.isLoading = false;
@@ -253,8 +254,8 @@ const authSlice = createSlice({
         }
       })
       .addCase(restoreAuthState.rejected, (state) => {
-        console.log(
-          "≡ƒöä restoreAuthState.rejected: Auth restoration failed, setting authChecked = true",
+        logger.debug(
+          "restoreAuthState.rejected: Auth restoration failed, setting authChecked = true",
         );
         state.isLoading = false;
         state.authChecked = true;

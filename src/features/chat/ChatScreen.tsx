@@ -4,7 +4,7 @@
  * Enhanced with avatars, voice input, and message reactions
  */
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -17,10 +17,12 @@ import {
   Platform,
   StatusBar,
   Animated,
+  Alert,
 } from 'react-native';
 import { useTheme } from "@theme/ThemeProvider";
 import { MentalHealthIcon } from '@components/icons';
 import { FreudLogo } from '@components/icons/FreudIcons';
+import CrisisManager from '../crisis/CrisisManager';
 
 interface Message {
   id: string;
@@ -63,6 +65,15 @@ export const ChatScreen = ({ navigation, route }: any) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const pulseAnim = useRef(new Animated.Value(1)).current;
+  const crisisManagerRef = useRef<CrisisManager | null>(null);
+
+  useEffect(() => {
+    const initCrisisManager = async () => {
+      crisisManagerRef.current = new CrisisManager();
+      await crisisManagerRef.current.loadConfiguration();
+    };
+    initCrisisManager();
+  }, []);
 
   const styles = StyleSheet.create({
     container: {
@@ -250,11 +261,44 @@ export const ChatScreen = ({ navigation, route }: any) => {
     },
   });
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (inputText.trim()) {
+      const messageText = inputText.trim();
+
+      if (crisisManagerRef.current) {
+        const crisisAnalysis = await crisisManagerRef.current.analyzeCrisisRisk(messageText);
+
+        if (crisisAnalysis.risk === 'critical' || crisisAnalysis.risk === 'high') {
+          const crisisResponse = await crisisManagerRef.current.handleCrisis(
+            crisisAnalysis,
+            { id: route.params?.userId || 'anonymous' }
+          );
+
+          Alert.alert(
+            'Support Available',
+            crisisResponse.message,
+            [
+              ...(crisisResponse.actions || []).map((action: any) => ({
+                text: action.label,
+                onPress: async () => {
+                  if (action.type === 'call' && action.number) {
+                    await crisisManagerRef.current?.callEmergencyNumber(action.number);
+                  } else if (action.type === 'text' && action.number) {
+                    await crisisManagerRef.current?.textCrisisLine(action.number, action.keyword);
+                  }
+                },
+                style: action.urgent ? 'destructive' : 'default',
+              })),
+              { text: 'Continue Talking', style: 'cancel' },
+            ],
+            { cancelable: true }
+          );
+        }
+      }
+
       const newMessage: Message = {
         id: Date.now().toString(),
-        text: inputText.trim(),
+        text: messageText,
         isUser: true,
         timestamp: new Date(),
       };
@@ -263,7 +307,6 @@ export const ChatScreen = ({ navigation, route }: any) => {
       setInputText('');
       setIsTyping(true);
 
-      // Simulate AI response with typing indicator
       const isJest = typeof process !== 'undefined' && !!process.env?.JEST_WORKER_ID;
       const delay = isJest ? 50 : 2000;
       setTimeout(() => {
@@ -275,7 +318,6 @@ export const ChatScreen = ({ navigation, route }: any) => {
           "Thank you for being honest about that. Many people struggle with this feeling. What if we reframed it - instead of focusing on 'should,' what do you actually want to be doing? What matters to you?",
         ];
 
-        // Make AI response deterministic under Jest to stabilize tests
         const aiResponse: Message = {
           id: (Date.now() + 1).toString(),
           text: isJest ? responses[1] : responses[Math.floor(Math.random() * responses.length)],

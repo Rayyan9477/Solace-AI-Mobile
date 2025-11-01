@@ -63,11 +63,8 @@ export const STORAGE_CONFIG = {
   // AsyncStorage key prefix
   keyPrefix: process.env.EXPO_PUBLIC_STORAGE_PREFIX || 'solace_ai_',
 
-  // Enable storage encryption
-  encryption: process.env.EXPO_PUBLIC_STORAGE_ENCRYPTION === 'true',
-
-  // Encryption key for sensitive data (should be set via environment variable)
-  encryptionKey: process.env.EXPO_PUBLIC_ENCRYPTION_KEY || 'solace_default_key_2024',
+  // Enable storage encryption (always true for secure storage)
+  encryption: true,
 };
 
 /**

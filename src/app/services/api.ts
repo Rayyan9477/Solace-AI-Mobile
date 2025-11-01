@@ -4,6 +4,7 @@
  */
 
 import { API_CONFIG } from '../../shared/config/environment';
+import { logger } from '@shared/utils/logger';
 
 /**
  * Custom API Error class for authentication
@@ -66,9 +67,10 @@ async function retryWithNewToken(url, options, newTokens) {
   return await response.json();
 }
 
-/**
- * Helper function to handle API requests with authentication
- */
+const tokenRefreshAttempts = new Map();
+const MAX_REFRESH_ATTEMPTS = 2;
+const REFRESH_ATTEMPT_WINDOW = 60000;
+
 async function authenticatedFetch(url, options = {}) {
   const tokenService = require('./tokenService').default;
   const tokens = await tokenService.getTokens();
@@ -94,22 +96,43 @@ async function authenticatedFetch(url, options = {}) {
 
     clearTimeout(timeoutId);
 
-    // Handle token refresh on 401
     if (response.status === 401 && tokens?.refreshToken) {
+      const now = Date.now();
+      const attemptKey = tokens.refreshToken.substring(0, 10);
+      const attemptRecord = tokenRefreshAttempts.get(attemptKey);
+
+      if (attemptRecord && now - attemptRecord.firstAttempt < REFRESH_ATTEMPT_WINDOW) {
+        if (attemptRecord.count >= MAX_REFRESH_ATTEMPTS) {
+          tokenRefreshAttempts.delete(attemptKey);
+          await tokenService.clearTokens();
+          throw new AuthAPIError('Maximum token refresh attempts exceeded', 401, url);
+        }
+        attemptRecord.count++;
+      } else {
+        tokenRefreshAttempts.set(attemptKey, { count: 1, firstAttempt: now });
+      }
+
       try {
         const newTokens = await refreshAccessToken(tokens.refreshToken);
+
+        if (!newTokens?.access_token) {
+          throw new Error('Invalid token response');
+        }
+
         const transformedTokens = {
           accessToken: newTokens.access_token,
           refreshToken: newTokens.refresh_token || tokens.refreshToken,
           expiresAt: Date.now() + (newTokens.expires_in || 3600) * 1000,
         };
-        await tokenService.storeTokens(transformedTokens);
 
-        // Retry original request with new token
+        await tokenService.storeTokens(transformedTokens);
+        tokenRefreshAttempts.delete(attemptKey);
+
         return await retryWithNewToken(url, options, transformedTokens);
       } catch (refreshError) {
-        console.warn('Token refresh failed:', refreshError);
-        // Fall through to original error handling
+        logger.warn('Token refresh failed', refreshError);
+        await tokenService.clearTokens();
+        throw new AuthAPIError('Authentication expired', 401, url);
       }
     }
 
@@ -253,7 +276,7 @@ const authAPI = {
       }
     } catch (error) {
       // Log but don't throw - logout should succeed even if API call fails
-      console.warn('API logout failed:', error.message);
+      logger.warn('API logout failed:', error.message);
     }
 
     // Always clear local tokens

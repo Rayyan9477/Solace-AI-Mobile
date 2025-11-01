@@ -21,12 +21,22 @@ interface LoggerConfig {
 
 class Logger {
   private config: LoggerConfig;
+  private sensitivePatterns: RegExp[] = [
+    /Bearer\s+[\w-]+\.[\w-]+\.[\w-]+/gi,
+    /token["\s:]+["']?[\w-]+\.[\w-]+\.[\w-]+["']?/gi,
+    /password["\s:]+["']?[^"'\s]+["']?/gi,
+    /api[_-]?key["\s:]+["']?[^"'\s]+["']?/gi,
+    /secret["\s:]+["']?[^"'\s]+["']?/gi,
+    /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/gi,
+    /\b\d{3}-\d{2}-\d{4}\b/g,
+    /\b\d{16}\b/g,
+  ];
 
   constructor(config?: Partial<LoggerConfig>) {
     this.config = {
-      enabled: __DEV__, // Only log in development by default
+      enabled: __DEV__,
       logLevel: 'debug',
-      prefix: '🌟 Solace AI',
+      prefix: 'Solace AI',
       ...config,
     };
   }
@@ -41,31 +51,62 @@ class Logger {
     return requestedLevelIndex >= currentLevelIndex;
   }
 
+  private sanitize(data: any): any {
+    if (typeof data === 'string') {
+      let sanitized = data;
+      this.sensitivePatterns.forEach(pattern => {
+        sanitized = sanitized.replace(pattern, '[REDACTED]');
+      });
+      return sanitized;
+    }
+
+    if (Array.isArray(data)) {
+      return data.map(item => this.sanitize(item));
+    }
+
+    if (data && typeof data === 'object') {
+      const sanitized: any = {};
+      const sensitiveKeys = [
+        'token', 'accessToken', 'refreshToken', 'password', 'secret',
+        'apiKey', 'authorization', 'email', 'phone', 'ssn', 'cardNumber'
+      ];
+
+      for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+          if (sensitiveKeys.some(k => key.toLowerCase().includes(k.toLowerCase()))) {
+            sanitized[key] = '[REDACTED]';
+          } else {
+            sanitized[key] = this.sanitize(data[key]);
+          }
+        }
+      }
+      return sanitized;
+    }
+
+    return data;
+  }
+
   private formatMessage(level: LogLevel, message: string, ...args: any[]): void {
     if (!this.shouldLog(level)) return;
 
-    const emoji = {
-      debug: '🔍',
-      info: 'ℹ️',
-      warn: '⚠️',
-      error: '❌',
-    };
+    const sanitizedMessage = this.sanitize(message);
+    const sanitizedArgs = args.map(arg => this.sanitize(arg));
 
     const timestamp = new Date().toISOString();
-    const prefix = `${emoji[level]} ${this.config.prefix}`;
+    const prefix = `${this.config.prefix} [${level.toUpperCase()}]`;
 
     switch (level) {
       case 'debug':
-        console.log(`${prefix} [${timestamp}]`, message, ...args);
+        console.log(`${prefix} [${timestamp}]`, sanitizedMessage, ...sanitizedArgs);
         break;
       case 'info':
-        console.info(`${prefix} [${timestamp}]`, message, ...args);
+        console.info(`${prefix} [${timestamp}]`, sanitizedMessage, ...sanitizedArgs);
         break;
       case 'warn':
-        console.warn(`${prefix} [${timestamp}]`, message, ...args);
+        console.warn(`${prefix} [${timestamp}]`, sanitizedMessage, ...sanitizedArgs);
         break;
       case 'error':
-        console.error(`${prefix} [${timestamp}]`, message, ...args);
+        console.error(`${prefix} [${timestamp}]`, sanitizedMessage, ...sanitizedArgs);
         break;
     }
   }

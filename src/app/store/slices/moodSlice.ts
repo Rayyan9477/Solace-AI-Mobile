@@ -167,15 +167,6 @@ const moodSlice = createSlice({
   reducers: {
     setCurrentMood: (state, action) => {
       state.currentMood = action.payload;
-      // Also record into moodHistory for tests expecting persistence
-      state.moodHistory.unshift({
-        mood: action.payload,
-        intensity: 3, // Use neutral intensity for test consistency
-        timestamp: Date.now(),
-      });
-      // Update stats and insights using helper functions
-      state.weeklyStats = calculateWeeklyStats(state.moodHistory);
-      state.insights = generateInsights(state.weeklyStats, state.moodHistory);
     },
     clearMoodError: (state) => {
       state.error = null;
@@ -184,6 +175,19 @@ const moodSlice = createSlice({
       state.weeklyStats = calculateWeeklyStats(state.moodHistory);
     },
     updateInsights: (state) => {
+      state.insights = generateInsights(state.weeklyStats, state.moodHistory);
+    },
+    addMoodToHistory: (state, action) => {
+      const entry = {
+        mood: action.payload.mood || action.payload,
+        intensity: action.payload.intensity || 3,
+        timestamp: action.payload.timestamp || Date.now(),
+        notes: action.payload.notes,
+        activities: action.payload.activities,
+      };
+      state.moodHistory.unshift(entry);
+      state.currentMood = entry.mood;
+      state.weeklyStats = calculateWeeklyStats(state.moodHistory);
       state.insights = generateInsights(state.weeklyStats, state.moodHistory);
     },
   },
@@ -196,7 +200,12 @@ const moodSlice = createSlice({
       .addCase(logMood.fulfilled, (state, action) => {
         state.loading = false;
         if (action.payload) {
-          state.moodHistory.unshift(action.payload);
+          const existingIndex = state.moodHistory.findIndex(
+            entry => entry.timestamp === action.payload.timestamp
+          );
+          if (existingIndex === -1) {
+            state.moodHistory.unshift(action.payload);
+          }
           state.currentMood = action.payload.mood;
           state.weeklyStats = calculateWeeklyStats(state.moodHistory);
           state.insights = generateInsights(state.weeklyStats, state.moodHistory);

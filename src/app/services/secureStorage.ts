@@ -1,227 +1,209 @@
-/**
- * Secure Storage Service for sensitive data
- * Uses AsyncStorage with encryption for sensitive data
- */
-
+import * as SecureStore from 'expo-secure-store';
+import * as Crypto from 'expo-crypto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 import { STORAGE_CONFIG } from '../../shared/config/environment';
 
+interface StorageData {
+  data: any;
+  dataType: string;
+  timestamp: number;
+  version: string;
+  checksum: string;
+}
+
 class SecureStorage {
-  constructor() {
-    this.encryptionKey = STORAGE_CONFIG.encryptionKey;
-  }
+  private deviceKeyCache: string | null = null;
 
-  /**
-   * Encrypt data using simple XOR encryption (for demo purposes)
-   * In production, use a proper encryption library like react-native-keychain
-   * @param {string} data - Data to encrypt
-   * @returns {string} Encrypted data
-   */
-  _encrypt(data) {
-    if (!data) return data;
-
-    let result = '';
-    for (let i = 0; i < data.length; i++) {
-      const charCode = data.charCodeAt(i) ^ this.encryptionKey.charCodeAt(i % this.encryptionKey.length);
-      result += String.fromCharCode(charCode);
+  async getDeviceKey(): Promise<string> {
+    if (this.deviceKeyCache) {
+      return this.deviceKeyCache;
     }
-    return btoa(result); // Base64 encode
-  }
-
-  /**
-   * Decrypt data
-   * @param {string} encryptedData - Data to decrypt
-   * @returns {string} Decrypted data
-   */
-  _decrypt(encryptedData) {
-    if (!encryptedData) return encryptedData;
 
     try {
-      const decoded = atob(encryptedData); // Base64 decode
-      let result = '';
-      for (let i = 0; i < decoded.length; i++) {
-        const charCode = decoded.charCodeAt(i) ^ this.encryptionKey.charCodeAt(i % this.encryptionKey.length);
-        result += String.fromCharCode(charCode);
+      let key = await SecureStore.getItemAsync('device_master_key');
+
+      if (!key) {
+        const randomBytes = await Crypto.getRandomBytesAsync(32);
+        key = Array.from(randomBytes)
+          .map(b => b.toString(16).padStart(2, '0'))
+          .join('');
+
+        await SecureStore.setItemAsync('device_master_key', key, {
+          keychainAccessible: SecureStore.WHEN_UNLOCKED,
+        });
       }
-      return result;
+
+      this.deviceKeyCache = key;
+      return key;
     } catch (error) {
-      console.warn('Failed to decrypt data:', error);
-      return null;
+      throw new Error(`Failed to get device key: ${error}`);
     }
   }
 
-  /**
-   * Store data securely
-   * @param {string} key - Storage key
-   * @param {any} data - Data to store
-   * @param {Object} options - Storage options
-   * @param {boolean} options.encrypt - Whether to encrypt the data
-   * @param {string} options.dataType - Type of data being stored
-   */
-  async storeSecureData(key, data, options = {}) {
-    try {
-      const { encrypt = true, dataType = 'general' } = options;
+  async calculateChecksum(data: any): Promise<string> {
+    const jsonString = JSON.stringify(data);
+    return await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256,
+      jsonString
+    );
+  }
 
-      const storageData = {
+  async storeSecureData(key: string, data: any, options: {
+    encrypt?: boolean;
+    dataType?: string;
+    requireAuth?: boolean;
+  } = {}): Promise<void> {
+    try {
+      const {
+        encrypt = true,
+        dataType = 'general',
+        requireAuth = false
+      } = options;
+
+      const checksum = await this.calculateChecksum(data);
+
+      const storageData: StorageData = {
         data,
         dataType,
         timestamp: Date.now(),
-        version: '1.0',
+        version: '2.0',
+        checksum,
       };
 
-      let dataToStore = JSON.stringify(storageData);
-
-      // Encrypt sensitive data
-      if (encrypt) {
-        dataToStore = this._encrypt(dataToStore);
-      }
-
+      const jsonData = JSON.stringify(storageData);
       const fullKey = `${STORAGE_CONFIG.keyPrefix}${key}`;
-      await AsyncStorage.setItem(fullKey, dataToStore);
 
+      if (encrypt && Platform.OS !== 'web') {
+        await SecureStore.setItemAsync(fullKey, jsonData, {
+          keychainAccessible: SecureStore.WHEN_UNLOCKED,
+          requireAuthentication: requireAuth,
+        });
+      } else {
+        await AsyncStorage.setItem(fullKey, jsonData);
+      }
     } catch (error) {
-      console.error('Failed to store secure data:', error);
-      throw new Error(`Secure storage failed: ${error.message}`);
+      throw new Error(`Secure storage failed: ${error}`);
     }
   }
 
-  /**
-   * Retrieve data from secure storage
-   * @param {string} key - Storage key
-   * @returns {Promise<any>} Retrieved data or null
-   */
-  async getSecureData(key) {
+  async getSecureData(key: string): Promise<any> {
     try {
       const fullKey = `${STORAGE_CONFIG.keyPrefix}${key}`;
-      const storedData = await AsyncStorage.getItem(fullKey);
+      let jsonData: string | null = null;
 
-      if (!storedData) {
+      if (Platform.OS !== 'web') {
+        try {
+          jsonData = await SecureStore.getItemAsync(fullKey);
+        } catch {
+          jsonData = await AsyncStorage.getItem(fullKey);
+        }
+      } else {
+        jsonData = await AsyncStorage.getItem(fullKey);
+      }
+
+      if (!jsonData) {
         return null;
       }
 
-      // Try to parse as JSON first
-      let parsedData;
       try {
-        parsedData = JSON.parse(storedData);
-        
-        // Check if it's the new format with data wrapper
+        const parsedData: StorageData = JSON.parse(jsonData);
+
         if (parsedData && typeof parsedData === 'object' && 'data' in parsedData) {
-          return parsedData.data;
-        }
-        
-        // Assume it's old format (just the data)
-        return parsedData;
-      } catch {
-        // If parsing fails, try decrypting (for encrypted new format)
-        try {
-          const decrypted = this._decrypt(storedData);
-          parsedData = JSON.parse(decrypted);
-          
-          // Validate data structure
-          if (!parsedData || typeof parsedData !== 'object' || !('data' in parsedData)) {
-            return null;
+          if (parsedData.version === '2.0' && parsedData.checksum) {
+            const expectedChecksum = await this.calculateChecksum(parsedData.data);
+            if (parsedData.checksum !== expectedChecksum) {
+              await this.removeSecureData(key);
+              throw new Error('Data integrity check failed');
+            }
           }
-          
+
           return parsedData.data;
-        } catch {
-          return null;
         }
+
+        return parsedData;
+      } catch (parseError) {
+        return null;
       }
     } catch (error) {
-      console.warn('Failed to retrieve secure data:', error);
       return null;
     }
   }
 
-  /**
-   * Remove data from secure storage
-   * @param {string} key - Storage key
-   */
-  async removeSecureData(key) {
+  async removeSecureData(key: string): Promise<void> {
     try {
       const fullKey = `${STORAGE_CONFIG.keyPrefix}${key}`;
-      await AsyncStorage.removeItem(fullKey);
+
+      if (Platform.OS !== 'web') {
+        try {
+          await SecureStore.deleteItemAsync(fullKey);
+        } catch {
+          await AsyncStorage.removeItem(fullKey);
+        }
+      } else {
+        await AsyncStorage.removeItem(fullKey);
+      }
     } catch (error) {
-      console.warn('Failed to remove secure data:', error);
-      // Don't throw - removal should be best effort
+      // Best effort removal
     }
   }
 
-  /**
-   * Clear all secure storage data
-   */
-  async clearAllSecureData() {
+  async clearAllSecureData(): Promise<void> {
     try {
       const keys = await AsyncStorage.getAllKeys();
       const secureKeys = keys.filter(key => key.startsWith(STORAGE_CONFIG.keyPrefix));
       await AsyncStorage.multiRemove(secureKeys);
+
+      if (Platform.OS !== 'web') {
+        for (const key of secureKeys) {
+          try {
+            await SecureStore.deleteItemAsync(key);
+          } catch {
+            // Continue clearing other keys
+          }
+        }
+      }
     } catch (error) {
-      console.warn('Failed to clear all secure data:', error);
-      throw new Error(`Clear secure storage failed: ${error.message}`);
+      throw new Error(`Clear secure storage failed: ${error}`);
     }
   }
 
-  /**
-   * Get all stored keys
-   * @returns {Promise<string[]>} Array of stored keys
-   */
-  async getAllKeys() {
+  async getAllKeys(): Promise<string[]> {
     try {
       const keys = await AsyncStorage.getAllKeys();
       return keys
         .filter(key => key.startsWith(STORAGE_CONFIG.keyPrefix))
         .map(key => key.replace(STORAGE_CONFIG.keyPrefix, ''));
     } catch (error) {
-      console.warn('Failed to get all keys:', error);
       return [];
     }
   }
 
-  /**
-   * Check if data exists for a key
-   * @param {string} key - Storage key
-   * @returns {Promise<boolean>} True if data exists
-   */
-  async hasData(key) {
+  async hasData(key: string): Promise<boolean> {
     try {
       const data = await this.getSecureData(key);
       return data !== null;
     } catch (error) {
-      console.warn('Failed to check data existence:', error);
       return false;
     }
   }
 
-  /**
-   * Store sensitive data with additional security measures
-   * @param {string} key - Storage key
-   * @param {any} data - Sensitive data to store
-   */
-  async storeSensitiveData(key, data) {
+  async storeSensitiveData(key: string, data: any): Promise<void> {
     return this.storeSecureData(key, data, {
       encrypt: true,
-      dataType: 'sensitive'
+      dataType: 'sensitive',
+      requireAuth: false,
     });
   }
 
-  /**
-   * Store non-sensitive data without encryption
-   * @param {string} key - Storage key
-   * @param {any} data - Data to store
-   */
-  async storeData(key, data) {
+  async storeData(key: string, data: any): Promise<void> {
     return this.storeSecureData(key, data, {
       encrypt: false,
-      dataType: 'general'
+      dataType: 'general',
     });
   }
 
-  /**
-   * Migrate data from old storage format
-   * @param {string} oldKey - Old storage key
-   * @param {string} newKey - New storage key
-   */
-  async migrateData(oldKey, newKey) {
+  async migrateData(oldKey: string, newKey: string): Promise<void> {
     try {
       const data = await AsyncStorage.getItem(oldKey);
       if (data) {
@@ -229,11 +211,10 @@ class SecureStorage {
         await AsyncStorage.removeItem(oldKey);
       }
     } catch (error) {
-      console.warn('Failed to migrate data:', error);
+      // Migration is best effort
     }
   }
 }
 
-// Export singleton instance
 const secureStorage = new SecureStorage();
 export default secureStorage;

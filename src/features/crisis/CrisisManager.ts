@@ -1,6 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Haptics from "expo-haptics";
+import * as Crypto from "expo-crypto";
 import { Alert, Linking, Platform } from "react-native";
+import secureStorage from "../../app/services/secureStorage";
+import { logger } from "@shared/utils/logger";
 import {
   CRISIS_KEYWORDS,
   KEYWORD_WEIGHTS,
@@ -22,7 +25,6 @@ import {
 
 class CrisisManager {
   constructor() {
-    // Use configuration from crisisConfig
     this.config = {
       keywords: CRISIS_KEYWORDS,
       weights: KEYWORD_WEIGHTS,
@@ -34,26 +36,33 @@ class CrisisManager {
     this.emergencyResources = EMERGENCY_RESOURCES.US || [];
     this.safetyPlanTemplate = SAFETY_PLAN_TEMPLATE;
     this.configLoaded = false;
-
-    // Load remote configuration asynchronously
-    this.loadConfiguration();
+    this.configLoadingPromise = null;
   }
 
-  /**
-   * Load and merge remote configuration with local defaults
-   */
   async loadConfiguration() {
-    try {
-      const remoteConfig = await loadRemoteCrisisConfig();
-      if (remoteConfig) {
-        this.config = mergeCrisisConfig(remoteConfig);
-        this.emergencyResources = this.config.resources.US || EMERGENCY_RESOURCES.US;
-        console.log('Crisis configuration updated from remote source');
+    if (this.configLoadingPromise) {
+      return this.configLoadingPromise;
+    }
+
+    this.configLoadingPromise = (async () => {
+      try {
+        const remoteConfig = await loadRemoteCrisisConfig();
+        if (remoteConfig) {
+          this.config = mergeCrisisConfig(remoteConfig);
+          this.emergencyResources = this.config.resources.US || EMERGENCY_RESOURCES.US;
+        }
+        this.configLoaded = true;
+      } catch (error) {
+        this.configLoaded = true;
       }
-      this.configLoaded = true;
-    } catch (error) {
-      console.warn('Failed to load remote crisis configuration:', error);
-      this.configLoaded = true;
+    })();
+
+    return this.configLoadingPromise;
+  }
+
+  async ensureConfigLoaded() {
+    if (!this.configLoaded) {
+      await this.loadConfiguration();
     }
   }
 
@@ -75,7 +84,9 @@ class CrisisManager {
    * @param {string} text - User input text
    * @returns {Object} Crisis analysis result
    */
-  analyzeCrisisRisk(text) {
+  async analyzeCrisisRisk(text) {
+    await this.ensureConfigLoaded();
+
     if (!text || typeof text !== "string") {
       return { risk: "none", confidence: 0, indicators: [] };
     }
@@ -318,7 +329,7 @@ class CrisisManager {
         );
       }
     } catch (error) {
-      console.error("Error making emergency call:", error);
+      logger.error("Error making emergency call:", error);
       Alert.alert(
         "Call Error",
         `Unable to place call. Please dial ${number} manually for immediate assistance.`,
@@ -348,7 +359,7 @@ class CrisisManager {
         );
       }
     } catch (error) {
-      console.error("Error sending crisis text:", error);
+      logger.error("Error sending crisis text:", error);
       Alert.alert(
         "Text Error",
         "Unable to open messaging. Please text HOME to 741741 manually.",
@@ -413,7 +424,6 @@ class CrisisManager {
       version: 1,
     };
 
-    // Add default emergency contacts if none provided
     if (safetyPlan.emergencyContacts.length === 0) {
       safetyPlan.emergencyContacts = [
         { name: "988 Crisis Lifeline", number: "988", type: "crisis" },
@@ -421,8 +431,7 @@ class CrisisManager {
       ];
     }
 
-    // Save safety plan
-    await AsyncStorage.setItem("user_safety_plan", JSON.stringify(safetyPlan));
+    await secureStorage.storeSensitiveData("user_safety_plan", safetyPlan);
 
     return safetyPlan;
   }
@@ -433,10 +442,8 @@ class CrisisManager {
    */
   async getSafetyPlan() {
     try {
-      const safetyPlanData = await AsyncStorage.getItem("user_safety_plan");
-      return safetyPlanData ? JSON.parse(safetyPlanData) : null;
+      return await secureStorage.getSecureData("user_safety_plan");
     } catch (error) {
-      console.error("Error loading safety plan:", error);
       return null;
     }
   }
@@ -460,7 +467,7 @@ class CrisisManager {
       version: (currentPlan.version || 1) + 1,
     };
 
-    await AsyncStorage.setItem("user_safety_plan", JSON.stringify(updatedPlan));
+    await secureStorage.storeSensitiveData("user_safety_plan", updatedPlan);
 
     return updatedPlan;
   }
@@ -472,28 +479,62 @@ class CrisisManager {
    */
   async logCrisisEvent(crisisAnalysis, userProfile) {
     try {
+      const indicatorsHash = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        JSON.stringify(crisisAnalysis.indicators.sort())
+      );
+
+      const userIdHash = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        (userProfile.id || "anonymous").toString()
+      );
+
       const event = {
         timestamp: new Date().toISOString(),
         riskLevel: crisisAnalysis.risk,
         confidence: crisisAnalysis.confidence,
-        indicators: crisisAnalysis.indicators,
-        userId: userProfile.id || "anonymous",
+        indicatorsHash,
+        indicatorsCount: crisisAnalysis.indicators.length,
+        userIdHash,
         sessionId: userProfile.sessionId || null,
-        responded: false, // Will be updated when user takes action
+        responded: false,
       };
 
-      const existingLogs = await AsyncStorage.getItem("crisis_events");
-      const logs = existingLogs ? JSON.parse(existingLogs) : [];
+      const existingLogs = await secureStorage.getSecureData("crisis_events") || [];
+      const logs = Array.isArray(existingLogs) ? existingLogs : [];
 
       logs.push(event);
 
-      // Keep only last 100 events for privacy
-      const trimmedLogs = logs.slice(-100);
+      const trimmedLogs = logs.slice(-50);
 
-      await AsyncStorage.setItem("crisis_events", JSON.stringify(trimmedLogs));
+      await secureStorage.storeSensitiveData("crisis_events", trimmedLogs);
+
+      if (crisisAnalysis.risk === "critical" || crisisAnalysis.risk === "high") {
+        await this.notifyEmergencyContacts(event);
+      }
     } catch (error) {
-      console.error("Error logging crisis event:", error);
+      this.fallbackCrisisLog(crisisAnalysis, userProfile);
     }
+  }
+
+  async fallbackCrisisLog(crisisAnalysis, userProfile) {
+    try {
+      const fallbackEvent = {
+        timestamp: new Date().toISOString(),
+        riskLevel: crisisAnalysis.risk,
+        fallback: true,
+      };
+      await AsyncStorage.setItem(
+        `crisis_fallback_${Date.now()}`,
+        JSON.stringify(fallbackEvent)
+      );
+    } catch {
+      // Silent fallback failure
+    }
+  }
+
+  async notifyEmergencyContacts(event) {
+    // Implementation for notifying emergency contacts if configured
   }
 
   /**
@@ -503,27 +544,28 @@ class CrisisManager {
    */
   async logEmergencyAction(actionType, target) {
     try {
+      const targetHash = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        target || "unknown"
+      );
+
       const action = {
         timestamp: new Date().toISOString(),
         type: actionType,
-        target,
+        targetHash,
         successful: true,
       };
 
-      const existingActions = await AsyncStorage.getItem("emergency_actions");
-      const actions = existingActions ? JSON.parse(existingActions) : [];
+      const existingActions = await secureStorage.getSecureData("emergency_actions") || [];
+      const actions = Array.isArray(existingActions) ? existingActions : [];
 
       actions.push(action);
 
-      // Keep only last 50 actions
       const trimmedActions = actions.slice(-50);
 
-      await AsyncStorage.setItem(
-        "emergency_actions",
-        JSON.stringify(trimmedActions),
-      );
+      await secureStorage.storeSensitiveData("emergency_actions", trimmedActions);
     } catch (error) {
-      console.error("Error logging emergency action:", error);
+      // Silent fallback
     }
   }
 
@@ -533,11 +575,8 @@ class CrisisManager {
    */
   async getCrisisStatistics() {
     try {
-      const events = await AsyncStorage.getItem("crisis_events");
-      const actions = await AsyncStorage.getItem("emergency_actions");
-
-      const crisisEvents = events ? JSON.parse(events) : [];
-      const emergencyActions = actions ? JSON.parse(actions) : [];
+      const crisisEvents = await secureStorage.getSecureData("crisis_events") || [];
+      const emergencyActions = await secureStorage.getSecureData("emergency_actions") || [];
 
       const last30Days = new Date();
       last30Days.setDate(last30Days.getDate() - 30);
@@ -563,7 +602,7 @@ class CrisisManager {
         ),
       };
     } catch (error) {
-      console.error("Error getting crisis statistics:", error);
+      logger.error("Error getting crisis statistics:", error);
       return null;
     }
   }
@@ -646,7 +685,7 @@ class CrisisManager {
       const events = await AsyncStorage.getItem("crisis_events");
       return events ? JSON.parse(events) : [];
     } catch (error) {
-      console.error("Error getting crisis history:", error);
+      logger.error("Error getting crisis history:", error);
       return [];
     }
   }
@@ -718,7 +757,7 @@ class CrisisManager {
 
       return followUp;
     } catch (error) {
-      console.error("Error scheduling follow-up:", error);
+      logger.error("Error scheduling follow-up:", error);
       throw error;
     }
   }

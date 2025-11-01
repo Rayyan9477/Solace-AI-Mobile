@@ -4,6 +4,7 @@
  */
 
 import { STORAGE_CONFIG } from '../../shared/config/environment';
+import { logger } from '@shared/utils/logger';
 
 class TokenService {
   constructor() {
@@ -59,7 +60,7 @@ class TokenService {
 
       return tokenData;
     } catch (error) {
-      console.warn('Failed to retrieve tokens:', error);
+      logger.warn('Failed to retrieve tokens:', error);
       return null;
     }
   }
@@ -71,7 +72,7 @@ class TokenService {
     try {
       await this.storage.removeSecureData(`${STORAGE_CONFIG.keyPrefix}auth_tokens`);
     } catch (error) {
-      console.warn('Failed to clear tokens:', error);
+      logger.warn('Failed to clear tokens:', error);
       // Don't throw - clearing should be best effort
     }
   }
@@ -85,7 +86,7 @@ class TokenService {
       const tokens = await this.getTokens();
       return !!(tokens?.accessToken);
     } catch (error) {
-      console.warn('Failed to check authentication status:', error);
+      logger.warn('Failed to check authentication status:', error);
       return false;
     }
   }
@@ -146,7 +147,7 @@ class TokenService {
         expiresAt: Date.now() + (newTokens.expires_in || 3600) * 1000,
       };
     } catch (error) {
-      console.warn('Failed to refresh access token:', error);
+      logger.warn('Failed to refresh access token:', error);
       // Clear invalid tokens
       await this.clearTokens();
       return null;
@@ -165,7 +166,7 @@ class TokenService {
       const secureStorage = require('./secureStorage').default;
       await secureStorage.removeSecureData(`${STORAGE_CONFIG.keyPrefix}session_data`);
     } catch (error) {
-      console.warn('Failed to clear session data:', error);
+      logger.warn('Failed to clear session data:', error);
     }
   }
 
