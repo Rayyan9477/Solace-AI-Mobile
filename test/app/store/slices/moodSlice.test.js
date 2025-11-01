@@ -1,4 +1,4 @@
-import moodSlice, {
+import moodReducer, {
   logMood,
   fetchMoodHistory,
   setCurrentMood,
@@ -17,7 +17,7 @@ describe("Mood Slice", () => {
   beforeEach(() => {
     store = configureStore({
       reducer: {
-        mood: moodSlice.reducer,
+        mood: moodReducer,
       },
     });
     jest.clearAllMocks();
@@ -164,7 +164,7 @@ describe("Mood Slice", () => {
   describe("Reducers", () => {
     describe("setCurrentMood", () => {
       test("should set current mood and add to history", () => {
-        store.dispatch(moodSlice.actions.setCurrentMood("happy"));
+        store.dispatch(setCurrentMood("happy"));
 
         const state = store.getState().mood;
         expect(state.currentMood).toBe("happy");
@@ -177,7 +177,7 @@ describe("Mood Slice", () => {
       });
 
       test("should update weekly stats when setting mood", () => {
-        store.dispatch(moodSlice.actions.setCurrentMood("happy"));
+        store.dispatch(setCurrentMood("happy"));
 
         const state = store.getState().mood;
         expect(state.weeklyStats.totalEntries).toBe(1);
@@ -186,15 +186,15 @@ describe("Mood Slice", () => {
       });
 
       test("should generate insights when setting mood", () => {
-        store.dispatch(moodSlice.actions.setCurrentMood("happy"));
+        store.dispatch(setCurrentMood("happy"));
 
         const state = store.getState().mood;
         expect(state.insights).toHaveLength(0); // Neutral intensity (3) should not trigger positive insights
       });
 
       test("should handle multiple mood entries", () => {
-        store.dispatch(moodSlice.actions.setCurrentMood("happy"));
-        store.dispatch(moodSlice.actions.setCurrentMood("sad"));
+        store.dispatch(setCurrentMood("happy"));
+        store.dispatch(setCurrentMood("sad"));
 
         const state = store.getState().mood;
         expect(state.moodHistory).toHaveLength(2);
@@ -214,7 +214,7 @@ describe("Mood Slice", () => {
         let state = store.getState().mood;
         expect(state.error).toBe("Test error");
 
-        store.dispatch(moodSlice.actions.clearMoodError());
+        store.dispatch(clearMoodError());
         state = store.getState().mood;
         expect(state.error).toBeNull();
       });
@@ -223,9 +223,9 @@ describe("Mood Slice", () => {
     describe("updateWeeklyStats", () => {
       test("should calculate correct stats for multiple entries", () => {
         // Add multiple mood entries
-        store.dispatch(moodSlice.actions.setCurrentMood("happy"));
-        store.dispatch(moodSlice.actions.setCurrentMood("calm"));
-        store.dispatch(moodSlice.actions.setCurrentMood("happy"));
+        store.dispatch(setCurrentMood("happy"));
+        store.dispatch(setCurrentMood("calm"));
+        store.dispatch(setCurrentMood("happy"));
 
         const state = store.getState().mood;
         expect(state.weeklyStats.totalEntries).toBe(3);
@@ -234,7 +234,7 @@ describe("Mood Slice", () => {
       });
 
       test("should handle empty history", () => {
-        store.dispatch(moodSlice.actions.updateWeeklyStats());
+        store.dispatch(updateWeeklyStats());
 
         const state = store.getState().mood;
         expect(state.weeklyStats.totalEntries).toBe(0);
@@ -243,11 +243,11 @@ describe("Mood Slice", () => {
       });
 
       test("should update stats with existing history", () => {
-        store.dispatch(moodSlice.actions.setCurrentMood("happy"));
-        store.dispatch(moodSlice.actions.setCurrentMood("sad"));
+        store.dispatch(setCurrentMood("happy"));
+        store.dispatch(setCurrentMood("sad"));
 
         // Manually trigger stats update
-        store.dispatch(moodSlice.actions.updateWeeklyStats());
+        store.dispatch(updateWeeklyStats());
 
         const state = store.getState().mood;
         expect(state.weeklyStats.totalEntries).toBe(2);
@@ -258,18 +258,18 @@ describe("Mood Slice", () => {
     describe("updateInsights", () => {
       test("should update insights based on current stats", () => {
         // Set up state with specific stats
-        store.dispatch(moodSlice.actions.setCurrentMood("anxious"));
+        store.dispatch(setCurrentMood("anxious"));
 
         // Manually trigger insights update
-        store.dispatch(moodSlice.actions.updateInsights());
+        store.dispatch(updateInsights());
 
         const state = store.getState().mood;
         expect(state.insights.some(insight => insight.id === 'anxiety-pattern')).toBe(true);
       });
 
       test("should clear insights when stats change", () => {
-        store.dispatch(moodSlice.actions.setCurrentMood("neutral"));
-        store.dispatch(moodSlice.actions.updateInsights());
+        store.dispatch(setCurrentMood("neutral"));
+        store.dispatch(updateInsights());
 
         const state = store.getState().mood;
         expect(state.insights).toEqual([]); // Neutral mood should have no insights
@@ -523,19 +523,19 @@ describe("Mood Slice", () => {
   describe("Integration Tests", () => {
     test("should maintain state consistency across operations", () => {
       // Set initial mood
-      store.dispatch(moodSlice.actions.setCurrentMood("happy"));
+      store.dispatch(setCurrentMood("happy"));
       let state = store.getState().mood;
       expect(state.currentMood).toBe("happy");
       expect(state.weeklyStats.totalEntries).toBe(1);
 
       // Clear error (should not affect other state)
-      store.dispatch(moodSlice.actions.clearMoodError());
+      store.dispatch(clearMoodError());
       state = store.getState().mood;
       expect(state.currentMood).toBe("happy");
       expect(state.error).toBeNull();
 
       // Add another mood
-      store.dispatch(moodSlice.actions.setCurrentMood("calm"));
+      store.dispatch(setCurrentMood("calm"));
       state = store.getState().mood;
       expect(state.moodHistory).toHaveLength(2);
       expect(state.weeklyStats.totalEntries).toBe(2);
@@ -546,7 +546,7 @@ describe("Mood Slice", () => {
       const moods = ["happy", "anxious", "calm", "happy", "sad", "happy", "excited"];
 
       moods.forEach(mood => {
-        store.dispatch(moodSlice.actions.setCurrentMood(mood));
+        store.dispatch(setCurrentMood(mood));
       });
 
       const state = store.getState().mood;
@@ -608,7 +608,7 @@ describe("Mood Slice", () => {
       expect(state.moodHistory).toHaveLength(0);
 
       // Clear error
-      store.dispatch(moodSlice.actions.clearMoodError());
+      store.dispatch(clearMoodError());
       state = store.getState().mood;
       expect(state.error).toBeNull();
 
@@ -631,14 +631,14 @@ describe("Mood Slice", () => {
 
     test("should handle stats and insights updates correctly", () => {
       // Add entries that should trigger different insights
-      store.dispatch(moodSlice.actions.setCurrentMood("anxious"));
+      store.dispatch(setCurrentMood("anxious"));
       let state = store.getState().mood;
       expect(state.insights.some(i => i.id === 'anxiety-pattern')).toBe(true);
 
       // Add more entries to change stats
-      store.dispatch(moodSlice.actions.setCurrentMood("happy"));
-      store.dispatch(moodSlice.actions.setCurrentMood("happy"));
-      store.dispatch(moodSlice.actions.setCurrentMood("happy"));
+      store.dispatch(setCurrentMood("happy"));
+      store.dispatch(setCurrentMood("happy"));
+      store.dispatch(setCurrentMood("happy"));
 
       state = store.getState().mood;
       expect(state.weeklyStats.mostCommonMood).toBe("happy");
@@ -650,7 +650,7 @@ describe("Mood Slice", () => {
     test("should handle large mood history efficiently", () => {
       // Add many mood entries
       for (let i = 0; i < 100; i++) {
-        store.dispatch(moodSlice.actions.setCurrentMood(i % 2 === 0 ? "happy" : "sad"));
+        store.dispatch(setCurrentMood(i % 2 === 0 ? "happy" : "sad"));
       }
 
       const state = store.getState().mood;
@@ -664,10 +664,10 @@ describe("Mood Slice", () => {
 
       // Perform many operations
       for (let i = 0; i < 50; i++) {
-        store.dispatch(moodSlice.actions.setCurrentMood("happy"));
-        store.dispatch(moodSlice.actions.clearMoodError());
-        store.dispatch(moodSlice.actions.updateWeeklyStats());
-        store.dispatch(moodSlice.actions.updateInsights());
+        store.dispatch(setCurrentMood("happy"));
+        store.dispatch(clearMoodError());
+        store.dispatch(updateWeeklyStats());
+        store.dispatch(updateInsights());
       }
 
       const state = store.getState().mood;
