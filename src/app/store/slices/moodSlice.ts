@@ -232,4 +232,4 @@ export const {
 
 export { apiService, calculateWeeklyStats, generateInsights };
 
-export default moodSlice;
+export default moodSlice.reducer;

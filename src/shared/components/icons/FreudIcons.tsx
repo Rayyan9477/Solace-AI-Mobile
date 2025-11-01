@@ -11,13 +11,16 @@ import PropTypes from 'prop-types';
  * FreudLogo - Simple text-based logo component
  * Can be replaced with actual logo asset
  */
-export const FreudLogo = ({ size = 32, color = '#000000', style }) => {
+export const FreudLogo = ({ size = 32, color = '#000000', primaryColor, style }) => {
+  // Use primaryColor if provided, otherwise use color
+  const displayColor = primaryColor || color;
+  
   return (
     <Text
       style={[
         {
           fontSize: size,
-          color: color,
+          color: displayColor,
           fontWeight: 'bold',
         },
         style,
@@ -31,6 +34,7 @@ export const FreudLogo = ({ size = 32, color = '#000000', style }) => {
 FreudLogo.propTypes = {
   size: PropTypes.number,
   color: PropTypes.string,
+  primaryColor: PropTypes.string,
   style: PropTypes.object,
 };
 

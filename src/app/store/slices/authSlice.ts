@@ -1,20 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import apiService from "../../services/api";
-import secureStorage from "../../services/secureStorage";
-import tokenService from "../../services/tokenService";
+// Note: Use runtime requires so Jest tests with jest.resetModules can still mock these services
 
 // Async thunk for secure login
 export const secureLogin = createAsyncThunk(
   "auth/secureLogin",
-  async ({ email, password, rememberMe = false }, { rejectWithValue }) => {
+  async (payload: any, { rejectWithValue }) => {
     try {
+      const { email, password, rememberMe = false } = payload || {};
       // Input validation
       if (!email || !password) {
         throw new Error("Email and password are required");
       }
 
       // Real API call using the actual API service
-      const response = await apiService.auth.login(email, password);
+  const apiService = require("../../services/api").default;
+  const response = await apiService.auth.login(email, password);
 
       // Validate response
       if (!response?.user) {
@@ -22,6 +22,7 @@ export const secureLogin = createAsyncThunk(
       }
 
       // Store user data securely
+      const secureStorage = require("../../services/secureStorage").default;
       await secureStorage.storeSecureData("user_profile", response.user, {
         dataType: "user_profile",
       });
@@ -46,18 +47,21 @@ export const secureLogout = createAsyncThunk(
   "auth/secureLogout",
   async (_, { rejectWithValue }) => {
     try {
+      const tokenService = require("../../services/tokenService").default;
+      const secureStorage = require("../../services/secureStorage").default;
       // Clear tokens securely
-      await tokenService.clearTokens();
+  await tokenService.clearTokens();
 
       // Clear all secure user data
-      await secureStorage.removeSecureData("user_profile");
+  await secureStorage.removeSecureData("user_profile");
 
       // Invalidate session
-      await tokenService.invalidateSession();
+  await tokenService.invalidateSession();
 
       return {};
     } catch (error) {
-      return rejectWithValue(error.message);
+      const message = (error as any)?.message || 'Logout failed';
+      return rejectWithValue(message);
     }
   },
 );
@@ -77,8 +81,10 @@ export const restoreAuthState = createAsyncThunk(
       });
 
       const authCheckPromise = async () => {
+        const tokenService = require("../../services/tokenService").default;
+        const secureStorage = require("../../services/secureStorage").default;
         // Check if user is authenticated
-        const isAuthenticated = await tokenService.isAuthenticated();
+  const isAuthenticated = await tokenService.isAuthenticated();
         console.log("≡ƒöä restoreAuthState: isAuthenticated =", isAuthenticated);
 
         if (!isAuthenticated) {
@@ -89,11 +95,11 @@ export const restoreAuthState = createAsyncThunk(
         }
 
         // Get tokens
-        const tokens = await tokenService.getTokens();
+  const tokens = await tokenService.getTokens();
         console.log("≡ƒöä restoreAuthState: Tokens retrieved =", !!tokens);
 
         // Get user data
-        const user = await secureStorage.getSecureData("user_profile");
+  const user = await secureStorage.getSecureData("user_profile");
         console.log("≡ƒöä restoreAuthState: User data retrieved =", !!user);
 
         if (!tokens || !user) {
@@ -122,6 +128,7 @@ export const restoreAuthState = createAsyncThunk(
       console.error("≡ƒöä restoreAuthState: Error during restoration:", error);
       // Clear potentially corrupted state
       try {
+        const tokenService = require("../../services/tokenService").default;
         await tokenService.clearTokens();
       } catch (clearError) {
         console.warn("Failed to clear tokens:", clearError);
@@ -132,7 +139,20 @@ export const restoreAuthState = createAsyncThunk(
   },
 );
 
-const initialState = {
+interface AuthState {
+  isAuthenticated: boolean;
+  user: any;
+  token: string | null;
+  isLoading: boolean;
+  error: string | null;
+  onboardingCompleted: boolean;
+  sessionExpiry: number | null;
+  lastActivity: number;
+  authChecked: boolean;
+  initializationComplete: boolean;
+}
+
+const initialState: AuthState = {
   isAuthenticated: false, // Start with false for proper auth flow
   user: null,
   token: null,
@@ -157,7 +177,7 @@ const authSlice = createSlice({
       state.onboardingCompleted = true;
     },
     updateUser: (state, action) => {
-      state.user = { ...state.user, ...action.payload };
+      state.user = { ...(state.user || {}), ...action.payload } as any;
     },
     updateLastActivity: (state) => {
       state.lastActivity = Date.now();
@@ -176,18 +196,18 @@ const authSlice = createSlice({
       .addCase(secureLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = true;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+        state.user = (action.payload as any).user;
+        state.token = (action.payload as any).token;
         state.error = null;
         state.lastActivity = Date.now();
-        state.sessionExpiry = Date.now() + 3600 * 1000; // 1 hour
+        state.sessionExpiry = (Date.now() + 3600 * 1000) as any; // 1 hour
       })
       .addCase(secureLogin.rejected, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = false;
         state.user = null;
         state.token = null;
-        state.error = action.payload;
+        state.error = (action.payload as any) ?? 'Login failed';
       })
 
       // Secure logout cases
@@ -199,7 +219,7 @@ const authSlice = createSlice({
       })
       .addCase(secureLogout.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.error = (action.payload as any) ?? 'Logout failed';
         // Still clear auth state even if logout fails
         state.isAuthenticated = false;
         state.user = null;
@@ -217,14 +237,14 @@ const authSlice = createSlice({
         );
         console.log(
           "≡ƒöä restoreAuthState.fulfilled: isAuthenticated =",
-          action.payload.isAuthenticated,
+          (action.payload as any).isAuthenticated,
         );
         state.isLoading = false;
         state.authChecked = true;
-        if (action.payload.isAuthenticated) {
+        if ((action.payload as any).isAuthenticated) {
           state.isAuthenticated = true;
-          state.user = action.payload.user;
-          state.token = action.payload.token;
+          state.user = (action.payload as any).user;
+          state.token = (action.payload as any).token;
           state.lastActivity = Date.now();
         } else {
           state.isAuthenticated = false;

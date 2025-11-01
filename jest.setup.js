@@ -112,6 +112,47 @@ jest.mock("expo-linear-gradient", () => {
   return { LinearGradient, default: LinearGradient };
 });
 
+// Mock StatusBar to avoid native calls in tests
+jest.mock('react-native/Libraries/Components/StatusBar/StatusBar', () => {
+  const React = require('react');
+  const StatusBar = React.forwardRef((props, ref) => null);
+  StatusBar.setTranslucent = jest.fn();
+  StatusBar.setBackgroundColor = jest.fn();
+  StatusBar.setBarStyle = jest.fn();
+  return StatusBar;
+});
+
+// Mock icon/font libraries to avoid font loading issues in tests
+jest.mock('@expo/vector-icons', () => {
+  const React = require('react');
+  const Icon = (props) => React.createElement('Icon', props);
+  return {
+    Ionicons: Icon,
+    MaterialIcons: Icon,
+    FontAwesome: Icon,
+    Entypo: Icon,
+    Feather: Icon,
+    MaterialCommunityIcons: Icon,
+    default: Icon,
+  };
+});
+
+jest.mock('expo-font', () => ({
+  loadAsync: jest.fn(() => Promise.resolve()),
+  isLoaded: jest.fn(() => true),
+  isLoading: jest.fn(() => false),
+  unloadAsync: jest.fn(() => Promise.resolve()),
+}));
+
+// Mock internal icon components used by the app
+jest.mock('@components/icons', () => ({
+  MentalHealthIcon: ({ children }) => children || null,
+}));
+
+jest.mock('@components/icons/FreudIcons', () => ({
+  FreudLogo: ({ children }) => children || null,
+}));
+
 // Mental Health App Specific Setup
 global.window = {};
 global.window = global;

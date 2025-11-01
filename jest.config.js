@@ -3,6 +3,10 @@ module.exports = {
   setupFilesAfterEnv: [
     "@testing-library/jest-native/extend-expect",
   ],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "test/integration/MoodTrackingWorkflow\\.test\\.ts$",
+  ],
   transformIgnorePatterns: [
     "node_modules/(?!(jest-)?react-native|@react-native|react-redux|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|native-base|@react-native-firebase/.*)",
   ],

@@ -26,18 +26,18 @@ import {
   Platform,
 } from "react-native";
 
-import { useTheme } from "../../shared/theme/ThemeContext";
+import { useTheme } from "../../../theme/ThemeContext";
 import {
   TouchTargetHelpers,
   WCAG_CONSTANTS,
   FocusManagement,
   createFormInputAccessibility,
-} from "../../utils/accessibility";
+} from "../../../utils/accessibility";
 import {
   createValidator,
   FORM_CONTEXTS,
   VALIDATION_TYPES,
-} from "../../utils/formValidation";
+} from "../../../utils/formValidation";
 
 const EnhancedInput = forwardRef(
   (

@@ -28,6 +28,11 @@ const ICON_MAP = {
   ArrowForward: { library: Ionicons, name: 'arrow-forward' },
   Close: { library: Ionicons, name: 'close' },
   Menu: { library: Ionicons, name: 'menu' },
+  ChevronLeft: { library: Ionicons, name: 'chevron-back' },
+  ChevronRight: { library: Ionicons, name: 'chevron-forward' },
+  ChevronUp: { library: Ionicons, name: 'chevron-up' },
+  ChevronDown: { library: Ionicons, name: 'chevron-down' },
+  Search: { library: Ionicons, name: 'search' },
 
   // Actions
   Add: { library: Ionicons, name: 'add' },
@@ -35,6 +40,11 @@ const ICON_MAP = {
   Delete: { library: Ionicons, name: 'trash' },
   Save: { library: Ionicons, name: 'save' },
   Share: { library: Ionicons, name: 'share-social' },
+  Send: { library: Ionicons, name: 'send' },
+  Mic: { library: Ionicons, name: 'mic' },
+  Eye: { library: Ionicons, name: 'eye' },
+  EyeOff: { library: Ionicons, name: 'eye-off' },
+  Lock: { library: Ionicons, name: 'lock-closed' },
 
   // Status
   CheckCircle: { library: Ionicons, name: 'checkmark-circle' },
