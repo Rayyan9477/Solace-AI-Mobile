@@ -12,7 +12,14 @@
       "Bash(tree:*)",
       "Bash(echo:*)",
       "Bash(npm test:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "WebSearch",
+      "WebFetch(domain:eslint.org)",
+      "WebFetch(domain:github.com)",
+      "Bash(pip install:*)",
+      "Bash(cat:*)",
+      "Bash(cp:*)",
+      "Bash(awk:*)"
     ],
     "deny": [],
     "ask": []

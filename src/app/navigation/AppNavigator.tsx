@@ -26,6 +26,23 @@ import { CommunitySupportScreen, CreatePostScreen } from "@features/community";
 import { ProfileSettingsScreen } from "@features/profile";
 import { SearchScreen } from "@features/search";
 
+// New screen imports
+import FreudScoreScreen from "@features/dashboard/screens/FreudScoreScreen";
+import MoodStatsScreen from "@features/mood/screens/MoodStatsScreen";
+import MoodCalendarScreen from "@features/mood/screens/MoodCalendarScreen";
+import ActivityTrackingScreen from "@features/mood/screens/ActivityTrackingScreen";
+import StressStatsScreen from "@features/wellness/screens/StressStatsScreen";
+import SleepPatternsScreen from "@features/wellness/screens/SleepPatternsScreen";
+import PostDetailScreen from "@features/community/screens/PostDetailScreen";
+import CommunityNotificationsScreen from "@features/community/screens/CommunityNotificationsScreen";
+import SupportGroupsScreen from "@features/community/screens/SupportGroupsScreen";
+import CrisisSupportScreen from "@features/crisis/screens/CrisisSupportScreen";
+import JournalCalendarScreen from "@features/journal/screens/JournalCalendarScreen";
+import JournalSearchScreen from "@features/journal/screens/JournalSearchScreen";
+import SessionHistoryScreen from "@features/mindfulness/screens/SessionHistoryScreen";
+import NotificationHistoryScreen from "@features/smartNotifications/screens/NotificationHistoryScreen";
+import HelpCenterScreen from "@features/profile/screens/HelpCenterScreen";
+
 // Theme import
 import { useTheme } from "@theme/ThemeProvider";
 
@@ -198,19 +215,49 @@ const AppNavigator = (props: any) => {
           <Stack.Screen name="MoodTracker" component={EnhancedMoodTrackerScreen} />
           <Stack.Screen name="JournalList" component={JournalListScreen} />
           <Stack.Screen name="MindfulHours" component={MindfulHoursScreen} />
-          <Stack.Screen name="FreudScore" component={PlaceholderScreen} initialParams={{ name: 'Freud Score' }} />
-          <Stack.Screen name="MoodStats" component={PlaceholderScreen} initialParams={{ name: 'Mood Stats' }} />
+
+          {/* Dashboard & Analytics */}
+          <Stack.Screen name="FreudScore" component={FreudScoreScreen} />
+
+          {/* Mood Tracking */}
+          <Stack.Screen name="MoodStats" component={MoodStatsScreen} />
+          <Stack.Screen name="MoodCalendar" component={MoodCalendarScreen} />
+          <Stack.Screen name="ActivityTracking" component={ActivityTrackingScreen} />
+
+          {/* Wellness */}
           <Stack.Screen name="SleepQuality" component={SleepQualityScreen} />
+          <Stack.Screen name="SleepPatterns" component={SleepPatternsScreen} />
           <Stack.Screen name="StressLevel" component={StressManagementScreen} />
-          <Stack.Screen name="StressStats" component={PlaceholderScreen} initialParams={{ name: 'Stress Stats' }} />
+          <Stack.Screen name="StressStats" component={StressStatsScreen} />
+
+          {/* Journal */}
           <Stack.Screen name="JournalDetail" component={JournalDetailScreen} />
           <Stack.Screen name="JournalCreate" component={JournalCreateScreen} />
+          <Stack.Screen name="JournalCalendar" component={JournalCalendarScreen} />
+          <Stack.Screen name="JournalSearch" component={JournalSearchScreen} />
+
+          {/* Mindfulness */}
           <Stack.Screen name="ExerciseCreate" component={BreathingExerciseScreen} />
+          <Stack.Screen name="SessionHistory" component={SessionHistoryScreen} />
+
+          {/* Community */}
           <Stack.Screen name="CommunitySupport" component={CommunitySupportScreen} />
           <Stack.Screen name="CreatePost" component={CreatePostScreen} />
-          <Stack.Screen name="PostDetail" component={PlaceholderScreen} initialParams={{ name: 'Post Detail' }} />
-          <Stack.Screen name="CommunityNotifications" component={PlaceholderScreen} initialParams={{ name: 'Notifications' }} />
+          <Stack.Screen name="PostDetail" component={PostDetailScreen} />
+          <Stack.Screen name="CommunityNotifications" component={CommunityNotificationsScreen} />
+          <Stack.Screen name="SupportGroups" component={SupportGroupsScreen} />
+
+          {/* Notifications */}
+          <Stack.Screen name="NotificationHistory" component={NotificationHistoryScreen} />
+
+          {/* Crisis Support */}
+          <Stack.Screen name="CrisisSupport" component={CrisisSupportScreen} />
+
+          {/* Profile & Settings */}
           <Stack.Screen name="ProfileSettings" component={ProfileSettingsScreen} />
+          <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+
+          {/* Search */}
           <Stack.Screen name="Search" component={SearchScreen} />
         </>
       )}
