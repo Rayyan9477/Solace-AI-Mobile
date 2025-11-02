@@ -22,6 +22,7 @@ import { useTheme } from "@theme/ThemeProvider";
 import { FreudLogo } from '@components/icons/FreudIcons';
 import { MentalHealthIcon } from '@components/icons';
 import { secureLogin } from '@app/store/slices/authSlice';
+import rateLimiter from '@shared/utils/rateLimiter';
 
 export const LoginScreen = ({ navigation }: any) => {
   const { theme } = useTheme();
@@ -180,9 +181,25 @@ export const LoginScreen = ({ navigation }: any) => {
     return true;
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!validateForm()) return;
-    dispatch((secureLogin as any)({ email, password }));
+
+    const rateLimit = await rateLimiter.checkLimit(`login:${email.toLowerCase()}`, 5, 15 * 60 * 1000);
+
+    if (!rateLimit.allowed) {
+      Alert.alert(
+        'Too Many Attempts',
+        `You have exceeded the maximum login attempts. Please try again in ${rateLimit.waitTime} seconds.`,
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
+    const result = await dispatch((secureLogin as any)({ email, password }));
+
+    if (result.type === 'auth/secureLogin/fulfilled') {
+      rateLimiter.reset(`login:${email.toLowerCase()}`);
+    }
   };
 
   const canLogin = email.trim() && password.trim() && !isLoading;
@@ -242,6 +259,10 @@ export const LoginScreen = ({ navigation }: any) => {
                 <TouchableOpacity
                   style={styles.eyeButton}
                   onPress={() => setShowPassword(!showPassword)}
+                  accessible
+                  accessibilityLabel={showPassword ? "Hide password" : "Show password"}
+                  accessibilityRole="button"
+                  accessibilityHint="Toggles password visibility"
                 >
                   <MentalHealthIcon
                     name={showPassword ? "EyeOff" : "Eye"}
@@ -259,6 +280,11 @@ export const LoginScreen = ({ navigation }: any) => {
               ]}
               onPress={handleLogin}
               disabled={!canLogin}
+              accessible
+              accessibilityLabel="Sign in"
+              accessibilityRole="button"
+              accessibilityState={{ disabled: !canLogin, busy: isLoading }}
+              accessibilityHint="Sign in to your account"
             >
               <Text style={styles.loginButtonText}>
                 {isLoading ? 'Signing In...' : 'Sign In'}
@@ -267,13 +293,28 @@ export const LoginScreen = ({ navigation }: any) => {
             </TouchableOpacity>
 
             <View style={styles.socialContainer}>
-              <TouchableOpacity style={styles.socialButton}>
+              <TouchableOpacity
+                style={styles.socialButton}
+                accessible
+                accessibilityLabel="Sign in with Facebook"
+                accessibilityRole="button"
+              >
                 <Text style={styles.socialIcon}>f</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
+              <TouchableOpacity
+                style={styles.socialButton}
+                accessible
+                accessibilityLabel="Sign in with Google"
+                accessibilityRole="button"
+              >
                 <Text style={styles.socialIcon}>G</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
+              <TouchableOpacity
+                style={styles.socialButton}
+                accessible
+                accessibilityLabel="Sign in with Instagram"
+                accessibilityRole="button"
+              >
                 <Text style={styles.socialIcon}>📷</Text>
               </TouchableOpacity>
             </View>
@@ -291,6 +332,10 @@ export const LoginScreen = ({ navigation }: any) => {
               <TouchableOpacity
                 style={styles.forgotPassword}
                 onPress={() => navigation?.navigate?.('ForgotPassword')}
+                accessible
+                accessibilityLabel="Forgot password"
+                accessibilityRole="button"
+                accessibilityHint="Navigate to password recovery"
               >
                 <Text style={styles.forgotPasswordText}>Forgot Password</Text>
               </TouchableOpacity>

@@ -5,20 +5,19 @@
 
 import { STORAGE_CONFIG } from '../../shared/config/environment';
 import { logger } from '@shared/utils/logger';
+import secureStorage from './secureStorage';
 
 class TokenService {
+  private storage: typeof secureStorage;
+
   constructor() {
-    this.storage = require('./secureStorage').default;
+    this.storage = secureStorage;
   }
 
   /**
    * Store authentication tokens securely
-   * @param {Object} tokens - Token data
-   * @param {string} tokens.accessToken - Access token
-   * @param {string} tokens.refreshToken - Refresh token
-   * @param {number} tokens.expiresAt - Token expiration timestamp
    */
-  async storeTokens({ accessToken, refreshToken, expiresAt }) {
+  async storeTokens({ accessToken, refreshToken, expiresAt }: { accessToken: string; refreshToken: string; expiresAt?: number }) {
     if (!accessToken || !refreshToken) {
       throw new Error('Access token and refresh token are required');
     }
@@ -132,8 +131,8 @@ class TokenService {
         return null;
       }
 
-      const apiService = require('./api').default;
-      const newTokens = await apiService.auth.refreshToken(refreshToken);
+      const apiService = await import('./api');
+      const newTokens = await apiService.default.auth.refreshToken(refreshToken);
 
       await this.storeTokens({
         accessToken: newTokens.access_token,
@@ -161,9 +160,7 @@ class TokenService {
   async invalidateSession() {
     await this.clearTokens();
 
-    // Also clear any session-specific data
     try {
-      const secureStorage = require('./secureStorage').default;
       await secureStorage.removeSecureData(`${STORAGE_CONFIG.keyPrefix}session_data`);
     } catch (error) {
       logger.warn('Failed to clear session data:', error);

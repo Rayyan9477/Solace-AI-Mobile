@@ -8,9 +8,23 @@ import React from "react";
 import { View, Text, TouchableOpacity, Platform } from "react-native";
 
 import { useTheme } from "@theme/ThemeProvider";
+import { logger } from "@shared/utils/logger";
 
-class WebCompatibilityErrorBoundary extends React.Component {
-  constructor(props) {
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+  theme?: any;
+  onWebCompatibilityError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+  errorInfo: React.ErrorInfo | null;
+  isWebCompatibilityError: boolean;
+}
+
+class WebCompatibilityErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
       hasError: false,
@@ -20,8 +34,7 @@ class WebCompatibilityErrorBoundary extends React.Component {
     };
   }
 
-  static getDerivedStateFromError(error) {
-    // Check if this is a web compatibility error
+  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     const isWebCompatibilityError =
       Platform.OS === "web" &&
       (error.message?.includes("SVG") ||
@@ -39,21 +52,20 @@ class WebCompatibilityErrorBoundary extends React.Component {
     };
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     this.setState({
       error,
       errorInfo,
     });
 
-    // Log web compatibility errors specifically
     if (Platform.OS === "web") {
-      console.error("🌐 Web Compatibility Error:", error);
-      console.error("📊 Error Info:", errorInfo);
+      logger.error("Web Compatibility Error", { error, errorInfo });
 
-      // Send to crash reporting if available
       if (this.props.onWebCompatibilityError) {
         this.props.onWebCompatibilityError(error, errorInfo);
       }
+    } else {
+      logger.error("Application Error", { error, errorInfo });
     }
   }
 
@@ -86,8 +98,14 @@ class WebCompatibilityErrorBoundary extends React.Component {
   }
 }
 
-// Error display component
-const WebCompatibilityErrorDisplay = ({
+interface ErrorDisplayProps {
+  error: Error | null;
+  isWebCompatibilityError: boolean;
+  onReload: () => void;
+  theme?: any;
+}
+
+const WebCompatibilityErrorDisplay: React.FC<ErrorDisplayProps> = ({
   error,
   isWebCompatibilityError,
   onReload,
@@ -217,9 +235,8 @@ const WebCompatibilityErrorDisplay = ({
   );
 };
 
-// HOC wrapper for easier usage
-export const withWebCompatibility = (Component) => {
-  return (props) => {
+export const withWebCompatibility = <P extends object>(Component: React.ComponentType<P>) => {
+  return (props: P) => {
     const { theme } = useTheme();
 
     return (

@@ -21,6 +21,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from "@theme/ThemeProvider";
 import { FreudLogo } from '@components/icons/FreudIcons';
 import { MentalHealthIcon } from '@components/icons';
+import rateLimiter from '@shared/utils/rateLimiter';
 
 export const SignupScreen = ({ navigation }: any) => {
   const { theme } = useTheme();
@@ -169,6 +170,36 @@ export const SignupScreen = ({ navigation }: any) => {
     return true;
   };
 
+  const validatePassword = (password: string) => {
+    const errors: string[] = [];
+
+    if (password.length < 12) {
+      errors.push('at least 12 characters');
+    }
+    if (password.length > 128) {
+      errors.push('less than 128 characters');
+    }
+    if (!/[a-z]/.test(password)) {
+      errors.push('one lowercase letter');
+    }
+    if (!/[A-Z]/.test(password)) {
+      errors.push('one uppercase letter');
+    }
+    if (!/[0-9]/.test(password)) {
+      errors.push('one number');
+    }
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+      errors.push('one special character');
+    }
+
+    const commonPasswords = ['password', 'solace', 'mental', 'health', '123456789', 'qwerty'];
+    if (commonPasswords.some(common => password.toLowerCase().includes(common))) {
+      errors.push('cannot contain common words');
+    }
+
+    return errors;
+  };
+
   const validateForm = () => {
     if (!email.trim()) {
       Alert.alert('Error', 'Please enter your email address');
@@ -181,10 +212,17 @@ export const SignupScreen = ({ navigation }: any) => {
       Alert.alert('Error', 'Please enter a password');
       return false;
     }
-    if (password.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters long');
+
+    const passwordErrors = validatePassword(password);
+    if (passwordErrors.length > 0) {
+      Alert.alert(
+        'Password Too Weak',
+        `Your password must include:\n• ${passwordErrors.join('\n• ')}`,
+        [{ text: 'OK' }]
+      );
       return false;
     }
+
     if (password !== confirmPassword) {
       Alert.alert('Error', 'Passwords do not match');
       return false;
@@ -195,9 +233,21 @@ export const SignupScreen = ({ navigation }: any) => {
   const handleSignup = async () => {
     if (!validateForm()) return;
 
+    const rateLimit = await rateLimiter.checkLimit(`signup:${email.toLowerCase()}`, 3, 60 * 60 * 1000);
+
+    if (!rateLimit.allowed) {
+      Alert.alert(
+        'Too Many Attempts',
+        `You have exceeded the maximum signup attempts. Please try again in ${rateLimit.waitTime} seconds.`,
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
     setIsLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
+      rateLimiter.reset(`signup:${email.toLowerCase()}`);
       Alert.alert(
         'Success',
         'Account created successfully!',
@@ -289,6 +339,10 @@ export const SignupScreen = ({ navigation }: any) => {
                   <TouchableOpacity
                     style={styles.eyeButton}
                     onPress={() => setShowPassword(!showPassword)}
+                    accessible
+                    accessibilityLabel={showPassword ? "Hide password" : "Show password"}
+                    accessibilityRole="button"
+                    accessibilityHint="Toggles password visibility"
                   >
                     <MentalHealthIcon
                       name={showPassword ? "EyeOff" : "Eye"}
@@ -315,6 +369,10 @@ export const SignupScreen = ({ navigation }: any) => {
                   <TouchableOpacity
                     style={styles.eyeButton}
                     onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                    accessible
+                    accessibilityLabel={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                    accessibilityRole="button"
+                    accessibilityHint="Toggles confirm password visibility"
                   >
                     <MentalHealthIcon
                       name={showConfirmPassword ? "EyeOff" : "Eye"}
@@ -332,6 +390,11 @@ export const SignupScreen = ({ navigation }: any) => {
                 ]}
                 onPress={handleSignup}
                 disabled={!canSignup}
+                accessible
+                accessibilityLabel="Sign up"
+                accessibilityRole="button"
+                accessibilityState={{ disabled: !canSignup, busy: isLoading }}
+                accessibilityHint="Create a new account"
               >
                 <Text style={styles.signupButtonText}>
                   {isLoading ? 'Creating Account...' : 'Sign Up'}

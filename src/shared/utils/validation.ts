@@ -22,47 +22,13 @@ export interface AppValidationResult {
  * Validate app dependencies
  */
 export const validateDependencies = (): ValidationResult => {
-  const errors: string[] = [];
   const warnings: string[] = [];
 
-  // Check for React Navigation
-  try {
-    require('@react-navigation/native');
-    require('@react-navigation/stack');
-    require('@react-navigation/bottom-tabs');
-  } catch (error) {
-    errors.push('React Navigation dependencies missing');
-  }
-
-  // Check for Redux
-  try {
-    require('react-redux');
-    require('@reduxjs/toolkit');
-  } catch (error) {
-    errors.push('Redux dependencies missing');
-  }
-
-  // Check for Expo
-  try {
-    require('expo-status-bar');
-  } catch (error) {
-    warnings.push('Some Expo modules may not be available');
-  }
-
-  // Check critical dependencies
-  const criticalDeps = [
-    '@react-navigation/native',
-    'react-redux',
-    'expo-linear-gradient',
-  ];
-
-  // Note: Dynamic require() calls are not supported in Metro bundler
-  // These dependencies should be checked at build time instead
-  warnings.push('Dependency validation skipped in runtime');
+  warnings.push('Dependency validation skipped in runtime - checked at build time');
 
   return {
-    isValid: errors.length === 0,
-    errors,
+    isValid: true,
+    errors: [],
     warnings,
   };
 };
@@ -105,21 +71,10 @@ export const validatePlatform = (): ValidationResult => {
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  // Check React Native version compatibility
   if (Platform.OS === 'web') {
-    // Web-specific validations
-    if (globalThis.window === undefined) {
+    if (typeof globalThis.window === 'undefined') {
       errors.push('Window object not available in web environment');
     }
-  } else {
-    // Native-specific validations - no specific check needed
-  }
-
-  // Check React Native - simplified check
-  try {
-    require('react-native');
-  } catch {
-    errors.push('React Native not available');
   }
 
   return {

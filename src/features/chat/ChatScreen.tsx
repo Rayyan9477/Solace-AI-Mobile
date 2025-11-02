@@ -23,6 +23,7 @@ import { useTheme } from "@theme/ThemeProvider";
 import { MentalHealthIcon } from '@components/icons';
 import { FreudLogo } from '@components/icons/FreudIcons';
 import CrisisManager from '../crisis/CrisisManager';
+import { sanitizeText } from '@shared/utils/sanitization';
 
 interface Message {
   id: string;
@@ -263,7 +264,7 @@ export const ChatScreen = ({ navigation, route }: any) => {
 
   const sendMessage = async () => {
     if (inputText.trim()) {
-      const messageText = inputText.trim();
+      const messageText = sanitizeText(inputText.trim(), 5000);
 
       if (crisisManagerRef.current) {
         const crisisAnalysis = await crisisManagerRef.current.analyzeCrisisRisk(messageText);

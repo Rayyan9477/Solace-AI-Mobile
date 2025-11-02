@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@theme/ThemeProvider';
+import { sanitizeSearchQuery } from '@shared/utils/sanitization';
 
 interface SearchResult {
   id: string;
@@ -417,7 +418,7 @@ export const SearchScreen = () => {
             placeholder="Search freud.ai..."
             placeholderTextColor={theme.colors.text.tertiary}
             value={searchQuery}
-            onChangeText={setSearchQuery}
+            onChangeText={(text) => setSearchQuery(sanitizeSearchQuery(text))}
           />
           <TouchableOpacity style={styles.filterButton} onPress={() => setShowFilters(!showFilters)}>
             <Text style={styles.filterIcon}>⚙️</Text>

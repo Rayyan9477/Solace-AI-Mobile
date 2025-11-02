@@ -1,29 +1,24 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { logger } from "@shared/utils/logger";
-// Note: Use runtime requires so Jest tests with jest.resetModules can still mock these services
+import apiService from "../../services/api";
+import secureStorage from "../../services/secureStorage";
+import tokenService from "../../services/tokenService";
 
-// Async thunk for secure login
 export const secureLogin = createAsyncThunk(
   "auth/secureLogin",
   async (payload: any, { rejectWithValue }) => {
     try {
       const { email, password, rememberMe = false } = payload || {};
-      // Input validation
       if (!email || !password) {
         throw new Error("Email and password are required");
       }
 
-      // Real API call using the actual API service
-  const apiService = require("../../services/api").default;
-  const response = await apiService.auth.login(email, password);
+      const response = await apiService.auth.login(email, password);
 
-      // Validate response
       if (!response?.user) {
         throw new Error("Invalid API response");
       }
 
-      // Store user data securely
-      const secureStorage = require("../../services/secureStorage").default;
       await secureStorage.storeSecureData("user_profile", response.user, {
         dataType: "user_profile",
       });
@@ -43,21 +38,13 @@ export const secureLogin = createAsyncThunk(
   },
 );
 
-// Async thunk for secure logout
 export const secureLogout = createAsyncThunk(
   "auth/secureLogout",
   async (_, { rejectWithValue }) => {
     try {
-      const tokenService = require("../../services/tokenService").default;
-      const secureStorage = require("../../services/secureStorage").default;
-      // Clear tokens securely
-  await tokenService.clearTokens();
-
-      // Clear all secure user data
-  await secureStorage.removeSecureData("user_profile");
-
-      // Invalidate session
-  await tokenService.invalidateSession();
+      await tokenService.clearTokens();
+      await secureStorage.removeSecureData("user_profile");
+      await tokenService.invalidateSession();
 
       return {};
     } catch (error) {
@@ -82,10 +69,7 @@ export const restoreAuthState = createAsyncThunk(
       });
 
       const authCheckPromise = async () => {
-        const tokenService = require("../../services/tokenService").default;
-        const secureStorage = require("../../services/secureStorage").default;
-        // Check if user is authenticated
-  const isAuthenticated = await tokenService.isAuthenticated();
+        const isAuthenticated = await tokenService.isAuthenticated();
         logger.debug("restoreAuthState: isAuthenticated =", isAuthenticated);
 
         if (!isAuthenticated) {
@@ -95,16 +79,13 @@ export const restoreAuthState = createAsyncThunk(
           return { isAuthenticated: false };
         }
 
-        // Get tokens
-  const tokens = await tokenService.getTokens();
+        const tokens = await tokenService.getTokens();
         logger.debug("restoreAuthState: Tokens retrieved =", !!tokens);
 
-        // Get user data
-  const user = await secureStorage.getSecureData("user_profile");
+        const user = await secureStorage.getSecureData("user_profile");
         logger.debug("restoreAuthState: User data retrieved =", !!user);
 
         if (!tokens || !user) {
-          // Clear inconsistent state
           logger.debug(
             "restoreAuthState: Missing tokens or user data, clearing state",
           );
@@ -122,19 +103,15 @@ export const restoreAuthState = createAsyncThunk(
         };
       };
 
-      // Race between auth check and timeout
       return await Promise.race([authCheckPromise(), timeoutPromise]);
 
     } catch (error) {
       logger.error("restoreAuthState: Error during restoration:", error);
-      // Clear potentially corrupted state
       try {
-        const tokenService = require("../../services/tokenService").default;
         await tokenService.clearTokens();
       } catch (clearError) {
         logger.warn("Failed to clear tokens:", clearError);
       }
-      // Always return a valid state instead of rejecting
       return { isAuthenticated: false };
     }
   },

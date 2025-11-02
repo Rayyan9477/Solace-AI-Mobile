@@ -5,12 +5,18 @@
 
 import { API_CONFIG } from '../../shared/config/environment';
 import { logger } from '@shared/utils/logger';
+import tokenService from './tokenService';
+import apiCache from './apiCache';
 
 /**
  * Custom API Error class for authentication
  */
 export class AuthAPIError extends Error {
-  constructor(message, statusCode, endpoint) {
+  statusCode: number | null;
+  endpoint: string;
+  timestamp: string;
+
+  constructor(message: string, statusCode: number | null, endpoint: string) {
     super(message);
     this.name = 'AuthAPIError';
     this.statusCode = statusCode;
@@ -20,10 +26,34 @@ export class AuthAPIError extends Error {
 }
 
 /**
+ * Helper function for fetch with timeout
+ */
+async function fetchWithTimeout(url: string, options: any = {}, timeout = API_CONFIG.timeout): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error: any) {
+    clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      throw new AuthAPIError('Request timeout', 408, url);
+    }
+    throw error;
+  }
+}
+
+/**
  * Helper function to handle token refresh
  */
-async function refreshAccessToken(refreshToken) {
-  const response = await fetch(`${API_CONFIG.baseURL}/auth/refresh`, {
+async function refreshAccessToken(refreshToken: string): Promise<any> {
+  const response = await fetchWithTimeout(`${API_CONFIG.baseURL}/auth/refresh`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ refreshToken }),
@@ -44,7 +74,7 @@ async function refreshAccessToken(refreshToken) {
 /**
  * Helper function to retry request with new token
  */
-async function retryWithNewToken(url, options, newTokens) {
+async function retryWithNewToken(url: string, options: any, newTokens: any): Promise<any> {
   const headers = {
     ...options.headers,
     'Authorization': `Bearer ${newTokens.accessToken}`,
@@ -71,11 +101,20 @@ const tokenRefreshAttempts = new Map();
 const MAX_REFRESH_ATTEMPTS = 2;
 const REFRESH_ATTEMPT_WINDOW = 60000;
 
-async function authenticatedFetch(url, options = {}) {
-  const tokenService = require('./tokenService').default;
+async function authenticatedFetch(url: string, options: any = {}): Promise<any> {
+  const method = options.method || 'GET';
+
+  // Check cache for GET requests
+  if (method === 'GET') {
+    const cached = apiCache.get(url, options);
+    if (cached) {
+      return cached;
+    }
+  }
+
   const tokens = await tokenService.getTokens();
 
-  const headers = {
+  const headers: any = {
     'Content-Type': 'application/json',
     ...options.headers,
   };
@@ -145,8 +184,21 @@ async function authenticatedFetch(url, options = {}) {
       );
     }
 
-    return await response.json();
-  } catch (error) {
+    const data = await response.json();
+
+    // Cache GET requests
+    if (method === 'GET') {
+      apiCache.set(url, data, options);
+    }
+
+    // Invalidate related cache on mutations
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+      const urlPattern = new RegExp(url.split('/').slice(0, -1).join('/'));
+      apiCache.invalidatePattern(urlPattern);
+    }
+
+    return data;
+  } catch (error: any) {
     if (error.name === 'AbortError') {
       throw new AuthAPIError('Request timeout', 408, url);
     }
@@ -169,12 +221,12 @@ const authAPI = {
    * @param {string} password - User password
    * @returns {Promise<Object>} Login response with user and tokens
    */
-  async login(email, password) {
+  async login(email: string, password: string): Promise<any> {
     if (!email || !password) {
       throw new AuthAPIError('Email and password are required', 400, '/auth/login');
     }
 
-    const response = await fetch(`${API_CONFIG.baseURL}/auth/login`, {
+    const response = await fetchWithTimeout(`${API_CONFIG.baseURL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -191,8 +243,6 @@ const authAPI = {
 
     const data = await response.json();
 
-    // Store tokens securely
-    const tokenService = require('./tokenService').default;
     await tokenService.storeTokens({
       accessToken: data.access_token,
       refreshToken: data.refresh_token,
@@ -211,14 +261,14 @@ const authAPI = {
    * @param {Object} userData - User registration data
    * @returns {Promise<Object>} Registration response
    */
-  async register(userData) {
+  async register(userData: any): Promise<any> {
     const { email, password, name, ...additionalData } = userData;
 
     if (!email || !password || !name) {
       throw new AuthAPIError('Email, password, and name are required', 400, '/auth/register');
     }
 
-    const response = await fetch(`${API_CONFIG.baseURL}/auth/register`, {
+    const response = await fetchWithTimeout(`${API_CONFIG.baseURL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, name, ...additionalData }),
@@ -241,8 +291,8 @@ const authAPI = {
    * @param {string} refreshToken - Refresh token
    * @returns {Promise<Object>} New tokens
    */
-  async refreshToken(refreshToken) {
-    const response = await fetch(`${API_CONFIG.baseURL}/auth/refresh`, {
+  async refreshToken(refreshToken: string): Promise<any> {
+    const response = await fetchWithTimeout(`${API_CONFIG.baseURL}/auth/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refreshToken }),
@@ -266,7 +316,6 @@ const authAPI = {
    */
   async logout() {
     try {
-      const tokenService = require('./tokenService').default;
       const tokens = await tokenService.getTokens();
 
       if (tokens?.accessToken) {
@@ -274,13 +323,10 @@ const authAPI = {
           method: 'POST',
         });
       }
-    } catch (error) {
-      // Log but don't throw - logout should succeed even if API call fails
+    } catch (error: any) {
       logger.warn('API logout failed:', error.message);
     }
 
-    // Always clear local tokens
-    const tokenService = require('./tokenService').default;
     await tokenService.clearTokens();
 
     return { success: true };
@@ -299,7 +345,7 @@ const authAPI = {
    * @param {Object} profileData - Profile data to update
    * @returns {Promise<Object>} Updated profile
    */
-  async updateProfile(profileData) {
+  async updateProfile(profileData: any): Promise<any> {
     return await authenticatedFetch(`${API_CONFIG.baseURL}/auth/profile`, {
       method: 'PUT',
       body: JSON.stringify(profileData),
@@ -312,7 +358,7 @@ const authAPI = {
    * @param {string} newPassword - New password
    * @returns {Promise<Object>} Password change confirmation
    */
-  async changePassword(currentPassword, newPassword) {
+  async changePassword(currentPassword: string, newPassword: string): Promise<any> {
     return await authenticatedFetch(`${API_CONFIG.baseURL}/auth/change-password`, {
       method: 'POST',
       body: JSON.stringify({ currentPassword, newPassword }),
@@ -324,8 +370,8 @@ const authAPI = {
    * @param {string} email - User email
    * @returns {Promise<Object>} Reset request confirmation
    */
-  async requestPasswordReset(email) {
-    const response = await fetch(`${API_CONFIG.baseURL}/auth/forgot-password`, {
+  async requestPasswordReset(email: string): Promise<any> {
+    const response = await fetchWithTimeout(`${API_CONFIG.baseURL}/auth/forgot-password`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
@@ -349,8 +395,8 @@ const authAPI = {
    * @param {string} newPassword - New password
    * @returns {Promise<Object>} Password reset confirmation
    */
-  async resetPassword(token, newPassword) {
-    const response = await fetch(`${API_CONFIG.baseURL}/auth/reset-password`, {
+  async resetPassword(token: string, newPassword: string): Promise<any> {
+    const response = await fetchWithTimeout(`${API_CONFIG.baseURL}/auth/reset-password`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token, newPassword }),
@@ -386,7 +432,7 @@ const userAPI = {
    * @param {Object} preferences - User preferences
    * @returns {Promise<Object>} Updated preferences
    */
-  async updatePreferences(preferences) {
+  async updatePreferences(preferences: any): Promise<any> {
     return await authenticatedFetch(`${API_CONFIG.baseURL}/user/preferences`, {
       method: 'PUT',
       body: JSON.stringify(preferences),
