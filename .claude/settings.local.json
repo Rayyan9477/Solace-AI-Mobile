@@ -19,7 +19,8 @@
       "Bash(pip install:*)",
       "Bash(cat:*)",
       "Bash(cp:*)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(find src/features -type d -name screens -exec sh -c 'echo \"\"$(basename $(dirname {})):\"\"; ls {}/*.tsx 2>/dev/null | wc -l' ;)"
     ],
     "deny": [],
     "ask": []
