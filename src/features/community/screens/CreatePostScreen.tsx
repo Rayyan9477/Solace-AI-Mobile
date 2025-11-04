@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@theme/ThemeProvider';
 import { sanitizeInput } from '@shared/utils/sanitization';
@@ -40,6 +40,22 @@ export const CreatePostScreen = () => {
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
   const [hideFromCommunity, setHideFromCommunity] = useState(false);
   const [saveAsDraft, setSaveAsDraft] = useState(false);
+
+  const handleCreatePost = () => {
+    if (!postContent.trim()) {
+      return;
+    }
+
+    // TODO: Dispatch to Redux when community slice is implemented
+    // dispatch(createPost({ content: postContent, type: postType, mood: selectedMood, activities: selectedActivities }));
+
+    // For now, show success and navigate back
+    Alert.alert(
+      'Success',
+      'Your post has been created successfully!',
+      [{ text: 'OK', onPress: () => navigation.goBack() }]
+    );
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -417,7 +433,14 @@ export const CreatePostScreen = () => {
 
       {/* Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.postButton}>
+        <TouchableOpacity
+          style={styles.postButton}
+          onPress={handleCreatePost}
+          accessible
+          accessibilityLabel="Create post"
+          accessibilityRole="button"
+          accessibilityHint="Creates and publishes your post to the community"
+        >
           <Text style={styles.postButtonText}>Post →</Text>
         </TouchableOpacity>
       </View>

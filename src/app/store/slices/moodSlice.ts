@@ -1,18 +1,62 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+
+// TypeScript type declarations
+declare const __DEV__: boolean;
+
+// Interfaces
+interface MoodEntry {
+  id?: string;
+  mood: string;
+  notes?: string;
+  intensity: number;
+  activities?: string[];
+  timestamp: string | number;
+  createdAt?: string;
+}
+
+interface WeeklyStats {
+  averageIntensity: number;
+  mostCommonMood: string | null;
+  totalEntries: number;
+}
+
+interface Insight {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  icon: string;
+}
+
+interface MoodState {
+  currentMood: string | null;
+  moodHistory: MoodEntry[];
+  weeklyStats: WeeklyStats;
+  insights: Insight[];
+  loading: boolean;
+  error: string | null;
+}
 
 // Mock API service for mood tracking
 const mockApiService = {
   mood: {
-    async logMood(data) {
-      console.log('Mock mood logging:', data);
+    async logMood(data: Partial<MoodEntry>): Promise<MoodEntry> {
+      if (__DEV__) {
+        console.log('Mock mood logging:', data);
+      }
       return {
         id: Date.now().toString(),
+        mood: data.mood || '',
+        intensity: data.intensity || 3,
+        timestamp: data.timestamp || new Date().toISOString(),
         ...data,
         createdAt: new Date().toISOString(),
       };
     },
-    async getMoodHistory() {
-      console.log('Mock mood history fetch');
+    async getMoodHistory(): Promise<MoodEntry[]> {
+      if (__DEV__) {
+        console.log('Mock mood history fetch');
+      }
       return [];
     },
   },
@@ -21,7 +65,11 @@ const mockApiService = {
 const apiService = mockApiService;
 
 // Async thunk for logging mood
-export const logMood = createAsyncThunk(
+export const logMood = createAsyncThunk<
+  MoodEntry,
+  { mood: string; notes?: string; intensity: number; activities?: string[] },
+  { rejectValue: string }
+>(
   "mood/logMood",
   async ({ mood, notes, intensity, activities }, { rejectWithValue }) => {
     try {
@@ -36,39 +84,38 @@ export const logMood = createAsyncThunk(
 
       return moodEntry;
     } catch (error) {
-      console.error("Mood logging error:", error);
-      return rejectWithValue(
-        error.response?.data?.message ||
-          error.message ||
-          "Failed to log mood. Please try again.",
-      );
+      if (__DEV__) {
+        console.error("Mood logging error:", error);
+      }
+      const errorMessage = error instanceof Error ? error.message : "Failed to log mood. Please try again.";
+      return rejectWithValue(errorMessage);
     }
   },
 );
 
 // Async thunk for fetching mood history
-export const fetchMoodHistory = createAsyncThunk(
+export const fetchMoodHistory = createAsyncThunk<
+  MoodEntry[],
+  { startDate?: string; endDate?: string } | void,
+  { rejectValue: string }
+>(
   "mood/fetchMoodHistory",
-  async ({ startDate, endDate } = {}, { rejectWithValue }) => {
+  async (params = {}, { rejectWithValue }) => {
     try {
       // Real API call using the mood service
-      const moodHistory = await apiService.mood.getMoodHistory(
-        startDate,
-        endDate,
-      );
+      const moodHistory = await apiService.mood.getMoodHistory();
       return moodHistory;
     } catch (error) {
-      console.error("Mood history fetch error:", error);
-      return rejectWithValue(
-        error.response?.data?.message ||
-          error.message ||
-          "Failed to fetch mood history. Please try again.",
-      );
+      if (__DEV__) {
+        console.error("Mood history fetch error:", error);
+      }
+      const errorMessage = error instanceof Error ? error.message : "Failed to fetch mood history. Please try again.";
+      return rejectWithValue(errorMessage);
     }
   },
 );
 
-const initialState = {
+const initialState: MoodState = {
   currentMood: null,
   moodHistory: [],
   weeklyStats: {
@@ -82,7 +129,7 @@ const initialState = {
 };
 
 // Helper function to calculate weekly stats (pure function)
-const calculateWeeklyStats = (moodHistory) => {
+const calculateWeeklyStats = (moodHistory: MoodEntry[]): WeeklyStats => {
   const recentEntries = moodHistory.slice(-7);
 
   if (recentEntries.length === 0) {
@@ -94,13 +141,13 @@ const calculateWeeklyStats = (moodHistory) => {
   }
 
   const avgIntensity =
-    recentEntries.reduce((sum, entry) => sum + entry.intensity, 0) /
+    recentEntries.reduce((sum: number, entry: MoodEntry) => sum + entry.intensity, 0) /
     recentEntries.length;
 
-  const moodCounts = recentEntries.reduce((counts, entry) => {
+  const moodCounts = recentEntries.reduce((counts: Record<string, number>, entry: MoodEntry) => {
     counts[entry.mood] = (counts[entry.mood] || 0) + 1;
     return counts;
-  }, {});
+  }, {} as Record<string, number>);
 
   const moodEntries = Object.entries(moodCounts);
   const mostCommon = moodEntries.length
@@ -118,8 +165,8 @@ const calculateWeeklyStats = (moodHistory) => {
 };
 
 // Helper function to generate insights (pure function)
-const generateInsights = (weeklyStats, moodHistory = []) => {
-  const insights = [];
+const generateInsights = (weeklyStats: WeeklyStats, moodHistory: MoodEntry[] = []): Insight[] => {
+  const insights: Insight[] = [];
 
   // Generate insights based on mood patterns
   if (weeklyStats.averageIntensity > 4) {
@@ -165,7 +212,7 @@ const moodSlice = createSlice({
   name: "mood",
   initialState,
   reducers: {
-    setCurrentMood: (state, action) => {
+    setCurrentMood: (state, action: PayloadAction<string>) => {
       state.currentMood = action.payload;
     },
     clearMoodError: (state) => {
@@ -177,9 +224,9 @@ const moodSlice = createSlice({
     updateInsights: (state) => {
       state.insights = generateInsights(state.weeklyStats, state.moodHistory);
     },
-    addMoodToHistory: (state, action) => {
-      const entry = {
-        mood: action.payload.mood || action.payload,
+    addMoodToHistory: (state, action: PayloadAction<Partial<MoodEntry>>) => {
+      const entry: MoodEntry = {
+        mood: action.payload.mood || (typeof action.payload === 'string' ? action.payload : ''),
         intensity: action.payload.intensity || 3,
         timestamp: action.payload.timestamp || Date.now(),
         notes: action.payload.notes,
@@ -213,7 +260,7 @@ const moodSlice = createSlice({
       })
       .addCase(logMood.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || null;
       })
       .addCase(fetchMoodHistory.pending, (state) => {
         state.loading = true;
@@ -227,7 +274,7 @@ const moodSlice = createSlice({
       })
       .addCase(fetchMoodHistory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || null;
       });
   },
 });

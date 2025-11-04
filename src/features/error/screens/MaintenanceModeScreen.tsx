@@ -24,8 +24,10 @@ export const MaintenanceModeScreen = () => {
   };
 
   const handleCheckStatus = () => {
-    // Check maintenance status logic
-    console.log('Checking maintenance status...');
+    if (__DEV__) {
+      console.log('Checking maintenance status...');
+    }
+    // TODO: Implement actual maintenance status check
   };
 
   const styles = StyleSheet.create({

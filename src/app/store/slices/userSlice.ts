@@ -1,18 +1,89 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+
+// TypeScript type declarations
+declare const __DEV__: boolean;
+
+// Interfaces
+interface UserProfile {
+  id: string | null;
+  name: string;
+  email: string;
+  avatar?: string | null;
+  phoneNumber?: string;
+  dateOfBirth?: string;
+  emergencyContact?: {
+    name: string;
+    phone: string;
+    relationship: string;
+  };
+  [key: string]: any;
+}
+
+interface UserStats {
+  totalSessions: number;
+  streakDays: number;
+  assessmentsCompleted: number;
+  moodEntriesCount: number;
+  favoriteActivities: string[];
+  joinDate: string | null;
+}
+
+interface Goal {
+  id: string;
+  createdAt: string;
+  completed: boolean;
+  [key: string]: any;
+}
+
+interface Achievement {
+  id: string;
+  earnedAt: string;
+  [key: string]: any;
+}
+
+interface UserState {
+  profile: UserProfile;
+  preferences: {
+    notifications: {
+      moodReminders: boolean;
+      chatMessages: boolean;
+      assessmentDue: boolean;
+      insights: boolean;
+    };
+    privacy: {
+      shareData: boolean;
+      analytics: boolean;
+    };
+    theme: string;
+    language: string;
+  };
+  stats: UserStats;
+  goals: Goal[];
+  achievements: Achievement[];
+  loading: boolean;
+  error: string | null;
+  _idCounter: number;
+}
 
 // Mock API service for user management
 const mockApiService = {
   user: {
-    async getProfile() {
-      console.log('Mock user profile fetch');
+    async getProfile(): Promise<Partial<UserProfile>> {
+      if (__DEV__) {
+        console.log('Mock user profile fetch');
+      }
       return { id: '1', name: 'Test User', email: 'test@example.com' };
     },
-    async updateProfile(data) {
-      console.log('Mock user profile update:', data);
+    async updateProfile(data: Partial<UserProfile>): Promise<Partial<UserProfile>> {
+      if (__DEV__) {
+        console.log('Mock user profile update:', data);
+      }
       return { ...data, updatedAt: new Date().toISOString() };
     },
-    async getStats() {
-      console.log('Mock user stats fetch');
+    async getStats(): Promise<UserStats> {
+      if (__DEV__) {
+        console.log('Mock user stats fetch');
+      }
       return {
         totalSessions: 10,
         streakDays: 5,
@@ -31,26 +102,33 @@ const apiService = mockApiService;
 export { apiService };
 
 // Async thunk for updating user profile
-export const updateUserProfile = createAsyncThunk(
+export const updateUserProfile = createAsyncThunk<
+  Partial<UserProfile>,
+  Partial<UserProfile>,
+  { rejectValue: string }
+>(
   "user/updateProfile",
-  async (profileData, { rejectWithValue }) => {
+  async (profileData: Partial<UserProfile>, { rejectWithValue }) => {
     try {
       // Real API call using the user service
       const updatedProfile = await apiService.user.updateProfile(profileData);
       return updatedProfile;
     } catch (error) {
-      console.error("Profile update error:", error);
-      return rejectWithValue(
-        error.response?.data?.message ||
-          error.message ||
-          "Failed to update profile. Please try again.",
-      );
+      if (__DEV__) {
+        console.error("Profile update error:", error);
+      }
+      const errorMessage = error instanceof Error ? error.message : "Failed to update profile. Please try again.";
+      return rejectWithValue(errorMessage);
     }
   },
 );
 
 // Async thunk for fetching user stats
-export const fetchUserStats = createAsyncThunk(
+export const fetchUserStats = createAsyncThunk<
+  UserStats,
+  void,
+  { rejectValue: string }
+>(
   "user/fetchStats",
   async (_, { rejectWithValue }) => {
     try {
@@ -58,17 +136,16 @@ export const fetchUserStats = createAsyncThunk(
       const userStats = await apiService.user.getStats();
       return userStats;
     } catch (error) {
-      console.error("User stats fetch error:", error);
-      return rejectWithValue(
-        error.response?.data?.message ||
-          error.message ||
-          "Failed to fetch user statistics. Please try again.",
-      );
+      if (__DEV__) {
+        console.error("User stats fetch error:", error);
+      }
+      const errorMessage = error instanceof Error ? error.message : "Failed to fetch user statistics. Please try again.";
+      return rejectWithValue(errorMessage);
     }
   },
 );
 
-const initialState = {
+const initialState: UserState = {
   profile: {
     id: null,
     name: "",
@@ -115,48 +192,50 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUserProfile: (state, action) => {
+    setUserProfile: (state, action: PayloadAction<Partial<UserProfile>>) => {
       const payload = action.payload || {};
-      const { password, token, apiKey, ...safeData } = payload;
+      const { password, token, apiKey, ...safeData } = payload as any;
       state.profile = { ...state.profile, ...safeData };
     },
-    updatePreferences: (state, action) => {
+    updatePreferences: (state, action: PayloadAction<Partial<UserState['preferences']>>) => {
       state.preferences = { ...state.preferences, ...action.payload };
     },
-    setTheme: (state, action) => {
+    setTheme: (state, action: PayloadAction<string>) => {
       state.preferences.theme = action.payload;
     },
-    addGoal: (state, action) => {
+    addGoal: (state, action: PayloadAction<Partial<Goal>>) => {
       state._idCounter += 1;
-      state.goals.push({
+      const newGoal: Goal = {
         id: `goal-${state._idCounter}`,
-        ...action.payload,
         createdAt: new Date().toISOString(),
         completed: false,
-      });
+        ...action.payload,
+      };
+      state.goals.push(newGoal);
     },
-    updateGoal: (state, action) => {
+    updateGoal: (state, action: PayloadAction<{ id: string; [key: string]: any }>) => {
       const { id, ...updates } = action.payload;
       const goalIndex = state.goals.findIndex((goal) => goal.id === id);
       if (goalIndex !== -1) {
         state.goals[goalIndex] = { ...state.goals[goalIndex], ...updates };
       }
     },
-    deleteGoal: (state, action) => {
+    deleteGoal: (state, action: PayloadAction<string>) => {
       state.goals = state.goals.filter((goal) => goal.id !== action.payload);
     },
-    addAchievement: (state, action) => {
+    addAchievement: (state, action: PayloadAction<Partial<Achievement>>) => {
       state._idCounter += 1;
-      state.achievements.push({
+      const newAchievement: Achievement = {
         id: `achievement-${state._idCounter}`,
-        ...action.payload,
         earnedAt: new Date().toISOString(),
-      });
+        ...action.payload,
+      };
+      state.achievements.push(newAchievement);
     },
     clearUserError: (state) => {
       state.error = null;
     },
-    resetUserState: (state) => {
+    resetUserState: () => {
       return initialState;
     },
   },
@@ -173,7 +252,7 @@ const userSlice = createSlice({
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || null;
       })
       .addCase(fetchUserStats.pending, (state) => {
         state.loading = true;
@@ -186,7 +265,7 @@ const userSlice = createSlice({
       })
       .addCase(fetchUserStats.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || null;
       });
   },
 });

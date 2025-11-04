@@ -17,6 +17,182 @@ import {
   mergeCrisisConfig,
 } from "./crisisConfig";
 
+// TypeScript interfaces for Crisis Management System
+
+interface CrisisKeywords {
+  critical: string[];
+  high: string[];
+  moderate: string[];
+  urgency: string[];
+}
+
+interface CrisisWeights {
+  critical: number;
+  high: number;
+  moderate: number;
+  urgency: number;
+  [key: string]: number;
+}
+
+interface RiskThresholds {
+  critical: number;
+  high: number;
+  moderate: number;
+  low: number;
+}
+
+interface EmergencyResource {
+  name: string;
+  phone: string;
+  text?: string;
+  website?: string;
+  description: string;
+  available247: boolean;
+  specialty?: string;
+  priority: number;
+}
+
+interface EmergencyResourcesRegional {
+  US: EmergencyResource[];
+  [country: string]: EmergencyResource[];
+}
+
+interface CrisisConfig {
+  keywords: CrisisKeywords;
+  weights: CrisisWeights;
+  combinations: [string, string][];
+  thresholds: RiskThresholds;
+  resources: EmergencyResourcesRegional;
+}
+
+interface CrisisAnalysisResult {
+  risk: "none" | "low" | "moderate" | "high" | "critical";
+  confidence: number;
+  score?: number;
+  indicators: string[];
+  requiresImmediate?: boolean;
+}
+
+interface UserDemographics {
+  age?: number;
+  lgbtq?: boolean;
+  veteran?: boolean;
+  [key: string]: any;
+}
+
+interface UserProfile {
+  id?: string | number;
+  sessionId?: string;
+  demographics?: UserDemographics;
+  [key: string]: any;
+}
+
+interface CrisisAction {
+  type: string;
+  number?: string;
+  keyword?: string;
+  label: string;
+  urgent?: boolean;
+}
+
+interface CrisisResponse {
+  type: string;
+  riskLevel: string;
+  confidence: number;
+  timestamp: string;
+  resources: EmergencyResource[];
+  message: string;
+  actions: CrisisAction[];
+}
+
+interface EmergencyContact {
+  name: string;
+  phone: string;
+  relationship?: string;
+  type?: string;
+}
+
+interface SafetyPlan {
+  emergencyContacts: EmergencyContact[];
+  createdAt: string;
+  lastUpdated: string;
+  version: number;
+  [key: string]: any;
+}
+
+interface CrisisEvent {
+  timestamp: string;
+  riskLevel: string;
+  confidence: number;
+  indicatorsHash: string;
+  indicatorsCount: number;
+  userIdHash: string;
+  sessionId: string | null;
+  responded: boolean;
+  indicators?: string[];
+}
+
+interface EmergencyAction {
+  timestamp: string;
+  type: string;
+  targetHash: string;
+  successful: boolean;
+}
+
+interface CrisisStatistics {
+  totalCrisisEvents: number;
+  recentCrisisEvents: number;
+  totalEmergencyActions: number;
+  recentEmergencyActions: number;
+  riskLevelDistribution: RiskDistribution;
+  mostCommonIndicators: IndicatorCount[];
+  responseRate: number;
+}
+
+interface RiskDistribution {
+  none: number;
+  low: number;
+  moderate: number;
+  high: number;
+  critical: number;
+}
+
+interface IndicatorCount {
+  indicator: string;
+  count: number;
+}
+
+interface ProviderReport {
+  crisis_events: any[];
+  intervention_history: any[];
+  risk_assessment: {
+    current_risk: string;
+    confidence: number;
+    indicators: string[];
+  };
+  recommendations: string[];
+  report_generated: string;
+}
+
+interface FollowUpData {
+  type?: string;
+  scheduledTime?: string;
+  provider?: string;
+  priority?: string;
+  notes?: string;
+}
+
+interface ScheduledFollowUp {
+  id: string;
+  type: string;
+  scheduled_time: string;
+  provider: string;
+  priority: string;
+  notes: string;
+  reminder_set: boolean;
+  created_at: string;
+}
+
 /**
  * Crisis Intervention Manager
  * Handles emergency situations, crisis detection, and resource provision
@@ -24,27 +200,33 @@ import {
  */
 
 class CrisisManager {
+  private config: CrisisConfig;
+  private emergencyResources: EmergencyResource[];
+  private safetyPlanTemplate: any;
+  private configLoaded: boolean;
+  private configLoadingPromise: Promise<void> | null;
+
   constructor() {
     this.config = {
       keywords: CRISIS_KEYWORDS,
       weights: KEYWORD_WEIGHTS,
-      combinations: DANGEROUS_COMBINATIONS,
+      combinations: DANGEROUS_COMBINATIONS as [string, string][],
       thresholds: RISK_THRESHOLDS,
-      resources: EMERGENCY_RESOURCES,
+      resources: EMERGENCY_RESOURCES as unknown as EmergencyResourcesRegional,
     };
 
-    this.emergencyResources = EMERGENCY_RESOURCES.US || [];
+    this.emergencyResources = (EMERGENCY_RESOURCES.US || []) as unknown as EmergencyResource[];
     this.safetyPlanTemplate = SAFETY_PLAN_TEMPLATE;
     this.configLoaded = false;
     this.configLoadingPromise = null;
   }
 
-  async loadConfiguration() {
+  async loadConfiguration(): Promise<void> {
     if (this.configLoadingPromise) {
       return this.configLoadingPromise;
     }
 
-    this.configLoadingPromise = (async () => {
+    this.configLoadingPromise = (async (): Promise<void> => {
       try {
         const remoteConfig = await loadRemoteCrisisConfig();
         if (remoteConfig) {
@@ -60,7 +242,7 @@ class CrisisManager {
     return this.configLoadingPromise;
   }
 
-  async ensureConfigLoaded() {
+  async ensureConfigLoaded(): Promise<void> {
     if (!this.configLoaded) {
       await this.loadConfiguration();
     }
@@ -69,7 +251,7 @@ class CrisisManager {
   /**
    * Get all crisis keywords as a flat array
    */
-  getCrisisKeywords() {
+  getCrisisKeywords(): string[] {
     const { keywords } = this.config;
     return [
       ...keywords.critical,
@@ -84,7 +266,7 @@ class CrisisManager {
    * @param {string} text - User input text
    * @returns {Object} Crisis analysis result
    */
-  async analyzeCrisisRisk(text) {
+  async analyzeCrisisRisk(text: string): Promise<CrisisAnalysisResult> {
     await this.ensureConfigLoaded();
 
     if (!text || typeof text !== "string") {
@@ -92,14 +274,14 @@ class CrisisManager {
     }
 
     const normalizedText = text.toLowerCase().trim();
-    const detectedKeywords = [];
+    const detectedKeywords: string[] = [];
     let totalScore = 0;
 
     const { keywords, weights, combinations, thresholds } = this.config;
 
     // Check for crisis keywords by category
     Object.entries(keywords).forEach(([category, keywordList]) => {
-      keywordList.forEach((keyword) => {
+      keywordList.forEach((keyword: string) => {
         if (normalizedText.includes(keyword.toLowerCase())) {
           detectedKeywords.push(keyword);
           totalScore += weights[category] || 3;
@@ -117,7 +299,7 @@ class CrisisManager {
     });
 
     // Determine risk level based on configurable thresholds
-    let riskLevel = "none";
+    let riskLevel: "none" | "low" | "moderate" | "high" | "critical" = "none";
     let confidence = 0;
 
     if (totalScore >= thresholds.critical) {
@@ -149,7 +331,7 @@ class CrisisManager {
    * @param {Object} userProfile - User profile for personalization
    * @returns {Promise<Object>} Crisis response
    */
-  async handleCrisis(crisisAnalysis, userProfile = {}) {
+  async handleCrisis(crisisAnalysis: CrisisAnalysisResult, userProfile: UserProfile = {}): Promise<CrisisResponse | null> {
     const { risk, confidence, indicators, requiresImmediate } = crisisAnalysis;
 
     // Log crisis event for safety
@@ -160,7 +342,7 @@ class CrisisManager {
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
     }
 
-    const response = {
+    const response: CrisisResponse = {
       type: "crisis_response",
       riskLevel: risk,
       confidence,
@@ -245,7 +427,7 @@ class CrisisManager {
    * Show crisis alert dialog
    * @param {Object} crisisResponse - Response from handleCrisis
    */
-  async showCrisisAlert(crisisResponse) {
+  async showCrisisAlert(crisisResponse: CrisisResponse): Promise<string> {
     const { riskLevel, message, actions } = crisisResponse;
 
     if (riskLevel === "critical" || riskLevel === "high") {
@@ -312,7 +494,7 @@ class CrisisManager {
    * Make emergency call
    * @param {string} number - Phone number to call
    */
-  async makeEmergencyCall(number) {
+  async makeEmergencyCall(number: string): Promise<void> {
     try {
       const phoneNumber =
         Platform.OS === "ios" ? `telprompt:${number}` : `tel:${number}`;
@@ -341,7 +523,7 @@ class CrisisManager {
   /**
    * Send crisis text message
    */
-  async sendCrisisText() {
+  async sendCrisisText(): Promise<void> {
     try {
       const smsUrl =
         Platform.OS === "ios" ? "sms:741741&body=HOME" : "sms:741741?body=HOME";
@@ -373,14 +555,14 @@ class CrisisManager {
    * @param {Object} userProfile - User profile for personalization
    * @returns {Array} Relevant emergency resources
    */
-  getEmergencyResources(userProfile = {}) {
+  getEmergencyResources(userProfile: UserProfile = {}): EmergencyResource[] {
     let resources = [...this.emergencyResources];
 
     // Filter by specialty if applicable
     if (userProfile.demographics) {
       const { age, lgbtq, veteran } = userProfile.demographics;
 
-      if (lgbtq && age < 25) {
+      if (lgbtq && age !== undefined && age < 25) {
         // Prioritize Trevor Project for LGBTQ+ youth
         resources = resources.sort((a, b) => {
           if (a.specialty === "lgbtq") return -1;
@@ -406,7 +588,7 @@ class CrisisManager {
    * Get general support resources
    * @returns {Array} Support resources
    */
-  getSupportResources() {
+  getSupportResources(): any[] {
     return SUPPORT_RESOURCES;
   }
 
@@ -415,7 +597,7 @@ class CrisisManager {
    * @param {Object} userInputs - User's safety plan inputs
    * @returns {Object} Formatted safety plan
    */
-  async createSafetyPlan(userInputs) {
+  async createSafetyPlan(userInputs: any): Promise<SafetyPlan> {
     const safetyPlan = {
       ...this.safetyPlanTemplate,
       ...userInputs,
@@ -440,7 +622,7 @@ class CrisisManager {
    * Get saved safety plan
    * @returns {Object|null} User's safety plan
    */
-  async getSafetyPlan() {
+  async getSafetyPlan(): Promise<SafetyPlan | null> {
     try {
       return await secureStorage.getSecureData("user_safety_plan");
     } catch (error) {
@@ -453,7 +635,7 @@ class CrisisManager {
    * @param {Object} updates - Updates to apply
    * @returns {Object} Updated safety plan
    */
-  async updateSafetyPlan(updates) {
+  async updateSafetyPlan(updates: any): Promise<SafetyPlan> {
     const currentPlan = await this.getSafetyPlan();
 
     if (!currentPlan) {
@@ -477,7 +659,7 @@ class CrisisManager {
    * @param {Object} crisisAnalysis - Crisis analysis result
    * @param {Object} userProfile - User profile
    */
-  async logCrisisEvent(crisisAnalysis, userProfile) {
+  async logCrisisEvent(crisisAnalysis: CrisisAnalysisResult, userProfile: UserProfile): Promise<void> {
     try {
       const indicatorsHash = await Crypto.digestStringAsync(
         Crypto.CryptoDigestAlgorithm.SHA256,
@@ -517,7 +699,7 @@ class CrisisManager {
     }
   }
 
-  async fallbackCrisisLog(crisisAnalysis, userProfile) {
+  async fallbackCrisisLog(crisisAnalysis: CrisisAnalysisResult, userProfile: UserProfile): Promise<void> {
     try {
       const fallbackEvent = {
         timestamp: new Date().toISOString(),
@@ -533,7 +715,7 @@ class CrisisManager {
     }
   }
 
-  async notifyEmergencyContacts(event) {
+  async notifyEmergencyContacts(event: CrisisEvent): Promise<void> {
     // Implementation for notifying emergency contacts if configured
   }
 
@@ -542,7 +724,7 @@ class CrisisManager {
    * @param {string} actionType - Type of action (call, text, etc.)
    * @param {string} target - Target of action (phone number, etc.)
    */
-  async logEmergencyAction(actionType, target) {
+  async logEmergencyAction(actionType: string, target: string): Promise<void> {
     try {
       const targetHash = await Crypto.digestStringAsync(
         Crypto.CryptoDigestAlgorithm.SHA256,
@@ -573,7 +755,7 @@ class CrisisManager {
    * Get crisis statistics for user insights
    * @returns {Object} Crisis statistics
    */
-  async getCrisisStatistics() {
+  async getCrisisStatistics(): Promise<CrisisStatistics | null> {
     try {
       const crisisEvents = await secureStorage.getSecureData("crisis_events") || [];
       const emergencyActions = await secureStorage.getSecureData("emergency_actions") || [];
@@ -582,11 +764,11 @@ class CrisisManager {
       last30Days.setDate(last30Days.getDate() - 30);
 
       const recentEvents = crisisEvents.filter(
-        (event) => new Date(event.timestamp) > last30Days,
+        (event: CrisisEvent) => new Date(event.timestamp) > last30Days,
       );
 
       const recentActions = emergencyActions.filter(
-        (action) => new Date(action.timestamp) > last30Days,
+        (action: EmergencyAction) => new Date(action.timestamp) > last30Days,
       );
 
       return {
@@ -612,12 +794,13 @@ class CrisisManager {
    * @param {Array} events - Crisis events
    * @returns {Object} Risk distribution
    */
-  calculateRiskDistribution(events) {
-    const distribution = { none: 0, low: 0, moderate: 0, high: 0, critical: 0 };
+  calculateRiskDistribution(events: CrisisEvent[]): RiskDistribution {
+    const distribution: RiskDistribution = { none: 0, low: 0, moderate: 0, high: 0, critical: 0 };
 
     events.forEach((event) => {
-      if (distribution.hasOwnProperty(event.riskLevel)) {
-        distribution[event.riskLevel]++;
+      const riskLevel = event.riskLevel as keyof RiskDistribution;
+      if (distribution.hasOwnProperty(riskLevel)) {
+        distribution[riskLevel]++;
       }
     });
 
@@ -629,8 +812,8 @@ class CrisisManager {
    * @param {Array} events - Crisis events
    * @returns {Array} Top indicators
    */
-  getTopIndicators(events) {
-    const indicatorCounts = {};
+  getTopIndicators(events: CrisisEvent[]): IndicatorCount[] {
+    const indicatorCounts: Record<string, number> = {};
 
     events.forEach((event) => {
       event.indicators?.forEach((indicator) => {
@@ -639,9 +822,9 @@ class CrisisManager {
     });
 
     return Object.entries(indicatorCounts)
-      .sort(([, a], [, b]) => b - a)
+      .sort(([, a], [, b]) => (b as number) - (a as number))
       .slice(0, 10)
-      .map(([indicator, count]) => ({ indicator, count }));
+      .map(([indicator, count]) => ({ indicator, count: count as number }));
   }
 
   /**
@@ -650,7 +833,7 @@ class CrisisManager {
    * @param {Array} actions - Emergency actions
    * @returns {number} Response rate (0-1)
    */
-  calculateResponseRate(events, actions) {
+  calculateResponseRate(events: CrisisEvent[], actions: EmergencyAction[]): number {
     if (events.length === 0) return 0;
 
     const highRiskEvents = events.filter(
@@ -666,7 +849,7 @@ class CrisisManager {
       const eventTime = new Date(event.timestamp);
       const withinWindow = actions.some((action) => {
         const actionTime = new Date(action.timestamp);
-        const timeDiff = actionTime - eventTime;
+        const timeDiff = actionTime.getTime() - eventTime.getTime();
         return timeDiff >= 0 && timeDiff <= 24 * 60 * 60 * 1000; // Within 24 hours
       });
 
@@ -680,7 +863,7 @@ class CrisisManager {
    * Get crisis history for user
    * @returns {Promise<Array>} Crisis history
    */
-  async getCrisisHistory() {
+  async getCrisisHistory(): Promise<any[]> {
     try {
       const events = await AsyncStorage.getItem("crisis_events");
       return events ? JSON.parse(events) : [];
@@ -695,7 +878,7 @@ class CrisisManager {
    * @param {Object} data - Crisis data to anonymize
    * @returns {Object} Anonymized data
    */
-  anonymizeCrisisData(data) {
+  anonymizeCrisisData(data: any): any {
     const anonymized = { ...data };
 
     // Remove or hash sensitive personal information
@@ -715,7 +898,7 @@ class CrisisManager {
    * @param {Object} crisisData - Crisis event data
    * @returns {Object} Formatted provider report
    */
-  prepareProviderReport(crisisData) {
+  prepareProviderReport(crisisData: any): ProviderReport {
     const anonymizedData = this.anonymizeCrisisData(crisisData);
 
     return {
@@ -736,7 +919,7 @@ class CrisisManager {
    * @param {Object} followUpData - Follow-up scheduling data
    * @returns {Promise<Object>} Scheduled follow-up
    */
-  async scheduleFollowUp(followUpData) {
+  async scheduleFollowUp(followUpData: FollowUpData): Promise<ScheduledFollowUp> {
     const followUp = {
       id: `followup_${Date.now()}`,
       type: followUpData.type || "crisis_followup",
@@ -767,7 +950,7 @@ class CrisisManager {
    * @param {Object} crisisData - Anonymized crisis data
    * @returns {Array} Provider recommendations
    */
-  generateProviderRecommendations(crisisData) {
+  generateProviderRecommendations(crisisData: any): string[] {
     const recommendations = [];
 
     switch (crisisData.riskLevel) {

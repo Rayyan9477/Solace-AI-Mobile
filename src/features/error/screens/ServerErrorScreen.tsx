@@ -20,7 +20,10 @@ export const ServerErrorScreen = () => {
   const navigation = useNavigation();
 
   const handleRetry = () => {
-    console.log('Retrying request...');
+    if (__DEV__) {
+      console.log('Retrying request...');
+    }
+    // TODO: Implement actual retry logic
   };
 
   const handleGoHome = () => {

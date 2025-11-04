@@ -1,10 +1,108 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+
+// TypeScript interfaces
+interface TherapyMessage {
+  id: string;
+  timestamp: string;
+  [key: string]: any;
+}
+
+interface ExerciseCompletion {
+  exerciseId: string;
+  completedAt: string;
+  reflection?: string;
+}
+
+interface EmergencyContact {
+  id: string;
+  [key: string]: any;
+}
+
+interface CrisisResource {
+  name: string;
+  number: string;
+  description: string;
+  type: string;
+}
+
+interface ProgressNote {
+  timestamp: string;
+  [key: string]: any;
+}
+
+interface Achievement {
+  unlockedAt: string;
+  [key: string]: any;
+}
+
+interface SessionData {
+  sessionId: string | null;
+  isActive: boolean;
+  startTime: string | null;
+  endTime: string | null;
+  duration: number;
+  messages: TherapyMessage[];
+  exercisesCompleted: ExerciseCompletion[];
+  currentExercise: string | null;
+  interactionMode: string;
+  mood: string | null;
+  tags: string[];
+  notes: string;
+  isPaused?: boolean;
+}
+
+interface SessionSummary {
+  sessionId: string;
+  startTime: string;
+  endTime: string;
+  duration: number;
+  messageCount: number;
+  exercisesCompleted: ExerciseCompletion[];
+  mood: string | null;
+  tags: string[];
+}
+
+interface TherapyPreferences {
+  preferredInteractionMode: string;
+  enableVoiceRecording: boolean;
+  sessionReminders: boolean;
+  reminderTime: string;
+  emergencyContacts: EmergencyContact[];
+  crisisResources: CrisisResource[];
+  dataRetention: number;
+  shareDataForResearch: boolean;
+}
+
+interface TherapyInsights {
+  totalSessions: number;
+  totalDuration: number;
+  averageSessionLength: number;
+  mostUsedExercises: any[];
+  moodTrends: any[];
+  progressNotes: ProgressNote[];
+  achievements: Achievement[];
+}
+
+interface TherapyState {
+  currentSession: SessionData;
+  sessionHistory: SessionSummary[];
+  preferences: TherapyPreferences;
+  insights: TherapyInsights;
+  loading: boolean;
+  error: string | null;
+  sessionSaving: boolean;
+  preferencesLoading: boolean;
+}
 
 // Async thunks for therapy session management
-export const saveTherapySession = createAsyncThunk(
+export const saveTherapySession = createAsyncThunk<
+  { sessionData: SessionData; sessionSummary: SessionSummary },
+  SessionData,
+  { rejectValue: string }
+>(
   "therapy/saveSession",
-  async (sessionData, { rejectWithValue }) => {
+  async (sessionData: SessionData, { rejectWithValue }) => {
     try {
       const sessionKey = `therapy_session_${sessionData.sessionId}`;
       await AsyncStorage.setItem(sessionKey, JSON.stringify(sessionData));
@@ -12,12 +110,12 @@ export const saveTherapySession = createAsyncThunk(
       // Also update session history
       const historyKey = "therapy_session_history";
       const existingHistory = await AsyncStorage.getItem(historyKey);
-      const history = existingHistory ? JSON.parse(existingHistory) : [];
+      const history: SessionSummary[] = existingHistory ? JSON.parse(existingHistory) : [];
 
-      const sessionSummary = {
-        sessionId: sessionData.sessionId,
-        startTime: sessionData.startTime,
-        endTime: sessionData.endTime,
+      const sessionSummary: SessionSummary = {
+        sessionId: sessionData.sessionId || '',
+        startTime: sessionData.startTime || '',
+        endTime: sessionData.endTime || '',
         duration: sessionData.duration,
         messageCount: sessionData.messages?.length || 0,
         exercisesCompleted: sessionData.exercisesCompleted || [],
@@ -32,25 +130,35 @@ export const saveTherapySession = createAsyncThunk(
 
       return { sessionData, sessionSummary };
     } catch (error) {
-      return rejectWithValue(error.message);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save session';
+      return rejectWithValue(errorMessage);
     }
   },
 );
 
-export const loadTherapySession = createAsyncThunk(
+export const loadTherapySession = createAsyncThunk<
+  SessionData | null,
+  string,
+  { rejectValue: string }
+>(
   "therapy/loadSession",
-  async (sessionId, { rejectWithValue }) => {
+  async (sessionId: string, { rejectWithValue }) => {
     try {
       const sessionKey = `therapy_session_${sessionId}`;
       const sessionData = await AsyncStorage.getItem(sessionKey);
       return sessionData ? JSON.parse(sessionData) : null;
     } catch (error) {
-      return rejectWithValue(error.message);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to load session';
+      return rejectWithValue(errorMessage);
     }
   },
 );
 
-export const loadTherapyHistory = createAsyncThunk(
+export const loadTherapyHistory = createAsyncThunk<
+  SessionSummary[],
+  void,
+  { rejectValue: string }
+>(
   "therapy/loadHistory",
   async (_, { rejectWithValue }) => {
     try {
@@ -58,25 +166,35 @@ export const loadTherapyHistory = createAsyncThunk(
       const historyData = await AsyncStorage.getItem(historyKey);
       return historyData ? JSON.parse(historyData) : [];
     } catch (error) {
-      return rejectWithValue(error.message);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to load history';
+      return rejectWithValue(errorMessage);
     }
   },
 );
 
-export const saveTherapyPreferences = createAsyncThunk(
+export const saveTherapyPreferences = createAsyncThunk<
+  TherapyPreferences,
+  Partial<TherapyPreferences>,
+  { rejectValue: string }
+>(
   "therapy/savePreferences",
-  async (preferences, { rejectWithValue }) => {
+  async (preferences: Partial<TherapyPreferences>, { rejectWithValue }) => {
     try {
       const preferencesKey = "therapy_preferences";
       await AsyncStorage.setItem(preferencesKey, JSON.stringify(preferences));
-      return preferences;
+      return preferences as TherapyPreferences;
     } catch (error) {
-      return rejectWithValue(error.message);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save preferences';
+      return rejectWithValue(errorMessage);
     }
   },
 );
 
-export const loadTherapyPreferences = createAsyncThunk(
+export const loadTherapyPreferences = createAsyncThunk<
+  Partial<TherapyPreferences> | null,
+  void,
+  { rejectValue: string }
+>(
   "therapy/loadPreferences",
   async (_, { rejectWithValue }) => {
     try {
@@ -84,13 +202,14 @@ export const loadTherapyPreferences = createAsyncThunk(
       const preferencesData = await AsyncStorage.getItem(preferencesKey);
       return preferencesData ? JSON.parse(preferencesData) : null;
     } catch (error) {
-      return rejectWithValue(error.message);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to load preferences';
+      return rejectWithValue(errorMessage);
     }
   },
 );
 
 // Initial state
-const initialState = {
+const initialState: TherapyState = {
   // Current session state
   currentSession: {
     sessionId: null,
@@ -105,6 +224,7 @@ const initialState = {
     mood: null,
     tags: [],
     notes: "",
+    isPaused: false,
   },
 
   // Session history
@@ -159,7 +279,7 @@ const therapySlice = createSlice({
   initialState,
   reducers: {
     // Session management
-    startSession: (state, action) => {
+    startSession: (state, action: PayloadAction<{ sessionId: string; startTime: string }>) => {
       const { sessionId, startTime } = action.payload;
       state.currentSession = {
         ...initialState.currentSession,
@@ -172,15 +292,15 @@ const therapySlice = createSlice({
       state.error = null;
     },
 
-    endSession: (state, action) => {
+    endSession: (state, action: PayloadAction<{ endTime?: string; mood?: string; notes?: string }>) => {
       const { endTime, mood, notes } = action.payload || {};
       if (state.currentSession.isActive) {
         state.currentSession.isActive = false;
         state.currentSession.endTime = endTime || new Date().toISOString();
+        const endTimeDate = new Date(state.currentSession.endTime);
+        const startTimeDate = new Date(state.currentSession.startTime || '');
         state.currentSession.duration = Math.floor(
-          (new Date(state.currentSession.endTime) -
-            new Date(state.currentSession.startTime)) /
-            1000,
+          (endTimeDate.getTime() - startTimeDate.getTime()) / 1000,
         );
         if (mood) state.currentSession.mood = mood;
         if (notes) state.currentSession.notes = notes;
@@ -189,24 +309,30 @@ const therapySlice = createSlice({
 
     pauseSession: (state) => {
       // For future implementation
-      state.currentSession.isPaused = true;
+      if (state.currentSession.isPaused !== undefined) {
+        state.currentSession.isPaused = true;
+      }
     },
 
     resumeSession: (state) => {
       // For future implementation
-      state.currentSession.isPaused = false;
+      if (state.currentSession.isPaused !== undefined) {
+        state.currentSession.isPaused = false;
+      }
     },
 
     // Message management
-    addMessage: (state, action) => {
+    addMessage: (state, action: PayloadAction<Partial<TherapyMessage>>) => {
       const message = action.payload;
-      state.currentSession.messages.push({
-        ...message,
+      const newMessage: TherapyMessage = {
+        id: message.id || Date.now().toString(),
         timestamp: message.timestamp || new Date().toISOString(),
-      });
+        ...message,
+      };
+      state.currentSession.messages.push(newMessage);
     },
 
-    updateMessage: (state, action) => {
+    updateMessage: (state, action: PayloadAction<{ messageId: string; updates: Partial<TherapyMessage> }>) => {
       const { messageId, updates } = action.payload;
       const messageIndex = state.currentSession.messages.findIndex(
         (m) => m.id === messageId,
@@ -220,12 +346,12 @@ const therapySlice = createSlice({
     },
 
     // Exercise management
-    startExercise: (state, action) => {
+    startExercise: (state, action: PayloadAction<string>) => {
       const exerciseId = action.payload;
       state.currentSession.currentExercise = exerciseId;
     },
 
-    completeExercise: (state, action) => {
+    completeExercise: (state, action: PayloadAction<{ exerciseId: string; completedAt?: string; reflection?: string }>) => {
       const { exerciseId, completedAt, reflection } = action.payload;
       state.currentSession.exercisesCompleted.push({
         exerciseId,
@@ -236,46 +362,46 @@ const therapySlice = createSlice({
     },
 
     // Interaction mode
-    setInteractionMode: (state, action) => {
+    setInteractionMode: (state, action: PayloadAction<string>) => {
       state.currentSession.interactionMode = action.payload;
     },
 
     // Session metadata
-    addSessionTag: (state, action) => {
+    addSessionTag: (state, action: PayloadAction<string>) => {
       const tag = action.payload;
       if (!state.currentSession.tags.includes(tag)) {
         state.currentSession.tags.push(tag);
       }
     },
 
-    removeSessionTag: (state, action) => {
+    removeSessionTag: (state, action: PayloadAction<string>) => {
       const tag = action.payload;
       state.currentSession.tags = state.currentSession.tags.filter(
         (t) => t !== tag,
       );
     },
 
-    setSessionMood: (state, action) => {
+    setSessionMood: (state, action: PayloadAction<string>) => {
       state.currentSession.mood = action.payload;
     },
 
-    updateSessionNotes: (state, action) => {
+    updateSessionNotes: (state, action: PayloadAction<string>) => {
       state.currentSession.notes = action.payload;
     },
 
     // Preferences
-    updatePreferences: (state, action) => {
+    updatePreferences: (state, action: PayloadAction<Partial<TherapyPreferences>>) => {
       state.preferences = {
         ...state.preferences,
         ...action.payload,
       };
     },
 
-    addEmergencyContact: (state, action) => {
+    addEmergencyContact: (state, action: PayloadAction<EmergencyContact>) => {
       state.preferences.emergencyContacts.push(action.payload);
     },
 
-    removeEmergencyContact: (state, action) => {
+    removeEmergencyContact: (state, action: PayloadAction<string>) => {
       const contactId = action.payload;
       state.preferences.emergencyContacts =
         state.preferences.emergencyContacts.filter(
@@ -284,25 +410,27 @@ const therapySlice = createSlice({
     },
 
     // Insights and progress
-    updateInsights: (state, action) => {
+    updateInsights: (state, action: PayloadAction<Partial<TherapyInsights>>) => {
       state.insights = {
         ...state.insights,
         ...action.payload,
       };
     },
 
-    addProgressNote: (state, action) => {
-      state.insights.progressNotes.push({
-        ...action.payload,
+    addProgressNote: (state, action: PayloadAction<Partial<ProgressNote>>) => {
+      const newNote: ProgressNote = {
         timestamp: new Date().toISOString(),
-      });
+        ...action.payload,
+      };
+      state.insights.progressNotes.push(newNote);
     },
 
-    addAchievement: (state, action) => {
-      state.insights.achievements.push({
-        ...action.payload,
+    addAchievement: (state, action: PayloadAction<Partial<Achievement>>) => {
+      const newAchievement: Achievement = {
         unlockedAt: new Date().toISOString(),
-      });
+        ...action.payload,
+      };
+      state.insights.achievements.push(newAchievement);
     },
 
     // Error handling
@@ -310,7 +438,7 @@ const therapySlice = createSlice({
       state.error = null;
     },
 
-    setError: (state, action) => {
+    setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
   },
@@ -345,7 +473,7 @@ const therapySlice = createSlice({
       })
       .addCase(saveTherapySession.rejected, (state, action) => {
         state.sessionSaving = false;
-        state.error = action.payload;
+        state.error = action.payload || null;
       })
 
       // Load session
@@ -361,7 +489,7 @@ const therapySlice = createSlice({
       })
       .addCase(loadTherapySession.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || null;
       })
 
       // Load history
@@ -385,7 +513,7 @@ const therapySlice = createSlice({
       })
       .addCase(loadTherapyHistory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || null;
       })
 
       // Preferences
@@ -399,7 +527,7 @@ const therapySlice = createSlice({
       })
       .addCase(saveTherapyPreferences.rejected, (state, action) => {
         state.preferencesLoading = false;
-        state.error = action.payload;
+        state.error = action.payload || null;
       })
 
       .addCase(loadTherapyPreferences.pending, (state) => {
@@ -417,7 +545,7 @@ const therapySlice = createSlice({
       })
       .addCase(loadTherapyPreferences.rejected, (state, action) => {
         state.preferencesLoading = false;
-        state.error = action.payload;
+        state.error = action.payload || null;
       });
   },
 });
@@ -447,30 +575,37 @@ export const {
   setError,
 } = therapySlice.actions;
 
+// RootState type for selectors
+interface RootState {
+  therapy: TherapyState;
+}
+
 // Selectors
-export const selectCurrentSession = (state) => state.therapy.currentSession;
-export const selectSessionHistory = (state) => state.therapy.sessionHistory;
-export const selectTherapyPreferences = (state) => state.therapy.preferences;
-export const selectTherapyInsights = (state) => state.therapy.insights;
-export const selectTherapyLoading = (state) => state.therapy.loading;
-export const selectTherapyError = (state) => state.therapy.error;
-export const selectSessionSaving = (state) => state.therapy.sessionSaving;
-export const selectPreferencesLoading = (state) =>
+export const selectCurrentSession = (state: RootState) => state.therapy.currentSession;
+export const selectSessionHistory = (state: RootState) => state.therapy.sessionHistory;
+export const selectTherapyPreferences = (state: RootState) => state.therapy.preferences;
+export const selectTherapyInsights = (state: RootState) => state.therapy.insights;
+export const selectTherapyLoading = (state: RootState) => state.therapy.loading;
+export const selectTherapyError = (state: RootState) => state.therapy.error;
+export const selectSessionSaving = (state: RootState) => state.therapy.sessionSaving;
+export const selectPreferencesLoading = (state: RootState) =>
   state.therapy.preferencesLoading;
 
 // Computed selectors
-export const selectIsSessionActive = (state) =>
+export const selectIsSessionActive = (state: RootState) =>
   state.therapy.currentSession.isActive;
-export const selectCurrentExercise = (state) =>
+export const selectCurrentExercise = (state: RootState) =>
   state.therapy.currentSession.currentExercise;
-export const selectInteractionMode = (state) =>
+export const selectInteractionMode = (state: RootState) =>
   state.therapy.currentSession.interactionMode;
-export const selectSessionMessages = (state) =>
+export const selectSessionMessages = (state: RootState) =>
   state.therapy.currentSession.messages;
-export const selectSessionDuration = (state) => {
+export const selectSessionDuration = (state: RootState): number => {
   const session = state.therapy.currentSession;
   if (!session.isActive || !session.startTime) return 0;
-  return Math.floor((new Date() - new Date(session.startTime)) / 1000);
+  const now = new Date();
+  const startTime = new Date(session.startTime);
+  return Math.floor((now.getTime() - startTime.getTime()) / 1000);
 };
 
 export default therapySlice.reducer;

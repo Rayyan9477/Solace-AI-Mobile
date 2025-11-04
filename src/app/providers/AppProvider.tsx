@@ -244,7 +244,7 @@ const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, []);
 
   const announceForAccessibility = useCallback(
-    (message) => {
+    (message: string) => {
       if (isScreenReaderEnabled) {
         AccessibilityInfo.announceForAccessibility(message);
       }
@@ -253,7 +253,7 @@ const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   );
 
   const setAccessibilityFocus = useCallback(
-    (reactTag) => {
+    (reactTag: number) => {
       if (isScreenReaderEnabled && reactTag) {
         AccessibilityInfo.setAccessibilityFocus(reactTag);
       }
@@ -387,7 +387,7 @@ const MentalHealthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
   }, []);
 
-  const updateSafetyPlan = useCallback(async (planData) => {
+  const updateSafetyPlan = useCallback(async (planData: any) => {
     try {
       setSafetyPlan(planData);
       await AsyncStorage.setItem(
@@ -472,7 +472,7 @@ const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const memoryCheckInterval = setInterval(checkMemoryUsage, 30000);
     checkMemoryUsage();
 
-    const handleAppStateChange = (nextAppState) => {
+    const handleAppStateChange = (nextAppState: string) => {
       if (nextAppState.match(/inactive|background/)) {
         setBackgroundTasksActive(true);
         enableOptimizedMode();
@@ -509,7 +509,7 @@ const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsOptimizedMode(false);
   }, []);
 
-  const measureRenderTime = useCallback((componentName, renderFn) => {
+  const measureRenderTime = useCallback((componentName: string, renderFn: () => any) => {
     const startTime = Date.now();
     const result = renderFn();
     const endTime = Date.now();
@@ -553,7 +553,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <ReduxProvider store={store}>
       <PersistGate loading={<EnterpriseLoadingScreen />} persistor={persistor}>
-        <PaperProvider theme={isDark ? darkTheme : lightTheme}>
+        <PaperProvider theme={(isDark ? darkTheme : lightTheme) as any}>
           <AccessibilityProvider>
             <MentalHealthProvider>
               <PerformanceProvider>{children}</PerformanceProvider>

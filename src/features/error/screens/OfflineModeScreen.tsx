@@ -78,7 +78,10 @@ export const OfflineModeScreen = () => {
   ];
 
   const handleCheckConnection = () => {
-    console.log('Checking connection...');
+    if (__DEV__) {
+      console.log('Checking connection...');
+    }
+    // TODO: Implement actual connection check
   };
 
   const handleContinueOffline = () => {

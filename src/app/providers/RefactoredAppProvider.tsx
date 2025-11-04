@@ -32,7 +32,7 @@ const AppInitializer: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
       // Use Promise.race to add timeout protection
       await Promise.race([
-        dispatch(restoreAuthState()),
+        dispatch(restoreAuthState() as any),
         new Promise((_, reject) =>
           setTimeout(
             () => reject(new Error("Auth initialization timeout")),
@@ -45,7 +45,7 @@ const AppInitializer: React.FC<{ children: React.ReactNode }> = ({ children }) =
       setInitializationComplete(true);
     } catch (error) {
       logger.error("App initialization failed:", error);
-      setInitializationError(error);
+      setInitializationError(error as Error);
 
       // Force complete to prevent hanging - better to show login than blank screen
       logger.info("Forcing initialization completion to prevent blank screen");
@@ -115,8 +115,20 @@ const AppInitializer: React.FC<{ children: React.ReactNode }> = ({ children }) =
  * Enhanced Error Recovery Component
  * Provides comprehensive error recovery mechanisms for provider failures
  */
-class ProviderErrorBoundary extends React.Component {
-  constructor(props) {
+interface ProviderErrorBoundaryProps {
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
+}
+
+interface ProviderErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+  errorInfo: React.ErrorInfo | null;
+  retryCount: number;
+}
+
+class ProviderErrorBoundary extends React.Component<ProviderErrorBoundaryProps, ProviderErrorBoundaryState> {
+  constructor(props: ProviderErrorBoundaryProps) {
     super(props);
     this.state = {
       hasError: false,
@@ -126,11 +138,11 @@ class ProviderErrorBoundary extends React.Component {
     };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error): Partial<ProviderErrorBoundaryState> {
     return { hasError: true };
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     logger.error("Provider Error Boundary:", error);
     this.setState({
       error,
@@ -234,7 +246,7 @@ class ProviderErrorBoundary extends React.Component {
  * 4. PerformanceProvider - Performance optimization
  * 5. AppInitializer - Auth and app state initialization
  */
-export const RefactoredAppProvider = ({ children }) => {
+export const RefactoredAppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   logger.debug("Initializing app providers...");
 
   return (

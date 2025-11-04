@@ -1,16 +1,59 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
+// TypeScript type declarations
+declare const __DEV__: boolean;
+
+interface AssessmentQuestion {
+  id: string;
+  text: string;
+  type: string;
+  scale: {
+    min: number;
+    max: number;
+    labels: string[];
+  };
+}
+
+interface Assessment {
+  id: string;
+  title: string;
+  description: string;
+  questions: AssessmentQuestion[];
+}
+
+interface AssessmentResponses {
+  [questionId: string]: number;
+}
+
+interface AssessmentResult {
+  id: string;
+  assessmentId: string;
+  responses: AssessmentResponses;
+  totalScore: number;
+  completedAt: string;
+  severity: string;
+  recommendations: string[];
+  _offline?: boolean;
+}
+
 // Mock assessment API service
 const mockAssessmentAPI = {
-  async submitAssessment(data) {
-    console.log('Mock assessment submission:', data);
+  async submitAssessment(data: any): Promise<AssessmentResult> {
+    if (__DEV__) {
+      console.log('Mock assessment submission:', data);
+    }
     throw new Error('API not available'); // Force fallback to local calculation
   },
-  async getAssessmentQuestions(assessmentType) {
-    console.log('Mock assessment questions fetch for:', assessmentType);
+  async getAssessmentQuestions(assessmentType: string): Promise<Assessment> {
+    if (__DEV__) {
+      console.log('Mock assessment questions fetch for:', assessmentType);
+    }
     throw new Error('API not available'); // Force fallback to local mock data
   },
-  async getAssessmentHistory() {
-    console.log('Mock assessment history fetch');
+  async getAssessmentHistory(): Promise<AssessmentResult[]> {
+    if (__DEV__) {
+      console.log('Mock assessment history fetch');
+    }
     return [];
   },
 };
@@ -18,9 +61,13 @@ const mockAssessmentAPI = {
 const assessmentAPI = mockAssessmentAPI;
 
 // Async thunk for starting an assessment
-export const startAssessment = createAsyncThunk(
+export const startAssessment = createAsyncThunk<
+  Assessment,
+  string,
+  { rejectValue: string }
+>(
   "assessment/startAssessment",
-  async (assessmentType, { rejectWithValue }) => {
+  async (assessmentType: string, { rejectWithValue }) => {
     try {
       // Try to fetch from API first
       try {
@@ -28,14 +75,16 @@ export const startAssessment = createAsyncThunk(
         return assessment;
       } catch (apiError) {
         // Fallback to mock data if API fails
-        console.warn('[Assessment] API unavailable, using mock data');
+        if (__DEV__) {
+          console.warn('[Assessment] API unavailable, using mock data');
+        }
       }
 
       // Mock assessment data (fallback for offline use)
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Mock assessment data
-      const mockAssessments = {
+      const mockAssessments: Record<string, Assessment> = {
         phq9: {
           id: "phq9",
           title: "PHQ-9 Depression Assessment",
@@ -175,19 +224,24 @@ export const startAssessment = createAsyncThunk(
 
       return mockAssessments[assessmentType];
     } catch (error) {
-      return rejectWithValue(error.message);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      return rejectWithValue(errorMessage);
     }
   },
 );
 
 // Async thunk for submitting assessment
-export const submitAssessment = createAsyncThunk(
+export const submitAssessment = createAsyncThunk<
+  AssessmentResult,
+  { assessmentId: string; responses: AssessmentResponses },
+  { rejectValue: string }
+>(
   "assessment/submitAssessment",
-  async ({ assessmentId, responses }, { rejectWithValue }) => {
+  async ({ assessmentId, responses }: { assessmentId: string; responses: AssessmentResponses }, { rejectWithValue }) => {
     try {
       // Try to submit to API first
       try {
-        const result = await assessmentAPI.submitAssessment(assessmentId, responses);
+        const result = await assessmentAPI.submitAssessment({ assessmentId, responses });
         return result;
       } catch (apiError) {
         // Fallback to local calculation if API fails
@@ -199,11 +253,11 @@ export const submitAssessment = createAsyncThunk(
 
       // Calculate score based on responses
       const totalScore = Object.values(responses).reduce(
-        (sum, value) => sum + value,
+        (sum: number, value: number) => sum + value,
         0,
       );
 
-      let severity;
+      let severity: string;
       if (totalScore < 5) {
         severity = "Minimal";
       } else if (totalScore < 10) {
@@ -214,7 +268,7 @@ export const submitAssessment = createAsyncThunk(
         severity = "Severe";
       }
 
-      const result = {
+      const result: AssessmentResult = {
         id: Date.now().toString(),
         assessmentId,
         responses,
@@ -227,14 +281,15 @@ export const submitAssessment = createAsyncThunk(
 
       return result;
     } catch (error) {
-      return rejectWithValue(error.message);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      return rejectWithValue(errorMessage);
     }
   },
 );
 
 // Helper function to generate recommendations based on score
-const generateRecommendations = (score, assessmentType) => {
-  const recommendations = [];
+const generateRecommendations = (score: number, assessmentType: string): string[] => {
+  const recommendations: string[] = [];
 
   if (assessmentType === "phq9") {
     if (score < 5) {
@@ -289,7 +344,25 @@ const generateRecommendations = (score, assessmentType) => {
   return recommendations;
 };
 
-const initialState = {
+interface AvailableAssessment {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+  icon: string;
+}
+
+interface AssessmentState {
+  currentAssessment: Assessment | null;
+  currentQuestion: number;
+  responses: AssessmentResponses;
+  assessmentHistory: AssessmentResult[];
+  availableAssessments: AvailableAssessment[];
+  loading: boolean;
+  error: string | null | undefined;
+}
+
+const initialState: AssessmentState = {
   currentAssessment: null,
   currentQuestion: 0,
   responses: {},

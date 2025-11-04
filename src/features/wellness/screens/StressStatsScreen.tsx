@@ -62,6 +62,30 @@ export const StressStatsScreen = () => {
 
   const maxCount = Math.max(...stressLevels.map(s => s.count));
 
+  const handleSettings = () => {
+    // TODO: Navigate to stress tracking settings
+    // navigation.navigate('StressSettings');
+    if (__DEV__) {
+      console.log('Stress settings pressed');
+    }
+  };
+
+  const handleStatsDetail = () => {
+    // TODO: Navigate to detailed stress statistics screen
+    // navigation.navigate('StressStatsDetail');
+    if (__DEV__) {
+      console.log('Stress stats detail pressed');
+    }
+  };
+
+  const handleSeeAllStressors = () => {
+    // TODO: Navigate to all stressors list
+    // navigation.navigate('AllStressors');
+    if (__DEV__) {
+      console.log('See all stressors pressed');
+    }
+  };
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -337,9 +361,11 @@ export const StressStatsScreen = () => {
         <Text style={styles.headerTitle}>Stress Level Stats</Text>
         <TouchableOpacity
           style={styles.settingsButton}
+          onPress={handleSettings}
           accessible
-          accessibilityLabel="Settings"
+          accessibilityLabel="Stress tracking settings"
           accessibilityRole="button"
+          accessibilityHint="Opens stress tracking settings"
         >
           <Text style={{ fontSize: 20 }}>⚙️</Text>
         </TouchableOpacity>
@@ -372,7 +398,14 @@ export const StressStatsScreen = () => {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={styles.statsButton}>
+          <TouchableOpacity
+            style={styles.statsButton}
+            onPress={handleStatsDetail}
+            accessible
+            accessibilityLabel="View detailed stress statistics"
+            accessibilityRole="button"
+            accessibilityHint="Opens detailed stress analytics"
+          >
             <Text style={styles.statsButtonText}>Stress Stats</Text>
             <Text style={{ fontSize: 12 }}>→</Text>
           </TouchableOpacity>
@@ -432,7 +465,14 @@ export const StressStatsScreen = () => {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Top Stressors</Text>
-            <TouchableOpacity style={styles.seeAllButton}>
+            <TouchableOpacity
+              style={styles.seeAllButton}
+              onPress={handleSeeAllStressors}
+              accessible
+              accessibilityLabel="See all stressors"
+              accessibilityRole="button"
+              accessibilityHint="View complete list of stress triggers"
+            >
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
           </View>

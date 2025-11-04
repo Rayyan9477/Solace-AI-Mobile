@@ -179,13 +179,16 @@ export const MoodScreen = () => {
 
   const saveMoodEntry = () => {
     if (selectedMood && selectedIntensity) {
-      // Here you would save to your state management or API
-      console.log('Saving mood entry:', {
-        mood: selectedMood,
-        intensity: selectedIntensity,
-        timestamp: new Date(),
-      });
-      
+      if (__DEV__) {
+        console.log('Saving mood entry:', {
+          mood: selectedMood,
+          intensity: selectedIntensity,
+          timestamp: new Date(),
+        });
+      }
+
+      // TODO: Save to Redux store - dispatch(saveMood({ mood: selectedMood, intensity: selectedIntensity }))
+
       // Reset form
       setSelectedMood(null);
       setSelectedIntensity(null);

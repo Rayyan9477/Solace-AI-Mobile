@@ -1,10 +1,130 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform, Alert } from "react-native";
 
+// TypeScript type declarations
+declare const __DEV__: boolean;
+
 // Conditionally import NetInfo for native platforms only
-let NetInfo;
+let NetInfo: any;
 if (Platform.OS !== "web") {
   NetInfo = require("@react-native-community/netinfo").default;
+}
+
+// TypeScript interfaces for Offline Manager
+
+interface ConnectivityState {
+  isOnline: boolean;
+  connectionType: string;
+  wasOnline: boolean;
+}
+
+interface ConnectivityListener {
+  (state: ConnectivityState): void;
+}
+
+interface OfflineDataItem {
+  id: string;
+  timestamp: string;
+  offline?: boolean;
+  synced?: boolean;
+  serverSyncedAt?: string;
+  lastModified?: string;
+  [key: string]: any;
+}
+
+interface OfflineData {
+  moodEntries: OfflineDataItem[];
+  therapySessions: OfflineDataItem[];
+  journalEntries: OfflineDataItem[];
+  preferences: Record<string, any>;
+  crisisEvents: OfflineDataItem[];
+}
+
+interface SyncQueueOperation {
+  type: "CREATE" | "UPDATE" | "DELETE";
+  dataType: string;
+  data?: OfflineDataItem;
+  id?: string;
+  updates?: Partial<OfflineDataItem>;
+  timestamp: string;
+  queuedAt?: string;
+  attempts?: number;
+  status?: "pending" | "completed" | "failed" | "retry";
+  lastError?: string;
+  completedAt?: string;
+}
+
+interface SyncResults {
+  successful: number;
+  failed: number;
+  errors: Array<{
+    operation: string;
+    dataType: string;
+    error: string;
+  }>;
+}
+
+interface OfflineDataFilters {
+  limit?: number;
+  since?: string;
+  synced?: boolean;
+}
+
+interface TherapyExercise {
+  id: string;
+  title: string;
+  description: string;
+  instructions: string[];
+  duration: string;
+  category: string;
+}
+
+interface CrisisResource {
+  name: string;
+  number: string;
+  keyword?: string;
+  description: string;
+  type: string;
+}
+
+interface EssentialData {
+  cachedAt: string;
+  recentMoods: any[];
+  therapyExercises: TherapyExercise[];
+  crisisResources: CrisisResource[];
+  userPreferences: Record<string, any>;
+}
+
+interface StorageInfo {
+  hasSpace: boolean;
+  currentSize?: number;
+  maxSize?: number;
+  usagePercentage?: number;
+  error?: string;
+}
+
+interface OfflineStatus {
+  isOnline: boolean;
+  connectionType: string;
+  offlineDataCount: {
+    moodEntries: number;
+    therapySessions: number;
+    journalEntries: number;
+    crisisEvents: number;
+  };
+  syncQueueLength: number;
+  pendingSync: number;
+  storage: StorageInfo;
+  dataSize: number;
+  unsyncedCount: number;
+}
+
+interface ForceSyncResults {
+  success: boolean;
+  queueResults: SyncResults;
+  dataResults: { successful: number; failed: number };
+  totalSuccessful: number;
+  totalFailed: number;
 }
 
 /**
@@ -13,6 +133,13 @@ if (Platform.OS !== "web") {
  */
 
 class OfflineManager {
+  private isOnline: boolean;
+  private connectionType: string;
+  private listeners: ConnectivityListener[];
+  private syncQueue: SyncQueueOperation[];
+  private offlineData: OfflineData;
+  private networkUnsubscribe?: () => void;
+
   constructor() {
     this.isOnline = true;
     this.connectionType = "unknown";
@@ -33,7 +160,7 @@ class OfflineManager {
   /**
    * Setup network connectivity listener
    */
-  setupNetworkListener() {
+  setupNetworkListener(): void {
     // For web platform, use navigator.onLine
     if (Platform.OS === "web") {
       this.isOnline = navigator.onLine;
@@ -72,7 +199,7 @@ class OfflineManager {
 
     // For native platforms, use NetInfo
     if (NetInfo) {
-      this.networkUnsubscribe = NetInfo.addEventListener((state) => {
+      this.networkUnsubscribe = NetInfo.addEventListener((state: any) => {
         const wasOnline = this.isOnline;
         this.isOnline = state.isConnected && state.isInternetReachable;
         this.connectionType = state.type;
@@ -97,7 +224,7 @@ class OfflineManager {
   /**
    * Add connectivity listener
    */
-  addConnectivityListener(callback) {
+  addConnectivityListener(callback: ConnectivityListener): () => void {
     this.listeners.push(callback);
 
     // Return unsubscribe function
@@ -111,12 +238,14 @@ class OfflineManager {
   /**
    * Notify all listeners of connectivity changes
    */
-  notifyListeners(connectivityState) {
+  notifyListeners(connectivityState: ConnectivityState): void {
     this.listeners.forEach((callback) => {
       try {
         callback(connectivityState);
       } catch (error) {
-        console.error("Error notifying connectivity listener:", error);
+        if (__DEV__) {
+          console.error("Error notifying connectivity listener:", error);
+        }
       }
     });
   }
@@ -124,8 +253,10 @@ class OfflineManager {
   /**
    * Handle transition from offline to online
    */
-  async handleOnlineTransition() {
-    console.log("Device came online - starting sync process");
+  async handleOnlineTransition(): Promise<void> {
+    if (__DEV__) {
+      console.log("Device came online - starting sync process");
+    }
 
     // Show user that sync is happening
     this.showSyncNotification("Syncing your data...");
@@ -139,7 +270,9 @@ class OfflineManager {
 
       this.showSyncNotification("Sync completed successfully", "success");
     } catch (error) {
-      console.error("Error during online transition sync:", error);
+      if (__DEV__) {
+        console.error("Error during online transition sync:", error);
+      }
       this.showSyncNotification(
         "Sync encountered some issues, but your data is safe",
         "warning",
@@ -150,8 +283,10 @@ class OfflineManager {
   /**
    * Handle transition from online to offline
    */
-  async handleOfflineTransition() {
-    console.log("Device went offline - enabling offline mode");
+  async handleOfflineTransition(): Promise<void> {
+    if (__DEV__) {
+      console.log("Device went offline - enabling offline mode");
+    }
 
     // Notify user about offline mode
     Alert.alert(
@@ -167,7 +302,7 @@ class OfflineManager {
   /**
    * Load offline data from local storage
    */
-  async loadOfflineData() {
+  async loadOfflineData(): Promise<void> {
     try {
       const keys = [
         "offline_mood_entries",
@@ -207,19 +342,23 @@ class OfflineManager {
         }
       });
 
-      console.log("Offline data loaded successfully");
+      if (__DEV__) {
+        console.log("Offline data loaded successfully");
+      }
     } catch (error) {
-      console.error("Error loading offline data:", error);
+      if (__DEV__) {
+        console.error("Error loading offline data:", error);
+      }
     }
   }
 
   /**
    * Save data while offline
    */
-  async saveOfflineData(dataType, data) {
+  async saveOfflineData(dataType: string, data: any): Promise<{ success: boolean; offline: boolean }> {
     try {
       // Add to offline data
-      this.offlineData[dataType].push({
+      (this.offlineData as any)[dataType].push({
         ...data,
         id: data.id || `offline_${Date.now()}`,
         timestamp: data.timestamp || new Date().toISOString(),
@@ -230,20 +369,22 @@ class OfflineManager {
       // Save to AsyncStorage
       await AsyncStorage.setItem(
         `offline_${dataType}`,
-        JSON.stringify(this.offlineData[dataType]),
+        JSON.stringify((this.offlineData as any)[dataType]),
       );
 
       // Add to sync queue
       await this.addToSyncQueue({
         type: "CREATE",
         dataType,
-        data: this.offlineData[dataType][this.offlineData[dataType].length - 1],
+        data: (this.offlineData as any)[dataType][(this.offlineData as any)[dataType].length - 1],
         timestamp: new Date().toISOString(),
       });
 
       return { success: true, offline: true };
     } catch (error) {
-      console.error("Error saving offline data:", error);
+      if (__DEV__) {
+        console.error("Error saving offline data:", error);
+      }
       throw error;
     }
   }
@@ -251,9 +392,9 @@ class OfflineManager {
   /**
    * Get offline data
    */
-  async getOfflineData(dataType, filters = {}) {
+  async getOfflineData(dataType: string, filters: OfflineDataFilters = {}): Promise<{ data: OfflineDataItem[]; offline: boolean }> {
     try {
-      let data = this.offlineData[dataType] || [];
+      let data = (this.offlineData as any)[dataType] || [];
 
       // Apply filters
       if (filters.limit) {
@@ -262,16 +403,18 @@ class OfflineManager {
 
       if (filters.since) {
         const sinceDate = new Date(filters.since);
-        data = data.filter((item) => new Date(item.timestamp) >= sinceDate);
+        data = data.filter((item: OfflineDataItem) => new Date(item.timestamp) >= sinceDate);
       }
 
       if (filters.synced !== undefined) {
-        data = data.filter((item) => item.synced === filters.synced);
+        data = data.filter((item: OfflineDataItem) => item.synced === filters.synced);
       }
 
       return { data, offline: true };
     } catch (error) {
-      console.error("Error getting offline data:", error);
+      if (__DEV__) {
+        console.error("Error getting offline data:", error);
+      }
       throw error;
     }
   }
@@ -279,15 +422,15 @@ class OfflineManager {
   /**
    * Update offline data
    */
-  async updateOfflineData(dataType, id, updates) {
+  async updateOfflineData(dataType: string, id: string, updates: Partial<OfflineDataItem>): Promise<{ success: boolean; offline: boolean }> {
     try {
-      const dataIndex = this.offlineData[dataType].findIndex(
-        (item) => item.id === id,
+      const dataIndex = (this.offlineData as any)[dataType].findIndex(
+        (item: OfflineDataItem) => item.id === id,
       );
 
       if (dataIndex !== -1) {
-        this.offlineData[dataType][dataIndex] = {
-          ...this.offlineData[dataType][dataIndex],
+        (this.offlineData as any)[dataType][dataIndex] = {
+          ...(this.offlineData as any)[dataType][dataIndex],
           ...updates,
           lastModified: new Date().toISOString(),
         };
@@ -295,7 +438,7 @@ class OfflineManager {
         // Save to AsyncStorage
         await AsyncStorage.setItem(
           `offline_${dataType}`,
-          JSON.stringify(this.offlineData[dataType]),
+          JSON.stringify((this.offlineData as any)[dataType]),
         );
 
         // Add to sync queue
@@ -312,7 +455,9 @@ class OfflineManager {
         throw new Error("Item not found in offline data");
       }
     } catch (error) {
-      console.error("Error updating offline data:", error);
+      if (__DEV__) {
+        console.error("Error updating offline data:", error);
+      }
       throw error;
     }
   }
@@ -320,16 +465,16 @@ class OfflineManager {
   /**
    * Delete offline data
    */
-  async deleteOfflineData(dataType, id) {
+  async deleteOfflineData(dataType: string, id: string): Promise<{ success: boolean; offline: boolean }> {
     try {
-      this.offlineData[dataType] = this.offlineData[dataType].filter(
-        (item) => item.id !== id,
+      (this.offlineData as any)[dataType] = (this.offlineData as any)[dataType].filter(
+        (item: OfflineDataItem) => item.id !== id,
       );
 
       // Save to AsyncStorage
       await AsyncStorage.setItem(
         `offline_${dataType}`,
-        JSON.stringify(this.offlineData[dataType]),
+        JSON.stringify((this.offlineData as any)[dataType]),
       );
 
       // Add to sync queue
@@ -342,7 +487,9 @@ class OfflineManager {
 
       return { success: true, offline: true };
     } catch (error) {
-      console.error("Error deleting offline data:", error);
+      if (__DEV__) {
+        console.error("Error deleting offline data:", error);
+      }
       throw error;
     }
   }
@@ -350,7 +497,7 @@ class OfflineManager {
   /**
    * Add operation to sync queue
    */
-  async addToSyncQueue(operation) {
+  async addToSyncQueue(operation: Omit<SyncQueueOperation, 'queuedAt' | 'attempts' | 'status'>): Promise<void> {
     try {
       this.syncQueue.push({
         ...operation,
@@ -361,19 +508,23 @@ class OfflineManager {
 
       await AsyncStorage.setItem("sync_queue", JSON.stringify(this.syncQueue));
     } catch (error) {
-      console.error("Error adding to sync queue:", error);
+      if (__DEV__) {
+        console.error("Error adding to sync queue:", error);
+      }
     }
   }
 
   /**
    * Process sync queue when back online
    */
-  async processSyncQueue() {
+  async processSyncQueue(): Promise<SyncResults | undefined> {
     if (!this.isOnline || this.syncQueue.length === 0) return;
 
-    console.log(`Processing ${this.syncQueue.length} items in sync queue`);
+    if (__DEV__) {
+      console.log(`Processing ${this.syncQueue.length} items in sync queue`);
+    }
 
-    const results = {
+    const results: SyncResults = {
       successful: 0,
       failed: 0,
       errors: [],
@@ -388,9 +539,11 @@ class OfflineManager {
         operation.completedAt = new Date().toISOString();
         results.successful++;
       } catch (error) {
-        console.error(`Error syncing operation ${i}:`, error);
+        if (__DEV__) {
+          console.error(`Error syncing operation ${i}:`, error);
+        }
         operation.attempts = (operation.attempts || 0) + 1;
-        operation.lastError = error.message;
+        operation.lastError = error instanceof Error ? error.message : String(error);
         operation.status = operation.attempts >= 3 ? "failed" : "retry";
 
         if (operation.status === "failed") {
@@ -398,7 +551,7 @@ class OfflineManager {
           results.errors.push({
             operation: operation.type,
             dataType: operation.dataType,
-            error: error.message,
+            error: error instanceof Error ? error.message : String(error),
           });
         }
       }
@@ -412,22 +565,27 @@ class OfflineManager {
     // Save updated queue
     await AsyncStorage.setItem("sync_queue", JSON.stringify(this.syncQueue));
 
-    console.log("Sync queue processing completed:", results);
+    if (__DEV__) {
+      console.log("Sync queue processing completed:", results);
+    }
     return results;
   }
 
   /**
    * Sync individual operation
    */
-  async syncOperation(operation) {
+  async syncOperation(operation: SyncQueueOperation): Promise<{ success: boolean }> {
     const { type, dataType, data, id, updates } = operation;
 
     switch (type) {
       case "CREATE":
+        if (!data) throw new Error("Data is required for CREATE operation");
         return await this.syncCreateOperation(dataType, data);
       case "UPDATE":
+        if (!id || !updates) throw new Error("ID and updates are required for UPDATE operation");
         return await this.syncUpdateOperation(dataType, id, updates);
       case "DELETE":
+        if (!id) throw new Error("ID is required for DELETE operation");
         return await this.syncDeleteOperation(dataType, id);
       default:
         throw new Error(`Unknown operation type: ${type}`);
@@ -437,25 +595,27 @@ class OfflineManager {
   /**
    * Sync create operation
    */
-  async syncCreateOperation(dataType, data) {
+  async syncCreateOperation(dataType: string, data: OfflineDataItem): Promise<{ success: boolean }> {
     // Mock API call - replace with actual API
-    console.log(`Syncing CREATE ${dataType}:`, data.id);
+    if (__DEV__) {
+      console.log(`Syncing CREATE ${dataType}:`, data.id);
+    }
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Update local data to mark as synced
-    const localItemIndex = this.offlineData[dataType].findIndex(
-      (item) => item.id === data.id,
+    const localItemIndex = (this.offlineData as any)[dataType].findIndex(
+      (item: OfflineDataItem) => item.id === data.id,
     );
     if (localItemIndex !== -1) {
-      this.offlineData[dataType][localItemIndex].synced = true;
-      this.offlineData[dataType][localItemIndex].serverSyncedAt =
+      (this.offlineData as any)[dataType][localItemIndex].synced = true;
+      (this.offlineData as any)[dataType][localItemIndex].serverSyncedAt =
         new Date().toISOString();
 
       await AsyncStorage.setItem(
         `offline_${dataType}`,
-        JSON.stringify(this.offlineData[dataType]),
+        JSON.stringify((this.offlineData as any)[dataType]),
       );
     }
 
@@ -465,9 +625,11 @@ class OfflineManager {
   /**
    * Sync update operation
    */
-  async syncUpdateOperation(dataType, id, updates) {
+  async syncUpdateOperation(dataType: string, id: string, updates: Partial<OfflineDataItem>): Promise<{ success: boolean }> {
     // Mock API call - replace with actual API
-    console.log(`Syncing UPDATE ${dataType} ${id}:`, updates);
+    if (__DEV__) {
+      console.log(`Syncing UPDATE ${dataType} ${id}:`, updates);
+    }
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 300));
@@ -478,9 +640,11 @@ class OfflineManager {
   /**
    * Sync delete operation
    */
-  async syncDeleteOperation(dataType, id) {
+  async syncDeleteOperation(dataType: string, id: string): Promise<{ success: boolean }> {
     // Mock API call - replace with actual API
-    console.log(`Syncing DELETE ${dataType} ${id}`);
+    if (__DEV__) {
+      console.log(`Syncing DELETE ${dataType} ${id}`);
+    }
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 200));
@@ -491,7 +655,7 @@ class OfflineManager {
   /**
    * Sync all offline data with server
    */
-  async syncOfflineData() {
+  async syncOfflineData(): Promise<{ successful: number; failed: number } | undefined> {
     if (!this.isOnline) return;
 
     const syncPromises = [];
@@ -517,9 +681,11 @@ class OfflineManager {
       (result) => result.status === "rejected",
     ).length;
 
-    console.log(
-      `Data sync completed: ${successful} successful, ${failed} failed`,
-    );
+    if (__DEV__) {
+      console.log(
+        `Data sync completed: ${successful} successful, ${failed} failed`,
+      );
+    }
 
     return { successful, failed };
   }
@@ -527,14 +693,18 @@ class OfflineManager {
   /**
    * Sync specific data type
    */
-  async syncDataType(dataType, items) {
-    console.log(`Syncing ${items.length} ${dataType} items`);
+  async syncDataType(dataType: string, items: OfflineDataItem[]): Promise<{ dataType: string; count: number }> {
+    if (__DEV__) {
+      console.log(`Syncing ${items.length} ${dataType} items`);
+    }
 
     for (const item of items) {
       try {
         await this.syncCreateOperation(dataType, item);
       } catch (error) {
-        console.error(`Error syncing ${dataType} item ${item.id}:`, error);
+        if (__DEV__) {
+          console.error(`Error syncing ${dataType} item ${item.id}:`, error);
+        }
         throw error;
       }
     }
@@ -545,7 +715,7 @@ class OfflineManager {
   /**
    * Cache essential data for offline use
    */
-  async cacheEssentialData() {
+  async cacheEssentialData(): Promise<void> {
     try {
       // Cache recent mood history for offline insights
       // Cache therapy exercises and resources
@@ -565,16 +735,20 @@ class OfflineManager {
         JSON.stringify(essentialData),
       );
 
-      console.log("Essential data cached for offline use");
+      if (__DEV__) {
+        console.log("Essential data cached for offline use");
+      }
     } catch (error) {
-      console.error("Error caching essential data:", error);
+      if (__DEV__) {
+        console.error("Error caching essential data:", error);
+      }
     }
   }
 
   /**
    * Get offline therapy exercises
    */
-  getOfflineTherapyExercises() {
+  getOfflineTherapyExercises(): TherapyExercise[] {
     return [
       {
         id: "breathing_4_7_8",
@@ -624,7 +798,7 @@ class OfflineManager {
   /**
    * Get offline crisis resources
    */
-  getOfflineCrisisResources() {
+  getOfflineCrisisResources(): CrisisResource[] {
     return [
       {
         name: "988 Suicide & Crisis Lifeline",
@@ -651,7 +825,7 @@ class OfflineManager {
   /**
    * Check if device has sufficient storage for offline mode
    */
-  async checkStorageSpace() {
+  async checkStorageSpace(): Promise<StorageInfo> {
     try {
       // This is a simplified check - in a real app, you'd use a library like
       // react-native-device-info to get actual storage information
@@ -666,15 +840,17 @@ class OfflineManager {
         usagePercentage: (currentDataSize / maxAllowedSize) * 100,
       };
     } catch (error) {
-      console.error("Error checking storage space:", error);
-      return { hasSpace: true, error: error.message };
+      if (__DEV__) {
+        console.error("Error checking storage space:", error);
+      }
+      return { hasSpace: true, error: error instanceof Error ? error.message : String(error) };
     }
   }
 
   /**
    * Calculate size of offline data
    */
-  async calculateOfflineDataSize() {
+  async calculateOfflineDataSize(): Promise<number> {
     try {
       let totalSize = 0;
 
@@ -693,7 +869,9 @@ class OfflineManager {
 
       return totalSize;
     } catch (error) {
-      console.error("Error calculating data size:", error);
+      if (__DEV__) {
+        console.error("Error calculating data size:", error);
+      }
       return 0;
     }
   }
@@ -701,7 +879,7 @@ class OfflineManager {
   /**
    * Clean up old offline data
    */
-  async cleanupOfflineData(daysToKeep = 30) {
+  async cleanupOfflineData(daysToKeep: number = 30): Promise<{ cleanedItems: number }> {
     try {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
@@ -712,19 +890,19 @@ class OfflineManager {
         if (Array.isArray(items)) {
           const beforeCount = items.length;
 
-          this.offlineData[dataType] = items.filter((item) => {
+          (this.offlineData as any)[dataType] = items.filter((item: OfflineDataItem) => {
             const itemDate = new Date(item.timestamp);
             return itemDate >= cutoffDate || !item.synced; // Keep recent items and unsynced items
           });
 
-          const afterCount = this.offlineData[dataType].length;
+          const afterCount = (this.offlineData as any)[dataType].length;
           cleanedItems += beforeCount - afterCount;
 
           // Save cleaned data
           if (beforeCount !== afterCount) {
             await AsyncStorage.setItem(
               `offline_${dataType}`,
-              JSON.stringify(this.offlineData[dataType]),
+              JSON.stringify((this.offlineData as any)[dataType]),
             );
           }
         }
@@ -735,7 +913,8 @@ class OfflineManager {
       queueCutoffDate.setDate(queueCutoffDate.getDate() - 7);
 
       const beforeQueueCount = this.syncQueue.length;
-      this.syncQueue = this.syncQueue.filter((item) => {
+      this.syncQueue = this.syncQueue.filter((item: SyncQueueOperation) => {
+        if (!item.queuedAt) return true;
         const itemDate = new Date(item.queuedAt);
         return itemDate >= queueCutoffDate || item.status !== "completed";
       });
@@ -748,10 +927,14 @@ class OfflineManager {
         cleanedItems += beforeQueueCount - this.syncQueue.length;
       }
 
-      console.log(`Cleanup completed: ${cleanedItems} items removed`);
+      if (__DEV__) {
+        console.log(`Cleanup completed: ${cleanedItems} items removed`);
+      }
       return { cleanedItems };
     } catch (error) {
-      console.error("Error cleaning up offline data:", error);
+      if (__DEV__) {
+        console.error("Error cleaning up offline data:", error);
+      }
       throw error;
     }
   }
@@ -759,18 +942,19 @@ class OfflineManager {
   /**
    * Show sync notification to user
    */
-  showSyncNotification(message, type = "info") {
-    // This would integrate with your notification system
-    console.log(`[${type.toUpperCase()}] Sync: ${message}`);
+  showSyncNotification(message: string, type: string = "info"): void {
+    if (__DEV__) {
+      console.log(`[${type.toUpperCase()}] Sync: ${message}`);
+    }
 
-    // For now, just log - in a real app, this would show a toast or banner
-    // You could integrate this with your app's notification/toast system
+    // TODO: Integrate with app notification system (toast/banner)
+    // This would show a toast or banner in production
   }
 
   /**
    * Get offline mode status and statistics
    */
-  async getOfflineStatus() {
+  async getOfflineStatus(): Promise<OfflineStatus> {
     const storageInfo = await this.checkStorageSpace();
     const dataSize = await this.calculateOfflineDataSize();
 
@@ -800,16 +984,18 @@ class OfflineManager {
   /**
    * Force sync all data
    */
-  async forceSyncAll() {
+  async forceSyncAll(): Promise<ForceSyncResults> {
     if (!this.isOnline) {
       throw new Error("Device is offline. Cannot force sync.");
     }
 
-    console.log("Starting forced sync of all data...");
+    if (__DEV__) {
+      console.log("Starting forced sync of all data...");
+    }
 
     try {
-      const queueResults = await this.processSyncQueue();
-      const dataResults = await this.syncOfflineData();
+      const queueResults = await this.processSyncQueue() || { successful: 0, failed: 0, errors: [] };
+      const dataResults = await this.syncOfflineData() || { successful: 0, failed: 0 };
 
       const totalSuccessful = queueResults.successful + dataResults.successful;
       const totalFailed = queueResults.failed + dataResults.failed;
@@ -827,8 +1013,10 @@ class OfflineManager {
         totalFailed,
       };
     } catch (error) {
-      console.error("Error during forced sync:", error);
-      this.showSyncNotification("Sync failed: " + error.message, "error");
+      if (__DEV__) {
+        console.error("Error during forced sync:", error);
+      }
+      this.showSyncNotification("Sync failed: " + (error instanceof Error ? error.message : String(error)), "error");
       throw error;
     }
   }
@@ -836,7 +1024,7 @@ class OfflineManager {
   /**
    * Cleanup method - call when app is closing
    */
-  cleanup() {
+  cleanup(): void {
     if (this.networkUnsubscribe) {
       this.networkUnsubscribe();
     }

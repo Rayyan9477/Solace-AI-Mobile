@@ -19,8 +19,10 @@ export const NetworkErrorScreen = () => {
   const navigation = useNavigation();
 
   const handleRetry = () => {
-    // Retry logic would go here
-    console.log('Retrying connection...');
+    if (__DEV__) {
+      console.log('Retrying connection...');
+    }
+    // TODO: Implement actual retry logic
   };
 
   const handleGoOffline = () => {

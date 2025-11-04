@@ -12,6 +12,158 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Platform, Alert } from "react-native";
 
+// TypeScript type declarations
+declare const __DEV__: boolean;
+
+/**
+ * TypeScript interfaces for Smart Notification Manager
+ */
+
+interface NotificationChannel {
+  id: string;
+  name: string;
+  description: string;
+  importance: "low" | "default" | "high" | "critical";
+  sound: string;
+}
+
+interface NotificationChannels {
+  mood_reminders: NotificationChannel;
+  therapy_sessions: NotificationChannel;
+  wellness_tips: NotificationChannel;
+  crisis_support: NotificationChannel;
+  progress_celebrations: NotificationChannel;
+}
+
+interface TherapeuticMessage {
+  title: string;
+  body: string;
+  therapeutic: boolean;
+}
+
+interface TherapeuticMessages {
+  mood_reminders: TherapeuticMessage[];
+  wellness_tips: TherapeuticMessage[];
+  progress_celebrations: TherapeuticMessage[];
+}
+
+interface NotificationPreferences {
+  mood_reminders: {
+    enabled: boolean;
+    frequency: "daily" | "twice_daily" | "custom";
+    time: string;
+    customTimes: string[];
+    quietHours: { start: string; end: string };
+    adaptiveFrequency: boolean;
+  };
+  therapy_sessions: {
+    enabled: boolean;
+    reminderBefore: number[];
+    followUpAfter: number;
+  };
+  wellness_tips: {
+    enabled: boolean;
+    frequency: string;
+    time: string;
+    categories: string[];
+  };
+  crisis_support: {
+    enabled: boolean;
+    checkInAfterCrisis: number;
+    safetyPlanReminders: boolean;
+  };
+  progress_celebrations: {
+    enabled: boolean;
+    milestones: boolean;
+    streaks: boolean;
+    achievements: boolean;
+  };
+  adaptive: {
+    enabled: boolean;
+    learnFromUsage: boolean;
+    respectMoodPatterns: boolean;
+    avoidLowMoodTimes: boolean;
+  };
+}
+
+interface MoodEntry {
+  timestamp: string;
+  mood?: string;
+  score?: number;
+  [key: string]: any;
+}
+
+interface SessionDetails {
+  therapist?: string;
+  type?: string;
+  [key: string]: any;
+}
+
+interface Milestone {
+  description: string;
+  type?: string;
+  date?: string;
+  [key: string]: any;
+}
+
+interface UserAnalytics {
+  moodPatterns?: {
+    lowMoodTimes?: string[];
+    [key: string]: any;
+  };
+  usagePatterns?: {
+    engagement?: number;
+    [key: string]: any;
+  };
+  riskFactors?: {
+    highRiskPeriods?: string[];
+    [key: string]: any;
+  };
+}
+
+interface RecurringNotificationConfig {
+  id: string;
+  category: string;
+  channelId: string;
+  title: string;
+  body: string;
+  time: string;
+  repeat: "daily" | "once";
+  data: Record<string, any>;
+}
+
+interface NotificationInteraction {
+  timestamp: string;
+  notificationId: string;
+  type: string;
+  actionType: string;
+  title: string;
+  scheduled: string | Date;
+}
+
+interface NotificationAnalytics {
+  totalSent: number;
+  totalOpened: number;
+  engagementRate: number;
+  typeDistribution: Record<string, number>;
+  timeEffectiveness: Record<number, { sent: number; opened: number }>;
+  recommendations: string[];
+}
+
+interface TimeRangeCount {
+  [key: number]: number;
+}
+
+interface TypeEngagement {
+  [key: string]: { sent: number; opened: number };
+}
+
+interface EngagementRate {
+  type: string;
+  rate: number;
+  count: number;
+}
+
 /**
  * Smart Notification Manager for Mental Health App
  * Provides intelligent, therapeutic notifications based on user patterns and needs
@@ -27,6 +179,11 @@ Notifications.setNotificationHandler({
 });
 
 class SmartNotificationManager {
+  private isInitialized: boolean;
+  private notificationChannels: NotificationChannels;
+  private therapeuticMessages: TherapeuticMessages;
+  private userPreferences!: NotificationPreferences; // Will be initialized in loadNotificationPreferences or getDefaultPreferences
+
   constructor() {
     this.isInitialized = false;
     this.notificationChannels = {
@@ -168,10 +325,10 @@ class SmartNotificationManager {
   /**
    * Create notification channels for Android
    */
-  async createNotificationChannels() {
+  async createNotificationChannels(): Promise<void> {
     if (Platform.OS !== "android") return;
 
-    for (const channel of Object.values(this.notificationChannels)) {
+    for (const channel of Object.values(this.notificationChannels) as NotificationChannel[]) {
       await Notifications.setNotificationChannelAsync(channel.id, {
         name: channel.name,
         description: channel.description,
@@ -184,8 +341,8 @@ class SmartNotificationManager {
   /**
    * Map importance levels to Expo constants
    */
-  mapImportance(importance) {
-    const importanceMap = {
+  mapImportance(importance: string): any {
+    const importanceMap: Record<string, any> = {
       low: Notifications.AndroidImportance.LOW,
       default: Notifications.AndroidImportance.DEFAULT,
       high: Notifications.AndroidImportance.HIGH,
@@ -197,7 +354,7 @@ class SmartNotificationManager {
   /**
    * Load user notification preferences
    */
-  async loadNotificationPreferences() {
+  async loadNotificationPreferences(): Promise<void> {
     try {
       const preferences = await AsyncStorage.getItem(
         "notification_preferences",
@@ -214,7 +371,7 @@ class SmartNotificationManager {
   /**
    * Get default notification preferences
    */
-  getDefaultPreferences() {
+  getDefaultPreferences(): NotificationPreferences {
     return {
       mood_reminders: {
         enabled: true,
@@ -258,7 +415,7 @@ class SmartNotificationManager {
   /**
    * Save user notification preferences
    */
-  async saveNotificationPreferences(preferences) {
+  async saveNotificationPreferences(preferences: Partial<NotificationPreferences>): Promise<void> {
     try {
       this.userPreferences = { ...this.userPreferences, ...preferences };
       await AsyncStorage.setItem(
@@ -276,7 +433,7 @@ class SmartNotificationManager {
   /**
    * Schedule intelligent mood reminder based on user patterns
    */
-  async scheduleMoodReminder(userMoodHistory = []) {
+  async scheduleMoodReminder(userMoodHistory: MoodEntry[] = []): Promise<void> {
     if (!this.userPreferences.mood_reminders.enabled) return;
 
     // Cancel existing mood reminders
@@ -358,26 +515,26 @@ class SmartNotificationManager {
   /**
    * Calculate optimal time for mood reminders based on user patterns
    */
-  async calculateOptimalMoodReminderTime(moodHistory) {
+  async calculateOptimalMoodReminderTime(moodHistory: MoodEntry[]): Promise<string> {
     if (!moodHistory || moodHistory.length < 10) {
       return this.userPreferences.mood_reminders.time; // Use default if insufficient data
     }
 
     // Analyze when user typically logs moods
-    const logTimes = moodHistory.map((entry) => {
+    const logTimes = moodHistory.map((entry: MoodEntry) => {
       const date = parseISO(entry.timestamp);
       return date.getHours() + date.getMinutes() / 60;
     });
 
     // Find the most common time range
-    const timeRanges = {};
-    logTimes.forEach((time) => {
+    const timeRanges: TimeRangeCount = {};
+    logTimes.forEach((time: number) => {
       const range = Math.floor(time);
       timeRanges[range] = (timeRanges[range] || 0) + 1;
     });
 
     const mostCommonHour = Object.entries(timeRanges).sort(
-      ([, a], [, b]) => b - a,
+      ([, a], [, b]) => (b as number) - (a as number),
     )[0][0];
 
     // Suggest a time 1 hour before the most common logging time
@@ -388,7 +545,7 @@ class SmartNotificationManager {
   /**
    * Schedule therapy session reminders
    */
-  async scheduleTherapySessionReminder(sessionDateTime, sessionDetails = {}) {
+  async scheduleTherapySessionReminder(sessionDateTime: string, sessionDetails: SessionDetails = {}): Promise<void> {
     if (!this.userPreferences.therapy_sessions.enabled) return;
 
     const sessionTime = parseISO(sessionDateTime);
@@ -454,7 +611,7 @@ class SmartNotificationManager {
   /**
    * Schedule daily wellness tips
    */
-  async scheduleWellnessTips() {
+  async scheduleWellnessTips(): Promise<void> {
     if (!this.userPreferences.wellness_tips.enabled) return;
 
     await this.cancelNotificationsByCategory("wellness_tip");
@@ -496,7 +653,7 @@ class SmartNotificationManager {
   /**
    * Schedule crisis support check-in
    */
-  async scheduleCrisisCheckIn(crisisDateTime) {
+  async scheduleCrisisCheckIn(crisisDateTime: string): Promise<void> {
     if (!this.userPreferences.crisis_support.enabled) return;
 
     const checkInTime = addHours(
@@ -527,7 +684,7 @@ class SmartNotificationManager {
   /**
    * Schedule progress celebration
    */
-  async scheduleProgressCelebration(milestone) {
+  async scheduleProgressCelebration(milestone: Milestone): Promise<void> {
     if (!this.userPreferences.progress_celebrations.enabled) return;
 
     const messages = this.therapeuticMessages.progress_celebrations;
@@ -555,7 +712,7 @@ class SmartNotificationManager {
   /**
    * Schedule intelligent adaptive notifications based on user patterns
    */
-  async scheduleAdaptiveNotifications(userAnalytics) {
+  async scheduleAdaptiveNotifications(userAnalytics: UserAnalytics): Promise<void> {
     if (!this.userPreferences.adaptive.enabled) return;
 
     const { moodPatterns, usagePatterns, riskFactors } = userAnalytics;
@@ -563,7 +720,7 @@ class SmartNotificationManager {
     // Avoid low mood times
     if (
       this.userPreferences.adaptive.avoidLowMoodTimes &&
-      moodPatterns.lowMoodTimes
+      moodPatterns?.lowMoodTimes
     ) {
       // Reschedule notifications to avoid identified low mood times
       await this.adjustNotificationTimingForMoodPatterns(
@@ -584,10 +741,32 @@ class SmartNotificationManager {
     }
   }
 
+  // Placeholder methods for adaptive notification features
+  private async adjustNotificationTimingForMoodPatterns(lowMoodTimes: string[]): Promise<void> {
+    // Implementation placeholder
+    if (__DEV__) {
+      console.log("Adjusting notification timing for mood patterns", lowMoodTimes);
+    }
+  }
+
+  private async scheduleAdditionalSupportDuringRiskPeriods(highRiskPeriods: string[]): Promise<void> {
+    // Implementation placeholder
+    if (__DEV__) {
+      console.log("Scheduling additional support during risk periods", highRiskPeriods);
+    }
+  }
+
+  private async adjustNotificationFrequencyByEngagement(usagePatterns: any): Promise<void> {
+    // Implementation placeholder
+    if (__DEV__) {
+      console.log("Adjusting notification frequency by engagement", usagePatterns);
+    }
+  }
+
   /**
    * Schedule recurring notification
    */
-  async scheduleRecurringNotification(config) {
+  async scheduleRecurringNotification(config: RecurringNotificationConfig): Promise<void> {
     const { id, channelId, title, body, time, repeat, data } = config;
 
     const [hours, minutes] = time.split(":").map(Number);
@@ -622,11 +801,11 @@ class SmartNotificationManager {
   /**
    * Cancel notifications by category
    */
-  async cancelNotificationsByCategory(category) {
+  async cancelNotificationsByCategory(category: string): Promise<void> {
     const scheduledNotifications =
       await Notifications.getAllScheduledNotificationsAsync();
     const categoryNotifications = scheduledNotifications.filter(
-      (notification) => notification.content.categoryIdentifier === category,
+      (notification: any) => notification.content.categoryIdentifier === category,
     );
 
     for (const notification of categoryNotifications) {
@@ -639,7 +818,7 @@ class SmartNotificationManager {
   /**
    * Schedule all notifications based on current preferences
    */
-  async scheduleAllNotifications() {
+  async scheduleAllNotifications(): Promise<void> {
     if (!this.isInitialized) return;
 
     // Cancel all existing scheduled notifications
@@ -656,7 +835,7 @@ class SmartNotificationManager {
   /**
    * Handle notification interaction
    */
-  async handleNotificationInteraction(notification, actionType = "opened") {
+  async handleNotificationInteraction(notification: any, actionType: string = "opened"): Promise<any> {
     const { data } = notification.request.content;
 
     // Log interaction for analytics
@@ -702,9 +881,9 @@ class SmartNotificationManager {
   /**
    * Log notification interaction for analytics
    */
-  async logNotificationInteraction(notification, actionType) {
+  async logNotificationInteraction(notification: any, actionType: string): Promise<void> {
     try {
-      const interaction = {
+      const interaction: NotificationInteraction = {
         timestamp: new Date().toISOString(),
         notificationId: notification.request.identifier,
         type: notification.request.content.data?.type || "unknown",
@@ -735,7 +914,7 @@ class SmartNotificationManager {
   /**
    * Get notification analytics
    */
-  async getNotificationAnalytics() {
+  async getNotificationAnalytics(): Promise<NotificationAnalytics | null> {
     try {
       const interactions = await AsyncStorage.getItem(
         "notification_interactions",
@@ -746,25 +925,25 @@ class SmartNotificationManager {
       last30Days.setDate(last30Days.getDate() - 30);
 
       const recentInteractions = notificationLogs.filter(
-        (log) => new Date(log.timestamp) > last30Days,
+        (log: NotificationInteraction) => new Date(log.timestamp) > last30Days,
       );
 
       // Calculate engagement rates
       const sentCount = recentInteractions.length;
       const openedCount = recentInteractions.filter(
-        (log) => log.actionType === "opened",
+        (log: NotificationInteraction) => log.actionType === "opened",
       ).length;
       const engagementRate = sentCount > 0 ? openedCount / sentCount : 0;
 
       // Type distribution
-      const typeDistribution = {};
-      recentInteractions.forEach((log) => {
+      const typeDistribution: Record<string, number> = {};
+      recentInteractions.forEach((log: NotificationInteraction) => {
         typeDistribution[log.type] = (typeDistribution[log.type] || 0) + 1;
       });
 
       // Most effective times
-      const timeEffectiveness = {};
-      recentInteractions.forEach((log) => {
+      const timeEffectiveness: Record<number, { sent: number; opened: number }> = {};
+      recentInteractions.forEach((log: NotificationInteraction) => {
         const hour = new Date(log.timestamp).getHours();
         if (!timeEffectiveness[hour]) {
           timeEffectiveness[hour] = { sent: 0, opened: 0 };
@@ -793,16 +972,16 @@ class SmartNotificationManager {
   /**
    * Generate recommendations based on notification analytics
    */
-  generateNotificationRecommendations(interactions) {
-    const recommendations = [];
+  generateNotificationRecommendations(interactions: NotificationInteraction[]): string[] {
+    const recommendations: string[] = [];
 
     if (interactions.length === 0) {
       return ["Start with daily mood reminders to establish a routine."];
     }
 
     // Analyze engagement rates by type
-    const typeEngagement = {};
-    interactions.forEach((log) => {
+    const typeEngagement: TypeEngagement = {};
+    interactions.forEach((log: NotificationInteraction) => {
       if (!typeEngagement[log.type]) {
         typeEngagement[log.type] = { sent: 0, opened: 0 };
       }
@@ -813,11 +992,11 @@ class SmartNotificationManager {
     });
 
     // Find most and least engaging types
-    const engagementRates = Object.entries(typeEngagement).map(
+    const engagementRates: EngagementRate[] = Object.entries(typeEngagement).map(
       ([type, stats]) => ({
         type,
-        rate: stats.sent > 0 ? stats.opened / stats.sent : 0,
-        count: stats.sent,
+        rate: (stats as { sent: number; opened: number }).sent > 0 ? (stats as { sent: number; opened: number }).opened / (stats as { sent: number; opened: number }).sent : 0,
+        count: (stats as { sent: number; opened: number }).sent,
       }),
     );
 
@@ -850,7 +1029,7 @@ class SmartNotificationManager {
   /**
    * Utility function to format time until
    */
-  formatTimeUntil(minutes) {
+  formatTimeUntil(minutes: number): string {
     if (minutes < 60) {
       return `${minutes} minute${minutes !== 1 ? "s" : ""}`;
     }
@@ -861,7 +1040,7 @@ class SmartNotificationManager {
   /**
    * Check if current time is within quiet hours
    */
-  isWithinQuietHours() {
+  isWithinQuietHours(): boolean {
     const now = new Date();
     const currentTime = now.getHours() * 100 + now.getMinutes();
 
@@ -880,7 +1059,7 @@ class SmartNotificationManager {
   /**
    * Get current notification permission status
    */
-  async getPermissionStatus() {
+  async getPermissionStatus(): Promise<string> {
     try {
       const { status } = await Notifications.getPermissionsAsync();
       return status;
@@ -893,7 +1072,7 @@ class SmartNotificationManager {
   /**
    * Request notification permissions with explanation
    */
-  async requestPermissions() {
+  async requestPermissions(): Promise<boolean> {
     try {
       const { status } = await Notifications.requestPermissionsAsync({
         ios: {

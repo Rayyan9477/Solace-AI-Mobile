@@ -1,6 +1,35 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = {
+// TypeScript interfaces
+interface Conversation {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  messageCount: number;
+}
+
+interface Message {
+  id: string;
+  text?: string;
+  timestamp: string;
+  sender?: string;
+  type?: string;
+  [key: string]: any;
+}
+
+interface ChatState {
+  conversations: Conversation[];
+  currentConversation: string | null;
+  messages: Message[];
+  isTyping: boolean;
+  isLoading: boolean;
+  error: string | null;
+  voiceEnabled: boolean;
+  emotionDetection: boolean;
+}
+
+const initialState: ChatState = {
   conversations: [],
   currentConversation: null,
   messages: [],
@@ -15,8 +44,8 @@ const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    startNewConversation: (state, action) => {
-      const newConversation = {
+    startNewConversation: (state, action: PayloadAction<{ title?: string }>) => {
+      const newConversation: Conversation = {
         id: Date.now().toString(),
         title: action.payload.title || "New Conversation",
         createdAt: new Date().toISOString(),
@@ -28,11 +57,11 @@ const chatSlice = createSlice({
       state.messages = [];
     },
 
-    addMessage: (state, action) => {
-      const message = {
+    addMessage: (state, action: PayloadAction<Partial<Message>>) => {
+      const message: Message = {
         id: Date.now().toString() + Math.random(),
-        ...action.payload,
         timestamp: new Date().toISOString(),
+        ...action.payload,
       };
       state.messages.push(message);
 
@@ -50,15 +79,15 @@ const chatSlice = createSlice({
       }
     },
 
-    setTyping: (state, action) => {
+    setTyping: (state, action: PayloadAction<boolean>) => {
       state.isTyping = action.payload;
     },
 
-    setLoading: (state, action) => {
+    setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
 
-    setError: (state, action) => {
+    setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
 
@@ -74,12 +103,12 @@ const chatSlice = createSlice({
       state.emotionDetection = !state.emotionDetection;
     },
 
-    loadConversation: (state, action) => {
+    loadConversation: (state, action: PayloadAction<{ conversationId: string; messages?: Message[] }>) => {
       state.currentConversation = action.payload.conversationId;
       state.messages = action.payload.messages || [];
     },
 
-    deleteConversation: (state, action) => {
+    deleteConversation: (state, action: PayloadAction<string>) => {
       state.conversations = state.conversations.filter(
         (c) => c.id !== action.payload,
       );

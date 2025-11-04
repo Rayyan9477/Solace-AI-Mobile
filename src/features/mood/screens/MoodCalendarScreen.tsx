@@ -113,6 +113,18 @@ export const MoodCalendarScreen = () => {
     setSelectedMonth(newDate);
   };
 
+  const goToToday = () => {
+    setSelectedMonth(new Date());
+  };
+
+  const handleDayPress = (day: DayMood) => {
+    // TODO: Navigate to mood detail screen or show mood entry modal
+    // navigation.navigate('MoodDetail', { date: day.date, mood: day.mood });
+    if (__DEV__) {
+      console.log('Day pressed:', day);
+    }
+  };
+
   const calendarDays = generateCalendarDays();
 
   const styles = StyleSheet.create({
@@ -312,7 +324,14 @@ export const MoodCalendarScreen = () => {
           <Text style={{ fontSize: 20 }}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Mood Calendar</Text>
-        <TouchableOpacity style={styles.todayButton}>
+        <TouchableOpacity
+          style={styles.todayButton}
+          onPress={goToToday}
+          accessible
+          accessibilityLabel="Go to today"
+          accessibilityRole="button"
+          accessibilityHint="Jumps to current month"
+        >
           <Text style={styles.todayButtonText}>Today</Text>
         </TouchableOpacity>
       </View>
@@ -363,6 +382,11 @@ export const MoodCalendarScreen = () => {
                       day && styles.dayWithMood,
                       { borderColor: moodColor },
                     ]}
+                    onPress={() => handleDayPress(day)}
+                    accessible
+                    accessibilityLabel={`${day.mood} mood on day ${day.date}`}
+                    accessibilityRole="button"
+                    accessibilityHint="View mood details for this day"
                   >
                     <Text style={styles.dayEmoji}>{day.emoji}</Text>
                     <Text style={styles.dayNumber}>{day.date}</Text>

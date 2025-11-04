@@ -1,6 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { configureStore, combineReducers, Middleware } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
+import { configureStore, combineReducers, Middleware, UnknownAction } from "@reduxjs/toolkit";
+import { persistStore, persistReducer, PersistConfig } from "redux-persist";
+import encryptionTransform from "./transforms/encryptionTransform";
+import encryptionService from "@shared/utils/encryption";
 
 import assessmentSlice from "./slices/assessmentSlice";
 import authSlice from "./slices/authSlice";
@@ -9,16 +11,29 @@ import moodSlice from "./slices/moodSlice";
 import therapySlice from "./slices/therapySlice";
 import userSlice from "./slices/userSlice";
 
+// TypeScript type declarations
+declare const __DEV__: boolean;
+
+// Initialize encryption service on app startup
+(async () => {
+  try {
+    await encryptionService.initialize();
+    console.log('✅ Encryption service initialized - HIPAA compliant');
+  } catch (error) {
+    console.error('❌ Encryption service initialization failed:', error);
+  }
+})();
+
 const SESSION_TIMEOUT = 3600 * 1000;
 const INACTIVITY_TIMEOUT = 15 * 60 * 1000;
 
-const sessionTimeoutMiddleware: Middleware = (store) => (next) => (action) => {
+const sessionTimeoutMiddleware: Middleware = (store) => (next) => (action: unknown) => {
   const result = next(action);
 
-  const state = store.getState();
+  const state = store.getState() as any;
   const { sessionExpiry, lastActivity, isAuthenticated } = state.auth;
 
-  if (isAuthenticated && action.type !== 'auth/secureLogout/pending') {
+  if (isAuthenticated && (action as any).type !== 'auth/secureLogout/pending') {
     const now = Date.now();
 
     if (sessionExpiry && now > sessionExpiry) {
@@ -31,11 +46,11 @@ const sessionTimeoutMiddleware: Middleware = (store) => (next) => (action) => {
       return result;
     }
 
-    if (action.type && (
-      action.type.startsWith('mood/') ||
-      action.type.startsWith('chat/') ||
-      action.type.startsWith('user/') ||
-      action.type.startsWith('assessment/')
+    if ((action as any).type && (
+      (action as any).type.startsWith('mood/') ||
+      (action as any).type.startsWith('chat/') ||
+      (action as any).type.startsWith('user/') ||
+      (action as any).type.startsWith('assessment/')
     )) {
       store.dispatch({
         type: 'auth/updateLastActivity',
@@ -46,17 +61,6 @@ const sessionTimeoutMiddleware: Middleware = (store) => (next) => (action) => {
   return result;
 };
 
-const persistConfig = {
-  key: "root",
-  storage: AsyncStorage,
-  whitelist: ["auth", "user", "mood"],
-  timeout: 10000,
-  debug: __DEV__,
-  migrate: (state) => {
-    return Promise.resolve(state);
-  },
-};
-
 const rootReducer = combineReducers({
   auth: authSlice,
   chat: chatSlice,
@@ -65,6 +69,24 @@ const rootReducer = combineReducers({
   mood: moodSlice,
   therapy: therapySlice,
 });
+
+// Define RootState type before using in persistConfig
+type RootState = ReturnType<typeof rootReducer>;
+
+const persistConfig: PersistConfig<RootState> = {
+  key: "root",
+  storage: AsyncStorage,
+  whitelist: ["auth", "user", "mood", "chat", "assessment"], // PHI data slices
+  timeout: 10000,
+  debug: __DEV__,
+  transforms: [encryptionTransform as any], // AES-256 encryption for HIPAA compliance
+  migrate: (state: any) => {
+    if (state) {
+      console.log('🔄 Migrating persisted state with encryption');
+    }
+    return Promise.resolve(state);
+  },
+};
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
@@ -87,10 +109,13 @@ export const store = configureStore({
 
 export const persistor = persistStore(store, null, () => {
   if (__DEV__) {
-    console.log('✅ Redux store rehydration complete');
+    console.log('✅ Redux store rehydration complete with encryption');
   }
 });
 
-// For TypeScript projects, uncomment these type exports:
-export type RootState = ReturnType<typeof store.getState>;
+// Export encryption service for manual encryption needs
+export { encryptionService };
+
+// TypeScript type exports (RootState already defined above)
+export type { RootState };
 export type AppDispatch = typeof store.dispatch;

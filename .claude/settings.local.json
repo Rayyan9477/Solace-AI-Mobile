@@ -35,7 +35,10 @@
       "Bash(for dir in assessment auth chat community crisis dashboard error journal mindfulness mood onboarding profile search smartNotifications wellness)",
       "Bash(do echo \"=== $dir screens ===\")",
       "Bash(xargs basename:*)",
-      "Bash(del /F \"src\\features\\mood-tracking\\EnhancedMoodTrackerScreen.tsx\" \"src\\screens\\mood\\EnhancedMoodTrackerScreen.tsx\" \"src\\screens\\mood\\EnhancedMoodTrackerScreen.ts\" 2)"
+      "Bash(del /F \"src\\features\\mood-tracking\\EnhancedMoodTrackerScreen.tsx\" \"src\\screens\\mood\\EnhancedMoodTrackerScreen.tsx\" \"src\\screens\\mood\\EnhancedMoodTrackerScreen.ts\" 2)",
+      "Bash(git log:*)",
+      "Bash(for file in \"d:\\Repo\\Solace-AI-Mobile\\src\\features\\auth\\LoginScreen.tsx\" \"d:\\Repo\\Solace-AI-Mobile\\src\\features\\auth\\SignupScreen.tsx\" \"d:\\Repo\\Solace-AI-Mobile\\src\\features\\auth\\ForgotPasswordScreen.tsx\" \"d:\\Repo\\Solace-AI-Mobile\\src\\features\\chat\\ChatScreen.tsx\" \"d:\\Repo\\Solace-AI-Mobile\\src\\features\\chat\\ConversationListScreen.tsx\" \"d:\\Repo\\Solace-AI-Mobile\\src\\features\\chat\\NewConversationScreen.tsx\")",
+      "Bash(wc:*)"
     ],
     "deny": [],
     "ask": []

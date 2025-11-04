@@ -1,18 +1,64 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@theme/ThemeProvider';
+import { useSelector } from 'react-redux';
+import type { RootState } from '@app/store/store';
+
+interface ActivityCount {
+  id: string;
+  name: string;
+  impact: 'Positive' | 'Negative' | 'Neutral';
+  icon: string;
+  count: number;
+}
 
 export const ActivityTrackingScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
 
-  const activities = [
-    { id: '1', name: 'Exercise', impact: 'Positive', icon: '🏃', count: 5 },
-    { id: '2', name: 'Social Time', impact: 'Positive', icon: '👥', count: 8 },
-    { id: '3', name: 'Work Stress', impact: 'Negative', icon: '💼', count: 12 },
-    { id: '4', name: 'Sleep', impact: 'Positive', icon: '😴', count: 7 },
-  ];
+  // Get mood history from Redux
+  const moodHistory = useSelector((state: RootState) => state.mood?.moodHistory || []);
+
+  // Calculate activity counts from mood history
+  const activities = useMemo<ActivityCount[]>(() => {
+    const activityMap = new Map<string, number>();
+
+    moodHistory.forEach((entry: any) => {
+      if (entry.activities && Array.isArray(entry.activities)) {
+        entry.activities.forEach((activity: string) => {
+          activityMap.set(activity, (activityMap.get(activity) || 0) + 1);
+        });
+      }
+    });
+
+    // Define activity categories with icons and impact
+    const activityDefinitions = {
+      'Exercise': { icon: '🏃', impact: 'Positive' as const },
+      'Social Time': { icon: '👥', impact: 'Positive' as const },
+      'Work': { icon: '💼', impact: 'Neutral' as const },
+      'Work Stress': { icon: '💼', impact: 'Negative' as const },
+      'Sleep': { icon: '😴', impact: 'Positive' as const },
+      'Meditation': { icon: '🧘', impact: 'Positive' as const },
+      'Reading': { icon: '📖', impact: 'Positive' as const },
+      'Hobby': { icon: '🎨', impact: 'Positive' as const },
+      'Family Time': { icon: '👨‍👩‍👧‍👦', impact: 'Positive' as const },
+      'Relaxation': { icon: '🛀', impact: 'Positive' as const },
+      'Therapy': { icon: '💭', impact: 'Positive' as const },
+      'Conflict': { icon: '😤', impact: 'Negative' as const },
+      'Isolation': { icon: '🚪', impact: 'Negative' as const },
+    };
+
+    return Array.from(activityMap.entries())
+      .map(([name, count]) => ({
+        id: name,
+        name,
+        icon: activityDefinitions[name as keyof typeof activityDefinitions]?.icon || '📌',
+        impact: activityDefinitions[name as keyof typeof activityDefinitions]?.impact || 'Neutral',
+        count,
+      }))
+      .sort((a, b) => b.count - a.count);
+  }, [moodHistory]);
 
   const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: theme.colors.background.primary },
@@ -26,28 +72,61 @@ export const ActivityTrackingScreen = () => {
     activityName: { fontSize: 16, fontWeight: '700', color: theme.colors.text.primary },
     activityImpact: { fontSize: 13, color: theme.colors.text.secondary },
     activityCount: { fontSize: 20, fontWeight: '800', color: theme.colors.brown['80'] },
+    emptyState: { alignItems: 'center', paddingVertical: 60, paddingHorizontal: 20 },
+    emptyEmoji: { fontSize: 64, marginBottom: 16 },
+    emptyTitle: { fontSize: 20, fontWeight: '700', color: theme.colors.text.primary, marginBottom: 8, textAlign: 'center' },
+    emptyMessage: { fontSize: 15, color: theme.colors.text.secondary, textAlign: 'center', lineHeight: 22 },
   });
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+          accessible
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+        >
           <Text style={{ fontSize: 20 }}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Activity Tracking</Text>
         <View style={{ width: 40 }} />
       </View>
       <ScrollView style={styles.content}>
-        {activities.map(activity => (
-          <View key={activity.id} style={styles.activityCard}>
-            <Text style={styles.activityIcon}>{activity.icon}</Text>
-            <View style={styles.activityInfo}>
-              <Text style={styles.activityName}>{activity.name}</Text>
-              <Text style={styles.activityImpact}>{activity.impact} Impact</Text>
-            </View>
-            <Text style={styles.activityCount}>{activity.count}</Text>
+        {activities.length > 0 ? (
+          activities.map(activity => (
+            <TouchableOpacity
+              key={activity.id}
+              style={styles.activityCard}
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel={`${activity.name}: ${activity.count} times, ${activity.impact} impact`}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.activityIcon}>{activity.icon}</Text>
+              <View style={styles.activityInfo}>
+                <Text style={styles.activityName}>{activity.name}</Text>
+                <Text style={[
+                  styles.activityImpact,
+                  activity.impact === 'Positive' && { color: theme.colors.success },
+                  activity.impact === 'Negative' && { color: theme.colors.error },
+                ]}>
+                  {activity.impact} Impact
+                </Text>
+              </View>
+              <Text style={styles.activityCount}>{activity.count}</Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyEmoji}>📊</Text>
+            <Text style={styles.emptyTitle}>No activities tracked yet</Text>
+            <Text style={styles.emptyMessage}>
+              Start tracking your mood with activities to see insights here
+            </Text>
           </View>
-        ))}
+        )}
       </ScrollView>
     </SafeAreaView>
   );

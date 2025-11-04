@@ -36,6 +36,14 @@ export const SleepPatternsScreen = () => {
   const averageSleep = 7.4;
   const sleepGoal = 8.0;
 
+  const handleSettings = () => {
+    // TODO: Navigate to sleep settings or open settings modal
+    // navigation.navigate('SleepSettings');
+    if (__DEV__) {
+      console.log('Sleep settings pressed');
+    }
+  };
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -177,7 +185,14 @@ export const SleepPatternsScreen = () => {
           <Text style={{ fontSize: 20 }}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Sleep Patterns</Text>
-        <TouchableOpacity style={styles.settingsButton}>
+        <TouchableOpacity
+          style={styles.settingsButton}
+          onPress={handleSettings}
+          accessible
+          accessibilityLabel="Sleep settings"
+          accessibilityRole="button"
+          accessibilityHint="Opens sleep tracking settings"
+        >
           <Text style={{ fontSize: 20 }}>⚙️</Text>
         </TouchableOpacity>
       </View>

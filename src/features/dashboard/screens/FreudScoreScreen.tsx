@@ -60,6 +60,30 @@ export const FreudScoreScreen = () => {
     return theme.colors.orange['60'];
   };
 
+  const handleHelp = () => {
+    // TODO: Navigate to help screen or show info modal
+    // navigation.navigate('FreudScoreHelp');
+    if (__DEV__) {
+      console.log('Freud Score help pressed');
+    }
+  };
+
+  const handleSeeInsights = () => {
+    // TODO: Navigate to detailed insights screen
+    // navigation.navigate('MentalHealthInsights');
+    if (__DEV__) {
+      console.log('See insights pressed');
+    }
+  };
+
+  const handleSeeAllHistory = () => {
+    // TODO: Navigate to full score history
+    // navigation.navigate('ScoreHistory');
+    if (__DEV__) {
+      console.log('See all history pressed');
+    }
+  };
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -290,9 +314,11 @@ export const FreudScoreScreen = () => {
         <Text style={styles.headerTitle}>Freud Score</Text>
         <TouchableOpacity
           style={styles.helpButton}
+          onPress={handleHelp}
           accessible
-          accessibilityLabel="Help"
+          accessibilityLabel="Freud Score help"
           accessibilityRole="button"
+          accessibilityHint="Learn about Freud Score and mental health metrics"
         >
           <Text style={{ fontSize: 20 }}>❓</Text>
         </TouchableOpacity>
@@ -306,7 +332,14 @@ export const FreudScoreScreen = () => {
           <View style={styles.normalBadge}>
             <Text style={styles.normalText}>Normal</Text>
           </View>
-          <TouchableOpacity style={styles.seeInsightsButton}>
+          <TouchableOpacity
+            style={styles.seeInsightsButton}
+            onPress={handleSeeInsights}
+            accessible
+            accessibilityLabel="View mental health insights"
+            accessibilityRole="button"
+            accessibilityHint="Opens detailed analysis of your mental health score"
+          >
             <Text style={styles.seeInsightsText}>See your mental score insights</Text>
           </TouchableOpacity>
         </View>
@@ -385,7 +418,14 @@ export const FreudScoreScreen = () => {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Score History</Text>
-            <TouchableOpacity style={styles.seeAllButton}>
+            <TouchableOpacity
+              style={styles.seeAllButton}
+              onPress={handleSeeAllHistory}
+              accessible
+              accessibilityLabel="See all score history"
+              accessibilityRole="button"
+              accessibilityHint="View complete Freud Score history"
+            >
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
           </View>

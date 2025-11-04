@@ -59,7 +59,10 @@ export const SocialLoginScreen = () => {
   ];
 
   const handleSocialLogin = (providerId: string) => {
-    console.log(`Logging in with ${providerId}...`);
+    if (__DEV__) {
+      console.log(`Logging in with ${providerId}...`);
+    }
+    // TODO: Implement actual social login integration
   };
 
   const handleEmailLogin = () => {
