@@ -42,7 +42,11 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
 
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) return 0;
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          clearInterval(messageInterval);
+          return 100;
+        }
         return prev + 5;
       });
     }, 100);
@@ -51,7 +55,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
       clearInterval(messageInterval);
       clearInterval(progressInterval);
     };
-  }, []);
+  }, [loadingMessages]);
 
   const styles = StyleSheet.create({
     container: {

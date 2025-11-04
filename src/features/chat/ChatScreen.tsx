@@ -66,11 +66,12 @@ export const ChatScreen = ({ navigation, route }: any) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const pulseAnim = useRef(new Animated.Value(1)).current;
-  const crisisManagerRef = useRef<CrisisManager | null>(null);
+  const crisisManagerRef = useRef<typeof CrisisManager | null>(null);
 
   useEffect(() => {
     const initCrisisManager = async () => {
-      crisisManagerRef.current = new CrisisManager();
+      // CrisisManager is exported as a singleton instance, not a class
+      crisisManagerRef.current = CrisisManager;
       await crisisManagerRef.current.loadConfiguration();
     };
     initCrisisManager();

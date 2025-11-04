@@ -20,7 +20,22 @@
       "Bash(cat:*)",
       "Bash(cp:*)",
       "Bash(awk:*)",
-      "Bash(find src/features -type d -name screens -exec sh -c 'echo \"\"$(basename $(dirname {})):\"\"; ls {}/*.tsx 2>/dev/null | wc -l' ;)"
+      "Bash(find src/features -type d -name screens -exec sh -c 'echo \"\"$(basename $(dirname {})):\"\"; ls {}/*.tsx 2>/dev/null | wc -l' ;)",
+      "Bash(find:*)",
+      "Bash(NUL)",
+      "Bash(dir /s /b \"d:\\Repo\\Solace-AI-Mobile\\src\\features\")",
+      "Bash(findstr:*)",
+      "Bash(dir:*)",
+      "Bash(for dir in \"d:/Repo/Solace-AI-Mobile/src/features\"/*/screens)",
+      "Bash(do echo \"=== $dir ===\")",
+      "Bash(ls:*)",
+      "Bash(done)",
+      "Bash(for dir in */)",
+      "Bash(do echo '=== $dir%/ ===')",
+      "Bash(for dir in assessment auth chat community crisis dashboard error journal mindfulness mood onboarding profile search smartNotifications wellness)",
+      "Bash(do echo \"=== $dir screens ===\")",
+      "Bash(xargs basename:*)",
+      "Bash(del /F \"src\\features\\mood-tracking\\EnhancedMoodTrackerScreen.tsx\" \"src\\screens\\mood\\EnhancedMoodTrackerScreen.tsx\" \"src\\screens\\mood\\EnhancedMoodTrackerScreen.ts\" 2)"
     ],
     "deny": [],
     "ask": []

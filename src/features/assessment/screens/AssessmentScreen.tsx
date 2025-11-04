@@ -323,6 +323,16 @@ export const AssessmentScreen = () => {
     },
   });
 
+  const autoAdvanceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (autoAdvanceTimerRef.current) {
+        clearTimeout(autoAdvanceTimerRef.current);
+      }
+    };
+  }, []);
+
   const handleOptionSelect = (option: string) => {
     if (question.type === 'multi-select') {
       const newSelection = selectedOptions.includes(option)
@@ -331,8 +341,11 @@ export const AssessmentScreen = () => {
       setSelectedOptions(newSelection);
     } else {
       setAnswers({ ...answers, [question.id]: option });
-      // Auto-advance for single-select
-      setTimeout(() => handleContinue(option), 300);
+      // Auto-advance for single-select with cleanup
+      if (autoAdvanceTimerRef.current) {
+        clearTimeout(autoAdvanceTimerRef.current);
+      }
+      autoAdvanceTimerRef.current = setTimeout(() => handleContinue(option), 300);
     }
   };
 

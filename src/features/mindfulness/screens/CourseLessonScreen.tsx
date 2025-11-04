@@ -25,14 +25,20 @@ export const CourseLessonScreen = () => {
   const [duration] = useState(360); // 06:00 total
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isPlaying && currentTime < duration) {
-      interval = setInterval(() => {
-        setCurrentTime((prev) => Math.min(prev + 1, duration));
-      }, 1000);
-    }
+    if (!isPlaying) return;
+
+    const interval = setInterval(() => {
+      setCurrentTime((prev) => {
+        if (prev >= duration) {
+          clearInterval(interval);
+          return duration;
+        }
+        return prev + 1;
+      });
+    }, 1000);
+
     return () => clearInterval(interval);
-  }, [isPlaying, currentTime, duration]);
+  }, [isPlaying, duration]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);

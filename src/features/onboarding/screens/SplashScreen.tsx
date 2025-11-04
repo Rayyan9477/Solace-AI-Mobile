@@ -3,7 +3,7 @@
  * Based on ui-designs/Dark-mode/Splash & Loading.png
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -17,21 +17,27 @@ import { useTheme } from '@theme/ThemeProvider';
 export const SplashScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const fadeAnim = new Animated.Value(0);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.timing(fadeAnim, {
+    const animation = Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1500,
       useNativeDriver: true,
-    }).start();
+    });
+
+    animation.start();
 
     const timer = setTimeout(() => {
       navigation.replace('Welcome');
     }, 3000);
 
-    return () => clearTimeout(timer);
-  }, []);
+    return () => {
+      clearTimeout(timer);
+      fadeAnim.stopAnimation();
+      animation.stop();
+    };
+  }, [fadeAnim, navigation]);
 
   const styles = StyleSheet.create({
     container: {

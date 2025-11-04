@@ -153,7 +153,10 @@ export const BreathingExerciseScreen = () => {
   useEffect(() => {
     if (!isPlaying) return;
 
+    let isMounted = true;
+
     const breatheIn = () => {
+      if (!isMounted) return;
       setPhase('breathe-in');
       Animated.parallel([
         Animated.timing(scaleAnim, {
@@ -166,10 +169,13 @@ export const BreathingExerciseScreen = () => {
           duration: 4000,
           useNativeDriver: true,
         }),
-      ]).start(() => breatheOut());
+      ]).start(({ finished }) => {
+        if (finished && isMounted) breatheOut();
+      });
     };
 
     const breatheOut = () => {
+      if (!isMounted) return;
       setPhase('breathe-out');
       Animated.parallel([
         Animated.timing(scaleAnim, {
@@ -182,12 +188,15 @@ export const BreathingExerciseScreen = () => {
           duration: 4000,
           useNativeDriver: true,
         }),
-      ]).start(() => breatheIn());
+      ]).start(({ finished }) => {
+        if (finished && isMounted) breatheIn();
+      });
     };
 
     breatheIn();
 
     return () => {
+      isMounted = false;
       scaleAnim.stopAnimation();
       opacityAnim.stopAnimation();
     };

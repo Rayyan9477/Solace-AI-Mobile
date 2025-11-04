@@ -76,6 +76,7 @@ ios/
 .cursor/
 .claude
 .expo
+NUL
 .husky
 
 # Examine main navigation and routing logic for issues

@@ -7,7 +7,7 @@ export { MoodScreen } from './MoodScreen';
 export { default } from './MoodScreen';
 
 // Additional screens
-export { default as MoodTrackerScreen } from './screens/MoodTrackerScreen';
+// Note: MoodTrackerScreen file does not exist - using EnhancedMoodTrackerScreen
 export { default as MoodStatsScreen } from './screens/MoodStatsScreen';
 export { default as EnhancedMoodTrackerScreen } from './screens/EnhancedMoodTrackerScreen';
 export { MoodSelectionScreen } from './screens/MoodSelectionScreen';

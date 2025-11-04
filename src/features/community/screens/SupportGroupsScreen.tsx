@@ -19,10 +19,10 @@ export const SupportGroupsScreen = () => {
   const navigation = useNavigation();
 
   const groups = [
-    { id: '1', name: 'Anxiety Support', members: 1234, icon: '😰', color: theme.colors.purple['60'] },
-    { id: '2', name: 'Depression Care', members: 2456, icon: '💙', color: theme.colors.blue['60'] },
-    { id: '3', name: 'LGBTQ+ Mental Health', members: 876, icon: '🏳️‍🌈', color: theme.colors.rainbow },
-    { id: '4', name: 'New Parents', members: 543, icon: '👶', color: theme.colors.pink },
+    { id: '1', name: 'Anxiety Support', members: 1234, icon: '😰', color: theme.colors.purple?.['60'] || theme.colors.primary },
+    { id: '2', name: 'Depression Care', members: 2456, icon: '💙', color: theme.colors.blue?.['60'] || theme.colors.secondary },
+    { id: '3', name: 'LGBTQ+ Mental Health', members: 876, icon: '🏳️‍🌈', color: theme.colors.accent || theme.colors.primary },
+    { id: '4', name: 'New Parents', members: 543, icon: '👶', color: theme.colors.tertiary || theme.colors.secondary },
   ];
 
   const styles = StyleSheet.create({

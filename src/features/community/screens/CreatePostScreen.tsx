@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@theme/ThemeProvider';
+import { sanitizeInput } from '@shared/utils/sanitization';
 
 const MOODS = [
   { emoji: '😊', label: 'Grateful' },
@@ -369,8 +370,13 @@ export const CreatePostScreen = () => {
             placeholder="Share your story, ask a question, or start a discussion..."
             placeholderTextColor={theme.colors.text.tertiary}
             value={postContent}
-            onChangeText={setPostContent}
+            onChangeText={(text) => {
+              // Sanitize input to prevent XSS attacks
+              const sanitized = sanitizeInput(text);
+              setPostContent(sanitized);
+            }}
             multiline
+            maxLength={10000}
           />
         </View>
 
