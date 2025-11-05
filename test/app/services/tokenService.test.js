@@ -398,6 +398,120 @@ describe('TokenService', () => {
       expect(result).toBe(null);
       expect(mockSecureStorage.removeSecureData).toHaveBeenCalledWith('solace_secure_auth_tokens');
     });
+
+    it('prevents concurrent refresh attempts with mutex', async () => {
+      const currentTokens = {
+        accessToken: 'old_access',
+        refreshToken: 'refresh_456',
+        expiresAt: Date.now() + 3600000,
+      };
+
+      const newTokens = {
+        access_token: 'new_access_123',
+        refresh_token: 'new_refresh_456',
+        expires_in: 7200,
+      };
+
+      mockSecureStorage.getSecureData.mockResolvedValue(currentTokens);
+
+      // Simulate slow API response
+      let resolveRefresh;
+      const refreshPromise = new Promise((resolve) => {
+        resolveRefresh = resolve;
+      });
+      mockApiService.auth.refreshToken.mockReturnValue(refreshPromise);
+
+      // Fire 3 concurrent refresh attempts
+      const refresh1 = tokenService.refreshAccessToken();
+      const refresh2 = tokenService.refreshAccessToken();
+      const refresh3 = tokenService.refreshAccessToken();
+
+      // Resolve the API call
+      resolveRefresh(newTokens);
+
+      const [result1, result2, result3] = await Promise.all([refresh1, refresh2, refresh3]);
+
+      // Should only call API once due to mutex
+      expect(mockApiService.auth.refreshToken).toHaveBeenCalledTimes(1);
+
+      // All three should get the same result
+      expect(result1).toEqual(result2);
+      expect(result2).toEqual(result3);
+
+      // Should only store tokens once
+      expect(mockSecureStorage.storeSecureData).toHaveBeenCalledTimes(1);
+    });
+
+    it('allows new refresh after previous one completes', async () => {
+      const currentTokens = {
+        accessToken: 'old_access',
+        refreshToken: 'refresh_456',
+        expiresAt: Date.now() + 3600000,
+      };
+
+      const firstNewTokens = {
+        access_token: 'new_access_1',
+        refresh_token: 'new_refresh_1',
+        expires_in: 7200,
+      };
+
+      const secondNewTokens = {
+        access_token: 'new_access_2',
+        refresh_token: 'new_refresh_2',
+        expires_in: 7200,
+      };
+
+      mockSecureStorage.getSecureData.mockResolvedValue(currentTokens);
+      mockApiService.auth.refreshToken
+        .mockResolvedValueOnce(firstNewTokens)
+        .mockResolvedValueOnce(secondNewTokens);
+
+      // First refresh
+      const result1 = await tokenService.refreshAccessToken();
+      expect(result1.accessToken).toBe('new_access_1');
+
+      // Second refresh (should be allowed after first completes)
+      const result2 = await tokenService.refreshAccessToken();
+      expect(result2.accessToken).toBe('new_access_2');
+
+      // Should call API twice
+      expect(mockApiService.auth.refreshToken).toHaveBeenCalledTimes(2);
+    });
+
+    it('handles concurrent refresh with one failure', async () => {
+      const currentTokens = {
+        accessToken: 'old_access',
+        refreshToken: 'refresh_456',
+        expiresAt: Date.now() + 3600000,
+      };
+
+      mockSecureStorage.getSecureData.mockResolvedValue(currentTokens);
+
+      let rejectRefresh;
+      const refreshPromise = new Promise((_, reject) => {
+        rejectRefresh = reject;
+      });
+      mockApiService.auth.refreshToken.mockReturnValue(refreshPromise);
+
+      // Fire 2 concurrent refresh attempts
+      const refresh1 = tokenService.refreshAccessToken();
+      const refresh2 = tokenService.refreshAccessToken();
+
+      // Reject the API call
+      rejectRefresh(new Error('Network error'));
+
+      const [result1, result2] = await Promise.all([refresh1, refresh2]);
+
+      // Both should get null
+      expect(result1).toBe(null);
+      expect(result2).toBe(null);
+
+      // Should only call API once
+      expect(mockApiService.auth.refreshToken).toHaveBeenCalledTimes(1);
+
+      // Should clear tokens once
+      expect(mockSecureStorage.removeSecureData).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('invalidateSession', () => {

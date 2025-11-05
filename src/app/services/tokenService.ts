@@ -9,6 +9,7 @@ import secureStorage from './secureStorage';
 
 class TokenService {
   private storage: typeof secureStorage;
+  private refreshPromise: Promise<any> | null = null;
 
   constructor() {
     this.storage = secureStorage;
@@ -119,38 +120,51 @@ class TokenService {
     }
     return Date.now() > tokens.expiresAt;
   }
-
   /**
    * Refresh access token using refresh token
+   * Implements mutex to prevent concurrent refresh attempts
    * @returns {Promise<Object|null>} New token data or null on failure
    */
   async refreshAccessToken() {
-    try {
-      const refreshToken = await this.getRefreshToken();
-      if (!refreshToken) {
-        return null;
-      }
-
-      const apiService = await import('./api');
-      const newTokens = await apiService.default.auth.refreshToken(refreshToken);
-
-      await this.storeTokens({
-        accessToken: newTokens.access_token,
-        refreshToken: newTokens.refresh_token || refreshToken, // Use new refresh token or keep existing
-        expiresAt: Date.now() + (newTokens.expires_in || 3600) * 1000,
-      });
-
-      return {
-        accessToken: newTokens.access_token,
-        refreshToken: newTokens.refresh_token || refreshToken,
-        expiresAt: Date.now() + (newTokens.expires_in || 3600) * 1000,
-      };
-    } catch (error) {
-      logger.warn('Failed to refresh access token:', error);
-      // Clear invalid tokens
-      await this.clearTokens();
-      return null;
+    // If refresh is already in progress, return the existing promise
+    if (this.refreshPromise) {
+      logger.info('Token refresh already in progress, waiting for result');
+      return this.refreshPromise;
     }
+
+    // Start new refresh and store the promise
+    this.refreshPromise = (async () => {
+      try {
+        const refreshToken = await this.getRefreshToken();
+        if (!refreshToken) {
+          return null;
+        }
+
+        const apiService = await import('./api');
+        const newTokens = await apiService.default.auth.refreshToken(refreshToken);
+
+        await this.storeTokens({
+          accessToken: newTokens.access_token,
+          refreshToken: newTokens.refresh_token || refreshToken,
+          expiresAt: Date.now() + (newTokens.expires_in || 3600) * 1000,
+        });
+
+        return {
+          accessToken: newTokens.access_token,
+          refreshToken: newTokens.refresh_token || refreshToken,
+          expiresAt: Date.now() + (newTokens.expires_in || 3600) * 1000,
+        };
+      } catch (error) {
+        logger.warn('Failed to refresh access token:', error);
+        await this.clearTokens();
+        return null;
+      } finally {
+        // Clear the promise after completion
+        this.refreshPromise = null;
+      }
+    })();
+
+    return this.refreshPromise;
   }
 
   /**

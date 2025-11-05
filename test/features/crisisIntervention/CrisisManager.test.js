@@ -41,6 +41,14 @@ jest.mock("@react-native-async-storage/async-storage", () => ({
   setItem: jest.fn(),
   removeItem: jest.fn(),
 }));
+n// Mock secureStorage for encrypted crisis data
+jest.mock("../../../src/app/services/secureStorage", () => ({
+  default: {
+    storeSensitiveData: jest.fn(),
+    getSecureData: jest.fn(),
+    removeSecureData: jest.fn(),
+  },
+}));
 
 describe("CrisisManager", () => {
   let crisisManager;
@@ -510,3 +518,169 @@ describe("CrisisManager", () => {
     });
   });
 });
+
+  describe("Encrypted Crisis Data Storage", () => {
+    const mockSecureStorage = require("../../../src/app/services/secureStorage").default;
+
+    beforeEach(() => {
+      mockSecureStorage.storeSensitiveData.mockResolvedValue();
+      mockSecureStorage.getSecureData.mockResolvedValue(null);
+    });
+
+    it("stores crisis fallback data encrypted", async () => {
+      const crisisAnalysis = {
+        risk: "high",
+        keywords: ["suicide"],
+        score: 10,
+      };
+
+      const userProfile = {
+        userId: "user_123",
+        name: "Test User",
+      };
+
+      await crisisManager.fallbackCrisisLog(crisisAnalysis, userProfile);
+
+      // Verify storeSensitiveData was called (encrypted storage)
+      expect(mockSecureStorage.storeSensitiveData).toHaveBeenCalled();
+      
+      const storageKey = mockSecureStorage.storeSensitiveData.mock.calls[0][0];
+      const storedData = mockSecureStorage.storeSensitiveData.mock.calls[0][1];
+
+      expect(storageKey).toMatch(/^crisis_fallback_\d+$/);
+      expect(storedData).toEqual({
+        timestamp: expect.any(String),
+        riskLevel: "high",
+        fallback: true,
+      });
+    });
+
+    it("retrieves crisis history from encrypted storage", async () => {
+      const mockHistory = [
+        {
+          timestamp: "2024-01-01T00:00:00Z",
+          riskLevel: "high",
+          keywords: ["suicide"],
+        },
+        {
+          timestamp: "2024-01-02T00:00:00Z",
+          riskLevel: "medium",
+          keywords: ["hopeless"],
+        },
+      ];
+
+      mockSecureStorage.getSecureData.mockResolvedValue(mockHistory);
+
+      const history = await crisisManager.getCrisisHistory();
+
+      expect(mockSecureStorage.getSecureData).toHaveBeenCalledWith("crisis_events");
+      expect(history).toEqual(mockHistory);
+      expect(history).toHaveLength(2);
+    });
+
+    it("returns empty array when no crisis history exists", async () => {
+      mockSecureStorage.getSecureData.mockResolvedValue(null);
+
+      const history = await crisisManager.getCrisisHistory();
+
+      expect(history).toEqual([]);
+    });
+
+    it("handles non-array crisis history gracefully", async () => {
+      mockSecureStorage.getSecureData.mockResolvedValue({ invalid: "data" });
+
+      const history = await crisisManager.getCrisisHistory();
+
+      expect(history).toEqual([]);
+    });
+
+    it("stores follow-up appointments encrypted", async () => {
+      const followUpData = {
+        type: "crisis_followup",
+        scheduledTime: "2024-01-15T10:00:00Z",
+        provider: "crisis_team",
+        priority: "high",
+        notes: "Follow up on suicide ideation",
+      };
+
+      mockSecureStorage.getSecureData.mockResolvedValue([]);
+
+      const scheduled = await crisisManager.scheduleFollowUp(followUpData);
+
+      expect(mockSecureStorage.getSecureData).toHaveBeenCalledWith("scheduled_followups");
+      expect(mockSecureStorage.storeSensitiveData).toHaveBeenCalledWith(
+        "scheduled_followups",
+        expect.arrayContaining([
+          expect.objectContaining({
+            type: "crisis_followup",
+            provider: "crisis_team",
+            priority: "high",
+            notes: "Follow up on suicide ideation",
+          }),
+        ])
+      );
+
+      expect(scheduled).toMatchObject({
+        id: expect.stringMatching(/^followup_\d+$/),
+        type: "crisis_followup",
+        priority: "high",
+      });
+    });
+
+    it("appends new follow-ups to existing encrypted list", async () => {
+      const existingFollowUps = [
+        {
+          id: "followup_1",
+          type: "crisis_followup",
+          scheduled_time: "2024-01-10T10:00:00Z",
+        },
+      ];
+
+      const newFollowUp = {
+        type: "therapy_session",
+        scheduledTime: "2024-01-20T14:00:00Z",
+      };
+
+      mockSecureStorage.getSecureData.mockResolvedValue(existingFollowUps);
+
+      await crisisManager.scheduleFollowUp(newFollowUp);
+
+      const storedData = mockSecureStorage.storeSensitiveData.mock.calls[0][1];
+      expect(storedData).toHaveLength(2);
+      expect(storedData[0]).toEqual(existingFollowUps[0]);
+      expect(storedData[1]).toMatchObject({
+        type: "therapy_session",
+      });
+    });
+
+    it("handles storage errors gracefully during fallback", async () => {
+      mockSecureStorage.storeSensitiveData.mockRejectedValue(new Error("Storage full"));
+
+      const crisisAnalysis = {
+        risk: "critical",
+        keywords: ["suicide"],
+      };
+
+      // Should not throw error
+      await expect(
+        crisisManager.fallbackCrisisLog(crisisAnalysis, {})
+      ).resolves.not.toThrow();
+    });
+
+    it("protects crisis data with encryption", async () => {
+      const sensitiveData = {
+        userId: "user_123",
+        message: "I want to kill myself",
+        location: "Home",
+      };
+
+      await crisisManager.fallbackCrisisLog(
+        { risk: "critical", keywords: ["kill myself"] },
+        sensitiveData
+      );
+
+      // Verify data was passed to encrypted storage, not AsyncStorage
+      expect(mockSecureStorage.storeSensitiveData).toHaveBeenCalled();
+      expect(AsyncStorage.setItem).not.toHaveBeenCalled();
+    });
+  });

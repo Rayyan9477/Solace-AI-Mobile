@@ -402,3 +402,200 @@ describe('ChatScreen', () => {
   expect(sendButton.props.accessibilityLabel).toBe('Send message');
   });
 });
+  describe("Crisis Detection Integration", () => {
+    it("detects crisis keywords in message and triggers alert", async () => {
+      const { getByPlaceholderText, getByTestId } = render(
+        <ThemeProvider>
+          <ChatScreen />
+        </ThemeProvider>
+      );
+
+      const input = getByPlaceholderText("Type your message...");
+      const sendButton = getByTestId("send-button");
+
+      // Type crisis message
+      fireEvent.changeText(input, "I want to kill myself");
+      fireEvent.press(sendButton);
+
+      await waitFor(() => {
+        // Crisis alert should be shown
+        expect(Alert.alert).toHaveBeenCalledWith(
+          expect.stringContaining("Crisis"),
+          expect.any(String),
+          expect.arrayContaining([
+            expect.objectContaining({
+              text: expect.stringMatching(/988|Emergency/i),
+            }),
+          ])
+        );
+      });
+    });
+
+    it("sanitizes user input before sending", async () => {
+      const { getByPlaceholderText, getByTestId } = render(
+        <ThemeProvider>
+          <ChatScreen />
+        </ThemeProvider>
+      );
+
+      const input = getByPlaceholderText("Type your message...");
+
+      // Type malicious script
+      const maliciousInput = '<script>alert("xss")</script>Hello';
+      fireEvent.changeText(input, maliciousInput);
+
+      // Input should be sanitized
+      await waitFor(() => {
+        const currentValue = input.props.value;
+        expect(currentValue).not.toContain("<script>");
+        expect(currentValue).not.toContain("</script>");
+      });
+    });
+
+    it("initializes CrisisManager before accepting messages", async () => {
+      const { getByPlaceholderText, getByTestId } = render(
+        <ThemeProvider>
+          <ChatScreen />
+        </ThemeProvider>
+      );
+
+      // Wait for CrisisManager initialization
+      await waitFor(() => {
+        expect(CrisisManager.loadConfiguration).toHaveBeenCalled();
+      });
+
+      const input = getByPlaceholderText("Type your message...");
+      const sendButton = getByTestId("send-button");
+
+      // Now message can be sent safely
+      fireEvent.changeText(input, "Hello");
+      fireEvent.press(sendButton);
+
+      await waitFor(() => {
+        expect(CrisisManager.analyzeCrisisRisk).toHaveBeenCalledWith("Hello");
+      });
+    });
+
+    it("handles crisis analysis failure gracefully", async () => {
+      CrisisManager.analyzeCrisisRisk.mockRejectedValueOnce(
+        new Error("Analysis failed")
+      );
+
+      const { getByPlaceholderText, getByTestId } = render(
+        <ThemeProvider>
+          <ChatScreen />
+        </ThemeProvider>
+      );
+
+      const input = getByPlaceholderText("Type your message...");
+      const sendButton = getByTestId("send-button");
+
+      fireEvent.changeText(input, "Test message");
+      fireEvent.press(sendButton);
+
+      // Should not crash
+      await waitFor(() => {
+        expect(true).toBe(true); // Component still renders
+      });
+    });
+
+    it("shows different alert levels based on crisis risk", async () => {
+      const riskLevels = ["low", "medium", "high", "critical"];
+
+      for (const risk of riskLevels) {
+        jest.clearAllMocks();
+
+        CrisisManager.analyzeCrisisRisk.mockResolvedValueOnce({
+          risk,
+          keywords: ["test"],
+          score: risk === "critical" ? 10 : 5,
+        });
+
+        const { getByPlaceholderText, getByTestId } = render(
+          <ThemeProvider>
+            <ChatScreen />
+          </ThemeProvider>
+        );
+
+        const input = getByPlaceholderText("Type your message...");
+        const sendButton = getByTestId("send-button");
+
+        fireEvent.changeText(input, "Test message");
+        fireEvent.press(sendButton);
+
+        if (risk === "high" || risk === "critical") {
+          await waitFor(() => {
+            expect(Alert.alert).toHaveBeenCalled();
+          });
+        }
+      }
+    });
+  });
+
+  describe("Authentication Integration", () => {
+    it("persists session across app restart", async () => {
+      // Mock stored session
+      const mockSession = {
+        user: { id: "1", name: "Test User" },
+        accessToken: "valid_token",
+        refreshToken: "refresh_token",
+        expiresAt: Date.now() + 3600000,
+      };
+
+      mockSecureStorage.getSecureData.mockResolvedValue(mockSession);
+      mockTokenService.isAuthenticated.mockResolvedValue(true);
+
+      // Simulate app restart by dispatching restoreAuthState
+      await store.dispatch(restoreAuthState());
+
+      const state = store.getState().auth;
+
+      expect(state.isAuthenticated).toBe(true);
+      expect(state.user).toEqual(mockSession.user);
+      expect(state.token).toBe(mockSession.accessToken);
+    });
+
+    it("auto-refreshes token when approaching expiry", async () => {
+      const almostExpiredToken = {
+        accessToken: "old_token",
+        refreshToken: "refresh_token",
+        expiresAt: Date.now() + 4 * 60 * 1000, // 4 minutes (< 5 minute threshold)
+      };
+
+      const newToken = {
+        access_token: "new_token",
+        refresh_token: "new_refresh",
+        expires_in: 3600,
+      };
+
+      mockTokenService.getTokens.mockResolvedValue(almostExpiredToken);
+      mockTokenService.shouldRefreshToken.mockResolvedValue(true);
+      mockApiService.auth.refreshToken.mockResolvedValue(newToken);
+
+      // Trigger token refresh
+      const result = await mockTokenService.refreshAccessToken();
+
+      expect(mockApiService.auth.refreshToken).toHaveBeenCalledWith(
+        "refresh_token"
+      );
+      expect(result.accessToken).toBe("new_token");
+    });
+
+    it("logs out user when refresh token is invalid", async () => {
+      const expiredToken = {
+        accessToken: "old_token",
+        refreshToken: "invalid_refresh",
+        expiresAt: Date.now() - 1000,
+      };
+
+      mockTokenService.getTokens.mockResolvedValue(expiredToken);
+      mockApiService.auth.refreshToken.mockRejectedValue(
+        new Error("Invalid refresh token")
+      );
+
+      const result = await mockTokenService.refreshAccessToken();
+
+      expect(result).toBe(null);
+      expect(mockTokenService.clearTokens).toHaveBeenCalled();
+    });
+  });

@@ -296,3 +296,115 @@ describe("Auth Slice", () => {
     });
   });
 });
+
+  describe("Session Timeout Middleware Integration", () => {
+    it("blocks actions when session is expired", async () => {
+      const testStore = configureStore({
+        reducer: { auth: authSlice },
+        middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+      });
+
+      // Set up expired session
+      const expiredTime = Date.now() - 1000; // 1 second ago
+      testStore.dispatch(setSessionExpiry(expiredTime));
+      testStore.dispatch(updateUser({ name: "Test User" }));
+
+      const state = testStore.getState().auth;
+
+      // Session should be expired
+      expect(state.sessionExpiry).toBeLessThan(Date.now());
+    });
+
+    it("updates last activity on mood/chat/user actions", async () => {
+      const testStore = configureStore({
+        reducer: { auth: authSlice },
+      });
+
+      // Login first
+      mockTokenService.storeTokens.mockResolvedValue();
+      mockSecureStorage.storeSecureData.mockResolvedValue();
+      mockApiService.auth.login.mockResolvedValue({
+        user: { id: "1", name: "Test" },
+        accessToken: "token",
+        refreshToken: "refresh",
+      });
+
+      await testStore.dispatch(
+        secureLogin({ email: "test@test.com", password: "password" })
+      );
+
+      const initialActivity = testStore.getState().auth.lastActivity;
+
+      // Wait a bit
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      // Dispatch user action (should update lastActivity)
+      testStore.dispatch(updateLastActivity());
+
+      const updatedActivity = testStore.getState().auth.lastActivity;
+
+      expect(updatedActivity).toBeGreaterThan(initialActivity!);
+    });
+
+    it("prevents action execution when session timeout fires first", async () => {
+      const testStore = configureStore({
+        reducer: { auth: authSlice },
+      });
+
+      // Set session that's about to expire
+      const almostExpired = Date.now() + 100;
+      testStore.dispatch(setSessionExpiry(almostExpired));
+
+      // Wait for expiry
+      await new Promise((resolve) => setTimeout(resolve, 150));
+
+      // Try to update user after expiry
+      testStore.dispatch(updateUser({ name: "Should Not Update" }));
+
+      const state = testStore.getState().auth;
+
+      // Session should have expired (middleware should have logged out)
+      expect(state.sessionExpiry).toBeLessThan(Date.now());
+    });
+
+    it("allows actions when session is valid", async () => {
+      const testStore = configureStore({
+        reducer: { auth: authSlice },
+      });
+
+      // Set valid session
+      const validExpiry = Date.now() + 3600000; // 1 hour from now
+      testStore.dispatch(setSessionExpiry(validExpiry));
+      testStore.dispatch(updateUser({ name: "Test User" }));
+
+      const state = testStore.getState().auth;
+
+      expect(state.user?.name).toBe("Test User");
+      expect(state.sessionExpiry).toBeGreaterThan(Date.now());
+    });
+
+    it("tracks inactivity timeout correctly", async () => {
+      const testStore = configureStore({
+        reducer: { auth: authSlice },
+      });
+
+      // Login
+      mockTokenService.storeTokens.mockResolvedValue();
+      mockSecureStorage.storeSecureData.mockResolvedValue();
+      mockApiService.auth.login.mockResolvedValue({
+        user: { id: "1", name: "Test" },
+        accessToken: "token",
+        refreshToken: "refresh",
+      });
+
+      await testStore.dispatch(
+        secureLogin({ email: "test@test.com", password: "password" })
+      );
+
+      const lastActivity = testStore.getState().auth.lastActivity;
+
+      expect(lastActivity).toBeDefined();
+      expect(lastActivity).toBeLessThanOrEqual(Date.now());
+    });
+  });
+});

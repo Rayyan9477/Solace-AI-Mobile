@@ -729,3 +729,173 @@ describe('API Service', () => {
     });
   });
 });
+
+describe("Input Sanitization", () => {
+  const { sanitizeText } = require("../../../src/shared/utils/sanitization");
+
+  describe("XSS Prevention", () => {
+    it("removes script tags from input", () => {
+      const malicious = '<script>alert("xss")</script>Hello';
+      const sanitized = sanitizeText(malicious, 1000);
+
+      expect(sanitized).not.toContain("<script>");
+      expect(sanitized).not.toContain("</script>");
+      expect(sanitized).toContain("Hello");
+    });
+
+    it("removes event handlers from input", () => {
+      const malicious = '<img src=x onerror="alert(1)">';
+      const sanitized = sanitizeText(malicious, 1000);
+
+      expect(sanitized).not.toContain("onerror");
+      expect(sanitized).not.toContain("alert");
+    });
+
+    it("removes javascript protocol from URLs", () => {
+      const malicious = '<a href="javascript:void(0)">Click</a>';
+      const sanitized = sanitizeText(malicious, 1000);
+
+      expect(sanitized).not.toContain("javascript:");
+    });
+
+    it("removes iframe tags", () => {
+      const malicious = '<iframe src="evil.com"></iframe>Normal text';
+      const sanitized = sanitizeText(malicious, 1000);
+
+      expect(sanitized).not.toContain("<iframe");
+      expect(sanitized).not.toContain("</iframe>");
+    });
+
+    it("removes style tags that could contain malicious CSS", () => {
+      const malicious = '<style>body { display: none; }</style>Text';
+      const sanitized = sanitizeText(malicious, 1000);
+
+      expect(sanitized).not.toContain("<style>");
+      expect(sanitized).not.toContain("</style>");
+    });
+  });
+
+  describe("Length Validation", () => {
+    it("truncates input to maximum length", () => {
+      const longText = "a".repeat(500);
+      const sanitized = sanitizeText(longText, 200);
+
+      expect(sanitized.length).toBeLessThanOrEqual(200);
+    });
+
+    it("preserves short input unchanged", () => {
+      const shortText = "Hello world";
+      const sanitized = sanitizeText(shortText, 200);
+
+      expect(sanitized).toBe(shortText);
+    });
+
+    it("handles exact length correctly", () => {
+      const exactText = "a".repeat(200);
+      const sanitized = sanitizeText(exactText, 200);
+
+      expect(sanitized).toBe(exactText);
+      expect(sanitized.length).toBe(200);
+    });
+  });
+
+  describe("SQL Injection Prevention", () => {
+    it("escapes SQL injection attempts", () => {
+      const sqlInjection = "'; DROP TABLE users; --";
+      const sanitized = sanitizeText(sqlInjection, 1000);
+
+      // Should not contain raw SQL commands
+      expect(sanitized).not.toMatch(/DROP\s+TABLE/i);
+      expect(sanitized).not.toContain("--");
+    });
+
+    it("escapes union-based SQL injection", () => {
+      const sqlInjection = "1' UNION SELECT * FROM passwords --";
+      const sanitized = sanitizeText(sqlInjection, 1000);
+
+      expect(sanitized).not.toMatch(/UNION\s+SELECT/i);
+    });
+  });
+
+  describe("Journal Input Sanitization", () => {
+    it("allows safe journal content", () => {
+      const safeJournal = "Today was a good day. I felt happy and relaxed.";
+      const sanitized = sanitizeText(safeJournal, 10000);
+
+      expect(sanitized).toBe(safeJournal);
+    });
+
+    it("removes HTML from journal while preserving text", () => {
+      const journalWithHTML = "I felt <strong>really</strong> happy today.";
+      const sanitized = sanitizeText(journalWithHTML, 10000);
+
+      expect(sanitized).not.toContain("<strong>");
+      expect(sanitized).not.toContain("</strong>");
+      expect(sanitized).toContain("really");
+      expect(sanitized).toContain("happy");
+    });
+
+    it("preserves line breaks in journal entries", () => {
+      const journalWithBreaks = "Line 1\nLine 2\nLine 3";
+      const sanitized = sanitizeText(journalWithBreaks, 10000);
+
+      expect(sanitized).toContain("\n");
+      expect(sanitized).toBe(journalWithBreaks);
+    });
+
+    it("handles empty journal input", () => {
+      const empty = "";
+      const sanitized = sanitizeText(empty, 10000);
+
+      expect(sanitized).toBe("");
+    });
+
+    it("handles null and undefined gracefully", () => {
+      expect(sanitizeText(null as any, 1000)).toBe("");
+      expect(sanitizeText(undefined as any, 1000)).toBe("");
+    });
+  });
+
+  describe("Title Sanitization", () => {
+    it("sanitizes journal title correctly", () => {
+      const title = "<script>alert('xss')</script>My Journal";
+      const sanitized = sanitizeText(title, 200);
+
+      expect(sanitized.length).toBeLessThanOrEqual(200);
+      expect(sanitized).not.toContain("<script>");
+      expect(sanitized).toContain("My Journal");
+    });
+
+    it("limits title to 200 characters", () => {
+      const longTitle = "A very long title ".repeat(20);
+      const sanitized = sanitizeText(longTitle, 200);
+
+      expect(sanitized.length).toBe(200);
+    });
+  });
+
+  describe("Special Characters", () => {
+    it("preserves safe special characters", () => {
+      const text = "I'm feeling great! It's a wonderful day :)";
+      const sanitized = sanitizeText(text, 1000);
+
+      expect(sanitized).toContain("I'm");
+      expect(sanitized).toContain("!");
+      expect(sanitized).toContain(":)");
+    });
+
+    it("handles unicode characters", () => {
+      const unicode = "Hello 你好 مرحبا";
+      const sanitized = sanitizeText(unicode, 1000);
+
+      expect(sanitized).toBe(unicode);
+    });
+
+    it("handles emojis correctly", () => {
+      const emojis = "I'm feeling 😊 happy today!";
+      const sanitized = sanitizeText(emojis, 1000);
+
+      expect(sanitized).toContain("😊");
+    });
+  });
+});
