@@ -3,10 +3,10 @@
  * Based on ui-designs/Dark-mode/Home & Mental Health Score.png
  */
 
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Svg, Circle, Text as SvgText } from 'react-native-svg';
-import { useTheme } from '@theme/ThemeProvider';
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Svg, Circle, Text as SvgText } from "react-native-svg";
 
 interface MentalHealthScoreWidgetProps {
   score: number;
@@ -16,10 +16,12 @@ interface MentalHealthScoreWidgetProps {
   size?: number;
 }
 
-export const MentalHealthScoreWidget: React.FC<MentalHealthScoreWidgetProps> = ({
+export const MentalHealthScoreWidget: React.FC<
+  MentalHealthScoreWidgetProps
+> = ({
   score = 80,
   maxScore = 100,
-  label = 'Mentally Stable',
+  label = "Mentally Stable",
   onPress,
   size = 160,
 }) => {
@@ -33,10 +35,10 @@ export const MentalHealthScoreWidget: React.FC<MentalHealthScoreWidgetProps> = (
 
   // Color based on score
   const getScoreColor = () => {
-    if (score >= 80) return theme.colors.green['60']; // Good
-    if (score >= 60) return theme.colors.yellow['60']; // Moderate
-    if (score >= 40) return theme.colors.orange['60']; // Low
-    return theme.colors.orange['70']; // Critical
+    if (score >= 80) return theme.colors.green["60"]; // Good
+    if (score >= 60) return theme.colors.yellow["60"]; // Moderate
+    if (score >= 40) return theme.colors.orange["60"]; // Low
+    return theme.colors.orange["70"]; // Critical
   };
 
   const scoreColor = getScoreColor();
@@ -56,7 +58,7 @@ export const MentalHealthScoreWidget: React.FC<MentalHealthScoreWidgetProps> = (
           cx={center}
           cy={center}
           r={radius}
-          stroke={theme.colors.gray['20']}
+          stroke={theme.colors.gray["20"]}
           strokeWidth={strokeWidth}
           fill="none"
         />
@@ -98,14 +100,14 @@ export const MentalHealthScoreWidget: React.FC<MentalHealthScoreWidgetProps> = (
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   label: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 30,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
 

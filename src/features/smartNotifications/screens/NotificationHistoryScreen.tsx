@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Smart Notifications.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,9 +13,7 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface Notification {
   id: string;
@@ -28,50 +28,49 @@ interface Notification {
 export const NotificationHistoryScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const [filter, setFilter] = useState<'all' | 'unread'>('all');
+  const [filter, setFilter] = useState<"all" | "unread">("all");
 
   const notifications: Notification[] = [
     {
-      id: '1',
-      title: 'Daily Check-In',
+      id: "1",
+      title: "Daily Check-In",
       message: "Time for your daily mood check-in! How are you feeling?",
-      type: 'mood',
-      timestamp: '2 hours ago',
+      type: "mood",
+      timestamp: "2 hours ago",
       read: false,
-      icon: '😊',
+      icon: "😊",
     },
     {
-      id: '2',
-      title: 'Meditation Reminder',
-      message: 'Your evening meditation session is ready',
-      type: 'meditation',
-      timestamp: '5 hours ago',
+      id: "2",
+      title: "Meditation Reminder",
+      message: "Your evening meditation session is ready",
+      type: "meditation",
+      timestamp: "5 hours ago",
       read: true,
-      icon: '🧘',
+      icon: "🧘",
     },
     {
-      id: '3',
-      title: 'Achievement Unlocked',
-      message: 'Congratulations! 7-day meditation streak!',
-      type: 'achievement',
-      timestamp: '1 day ago',
+      id: "3",
+      title: "Achievement Unlocked",
+      message: "Congratulations! 7-day meditation streak!",
+      type: "achievement",
+      timestamp: "1 day ago",
       read: true,
-      icon: '🏆',
+      icon: "🏆",
     },
     {
-      id: '4',
-      title: 'Journal Reminder',
-      message: 'Take a moment to reflect on your day',
-      type: 'journal',
-      timestamp: '1 day ago',
+      id: "4",
+      title: "Journal Reminder",
+      message: "Take a moment to reflect on your day",
+      type: "journal",
+      timestamp: "1 day ago",
       read: true,
-      icon: '📝',
+      icon: "📝",
     },
   ];
 
-  const filteredNotifications = filter === 'all'
-    ? notifications
-    : notifications.filter(n => !n.read);
+  const filteredNotifications =
+    filter === "all" ? notifications : notifications.filter((n) => !n.read);
 
   const styles = StyleSheet.create({
     container: {
@@ -79,23 +78,23 @@ export const NotificationHistoryScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     clearButton: {
@@ -104,14 +103,14 @@ export const NotificationHistoryScreen = () => {
     },
     clearButtonText: {
       fontSize: 14,
-      fontWeight: '700',
-      color: theme.colors.red['60'],
+      fontWeight: "700",
+      color: theme.colors.red["60"],
     },
     content: {
       flex: 1,
     },
     filterRow: {
-      flexDirection: 'row',
+      flexDirection: "row",
       paddingHorizontal: 20,
       paddingVertical: 16,
       gap: 12,
@@ -120,34 +119,34 @@ export const NotificationHistoryScreen = () => {
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
     },
     filterButtonActive: {
-      backgroundColor: theme.colors.orange['60'],
+      backgroundColor: theme.colors.orange["60"],
     },
     filterText: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     filterTextActive: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     notificationsList: {
       paddingHorizontal: 20,
     },
     notificationCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 16,
       marginBottom: 12,
-      flexDirection: 'row',
-      alignItems: 'flex-start',
+      flexDirection: "row",
+      alignItems: "flex-start",
     },
     notificationCardUnread: {
-      backgroundColor: theme.colors.orange['10'],
+      backgroundColor: theme.colors.orange["10"],
       borderLeftWidth: 4,
-      borderLeftColor: theme.colors.orange['60'],
+      borderLeftColor: theme.colors.orange["60"],
     },
     notificationIcon: {
       fontSize: 32,
@@ -158,7 +157,7 @@ export const NotificationHistoryScreen = () => {
     },
     notificationTitle: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
@@ -170,11 +169,11 @@ export const NotificationHistoryScreen = () => {
     },
     notificationTimestamp: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.tertiary,
     },
     emptyState: {
-      alignItems: 'center',
+      alignItems: "center",
       paddingVertical: 60,
     },
     emptyIcon: {
@@ -183,7 +182,7 @@ export const NotificationHistoryScreen = () => {
     },
     emptyTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -191,7 +190,7 @@ export const NotificationHistoryScreen = () => {
       fontSize: 14,
       lineHeight: 20,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       paddingHorizontal: 40,
     },
   });
@@ -216,18 +215,34 @@ export const NotificationHistoryScreen = () => {
 
       <View style={styles.filterRow}>
         <TouchableOpacity
-          style={[styles.filterButton, filter === 'all' && styles.filterButtonActive]}
-          onPress={() => setFilter('all')}
+          style={[
+            styles.filterButton,
+            filter === "all" && styles.filterButtonActive,
+          ]}
+          onPress={() => setFilter("all")}
         >
-          <Text style={[styles.filterText, filter === 'all' && styles.filterTextActive]}>
+          <Text
+            style={[
+              styles.filterText,
+              filter === "all" && styles.filterTextActive,
+            ]}
+          >
             All
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.filterButton, filter === 'unread' && styles.filterButtonActive]}
-          onPress={() => setFilter('unread')}
+          style={[
+            styles.filterButton,
+            filter === "unread" && styles.filterButtonActive,
+          ]}
+          onPress={() => setFilter("unread")}
         >
-          <Text style={[styles.filterText, filter === 'unread' && styles.filterTextActive]}>
+          <Text
+            style={[
+              styles.filterText,
+              filter === "unread" && styles.filterTextActive,
+            ]}
+          >
             Unread
           </Text>
         </TouchableOpacity>
@@ -246,9 +261,15 @@ export const NotificationHistoryScreen = () => {
               >
                 <Text style={styles.notificationIcon}>{notification.icon}</Text>
                 <View style={styles.notificationContent}>
-                  <Text style={styles.notificationTitle}>{notification.title}</Text>
-                  <Text style={styles.notificationMessage}>{notification.message}</Text>
-                  <Text style={styles.notificationTimestamp}>{notification.timestamp}</Text>
+                  <Text style={styles.notificationTitle}>
+                    {notification.title}
+                  </Text>
+                  <Text style={styles.notificationMessage}>
+                    {notification.message}
+                  </Text>
+                  <Text style={styles.notificationTimestamp}>
+                    {notification.timestamp}
+                  </Text>
                 </View>
               </TouchableOpacity>
             ))

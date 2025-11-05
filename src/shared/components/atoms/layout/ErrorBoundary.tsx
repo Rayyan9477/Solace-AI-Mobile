@@ -4,11 +4,10 @@
  * Catches and handles web-specific compatibility errors gracefully
  */
 
+import { logger } from "@shared/utils/logger";
+import { useTheme } from "@theme/ThemeProvider";
 import React from "react";
 import { View, Text, TouchableOpacity, Platform } from "react-native";
-
-import { useTheme } from "@theme/ThemeProvider";
-import { logger } from "@shared/utils/logger";
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -23,7 +22,10 @@ interface ErrorBoundaryState {
   isWebCompatibilityError: boolean;
 }
 
-class WebCompatibilityErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class WebCompatibilityErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
@@ -235,7 +237,9 @@ const WebCompatibilityErrorDisplay: React.FC<ErrorDisplayProps> = ({
   );
 };
 
-export const withWebCompatibility = <P extends object>(Component: React.ComponentType<P>) => {
+export const withWebCompatibility = <P extends object>(
+  Component: React.ComponentType<P>,
+) => {
   return (props: P) => {
     const { theme } = useTheme();
 

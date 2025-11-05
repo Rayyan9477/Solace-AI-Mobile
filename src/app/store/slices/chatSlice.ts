@@ -44,7 +44,10 @@ const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    startNewConversation: (state, action: PayloadAction<{ title?: string }>) => {
+    startNewConversation: (
+      state,
+      action: PayloadAction<{ title?: string }>,
+    ) => {
       const newConversation: Conversation = {
         id: Date.now().toString(),
         title: action.payload.title || "New Conversation",
@@ -103,7 +106,10 @@ const chatSlice = createSlice({
       state.emotionDetection = !state.emotionDetection;
     },
 
-    loadConversation: (state, action: PayloadAction<{ conversationId: string; messages?: Message[] }>) => {
+    loadConversation: (
+      state,
+      action: PayloadAction<{ conversationId: string; messages?: Message[] }>,
+    ) => {
       state.currentConversation = action.payload.conversationId;
       state.messages = action.payload.messages || [];
     },

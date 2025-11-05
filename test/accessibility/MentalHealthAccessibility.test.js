@@ -13,22 +13,22 @@ import {
   screen,
 } from "@testing-library/react-native";
 import React from "react";
-import { Provider } from "react-redux";
 import { AccessibilityInfo } from "react-native";
+import { Provider } from "react-redux";
 
 import MoodCheckIn from "../../components/dashboard/MoodCheckIn";
 import QuickActions from "../../components/dashboard/QuickActions";
 import MainAppScreen from "../../src/screens/MainAppScreen";
 import EnhancedMoodTrackerScreen from "../../src/screens/mood/EnhancedMoodTrackerScreen";
 import { ThemeProvider } from "../../src/shared/theme/ThemeContext";
+import enhancedMoodSlice from "../../src/store/slices/enhancedMoodSlice";
+import moodSlice from "../../src/store/slices/moodSlice";
 import {
   TouchTargetHelpers,
   WCAG_CONSTANTS,
   FocusManagement,
   MentalHealthAccessibility,
 } from "../../utils/accessibility";
-import enhancedMoodSlice from "../../src/store/slices/enhancedMoodSlice";
-import moodSlice from "../../src/store/slices/moodSlice";
 
 // Mock dependencies
 jest.mock("react-native", () => ({

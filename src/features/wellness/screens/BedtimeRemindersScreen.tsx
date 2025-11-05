@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Sleep Quality.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,9 +14,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Switch,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface ReminderTime {
   id: string;
@@ -32,15 +32,31 @@ export const BedtimeRemindersScreen = () => {
   const [bedtimeReminder, setBedtimeReminder] = useState(true);
   const [wakeUpReminder, setWakeUpReminder] = useState(false);
 
-  const [selectedBedtime, setSelectedBedtime] = useState('22:00');
-  const [selectedWakeTime, setSelectedWakeTime] = useState('06:00');
+  const [selectedBedtime, setSelectedBedtime] = useState("22:00");
+  const [selectedWakeTime, setSelectedWakeTime] = useState("06:00");
 
   const bedtimeOptions = [
-    '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30', '00:00',
+    "20:00",
+    "20:30",
+    "21:00",
+    "21:30",
+    "22:00",
+    "22:30",
+    "23:00",
+    "23:30",
+    "00:00",
   ];
 
   const wakeTimeOptions = [
-    '05:00', '05:30', '06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00',
+    "05:00",
+    "05:30",
+    "06:00",
+    "06:30",
+    "07:00",
+    "07:30",
+    "08:00",
+    "08:30",
+    "09:00",
   ];
 
   const styles = StyleSheet.create({
@@ -49,36 +65,36 @@ export const BedtimeRemindersScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
       flex: 1,
     },
     infoCard: {
-      backgroundColor: theme.colors.blue['20'],
+      backgroundColor: theme.colors.blue["20"],
       marginHorizontal: 20,
       marginTop: 20,
       borderRadius: 16,
       padding: 16,
-      flexDirection: 'row',
-      alignItems: 'flex-start',
+      flexDirection: "row",
+      alignItems: "flex-start",
     },
     infoIcon: {
       fontSize: 24,
@@ -97,18 +113,18 @@ export const BedtimeRemindersScreen = () => {
     },
     sectionTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
-      textTransform: 'uppercase',
+      textTransform: "uppercase",
       marginBottom: 16,
     },
     settingItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     settingLeft: {
       flex: 1,
@@ -116,7 +132,7 @@ export const BedtimeRemindersScreen = () => {
     },
     settingTitle: {
       fontSize: 15,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
@@ -126,57 +142,57 @@ export const BedtimeRemindersScreen = () => {
       color: theme.colors.text.secondary,
     },
     timePickerCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 20,
       marginBottom: 16,
     },
     timePickerTitle: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     timePickerDisplay: {
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: 20,
     },
     timePickerTime: {
       fontSize: 48,
-      fontWeight: '800',
-      color: theme.colors.purple['60'],
+      fontWeight: "800",
+      color: theme.colors.purple["60"],
       marginBottom: 8,
     },
     timePickerLabel: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     timeGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 8,
     },
     timeButton: {
-      width: '30%',
+      width: "30%",
       paddingVertical: 12,
       borderRadius: 12,
-      backgroundColor: theme.colors.gray['20'],
-      alignItems: 'center',
+      backgroundColor: theme.colors.gray["20"],
+      alignItems: "center",
     },
     timeButtonSelected: {
-      backgroundColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["60"],
     },
     timeButtonText: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     timeButtonTextSelected: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     schedulePreview: {
-      backgroundColor: theme.colors.purple['20'],
+      backgroundColor: theme.colors.purple["20"],
       marginHorizontal: 20,
       marginTop: 20,
       borderRadius: 16,
@@ -184,20 +200,20 @@ export const BedtimeRemindersScreen = () => {
     },
     scheduleTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     scheduleItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginBottom: 12,
     },
     scheduleTime: {
       width: 80,
       fontSize: 15,
-      fontWeight: '700',
-      color: theme.colors.purple['80'],
+      fontWeight: "700",
+      color: theme.colors.purple["80"],
     },
     scheduleDescription: {
       flex: 1,
@@ -210,24 +226,24 @@ export const BedtimeRemindersScreen = () => {
       marginRight: 12,
     },
     saveButton: {
-      backgroundColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["60"],
       borderRadius: 16,
       paddingVertical: 16,
       marginHorizontal: 20,
       marginVertical: 24,
-      alignItems: 'center',
+      alignItems: "center",
     },
     saveButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
   });
 
   const calculateWindDownTime = () => {
-    const [hours, minutes] = selectedBedtime.split(':').map(Number);
+    const [hours, minutes] = selectedBedtime.split(":").map(Number);
     const windDownHour = hours - 1;
-    return `${windDownHour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    return `${windDownHour.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
   };
 
   return (
@@ -252,7 +268,8 @@ export const BedtimeRemindersScreen = () => {
         <View style={styles.infoCard}>
           <Text style={styles.infoIcon}>💡</Text>
           <Text style={styles.infoText}>
-            Smart reminders help you maintain a consistent sleep schedule for better rest
+            Smart reminders help you maintain a consistent sleep schedule for
+            better rest
           </Text>
         </View>
 
@@ -270,7 +287,10 @@ export const BedtimeRemindersScreen = () => {
             <Switch
               value={smartReminders}
               onValueChange={setSmartReminders}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.purple['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.purple["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -285,7 +305,10 @@ export const BedtimeRemindersScreen = () => {
             <Switch
               value={windDownReminder}
               onValueChange={setWindDownReminder}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.purple['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.purple["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -300,7 +323,10 @@ export const BedtimeRemindersScreen = () => {
             <Switch
               value={bedtimeReminder}
               onValueChange={setBedtimeReminder}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.purple['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.purple["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -315,7 +341,10 @@ export const BedtimeRemindersScreen = () => {
             <Switch
               value={wakeUpReminder}
               onValueChange={setWakeUpReminder}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.purple['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.purple["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -372,7 +401,8 @@ export const BedtimeRemindersScreen = () => {
                   <Text
                     style={[
                       styles.timeButtonText,
-                      selectedWakeTime === time && styles.timeButtonTextSelected,
+                      selectedWakeTime === time &&
+                        styles.timeButtonTextSelected,
                     ]}
                   >
                     {time}

@@ -1,3 +1,5 @@
+import { MentalHealthIcon } from "@shared/components/icons";
+import { useTheme } from "@theme/ThemeProvider";
 import React, { useEffect, useRef, useState } from "react";
 import {
   View,
@@ -16,8 +18,6 @@ import Svg, {
   Stop,
 } from "react-native-svg";
 
-import { useTheme } from "@theme/ThemeProvider";
-import { MentalHealthIcon } from "@shared/components/icons";
 // Mock theme constants
 const spacing = { sm: 8, md: 16, lg: 24 };
 const borderRadius = { sm: 4, md: 8, lg: 12 };

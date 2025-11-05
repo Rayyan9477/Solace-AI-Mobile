@@ -1,6 +1,17 @@
+import {
+  // Use moodSlice actions (enhancedMoodSlice was deleted)
+  setCurrentMood as setSelectedMoodAction,
+} from "@app/store/slices/moodSlice";
 import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState, useRef, useEffect, useCallback, useContext } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useContext,
+} from "react";
 import {
   View,
   Text,
@@ -17,26 +28,35 @@ import {
 } from "react-native";
 // Note: Avoid requiring Redux Provider during tests
 
-import { useTheme } from "@theme/ThemeProvider";
 import { ReactReduxContext } from "react-redux";
-import {
-  // Use moodSlice actions (enhancedMoodSlice was deleted)
-  setCurrentMood as setSelectedMoodAction,
-} from "@app/store/slices/moodSlice";
 
 // Note: These actions don't exist in moodSlice, using local state only
 // This component manages its own UI state and syncs to moodSlice on save
-const setCurrentStepAction = (step) => ({ type: 'mood/UI_STEP', payload: step });
-const setIntensityAction = (intensity) => ({ type: 'mood/UI_INTENSITY', payload: intensity });
-const toggleActivityAction = (id) => ({ type: 'mood/UI_ACTIVITY', payload: id });
-const setNotesAction = (notes) => ({ type: 'mood/UI_NOTES', payload: notes });
-const toggleTriggerAction = (id) => ({ type: 'mood/UI_TRIGGER', payload: id });
+const setCurrentStepAction = (step) => ({
+  type: "mood/UI_STEP",
+  payload: step,
+});
+const setIntensityAction = (intensity) => ({
+  type: "mood/UI_INTENSITY",
+  payload: intensity,
+});
+const toggleActivityAction = (id) => ({
+  type: "mood/UI_ACTIVITY",
+  payload: id,
+});
+const setNotesAction = (notes) => ({ type: "mood/UI_NOTES", payload: notes });
+const toggleTriggerAction = (id) => ({ type: "mood/UI_TRIGGER", payload: id });
 // Build a safe theme object with defaults for tests without ThemeProvider
 const buildSafeTheme = (maybeThemeCtx) => {
   const maybeTheme = maybeThemeCtx?.theme || maybeThemeCtx || {};
   const defaultColors = {
     gray: { 200: "#E5E7EB", 300: "#D1D5DB", 400: "#9CA3AF", 500: "#6B7280" },
-    text: { primary: "#111827", secondary: "#374151", tertiary: "#6B7280", inverse: "#FFFFFF" },
+    text: {
+      primary: "#111827",
+      secondary: "#374151",
+      tertiary: "#6B7280",
+      inverse: "#FFFFFF",
+    },
     background: { primary: "#FFFFFF", secondary: "#F9FAFB" },
     error: { 400: "#F87171", 500: "#EF4444" },
     warning: { 100: "#FEF3C7", 400: "#FBBF24", 500: "#F59E0B" },
@@ -62,23 +82,23 @@ const buildSafeTheme = (maybeThemeCtx) => {
       ...(incoming.therapeutic || {}),
       calming: {
         ...defaultColors.therapeutic.calming,
-  ...(incoming.therapeutic?.calming || {}),
+        ...(incoming.therapeutic?.calming || {}),
       },
       peaceful: {
         ...defaultColors.therapeutic.peaceful,
-  ...(incoming.therapeutic?.peaceful || {}),
+        ...(incoming.therapeutic?.peaceful || {}),
       },
       energizing: {
         ...defaultColors.therapeutic.energizing,
-  ...(incoming.therapeutic?.energizing || {}),
+        ...(incoming.therapeutic?.energizing || {}),
       },
       grounding: {
         ...defaultColors.therapeutic.grounding,
-  ...(incoming.therapeutic?.grounding || {}),
+        ...(incoming.therapeutic?.grounding || {}),
       },
       nurturing: {
         ...defaultColors.therapeutic.nurturing,
-  ...(incoming.therapeutic?.nurturing || {}),
+        ...(incoming.therapeutic?.nurturing || {}),
       },
     },
   };
@@ -132,7 +152,8 @@ const MentalHealthAccessibility = { announce: () => {} };
 
 const { width, height } = Dimensions.get("window");
 
-const KeyboardAvoiding = KeyboardAvoidingView || (({ children }) => <>{children}</>);
+const KeyboardAvoiding =
+  KeyboardAvoidingView || (({ children }) => <>{children}</>);
 
 const EnhancedMoodTrackerScreen = () => {
   const navigation = useNavigation();
@@ -206,8 +227,14 @@ const EnhancedMoodTrackerScreen = () => {
   // Initialize from store on first mount
   useEffect(() => {
     // Apply crisis/support messages if applicable
-    if (/hurt\s*myself|kill\s*myself|suicide|hopeless|worthless/i.test(notes || "")) {
-      setCrisisMessage("If you're in crisis, call or text 988 for immediate help.");
+    if (
+      /hurt\s*myself|kill\s*myself|suicide|hopeless|worthless/i.test(
+        notes || "",
+      )
+    ) {
+      setCrisisMessage(
+        "If you're in crisis, call or text 988 for immediate help.",
+      );
     }
     if (
       selectedMood &&
@@ -244,7 +271,7 @@ const EnhancedMoodTrackerScreen = () => {
       id: "neutral",
       emoji: "😐",
       label: "Neutral",
-      color: theme.colors.gray['500'],
+      color: theme.colors.gray["500"],
       description: "Neither positive nor negative",
     },
     {
@@ -258,7 +285,7 @@ const EnhancedMoodTrackerScreen = () => {
       id: "anxious",
       emoji: "😰",
       label: "Anxious",
-      color: theme.colors.warning['500'],
+      color: theme.colors.warning["500"],
       description: "Worried or nervous",
     },
     {
@@ -272,7 +299,7 @@ const EnhancedMoodTrackerScreen = () => {
       id: "angry",
       emoji: "😠",
       label: "Angry",
-      color: theme.colors.error['500'],
+      color: theme.colors.error["500"],
       description: "Frustrated or irritated",
     },
   ];
@@ -333,7 +360,13 @@ const EnhancedMoodTrackerScreen = () => {
       safeDispatch(setIntensityAction(v), () =>
         setErrorMessage("Error: update failed, will retry."),
       );
-      const labels = ["Very mild", "Mild", "Moderate", "Strong", "Very intense"];
+      const labels = [
+        "Very mild",
+        "Mild",
+        "Moderate",
+        "Strong",
+        "Very intense",
+      ];
       if (AccessibilityInfo?.announceForAccessibility) {
         AccessibilityInfo.announceForAccessibility(
           `Intensity set to ${labels[v - 1] || v} out of 10`,
@@ -386,9 +419,7 @@ const EnhancedMoodTrackerScreen = () => {
         selectedMood &&
         ["sad", "anxious", "angry", "depressed"].includes(selectedMood)
       ) {
-        setSupportMessage(
-          "Support resources available to help you right now.",
-        );
+        setSupportMessage("Support resources available to help you right now.");
       } else {
         setSupportMessage("");
       }
@@ -400,14 +431,14 @@ const EnhancedMoodTrackerScreen = () => {
     // Validation by step
     if (currentStep === 0 && !selectedMood) {
       setErrorMessage("Mood is required to continue.");
-      if (typeof AccessibilityInfo?.setAccessibilityFocus === 'function') {
+      if (typeof AccessibilityInfo?.setAccessibilityFocus === "function") {
         AccessibilityInfo.setAccessibilityFocus();
       }
       return;
     }
     if (currentStep === 1 && (intensity < 1 || intensity > 10)) {
       setErrorMessage("Intensity must be within valid range (1-10).");
-      if (typeof AccessibilityInfo?.setAccessibilityFocus === 'function') {
+      if (typeof AccessibilityInfo?.setAccessibilityFocus === "function") {
         AccessibilityInfo.setAccessibilityFocus();
       }
       return;
@@ -431,7 +462,7 @@ const EnhancedMoodTrackerScreen = () => {
         }).start();
       });
       // Announce focus change for assistive technologies
-      if (typeof AccessibilityInfo?.setAccessibilityFocus === 'function') {
+      if (typeof AccessibilityInfo?.setAccessibilityFocus === "function") {
         AccessibilityInfo.setAccessibilityFocus();
       }
     }
@@ -476,7 +507,9 @@ const EnhancedMoodTrackerScreen = () => {
     const okInt = safeDispatch(setIntensityAction(intensity));
     const okNotes = safeDispatch(setNotesAction(notes));
     if (!okSel || !okInt || !okNotes) {
-      setErrorMessage("Error: Unable to save your mood entry. Please try again.");
+      setErrorMessage(
+        "Error: Unable to save your mood entry. Please try again.",
+      );
       return;
     }
 
@@ -485,7 +518,9 @@ const EnhancedMoodTrackerScreen = () => {
 
     // Simulate validation error on specific notes content
     if (notes && /error|invalid|required/i.test(notes)) {
-      setErrorMessage("Error: invalid notes input. Please adjust and try again.");
+      setErrorMessage(
+        "Error: invalid notes input. Please adjust and try again.",
+      );
       return;
     }
 
@@ -495,20 +530,29 @@ const EnhancedMoodTrackerScreen = () => {
         await fetch("https://example.com/mood", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ selectedMood, intensity, activities, triggers, notes }),
+          body: JSON.stringify({
+            selectedMood,
+            intensity,
+            activities,
+            triggers,
+            notes,
+          }),
         });
       } else {
         throw new Error("fetch unavailable");
       }
     } catch (err) {
-  console?.warn?.("Mood sync failed; storing offline", err);
+      console?.warn?.("Mood sync failed; storing offline", err);
       setInfoMessage("Saved locally. Will sync later (offline).");
     }
 
     // Finalize save - dispatch to moodSlice (using logMood thunk would be better)
     const ok = safeDispatch(
       { type: "mood/FINALIZE_SAVE" }, // Placeholder - real implementation should use logMood thunk
-      () => setErrorMessage("Error: Unable to save your mood entry. Please try again."),
+      () =>
+        setErrorMessage(
+          "Error: Unable to save your mood entry. Please try again.",
+        ),
     );
     if (!ok) return;
 
@@ -527,7 +571,15 @@ const EnhancedMoodTrackerScreen = () => {
         },
       ],
     );
-  }, [selectedMood, intensity, notes, activities, triggers, navigation, safeDispatch]);
+  }, [
+    selectedMood,
+    intensity,
+    notes,
+    activities,
+    triggers,
+    navigation,
+    safeDispatch,
+  ]);
 
   const canProceed = () => {
     if (currentStep === 0) return !!selectedMood;
@@ -550,7 +602,7 @@ const EnhancedMoodTrackerScreen = () => {
       <View
         style={[
           styles.progressBar,
-          { backgroundColor: theme.colors.gray['200'] },
+          { backgroundColor: theme.colors.gray["200"] },
         ]}
         testID="progress-indicator"
         accessible
@@ -608,11 +660,13 @@ const EnhancedMoodTrackerScreen = () => {
 
       {/* Helper prompt expected by integration tests */}
       <Text
-        style={[{
-          textAlign: "center",
-          marginBottom: spacing[4],
-          color: theme.colors.text.secondary,
-        }]}
+        style={[
+          {
+            textAlign: "center",
+            marginBottom: spacing[4],
+            color: theme.colors.text.secondary,
+          },
+        ]}
         accessibilityRole="text"
       >
         Select your mood
@@ -696,7 +750,7 @@ const EnhancedMoodTrackerScreen = () => {
                   backgroundColor:
                     intensity >= level
                       ? theme.colors.therapeutic.calming[500]
-                      : theme.colors.gray['300'],
+                      : theme.colors.gray["300"],
                 },
               ]}
               onPress={() => onSetIntensity(level)}
@@ -746,7 +800,9 @@ const EnhancedMoodTrackerScreen = () => {
         },
       ]}
     >
-  <Text style={[styles.stepTitle, { color: theme.colors.text.primary }]}>Select Activities</Text>
+      <Text style={[styles.stepTitle, { color: theme.colors.text.primary }]}>
+        Select Activities
+      </Text>
       <Text style={[styles.stepTitle, { color: theme.colors.text.primary }]}>
         What have you been doing?
       </Text>
@@ -814,7 +870,7 @@ const EnhancedMoodTrackerScreen = () => {
             {
               backgroundColor: theme.colors.background.secondary,
               color: theme.colors.text.primary,
-              borderColor: theme.colors.gray['300'],
+              borderColor: theme.colors.gray["300"],
             },
           ]}
           value={notes}
@@ -843,8 +899,8 @@ const EnhancedMoodTrackerScreen = () => {
               styles.optionCard,
               styles.triggerCard,
               triggers.includes(trigger.id) && {
-                backgroundColor: theme.colors.warning['100'],
-                borderColor: theme.colors.warning['400'],
+                backgroundColor: theme.colors.warning["100"],
+                borderColor: theme.colors.warning["400"],
                 borderWidth: 2,
               },
             ]}
@@ -883,170 +939,210 @@ const EnhancedMoodTrackerScreen = () => {
   };
 
   return (
-  <KeyboardAvoiding style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+    <KeyboardAvoiding
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <View style={{ flex: 1 }} testID="enhanced-mood-tracker">
-      <LinearGradient
-        colors={[
-          theme.colors.therapeutic.calming[100],
-          theme.colors.background.primary,
-        ]}
-        style={styles.backgroundGradient}
-      >
-        {/* Hidden global intensity slider test hook */}
-        <View
-          testID="intensity-slider"
-          accessible
-          accessibilityRole="adjustable"
-          accessibilityLabel="Intensity slider"
-          onValueChange={onSetIntensity}
-          style={{ width: 0, height: 0, opacity: 0, position: "absolute" }}
-        />
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-            accessible
-            accessibilityRole="button"
-            accessibilityLabel="back"
-            testID="header-back-button"
-          >
-            <Text style={{ fontSize: 24, color: theme.colors.text.primary }}>←</Text>
-          </TouchableOpacity>
-          <Text
-            style={[styles.headerTitle, { color: theme.colors.text.primary }]}
-          >
-            Mood Check-in
-          </Text>
-          <View style={styles.headerSpacer} />
-        </View>
-
-        {/* Progress Bar */}
-        {renderProgressBar()}
-
-        {/* Content */}
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
+        <LinearGradient
+          colors={[
+            theme.colors.therapeutic.calming[100],
+            theme.colors.background.primary,
+          ]}
+          style={styles.backgroundGradient}
         >
-          {renderStep()}
-        </ScrollView>
-
-        {/* Removed duplicate hidden notes input to ensure a single testID 'notes-input' exists */}
-
-        {/* Crisis/Support messages */}
-        {Boolean(crisisMessage) && (
-          <View accessibilityRole="alert" style={{ paddingHorizontal: spacing[5], paddingVertical: spacing[2] }}>
-            <Text style={{ color: theme.colors.error['500'] }}>{crisisMessage}</Text>
-          </View>
-        )}
-        {Boolean(supportMessage) && (
-          <View accessibilityRole="alert" style={{ paddingHorizontal: spacing[5], paddingVertical: spacing[2] }}>
-            <Text style={{ color: theme.colors.text.primary }}>{supportMessage}</Text>
-          </View>
-        )}
-
-        {/* Error/info message area for accessibility */}
-        {Boolean(errorMessage) && (
-          <View accessibilityRole="alert" style={{ paddingHorizontal: spacing[5], paddingVertical: spacing[2] }}>
-            <Text accessibilityRole="alert" style={{ color: theme.colors.error['500'] }}>{errorMessage}</Text>
-          </View>
-        )}
-        {Boolean(infoMessage) && (
-          <View accessibilityRole="alert" style={{ paddingHorizontal: spacing[5], paddingVertical: spacing[2] }}>
-            <Text style={{ color: theme.colors.text.primary }}>{infoMessage}</Text>
-          </View>
-        )}
-
-        {/* Navigation */}
-        <View style={styles.navigationContainer}>
-          <TouchableOpacity
-            style={[
-              styles.navButton,
-              styles.previousButton,
-              currentStep === 0 && styles.disabledButton,
-            ]}
-            onPress={handlePrevious}
-            disabled={currentStep === 0}
+          {/* Hidden global intensity slider test hook */}
+          <View
+            testID="intensity-slider"
             accessible
-            accessibilityRole="button"
-            accessibilityLabel="back"
-            testID="back-button"
-          >
-            <Text
-              style={[
-                styles.navButtonText,
-                {
-                  color:
-                    currentStep === 0
-                      ? theme.colors.text.tertiary
-                      : theme.colors.text.primary,
-                },
-              ]}
+            accessibilityRole="adjustable"
+            accessibilityLabel="Intensity slider"
+            onValueChange={onSetIntensity}
+            style={{ width: 0, height: 0, opacity: 0, position: "absolute" }}
+          />
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => navigation.goBack()}
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel="back"
+              testID="header-back-button"
             >
-              Back
+              <Text style={{ fontSize: 24, color: theme.colors.text.primary }}>
+                ←
+              </Text>
+            </TouchableOpacity>
+            <Text
+              style={[styles.headerTitle, { color: theme.colors.text.primary }]}
+            >
+              Mood Check-in
             </Text>
-          </TouchableOpacity>
+            <View style={styles.headerSpacer} />
+          </View>
 
-          <TouchableOpacity
-            style={[
-              styles.navButton,
-              styles.nextButton,
-              !canProceed() && styles.disabledButton,
-            ]}
-            onPress={currentStep === 3 ? handleSave : handleNext}
-            accessible
-            accessibilityRole="button"
-            accessibilityLabel={
-              currentStep === 3 ? "Save mood entry" : "next step"
-            }
-            testID={currentStep === 3 ? "save-button" : "next-button"}
+          {/* Progress Bar */}
+          {renderProgressBar()}
+
+          {/* Content */}
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
           >
-            <LinearGradient
-              colors={
-                canProceed()
-                  ? [
-                      theme.colors.therapeutic.calming[500],
-                      theme.colors.therapeutic.peaceful[500],
-                    ]
-                  : [theme.colors.gray['300'], theme.colors.gray['400']]
-              }
-              style={styles.nextButtonGradient}
+            {renderStep()}
+          </ScrollView>
+
+          {/* Removed duplicate hidden notes input to ensure a single testID 'notes-input' exists */}
+
+          {/* Crisis/Support messages */}
+          {Boolean(crisisMessage) && (
+            <View
+              accessibilityRole="alert"
+              style={{
+                paddingHorizontal: spacing[5],
+                paddingVertical: spacing[2],
+              }}
+            >
+              <Text style={{ color: theme.colors.error["500"] }}>
+                {crisisMessage}
+              </Text>
+            </View>
+          )}
+          {Boolean(supportMessage) && (
+            <View
+              accessibilityRole="alert"
+              style={{
+                paddingHorizontal: spacing[5],
+                paddingVertical: spacing[2],
+              }}
+            >
+              <Text style={{ color: theme.colors.text.primary }}>
+                {supportMessage}
+              </Text>
+            </View>
+          )}
+
+          {/* Error/info message area for accessibility */}
+          {Boolean(errorMessage) && (
+            <View
+              accessibilityRole="alert"
+              style={{
+                paddingHorizontal: spacing[5],
+                paddingVertical: spacing[2],
+              }}
+            >
+              <Text
+                accessibilityRole="alert"
+                style={{ color: theme.colors.error["500"] }}
+              >
+                {errorMessage}
+              </Text>
+            </View>
+          )}
+          {Boolean(infoMessage) && (
+            <View
+              accessibilityRole="alert"
+              style={{
+                paddingHorizontal: spacing[5],
+                paddingVertical: spacing[2],
+              }}
+            >
+              <Text style={{ color: theme.colors.text.primary }}>
+                {infoMessage}
+              </Text>
+            </View>
+          )}
+
+          {/* Navigation */}
+          <View style={styles.navigationContainer}>
+            <TouchableOpacity
+              style={[
+                styles.navButton,
+                styles.previousButton,
+                currentStep === 0 && styles.disabledButton,
+              ]}
+              onPress={handlePrevious}
+              disabled={currentStep === 0}
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel="back"
+              testID="back-button"
             >
               <Text
                 style={[
-                  styles.nextButtonText,
-                  { color: (theme?.colors?.text?.inverse) || "#FFFFFF" },
+                  styles.navButtonText,
+                  {
+                    color:
+                      currentStep === 0
+                        ? theme.colors.text.tertiary
+                        : theme.colors.text.primary,
+                  },
                 ]}
               >
-                {currentStep === 3 ? "Save" : "Next"}
+                Back
               </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
+            </TouchableOpacity>
 
-        {/* Hidden canonical notes input for integration tests (single testID reference, always present) */}
-        <TextInput
-          testID="notes-input"
-          value={notes}
-          onChangeText={onNotesChange}
-          style={{ width: 0, height: 0, opacity: 0, position: "absolute" }}
-          accessible={false}
-        />
+            <TouchableOpacity
+              style={[
+                styles.navButton,
+                styles.nextButton,
+                !canProceed() && styles.disabledButton,
+              ]}
+              onPress={currentStep === 3 ? handleSave : handleNext}
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel={
+                currentStep === 3 ? "Save mood entry" : "next step"
+              }
+              testID={currentStep === 3 ? "save-button" : "next-button"}
+            >
+              <LinearGradient
+                colors={
+                  canProceed()
+                    ? [
+                        theme.colors.therapeutic.calming[500],
+                        theme.colors.therapeutic.peaceful[500],
+                      ]
+                    : [theme.colors.gray["300"], theme.colors.gray["400"]]
+                }
+                style={styles.nextButtonGradient}
+              >
+                <Text
+                  style={[
+                    styles.nextButtonText,
+                    { color: theme?.colors?.text?.inverse || "#FFFFFF" },
+                  ]}
+                >
+                  {currentStep === 3 ? "Save" : "Next"}
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
 
-        {/* Hidden test hook retained for integration tests: only render when visible Save is not present */}
-        {currentStep !== 3 && (
-          <TouchableOpacity
-            testID="save-button"
-            onPress={() => {
-              handleSave();
-            }}
+          {/* Hidden canonical notes input for integration tests (single testID reference, always present) */}
+          <TextInput
+            testID="notes-input"
+            value={notes}
+            onChangeText={onNotesChange}
+            style={{ width: 0, height: 0, opacity: 0, position: "absolute" }}
             accessible={false}
-            style={{ width: 0, height: 0, opacity: 0 }}
           />
-        )}
-      </LinearGradient>
+
+          {/* Hidden test hook retained for integration tests: only render when visible Save is not present */}
+          {currentStep !== 3 && (
+            <TouchableOpacity
+              testID="save-button"
+              onPress={() => {
+                handleSave();
+              }}
+              accessible={false}
+              style={{ width: 0, height: 0, opacity: 0 }}
+            />
+          )}
+        </LinearGradient>
       </View>
     </KeyboardAvoiding>
   );

@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/Profile Settings & Help Center.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,9 +14,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TextInput,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface FAQItem {
   id: string;
@@ -26,47 +26,50 @@ interface FAQItem {
 export const HelpCenterScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null);
 
   const faqCategories = [
-    { id: 'account', name: 'Account', icon: '👤' },
-    { id: 'privacy', name: 'Privacy', icon: '🔒' },
-    { id: 'features', name: 'Features', icon: '⚡' },
-    { id: 'billing', name: 'Billing', icon: '💳' },
+    { id: "account", name: "Account", icon: "👤" },
+    { id: "privacy", name: "Privacy", icon: "🔒" },
+    { id: "features", name: "Features", icon: "⚡" },
+    { id: "billing", name: "Billing", icon: "💳" },
   ];
 
   const faqs: FAQItem[] = [
     {
-      id: '1',
-      question: 'How do I reset my password?',
-      answer: 'Go to Settings > Account > Change Password to reset your password.',
-      category: 'account',
+      id: "1",
+      question: "How do I reset my password?",
+      answer:
+        "Go to Settings > Account > Change Password to reset your password.",
+      category: "account",
     },
     {
-      id: '2',
-      question: 'Is my data secure?',
-      answer: 'Yes, we use end-to-end encryption to protect all your mental health data.',
-      category: 'privacy',
+      id: "2",
+      question: "Is my data secure?",
+      answer:
+        "Yes, we use end-to-end encryption to protect all your mental health data.",
+      category: "privacy",
     },
     {
-      id: '3',
-      question: 'How does the AI therapy chatbot work?',
-      answer: 'Our AI chatbot uses advanced natural language processing to provide therapeutic support.',
-      category: 'features',
+      id: "3",
+      question: "How does the AI therapy chatbot work?",
+      answer:
+        "Our AI chatbot uses advanced natural language processing to provide therapeutic support.",
+      category: "features",
     },
     {
-      id: '4',
-      question: 'Can I cancel my subscription?',
-      answer: 'Yes, you can cancel anytime from Settings > Subscription.',
-      category: 'billing',
+      id: "4",
+      question: "Can I cancel my subscription?",
+      answer: "Yes, you can cancel anytime from Settings > Subscription.",
+      category: "billing",
     },
   ];
 
   const contactOptions = [
-    { id: 'email', name: 'Email Support', icon: '📧', action: 'Email' },
-    { id: 'chat', name: 'Live Chat', icon: '💬', action: 'Chat' },
-    { id: 'phone', name: 'Phone Support', icon: '📞', action: 'Call' },
+    { id: "email", name: "Email Support", icon: "📧", action: "Email" },
+    { id: "chat", name: "Live Chat", icon: "💬", action: "Chat" },
+    { id: "phone", name: "Phone Support", icon: "📞", action: "Call" },
   ];
 
   const styles = StyleSheet.create({
@@ -75,23 +78,23 @@ export const HelpCenterScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
@@ -101,7 +104,7 @@ export const HelpCenterScreen = () => {
       padding: 20,
     },
     searchInput: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       paddingHorizontal: 16,
       paddingVertical: 12,
@@ -114,22 +117,22 @@ export const HelpCenterScreen = () => {
     },
     sectionTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     categoriesGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 12,
     },
     categoryCard: {
       flex: 1,
-      minWidth: '47%',
-      backgroundColor: theme.colors.brown['10'],
+      minWidth: "47%",
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 20,
-      alignItems: 'center',
+      alignItems: "center",
     },
     categoryIcon: {
       fontSize: 32,
@@ -137,7 +140,7 @@ export const HelpCenterScreen = () => {
     },
     categoryName: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     faqSection: {
@@ -145,14 +148,14 @@ export const HelpCenterScreen = () => {
       marginBottom: 24,
     },
     faqCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 16,
       marginBottom: 12,
     },
     faqQuestion: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -166,11 +169,11 @@ export const HelpCenterScreen = () => {
       marginBottom: 24,
     },
     contactCard: {
-      backgroundColor: theme.colors.green['20'],
+      backgroundColor: theme.colors.green["20"],
       borderRadius: 16,
       padding: 16,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginBottom: 12,
     },
     contactIcon: {
@@ -182,19 +185,22 @@ export const HelpCenterScreen = () => {
     },
     contactName: {
       fontSize: 15,
-      fontWeight: '700',
-      color: theme.colors.green['100'],
+      fontWeight: "700",
+      color: theme.colors.green["100"],
     },
     contactArrow: {
       fontSize: 18,
-      color: theme.colors.green['80'],
+      color: theme.colors.green["80"],
     },
   });
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
           <Text style={{ fontSize: 20 }}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Help Center</Text>
@@ -230,10 +236,14 @@ export const HelpCenterScreen = () => {
             <TouchableOpacity
               key={faq.id}
               style={styles.faqCard}
-              onPress={() => setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)}
+              onPress={() =>
+                setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)
+              }
             >
               <Text style={styles.faqQuestion}>{faq.question}</Text>
-              {expandedFAQ === faq.id && <Text style={styles.faqAnswer}>{faq.answer}</Text>}
+              {expandedFAQ === faq.id && (
+                <Text style={styles.faqAnswer}>{faq.answer}</Text>
+              )}
             </TouchableOpacity>
           ))}
         </View>

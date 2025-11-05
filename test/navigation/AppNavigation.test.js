@@ -56,7 +56,7 @@ jest.mock("react-native-reanimated", () => {
 jest.mock("@react-navigation/stack", () => {
   const actualStack = jest.requireActual("@react-navigation/stack");
   const React = require("react");
-  
+
   return {
     ...actualStack,
     CardStyleInterpolators: {
@@ -78,7 +78,8 @@ jest.mock("@react-navigation/stack", () => {
     },
     // Mock the CardStack component to avoid interpolation issues
     createStackNavigator: () => {
-      const Navigator = ({ children }) => React.createElement(React.Fragment, null, children);
+      const Navigator = ({ children }) =>
+        React.createElement(React.Fragment, null, children);
       const Screen = () => null;
       return { Navigator, Screen };
     },
@@ -99,10 +100,16 @@ describe("App Navigation", () => {
       );
 
       // Check for main tabs - current app has Dashboard, Mood, Chat, Profile
-      expect(getByText("Home") || getByText("Dashboard") || queryByText("Dashboard")).toBeTruthy();
+      expect(
+        getByText("Home") || getByText("Dashboard") || queryByText("Dashboard"),
+      ).toBeTruthy();
       expect(getByText("Chat") || queryByText("Chat")).toBeTruthy();
-      expect(getByText("Mood") || getByText("Tracker") || queryByText("Mood")).toBeTruthy();
-      expect(getByText("Profile") || getByText("Settings") || queryByText("Profile")).toBeTruthy();
+      expect(
+        getByText("Mood") || getByText("Tracker") || queryByText("Mood"),
+      ).toBeTruthy();
+      expect(
+        getByText("Profile") || getByText("Settings") || queryByText("Profile"),
+      ).toBeTruthy();
     });
 
     it("navigates between tabs correctly", async () => {
@@ -132,7 +139,9 @@ describe("App Navigation", () => {
 
       // Active tab should have visual indicator or just render without error
       const activeTab =
-        queryByTestId("tab-home-active") || queryByTestId("tab-home") || queryByTestId("app-navigator");
+        queryByTestId("tab-home-active") ||
+        queryByTestId("tab-home") ||
+        queryByTestId("app-navigator");
       expect(activeTab).toBeTruthy();
     });
 
@@ -247,7 +256,9 @@ describe("App Navigation", () => {
 
       // In crisis mode, should show crisis resources or navigate normally
       // Just verify it renders without crashing
-      expect(queryByText(/Dashboard|Home/) || getByText("Dashboard")).toBeTruthy();
+      expect(
+        queryByText(/Dashboard|Home/) || getByText("Dashboard"),
+      ).toBeTruthy();
     });
 
     it("maintains crisis support in navigation header", () => {
@@ -259,8 +270,8 @@ describe("App Navigation", () => {
 
       // Should have crisis support available (from wrapper)
       const header =
-        queryByTestId("navigation-header") || 
-        queryByTestId("app-header") || 
+        queryByTestId("navigation-header") ||
+        queryByTestId("app-header") ||
         queryByTestId("global-crisis-support");
       expect(header).toBeTruthy();
     });
@@ -274,7 +285,10 @@ describe("App Navigation", () => {
         </MentalHealthTestWrapper>,
       );
 
-      const firstTab = queryByText("Home") || queryByText("Dashboard") || getByText("Dashboard");
+      const firstTab =
+        queryByText("Home") ||
+        queryByText("Dashboard") ||
+        getByText("Dashboard");
 
       // Simulate keyboard navigation
       fireEvent(firstTab, "focus");
@@ -340,7 +354,11 @@ describe("App Navigation", () => {
       );
 
       // Should start with home screen loaded
-      expect(queryByText("Home") || queryByText("Dashboard") || getByText("Dashboard")).toBeTruthy();
+      expect(
+        queryByText("Home") ||
+          queryByText("Dashboard") ||
+          getByText("Dashboard"),
+      ).toBeTruthy();
 
       // Other screens should load on demand
       const chatTab = queryByText("Chat");
@@ -435,7 +453,13 @@ describe("App Navigation", () => {
 
       // Should have quick access to mood tracking
       const allMoodMatches = (() => {
-        try { return queryAllByText(/mood|feeling|track/i) || getAllByText(/Dashboard/); } catch { return []; }
+        try {
+          return (
+            queryAllByText(/mood|feeling|track/i) || getAllByText(/Dashboard/)
+          );
+        } catch {
+          return [];
+        }
       })();
       const moodAccess = allMoodMatches[0];
       expect(moodAccess || true).toBeTruthy();
@@ -468,10 +492,17 @@ describe("App Navigation", () => {
       );
 
       // Should provide contextual navigation without crashing
-      const allSupportMatches = (() => { 
-        try { return queryAllByText(/support|help|calm|dashboard|home/i); } catch { return []; } 
+      const allSupportMatches = (() => {
+        try {
+          return queryAllByText(/support|help|calm|dashboard|home/i);
+        } catch {
+          return [];
+        }
       })();
-      const supportEl = allSupportMatches[0] || queryByText("Dashboard") || getByText("Dashboard");
+      const supportEl =
+        allSupportMatches[0] ||
+        queryByText("Dashboard") ||
+        getByText("Dashboard");
       expect(supportEl).toBeTruthy();
     });
 
@@ -525,7 +556,10 @@ describe("App Navigation", () => {
       // Navigate multiple times
       const tabs = ["Mood", "Chat", "Profile"];
       tabs.forEach((tab) => {
-        const tabElement = queryByText(tab) || queryByText("Dashboard") || getByText("Dashboard");
+        const tabElement =
+          queryByText(tab) ||
+          queryByText("Dashboard") ||
+          getByText("Dashboard");
         if (tabElement && tab === "Dashboard") {
           fireEvent.press(tabElement);
         }

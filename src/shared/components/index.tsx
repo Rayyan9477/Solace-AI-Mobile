@@ -4,13 +4,13 @@
  */
 
 // Atoms
-export * from './atoms';
+export * from "./atoms";
 
 // Molecules
-export * from './molecules';
+export * from "./molecules";
 
 // Organisms
-export * from './organisms';
+export * from "./organisms";
 
 // Forms
-export * from './forms';
+export * from "./forms";

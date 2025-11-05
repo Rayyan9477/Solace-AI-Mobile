@@ -12,34 +12,34 @@
  */
 
 // Expo compatibility layer - only for native platforms
-if (typeof window === 'undefined') {
+// Core React Native and Expo imports
+import { NavigationContainer } from "@react-navigation/native";
+import { registerRootComponent } from "expo";
+import React, { useEffect, useCallback } from "react";
+import { Platform, AppState } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+// Expo modules
+import AppNavigator from "./src/app/navigation/AppNavigator";
+import RefactoredAppProvider from "./src/app/providers/RefactoredAppProvider";
+import { APP_CONFIG } from "./src/shared/constants";
+import { StatusBar, SplashScreen } from "./src/shared/expo";
+import { logger } from "./src/shared/utils/logger";
+import { platform } from "./src/shared/utils/platform";
+
+// App modules
+// Store providers are applied inside RefactoredAppProvider/AppProvider
+import { validateApp } from "./src/shared/utils/validation";
+
+if (typeof window === "undefined") {
   // Only import expo-dev-client on native platforms, not web
   try {
-    require('expo-dev-client');
+    require("expo-dev-client");
   } catch (error) {
     // expo-dev-client not available, continue without it (silent fail is OK here)
   }
 }
-
-// Core React Native and Expo imports
-import { NavigationContainer } from '@react-navigation/native';
-import React, { useEffect, useCallback } from 'react';
-import { Platform, AppState } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { registerRootComponent } from 'expo';
-
-// Expo modules
-import { StatusBar, SplashScreen } from './src/shared/expo';
-import { platform } from './src/shared/utils/platform';
-import { logger } from './src/shared/utils/logger';
-
-// App modules
-import RefactoredAppProvider from './src/app/providers/RefactoredAppProvider';
-import AppNavigator from './src/app/navigation/AppNavigator';
-// Store providers are applied inside RefactoredAppProvider/AppProvider
-import { APP_CONFIG } from './src/shared/constants';
-import { validateApp } from './src/shared/utils/validation';
 
 // Prevent splash screen from auto-hiding
 if (SplashScreen) {
@@ -61,24 +61,29 @@ const AppRoot: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       logger.debug(`App state changed to: ${nextAppState}`);
     };
 
-    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange,
+    );
     return () => subscription?.remove();
   }, []);
 
   // Log app startup with comprehensive validation
   useEffect(() => {
     const initializeApp = async () => {
-      logger.info('Starting mental health support app...');
+      logger.info("Starting mental health support app...");
       logger.info(`Platform: ${Platform.OS} ${Platform.Version}`);
       logger.info(`Version: ${APP_VERSION}`);
-      logger.info(`Expo: ${platform.isExpoGo ? 'Expo Go' : 'Standalone'}`);
+      logger.info(`Expo: ${platform.isExpoGo ? "Expo Go" : "Standalone"}`);
       logger.info(`Device: ${platform.getDeviceType()}`);
 
       // Run comprehensive app validation
       const validationResults = validateApp();
 
       if (!validationResults.overall.isValid) {
-        logger.warn('App validation failed - some features may not work correctly');
+        logger.warn(
+          "App validation failed - some features may not work correctly",
+        );
       }
 
       // Hide splash screen after initialization is complete
@@ -87,7 +92,7 @@ const AppRoot: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           await SplashScreen.hideAsync();
         } catch (error) {
           // Splash screen might not be available
-          logger.debug('Splash screen hide failed:', error);
+          logger.debug("Splash screen hide failed:", error);
         }
       }
     };
@@ -97,9 +102,7 @@ const AppRoot: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-  {children}
-      </SafeAreaProvider>
+      <SafeAreaProvider>{children}</SafeAreaProvider>
     </GestureHandlerRootView>
   );
 };
@@ -107,17 +110,19 @@ const AppRoot: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 /**
  * Navigation Wrapper - Handles navigation-specific concerns
  */
-const NavigationWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const NavigationWrapper: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   // Navigation state change handler
   const onNavigationStateChange = useCallback((state: any) => {
     if (state) {
-      logger.debug('Navigation state changed:', state);
+      logger.debug("Navigation state changed:", state);
     }
   }, []);
 
   // Navigation ready handler
   const onNavigationReady = useCallback(() => {
-    logger.info('Navigation is ready');
+    logger.info("Navigation is ready");
   }, []);
 
   return (
@@ -135,7 +140,7 @@ const NavigationWrapper: React.FC<{ children: React.ReactNode }> = ({ children }
  * Main App Component - Clean, modern, and performant
  */
 const App = () => {
-  logger.debug('App component rendering');
+  logger.debug("App component rendering");
 
   return (
     <AppRoot>

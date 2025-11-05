@@ -3,12 +3,19 @@
  * Based on ui-designs/Dark-mode/Mood Tracker.png
  */
 
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Animated } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
 
-type MoodType = 'depressed' | 'sad' | 'neutral' | 'happy' | 'overjoyed';
+type MoodType = "depressed" | "sad" | "neutral" | "happy" | "overjoyed";
 
 interface MoodOption {
   type: MoodType;
@@ -21,44 +28,44 @@ interface MoodOption {
 
 const MOODS: MoodOption[] = [
   {
-    type: 'depressed',
-    emoji: '😭',
-    label: 'Depressed',
+    type: "depressed",
+    emoji: "😭",
+    label: "Depressed",
     description: "I'm feeling Depressed",
-    backgroundColor: '#8B7DA8',
-    textColor: '#FFFFFF',
+    backgroundColor: "#8B7DA8",
+    textColor: "#FFFFFF",
   },
   {
-    type: 'sad',
-    emoji: '😔',
-    label: 'Sad',
+    type: "sad",
+    emoji: "😔",
+    label: "Sad",
     description: "I'm feeling Sad",
-    backgroundColor: '#C96100',
-    textColor: '#FFFFFF',
+    backgroundColor: "#C96100",
+    textColor: "#FFFFFF",
   },
   {
-    type: 'neutral',
-    emoji: '😐',
-    label: 'Neutral',
+    type: "neutral",
+    emoji: "😐",
+    label: "Neutral",
     description: "I'm feeling Neutral",
-    backgroundColor: '#8B7B6F',
-    textColor: '#FFFFFF',
+    backgroundColor: "#8B7B6F",
+    textColor: "#FFFFFF",
   },
   {
-    type: 'happy',
-    emoji: '😊',
-    label: 'Happy',
+    type: "happy",
+    emoji: "😊",
+    label: "Happy",
     description: "I'm feeling Happy",
-    backgroundColor: '#F5C563',
-    textColor: '#4A3D2B',
+    backgroundColor: "#F5C563",
+    textColor: "#4A3D2B",
   },
   {
-    type: 'overjoyed',
-    emoji: '😄',
-    label: 'Overjoyed',
+    type: "overjoyed",
+    emoji: "😄",
+    label: "Overjoyed",
     description: "I'm feeling Overjoyed!",
-    backgroundColor: '#98B068',
-    textColor: '#FFFFFF',
+    backgroundColor: "#98B068",
+    textColor: "#FFFFFF",
   },
 ];
 
@@ -68,8 +75,9 @@ export const MoodSelectionScreen = () => {
   const [selectedMood, setSelectedMood] = useState<MoodType | null>(null);
   const [scaleAnim] = useState(new Animated.Value(1));
 
-  const currentMood = MOODS.find(m => m.type === selectedMood);
-  const backgroundColor = currentMood?.backgroundColor || theme.colors.background.primary;
+  const currentMood = MOODS.find((m) => m.type === selectedMood);
+  const backgroundColor =
+    currentMood?.backgroundColor || theme.colors.background.primary;
 
   const styles = StyleSheet.create({
     container: {
@@ -85,30 +93,30 @@ export const MoodSelectionScreen = () => {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: 'rgba(255,255,255,0.2)',
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: "rgba(255,255,255,0.2)",
+      justifyContent: "center",
+      alignItems: "center",
     },
     content: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       paddingHorizontal: 40,
     },
     title: {
       fontSize: 28,
-      fontWeight: '800',
-      color: '#FFFFFF',
-      textAlign: 'center',
+      fontWeight: "800",
+      color: "#FFFFFF",
+      textAlign: "center",
       marginBottom: 60,
     },
     emojiContainer: {
       width: 180,
       height: 180,
       borderRadius: 90,
-      backgroundColor: 'rgba(255,255,255,0.3)',
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: "rgba(255,255,255,0.3)",
+      justifyContent: "center",
+      alignItems: "center",
       marginBottom: 32,
     },
     emoji: {
@@ -116,13 +124,13 @@ export const MoodSelectionScreen = () => {
     },
     moodLabel: {
       fontSize: 24,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
       marginBottom: 80,
     },
     intensityIndicator: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 8,
       marginBottom: 40,
     },
@@ -130,10 +138,10 @@ export const MoodSelectionScreen = () => {
       width: 12,
       height: 12,
       borderRadius: 6,
-      backgroundColor: 'rgba(255,255,255,0.3)',
+      backgroundColor: "rgba(255,255,255,0.3)",
     },
     dotActive: {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: "#FFFFFF",
       width: 16,
       height: 16,
       borderRadius: 8,
@@ -142,30 +150,30 @@ export const MoodSelectionScreen = () => {
       padding: 20,
     },
     setMoodButton: {
-      backgroundColor: 'rgba(255,255,255,0.9)',
+      backgroundColor: "rgba(255,255,255,0.9)",
       paddingVertical: 16,
       borderRadius: 16,
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'center',
+      alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "center",
       gap: 8,
     },
     setMoodButtonText: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: backgroundColor,
     },
     gestureHint: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 120,
       left: 0,
       right: 0,
-      alignItems: 'center',
+      alignItems: "center",
     },
     gestureText: {
       fontSize: 12,
-      fontWeight: '600',
-      color: 'rgba(255,255,255,0.7)',
+      fontWeight: "600",
+      color: "rgba(255,255,255,0.7)",
     },
   });
 
@@ -187,19 +195,19 @@ export const MoodSelectionScreen = () => {
 
   const handleSetMood = () => {
     if (selectedMood) {
-      navigation.navigate('MoodStats', { mood: selectedMood });
+      navigation.navigate("MoodStats", { mood: selectedMood });
     }
   };
 
   // Swipe through moods
-  const handleSwipe = (direction: 'left' | 'right') => {
+  const handleSwipe = (direction: "left" | "right") => {
     if (!selectedMood) {
-      setSelectedMood('neutral');
+      setSelectedMood("neutral");
       return;
     }
 
-    const currentIndex = MOODS.findIndex(m => m.type === selectedMood);
-    let nextIndex = direction === 'right' ? currentIndex + 1 : currentIndex - 1;
+    const currentIndex = MOODS.findIndex((m) => m.type === selectedMood);
+    let nextIndex = direction === "right" ? currentIndex + 1 : currentIndex - 1;
 
     if (nextIndex < 0) nextIndex = MOODS.length - 1;
     if (nextIndex >= MOODS.length) nextIndex = 0;
@@ -211,8 +219,11 @@ export const MoodSelectionScreen = () => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={{ fontSize: 20, color: '#FFFFFF' }}>←</Text>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={{ fontSize: 20, color: "#FFFFFF" }}>←</Text>
         </TouchableOpacity>
       </View>
 
@@ -222,25 +233,26 @@ export const MoodSelectionScreen = () => {
 
         <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
           <View style={styles.emojiContainer}>
-            <Text style={styles.emoji}>{currentMood?.emoji || '😐'}</Text>
+            <Text style={styles.emoji}>{currentMood?.emoji || "😐"}</Text>
           </View>
         </Animated.View>
 
-        <Text style={styles.moodLabel}>{currentMood?.description || "Select your mood"}</Text>
+        <Text style={styles.moodLabel}>
+          {currentMood?.description || "Select your mood"}
+        </Text>
 
         {/* Intensity Indicator */}
         <View style={styles.intensityIndicator}>
           {MOODS.map((mood, index) => {
-            const moodIndex = MOODS.findIndex(m => m.type === selectedMood);
+            const moodIndex = MOODS.findIndex((m) => m.type === selectedMood);
             return (
               <TouchableOpacity
                 key={mood.type}
                 onPress={() => handleMoodSelect(mood.type)}
               >
-                <View style={[
-                  styles.dot,
-                  index === moodIndex && styles.dotActive,
-                ]} />
+                <View
+                  style={[styles.dot, index === moodIndex && styles.dotActive]}
+                />
               </TouchableOpacity>
             );
           })}

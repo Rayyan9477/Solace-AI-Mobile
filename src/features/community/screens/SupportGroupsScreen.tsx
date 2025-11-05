@@ -2,7 +2,9 @@
  * Support Groups Screen - Community Support Groups
  */
 
-import React from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
 import {
   View,
   Text,
@@ -10,19 +12,41 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 export const SupportGroupsScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
 
   const groups = [
-    { id: '1', name: 'Anxiety Support', members: 1234, icon: '😰', color: theme.colors.purple?.['60'] || theme.colors.primary },
-    { id: '2', name: 'Depression Care', members: 2456, icon: '💙', color: theme.colors.blue?.['60'] || theme.colors.secondary },
-    { id: '3', name: 'LGBTQ+ Mental Health', members: 876, icon: '🏳️‍🌈', color: theme.colors.accent || theme.colors.primary },
-    { id: '4', name: 'New Parents', members: 543, icon: '👶', color: theme.colors.tertiary || theme.colors.secondary },
+    {
+      id: "1",
+      name: "Anxiety Support",
+      members: 1234,
+      icon: "😰",
+      color: theme.colors.purple?.["60"] || theme.colors.primary,
+    },
+    {
+      id: "2",
+      name: "Depression Care",
+      members: 2456,
+      icon: "💙",
+      color: theme.colors.blue?.["60"] || theme.colors.secondary,
+    },
+    {
+      id: "3",
+      name: "LGBTQ+ Mental Health",
+      members: 876,
+      icon: "🏳️‍🌈",
+      color: theme.colors.accent || theme.colors.primary,
+    },
+    {
+      id: "4",
+      name: "New Parents",
+      members: 543,
+      icon: "👶",
+      color: theme.colors.tertiary || theme.colors.secondary,
+    },
   ];
 
   const styles = StyleSheet.create({
@@ -31,36 +55,36 @@ export const SupportGroupsScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       flex: 1,
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
-      textAlign: 'center',
+      textAlign: "center",
     },
     content: {
       padding: 20,
     },
     groupCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 20,
       marginBottom: 12,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
     },
     groupIcon: {
       fontSize: 40,
@@ -71,7 +95,7 @@ export const SupportGroupsScreen = () => {
     },
     groupName: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
@@ -80,22 +104,25 @@ export const SupportGroupsScreen = () => {
       color: theme.colors.text.secondary,
     },
     joinButton: {
-      backgroundColor: theme.colors.green['60'],
+      backgroundColor: theme.colors.green["60"],
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 12,
     },
     joinButtonText: {
       fontSize: 13,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
   });
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
           <Text style={{ fontSize: 20 }}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Support Groups</Text>

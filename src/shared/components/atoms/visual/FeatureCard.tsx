@@ -1,10 +1,14 @@
+import { useTheme } from "@theme/ThemeProvider";
+import { motion } from "framer-motion";
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Card, Surface, IconButton } from "react-native-paper";
-import { motion } from "framer-motion";
 
-import { useTheme } from "@theme/ThemeProvider";
-import { FreudColors, FreudSpacing, FreudTypography } from "../shared/theme/FreudDesignSystem";
+import {
+  FreudColors,
+  FreudSpacing,
+  FreudTypography,
+} from "../shared/theme/FreudDesignSystem";
 
 const AnimatedCard = motion(Card);
 const AnimatedSurface = motion(Surface);
@@ -47,7 +51,7 @@ const FeatureCard = ({
         type: "spring",
         stiffness: 300,
         damping: 25,
-        delay: 0.1
+        delay: 0.1,
       }}
       style={[styles.card, style]}
       onPress={onPress}
@@ -59,10 +63,8 @@ const FeatureCard = ({
         style={[
           styles.surface,
           {
-            backgroundColor: isDarkMode
-              ? therapeuticColor[90]
-              : '#FFFFFF',
-          }
+            backgroundColor: isDarkMode ? therapeuticColor[90] : "#FFFFFF",
+          },
         ]}
       >
         <View
@@ -73,16 +75,16 @@ const FeatureCard = ({
             },
           ]}
         >
-          <Text style={[styles.icon, { color: therapeuticColor[60] }]}>{icon}</Text>
+          <Text style={[styles.icon, { color: therapeuticColor[60] }]}>
+            {icon}
+          </Text>
         </View>
 
         <Text
           style={[
             styles.title,
             {
-              color: isDarkMode
-                ? therapeuticColor[10]
-                : therapeuticColor[90],
+              color: isDarkMode ? therapeuticColor[10] : therapeuticColor[90],
             },
           ]}
         >
@@ -93,9 +95,7 @@ const FeatureCard = ({
           style={[
             styles.description,
             {
-              color: isDarkMode
-                ? therapeuticColor[30]
-                : therapeuticColor[70],
+              color: isDarkMode ? therapeuticColor[30] : therapeuticColor[70],
             },
           ]}
         >

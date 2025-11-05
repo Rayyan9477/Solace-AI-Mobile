@@ -44,7 +44,9 @@
       "Bash(git -C \"R:/Solace-AI-Mobile\" status --porcelain)",
       "Bash(git -C \"R:/Solace-AI-Mobile\" status -uall)",
       "Bash(timeout 60 npm test -- --passWithNoTests --silent)",
-      "Bash(timeout 90 npm test -- --passWithNoTests --maxWorkers=2)"
+      "Bash(timeout 90 npm test -- --passWithNoTests --maxWorkers=2)",
+      "Bash(timeout 90 npm test -- --passWithNoTests --maxWorkers=2 --coverage)",
+      "Bash(lint-fix-output.txt)"
     ],
     "deny": [],
     "ask": []

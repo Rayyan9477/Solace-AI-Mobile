@@ -3,8 +3,9 @@
  * Validates app configuration and dependencies
  */
 
-import { Platform } from 'react-native';
-import { APP_CONFIG } from '../constants';
+import { Platform } from "react-native";
+
+import { APP_CONFIG } from "../constants";
 export interface ValidationResult {
   isValid: boolean;
   errors: string[];
@@ -24,7 +25,9 @@ export interface AppValidationResult {
 export const validateDependencies = (): ValidationResult => {
   const warnings: string[] = [];
 
-  warnings.push('Dependency validation skipped in runtime - checked at build time');
+  warnings.push(
+    "Dependency validation skipped in runtime - checked at build time",
+  );
 
   return {
     isValid: true,
@@ -42,19 +45,19 @@ export const validateConfiguration = (): ValidationResult => {
 
   // Validate APP_CONFIG
   if (!APP_CONFIG.version) {
-    errors.push('App version not configured');
+    errors.push("App version not configured");
   }
 
   // Note: API URL is now in API_CONFIG, not APP_CONFIG
 
   // Validate environment variables
   if (APP_CONFIG.features?.analytics && !process.env.ANALYTICS_KEY) {
-    warnings.push('Analytics enabled but key not configured');
+    warnings.push("Analytics enabled but key not configured");
   }
 
   // Check environment
-  if (typeof __DEV__ === 'undefined') {
-    warnings.push('Development mode not properly configured');
+  if (typeof __DEV__ === "undefined") {
+    warnings.push("Development mode not properly configured");
   }
 
   return {
@@ -71,9 +74,9 @@ export const validatePlatform = (): ValidationResult => {
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  if (Platform.OS === 'web') {
-    if (typeof globalThis.window === 'undefined') {
-      errors.push('Window object not available in web environment');
+  if (Platform.OS === "web") {
+    if (typeof globalThis.window === "undefined") {
+      errors.push("Window object not available in web environment");
     }
   }
 

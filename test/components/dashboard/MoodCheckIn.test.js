@@ -11,12 +11,12 @@ import {
   act,
   screen,
 } from "@testing-library/react-native";
+import PropTypes from "prop-types";
 import React from "react";
 import { Animated } from "react-native";
-import PropTypes from "prop-types";
 
-import { ThemeProvider } from "../../../src/shared/theme/ThemeContext";
 import MoodCheckIn from "../../../src/components/dashboard/MoodCheckIn";
+import { ThemeProvider } from "../../../src/shared/theme/ThemeContext";
 
 // Mock dependencies
 jest.mock("expo-linear-gradient", () => ({
@@ -225,12 +225,15 @@ describe("MoodCheckIn Component", () => {
       fireEvent.press(checkInButton);
 
       await waitFor(() => {
-        expect(mockOnCheckIn).toHaveBeenCalledWith("happy", expect.objectContaining({
-          timestamp: expect.any(String),
-          emoji: "😊",
-          label: "Happy",
-          crisisRelated: false,
-        }));
+        expect(mockOnCheckIn).toHaveBeenCalledWith(
+          "happy",
+          expect.objectContaining({
+            timestamp: expect.any(String),
+            emoji: "😊",
+            label: "Happy",
+            crisisRelated: false,
+          }),
+        );
       });
     });
 

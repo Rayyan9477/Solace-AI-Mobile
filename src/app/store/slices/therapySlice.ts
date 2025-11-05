@@ -110,12 +110,14 @@ export const saveTherapySession = createAsyncThunk<
       // Also update session history
       const historyKey = "therapy_session_history";
       const existingHistory = await AsyncStorage.getItem(historyKey);
-      const history: SessionSummary[] = existingHistory ? JSON.parse(existingHistory) : [];
+      const history: SessionSummary[] = existingHistory
+        ? JSON.parse(existingHistory)
+        : [];
 
       const sessionSummary: SessionSummary = {
-        sessionId: sessionData.sessionId || '',
-        startTime: sessionData.startTime || '',
-        endTime: sessionData.endTime || '',
+        sessionId: sessionData.sessionId || "",
+        startTime: sessionData.startTime || "",
+        endTime: sessionData.endTime || "",
         duration: sessionData.duration,
         messageCount: sessionData.messages?.length || 0,
         exercisesCompleted: sessionData.exercisesCompleted || [],
@@ -130,7 +132,8 @@ export const saveTherapySession = createAsyncThunk<
 
       return { sessionData, sessionSummary };
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to save session';
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to save session";
       return rejectWithValue(errorMessage);
     }
   },
@@ -140,37 +143,33 @@ export const loadTherapySession = createAsyncThunk<
   SessionData | null,
   string,
   { rejectValue: string }
->(
-  "therapy/loadSession",
-  async (sessionId: string, { rejectWithValue }) => {
-    try {
-      const sessionKey = `therapy_session_${sessionId}`;
-      const sessionData = await AsyncStorage.getItem(sessionKey);
-      return sessionData ? JSON.parse(sessionData) : null;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to load session';
-      return rejectWithValue(errorMessage);
-    }
-  },
-);
+>("therapy/loadSession", async (sessionId: string, { rejectWithValue }) => {
+  try {
+    const sessionKey = `therapy_session_${sessionId}`;
+    const sessionData = await AsyncStorage.getItem(sessionKey);
+    return sessionData ? JSON.parse(sessionData) : null;
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to load session";
+    return rejectWithValue(errorMessage);
+  }
+});
 
 export const loadTherapyHistory = createAsyncThunk<
   SessionSummary[],
   void,
   { rejectValue: string }
->(
-  "therapy/loadHistory",
-  async (_, { rejectWithValue }) => {
-    try {
-      const historyKey = "therapy_session_history";
-      const historyData = await AsyncStorage.getItem(historyKey);
-      return historyData ? JSON.parse(historyData) : [];
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to load history';
-      return rejectWithValue(errorMessage);
-    }
-  },
-);
+>("therapy/loadHistory", async (_, { rejectWithValue }) => {
+  try {
+    const historyKey = "therapy_session_history";
+    const historyData = await AsyncStorage.getItem(historyKey);
+    return historyData ? JSON.parse(historyData) : [];
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to load history";
+    return rejectWithValue(errorMessage);
+  }
+});
 
 export const saveTherapyPreferences = createAsyncThunk<
   TherapyPreferences,
@@ -184,7 +183,8 @@ export const saveTherapyPreferences = createAsyncThunk<
       await AsyncStorage.setItem(preferencesKey, JSON.stringify(preferences));
       return preferences as TherapyPreferences;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to save preferences';
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to save preferences";
       return rejectWithValue(errorMessage);
     }
   },
@@ -194,19 +194,17 @@ export const loadTherapyPreferences = createAsyncThunk<
   Partial<TherapyPreferences> | null,
   void,
   { rejectValue: string }
->(
-  "therapy/loadPreferences",
-  async (_, { rejectWithValue }) => {
-    try {
-      const preferencesKey = "therapy_preferences";
-      const preferencesData = await AsyncStorage.getItem(preferencesKey);
-      return preferencesData ? JSON.parse(preferencesData) : null;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to load preferences';
-      return rejectWithValue(errorMessage);
-    }
-  },
-);
+>("therapy/loadPreferences", async (_, { rejectWithValue }) => {
+  try {
+    const preferencesKey = "therapy_preferences";
+    const preferencesData = await AsyncStorage.getItem(preferencesKey);
+    return preferencesData ? JSON.parse(preferencesData) : null;
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to load preferences";
+    return rejectWithValue(errorMessage);
+  }
+});
 
 // Initial state
 const initialState: TherapyState = {
@@ -279,7 +277,10 @@ const therapySlice = createSlice({
   initialState,
   reducers: {
     // Session management
-    startSession: (state, action: PayloadAction<{ sessionId: string; startTime: string }>) => {
+    startSession: (
+      state,
+      action: PayloadAction<{ sessionId: string; startTime: string }>,
+    ) => {
       const { sessionId, startTime } = action.payload;
       state.currentSession = {
         ...initialState.currentSession,
@@ -292,13 +293,20 @@ const therapySlice = createSlice({
       state.error = null;
     },
 
-    endSession: (state, action: PayloadAction<{ endTime?: string; mood?: string; notes?: string }>) => {
+    endSession: (
+      state,
+      action: PayloadAction<{
+        endTime?: string;
+        mood?: string;
+        notes?: string;
+      }>,
+    ) => {
       const { endTime, mood, notes } = action.payload || {};
       if (state.currentSession.isActive) {
         state.currentSession.isActive = false;
         state.currentSession.endTime = endTime || new Date().toISOString();
         const endTimeDate = new Date(state.currentSession.endTime);
-        const startTimeDate = new Date(state.currentSession.startTime || '');
+        const startTimeDate = new Date(state.currentSession.startTime || "");
         state.currentSession.duration = Math.floor(
           (endTimeDate.getTime() - startTimeDate.getTime()) / 1000,
         );
@@ -332,7 +340,13 @@ const therapySlice = createSlice({
       state.currentSession.messages.push(newMessage);
     },
 
-    updateMessage: (state, action: PayloadAction<{ messageId: string; updates: Partial<TherapyMessage> }>) => {
+    updateMessage: (
+      state,
+      action: PayloadAction<{
+        messageId: string;
+        updates: Partial<TherapyMessage>;
+      }>,
+    ) => {
       const { messageId, updates } = action.payload;
       const messageIndex = state.currentSession.messages.findIndex(
         (m) => m.id === messageId,
@@ -351,7 +365,14 @@ const therapySlice = createSlice({
       state.currentSession.currentExercise = exerciseId;
     },
 
-    completeExercise: (state, action: PayloadAction<{ exerciseId: string; completedAt?: string; reflection?: string }>) => {
+    completeExercise: (
+      state,
+      action: PayloadAction<{
+        exerciseId: string;
+        completedAt?: string;
+        reflection?: string;
+      }>,
+    ) => {
       const { exerciseId, completedAt, reflection } = action.payload;
       state.currentSession.exercisesCompleted.push({
         exerciseId,
@@ -390,7 +411,10 @@ const therapySlice = createSlice({
     },
 
     // Preferences
-    updatePreferences: (state, action: PayloadAction<Partial<TherapyPreferences>>) => {
+    updatePreferences: (
+      state,
+      action: PayloadAction<Partial<TherapyPreferences>>,
+    ) => {
       state.preferences = {
         ...state.preferences,
         ...action.payload,
@@ -410,7 +434,10 @@ const therapySlice = createSlice({
     },
 
     // Insights and progress
-    updateInsights: (state, action: PayloadAction<Partial<TherapyInsights>>) => {
+    updateInsights: (
+      state,
+      action: PayloadAction<Partial<TherapyInsights>>,
+    ) => {
       state.insights = {
         ...state.insights,
         ...action.payload,
@@ -581,13 +608,18 @@ interface RootState {
 }
 
 // Selectors
-export const selectCurrentSession = (state: RootState) => state.therapy.currentSession;
-export const selectSessionHistory = (state: RootState) => state.therapy.sessionHistory;
-export const selectTherapyPreferences = (state: RootState) => state.therapy.preferences;
-export const selectTherapyInsights = (state: RootState) => state.therapy.insights;
+export const selectCurrentSession = (state: RootState) =>
+  state.therapy.currentSession;
+export const selectSessionHistory = (state: RootState) =>
+  state.therapy.sessionHistory;
+export const selectTherapyPreferences = (state: RootState) =>
+  state.therapy.preferences;
+export const selectTherapyInsights = (state: RootState) =>
+  state.therapy.insights;
 export const selectTherapyLoading = (state: RootState) => state.therapy.loading;
 export const selectTherapyError = (state: RootState) => state.therapy.error;
-export const selectSessionSaving = (state: RootState) => state.therapy.sessionSaving;
+export const selectSessionSaving = (state: RootState) =>
+  state.therapy.sessionSaving;
 export const selectPreferencesLoading = (state: RootState) =>
   state.therapy.preferencesLoading;
 

@@ -3,16 +3,10 @@
  * Based on ui-designs/Dark-mode/Splash & Loading.png
  */
 
-import React, { useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  Animated,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useEffect, useRef } from "react";
+import { View, Text, StyleSheet, SafeAreaView, Animated } from "react-native";
 
 export const SplashScreen = () => {
   const { theme } = useTheme();
@@ -29,7 +23,7 @@ export const SplashScreen = () => {
     animation.start();
 
     const timer = setTimeout(() => {
-      navigation.replace('Welcome');
+      navigation.replace("Welcome");
     }, 3000);
 
     return () => {
@@ -43,11 +37,11 @@ export const SplashScreen = () => {
     container: {
       flex: 1,
       backgroundColor: theme.colors.background.primary,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     logoContainer: {
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: 40,
     },
     logo: {
@@ -56,25 +50,25 @@ export const SplashScreen = () => {
     },
     appName: {
       fontSize: 32,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
     tagline: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       paddingHorizontal: 40,
     },
     bottomSection: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 60,
-      alignItems: 'center',
+      alignItems: "center",
     },
     version: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.tertiary,
       marginBottom: 8,
     },

@@ -3,7 +3,10 @@
  * Clean onboarding interface for professional users
  */
 
-import React, { useState, useRef } from 'react';
+import { completeOnboarding } from "@app/store/slices/authSlice";
+import { useTheme } from "@theme/ThemeProvider";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -14,35 +17,32 @@ import {
   StyleSheet,
   StatusBar,
   Platform,
-} from 'react-native';
-import { useDispatch } from 'react-redux';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '@theme/ThemeProvider';
-import { completeOnboarding } from '@app/store/slices/authSlice';
+} from "react-native";
+import { useDispatch } from "react-redux";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const onboardingSteps = [
   {
     id: 1,
-    title: 'Welcome to Solace AI',
-    description: 'Your professional mental health companion',
-    emoji: '🧠',
-    color: '#007AFF',
+    title: "Welcome to Solace AI",
+    description: "Your professional mental health companion",
+    emoji: "🧠",
+    color: "#007AFF",
   },
   {
     id: 2,
-    title: 'AI-Powered Insights',
-    description: 'Get personalized mental health recommendations',
-    emoji: '🤖',
-    color: '#34C759',
+    title: "AI-Powered Insights",
+    description: "Get personalized mental health recommendations",
+    emoji: "🤖",
+    color: "#34C759",
   },
   {
     id: 3,
-    title: 'Professional Support',
-    description: 'Access evidence-based therapeutic tools',
-    emoji: '👨‍⚕️',
-    color: '#FF9500',
+    title: "Professional Support",
+    description: "Access evidence-based therapeutic tools",
+    emoji: "👨‍⚕️",
+    color: "#FF9500",
   },
 ];
 
@@ -57,13 +57,13 @@ const ProfessionalOnboardingScreen = ({ navigation }) => {
       setCurrentStep(currentStep + 1);
     } else {
       dispatch(completeOnboarding());
-      navigation.navigate('Login');
+      navigation.navigate("Login");
     }
   };
 
   const handleSkip = () => {
     dispatch(completeOnboarding());
-    navigation.navigate('Login');
+    navigation.navigate("Login");
   };
 
   const currentStepData = onboardingSteps[currentStep];
@@ -71,13 +71,13 @@ const ProfessionalOnboardingScreen = ({ navigation }) => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.colors?.background?.primary || '#F7FAFC',
+      backgroundColor: theme.colors?.background?.primary || "#F7FAFC",
     },
     slideContainer: {
-      width: width,
-      height: height,
-      justifyContent: 'center',
-      alignItems: 'center',
+      width,
+      height,
+      justifyContent: "center",
+      alignItems: "center",
       padding: 40,
     },
     illustrationContainer: {
@@ -85,10 +85,10 @@ const ProfessionalOnboardingScreen = ({ navigation }) => {
       height: 200,
       borderRadius: 100,
       backgroundColor: currentStepData.color,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       marginBottom: 40,
-      shadowColor: '#000',
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 8 },
       shadowOpacity: 0.15,
       shadowRadius: 16,
@@ -96,39 +96,39 @@ const ProfessionalOnboardingScreen = ({ navigation }) => {
     },
     illustrationText: {
       fontSize: 80,
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     titleText: {
       fontSize: 32,
-      fontWeight: '800',
-      color: theme.colors?.text?.primary || '#2D3748',
-      textAlign: 'center',
+      fontWeight: "800",
+      color: theme.colors?.text?.primary || "#2D3748",
+      textAlign: "center",
       marginBottom: 8,
       letterSpacing: -0.5,
     },
     subtitleText: {
       fontSize: 16,
-      fontWeight: '500',
-      color: theme.colors?.text?.secondary || '#718096',
-      textAlign: 'center',
+      fontWeight: "500",
+      color: theme.colors?.text?.secondary || "#718096",
+      textAlign: "center",
       opacity: 0.8,
     },
     descriptionText: {
       fontSize: 16,
-      color: theme.colors?.text?.secondary || '#718096',
-      textAlign: 'center',
+      color: theme.colors?.text?.secondary || "#718096",
+      textAlign: "center",
       lineHeight: 24,
       maxWidth: 300,
       marginTop: 16,
     },
     navigationContainer: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 60,
       left: 0,
       right: 0,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       paddingHorizontal: 20,
     },
     button: {
@@ -137,24 +137,24 @@ const ProfessionalOnboardingScreen = ({ navigation }) => {
       borderRadius: 8,
     },
     skipButton: {
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     skipButtonText: {
-      color: theme.colors?.text?.secondary || '#718096',
+      color: theme.colors?.text?.secondary || "#718096",
       fontSize: 16,
     },
     nextButton: {
       backgroundColor: currentStepData.color,
     },
     nextButtonText: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     paginationContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
     },
     paginationDot: {
       width: 12,
@@ -166,24 +166,26 @@ const ProfessionalOnboardingScreen = ({ navigation }) => {
       backgroundColor: currentStepData.color,
     },
     inactiveDot: {
-      backgroundColor: theme.colors?.text?.tertiary || '#CBD5E1',
+      backgroundColor: theme.colors?.text?.tertiary || "#CBD5E1",
     },
   });
 
   return (
     <View style={styles.container}>
       <StatusBar
-        barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+        barStyle={theme.isDark ? "light-content" : "dark-content"}
         backgroundColor="transparent"
         translucent
       />
-      
-          <ScrollView
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
+
+      <ScrollView
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={(event) => {
-          const newIndex = Math.round(event.nativeEvent.contentOffset.x / width);
+          const newIndex = Math.round(
+            event.nativeEvent.contentOffset.x / width,
+          );
           setCurrentStep(newIndex);
         }}
       >
@@ -197,7 +199,7 @@ const ProfessionalOnboardingScreen = ({ navigation }) => {
             <Text style={styles.descriptionText}>{step.description}</Text>
           </View>
         ))}
-          </ScrollView>
+      </ScrollView>
 
       <View style={styles.navigationContainer}>
         <TouchableOpacity style={styles.button} onPress={handleSkip}>
@@ -207,18 +209,23 @@ const ProfessionalOnboardingScreen = ({ navigation }) => {
         <View style={styles.paginationContainer}>
           {onboardingSteps.map((_, index) => (
             <View
-                key={index}
+              key={index}
               style={[
                 styles.paginationDot,
                 index === currentStep ? styles.activeDot : styles.inactiveDot,
               ]}
-              />
-            ))}
+            />
+          ))}
         </View>
 
-        <TouchableOpacity style={[styles.button, styles.nextButton]} onPress={handleNext}>
+        <TouchableOpacity
+          style={[styles.button, styles.nextButton]}
+          onPress={handleNext}
+        >
           <Text style={styles.nextButtonText}>
-            {currentStep === onboardingSteps.length - 1 ? 'Get Started' : 'Next'}
+            {currentStep === onboardingSteps.length - 1
+              ? "Get Started"
+              : "Next"}
           </Text>
         </TouchableOpacity>
       </View>

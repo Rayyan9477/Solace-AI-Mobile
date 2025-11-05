@@ -69,7 +69,8 @@ const _contrast = (fg, bg) => {
 export const AccessibilityValidators = {
   validateColorContrast: (fg, bg, fontSize, isBold, level) => {
     const ratio = _contrast(fg, bg);
-    const isLargeText = Number(fontSize) >= 18 || (isBold && Number(fontSize) >= 14);
+    const isLargeText =
+      Number(fontSize) >= 18 || (isBold && Number(fontSize) >= 14);
     const requiredRatio = isLargeText
       ? WCAG_CONSTANTS.COLOR_CONTRAST_AA_LARGE
       : WCAG_CONSTANTS.COLOR_CONTRAST_AA_NORMAL;
@@ -82,8 +83,7 @@ export const AccessibilityValidators = {
   },
   validateAccessibilityLabel: (label) => ({
     hasLabel: !!label,
-    isDescriptive:
-      typeof label === "string" && label.trim().length >= 4,
+    isDescriptive: typeof label === "string" && label.trim().length >= 4,
     isTooShort:
       typeof label === "string" &&
       label.trim().length > 0 &&
@@ -104,10 +104,14 @@ export class FocusManagement {
   setFocusToElement(element) {
     try {
       // In RN tests, setAccessibilityFocus is mocked in jest.setup.js
-      AccessibilityInfo.setAccessibilityFocus && AccessibilityInfo.setAccessibilityFocus(element);
+      AccessibilityInfo.setAccessibilityFocus &&
+        AccessibilityInfo.setAccessibilityFocus(element);
     } catch (err) {
       // Swallow in non-native environments but record at debug level for diagnostics
-      if (typeof console !== "undefined" && typeof console.debug === "function") {
+      if (
+        typeof console !== "undefined" &&
+        typeof console.debug === "function"
+      ) {
         console.debug("setAccessibilityFocus not available:", err);
       }
     }

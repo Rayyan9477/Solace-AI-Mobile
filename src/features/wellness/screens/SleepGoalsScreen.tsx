@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Sleep Quality.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,9 +13,7 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface SleepGoal {
   id: string;
@@ -26,36 +26,36 @@ interface SleepGoal {
 export const SleepGoalsScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const [selectedGoal, setSelectedGoal] = useState<string>('2');
+  const [selectedGoal, setSelectedGoal] = useState<string>("2");
   const [customHours, setCustomHours] = useState(8);
 
   const sleepGoals: SleepGoal[] = [
     {
-      id: '1',
-      title: 'Recovery Mode',
+      id: "1",
+      title: "Recovery Mode",
       hours: 9,
-      description: 'Extended sleep for maximum recovery',
+      description: "Extended sleep for maximum recovery",
       recommended: false,
     },
     {
-      id: '2',
-      title: 'Optimal Health',
+      id: "2",
+      title: "Optimal Health",
       hours: 8,
-      description: 'Recommended for most adults',
+      description: "Recommended for most adults",
       recommended: true,
     },
     {
-      id: '3',
-      title: 'Moderate',
+      id: "3",
+      title: "Moderate",
       hours: 7,
-      description: 'Minimum for healthy functioning',
+      description: "Minimum for healthy functioning",
       recommended: false,
     },
     {
-      id: '4',
-      title: 'Light Sleeper',
+      id: "4",
+      title: "Light Sleeper",
       hours: 6,
-      description: 'Below recommended amount',
+      description: "Below recommended amount",
       recommended: false,
     },
   ];
@@ -74,30 +74,30 @@ export const SleepGoalsScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
       flex: 1,
     },
     progressCard: {
-      backgroundColor: theme.colors.purple['20'],
+      backgroundColor: theme.colors.purple["20"],
       marginHorizontal: 20,
       marginTop: 20,
       borderRadius: 20,
@@ -105,45 +105,45 @@ export const SleepGoalsScreen = () => {
     },
     progressTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     progressStats: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
       marginBottom: 16,
     },
     progressStat: {
-      alignItems: 'center',
+      alignItems: "center",
     },
     progressValue: {
       fontSize: 24,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
     progressLabel: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     progressBarContainer: {
       height: 12,
       borderRadius: 6,
-      backgroundColor: theme.colors.gray['20'],
-      overflow: 'hidden',
+      backgroundColor: theme.colors.gray["20"],
+      overflow: "hidden",
     },
     progressBar: {
-      height: '100%',
-      backgroundColor: theme.colors.purple['60'],
+      height: "100%",
+      backgroundColor: theme.colors.purple["60"],
       borderRadius: 6,
     },
     progressText: {
       fontSize: 13,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
-      textAlign: 'center',
+      textAlign: "center",
       marginTop: 8,
     },
     section: {
@@ -152,40 +152,40 @@ export const SleepGoalsScreen = () => {
     },
     sectionTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     goalCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 16,
       marginBottom: 12,
       borderWidth: 2,
-      borderColor: 'transparent',
+      borderColor: "transparent",
     },
     goalCardSelected: {
-      borderColor: theme.colors.purple['60'],
-      backgroundColor: theme.colors.purple['10'],
+      borderColor: theme.colors.purple["60"],
+      backgroundColor: theme.colors.purple["10"],
     },
     goalCardRecommended: {
-      borderColor: theme.colors.green['60'],
+      borderColor: theme.colors.green["60"],
     },
     goalHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       marginBottom: 8,
     },
     goalTitle: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     goalHours: {
       fontSize: 20,
-      fontWeight: '800',
-      color: theme.colors.purple['60'],
+      fontWeight: "800",
+      color: theme.colors.purple["60"],
     },
     goalDescription: {
       fontSize: 13,
@@ -194,71 +194,71 @@ export const SleepGoalsScreen = () => {
       marginBottom: 8,
     },
     recommendedBadge: {
-      alignSelf: 'flex-start',
-      backgroundColor: theme.colors.green['60'],
+      alignSelf: "flex-start",
+      backgroundColor: theme.colors.green["60"],
       borderRadius: 12,
       paddingHorizontal: 10,
       paddingVertical: 4,
     },
     recommendedText: {
       fontSize: 11,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     customGoalCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 20,
       marginBottom: 12,
     },
     customGoalTitle: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
-      textAlign: 'center',
+      textAlign: "center",
     },
     sliderContainer: {
-      alignItems: 'center',
+      alignItems: "center",
     },
     sliderValue: {
       fontSize: 48,
-      fontWeight: '800',
-      color: theme.colors.purple['60'],
+      fontWeight: "800",
+      color: theme.colors.purple["60"],
       marginBottom: 8,
     },
     sliderLabel: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
       marginBottom: 16,
     },
     sliderControls: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 20,
     },
     sliderButton: {
       width: 48,
       height: 48,
       borderRadius: 24,
-      backgroundColor: theme.colors.purple['60'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.purple["60"],
+      justifyContent: "center",
+      alignItems: "center",
     },
     sliderButtonText: {
       fontSize: 24,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     sliderTrack: {
       flex: 1,
       height: 8,
       borderRadius: 4,
-      backgroundColor: theme.colors.gray['20'],
+      backgroundColor: theme.colors.gray["20"],
     },
     tipsCard: {
-      backgroundColor: theme.colors.blue['20'],
+      backgroundColor: theme.colors.blue["20"],
       marginHorizontal: 20,
       marginTop: 24,
       borderRadius: 16,
@@ -266,13 +266,13 @@ export const SleepGoalsScreen = () => {
     },
     tipsTitle: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 12,
     },
     tipItem: {
-      flexDirection: 'row',
-      alignItems: 'flex-start',
+      flexDirection: "row",
+      alignItems: "flex-start",
       marginBottom: 8,
     },
     tipIcon: {
@@ -286,17 +286,17 @@ export const SleepGoalsScreen = () => {
       color: theme.colors.text.secondary,
     },
     saveButton: {
-      backgroundColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["60"],
       borderRadius: 16,
       paddingVertical: 16,
       marginHorizontal: 20,
       marginVertical: 24,
-      alignItems: 'center',
+      alignItems: "center",
     },
     saveButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
   });
 
@@ -324,21 +324,32 @@ export const SleepGoalsScreen = () => {
 
           <View style={styles.progressStats}>
             <View style={styles.progressStat}>
-              <Text style={styles.progressValue}>{currentProgress.averageSleep}h</Text>
+              <Text style={styles.progressValue}>
+                {currentProgress.averageSleep}h
+              </Text>
               <Text style={styles.progressLabel}>Avg Sleep</Text>
             </View>
             <View style={styles.progressStat}>
-              <Text style={styles.progressValue}>{currentProgress.goalHours}h</Text>
+              <Text style={styles.progressValue}>
+                {currentProgress.goalHours}h
+              </Text>
               <Text style={styles.progressLabel}>Goal</Text>
             </View>
             <View style={styles.progressStat}>
-              <Text style={styles.progressValue}>{currentProgress.daysOnTrack}</Text>
+              <Text style={styles.progressValue}>
+                {currentProgress.daysOnTrack}
+              </Text>
               <Text style={styles.progressLabel}>Days On Track</Text>
             </View>
           </View>
 
           <View style={styles.progressBarContainer}>
-            <View style={[styles.progressBar, { width: `${currentProgress.progressPercentage}%` }]} />
+            <View
+              style={[
+                styles.progressBar,
+                { width: `${currentProgress.progressPercentage}%` },
+              ]}
+            />
           </View>
           <Text style={styles.progressText}>
             {currentProgress.progressPercentage}% of your goal achieved
@@ -387,7 +398,9 @@ export const SleepGoalsScreen = () => {
                 <View style={styles.sliderTrack} />
                 <TouchableOpacity
                   style={styles.sliderButton}
-                  onPress={() => setCustomHours(Math.min(12, customHours + 0.5))}
+                  onPress={() =>
+                    setCustomHours(Math.min(12, customHours + 0.5))
+                  }
                 >
                   <Text style={styles.sliderButtonText}>+</Text>
                 </TouchableOpacity>
@@ -401,11 +414,15 @@ export const SleepGoalsScreen = () => {
           <Text style={styles.tipsTitle}>💡 Sleep Tips</Text>
           <View style={styles.tipItem}>
             <Text style={styles.tipIcon}>•</Text>
-            <Text style={styles.tipText}>Maintain consistent sleep and wake times</Text>
+            <Text style={styles.tipText}>
+              Maintain consistent sleep and wake times
+            </Text>
           </View>
           <View style={styles.tipItem}>
             <Text style={styles.tipIcon}>•</Text>
-            <Text style={styles.tipText}>Create a relaxing bedtime routine</Text>
+            <Text style={styles.tipText}>
+              Create a relaxing bedtime routine
+            </Text>
           </View>
           <View style={styles.tipItem}>
             <Text style={styles.tipIcon}>•</Text>

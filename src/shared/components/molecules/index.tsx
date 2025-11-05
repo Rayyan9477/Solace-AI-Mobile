@@ -4,7 +4,7 @@
  */
 
 // Card Components
-export { default as MentalHealthCard } from './MentalHealthCard';
+export { default as MentalHealthCard } from "./MentalHealthCard";
 // Export unique named variants only (avoid duplicating default name)
 export {
   MoodCard,
@@ -14,24 +14,24 @@ export {
   InsightCard,
   CardGroup,
   ProgressCard,
-} from './MentalHealthCard';
+} from "./MentalHealthCard";
 
 // Screen Components
-export { default as LoadingScreen } from './LoadingScreen';
+export { default as LoadingScreen } from "./LoadingScreen";
 export {
   TherapeuticLoadingScreen,
   CrisisLoadingScreen,
   MinimalLoadingScreen,
-} from './LoadingScreen';
+} from "./LoadingScreen";
 
-export { default as SplashScreen } from './SplashScreen';
+export { default as SplashScreen } from "./SplashScreen";
 
 // Form & Input Components
-export { default as Dropdown } from './Dropdown';
-export { default as Modal } from './Modal';
+export { default as Dropdown } from "./Dropdown";
+export { default as Modal } from "./Modal";
 
 // Data Display
-export { default as Table } from './Table';
+export { default as Table } from "./Table";
 
 // Default export
 export default {

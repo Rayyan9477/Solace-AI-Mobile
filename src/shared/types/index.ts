@@ -4,10 +4,10 @@
  */
 
 // Theme types
-export * from './theme';
+export * from "./theme";
 
 // Navigation types
-export * from './navigation';
+export * from "./navigation";
 
 // Store types
-export * from './store';
+export * from "./store";

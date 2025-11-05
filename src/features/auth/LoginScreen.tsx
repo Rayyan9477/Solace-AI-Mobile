@@ -3,7 +3,14 @@
  * Matches Freud UI design with brown therapeutic theme
  */
 
-import React, { useState } from 'react';
+import { useAppDispatch, useAppSelector } from "@app/store";
+import { secureLogin } from "@app/store/slices/authSlice";
+import { MentalHealthIcon } from "@components/icons";
+import { FreudLogo } from "@components/icons/FreudIcons";
+import rateLimiter from "@shared/utils/rateLimiter";
+import { useTheme } from "@theme/ThemeProvider";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -15,27 +22,20 @@ import {
   Platform,
   Alert,
   StatusBar,
-} from 'react-native';
-import { useAppDispatch, useAppSelector } from '@app/store';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from "@theme/ThemeProvider";
-import { FreudLogo } from '@components/icons/FreudIcons';
-import { MentalHealthIcon } from '@components/icons';
-import { secureLogin } from '@app/store/slices/authSlice';
-import rateLimiter from '@shared/utils/rateLimiter';
+} from "react-native";
 
 export const LoginScreen = ({ navigation }: any) => {
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((state) => (state as any).auth);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.isDark ? '#2D1B0E' : '#8B7355',
+      backgroundColor: theme.isDark ? "#2D1B0E" : "#8B7355",
     },
     gradient: {
       flex: 1,
@@ -43,14 +43,14 @@ export const LoginScreen = ({ navigation }: any) => {
     header: {
       paddingTop: 60,
       paddingBottom: 40,
-      alignItems: 'center',
+      alignItems: "center",
     },
     logoContainer: {
       marginBottom: 24,
     },
     content: {
       flex: 1,
-      backgroundColor: theme.isDark ? '#3D2817' : '#4A3426',
+      backgroundColor: theme.isDark ? "#3D2817" : "#4A3426",
       borderTopLeftRadius: 32,
       borderTopRightRadius: 32,
       paddingTop: 48,
@@ -58,28 +58,28 @@ export const LoginScreen = ({ navigation }: any) => {
     },
     title: {
       fontSize: 32,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
       marginBottom: 40,
-      textAlign: 'center',
+      textAlign: "center",
     },
     inputContainer: {
       marginBottom: 20,
     },
     inputLabel: {
       fontSize: 14,
-      fontWeight: '500',
-      color: '#E5DDD5',
+      fontWeight: "500",
+      color: "#E5DDD5",
       marginBottom: 8,
       letterSpacing: 0.3,
     },
     inputWrapper: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       borderWidth: 1.5,
-      borderColor: '#6B5444',
+      borderColor: "#6B5444",
       borderRadius: 24,
-      backgroundColor: 'rgba(45, 27, 14, 0.5)',
+      backgroundColor: "rgba(45, 27, 14, 0.5)",
       paddingHorizontal: 20,
       paddingVertical: 14,
     },
@@ -89,7 +89,7 @@ export const LoginScreen = ({ navigation }: any) => {
     input: {
       flex: 1,
       fontSize: 16,
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       paddingVertical: 0,
     },
     eyeButton: {
@@ -97,26 +97,26 @@ export const LoginScreen = ({ navigation }: any) => {
       marginLeft: 8,
     },
     loginButton: {
-      backgroundColor: '#A67C52',
+      backgroundColor: "#A67C52",
       borderRadius: 24,
       paddingVertical: 16,
-      alignItems: 'center',
+      alignItems: "center",
       marginTop: 32,
-      flexDirection: 'row',
-      justifyContent: 'center',
+      flexDirection: "row",
+      justifyContent: "center",
     },
     disabledButton: {
       opacity: 0.5,
     },
     loginButtonText: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       marginRight: 8,
     },
     socialContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
+      flexDirection: "row",
+      justifyContent: "center",
       gap: 16,
       marginTop: 32,
     },
@@ -124,58 +124,58 @@ export const LoginScreen = ({ navigation }: any) => {
       width: 48,
       height: 48,
       borderRadius: 24,
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
       borderWidth: 1,
-      borderColor: '#6B5444',
-      justifyContent: 'center',
-      alignItems: 'center',
+      borderColor: "#6B5444",
+      justifyContent: "center",
+      alignItems: "center",
     },
     socialIcon: {
       fontSize: 20,
     },
     footer: {
-      alignItems: 'center',
+      alignItems: "center",
       marginTop: 24,
       marginBottom: 32,
     },
     footerText: {
       fontSize: 14,
-      color: '#B8A99A',
+      color: "#B8A99A",
     },
     signupButton: {
       marginTop: 4,
     },
     signupText: {
       fontSize: 14,
-      color: '#E8A872',
-      fontWeight: '600',
+      color: "#E8A872",
+      fontWeight: "600",
     },
     forgotPassword: {
-      alignSelf: 'center',
+      alignSelf: "center",
       marginTop: 16,
     },
     forgotPasswordText: {
-      color: '#E8A872',
+      color: "#E8A872",
       fontSize: 14,
-      fontWeight: '500',
+      fontWeight: "500",
     },
   });
 
   const backgroundColors = theme.isDark
-    ? ['#8B7355', '#6B5444']
-    : ['#A67C52', '#8B6F47'];
+    ? ["#8B7355", "#6B5444"]
+    : ["#A67C52", "#8B6F47"];
 
   const validateForm = () => {
     if (!email.trim()) {
-      Alert.alert('Error', 'Please enter your email address');
+      Alert.alert("Error", "Please enter your email address");
       return false;
     }
     if (!password.trim()) {
-      Alert.alert('Error', 'Please enter your password');
+      Alert.alert("Error", "Please enter your password");
       return false;
     }
     if (!/\S+@\S+\.\S+/.test(email)) {
-      Alert.alert('Error', 'Please enter a valid email address');
+      Alert.alert("Error", "Please enter a valid email address");
       return false;
     }
     return true;
@@ -184,20 +184,24 @@ export const LoginScreen = ({ navigation }: any) => {
   const handleLogin = async () => {
     if (!validateForm()) return;
 
-    const rateLimit = await rateLimiter.checkLimit(`login:${email.toLowerCase()}`, 5, 15 * 60 * 1000);
+    const rateLimit = await rateLimiter.checkLimit(
+      `login:${email.toLowerCase()}`,
+      5,
+      15 * 60 * 1000,
+    );
 
     if (!rateLimit.allowed) {
       Alert.alert(
-        'Too Many Attempts',
+        "Too Many Attempts",
         `You have exceeded the maximum login attempts. Please try again in ${rateLimit.waitTime} seconds.`,
-        [{ text: 'OK' }]
+        [{ text: "OK" }],
       );
       return;
     }
 
     const result = await dispatch((secureLogin as any)({ email, password }));
 
-    if (result.type === 'auth/secureLogin/fulfilled') {
+    if (result.type === "auth/secureLogin/fulfilled") {
       rateLimiter.reset(`login:${email.toLowerCase()}`);
     }
   };
@@ -206,10 +210,14 @@ export const LoginScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <LinearGradient
           colors={backgroundColors}
@@ -229,7 +237,12 @@ export const LoginScreen = ({ navigation }: any) => {
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Email Address</Text>
               <View style={styles.inputWrapper}>
-                <MentalHealthIcon name="Mail" size={20} color="#B8A99A" style={styles.inputIcon} />
+                <MentalHealthIcon
+                  name="Mail"
+                  size={20}
+                  color="#B8A99A"
+                  style={styles.inputIcon}
+                />
                 <TextInput
                   style={styles.input}
                   value={email}
@@ -246,7 +259,12 @@ export const LoginScreen = ({ navigation }: any) => {
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Password</Text>
               <View style={styles.inputWrapper}>
-                <MentalHealthIcon name="Lock" size={20} color="#B8A99A" style={styles.inputIcon} />
+                <MentalHealthIcon
+                  name="Lock"
+                  size={20}
+                  color="#B8A99A"
+                  style={styles.inputIcon}
+                />
                 <TextInput
                   style={styles.input}
                   value={password}
@@ -260,7 +278,9 @@ export const LoginScreen = ({ navigation }: any) => {
                   style={styles.eyeButton}
                   onPress={() => setShowPassword(!showPassword)}
                   accessible
-                  accessibilityLabel={showPassword ? "Hide password" : "Show password"}
+                  accessibilityLabel={
+                    showPassword ? "Hide password" : "Show password"
+                  }
                   accessibilityRole="button"
                   accessibilityHint="Toggles password visibility"
                 >
@@ -274,10 +294,7 @@ export const LoginScreen = ({ navigation }: any) => {
             </View>
 
             <TouchableOpacity
-              style={[
-                styles.loginButton,
-                !canLogin && styles.disabledButton,
-              ]}
+              style={[styles.loginButton, !canLogin && styles.disabledButton]}
               onPress={handleLogin}
               disabled={!canLogin}
               accessible
@@ -287,9 +304,9 @@ export const LoginScreen = ({ navigation }: any) => {
               accessibilityHint="Sign in to your account"
             >
               <Text style={styles.loginButtonText}>
-                {isLoading ? 'Signing In...' : 'Sign In'}
+                {isLoading ? "Signing In..." : "Sign In"}
               </Text>
-              <Text style={{ color: '#FFFFFF', fontSize: 18 }}>→</Text>
+              <Text style={{ color: "#FFFFFF", fontSize: 18 }}>→</Text>
             </TouchableOpacity>
 
             <View style={styles.socialContainer}>
@@ -321,17 +338,17 @@ export const LoginScreen = ({ navigation }: any) => {
 
             <View style={styles.footer}>
               <Text style={styles.footerText}>
-                Don't have an account?{' '}
+                Don't have an account?{" "}
                 <Text
                   style={styles.signupText}
-                  onPress={() => navigation?.navigate?.('Signup')}
+                  onPress={() => navigation?.navigate?.("Signup")}
                 >
                   Sign Up
                 </Text>
               </Text>
               <TouchableOpacity
                 style={styles.forgotPassword}
-                onPress={() => navigation?.navigate?.('ForgotPassword')}
+                onPress={() => navigation?.navigate?.("ForgotPassword")}
                 accessible
                 accessibilityLabel="Forgot password"
                 accessibilityRole="button"

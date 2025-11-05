@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/Profile Settings & Help Center.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,9 +14,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Switch,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 export const SecuritySettingsScreen = () => {
   const { theme } = useTheme();
@@ -30,36 +30,36 @@ export const SecuritySettingsScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
       flex: 1,
     },
     warningCard: {
-      backgroundColor: theme.colors.orange['20'],
+      backgroundColor: theme.colors.orange["20"],
       marginHorizontal: 20,
       marginTop: 20,
       borderRadius: 16,
       padding: 16,
-      flexDirection: 'row',
-      alignItems: 'flex-start',
+      flexDirection: "row",
+      alignItems: "flex-start",
     },
     warningIcon: {
       fontSize: 24,
@@ -69,7 +69,7 @@ export const SecuritySettingsScreen = () => {
       flex: 1,
       fontSize: 13,
       lineHeight: 18,
-      color: theme.colors.orange['100'],
+      color: theme.colors.orange["100"],
     },
     section: {
       paddingHorizontal: 20,
@@ -78,18 +78,18 @@ export const SecuritySettingsScreen = () => {
     },
     sectionTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
-      textTransform: 'uppercase',
+      textTransform: "uppercase",
       marginBottom: 16,
     },
     settingItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     settingLeft: {
       flex: 1,
@@ -97,7 +97,7 @@ export const SecuritySettingsScreen = () => {
     },
     settingTitle: {
       fontSize: 15,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
@@ -107,16 +107,16 @@ export const SecuritySettingsScreen = () => {
       color: theme.colors.text.secondary,
     },
     actionButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     actionText: {
       fontSize: 15,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     actionArrow: {
@@ -124,17 +124,17 @@ export const SecuritySettingsScreen = () => {
       color: theme.colors.text.tertiary,
     },
     saveButton: {
-      backgroundColor: theme.colors.brown['60'],
+      backgroundColor: theme.colors.brown["60"],
       borderRadius: 16,
       paddingVertical: 16,
       marginHorizontal: 20,
       marginVertical: 24,
-      alignItems: 'center',
+      alignItems: "center",
     },
     saveButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
   });
 
@@ -160,7 +160,8 @@ export const SecuritySettingsScreen = () => {
         <View style={styles.warningCard}>
           <Text style={styles.warningIcon}>⚠️</Text>
           <Text style={styles.warningText}>
-            Keep your account secure by enabling two-factor authentication and using a strong password
+            Keep your account secure by enabling two-factor authentication and
+            using a strong password
           </Text>
         </View>
 
@@ -178,7 +179,10 @@ export const SecuritySettingsScreen = () => {
             <Switch
               value={biometricLock}
               onValueChange={setBiometricLock}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.green['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.green["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -193,7 +197,10 @@ export const SecuritySettingsScreen = () => {
             <Switch
               value={twoFactorAuth}
               onValueChange={setTwoFactorAuth}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.green['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.green["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -208,7 +215,10 @@ export const SecuritySettingsScreen = () => {
             <Switch
               value={sessionTimeout}
               onValueChange={setSessionTimeout}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.green['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.green["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>

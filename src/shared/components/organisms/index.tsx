@@ -3,8 +3,8 @@
  * Complex UI components
  */
 
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React from "react";
+import { View, StyleSheet } from "react-native";
 
 export const Container = ({ children, style, ...props }) => (
   <View style={[styles.container, style]} {...props}>
@@ -15,6 +15,6 @@ export const Container = ({ children, style, ...props }) => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F7FAFC',
+    backgroundColor: "#F7FAFC",
   },
 });

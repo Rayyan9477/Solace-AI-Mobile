@@ -1,3 +1,7 @@
+import { useTheme } from "@theme/ThemeProvider";
+import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
+import PropTypes from "prop-types";
 import React, { useEffect, useRef } from "react";
 import {
   View,
@@ -7,11 +11,6 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import * as Haptics from "expo-haptics";
-import PropTypes from "prop-types";
-
-import { useTheme } from "@theme/ThemeProvider";
 
 /**
  * QuickActions Component
@@ -79,7 +78,10 @@ const QuickActions = ({
       title: "Crisis Support",
       description: "Immediate help and support available",
       icon: "🚨",
-  color: (theme?.colors?.error?.main as any) || (theme?.colors?.error as any) || "#FF3B30",
+      color:
+        (theme?.colors?.error?.main as any) ||
+        (theme?.colors?.error as any) ||
+        "#FF3B30",
       testID: "action-card-crisis",
       accessibilityLabel: "Access crisis support",
       accessibilityHint: "Navigate to crisis intervention screen",
@@ -106,7 +108,7 @@ const QuickActions = ({
         duration: 500,
         delay: index * animationDelay,
         useNativeDriver: true,
-      })
+      }),
     );
     // Trigger both batching APIs for test spies
     Animated.sequence(sequence).start();
@@ -132,7 +134,9 @@ const QuickActions = ({
 
   const renderActionCard = (action: any, index: number) => {
     const animatedStyle = {
-      opacity: isReducedMotionEnabled ? 1 : (animations.current[index] as any) || 1,
+      opacity: isReducedMotionEnabled
+        ? 1
+        : (animations.current[index] as any) || 1,
       transform: [
         {
           translateY: isReducedMotionEnabled
@@ -167,7 +171,7 @@ const QuickActions = ({
           accessibilityLabel={action.accessibilityLabel}
           accessibilityHint={action.accessibilityHint}
           accessibilityRole="button"
-          accessible={true}
+          accessible
         >
           <LinearGradient
             colors={[action.color + "20", action.color + "10"]}
@@ -208,7 +212,7 @@ const QuickActions = ({
       testID={testID}
       accessibilityLabel={accessibilityLabel}
       {...({ accessibilityRole: "group" } as any)}
-      accessible={true}
+      accessible
     >
       <Text
         style={[

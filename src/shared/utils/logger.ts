@@ -11,7 +11,7 @@
  * logger.error('Error message', error);
  */
 
-type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+type LogLevel = "debug" | "info" | "warn" | "error";
 
 interface LoggerConfig {
   enabled: boolean;
@@ -35,8 +35,8 @@ class Logger {
   constructor(config?: Partial<LoggerConfig>) {
     this.config = {
       enabled: __DEV__,
-      logLevel: 'debug',
-      prefix: 'Solace AI',
+      logLevel: "debug",
+      prefix: "Solace AI",
       ...config,
     };
   }
@@ -44,7 +44,7 @@ class Logger {
   private shouldLog(level: LogLevel): boolean {
     if (!this.config.enabled) return false;
 
-    const levels: LogLevel[] = ['debug', 'info', 'warn', 'error'];
+    const levels: LogLevel[] = ["debug", "info", "warn", "error"];
     const currentLevelIndex = levels.indexOf(this.config.logLevel);
     const requestedLevelIndex = levels.indexOf(level);
 
@@ -52,29 +52,42 @@ class Logger {
   }
 
   private sanitize(data: any): any {
-    if (typeof data === 'string') {
+    if (typeof data === "string") {
       let sanitized = data;
-      this.sensitivePatterns.forEach(pattern => {
-        sanitized = sanitized.replace(pattern, '[REDACTED]');
+      this.sensitivePatterns.forEach((pattern) => {
+        sanitized = sanitized.replace(pattern, "[REDACTED]");
       });
       return sanitized;
     }
 
     if (Array.isArray(data)) {
-      return data.map(item => this.sanitize(item));
+      return data.map((item) => this.sanitize(item));
     }
 
-    if (data && typeof data === 'object') {
+    if (data && typeof data === "object") {
       const sanitized: any = {};
       const sensitiveKeys = [
-        'token', 'accessToken', 'refreshToken', 'password', 'secret',
-        'apiKey', 'authorization', 'email', 'phone', 'ssn', 'cardNumber'
+        "token",
+        "accessToken",
+        "refreshToken",
+        "password",
+        "secret",
+        "apiKey",
+        "authorization",
+        "email",
+        "phone",
+        "ssn",
+        "cardNumber",
       ];
 
       for (const key in data) {
         if (data.hasOwnProperty(key)) {
-          if (sensitiveKeys.some(k => key.toLowerCase().includes(k.toLowerCase()))) {
-            sanitized[key] = '[REDACTED]';
+          if (
+            sensitiveKeys.some((k) =>
+              key.toLowerCase().includes(k.toLowerCase()),
+            )
+          ) {
+            sanitized[key] = "[REDACTED]";
           } else {
             sanitized[key] = this.sanitize(data[key]);
           }
@@ -86,27 +99,47 @@ class Logger {
     return data;
   }
 
-  private formatMessage(level: LogLevel, message: string, ...args: any[]): void {
+  private formatMessage(
+    level: LogLevel,
+    message: string,
+    ...args: any[]
+  ): void {
     if (!this.shouldLog(level)) return;
 
     const sanitizedMessage = this.sanitize(message);
-    const sanitizedArgs = args.map(arg => this.sanitize(arg));
+    const sanitizedArgs = args.map((arg) => this.sanitize(arg));
 
     const timestamp = new Date().toISOString();
     const prefix = `${this.config.prefix} [${level.toUpperCase()}]`;
 
     switch (level) {
-      case 'debug':
-        console.log(`${prefix} [${timestamp}]`, sanitizedMessage, ...sanitizedArgs);
+      case "debug":
+        console.log(
+          `${prefix} [${timestamp}]`,
+          sanitizedMessage,
+          ...sanitizedArgs,
+        );
         break;
-      case 'info':
-        console.info(`${prefix} [${timestamp}]`, sanitizedMessage, ...sanitizedArgs);
+      case "info":
+        console.info(
+          `${prefix} [${timestamp}]`,
+          sanitizedMessage,
+          ...sanitizedArgs,
+        );
         break;
-      case 'warn':
-        console.warn(`${prefix} [${timestamp}]`, sanitizedMessage, ...sanitizedArgs);
+      case "warn":
+        console.warn(
+          `${prefix} [${timestamp}]`,
+          sanitizedMessage,
+          ...sanitizedArgs,
+        );
         break;
-      case 'error':
-        console.error(`${prefix} [${timestamp}]`, sanitizedMessage, ...sanitizedArgs);
+      case "error":
+        console.error(
+          `${prefix} [${timestamp}]`,
+          sanitizedMessage,
+          ...sanitizedArgs,
+        );
         break;
     }
   }
@@ -115,21 +148,21 @@ class Logger {
    * Log debug messages (development only)
    */
   debug(message: string, ...args: any[]): void {
-    this.formatMessage('debug', message, ...args);
+    this.formatMessage("debug", message, ...args);
   }
 
   /**
    * Log informational messages
    */
   info(message: string, ...args: any[]): void {
-    this.formatMessage('info', message, ...args);
+    this.formatMessage("info", message, ...args);
   }
 
   /**
    * Log warning messages
    */
   warn(message: string, ...args: any[]): void {
-    this.formatMessage('warn', message, ...args);
+    this.formatMessage("warn", message, ...args);
   }
 
   /**
@@ -137,13 +170,13 @@ class Logger {
    */
   error(message: string, error?: Error | any, ...args: any[]): void {
     if (error instanceof Error) {
-      this.formatMessage('error', message, {
+      this.formatMessage("error", message, {
         message: error.message,
         stack: error.stack,
         ...args,
       });
     } else {
-      this.formatMessage('error', message, error, ...args);
+      this.formatMessage("error", message, error, ...args);
     }
   }
 
@@ -151,7 +184,7 @@ class Logger {
    * Group related log messages
    */
   group(title: string): void {
-    if (this.shouldLog('debug') && console.group) {
+    if (this.shouldLog("debug") && console.group) {
       console.group(`${this.config.prefix}: ${title}`);
     }
   }
@@ -160,7 +193,7 @@ class Logger {
    * End grouped log messages
    */
   groupEnd(): void {
-    if (this.shouldLog('debug') && console.groupEnd) {
+    if (this.shouldLog("debug") && console.groupEnd) {
       console.groupEnd();
     }
   }
@@ -169,7 +202,7 @@ class Logger {
    * Log performance timing
    */
   time(label: string): void {
-    if (this.shouldLog('debug') && console.time) {
+    if (this.shouldLog("debug") && console.time) {
       console.time(`${this.config.prefix}: ${label}`);
     }
   }
@@ -178,7 +211,7 @@ class Logger {
    * End performance timing
    */
   timeEnd(label: string): void {
-    if (this.shouldLog('debug') && console.timeEnd) {
+    if (this.shouldLog("debug") && console.timeEnd) {
       console.timeEnd(`${this.config.prefix}: ${label}`);
     }
   }

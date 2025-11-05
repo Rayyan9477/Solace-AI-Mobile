@@ -15,9 +15,9 @@ import {
   isStaging,
   getEnvironmentConfig,
   validateEnvironmentConfig,
-} from '../../../src/shared/config/environment';
+} from "../../../src/shared/config/environment";
 
-describe('Environment Configuration', () => {
+describe("Environment Configuration", () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
@@ -30,40 +30,40 @@ describe('Environment Configuration', () => {
     process.env = originalEnv;
   });
 
-  describe('API_CONFIG', () => {
-    it('should have default API configuration', () => {
+  describe("API_CONFIG", () => {
+    it("should have default API configuration", () => {
       expect(API_CONFIG.baseURL).toBeDefined();
       expect(API_CONFIG.timeout).toBe(10000);
       expect(API_CONFIG.retryAttempts).toBe(3);
       expect(API_CONFIG.retryDelay).toBe(1000);
     });
 
-    it('should use environment variable for baseURL when provided', () => {
+    it("should use environment variable for baseURL when provided", () => {
       // This test verifies the configuration is loaded correctly
-      expect(typeof API_CONFIG.baseURL).toBe('string');
+      expect(typeof API_CONFIG.baseURL).toBe("string");
       expect(API_CONFIG.baseURL.length).toBeGreaterThan(0);
     });
 
-    it('should parse timeout as number', () => {
-      expect(typeof API_CONFIG.timeout).toBe('number');
+    it("should parse timeout as number", () => {
+      expect(typeof API_CONFIG.timeout).toBe("number");
       expect(API_CONFIG.timeout).toBeGreaterThan(0);
     });
 
-    it('should have valid retry configuration', () => {
+    it("should have valid retry configuration", () => {
       expect(API_CONFIG.retryAttempts).toBeGreaterThanOrEqual(0);
       expect(API_CONFIG.retryDelay).toBeGreaterThanOrEqual(0);
     });
   });
 
-  describe('FEATURES', () => {
-    it('should have boolean feature flags', () => {
-      expect(typeof FEATURES.remoteCrisisConfig).toBe('boolean');
-      expect(typeof FEATURES.analytics).toBe('boolean');
-      expect(typeof FEATURES.crashReporting).toBe('boolean');
-      expect(typeof FEATURES.experimental).toBe('boolean');
+  describe("FEATURES", () => {
+    it("should have boolean feature flags", () => {
+      expect(typeof FEATURES.remoteCrisisConfig).toBe("boolean");
+      expect(typeof FEATURES.analytics).toBe("boolean");
+      expect(typeof FEATURES.crashReporting).toBe("boolean");
+      expect(typeof FEATURES.experimental).toBe("boolean");
     });
 
-    it('should default features to false when not set', () => {
+    it("should default features to false when not set", () => {
       // Features should be explicitly enabled
       expect(FEATURES.remoteCrisisConfig).toBe(false);
       expect(FEATURES.analytics).toBe(false);
@@ -72,49 +72,52 @@ describe('Environment Configuration', () => {
     });
   });
 
-  describe('APP_CONFIG', () => {
-    it('should have application configuration', () => {
+  describe("APP_CONFIG", () => {
+    it("should have application configuration", () => {
       expect(APP_CONFIG.environment).toBeDefined();
       expect(APP_CONFIG.version).toBeDefined();
-      expect(typeof APP_CONFIG.debug).toBe('boolean');
+      expect(typeof APP_CONFIG.debug).toBe("boolean");
     });
 
-    it('should have valid environment value', () => {
-      const validEnvs = ['development', 'staging', 'production'];
+    it("should have valid environment value", () => {
+      const validEnvs = ["development", "staging", "production"];
       expect(validEnvs).toContain(APP_CONFIG.environment);
     });
 
-    it('should have semantic version format', () => {
+    it("should have semantic version format", () => {
       const versionRegex = /^\d+\.\d+\.\d+/;
       expect(APP_CONFIG.version).toMatch(versionRegex);
     });
 
-    it('should enable debug in development', () => {
+    it("should enable debug in development", () => {
       // Test that debug flag exists and is a boolean
       // The actual value depends on environment variables at runtime
-      expect(typeof APP_CONFIG.debug).toBe('boolean');
+      expect(typeof APP_CONFIG.debug).toBe("boolean");
 
       // In test environment (NODE_ENV=test), debug is typically false
       // unless explicitly enabled via EXPO_PUBLIC_DEBUG=true
-      if (process.env.NODE_ENV === 'test' && process.env.EXPO_PUBLIC_DEBUG !== 'true') {
+      if (
+        process.env.NODE_ENV === "test" &&
+        process.env.EXPO_PUBLIC_DEBUG !== "true"
+      ) {
         expect(APP_CONFIG.debug).toBe(false);
       }
     });
   });
 
-  describe('STORAGE_CONFIG', () => {
-    it('should have storage configuration', () => {
+  describe("STORAGE_CONFIG", () => {
+    it("should have storage configuration", () => {
       expect(STORAGE_CONFIG.keyPrefix).toBeDefined();
-      expect(typeof STORAGE_CONFIG.encryption).toBe('boolean');
+      expect(typeof STORAGE_CONFIG.encryption).toBe("boolean");
       expect(STORAGE_CONFIG.encryptionKey).toBeDefined();
     });
 
-    it('should have valid key prefix', () => {
-      expect(STORAGE_CONFIG.keyPrefix).toContain('solace');
+    it("should have valid key prefix", () => {
+      expect(STORAGE_CONFIG.keyPrefix).toContain("solace");
       expect(STORAGE_CONFIG.keyPrefix.length).toBeGreaterThan(0);
     });
 
-    it('should have encryption key when encryption is enabled', () => {
+    it("should have encryption key when encryption is enabled", () => {
       if (STORAGE_CONFIG.encryption) {
         expect(STORAGE_CONFIG.encryptionKey).toBeTruthy();
         expect(STORAGE_CONFIG.encryptionKey.length).toBeGreaterThan(8);
@@ -122,55 +125,55 @@ describe('Environment Configuration', () => {
     });
   });
 
-  describe('ANALYTICS_CONFIG', () => {
-    it('should have analytics configuration', () => {
+  describe("ANALYTICS_CONFIG", () => {
+    it("should have analytics configuration", () => {
       expect(ANALYTICS_CONFIG).toBeDefined();
-      expect(typeof ANALYTICS_CONFIG.apiKey).toBe('string');
-      expect(typeof ANALYTICS_CONFIG.enableInDev).toBe('boolean');
+      expect(typeof ANALYTICS_CONFIG.apiKey).toBe("string");
+      expect(typeof ANALYTICS_CONFIG.enableInDev).toBe("boolean");
     });
   });
 
-  describe('SENTRY_CONFIG', () => {
-    it('should have Sentry configuration', () => {
+  describe("SENTRY_CONFIG", () => {
+    it("should have Sentry configuration", () => {
       expect(SENTRY_CONFIG).toBeDefined();
-      expect(typeof SENTRY_CONFIG.dsn).toBe('string');
-      expect(typeof SENTRY_CONFIG.enabled).toBe('boolean');
+      expect(typeof SENTRY_CONFIG.dsn).toBe("string");
+      expect(typeof SENTRY_CONFIG.enabled).toBe("boolean");
       expect(SENTRY_CONFIG.environment).toBeDefined();
     });
 
-    it('should match app environment', () => {
+    it("should match app environment", () => {
       expect(SENTRY_CONFIG.environment).toBe(APP_CONFIG.environment);
     });
   });
 
-  describe('Environment Helper Functions', () => {
-    it('should correctly identify production environment', () => {
+  describe("Environment Helper Functions", () => {
+    it("should correctly identify production environment", () => {
       const result = isProduction();
-      expect(typeof result).toBe('boolean');
-      expect(result).toBe(APP_CONFIG.environment === 'production');
+      expect(typeof result).toBe("boolean");
+      expect(result).toBe(APP_CONFIG.environment === "production");
     });
 
-    it('should correctly identify development environment', () => {
+    it("should correctly identify development environment", () => {
       const result = isDevelopment();
-      expect(typeof result).toBe('boolean');
-      expect(result).toBe(APP_CONFIG.environment === 'development');
+      expect(typeof result).toBe("boolean");
+      expect(result).toBe(APP_CONFIG.environment === "development");
     });
 
-    it('should correctly identify staging environment', () => {
+    it("should correctly identify staging environment", () => {
       const result = isStaging();
-      expect(typeof result).toBe('boolean');
-      expect(result).toBe(APP_CONFIG.environment === 'staging');
+      expect(typeof result).toBe("boolean");
+      expect(result).toBe(APP_CONFIG.environment === "staging");
     });
 
-    it('should return complete environment configuration', () => {
+    it("should return complete environment configuration", () => {
       const config = getEnvironmentConfig();
 
-      expect(config).toHaveProperty('api');
-      expect(config).toHaveProperty('features');
-      expect(config).toHaveProperty('app');
-      expect(config).toHaveProperty('storage');
-      expect(config).toHaveProperty('analytics');
-      expect(config).toHaveProperty('sentry');
+      expect(config).toHaveProperty("api");
+      expect(config).toHaveProperty("features");
+      expect(config).toHaveProperty("app");
+      expect(config).toHaveProperty("storage");
+      expect(config).toHaveProperty("analytics");
+      expect(config).toHaveProperty("sentry");
 
       expect(config.api).toEqual(API_CONFIG);
       expect(config.features).toEqual(FEATURES);
@@ -181,42 +184,42 @@ describe('Environment Configuration', () => {
     });
   });
 
-  describe('Configuration Validation', () => {
-    it('should validate environment configuration', () => {
+  describe("Configuration Validation", () => {
+    it("should validate environment configuration", () => {
       const result = validateEnvironmentConfig();
 
-      expect(result).toHaveProperty('valid');
-      expect(result).toHaveProperty('warnings');
-      expect(typeof result.valid).toBe('boolean');
+      expect(result).toHaveProperty("valid");
+      expect(result).toHaveProperty("warnings");
+      expect(typeof result.valid).toBe("boolean");
       expect(Array.isArray(result.warnings)).toBe(true);
     });
 
-    it('should warn about localhost API URL', () => {
+    it("should warn about localhost API URL", () => {
       const result = validateEnvironmentConfig();
 
-      if (API_CONFIG.baseURL.includes('localhost')) {
+      if (API_CONFIG.baseURL.includes("localhost")) {
         expect(result.warnings.length).toBeGreaterThan(0);
-        expect(result.warnings.some(w => w.includes('API'))).toBe(true);
+        expect(result.warnings.some((w) => w.includes("API"))).toBe(true);
       }
     });
 
-    it('should warn about missing analytics key when enabled', () => {
+    it("should warn about missing analytics key when enabled", () => {
       const result = validateEnvironmentConfig();
 
       if (FEATURES.analytics && !ANALYTICS_CONFIG.apiKey) {
-        expect(result.warnings.some(w => w.includes('Analytics'))).toBe(true);
+        expect(result.warnings.some((w) => w.includes("Analytics"))).toBe(true);
       }
     });
 
-    it('should warn about missing Sentry DSN when enabled', () => {
+    it("should warn about missing Sentry DSN when enabled", () => {
       const result = validateEnvironmentConfig();
 
       if (SENTRY_CONFIG.enabled && !SENTRY_CONFIG.dsn) {
-        expect(result.warnings.some(w => w.includes('Sentry'))).toBe(true);
+        expect(result.warnings.some((w) => w.includes("Sentry"))).toBe(true);
       }
     });
 
-    it('should return valid=true when no warnings', () => {
+    it("should return valid=true when no warnings", () => {
       const result = validateEnvironmentConfig();
 
       if (result.warnings.length === 0) {
@@ -225,8 +228,8 @@ describe('Environment Configuration', () => {
     });
   });
 
-  describe('Configuration Immutability', () => {
-    it('should not allow modification of API_CONFIG', () => {
+  describe("Configuration Immutability", () => {
+    it("should not allow modification of API_CONFIG", () => {
       const originalTimeout = API_CONFIG.timeout;
 
       // Attempt to modify should not affect the original
@@ -236,7 +239,7 @@ describe('Environment Configuration', () => {
       expect(modified.timeout).toBe(99999);
     });
 
-    it('should provide consistent configuration across calls', () => {
+    it("should provide consistent configuration across calls", () => {
       const config1 = getEnvironmentConfig();
       const config2 = getEnvironmentConfig();
 
@@ -245,8 +248,8 @@ describe('Environment Configuration', () => {
     });
   });
 
-  describe('Security Considerations', () => {
-    it('should not expose sensitive data in logs', () => {
+  describe("Security Considerations", () => {
+    it("should not expose sensitive data in logs", () => {
       const config = getEnvironmentConfig();
       const configString = JSON.stringify(config);
 
@@ -254,9 +257,9 @@ describe('Environment Configuration', () => {
       expect(configString).toBeDefined();
     });
 
-    it('should use secure defaults', () => {
+    it("should use secure defaults", () => {
       // Encryption should be optional but available
-      expect(typeof STORAGE_CONFIG.encryption).toBe('boolean');
+      expect(typeof STORAGE_CONFIG.encryption).toBe("boolean");
 
       // Analytics should be opt-in
       expect(FEATURES.analytics).toBe(false);

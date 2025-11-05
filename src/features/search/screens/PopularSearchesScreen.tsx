@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Search Screen.png
  */
 
-import React from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
 import {
   View,
   Text,
@@ -11,9 +13,7 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface SearchTerm {
   id: string;
@@ -29,72 +29,72 @@ export const PopularSearchesScreen = () => {
 
   const popularSearches: SearchTerm[] = [
     {
-      id: '1',
-      term: 'anxiety coping strategies',
+      id: "1",
+      term: "anxiety coping strategies",
       count: 2840,
       trending: true,
-      category: 'Mental Health',
+      category: "Mental Health",
     },
     {
-      id: '2',
-      term: 'sleep meditation',
+      id: "2",
+      term: "sleep meditation",
       count: 2156,
       trending: true,
-      category: 'Mindfulness',
+      category: "Mindfulness",
     },
     {
-      id: '3',
-      term: 'stress management techniques',
+      id: "3",
+      term: "stress management techniques",
       count: 1923,
-      category: 'Wellness',
+      category: "Wellness",
     },
     {
-      id: '4',
-      term: 'mindfulness exercises',
+      id: "4",
+      term: "mindfulness exercises",
       count: 1687,
       trending: true,
-      category: 'Mindfulness',
+      category: "Mindfulness",
     },
     {
-      id: '5',
-      term: 'depression support',
+      id: "5",
+      term: "depression support",
       count: 1542,
-      category: 'Mental Health',
+      category: "Mental Health",
     },
     {
-      id: '6',
-      term: 'breathing techniques',
+      id: "6",
+      term: "breathing techniques",
       count: 1398,
-      category: 'Wellness',
+      category: "Wellness",
     },
     {
-      id: '7',
-      term: 'self-care tips',
+      id: "7",
+      term: "self-care tips",
       count: 1276,
-      category: 'Wellness',
+      category: "Wellness",
     },
     {
-      id: '8',
-      term: 'meditation for beginners',
+      id: "8",
+      term: "meditation for beginners",
       count: 1154,
-      category: 'Mindfulness',
+      category: "Mindfulness",
     },
     {
-      id: '9',
-      term: 'panic attack help',
+      id: "9",
+      term: "panic attack help",
       count: 1089,
-      category: 'Mental Health',
+      category: "Mental Health",
     },
     {
-      id: '10',
-      term: 'cognitive behavioral therapy',
+      id: "10",
+      term: "cognitive behavioral therapy",
       count: 987,
-      category: 'Therapy',
+      category: "Therapy",
     },
   ];
 
   const handleSearch = (term: string) => {
-    navigation.navigate('Search', { query: term });
+    navigation.navigate("Search", { query: term });
   };
 
   const styles = StyleSheet.create({
@@ -103,35 +103,35 @@ export const PopularSearchesScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
       flex: 1,
     },
     heroCard: {
-      backgroundColor: theme.colors.purple['20'],
+      backgroundColor: theme.colors.purple["20"],
       marginHorizontal: 20,
       marginTop: 20,
       borderRadius: 16,
       padding: 20,
-      alignItems: 'center',
+      alignItems: "center",
     },
     heroIcon: {
       fontSize: 48,
@@ -139,7 +139,7 @@ export const PopularSearchesScreen = () => {
     },
     heroTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
@@ -147,102 +147,102 @@ export const PopularSearchesScreen = () => {
       fontSize: 13,
       lineHeight: 18,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
     },
     section: {
       paddingHorizontal: 20,
       paddingTop: 24,
     },
     sectionHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       marginBottom: 16,
     },
     sectionTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     sectionSubtitle: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.tertiary,
     },
     searchCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 12,
       padding: 16,
       marginBottom: 12,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
     },
     searchCardLeft: {
       flex: 1,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
     },
     rankBadge: {
       width: 32,
       height: 32,
       borderRadius: 16,
-      backgroundColor: theme.colors.purple['60'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.purple["60"],
+      justifyContent: "center",
+      alignItems: "center",
       marginRight: 12,
     },
     rankText: {
       fontSize: 14,
-      fontWeight: '800',
-      color: '#FFFFFF',
+      fontWeight: "800",
+      color: "#FFFFFF",
     },
     searchInfo: {
       flex: 1,
     },
     searchTerm: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
     searchMeta: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 8,
     },
     categoryBadge: {
       paddingHorizontal: 8,
       paddingVertical: 2,
       borderRadius: 4,
-      backgroundColor: theme.colors.purple['20'],
+      backgroundColor: theme.colors.purple["20"],
     },
     categoryText: {
       fontSize: 10,
-      fontWeight: '700',
-      color: theme.colors.purple['60'],
-      textTransform: 'uppercase',
+      fontWeight: "700",
+      color: theme.colors.purple["60"],
+      textTransform: "uppercase",
     },
     countText: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     searchCardRight: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 8,
     },
     trendingBadge: {
       paddingHorizontal: 8,
       paddingVertical: 4,
       borderRadius: 8,
-      backgroundColor: theme.colors.orange['20'],
+      backgroundColor: theme.colors.orange["20"],
     },
     trendingText: {
       fontSize: 11,
-      fontWeight: '700',
-      color: theme.colors.orange['60'],
+      fontWeight: "700",
+      color: theme.colors.orange["60"],
     },
     arrowIcon: {
       fontSize: 18,
@@ -338,7 +338,7 @@ export const PopularSearchesScreen = () => {
                 <View
                   style={[
                     styles.rankBadge,
-                    { backgroundColor: theme.colors.brown['40'] },
+                    { backgroundColor: theme.colors.brown["40"] },
                   ]}
                 >
                   <Text style={styles.rankText}>{index + 1}</Text>

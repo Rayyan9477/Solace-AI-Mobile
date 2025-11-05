@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Error & Other Utilities.png
  */
 
-import React from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
 import {
   View,
   Text,
@@ -11,9 +13,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 export const ServerErrorScreen = () => {
   const { theme } = useTheme();
@@ -21,17 +21,17 @@ export const ServerErrorScreen = () => {
 
   const handleRetry = () => {
     if (__DEV__) {
-      console.log('Retrying request...');
+      console.log("Retrying request...");
     }
     // TODO: Implement actual retry logic
   };
 
   const handleGoHome = () => {
-    navigation.navigate('Dashboard');
+    navigation.navigate("Dashboard");
   };
 
   const handleContactSupport = () => {
-    navigation.navigate('ContactSupport');
+    navigation.navigate("ContactSupport");
   };
 
   const styles = StyleSheet.create({
@@ -41,8 +41,8 @@ export const ServerErrorScreen = () => {
     },
     content: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       paddingHorizontal: 40,
     },
     errorIcon: {
@@ -51,60 +51,60 @@ export const ServerErrorScreen = () => {
     },
     errorCode: {
       fontSize: 48,
-      fontWeight: '800',
-      color: theme.colors.red['60'],
+      fontWeight: "800",
+      color: theme.colors.red["60"],
       marginBottom: 8,
     },
     errorTitle: {
       fontSize: 24,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 12,
-      textAlign: 'center',
+      textAlign: "center",
     },
     errorMessage: {
       fontSize: 15,
       lineHeight: 22,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: 32,
     },
     buttonContainer: {
-      width: '100%',
+      width: "100%",
       gap: 12,
       marginBottom: 32,
     },
     primaryButton: {
-      backgroundColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["60"],
       borderRadius: 16,
       paddingVertical: 16,
-      alignItems: 'center',
+      alignItems: "center",
     },
     buttonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     secondaryButton: {
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 16,
       paddingVertical: 16,
-      alignItems: 'center',
+      alignItems: "center",
     },
     secondaryButtonText: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     supportCard: {
-      backgroundColor: theme.colors.blue['20'],
+      backgroundColor: theme.colors.blue["20"],
       borderRadius: 12,
       padding: 16,
-      width: '100%',
+      width: "100%",
     },
     supportTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -115,28 +115,28 @@ export const ServerErrorScreen = () => {
       marginBottom: 12,
     },
     supportButton: {
-      backgroundColor: theme.colors.blue['60'],
+      backgroundColor: theme.colors.blue["60"],
       borderRadius: 8,
       paddingVertical: 10,
-      alignItems: 'center',
+      alignItems: "center",
     },
     supportButtonText: {
       fontSize: 13,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     detailsCard: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 20,
       left: 20,
       right: 20,
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 12,
       padding: 16,
     },
     detailsTitle: {
       fontSize: 12,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -144,7 +144,7 @@ export const ServerErrorScreen = () => {
       fontSize: 11,
       lineHeight: 16,
       color: theme.colors.text.tertiary,
-      fontFamily: 'monospace',
+      fontFamily: "monospace",
     },
   });
 
@@ -155,7 +155,8 @@ export const ServerErrorScreen = () => {
         <Text style={styles.errorCode}>500</Text>
         <Text style={styles.errorTitle}>Server Error</Text>
         <Text style={styles.errorMessage}>
-          We're experiencing technical difficulties on our end. Our team has been notified and is working to resolve the issue.
+          We're experiencing technical difficulties on our end. Our team has
+          been notified and is working to resolve the issue.
         </Text>
 
         <View style={styles.buttonContainer}>
@@ -183,7 +184,8 @@ export const ServerErrorScreen = () => {
         <View style={styles.supportCard}>
           <Text style={styles.supportTitle}>Need Immediate Help?</Text>
           <Text style={styles.supportText}>
-            If this issue persists or you need urgent assistance, our support team is ready to help.
+            If this issue persists or you need urgent assistance, our support
+            team is ready to help.
           </Text>
           <TouchableOpacity
             style={styles.supportButton}
@@ -200,8 +202,9 @@ export const ServerErrorScreen = () => {
       <View style={styles.detailsCard}>
         <Text style={styles.detailsTitle}>Error Details:</Text>
         <Text style={styles.detailsText}>
-          Error Code: 500{'\n'}
-          Time: {new Date().toLocaleString()}{'\n'}
+          Error Code: 500{"\n"}
+          Time: {new Date().toLocaleString()}
+          {"\n"}
           Request ID: {Math.random().toString(36).substr(2, 9)}
         </Text>
       </View>

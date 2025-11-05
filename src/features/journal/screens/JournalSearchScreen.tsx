@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Mental Health Journal.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,9 +14,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TextInput,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface SearchResult {
   id: string;
@@ -29,48 +29,60 @@ interface SearchResult {
 export const JournalSearchScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'mood' | 'tags'>('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState<"all" | "mood" | "tags">(
+    "all",
+  );
 
   const recentSearches = [
-    'anxiety',
-    'work stress',
-    'therapy session',
-    'happy moments',
+    "anxiety",
+    "work stress",
+    "therapy session",
+    "happy moments",
   ];
 
   const searchResults: SearchResult[] = [
     {
-      id: '1',
-      title: 'Feeling overwhelmed with work',
-      excerpt: 'Today was really challenging. The deadline for the project is approaching and I feel...',
-      date: 'Oct 15, 2024',
-      mood: 'Stressed',
-      emoji: '😰',
-      tags: ['work', 'stress', 'anxiety'],
+      id: "1",
+      title: "Feeling overwhelmed with work",
+      excerpt:
+        "Today was really challenging. The deadline for the project is approaching and I feel...",
+      date: "Oct 15, 2024",
+      mood: "Stressed",
+      emoji: "😰",
+      tags: ["work", "stress", "anxiety"],
     },
     {
-      id: '2',
-      title: 'Great therapy session today',
-      excerpt: 'Had an amazing breakthrough in therapy. Dr. Smith helped me understand...',
-      date: 'Oct 12, 2024',
-      mood: 'Happy',
-      emoji: '😊',
-      tags: ['therapy', 'progress', 'happy'],
+      id: "2",
+      title: "Great therapy session today",
+      excerpt:
+        "Had an amazing breakthrough in therapy. Dr. Smith helped me understand...",
+      date: "Oct 12, 2024",
+      mood: "Happy",
+      emoji: "😊",
+      tags: ["therapy", "progress", "happy"],
     },
     {
-      id: '3',
-      title: 'Anxiety about upcoming presentation',
-      excerpt: 'The presentation is in 2 days and I can\'t stop thinking about it...',
-      date: 'Oct 10, 2024',
-      mood: 'Anxious',
-      emoji: '😟',
-      tags: ['anxiety', 'work', 'presentation'],
+      id: "3",
+      title: "Anxiety about upcoming presentation",
+      excerpt:
+        "The presentation is in 2 days and I can't stop thinking about it...",
+      date: "Oct 10, 2024",
+      mood: "Anxious",
+      emoji: "😟",
+      tags: ["anxiety", "work", "presentation"],
     },
   ];
 
   const popularTags = [
-    'work', 'family', 'therapy', 'anxiety', 'stress', 'happy', 'progress', 'relationships',
+    "work",
+    "family",
+    "therapy",
+    "anxiety",
+    "stress",
+    "happy",
+    "progress",
+    "relationships",
   ];
 
   const styles = StyleSheet.create({
@@ -79,24 +91,24 @@ export const JournalSearchScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     searchInputContainer: {
       flex: 1,
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: theme.colors.brown['10'],
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 12,
       paddingHorizontal: 12,
       marginLeft: 12,
@@ -122,7 +134,7 @@ export const JournalSearchScreen = () => {
       flex: 1,
     },
     filterRow: {
-      flexDirection: 'row',
+      flexDirection: "row",
       paddingHorizontal: 20,
       paddingVertical: 16,
       gap: 12,
@@ -131,18 +143,18 @@ export const JournalSearchScreen = () => {
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
     },
     filterButtonActive: {
-      backgroundColor: theme.colors.orange['60'],
+      backgroundColor: theme.colors.orange["60"],
     },
     filterText: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     filterTextActive: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     section: {
       paddingHorizontal: 20,
@@ -150,17 +162,17 @@ export const JournalSearchScreen = () => {
     },
     sectionTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
-      textTransform: 'uppercase',
+      textTransform: "uppercase",
       marginBottom: 12,
     },
     recentSearchItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       paddingVertical: 12,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     recentSearchIcon: {
       fontSize: 16,
@@ -170,36 +182,36 @@ export const JournalSearchScreen = () => {
     recentSearchText: {
       flex: 1,
       fontSize: 15,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     tagsContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 8,
     },
     tagButton: {
       paddingHorizontal: 14,
       paddingVertical: 8,
       borderRadius: 16,
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderWidth: 1,
-      borderColor: theme.colors.gray['20'],
+      borderColor: theme.colors.gray["20"],
     },
     tagText: {
       fontSize: 13,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     resultCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 16,
       marginBottom: 12,
     },
     resultHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginBottom: 8,
     },
     resultEmoji: {
@@ -211,13 +223,13 @@ export const JournalSearchScreen = () => {
     },
     resultTitle: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 2,
     },
     resultMeta: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     resultExcerpt: {
@@ -227,23 +239,23 @@ export const JournalSearchScreen = () => {
       marginBottom: 12,
     },
     resultTags: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 6,
     },
     resultTag: {
       paddingHorizontal: 10,
       paddingVertical: 4,
       borderRadius: 12,
-      backgroundColor: theme.colors.orange['20'],
+      backgroundColor: theme.colors.orange["20"],
     },
     resultTagText: {
       fontSize: 11,
-      fontWeight: '700',
-      color: theme.colors.orange['80'],
+      fontWeight: "700",
+      color: theme.colors.orange["80"],
     },
     emptyState: {
-      alignItems: 'center',
+      alignItems: "center",
       paddingVertical: 60,
     },
     emptyIcon: {
@@ -252,7 +264,7 @@ export const JournalSearchScreen = () => {
     },
     emptyTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -260,7 +272,7 @@ export const JournalSearchScreen = () => {
       fontSize: 14,
       lineHeight: 20,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       paddingHorizontal: 40,
     },
   });
@@ -291,7 +303,7 @@ export const JournalSearchScreen = () => {
           {searchQuery.length > 0 && (
             <TouchableOpacity
               style={styles.clearButton}
-              onPress={() => setSearchQuery('')}
+              onPress={() => setSearchQuery("")}
             >
               <Text style={styles.clearButtonText}>✕</Text>
             </TouchableOpacity>
@@ -303,26 +315,50 @@ export const JournalSearchScreen = () => {
         {/* Filter Row */}
         <View style={styles.filterRow}>
           <TouchableOpacity
-            style={[styles.filterButton, selectedFilter === 'all' && styles.filterButtonActive]}
-            onPress={() => setSelectedFilter('all')}
+            style={[
+              styles.filterButton,
+              selectedFilter === "all" && styles.filterButtonActive,
+            ]}
+            onPress={() => setSelectedFilter("all")}
           >
-            <Text style={[styles.filterText, selectedFilter === 'all' && styles.filterTextActive]}>
+            <Text
+              style={[
+                styles.filterText,
+                selectedFilter === "all" && styles.filterTextActive,
+              ]}
+            >
               All
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.filterButton, selectedFilter === 'mood' && styles.filterButtonActive]}
-            onPress={() => setSelectedFilter('mood')}
+            style={[
+              styles.filterButton,
+              selectedFilter === "mood" && styles.filterButtonActive,
+            ]}
+            onPress={() => setSelectedFilter("mood")}
           >
-            <Text style={[styles.filterText, selectedFilter === 'mood' && styles.filterTextActive]}>
+            <Text
+              style={[
+                styles.filterText,
+                selectedFilter === "mood" && styles.filterTextActive,
+              ]}
+            >
               By Mood
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.filterButton, selectedFilter === 'tags' && styles.filterButtonActive]}
-            onPress={() => setSelectedFilter('tags')}
+            style={[
+              styles.filterButton,
+              selectedFilter === "tags" && styles.filterButtonActive,
+            ]}
+            onPress={() => setSelectedFilter("tags")}
           >
-            <Text style={[styles.filterText, selectedFilter === 'tags' && styles.filterTextActive]}>
+            <Text
+              style={[
+                styles.filterText,
+                selectedFilter === "tags" && styles.filterTextActive,
+              ]}
+            >
               By Tags
             </Text>
           </TouchableOpacity>
@@ -373,7 +409,9 @@ export const JournalSearchScreen = () => {
                   <TouchableOpacity
                     key={result.id}
                     style={styles.resultCard}
-                    onPress={() => navigation.navigate('JournalDetail', { id: result.id })}
+                    onPress={() =>
+                      navigation.navigate("JournalDetail", { id: result.id })
+                    }
                   >
                     <View style={styles.resultHeader}>
                       <Text style={styles.resultEmoji}>{result.emoji}</Text>

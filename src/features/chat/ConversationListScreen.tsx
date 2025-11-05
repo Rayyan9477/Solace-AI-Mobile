@@ -3,7 +3,10 @@
  * Shows all past conversations with AI therapist
  */
 
-import React, { useState } from 'react';
+import { MentalHealthIcon } from "@components/icons";
+import { FreudLogo } from "@components/icons/FreudIcons";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,60 +15,57 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-} from 'react-native';
-import { useTheme } from '@theme/ThemeProvider';
-import { MentalHealthIcon } from '@components/icons';
-import { FreudLogo } from '@components/icons/FreudIcons';
+} from "react-native";
 
 interface Conversation {
   id: string;
   title: string;
   lastMessage: string;
   timestamp: string;
-  mood: 'happy' | 'neutral' | 'sad' | 'anxious';
+  mood: "happy" | "neutral" | "sad" | "anxious";
   unread?: boolean;
 }
 
 export const ConversationListScreen = ({ navigation }: any) => {
   const { theme } = useTheme();
-  const [filter, setFilter] = useState<'recent' | 'today'>('recent');
+  const [filter, setFilter] = useState<"recent" | "today">("recent");
 
   const conversations: Conversation[] = [
     {
-      id: '1',
-      title: 'Recent Breakup, feel...',
-      lastMessage: 'It\'s normal to feel this way',
-      timestamp: '2h ago',
-      mood: 'sad',
+      id: "1",
+      title: "Recent Breakup, feel...",
+      lastMessage: "It's normal to feel this way",
+      timestamp: "2h ago",
+      mood: "sad",
       unread: true,
     },
     {
-      id: '2',
-      title: 'Shitty Teacher at Uni...',
-      lastMessage: 'Let\'s talk about coping strategies',
-      timestamp: '5h ago',
-      mood: 'anxious',
+      id: "2",
+      title: "Shitty Teacher at Uni...",
+      lastMessage: "Let's talk about coping strategies",
+      timestamp: "5h ago",
+      mood: "anxious",
     },
     {
-      id: '3',
-      title: 'Just wanna hang exist...',
-      lastMessage: 'That\'s okay, we can explore this',
-      timestamp: '1d ago',
-      mood: 'neutral',
+      id: "3",
+      title: "Just wanna hang exist...",
+      lastMessage: "That's okay, we can explore this",
+      timestamp: "1d ago",
+      mood: "neutral",
     },
     {
-      id: '4',
-      title: 'More Zans this Xmas...',
-      lastMessage: 'I understand your concerns',
-      timestamp: '2d ago',
-      mood: 'anxious',
+      id: "4",
+      title: "More Zans this Xmas...",
+      lastMessage: "I understand your concerns",
+      timestamp: "2d ago",
+      mood: "anxious",
     },
     {
-      id: '5',
-      title: 'Tired of this excuse...',
-      lastMessage: 'Let\'s work through this together',
-      timestamp: '3d ago',
-      mood: 'sad',
+      id: "5",
+      title: "Tired of this excuse...",
+      lastMessage: "Let's work through this together",
+      timestamp: "3d ago",
+      mood: "sad",
     },
   ];
 
@@ -79,62 +79,62 @@ export const ConversationListScreen = ({ navigation }: any) => {
       paddingTop: 8,
     },
     headerTop: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       marginBottom: 20,
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     moreButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     statsContainer: {
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: 24,
     },
     totalConversations: {
       fontSize: 48,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
     statsLabel: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
       marginBottom: 16,
     },
     statsRow: {
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 40,
     },
     statItem: {
-      alignItems: 'center',
+      alignItems: "center",
     },
     statIcon: {
       width: 48,
       height: 48,
       borderRadius: 24,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       marginBottom: 8,
     },
     statValue: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
@@ -143,14 +143,14 @@ export const ConversationListScreen = ({ navigation }: any) => {
       color: theme.colors.text.secondary,
     },
     upgradeCard: {
-      backgroundColor: theme.colors.green['20'],
+      backgroundColor: theme.colors.green["20"],
       borderRadius: 16,
       padding: 16,
       marginHorizontal: 20,
       marginBottom: 16,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
     },
     upgradeContent: {
       flex: 1,
@@ -158,27 +158,27 @@ export const ConversationListScreen = ({ navigation }: any) => {
     },
     upgradeTitle: {
       fontSize: 14,
-      fontWeight: '700',
-      color: theme.colors.green['100'],
+      fontWeight: "700",
+      color: theme.colors.green["100"],
       marginBottom: 4,
     },
     upgradeSubtitle: {
       fontSize: 12,
-      color: theme.colors.green['80'],
+      color: theme.colors.green["80"],
     },
     upgradeButton: {
-      backgroundColor: theme.colors.green['40'],
+      backgroundColor: theme.colors.green["40"],
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
     },
     upgradeButtonText: {
       fontSize: 12,
-      fontWeight: '600',
-      color: '#FFFFFF',
+      fontWeight: "600",
+      color: "#FFFFFF",
     },
     filterContainer: {
-      flexDirection: 'row',
+      flexDirection: "row",
       paddingHorizontal: 20,
       marginBottom: 16,
       gap: 12,
@@ -191,16 +191,16 @@ export const ConversationListScreen = ({ navigation }: any) => {
       borderColor: theme.colors.border.primary,
     },
     filterButtonActive: {
-      backgroundColor: theme.colors.orange['40'],
-      borderColor: theme.colors.orange['40'],
+      backgroundColor: theme.colors.orange["40"],
+      borderColor: theme.colors.orange["40"],
     },
     filterButtonText: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     filterButtonTextActive: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     sectionHeader: {
       paddingHorizontal: 20,
@@ -208,31 +208,31 @@ export const ConversationListScreen = ({ navigation }: any) => {
     },
     sectionTitle: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.tertiary,
-      textTransform: 'uppercase',
+      textTransform: "uppercase",
       letterSpacing: 0.5,
     },
     listContainer: {
       paddingHorizontal: 20,
     },
     conversationCard: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       padding: 16,
       marginBottom: 8,
       borderRadius: 16,
       backgroundColor: theme.colors.background.secondary,
     },
     conversationCardUnread: {
-      backgroundColor: theme.colors.orange['10'],
+      backgroundColor: theme.colors.orange["10"],
     },
     avatarContainer: {
       width: 48,
       height: 48,
       borderRadius: 24,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       marginRight: 12,
     },
     conversationContent: {
@@ -240,7 +240,7 @@ export const ConversationListScreen = ({ navigation }: any) => {
     },
     conversationTitle: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
@@ -249,7 +249,7 @@ export const ConversationListScreen = ({ navigation }: any) => {
       color: theme.colors.text.secondary,
     },
     conversationMeta: {
-      alignItems: 'flex-end',
+      alignItems: "flex-end",
     },
     conversationTime: {
       fontSize: 11,
@@ -260,57 +260,57 @@ export const ConversationListScreen = ({ navigation }: any) => {
       width: 24,
       height: 24,
       borderRadius: 12,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     newConversationButton: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 24,
       left: 20,
       right: 20,
-      backgroundColor: theme.colors.orange['40'],
+      backgroundColor: theme.colors.orange["40"],
       borderRadius: 24,
       paddingVertical: 16,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...theme.getShadow('lg'),
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      ...theme.getShadow("lg"),
     },
     newConversationButtonText: {
       fontSize: 16,
-      fontWeight: '600',
-      color: '#FFFFFF',
+      fontWeight: "600",
+      color: "#FFFFFF",
       marginLeft: 8,
     },
   });
 
-  const getMoodEmoji = (mood: Conversation['mood']) => {
+  const getMoodEmoji = (mood: Conversation["mood"]) => {
     switch (mood) {
-      case 'happy':
-        return '😊';
-      case 'neutral':
-        return '😐';
-      case 'sad':
-        return '😢';
-      case 'anxious':
-        return '😰';
+      case "happy":
+        return "😊";
+      case "neutral":
+        return "😐";
+      case "sad":
+        return "😢";
+      case "anxious":
+        return "😰";
       default:
-        return '😐';
+        return "😐";
     }
   };
 
-  const getMoodColor = (mood: Conversation['mood']) => {
+  const getMoodColor = (mood: Conversation["mood"]) => {
     switch (mood) {
-      case 'happy':
-        return theme.colors.green['40'];
-      case 'neutral':
-        return theme.colors.gray['40'];
-      case 'sad':
-        return theme.colors.blue['40'];
-      case 'anxious':
-        return theme.colors.yellow['40'];
+      case "happy":
+        return theme.colors.green["40"];
+      case "neutral":
+        return theme.colors.gray["40"];
+      case "sad":
+        return theme.colors.blue["40"];
+      case "anxious":
+        return theme.colors.yellow["40"];
       default:
-        return theme.colors.gray['40'];
+        return theme.colors.gray["40"];
     }
   };
 
@@ -320,15 +320,15 @@ export const ConversationListScreen = ({ navigation }: any) => {
         styles.conversationCard,
         item.unread && styles.conversationCardUnread,
       ]}
-      onPress={() => navigation.navigate('Chat', { conversationId: item.id })}
+      onPress={() => navigation.navigate("Chat", { conversationId: item.id })}
     >
       <View
         style={[
           styles.avatarContainer,
-          { backgroundColor: theme.colors.green['20'] },
+          { backgroundColor: theme.colors.green["20"] },
         ]}
       >
-        <FreudLogo size={24} primaryColor={theme.colors.green['60']} />
+        <FreudLogo size={24} primaryColor={theme.colors.green["60"]} />
       </View>
 
       <View style={styles.conversationContent}>
@@ -357,7 +357,7 @@ export const ConversationListScreen = ({ navigation }: any) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
-        barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+        barStyle={theme.isDark ? "light-content" : "dark-content"}
         backgroundColor="transparent"
         translucent
       />
@@ -397,7 +397,7 @@ export const ConversationListScreen = ({ navigation }: any) => {
               <View
                 style={[
                   styles.statIcon,
-                  { backgroundColor: theme.colors.orange['20'] },
+                  { backgroundColor: theme.colors.orange["20"] },
                 ]}
               >
                 <Text style={{ fontSize: 20 }}>📊</Text>
@@ -410,7 +410,7 @@ export const ConversationListScreen = ({ navigation }: any) => {
               <View
                 style={[
                   styles.statIcon,
-                  { backgroundColor: theme.colors.blue['20'] },
+                  { backgroundColor: theme.colors.blue["20"] },
                 ]}
               >
                 <Text style={{ fontSize: 20 }}>⏱️</Text>
@@ -423,7 +423,7 @@ export const ConversationListScreen = ({ navigation }: any) => {
               <View
                 style={[
                   styles.statIcon,
-                  { backgroundColor: theme.colors.green['20'] },
+                  { backgroundColor: theme.colors.green["20"] },
                 ]}
               >
                 <Text style={{ fontSize: 20 }}>✓</Text>
@@ -451,14 +451,14 @@ export const ConversationListScreen = ({ navigation }: any) => {
         <TouchableOpacity
           style={[
             styles.filterButton,
-            filter === 'recent' && styles.filterButtonActive,
+            filter === "recent" && styles.filterButtonActive,
           ]}
-          onPress={() => setFilter('recent')}
+          onPress={() => setFilter("recent")}
         >
           <Text
             style={[
               styles.filterButtonText,
-              filter === 'recent' && styles.filterButtonTextActive,
+              filter === "recent" && styles.filterButtonTextActive,
             ]}
           >
             Recent (4)
@@ -468,14 +468,14 @@ export const ConversationListScreen = ({ navigation }: any) => {
         <TouchableOpacity
           style={[
             styles.filterButton,
-            filter === 'today' && styles.filterButtonActive,
+            filter === "today" && styles.filterButtonActive,
           ]}
-          onPress={() => setFilter('today')}
+          onPress={() => setFilter("today")}
         >
           <Text
             style={[
               styles.filterButtonText,
-              filter === 'today' && styles.filterButtonTextActive,
+              filter === "today" && styles.filterButtonTextActive,
             ]}
           >
             Today
@@ -500,7 +500,7 @@ export const ConversationListScreen = ({ navigation }: any) => {
       {/* New Conversation Button */}
       <TouchableOpacity
         style={styles.newConversationButton}
-        onPress={() => navigation.navigate('NewConversation')}
+        onPress={() => navigation.navigate("NewConversation")}
       >
         <MentalHealthIcon name="Plus" size={24} color="#FFFFFF" />
         <Text style={styles.newConversationButtonText}>New Conversation</Text>

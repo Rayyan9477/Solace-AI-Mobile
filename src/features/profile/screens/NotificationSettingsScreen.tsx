@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/Profile Settings & Help Center.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,9 +14,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Switch,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 export const NotificationSettingsScreen = () => {
   const { theme } = useTheme();
@@ -31,23 +31,23 @@ export const NotificationSettingsScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
@@ -60,18 +60,18 @@ export const NotificationSettingsScreen = () => {
     },
     sectionTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
-      textTransform: 'uppercase',
+      textTransform: "uppercase",
       marginBottom: 16,
     },
     settingItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     settingLeft: {
       flex: 1,
@@ -79,7 +79,7 @@ export const NotificationSettingsScreen = () => {
     },
     settingTitle: {
       fontSize: 15,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
@@ -89,17 +89,17 @@ export const NotificationSettingsScreen = () => {
       color: theme.colors.text.secondary,
     },
     saveButton: {
-      backgroundColor: theme.colors.brown['60'],
+      backgroundColor: theme.colors.brown["60"],
       borderRadius: 16,
       paddingVertical: 16,
       marginHorizontal: 20,
       marginVertical: 24,
-      alignItems: 'center',
+      alignItems: "center",
     },
     saveButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
   });
 
@@ -135,7 +135,10 @@ export const NotificationSettingsScreen = () => {
             <Switch
               value={pushNotifications}
               onValueChange={setPushNotifications}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.green['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.green["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -150,7 +153,10 @@ export const NotificationSettingsScreen = () => {
             <Switch
               value={supportNotifications}
               onValueChange={setSupportNotifications}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.green['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.green["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -170,7 +176,10 @@ export const NotificationSettingsScreen = () => {
             <Switch
               value={soundEffects}
               onValueChange={setSoundEffects}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.green['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.green["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -190,7 +199,10 @@ export const NotificationSettingsScreen = () => {
             <Switch
               value={emailNotifications}
               onValueChange={setEmailNotifications}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.green['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.green["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>

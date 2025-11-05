@@ -1,10 +1,9 @@
-import React, { useState, useCallback } from "react";
-import { View, Text, StyleSheet, Animated } from "react-native";
-
-import { useTheme } from "@theme/ThemeProvider";
-import { hapticUtils, styleUtils } from "@shared/utils/platformOptimizations";
 import Button from "@shared/components/atoms/buttons/TherapeuticButton";
 import Input from "@shared/components/atoms/forms/EnhancedInput";
+import { hapticUtils, styleUtils } from "@shared/utils/platformOptimizations";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState, useCallback } from "react";
+import { View, Text, StyleSheet, Animated } from "react-native";
 
 // Supportive validation messages for mental health context
 const THERAPEUTIC_MESSAGES = {
@@ -43,7 +42,7 @@ const ProgressIndicator = ({ current, total, label }) => {
       <View
         style={[
           styles.progressBar,
-          { backgroundColor: theme.colors.gray['200'] },
+          { backgroundColor: theme.colors.gray["200"] },
         ]}
       >
         <Animated.View

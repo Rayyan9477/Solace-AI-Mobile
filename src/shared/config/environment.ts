@@ -13,16 +13,19 @@
 export const API_CONFIG = {
   // Base URL for API requests
   // Set via EXPO_PUBLIC_API_URL environment variable
-  baseURL: process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api',
+  baseURL: process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000/api",
 
   // Request timeout in milliseconds
-  timeout: parseInt(process.env.EXPO_PUBLIC_API_TIMEOUT || '10000', 10),
+  timeout: parseInt(process.env.EXPO_PUBLIC_API_TIMEOUT || "10000", 10),
 
   // Number of retry attempts for failed requests
-  retryAttempts: parseInt(process.env.EXPO_PUBLIC_API_RETRY_ATTEMPTS || '3', 10),
+  retryAttempts: parseInt(
+    process.env.EXPO_PUBLIC_API_RETRY_ATTEMPTS || "3",
+    10,
+  ),
 
   // Delay between retries in milliseconds
-  retryDelay: parseInt(process.env.EXPO_PUBLIC_API_RETRY_DELAY || '1000', 10),
+  retryDelay: parseInt(process.env.EXPO_PUBLIC_API_RETRY_DELAY || "1000", 10),
 };
 
 /**
@@ -30,16 +33,17 @@ export const API_CONFIG = {
  */
 export const FEATURES = {
   // Enable remote crisis keyword configuration
-  remoteCrisisConfig: process.env.EXPO_PUBLIC_FEATURE_REMOTE_CRISIS_CONFIG === 'true',
+  remoteCrisisConfig:
+    process.env.EXPO_PUBLIC_FEATURE_REMOTE_CRISIS_CONFIG === "true",
 
   // Enable analytics tracking
-  analytics: process.env.EXPO_PUBLIC_FEATURE_ANALYTICS === 'true',
+  analytics: process.env.EXPO_PUBLIC_FEATURE_ANALYTICS === "true",
 
   // Enable crash reporting
-  crashReporting: process.env.EXPO_PUBLIC_FEATURE_CRASH_REPORTING === 'true',
+  crashReporting: process.env.EXPO_PUBLIC_FEATURE_CRASH_REPORTING === "true",
 
   // Enable experimental features
-  experimental: process.env.EXPO_PUBLIC_FEATURE_EXPERIMENTAL === 'true',
+  experimental: process.env.EXPO_PUBLIC_FEATURE_EXPERIMENTAL === "true",
 };
 
 /**
@@ -47,13 +51,15 @@ export const FEATURES = {
  */
 export const APP_CONFIG = {
   // Environment (development, staging, production)
-  environment: process.env.EXPO_PUBLIC_ENVIRONMENT || 'development',
+  environment: process.env.EXPO_PUBLIC_ENVIRONMENT || "development",
 
   // App version
-  version: process.env.EXPO_PUBLIC_APP_VERSION || '1.0.0',
+  version: process.env.EXPO_PUBLIC_APP_VERSION || "1.0.0",
 
   // Enable debug mode
-  debug: process.env.EXPO_PUBLIC_DEBUG === 'true' || process.env.NODE_ENV === 'development',
+  debug:
+    process.env.EXPO_PUBLIC_DEBUG === "true" ||
+    process.env.NODE_ENV === "development",
 };
 
 /**
@@ -61,7 +67,7 @@ export const APP_CONFIG = {
  */
 export const STORAGE_CONFIG = {
   // AsyncStorage key prefix
-  keyPrefix: process.env.EXPO_PUBLIC_STORAGE_PREFIX || 'solace_ai_',
+  keyPrefix: process.env.EXPO_PUBLIC_STORAGE_PREFIX || "solace_ai_",
 
   // Enable storage encryption (always true for secure storage)
   encryption: true,
@@ -72,10 +78,10 @@ export const STORAGE_CONFIG = {
  */
 export const ANALYTICS_CONFIG = {
   // Analytics service API key
-  apiKey: process.env.EXPO_PUBLIC_ANALYTICS_API_KEY || '',
+  apiKey: process.env.EXPO_PUBLIC_ANALYTICS_API_KEY || "",
 
   // Enable analytics in development
-  enableInDev: process.env.EXPO_PUBLIC_ANALYTICS_DEV === 'true',
+  enableInDev: process.env.EXPO_PUBLIC_ANALYTICS_DEV === "true",
 };
 
 /**
@@ -83,34 +89,34 @@ export const ANALYTICS_CONFIG = {
  */
 export const SENTRY_CONFIG = {
   // Sentry DSN
-  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN || '',
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN || "",
 
   // Enable Sentry
-  enabled: process.env.EXPO_PUBLIC_SENTRY_ENABLED === 'true',
+  enabled: process.env.EXPO_PUBLIC_SENTRY_ENABLED === "true",
 
   // Environment name
-  environment: process.env.EXPO_PUBLIC_ENVIRONMENT || 'development',
+  environment: process.env.EXPO_PUBLIC_ENVIRONMENT || "development",
 };
 
 /**
  * Check if running in production
  */
 export function isProduction() {
-  return APP_CONFIG.environment === 'production';
+  return APP_CONFIG.environment === "production";
 }
 
 /**
  * Check if running in development
  */
 export function isDevelopment() {
-  return APP_CONFIG.environment === 'development';
+  return APP_CONFIG.environment === "development";
 }
 
 /**
  * Check if running in staging
  */
 export function isStaging() {
-  return APP_CONFIG.environment === 'staging';
+  return APP_CONFIG.environment === "staging";
 }
 
 /**
@@ -135,24 +141,28 @@ export function validateEnvironmentConfig() {
   const warnings = [];
 
   // Check for required API URL
-  if (API_CONFIG.baseURL === 'http://localhost:3000/api') {
-    warnings.push('API_CONFIG.baseURL is using default localhost URL. Set EXPO_PUBLIC_API_URL for production.');
+  if (API_CONFIG.baseURL === "http://localhost:3000/api") {
+    warnings.push(
+      "API_CONFIG.baseURL is using default localhost URL. Set EXPO_PUBLIC_API_URL for production.",
+    );
   }
 
   // Check for analytics configuration
   if (FEATURES.analytics && !ANALYTICS_CONFIG.apiKey) {
-    warnings.push('Analytics is enabled but EXPO_PUBLIC_ANALYTICS_API_KEY is not set.');
+    warnings.push(
+      "Analytics is enabled but EXPO_PUBLIC_ANALYTICS_API_KEY is not set.",
+    );
   }
 
   // Check for Sentry configuration
   if (SENTRY_CONFIG.enabled && !SENTRY_CONFIG.dsn) {
-    warnings.push('Sentry is enabled but EXPO_PUBLIC_SENTRY_DSN is not set.');
+    warnings.push("Sentry is enabled but EXPO_PUBLIC_SENTRY_DSN is not set.");
   }
 
   // Log warnings
   if (warnings.length > 0) {
-    console.warn('Environment configuration warnings:');
-    warnings.forEach(warning => console.warn(`  - ${warning}`));
+    console.warn("Environment configuration warnings:");
+    warnings.forEach((warning) => console.warn(`  - ${warning}`));
   }
 
   return {

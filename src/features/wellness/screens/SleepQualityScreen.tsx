@@ -3,39 +3,48 @@
  * Based on ui-designs/Dark-mode/Sleep Quality.png
  */
 
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
-import Svg, { Circle, Path } from 'react-native-svg';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
+import Svg, { Circle, Path } from "react-native-svg";
 
 interface SleepData {
   date: string;
   hours: number;
-  quality: 'normal' | 'core' | 'REM';
+  quality: "normal" | "core" | "REM";
   rating: number;
 }
 
 const SLEEP_HISTORY: SleepData[] = [
-  { date: 'Mon', hours: 8.5, quality: 'normal', rating: 4 },
-  { date: 'Tue', hours: 7.8, quality: 'core', rating: 3 },
-  { date: 'Wed', hours: 6.2, quality: 'REM', rating: 2 },
-  { date: 'Thu', hours: 8.0, quality: 'normal', rating: 4 },
-  { date: 'Fri', hours: 7.5, quality: 'core', rating: 3 },
-  { date: 'Sat', hours: 9.0, quality: 'normal', rating: 5 },
-  { date: 'Sun', hours: 8.25, quality: 'REM', rating: 4 },
+  { date: "Mon", hours: 8.5, quality: "normal", rating: 4 },
+  { date: "Tue", hours: 7.8, quality: "core", rating: 3 },
+  { date: "Wed", hours: 6.2, quality: "REM", rating: 2 },
+  { date: "Thu", hours: 8.0, quality: "normal", rating: 4 },
+  { date: "Fri", hours: 7.5, quality: "core", rating: 3 },
+  { date: "Sat", hours: 9.0, quality: "normal", rating: 5 },
+  { date: "Sun", hours: 8.25, quality: "REM", rating: 4 },
 ];
 
 const QUALITY_COLORS = {
-  normal: '#98B068',
-  core: '#C96100',
-  REM: '#8B7DA8',
+  normal: "#98B068",
+  core: "#C96100",
+  REM: "#8B7DA8",
 };
 
 export const SleepQualityScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month'>('week');
+  const [selectedPeriod, setSelectedPeriod] = useState<"week" | "month">(
+    "week",
+  );
 
   const totalHours = SLEEP_HISTORY.reduce((sum, day) => sum + day.hours, 0);
   const avgHours = (totalHours / SLEEP_HISTORY.length).toFixed(1);
@@ -47,9 +56,9 @@ export const SleepQualityScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
     },
@@ -57,13 +66,13 @@ export const SleepQualityScreen = () => {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['20'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.brown["20"],
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
@@ -71,75 +80,75 @@ export const SleepQualityScreen = () => {
       padding: 20,
     },
     scoreCard: {
-      backgroundColor: '#8B7DA8',
+      backgroundColor: "#8B7DA8",
       borderRadius: 24,
       padding: 32,
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: 24,
     },
     scoreValue: {
       fontSize: 72,
-      fontWeight: '800',
-      color: '#FFFFFF',
+      fontWeight: "800",
+      color: "#FFFFFF",
       marginBottom: 8,
     },
     scoreLabel: {
       fontSize: 18,
-      fontWeight: '600',
-      color: 'rgba(255,255,255,0.9)',
+      fontWeight: "600",
+      color: "rgba(255,255,255,0.9)",
     },
     sleepOverview: {
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 20,
       padding: 20,
       marginBottom: 24,
     },
     overviewTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     statsRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
+      flexDirection: "row",
+      justifyContent: "space-around",
       marginBottom: 20,
     },
     statItem: {
-      alignItems: 'center',
+      alignItems: "center",
     },
     statCircle: {
       width: 80,
       height: 80,
       borderRadius: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       marginBottom: 8,
     },
     statValue: {
       fontSize: 20,
-      fontWeight: '800',
-      color: '#FFFFFF',
+      fontWeight: "800",
+      color: "#FFFFFF",
     },
     statLabel: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     qualityChart: {
       height: 200,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       marginBottom: 20,
     },
     chartLegend: {
-      flexDirection: 'row',
-      justifyContent: 'center',
+      flexDirection: "row",
+      justifyContent: "center",
       gap: 16,
     },
     legendItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 6,
     },
     legendDot: {
@@ -149,26 +158,26 @@ export const SleepQualityScreen = () => {
     },
     legendText: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     historySection: {
       marginBottom: 24,
     },
     sectionHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       marginBottom: 16,
     },
     sectionTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     periodToggle: {
-      flexDirection: 'row',
-      backgroundColor: theme.colors.brown['20'],
+      flexDirection: "row",
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 12,
       padding: 4,
     },
@@ -178,11 +187,11 @@ export const SleepQualityScreen = () => {
       borderRadius: 8,
     },
     periodButtonActive: {
-      backgroundColor: theme.colors.brown['70'],
+      backgroundColor: theme.colors.brown["70"],
     },
     periodText: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     periodTextActive: {
@@ -192,39 +201,39 @@ export const SleepQualityScreen = () => {
       gap: 12,
     },
     historyItem: {
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 16,
       padding: 16,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
     },
     historyLeft: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 12,
     },
     historyIcon: {
       width: 48,
       height: 48,
       borderRadius: 24,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     historyDate: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
     historyHours: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     historyRating: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
   });
@@ -244,22 +253,46 @@ export const SleepQualityScreen = () => {
           />
           {/* Core - Orange segment */}
           <Path
-            d={describeArc(100, 100, 80, normalPercent * 360, (normalPercent + corePercent) * 360)}
+            d={describeArc(
+              100,
+              100,
+              80,
+              normalPercent * 360,
+              (normalPercent + corePercent) * 360,
+            )}
             fill={QUALITY_COLORS.core}
           />
           {/* REM - Purple segment */}
           <Path
-            d={describeArc(100, 100, 80, (normalPercent + corePercent) * 360, 360)}
+            d={describeArc(
+              100,
+              100,
+              80,
+              (normalPercent + corePercent) * 360,
+              360,
+            )}
             fill={QUALITY_COLORS.REM}
           />
           {/* Center white circle */}
-          <Circle cx={100} cy={100} r={50} fill={theme.colors.brown['10']} />
+          <Circle cx={100} cy={100} r={50} fill={theme.colors.brown["10"]} />
         </Svg>
-        <View style={{ position: 'absolute', alignItems: 'center' }}>
-          <Text style={{ fontSize: 32, fontWeight: '800', color: theme.colors.text.primary }}>
+        <View style={{ position: "absolute", alignItems: "center" }}>
+          <Text
+            style={{
+              fontSize: 32,
+              fontWeight: "800",
+              color: theme.colors.text.primary,
+            }}
+          >
             {avgHours}h
           </Text>
-          <Text style={{ fontSize: 12, fontWeight: '600', color: theme.colors.text.secondary }}>
+          <Text
+            style={{
+              fontSize: 12,
+              fontWeight: "600",
+              color: theme.colors.text.secondary,
+            }}
+          >
             Average
           </Text>
         </View>
@@ -267,14 +300,25 @@ export const SleepQualityScreen = () => {
     );
   };
 
-  const describeArc = (x: number, y: number, radius: number, startAngle: number, endAngle: number) => {
+  const describeArc = (
+    x: number,
+    y: number,
+    radius: number,
+    startAngle: number,
+    endAngle: number,
+  ) => {
     const start = polarToCartesian(x, y, radius, endAngle);
     const end = polarToCartesian(x, y, radius, startAngle);
-    const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
     return `M ${x} ${y} L ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 0 ${end.x} ${end.y} Z`;
   };
 
-  const polarToCartesian = (centerX: number, centerY: number, radius: number, angleInDegrees: number) => {
+  const polarToCartesian = (
+    centerX: number,
+    centerY: number,
+    radius: number,
+    angleInDegrees: number,
+  ) => {
     const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180;
     return {
       x: centerX + radius * Math.cos(angleInRadians),
@@ -286,7 +330,10 @@ export const SleepQualityScreen = () => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
           <Text style={{ fontSize: 20 }}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Sleep Quality</Text>
@@ -306,19 +353,19 @@ export const SleepQualityScreen = () => {
 
           <View style={styles.statsRow}>
             <View style={styles.statItem}>
-              <View style={[styles.statCircle, { backgroundColor: '#98B068' }]}>
+              <View style={[styles.statCircle, { backgroundColor: "#98B068" }]}>
                 <Text style={styles.statValue}>8.5h</Text>
               </View>
               <Text style={styles.statLabel}>Goal</Text>
             </View>
             <View style={styles.statItem}>
-              <View style={[styles.statCircle, { backgroundColor: '#C96100' }]}>
+              <View style={[styles.statCircle, { backgroundColor: "#C96100" }]}>
                 <Text style={styles.statValue}>7.8h</Text>
               </View>
               <Text style={styles.statLabel}>Core</Text>
             </View>
             <View style={styles.statItem}>
-              <View style={[styles.statCircle, { backgroundColor: '#8B7DA8' }]}>
+              <View style={[styles.statCircle, { backgroundColor: "#8B7DA8" }]}>
                 <Text style={styles.statValue}>5+</Text>
               </View>
               <Text style={styles.statLabel}>REM</Text>
@@ -331,15 +378,21 @@ export const SleepQualityScreen = () => {
           {/* Legend */}
           <View style={styles.chartLegend}>
             <View style={styles.legendItem}>
-              <View style={[styles.legendDot, { backgroundColor: '#98B068' }]} />
+              <View
+                style={[styles.legendDot, { backgroundColor: "#98B068" }]}
+              />
               <Text style={styles.legendText}>Normal</Text>
             </View>
             <View style={styles.legendItem}>
-              <View style={[styles.legendDot, { backgroundColor: '#C96100' }]} />
+              <View
+                style={[styles.legendDot, { backgroundColor: "#C96100" }]}
+              />
               <Text style={styles.legendText}>Core</Text>
             </View>
             <View style={styles.legendItem}>
-              <View style={[styles.legendDot, { backgroundColor: '#8B7DA8' }]} />
+              <View
+                style={[styles.legendDot, { backgroundColor: "#8B7DA8" }]}
+              />
               <Text style={styles.legendText}>REM</Text>
             </View>
           </View>
@@ -351,18 +404,34 @@ export const SleepQualityScreen = () => {
             <Text style={styles.sectionTitle}>Sleep History</Text>
             <View style={styles.periodToggle}>
               <TouchableOpacity
-                style={[styles.periodButton, selectedPeriod === 'week' && styles.periodButtonActive]}
-                onPress={() => setSelectedPeriod('week')}
+                style={[
+                  styles.periodButton,
+                  selectedPeriod === "week" && styles.periodButtonActive,
+                ]}
+                onPress={() => setSelectedPeriod("week")}
               >
-                <Text style={[styles.periodText, selectedPeriod === 'week' && styles.periodTextActive]}>
+                <Text
+                  style={[
+                    styles.periodText,
+                    selectedPeriod === "week" && styles.periodTextActive,
+                  ]}
+                >
                   Week
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.periodButton, selectedPeriod === 'month' && styles.periodButtonActive]}
-                onPress={() => setSelectedPeriod('month')}
+                style={[
+                  styles.periodButton,
+                  selectedPeriod === "month" && styles.periodButtonActive,
+                ]}
+                onPress={() => setSelectedPeriod("month")}
               >
-                <Text style={[styles.periodText, selectedPeriod === 'month' && styles.periodTextActive]}>
+                <Text
+                  style={[
+                    styles.periodText,
+                    selectedPeriod === "month" && styles.periodTextActive,
+                  ]}
+                >
                   Month
                 </Text>
               </TouchableOpacity>
@@ -373,11 +442,18 @@ export const SleepQualityScreen = () => {
             {SLEEP_HISTORY.map((item, index) => (
               <TouchableOpacity key={index} style={styles.historyItem}>
                 <View style={styles.historyLeft}>
-                  <View style={[styles.historyIcon, { backgroundColor: QUALITY_COLORS[item.quality] }]}>
+                  <View
+                    style={[
+                      styles.historyIcon,
+                      { backgroundColor: QUALITY_COLORS[item.quality] },
+                    ]}
+                  >
                     <Text style={{ fontSize: 24 }}>🌙</Text>
                   </View>
                   <View>
-                    <Text style={styles.historyDate}>You slept for {item.hours}h</Text>
+                    <Text style={styles.historyDate}>
+                      You slept for {item.hours}h
+                    </Text>
                     <Text style={styles.historyHours}>{item.date}</Text>
                   </View>
                 </View>

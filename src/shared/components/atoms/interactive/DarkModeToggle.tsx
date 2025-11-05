@@ -1,3 +1,5 @@
+import { useTheme } from "@theme/ThemeProvider";
+import { freudDarkTheme } from "@theme/freudDarkTheme";
 import React, { useRef, useEffect } from "react";
 import {
   View,
@@ -6,9 +8,6 @@ import {
   StyleSheet,
   Animated,
 } from "react-native";
-
-import { useTheme } from "@theme/ThemeProvider";
-import { freudDarkTheme } from "@theme/freudDarkTheme";
 
 const DarkModeToggle = ({ style, showLabel = true, size = "normal" }) => {
   const { theme, isDarkMode, toggleTheme } = useTheme();

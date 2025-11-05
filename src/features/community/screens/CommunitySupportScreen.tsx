@@ -3,10 +3,18 @@
  * Based on ui-designs/Dark-mode/Community Support.png
  */
 
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 
 interface Post {
   id: string;
@@ -25,38 +33,41 @@ interface Post {
 
 const MOCK_POSTS: Post[] = [
   {
-    id: '1',
-    author: { name: 'Shinomiya Kaguya', avatar: '👤', verified: true },
-    time: '2h ago',
-    content: 'Does anyone believe what I\'m head just now?! I\'m so happy today! #PositiveLife #Yolo #mentalhealth',
-    tags: ['PositiveLife', 'Yolo', 'mentalhealth'],
+    id: "1",
+    author: { name: "Shinomiya Kaguya", avatar: "👤", verified: true },
+    time: "2h ago",
+    content:
+      "Does anyone believe what I'm head just now?! I'm so happy today! #PositiveLife #Yolo #mentalhealth",
+    tags: ["PositiveLife", "Yolo", "mentalhealth"],
     likes: 12,
     comments: 6,
   },
   {
-    id: '2',
-    author: { name: 'Nadine G. Smith', avatar: '👤', verified: false },
-    time: '5h ago',
-    content: 'I don\'t want believe what I\'m head just now. I\'m getting really Crazy #depression',
-    tags: ['depression'],
+    id: "2",
+    author: { name: "Nadine G. Smith", avatar: "👤", verified: false },
+    time: "5h ago",
+    content:
+      "I don't want believe what I'm head just now. I'm getting really Crazy #depression",
+    tags: ["depression"],
     likes: 30,
     comments: 12,
   },
   {
-    id: '3',
-    author: { name: 'Ash Ketchum', avatar: '👤', verified: false },
-    time: '8h ago',
-    content: 'I don\'t here can live without friend of PLEASE #depression #alone #lonely',
-    tags: ['depression', 'alone', 'lonely'],
+    id: "3",
+    author: { name: "Ash Ketchum", avatar: "👤", verified: false },
+    time: "8h ago",
+    content:
+      "I don't here can live without friend of PLEASE #depression #alone #lonely",
+    tags: ["depression", "alone", "lonely"],
     likes: 20,
     comments: 8,
   },
   {
-    id: '4',
-    author: { name: 'Shinomiya Kaguya', avatar: '👤', verified: true },
-    time: '1d ago',
-    content: 'Everything thank my Dad! I feel grateful for Dad!',
-    tags: ['grateful'],
+    id: "4",
+    author: { name: "Shinomiya Kaguya", avatar: "👤", verified: true },
+    time: "1d ago",
+    content: "Everything thank my Dad! I feel grateful for Dad!",
+    tags: ["grateful"],
     likes: 32,
     comments: 5,
   },
@@ -65,7 +76,7 @@ const MOCK_POSTS: Post[] = [
 export const CommunitySupportScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const [activeTab, setActiveTab] = useState<'all' | 'following'>('all');
+  const [activeTab, setActiveTab] = useState<"all" | "following">("all");
 
   const styles = StyleSheet.create({
     container: {
@@ -77,50 +88,50 @@ export const CommunitySupportScreen = () => {
       paddingVertical: 16,
     },
     headerTop: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       marginBottom: 16,
     },
     backButton: {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['20'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.brown["20"],
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     notificationButton: {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['20'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.brown["20"],
+      justifyContent: "center",
+      alignItems: "center",
     },
     tabs: {
-      flexDirection: 'row',
-      backgroundColor: theme.colors.brown['20'],
+      flexDirection: "row",
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 12,
       padding: 4,
     },
     tab: {
       flex: 1,
       paddingVertical: 10,
-      alignItems: 'center',
+      alignItems: "center",
       borderRadius: 8,
     },
     tabActive: {
-      backgroundColor: theme.colors.brown['70'],
+      backgroundColor: theme.colors.brown["70"],
     },
     tabText: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
     },
     tabTextActive: {
@@ -130,23 +141,23 @@ export const CommunitySupportScreen = () => {
       flex: 1,
     },
     postCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.brown['20'],
+      borderBottomColor: theme.colors.brown["20"],
       padding: 16,
     },
     postHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginBottom: 12,
     },
     avatar: {
       width: 44,
       height: 44,
       borderRadius: 22,
-      backgroundColor: theme.colors.brown['30'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.brown["30"],
+      justifyContent: "center",
+      alignItems: "center",
       marginRight: 12,
     },
     avatarText: {
@@ -157,13 +168,13 @@ export const CommunitySupportScreen = () => {
     },
     authorName: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 2,
     },
     postTime: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.tertiary,
     },
     verifiedBadge: {
@@ -180,31 +191,31 @@ export const CommunitySupportScreen = () => {
       marginBottom: 12,
     },
     postImage: {
-      width: '100%',
+      width: "100%",
       height: 200,
       borderRadius: 12,
-      backgroundColor: theme.colors.brown['30'],
+      backgroundColor: theme.colors.brown["30"],
       marginBottom: 12,
     },
     postTags: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 8,
       marginBottom: 12,
     },
     tag: {
       fontSize: 14,
-      fontWeight: '600',
-      color: theme.colors.brown['70'],
+      fontWeight: "600",
+      color: theme.colors.brown["70"],
     },
     postActions: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 24,
     },
     action: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 6,
     },
     actionIcon: {
@@ -212,20 +223,20 @@ export const CommunitySupportScreen = () => {
     },
     actionText: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     fab: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 24,
       right: 24,
       width: 60,
       height: 60,
       borderRadius: 30,
-      backgroundColor: theme.colors.brown['70'],
-      justifyContent: 'center',
-      alignItems: 'center',
-      shadowColor: '#000',
+      backgroundColor: theme.colors.brown["70"],
+      justifyContent: "center",
+      alignItems: "center",
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.3,
       shadowRadius: 8,
@@ -241,7 +252,7 @@ export const CommunitySupportScreen = () => {
     <TouchableOpacity
       key={post.id}
       style={styles.postCard}
-      onPress={() => navigation.navigate('PostDetail', { postId: post.id })}
+      onPress={() => navigation.navigate("PostDetail", { postId: post.id })}
     >
       {/* Post Header */}
       <View style={styles.postHeader}>
@@ -249,14 +260,18 @@ export const CommunitySupportScreen = () => {
           <Text style={styles.avatarText}>{post.author.avatar}</Text>
         </View>
         <View style={styles.authorInfo}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text style={styles.authorName}>{post.author.name}</Text>
-            {post.author.verified && <Text style={styles.verifiedBadge}>✓</Text>}
+            {post.author.verified && (
+              <Text style={styles.verifiedBadge}>✓</Text>
+            )}
           </View>
           <Text style={styles.postTime}>{post.time}</Text>
         </View>
         <TouchableOpacity style={styles.moreButton}>
-          <Text style={{ fontSize: 20, color: theme.colors.text.secondary }}>⋮</Text>
+          <Text style={{ fontSize: 20, color: theme.colors.text.secondary }}>
+            ⋮
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -269,7 +284,9 @@ export const CommunitySupportScreen = () => {
       {/* Tags */}
       <View style={styles.postTags}>
         {post.tags.map((tag, index) => (
-          <Text key={index} style={styles.tag}>#{tag}</Text>
+          <Text key={index} style={styles.tag}>
+            #{tag}
+          </Text>
         ))}
       </View>
 
@@ -296,13 +313,16 @@ export const CommunitySupportScreen = () => {
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerTop}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
             <Text style={{ fontSize: 20 }}>←</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Community Feed</Text>
           <TouchableOpacity
             style={styles.notificationButton}
-            onPress={() => navigation.navigate('CommunityNotifications')}
+            onPress={() => navigation.navigate("CommunityNotifications")}
           >
             <Text style={{ fontSize: 20 }}>🔔</Text>
           </TouchableOpacity>
@@ -311,18 +331,28 @@ export const CommunitySupportScreen = () => {
         {/* Tabs */}
         <View style={styles.tabs}>
           <TouchableOpacity
-            style={[styles.tab, activeTab === 'all' && styles.tabActive]}
-            onPress={() => setActiveTab('all')}
+            style={[styles.tab, activeTab === "all" && styles.tabActive]}
+            onPress={() => setActiveTab("all")}
           >
-            <Text style={[styles.tabText, activeTab === 'all' && styles.tabTextActive]}>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === "all" && styles.tabTextActive,
+              ]}
+            >
               All Posts
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.tab, activeTab === 'following' && styles.tabActive]}
-            onPress={() => setActiveTab('following')}
+            style={[styles.tab, activeTab === "following" && styles.tabActive]}
+            onPress={() => setActiveTab("following")}
           >
-            <Text style={[styles.tabText, activeTab === 'following' && styles.tabTextActive]}>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === "following" && styles.tabTextActive,
+              ]}
+            >
               Following
             </Text>
           </TouchableOpacity>
@@ -337,7 +367,7 @@ export const CommunitySupportScreen = () => {
       {/* Add Post FAB */}
       <TouchableOpacity
         style={styles.fab}
-        onPress={() => navigation.navigate('CreatePost')}
+        onPress={() => navigation.navigate("CreatePost")}
       >
         <Text style={styles.fabIcon}>+</Text>
       </TouchableOpacity>

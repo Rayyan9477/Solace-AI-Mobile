@@ -70,27 +70,29 @@ const mockApiService = {
   user: {
     async getProfile(): Promise<Partial<UserProfile>> {
       if (__DEV__) {
-        console.log('Mock user profile fetch');
+        console.log("Mock user profile fetch");
       }
-      return { id: '1', name: 'Test User', email: 'test@example.com' };
+      return { id: "1", name: "Test User", email: "test@example.com" };
     },
-    async updateProfile(data: Partial<UserProfile>): Promise<Partial<UserProfile>> {
+    async updateProfile(
+      data: Partial<UserProfile>,
+    ): Promise<Partial<UserProfile>> {
       if (__DEV__) {
-        console.log('Mock user profile update:', data);
+        console.log("Mock user profile update:", data);
       }
       return { ...data, updatedAt: new Date().toISOString() };
     },
     async getStats(): Promise<UserStats> {
       if (__DEV__) {
-        console.log('Mock user stats fetch');
+        console.log("Mock user stats fetch");
       }
       return {
         totalSessions: 10,
         streakDays: 5,
         assessmentsCompleted: 3,
         moodEntriesCount: 25,
-        favoriteActivities: ['meditation', 'walking'],
-        joinDate: '2023-01-01T00:00:00.000Z',
+        favoriteActivities: ["meditation", "walking"],
+        joinDate: "2023-01-01T00:00:00.000Z",
       };
     },
   },
@@ -117,7 +119,10 @@ export const updateUserProfile = createAsyncThunk<
       if (__DEV__) {
         console.error("Profile update error:", error);
       }
-      const errorMessage = error instanceof Error ? error.message : "Failed to update profile. Please try again.";
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to update profile. Please try again.";
       return rejectWithValue(errorMessage);
     }
   },
@@ -128,22 +133,22 @@ export const fetchUserStats = createAsyncThunk<
   UserStats,
   void,
   { rejectValue: string }
->(
-  "user/fetchStats",
-  async (_, { rejectWithValue }) => {
-    try {
-      // Real API call using the user service
-      const userStats = await apiService.user.getStats();
-      return userStats;
-    } catch (error) {
-      if (__DEV__) {
-        console.error("User stats fetch error:", error);
-      }
-      const errorMessage = error instanceof Error ? error.message : "Failed to fetch user statistics. Please try again.";
-      return rejectWithValue(errorMessage);
+>("user/fetchStats", async (_, { rejectWithValue }) => {
+  try {
+    // Real API call using the user service
+    const userStats = await apiService.user.getStats();
+    return userStats;
+  } catch (error) {
+    if (__DEV__) {
+      console.error("User stats fetch error:", error);
     }
-  },
-);
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "Failed to fetch user statistics. Please try again.";
+    return rejectWithValue(errorMessage);
+  }
+});
 
 const initialState: UserState = {
   profile: {
@@ -197,7 +202,10 @@ const userSlice = createSlice({
       const { password, token, apiKey, ...safeData } = payload as any;
       state.profile = { ...state.profile, ...safeData };
     },
-    updatePreferences: (state, action: PayloadAction<Partial<UserState['preferences']>>) => {
+    updatePreferences: (
+      state,
+      action: PayloadAction<Partial<UserState["preferences"]>>,
+    ) => {
       state.preferences = { ...state.preferences, ...action.payload };
     },
     setTheme: (state, action: PayloadAction<string>) => {
@@ -213,7 +221,10 @@ const userSlice = createSlice({
       };
       state.goals.push(newGoal);
     },
-    updateGoal: (state, action: PayloadAction<{ id: string; [key: string]: any }>) => {
+    updateGoal: (
+      state,
+      action: PayloadAction<{ id: string; [key: string]: any }>,
+    ) => {
       const { id, ...updates } = action.payload;
       const goalIndex = state.goals.findIndex((goal) => goal.id === id);
       if (goalIndex !== -1) {

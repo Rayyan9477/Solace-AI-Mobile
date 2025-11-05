@@ -4,9 +4,16 @@
  * Ensures crisis resources remain accessible even if other parts of app fail
  */
 
-import React, { Component, ReactNode } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking, Alert } from 'react-native';
-import { logger } from '@shared/utils/logger';
+import { logger } from "@shared/utils/logger";
+import React, { Component, ReactNode } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Linking,
+  Alert,
+} from "react-native";
 
 interface Props {
   children: ReactNode;
@@ -34,7 +41,7 @@ export class CrisisErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    logger.error('CrisisErrorBoundary caught error:', {
+    logger.error("CrisisErrorBoundary caught error:", {
       error: error.toString(),
       componentStack: errorInfo.componentStack,
     });
@@ -42,21 +49,24 @@ export class CrisisErrorBoundary extends Component<Props, State> {
 
   handleEmergencyCall = () => {
     Alert.alert(
-      'Emergency Services',
-      'Calling 988 - Suicide & Crisis Lifeline',
+      "Emergency Services",
+      "Calling 988 - Suicide & Crisis Lifeline",
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: "Cancel", style: "cancel" },
         {
-          text: 'Call Now',
-          onPress: () => Linking.openURL('tel:988'),
+          text: "Call Now",
+          onPress: () => Linking.openURL("tel:988"),
         },
-      ]
+      ],
     );
   };
 
   handleCrisisText = () => {
-    Linking.openURL('sms:741741').catch(() => {
-      Alert.alert('Error', 'Unable to open messaging app. Please text 741741 manually.');
+    Linking.openURL("sms:741741").catch(() => {
+      Alert.alert(
+        "Error",
+        "Unable to open messaging app. Please text 741741 manually.",
+      );
     });
   };
 
@@ -71,8 +81,8 @@ export class CrisisErrorBoundary extends Component<Props, State> {
             </View>
 
             <Text style={styles.message}>
-              We're sorry - the app encountered an error. However, crisis support is still
-              available through these emergency resources:
+              We're sorry - the app encountered an error. However, crisis
+              support is still available through these emergency resources:
             </Text>
 
             <View style={styles.resourcesContainer}>
@@ -84,7 +94,9 @@ export class CrisisErrorBoundary extends Component<Props, State> {
                 accessibilityLabel="Call 988 Suicide & Crisis Lifeline"
               >
                 <Text style={styles.emergencyButtonText}>📞 Call 988</Text>
-                <Text style={styles.buttonSubtext}>Suicide & Crisis Lifeline</Text>
+                <Text style={styles.buttonSubtext}>
+                  Suicide & Crisis Lifeline
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -100,7 +112,7 @@ export class CrisisErrorBoundary extends Component<Props, State> {
 
               <TouchableOpacity
                 style={[styles.button, styles.secondaryButton]}
-                onPress={() => Linking.openURL('tel:911')}
+                onPress={() => Linking.openURL("tel:911")}
                 accessible
                 accessibilityRole="button"
                 accessibilityLabel="Call 911 for immediate emergency"
@@ -112,8 +124,8 @@ export class CrisisErrorBoundary extends Component<Props, State> {
 
             <View style={styles.safetyMessage}>
               <Text style={styles.safetyText}>
-                You are not alone. Help is available 24/7. These services are free,
-                confidential, and staffed by trained crisis counselors.
+                You are not alone. Help is available 24/7. These services are
+                free, confidential, and staffed by trained crisis counselors.
               </Text>
             </View>
           </View>
@@ -128,23 +140,23 @@ export class CrisisErrorBoundary extends Component<Props, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF9F0',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#FFF9F0",
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   content: {
-    width: '100%',
+    width: "100%",
     maxWidth: 400,
   },
   alertBox: {
-    backgroundColor: '#FFE5E5',
+    backgroundColor: "#FFE5E5",
     borderLeftWidth: 4,
-    borderLeftColor: '#FF4444',
+    borderLeftColor: "#FF4444",
     padding: 16,
     borderRadius: 8,
     marginBottom: 24,
-    alignItems: 'center',
+    alignItems: "center",
   },
   alertEmoji: {
     fontSize: 48,
@@ -152,70 +164,70 @@ const styles = StyleSheet.create({
   },
   alertTitle: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#CC0000',
-    textAlign: 'center',
+    fontWeight: "700",
+    color: "#CC0000",
+    textAlign: "center",
   },
   message: {
     fontSize: 16,
-    color: '#333333',
-    textAlign: 'center',
+    color: "#333333",
+    textAlign: "center",
     marginBottom: 24,
     lineHeight: 24,
   },
   resourcesContainer: {
-    width: '100%',
+    width: "100%",
     marginBottom: 24,
   },
   button: {
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
-    alignItems: 'center',
+    alignItems: "center",
   },
   emergencyButton: {
-    backgroundColor: '#FF4444',
+    backgroundColor: "#FF4444",
   },
   emergencyButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 4,
   },
   textButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: "#4CAF50",
   },
   textButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 4,
   },
   secondaryButton: {
-    backgroundColor: '#FF9800',
+    backgroundColor: "#FF9800",
   },
   secondaryButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 4,
   },
   buttonSubtext: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 14,
     opacity: 0.9,
   },
   safetyMessage: {
-    backgroundColor: '#E8F5E9',
+    backgroundColor: "#E8F5E9",
     padding: 16,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#4CAF50',
+    borderColor: "#4CAF50",
   },
   safetyText: {
     fontSize: 14,
-    color: '#2E7D32',
-    textAlign: 'center',
+    color: "#2E7D32",
+    textAlign: "center",
     lineHeight: 20,
   },
 });

@@ -4,6 +4,7 @@
  * Based on modern design principles and accessibility best practices
  */
 
+import { useTheme } from "@theme/ThemeProvider";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -14,7 +15,6 @@ import {
   Animated,
 } from "react-native";
 
-import { useTheme } from "@theme/ThemeProvider";
 // Mock spacing
 const spacing = { sm: 8, md: 16, lg: 24 };
 

@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/Sign In & Sign Up.png
  */
 
-import React from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
 import {
   View,
   Text,
@@ -11,9 +13,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface SocialProvider {
   id: string;
@@ -29,32 +29,32 @@ export const SocialLoginScreen = () => {
 
   const socialProviders: SocialProvider[] = [
     {
-      id: 'google',
-      name: 'Continue with Google',
-      icon: '🔍',
-      color: '#FFFFFF',
-      bgColor: '#4285F4',
+      id: "google",
+      name: "Continue with Google",
+      icon: "🔍",
+      color: "#FFFFFF",
+      bgColor: "#4285F4",
     },
     {
-      id: 'apple',
-      name: 'Continue with Apple',
-      icon: '',
-      color: '#FFFFFF',
-      bgColor: '#000000',
+      id: "apple",
+      name: "Continue with Apple",
+      icon: "",
+      color: "#FFFFFF",
+      bgColor: "#000000",
     },
     {
-      id: 'facebook',
-      name: 'Continue with Facebook',
-      icon: '📘',
-      color: '#FFFFFF',
-      bgColor: '#1877F2',
+      id: "facebook",
+      name: "Continue with Facebook",
+      icon: "📘",
+      color: "#FFFFFF",
+      bgColor: "#1877F2",
     },
     {
-      id: 'microsoft',
-      name: 'Continue with Microsoft',
-      icon: '🪟',
-      color: '#FFFFFF',
-      bgColor: '#00A4EF',
+      id: "microsoft",
+      name: "Continue with Microsoft",
+      icon: "🪟",
+      color: "#FFFFFF",
+      bgColor: "#00A4EF",
     },
   ];
 
@@ -66,7 +66,7 @@ export const SocialLoginScreen = () => {
   };
 
   const handleEmailLogin = () => {
-    navigation.navigate('SignIn');
+    navigation.navigate("SignIn");
   };
 
   const styles = StyleSheet.create({
@@ -75,23 +75,23 @@ export const SocialLoginScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
@@ -100,7 +100,7 @@ export const SocialLoginScreen = () => {
     heroSection: {
       paddingHorizontal: 40,
       paddingVertical: 40,
-      alignItems: 'center',
+      alignItems: "center",
     },
     heroIcon: {
       fontSize: 64,
@@ -108,16 +108,16 @@ export const SocialLoginScreen = () => {
     },
     heroTitle: {
       fontSize: 24,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 12,
-      textAlign: 'center',
+      textAlign: "center",
     },
     heroSubtitle: {
       fontSize: 15,
       lineHeight: 22,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
     },
     section: {
       paddingHorizontal: 20,
@@ -125,7 +125,7 @@ export const SocialLoginScreen = () => {
     },
     sectionTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
@@ -133,56 +133,56 @@ export const SocialLoginScreen = () => {
       gap: 12,
     },
     providerButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
       paddingVertical: 16,
       paddingHorizontal: 20,
       borderRadius: 12,
-      position: 'relative',
+      position: "relative",
     },
     providerIcon: {
       fontSize: 24,
-      position: 'absolute',
+      position: "absolute",
       left: 20,
     },
     providerText: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
     },
     divider: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       paddingHorizontal: 20,
       paddingVertical: 24,
     },
     dividerLine: {
       flex: 1,
       height: 1,
-      backgroundColor: theme.colors.gray['20'],
+      backgroundColor: theme.colors.gray["20"],
     },
     dividerText: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.tertiary,
       marginHorizontal: 16,
     },
     emailButton: {
-      backgroundColor: theme.colors.purple['60'],
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+      backgroundColor: theme.colors.purple["60"],
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
       paddingVertical: 16,
       borderRadius: 12,
       marginHorizontal: 20,
     },
     emailButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     infoCard: {
-      backgroundColor: theme.colors.blue['20'],
+      backgroundColor: theme.colors.blue["20"],
       borderRadius: 12,
       padding: 16,
       marginHorizontal: 20,
@@ -190,7 +190,7 @@ export const SocialLoginScreen = () => {
     },
     infoTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -205,17 +205,17 @@ export const SocialLoginScreen = () => {
     footer: {
       paddingHorizontal: 40,
       paddingVertical: 24,
-      alignItems: 'center',
+      alignItems: "center",
     },
     footerText: {
       fontSize: 12,
       lineHeight: 18,
       color: theme.colors.text.tertiary,
-      textAlign: 'center',
+      textAlign: "center",
     },
     linkText: {
-      color: theme.colors.purple['60'],
-      fontWeight: '700',
+      color: theme.colors.purple["60"],
+      fontWeight: "700",
     },
   });
 
@@ -260,9 +260,7 @@ export const SocialLoginScreen = () => {
                 accessibilityRole="button"
               >
                 <Text style={styles.providerIcon}>{provider.icon}</Text>
-                <Text
-                  style={[styles.providerText, { color: provider.color }]}
-                >
+                <Text style={[styles.providerText, { color: provider.color }]}>
                   {provider.name}
                 </Text>
               </TouchableOpacity>
@@ -298,8 +296,8 @@ export const SocialLoginScreen = () => {
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            By continuing, you agree to our{' '}
-            <Text style={styles.linkText}>Terms of Service</Text> and{' '}
+            By continuing, you agree to our{" "}
+            <Text style={styles.linkText}>Terms of Service</Text> and{" "}
             <Text style={styles.linkText}>Privacy Policy</Text>
           </Text>
         </View>

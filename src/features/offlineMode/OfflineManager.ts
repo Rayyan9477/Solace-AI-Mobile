@@ -57,11 +57,11 @@ interface SyncQueueOperation {
 interface SyncResults {
   successful: number;
   failed: number;
-  errors: Array<{
+  errors: {
     operation: string;
     dataType: string;
     error: string;
-  }>;
+  }[];
 }
 
 interface OfflineDataFilters {
@@ -355,7 +355,10 @@ class OfflineManager {
   /**
    * Save data while offline
    */
-  async saveOfflineData(dataType: string, data: any): Promise<{ success: boolean; offline: boolean }> {
+  async saveOfflineData(
+    dataType: string,
+    data: any,
+  ): Promise<{ success: boolean; offline: boolean }> {
     try {
       // Add to offline data
       (this.offlineData as any)[dataType].push({
@@ -376,7 +379,9 @@ class OfflineManager {
       await this.addToSyncQueue({
         type: "CREATE",
         dataType,
-        data: (this.offlineData as any)[dataType][(this.offlineData as any)[dataType].length - 1],
+        data: (this.offlineData as any)[dataType][
+          (this.offlineData as any)[dataType].length - 1
+        ],
         timestamp: new Date().toISOString(),
       });
 
@@ -392,7 +397,10 @@ class OfflineManager {
   /**
    * Get offline data
    */
-  async getOfflineData(dataType: string, filters: OfflineDataFilters = {}): Promise<{ data: OfflineDataItem[]; offline: boolean }> {
+  async getOfflineData(
+    dataType: string,
+    filters: OfflineDataFilters = {},
+  ): Promise<{ data: OfflineDataItem[]; offline: boolean }> {
     try {
       let data = (this.offlineData as any)[dataType] || [];
 
@@ -403,11 +411,15 @@ class OfflineManager {
 
       if (filters.since) {
         const sinceDate = new Date(filters.since);
-        data = data.filter((item: OfflineDataItem) => new Date(item.timestamp) >= sinceDate);
+        data = data.filter(
+          (item: OfflineDataItem) => new Date(item.timestamp) >= sinceDate,
+        );
       }
 
       if (filters.synced !== undefined) {
-        data = data.filter((item: OfflineDataItem) => item.synced === filters.synced);
+        data = data.filter(
+          (item: OfflineDataItem) => item.synced === filters.synced,
+        );
       }
 
       return { data, offline: true };
@@ -422,7 +434,11 @@ class OfflineManager {
   /**
    * Update offline data
    */
-  async updateOfflineData(dataType: string, id: string, updates: Partial<OfflineDataItem>): Promise<{ success: boolean; offline: boolean }> {
+  async updateOfflineData(
+    dataType: string,
+    id: string,
+    updates: Partial<OfflineDataItem>,
+  ): Promise<{ success: boolean; offline: boolean }> {
     try {
       const dataIndex = (this.offlineData as any)[dataType].findIndex(
         (item: OfflineDataItem) => item.id === id,
@@ -465,11 +481,14 @@ class OfflineManager {
   /**
    * Delete offline data
    */
-  async deleteOfflineData(dataType: string, id: string): Promise<{ success: boolean; offline: boolean }> {
+  async deleteOfflineData(
+    dataType: string,
+    id: string,
+  ): Promise<{ success: boolean; offline: boolean }> {
     try {
-      (this.offlineData as any)[dataType] = (this.offlineData as any)[dataType].filter(
-        (item: OfflineDataItem) => item.id !== id,
-      );
+      (this.offlineData as any)[dataType] = (this.offlineData as any)[
+        dataType
+      ].filter((item: OfflineDataItem) => item.id !== id);
 
       // Save to AsyncStorage
       await AsyncStorage.setItem(
@@ -497,7 +516,9 @@ class OfflineManager {
   /**
    * Add operation to sync queue
    */
-  async addToSyncQueue(operation: Omit<SyncQueueOperation, 'queuedAt' | 'attempts' | 'status'>): Promise<void> {
+  async addToSyncQueue(
+    operation: Omit<SyncQueueOperation, "queuedAt" | "attempts" | "status">,
+  ): Promise<void> {
     try {
       this.syncQueue.push({
         ...operation,
@@ -543,7 +564,8 @@ class OfflineManager {
           console.error(`Error syncing operation ${i}:`, error);
         }
         operation.attempts = (operation.attempts || 0) + 1;
-        operation.lastError = error instanceof Error ? error.message : String(error);
+        operation.lastError =
+          error instanceof Error ? error.message : String(error);
         operation.status = operation.attempts >= 3 ? "failed" : "retry";
 
         if (operation.status === "failed") {
@@ -574,7 +596,9 @@ class OfflineManager {
   /**
    * Sync individual operation
    */
-  async syncOperation(operation: SyncQueueOperation): Promise<{ success: boolean }> {
+  async syncOperation(
+    operation: SyncQueueOperation,
+  ): Promise<{ success: boolean }> {
     const { type, dataType, data, id, updates } = operation;
 
     switch (type) {
@@ -582,7 +606,8 @@ class OfflineManager {
         if (!data) throw new Error("Data is required for CREATE operation");
         return await this.syncCreateOperation(dataType, data);
       case "UPDATE":
-        if (!id || !updates) throw new Error("ID and updates are required for UPDATE operation");
+        if (!id || !updates)
+          throw new Error("ID and updates are required for UPDATE operation");
         return await this.syncUpdateOperation(dataType, id, updates);
       case "DELETE":
         if (!id) throw new Error("ID is required for DELETE operation");
@@ -595,7 +620,10 @@ class OfflineManager {
   /**
    * Sync create operation
    */
-  async syncCreateOperation(dataType: string, data: OfflineDataItem): Promise<{ success: boolean }> {
+  async syncCreateOperation(
+    dataType: string,
+    data: OfflineDataItem,
+  ): Promise<{ success: boolean }> {
     // Mock API call - replace with actual API
     if (__DEV__) {
       console.log(`Syncing CREATE ${dataType}:`, data.id);
@@ -625,7 +653,11 @@ class OfflineManager {
   /**
    * Sync update operation
    */
-  async syncUpdateOperation(dataType: string, id: string, updates: Partial<OfflineDataItem>): Promise<{ success: boolean }> {
+  async syncUpdateOperation(
+    dataType: string,
+    id: string,
+    updates: Partial<OfflineDataItem>,
+  ): Promise<{ success: boolean }> {
     // Mock API call - replace with actual API
     if (__DEV__) {
       console.log(`Syncing UPDATE ${dataType} ${id}:`, updates);
@@ -640,7 +672,10 @@ class OfflineManager {
   /**
    * Sync delete operation
    */
-  async syncDeleteOperation(dataType: string, id: string): Promise<{ success: boolean }> {
+  async syncDeleteOperation(
+    dataType: string,
+    id: string,
+  ): Promise<{ success: boolean }> {
     // Mock API call - replace with actual API
     if (__DEV__) {
       console.log(`Syncing DELETE ${dataType} ${id}`);
@@ -655,7 +690,9 @@ class OfflineManager {
   /**
    * Sync all offline data with server
    */
-  async syncOfflineData(): Promise<{ successful: number; failed: number } | undefined> {
+  async syncOfflineData(): Promise<
+    { successful: number; failed: number } | undefined
+  > {
     if (!this.isOnline) return;
 
     const syncPromises = [];
@@ -693,7 +730,10 @@ class OfflineManager {
   /**
    * Sync specific data type
    */
-  async syncDataType(dataType: string, items: OfflineDataItem[]): Promise<{ dataType: string; count: number }> {
+  async syncDataType(
+    dataType: string,
+    items: OfflineDataItem[],
+  ): Promise<{ dataType: string; count: number }> {
     if (__DEV__) {
       console.log(`Syncing ${items.length} ${dataType} items`);
     }
@@ -843,7 +883,10 @@ class OfflineManager {
       if (__DEV__) {
         console.error("Error checking storage space:", error);
       }
-      return { hasSpace: true, error: error instanceof Error ? error.message : String(error) };
+      return {
+        hasSpace: true,
+        error: error instanceof Error ? error.message : String(error),
+      };
     }
   }
 
@@ -879,7 +922,9 @@ class OfflineManager {
   /**
    * Clean up old offline data
    */
-  async cleanupOfflineData(daysToKeep: number = 30): Promise<{ cleanedItems: number }> {
+  async cleanupOfflineData(
+    daysToKeep: number = 30,
+  ): Promise<{ cleanedItems: number }> {
     try {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
@@ -890,10 +935,12 @@ class OfflineManager {
         if (Array.isArray(items)) {
           const beforeCount = items.length;
 
-          (this.offlineData as any)[dataType] = items.filter((item: OfflineDataItem) => {
-            const itemDate = new Date(item.timestamp);
-            return itemDate >= cutoffDate || !item.synced; // Keep recent items and unsynced items
-          });
+          (this.offlineData as any)[dataType] = items.filter(
+            (item: OfflineDataItem) => {
+              const itemDate = new Date(item.timestamp);
+              return itemDate >= cutoffDate || !item.synced; // Keep recent items and unsynced items
+            },
+          );
 
           const afterCount = (this.offlineData as any)[dataType].length;
           cleanedItems += beforeCount - afterCount;
@@ -994,8 +1041,15 @@ class OfflineManager {
     }
 
     try {
-      const queueResults = await this.processSyncQueue() || { successful: 0, failed: 0, errors: [] };
-      const dataResults = await this.syncOfflineData() || { successful: 0, failed: 0 };
+      const queueResults = (await this.processSyncQueue()) || {
+        successful: 0,
+        failed: 0,
+        errors: [],
+      };
+      const dataResults = (await this.syncOfflineData()) || {
+        successful: 0,
+        failed: 0,
+      };
 
       const totalSuccessful = queueResults.successful + dataResults.successful;
       const totalFailed = queueResults.failed + dataResults.failed;
@@ -1016,7 +1070,11 @@ class OfflineManager {
       if (__DEV__) {
         console.error("Error during forced sync:", error);
       }
-      this.showSyncNotification("Sync failed: " + (error instanceof Error ? error.message : String(error)), "error");
+      this.showSyncNotification(
+        "Sync failed: " +
+          (error instanceof Error ? error.message : String(error)),
+        "error",
+      );
       throw error;
     }
   }

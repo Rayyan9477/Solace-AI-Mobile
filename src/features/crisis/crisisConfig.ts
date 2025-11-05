@@ -50,13 +50,7 @@ export const CRISIS_KEYWORDS = {
   ],
 
   // Urgency indicators - time-based danger signals
-  urgency: [
-    "right now",
-    "tonight",
-    "today",
-    "plan to",
-    "going to",
-  ],
+  urgency: ["right now", "tonight", "today", "plan to", "going to"],
 };
 
 /**
@@ -200,16 +194,18 @@ export const SAFETY_PLAN_TEMPLATE = {
  *
  * @returns {Promise<Object>} Updated crisis configuration
  */
-export async function loadRemoteCrisisConfig(apiUrl = process.env.EXPO_PUBLIC_API_URL) {
+export async function loadRemoteCrisisConfig(
+  apiUrl = process.env.EXPO_PUBLIC_API_URL,
+) {
   try {
     if (!apiUrl) {
       return null;
     }
 
     const response = await global.fetch(`${apiUrl}/config/crisis-keywords`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
@@ -218,7 +214,10 @@ export async function loadRemoteCrisisConfig(apiUrl = process.env.EXPO_PUBLIC_AP
       return remoteConfig;
     }
   } catch (error) {
-    console.warn('Failed to load remote crisis config, using defaults:', error.message);
+    console.warn(
+      "Failed to load remote crisis config, using defaults:",
+      error.message,
+    );
   }
 
   return null;

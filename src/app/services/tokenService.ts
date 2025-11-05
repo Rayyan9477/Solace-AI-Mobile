@@ -3,9 +3,10 @@
  * Handles secure storage and retrieval of access/refresh tokens
  */
 
-import { STORAGE_CONFIG } from '../../shared/config/environment';
-import { logger } from '@shared/utils/logger';
-import secureStorage from './secureStorage';
+import { logger } from "@shared/utils/logger";
+
+import secureStorage from "./secureStorage";
+import { STORAGE_CONFIG } from "../../shared/config/environment";
 
 class TokenService {
   private storage: typeof secureStorage;
@@ -18,22 +19,30 @@ class TokenService {
   /**
    * Store authentication tokens securely
    */
-  async storeTokens({ accessToken, refreshToken, expiresAt }: { accessToken: string; refreshToken: string; expiresAt?: number }) {
+  async storeTokens({
+    accessToken,
+    refreshToken,
+    expiresAt,
+  }: {
+    accessToken: string;
+    refreshToken: string;
+    expiresAt?: number;
+  }) {
     if (!accessToken || !refreshToken) {
-      throw new Error('Access token and refresh token are required');
+      throw new Error("Access token and refresh token are required");
     }
 
     const tokenData = {
       accessToken,
       refreshToken,
-      expiresAt: expiresAt || (Date.now() + 3600 * 1000), // Default 1 hour
+      expiresAt: expiresAt || Date.now() + 3600 * 1000, // Default 1 hour
       storedAt: Date.now(),
     };
 
     await this.storage.storeSecureData(
       `${STORAGE_CONFIG.keyPrefix}auth_tokens`,
       tokenData,
-      { dataType: 'auth_tokens' }
+      { dataType: "auth_tokens" },
     );
   }
 
@@ -44,7 +53,7 @@ class TokenService {
   async getTokens() {
     try {
       const tokenData = await this.storage.getSecureData(
-        `${STORAGE_CONFIG.keyPrefix}auth_tokens`
+        `${STORAGE_CONFIG.keyPrefix}auth_tokens`,
       );
 
       if (!tokenData) {
@@ -60,7 +69,7 @@ class TokenService {
 
       return tokenData;
     } catch (error) {
-      logger.warn('Failed to retrieve tokens:', error);
+      logger.warn("Failed to retrieve tokens:", error);
       return null;
     }
   }
@@ -70,9 +79,11 @@ class TokenService {
    */
   async clearTokens() {
     try {
-      await this.storage.removeSecureData(`${STORAGE_CONFIG.keyPrefix}auth_tokens`);
+      await this.storage.removeSecureData(
+        `${STORAGE_CONFIG.keyPrefix}auth_tokens`,
+      );
     } catch (error) {
-      logger.warn('Failed to clear tokens:', error);
+      logger.warn("Failed to clear tokens:", error);
       // Don't throw - clearing should be best effort
     }
   }
@@ -84,9 +95,9 @@ class TokenService {
   async isAuthenticated() {
     try {
       const tokens = await this.getTokens();
-      return !!(tokens?.accessToken);
+      return !!tokens?.accessToken;
     } catch (error) {
-      logger.warn('Failed to check authentication status:', error);
+      logger.warn("Failed to check authentication status:", error);
       return false;
     }
   }
@@ -128,7 +139,7 @@ class TokenService {
   async refreshAccessToken() {
     // If refresh is already in progress, return the existing promise
     if (this.refreshPromise) {
-      logger.info('Token refresh already in progress, waiting for result');
+      logger.info("Token refresh already in progress, waiting for result");
       return this.refreshPromise;
     }
 
@@ -140,8 +151,9 @@ class TokenService {
           return null;
         }
 
-        const apiService = await import('./api');
-        const newTokens = await apiService.default.auth.refreshToken(refreshToken);
+        const apiService = await import("./api");
+        const newTokens =
+          await apiService.default.auth.refreshToken(refreshToken);
 
         await this.storeTokens({
           accessToken: newTokens.access_token,
@@ -155,7 +167,7 @@ class TokenService {
           expiresAt: Date.now() + (newTokens.expires_in || 3600) * 1000,
         };
       } catch (error) {
-        logger.warn('Failed to refresh access token:', error);
+        logger.warn("Failed to refresh access token:", error);
         await this.clearTokens();
         return null;
       } finally {
@@ -175,9 +187,11 @@ class TokenService {
     await this.clearTokens();
 
     try {
-      await secureStorage.removeSecureData(`${STORAGE_CONFIG.keyPrefix}session_data`);
+      await secureStorage.removeSecureData(
+        `${STORAGE_CONFIG.keyPrefix}session_data`,
+      );
     } catch (error) {
-      logger.warn('Failed to clear session data:', error);
+      logger.warn("Failed to clear session data:", error);
     }
   }
 
@@ -200,7 +214,7 @@ class TokenService {
       return true;
     }
 
-    const fiveMinutesFromNow = Date.now() + (5 * 60 * 1000);
+    const fiveMinutesFromNow = Date.now() + 5 * 60 * 1000;
     return tokens.expiresAt < fiveMinutesFromNow;
   }
 }

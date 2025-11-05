@@ -3,7 +3,9 @@
  * Simple onboarding interface without styled-components
  */
 
-import React, { useState, useRef } from 'react';
+import { completeOnboarding } from "@app/store/slices/authSlice";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -12,34 +14,34 @@ import {
   ScrollView,
   Animated,
   StyleSheet,
-} from 'react-native';
-import { useDispatch } from 'react-redux';
-import { useTheme } from '@theme/ThemeProvider';
-import { completeOnboarding } from '@app/store/slices/authSlice';
+} from "react-native";
+import { useDispatch } from "react-redux";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const onboardingSteps = [
   {
     id: 1,
-    title: 'Welcome to Solace AI',
-    description: 'Your mental health companion is here to support you on your wellness journey.',
-    emoji: '🧠',
-    color: '#007AFF',
+    title: "Welcome to Solace AI",
+    description:
+      "Your mental health companion is here to support you on your wellness journey.",
+    emoji: "🧠",
+    color: "#007AFF",
   },
   {
     id: 2,
-    title: 'Track Your Mood',
-    description: 'Monitor your emotional patterns and gain insights into your mental health.',
-    emoji: '😊',
-    color: '#34C759',
+    title: "Track Your Mood",
+    description:
+      "Monitor your emotional patterns and gain insights into your mental health.",
+    emoji: "😊",
+    color: "#34C759",
   },
   {
     id: 3,
-    title: 'AI Therapy Chat',
-    description: 'Get personalized support and guidance from our AI therapist.',
-    emoji: '💬',
-    color: '#FF9500',
+    title: "AI Therapy Chat",
+    description: "Get personalized support and guidance from our AI therapist.",
+    emoji: "💬",
+    color: "#FF9500",
   },
 ];
 
@@ -54,13 +56,13 @@ const OnboardingScreen = ({ navigation }) => {
       setCurrentStep(currentStep + 1);
     } else {
       dispatch(completeOnboarding());
-      navigation.navigate('Login');
+      navigation.navigate("Login");
     }
   };
 
   const handleSkip = () => {
     dispatch(completeOnboarding());
-    navigation.navigate('Login');
+    navigation.navigate("Login");
   };
 
   const currentStepData = onboardingSteps[currentStep];
@@ -68,13 +70,13 @@ const OnboardingScreen = ({ navigation }) => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.colors?.background?.primary || '#F7FAFC',
+      backgroundColor: theme.colors?.background?.primary || "#F7FAFC",
     },
     slideContainer: {
-      width: width,
-      height: height,
-      justifyContent: 'center',
-      alignItems: 'center',
+      width,
+      height,
+      justifyContent: "center",
+      alignItems: "center",
       padding: 40,
     },
     illustrationContainer: {
@@ -82,36 +84,36 @@ const OnboardingScreen = ({ navigation }) => {
       height: 200,
       borderRadius: 100,
       backgroundColor: currentStepData.color,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       marginBottom: 40,
     },
     illustrationText: {
       fontSize: 80,
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     titleText: {
       fontSize: 28,
-      fontWeight: 'bold',
-      color: theme.colors?.text?.primary || '#2D3748',
-      textAlign: 'center',
+      fontWeight: "bold",
+      color: theme.colors?.text?.primary || "#2D3748",
+      textAlign: "center",
       marginBottom: 16,
     },
     descriptionText: {
       fontSize: 16,
-      color: theme.colors?.text?.secondary || '#718096',
-      textAlign: 'center',
+      color: theme.colors?.text?.secondary || "#718096",
+      textAlign: "center",
       lineHeight: 24,
       maxWidth: 300,
     },
     navigationContainer: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 60,
       left: 0,
       right: 0,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       paddingHorizontal: 20,
     },
     button: {
@@ -120,24 +122,24 @@ const OnboardingScreen = ({ navigation }) => {
       borderRadius: 8,
     },
     skipButton: {
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     skipButtonText: {
-      color: theme.colors?.text?.secondary || '#718096',
+      color: theme.colors?.text?.secondary || "#718096",
       fontSize: 16,
     },
     nextButton: {
       backgroundColor: currentStepData.color,
     },
     nextButtonText: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     paginationContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
     },
     paginationDot: {
       width: 12,
@@ -149,7 +151,7 @@ const OnboardingScreen = ({ navigation }) => {
       backgroundColor: currentStepData.color,
     },
     inactiveDot: {
-      backgroundColor: theme.colors?.text?.tertiary || '#CBD5E1',
+      backgroundColor: theme.colors?.text?.tertiary || "#CBD5E1",
     },
   });
 
@@ -160,7 +162,9 @@ const OnboardingScreen = ({ navigation }) => {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={(event) => {
-          const newIndex = Math.round(event.nativeEvent.contentOffset.x / width);
+          const newIndex = Math.round(
+            event.nativeEvent.contentOffset.x / width,
+          );
           setCurrentStep(newIndex);
         }}
       >
@@ -192,9 +196,14 @@ const OnboardingScreen = ({ navigation }) => {
           ))}
         </View>
 
-        <TouchableOpacity style={[styles.button, styles.nextButton]} onPress={handleNext}>
+        <TouchableOpacity
+          style={[styles.button, styles.nextButton]}
+          onPress={handleNext}
+        >
           <Text style={styles.nextButtonText}>
-            {currentStep === onboardingSteps.length - 1 ? 'Get Started' : 'Next'}
+            {currentStep === onboardingSteps.length - 1
+              ? "Get Started"
+              : "Next"}
           </Text>
         </TouchableOpacity>
       </View>

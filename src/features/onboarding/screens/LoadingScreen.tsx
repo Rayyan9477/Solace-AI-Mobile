@@ -3,15 +3,15 @@
  * Based on ui-designs/Dark-mode/Splash & Loading.png
  */
 
-import React, { useState, useEffect } from 'react';
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
   ActivityIndicator,
-} from 'react-native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface LoadingScreenProps {
   message?: string;
@@ -19,18 +19,18 @@ interface LoadingScreenProps {
 }
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({
-  message = 'Loading...',
+  message = "Loading...",
   showProgress = true,
 }) => {
   const { theme } = useTheme();
   const [progress, setProgress] = useState(0);
-  const [currentMessage, setCurrentMessage] = useState('Initializing...');
+  const [currentMessage, setCurrentMessage] = useState("Initializing...");
 
   const loadingMessages = [
-    'Initializing...',
-    'Loading your data...',
-    'Setting up your profile...',
-    'Almost there...',
+    "Initializing...",
+    "Loading your data...",
+    "Setting up your profile...",
+    "Almost there...",
   ];
 
   useEffect(() => {
@@ -61,8 +61,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
     container: {
       flex: 1,
       backgroundColor: theme.colors.background.primary,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       paddingHorizontal: 40,
     },
     iconContainer: {
@@ -73,36 +73,36 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
     },
     loadingText: {
       fontSize: 20,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
-      textAlign: 'center',
+      textAlign: "center",
     },
     messageText: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
       marginBottom: 32,
-      textAlign: 'center',
+      textAlign: "center",
     },
     progressContainer: {
-      width: '100%',
+      width: "100%",
       height: 6,
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 3,
-      overflow: 'hidden',
+      overflow: "hidden",
       marginBottom: 16,
     },
     progressBar: {
-      height: '100%',
-      backgroundColor: theme.colors.purple['60'],
+      height: "100%",
+      backgroundColor: theme.colors.purple["60"],
       borderRadius: 3,
     },
     progressText: {
       fontSize: 13,
-      fontWeight: '700',
-      color: theme.colors.purple['60'],
-      textAlign: 'center',
+      fontWeight: "700",
+      color: theme.colors.purple["60"],
+      textAlign: "center",
     },
     spinner: {
       marginTop: 20,
@@ -129,7 +129,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
 
       <ActivityIndicator
         size="large"
-        color={theme.colors.purple['60']}
+        color={theme.colors.purple["60"]}
         style={styles.spinner}
       />
     </SafeAreaView>

@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/Mental Health Journal.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,11 +14,9 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 interface JournalEntry {
   date: number;
@@ -41,82 +41,82 @@ export const JournalCalendarScreen = () => {
   };
 
   const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
-  const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const weekDays = ["S", "M", "T", "W", "T", "F", "S"];
 
   const journalEntries: { [key: number]: JournalEntry } = {
     22: {
       date: 22,
-      title: 'Feeling Bad Again',
-      mood: 'Anxious',
-      emoji: '😰',
-      preview: 'I felt so overwhelmed today...',
+      title: "Feeling Bad Again",
+      mood: "Anxious",
+      emoji: "😰",
+      preview: "I felt so overwhelmed today...",
     },
     24: {
       date: 24,
-      title: 'Progress Today!',
-      mood: 'Happy',
-      emoji: '😊',
-      preview: 'In grateful for the supportive phone call...',
+      title: "Progress Today!",
+      mood: "Happy",
+      emoji: "😊",
+      preview: "In grateful for the supportive phone call...",
     },
     26: {
       date: 26,
-      title: 'Get A Gift from my BF OMG!',
-      mood: 'Excited',
-      emoji: '😄',
-      preview: 'I experienced pure joy today when...',
+      title: "Get A Gift from my BF OMG!",
+      mood: "Excited",
+      emoji: "😄",
+      preview: "I experienced pure joy today when...",
     },
     27: {
       date: 27,
-      title: 'Felt Bad, but it\'s OK',
-      mood: 'Neutral',
-      emoji: '😐',
-      preview: 'I felt anxious today during the team...',
+      title: "Felt Bad, but it's OK",
+      mood: "Neutral",
+      emoji: "😐",
+      preview: "I felt anxious today during the team...",
     },
     28: {
       date: 28,
-      title: 'Felt Sad & Glad. IDK what to do',
-      mood: 'Mixed',
-      emoji: '😕',
-      preview: 'Feeling confused after hearing a...',
+      title: "Felt Sad & Glad. IDK what to do",
+      mood: "Mixed",
+      emoji: "😕",
+      preview: "Feeling confused after hearing a...",
     },
     30: {
       date: 30,
-      title: 'I amazed and myself',
-      mood: 'Proud',
-      emoji: '😌',
-      preview: 'An important day! Decided feeling...',
+      title: "I amazed and myself",
+      mood: "Proud",
+      emoji: "😌",
+      preview: "An important day! Decided feeling...",
     },
   };
 
   const getMoodColor = (mood: string) => {
     switch (mood) {
-      case 'Happy':
-      case 'Excited':
-        return theme.colors.green['60'];
-      case 'Neutral':
-      case 'Proud':
-        return theme.colors.yellow['60'];
-      case 'Mixed':
-      case 'Anxious':
-        return theme.colors.orange['60'];
-      case 'Sad':
-        return theme.colors.purple['60'];
+      case "Happy":
+      case "Excited":
+        return theme.colors.green["60"];
+      case "Neutral":
+      case "Proud":
+        return theme.colors.yellow["60"];
+      case "Mixed":
+      case "Anxious":
+        return theme.colors.orange["60"];
+      case "Sad":
+        return theme.colors.purple["60"];
       default:
-        return theme.colors.gray['40'];
+        return theme.colors.gray["40"];
     }
   };
 
@@ -139,9 +139,9 @@ export const JournalCalendarScreen = () => {
     return days;
   };
 
-  const changeMonth = (direction: 'prev' | 'next') => {
+  const changeMonth = (direction: "prev" | "next") => {
     const newDate = new Date(selectedMonth);
-    if (direction === 'prev') {
+    if (direction === "prev") {
       newDate.setMonth(newDate.getMonth() - 1);
     } else {
       newDate.setMonth(newDate.getMonth() + 1);
@@ -159,99 +159,99 @@ export const JournalCalendarScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     statsButton: {
       paddingHorizontal: 12,
       paddingVertical: 6,
-      backgroundColor: theme.colors.brown['60'],
+      backgroundColor: theme.colors.brown["60"],
       borderRadius: 12,
     },
     statsButtonText: {
       fontSize: 12,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     content: {
       flex: 1,
       padding: 20,
     },
     summaryCard: {
-      backgroundColor: theme.colors.orange['20'],
+      backgroundColor: theme.colors.orange["20"],
       borderRadius: 20,
       padding: 24,
       marginBottom: 24,
-      alignItems: 'center',
+      alignItems: "center",
     },
     summaryNumber: {
       fontSize: 64,
-      fontWeight: '800',
-      color: theme.colors.orange['100'],
+      fontWeight: "800",
+      color: theme.colors.orange["100"],
       marginBottom: 8,
     },
     summaryText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: theme.colors.orange['80'],
+      fontWeight: "700",
+      color: theme.colors.orange["80"],
     },
     monthSelector: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       marginBottom: 20,
     },
     monthButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: theme.colors.brown['10'],
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 20,
     },
     monthText: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     calendarCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 20,
       padding: 20,
       marginBottom: 24,
     },
     weekDaysRow: {
-      flexDirection: 'row',
+      flexDirection: "row",
       marginBottom: 12,
     },
     weekDay: {
       flex: 1,
-      alignItems: 'center',
+      alignItems: "center",
     },
     weekDayText: {
       fontSize: 12,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
     },
     calendarGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
     },
     dayCell: {
       width: `${100 / 7}%`,
@@ -261,8 +261,8 @@ export const JournalCalendarScreen = () => {
     dayButton: {
       flex: 1,
       borderRadius: 12,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       backgroundColor: theme.colors.background.primary,
     },
     dayWithEntry: {
@@ -270,7 +270,7 @@ export const JournalCalendarScreen = () => {
     },
     dayNumber: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     dayDot: {
@@ -280,20 +280,20 @@ export const JournalCalendarScreen = () => {
       marginTop: 2,
     },
     emptyDay: {
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     selectedDay: {
-      backgroundColor: theme.colors.brown['40'],
+      backgroundColor: theme.colors.brown["40"],
     },
     entryPreview: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 16,
       marginBottom: 12,
     },
     entryHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginBottom: 8,
     },
     entryEmoji: {
@@ -302,7 +302,7 @@ export const JournalCalendarScreen = () => {
     },
     entryTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       flex: 1,
     },
@@ -313,8 +313,8 @@ export const JournalCalendarScreen = () => {
     },
     entryMoodText: {
       fontSize: 11,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     entryPreviewText: {
       fontSize: 13,
@@ -324,11 +324,11 @@ export const JournalCalendarScreen = () => {
     },
     entryDate: {
       fontSize: 11,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.tertiary,
     },
     emptyState: {
-      alignItems: 'center',
+      alignItems: "center",
       paddingVertical: 40,
     },
     emptyIcon: {
@@ -337,9 +337,9 @@ export const JournalCalendarScreen = () => {
     },
     emptyText: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
     },
   });
 
@@ -371,13 +371,19 @@ export const JournalCalendarScreen = () => {
 
         {/* Month Selector */}
         <View style={styles.monthSelector}>
-          <TouchableOpacity style={styles.monthButton} onPress={() => changeMonth('prev')}>
+          <TouchableOpacity
+            style={styles.monthButton}
+            onPress={() => changeMonth("prev")}
+          >
             <Text style={{ fontSize: 20 }}>←</Text>
           </TouchableOpacity>
           <Text style={styles.monthText}>
             {monthNames[selectedMonth.getMonth()]} {selectedMonth.getFullYear()}
           </Text>
-          <TouchableOpacity style={styles.monthButton} onPress={() => changeMonth('next')}>
+          <TouchableOpacity
+            style={styles.monthButton}
+            onPress={() => changeMonth("next")}
+          >
             <Text style={{ fontSize: 20 }}>→</Text>
           </TouchableOpacity>
         </View>
@@ -421,7 +427,10 @@ export const JournalCalendarScreen = () => {
                     <Text style={styles.dayNumber}>{day}</Text>
                     {entry && (
                       <View
-                        style={[styles.dayDot, { backgroundColor: getMoodColor(entry.mood) }]}
+                        style={[
+                          styles.dayDot,
+                          { backgroundColor: getMoodColor(entry.mood) },
+                        ]}
                       />
                     )}
                   </TouchableOpacity>
@@ -435,20 +444,33 @@ export const JournalCalendarScreen = () => {
         {selectedDate && journalEntries[selectedDate] ? (
           <View style={styles.entryPreview}>
             <View style={styles.entryHeader}>
-              <Text style={styles.entryEmoji}>{journalEntries[selectedDate].emoji}</Text>
-              <Text style={styles.entryTitle}>{journalEntries[selectedDate].title}</Text>
+              <Text style={styles.entryEmoji}>
+                {journalEntries[selectedDate].emoji}
+              </Text>
+              <Text style={styles.entryTitle}>
+                {journalEntries[selectedDate].title}
+              </Text>
               <View
                 style={[
                   styles.entryMoodBadge,
-                  { backgroundColor: getMoodColor(journalEntries[selectedDate].mood) },
+                  {
+                    backgroundColor: getMoodColor(
+                      journalEntries[selectedDate].mood,
+                    ),
+                  },
                 ]}
               >
-                <Text style={styles.entryMoodText}>{journalEntries[selectedDate].mood}</Text>
+                <Text style={styles.entryMoodText}>
+                  {journalEntries[selectedDate].mood}
+                </Text>
               </View>
             </View>
-            <Text style={styles.entryPreviewText}>{journalEntries[selectedDate].preview}</Text>
+            <Text style={styles.entryPreviewText}>
+              {journalEntries[selectedDate].preview}
+            </Text>
             <Text style={styles.entryDate}>
-              {monthNames[selectedMonth.getMonth()]} {selectedDate}, {selectedMonth.getFullYear()}
+              {monthNames[selectedMonth.getMonth()]} {selectedDate},{" "}
+              {selectedMonth.getFullYear()}
             </Text>
           </View>
         ) : selectedDate ? (

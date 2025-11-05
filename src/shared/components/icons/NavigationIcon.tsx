@@ -4,9 +4,10 @@
  * Extends MentalHealthIcon for navigation use cases
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import MentalHealthIcon from './MentalHealthIcon';
+import PropTypes from "prop-types";
+import React from "react";
+
+import MentalHealthIcon from "./MentalHealthIcon";
 
 /**
  * NavigationIcon - Convenience wrapper for navigation icons
@@ -15,11 +16,11 @@ import MentalHealthIcon from './MentalHealthIcon';
 const NavigationIcon = ({ name, ...props }) => {
   // Map navigation-specific names if needed
   const iconMap = {
-    back: 'ArrowBack',
-    forward: 'ArrowForward',
-    home: 'Home',
-    close: 'Close',
-    menu: 'Menu',
+    back: "ArrowBack",
+    forward: "ArrowForward",
+    home: "Home",
+    close: "Close",
+    menu: "Menu",
   };
 
   const mappedName = iconMap[name?.toLowerCase()] || name;
@@ -31,7 +32,7 @@ NavigationIcon.propTypes = {
   name: PropTypes.string.isRequired,
   size: PropTypes.number,
   color: PropTypes.string,
-  variant: PropTypes.oneOf(['filled', 'outline']),
+  variant: PropTypes.oneOf(["filled", "outline"]),
   style: PropTypes.object,
 };
 

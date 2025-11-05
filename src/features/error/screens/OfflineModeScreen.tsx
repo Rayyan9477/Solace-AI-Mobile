@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Error & Other Utilities.png
  */
 
-import React from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
 import {
   View,
   Text,
@@ -11,9 +13,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface OfflineFeature {
   id: string;
@@ -28,64 +28,64 @@ export const OfflineModeScreen = () => {
 
   const offlineFeatures: OfflineFeature[] = [
     {
-      id: 'journal',
-      title: 'Journal Entries',
-      icon: '📝',
+      id: "journal",
+      title: "Journal Entries",
+      icon: "📝",
       available: true,
     },
     {
-      id: 'mood',
-      title: 'Mood Tracking',
-      icon: '😊',
+      id: "mood",
+      title: "Mood Tracking",
+      icon: "😊",
       available: true,
     },
     {
-      id: 'breathing',
-      title: 'Breathing Exercises',
-      icon: '🫁',
+      id: "breathing",
+      title: "Breathing Exercises",
+      icon: "🫁",
       available: true,
     },
     {
-      id: 'meditation',
-      title: 'Downloaded Meditations',
-      icon: '🧘',
+      id: "meditation",
+      title: "Downloaded Meditations",
+      icon: "🧘",
       available: true,
     },
     {
-      id: 'crisis',
-      title: 'Crisis Resources',
-      icon: '🆘',
+      id: "crisis",
+      title: "Crisis Resources",
+      icon: "🆘",
       available: true,
     },
     {
-      id: 'chat',
-      title: 'AI Chat',
-      icon: '💬',
+      id: "chat",
+      title: "AI Chat",
+      icon: "💬",
       available: false,
     },
     {
-      id: 'community',
-      title: 'Community Support',
-      icon: '👥',
+      id: "community",
+      title: "Community Support",
+      icon: "👥",
       available: false,
     },
     {
-      id: 'resources',
-      title: 'Online Resources',
-      icon: '📚',
+      id: "resources",
+      title: "Online Resources",
+      icon: "📚",
       available: false,
     },
   ];
 
   const handleCheckConnection = () => {
     if (__DEV__) {
-      console.log('Checking connection...');
+      console.log("Checking connection...");
     }
     // TODO: Implement actual connection check
   };
 
   const handleContinueOffline = () => {
-    navigation.navigate('Dashboard');
+    navigation.navigate("Dashboard");
   };
 
   const styles = StyleSheet.create({
@@ -99,8 +99,8 @@ export const OfflineModeScreen = () => {
     heroSection: {
       paddingHorizontal: 40,
       paddingVertical: 40,
-      alignItems: 'center',
-      backgroundColor: theme.colors.orange['20'],
+      alignItems: "center",
+      backgroundColor: theme.colors.orange["20"],
     },
     heroIcon: {
       fontSize: 64,
@@ -108,28 +108,28 @@ export const OfflineModeScreen = () => {
     },
     heroTitle: {
       fontSize: 24,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 8,
-      textAlign: 'center',
+      textAlign: "center",
     },
     heroMessage: {
       fontSize: 15,
       lineHeight: 22,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: 24,
     },
     checkButton: {
-      backgroundColor: theme.colors.orange['60'],
+      backgroundColor: theme.colors.orange["60"],
       borderRadius: 12,
       paddingVertical: 14,
       paddingHorizontal: 32,
     },
     checkButtonText: {
       fontSize: 15,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     section: {
       paddingHorizontal: 20,
@@ -137,7 +137,7 @@ export const OfflineModeScreen = () => {
     },
     sectionTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -151,19 +151,19 @@ export const OfflineModeScreen = () => {
       gap: 12,
     },
     featureCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 12,
       padding: 16,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
     },
     featureCardDisabled: {
       opacity: 0.5,
     },
     featureLeft: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       flex: 1,
     },
     featureIcon: {
@@ -172,7 +172,7 @@ export const OfflineModeScreen = () => {
     },
     featureTitle: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     statusBadge: {
@@ -181,42 +181,42 @@ export const OfflineModeScreen = () => {
       borderRadius: 8,
     },
     statusBadgeAvailable: {
-      backgroundColor: theme.colors.green['20'],
+      backgroundColor: theme.colors.green["20"],
     },
     statusBadgeUnavailable: {
-      backgroundColor: theme.colors.red['20'],
+      backgroundColor: theme.colors.red["20"],
     },
     statusText: {
       fontSize: 11,
-      fontWeight: '700',
-      textTransform: 'uppercase',
+      fontWeight: "700",
+      textTransform: "uppercase",
     },
     statusTextAvailable: {
-      color: theme.colors.green['60'],
+      color: theme.colors.green["60"],
     },
     statusTextUnavailable: {
-      color: theme.colors.red['60'],
+      color: theme.colors.red["60"],
     },
     bottomBar: {
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderTopWidth: 1,
-      borderTopColor: theme.colors.gray['20'],
+      borderTopColor: theme.colors.gray["20"],
       backgroundColor: theme.colors.background.primary,
     },
     continueButton: {
-      backgroundColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["60"],
       borderRadius: 16,
       paddingVertical: 16,
-      alignItems: 'center',
+      alignItems: "center",
     },
     continueButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     tipCard: {
-      backgroundColor: theme.colors.blue['20'],
+      backgroundColor: theme.colors.blue["20"],
       borderRadius: 12,
       padding: 16,
       marginHorizontal: 20,
@@ -224,7 +224,7 @@ export const OfflineModeScreen = () => {
     },
     tipTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -248,7 +248,8 @@ export const OfflineModeScreen = () => {
           <Text style={styles.heroIcon}>📡</Text>
           <Text style={styles.heroTitle}>You're Offline</Text>
           <Text style={styles.heroMessage}>
-            No internet connection detected. Some features are limited, but you can still use Solace AI offline.
+            No internet connection detected. Some features are limited, but you
+            can still use Solace AI offline.
           </Text>
           <TouchableOpacity
             style={styles.checkButton}
@@ -273,12 +274,8 @@ export const OfflineModeScreen = () => {
                   <Text style={styles.featureIcon}>{feature.icon}</Text>
                   <Text style={styles.featureTitle}>{feature.title}</Text>
                 </View>
-                <View
-                  style={[styles.statusBadge, styles.statusBadgeAvailable]}
-                >
-                  <Text
-                    style={[styles.statusText, styles.statusTextAvailable]}
-                  >
+                <View style={[styles.statusBadge, styles.statusBadgeAvailable]}>
+                  <Text style={[styles.statusText, styles.statusTextAvailable]}>
                     Available
                   </Text>
                 </View>

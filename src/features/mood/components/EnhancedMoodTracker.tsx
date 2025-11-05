@@ -3,7 +3,8 @@
  * Basic mood tracking interface without complex dependencies
  */
 
-import React, { useState } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,23 +13,22 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
-} from 'react-native';
-import { Card, Button, Chip, TextInput, ProgressBar } from 'react-native-paper';
-import { LinearGradient } from 'expo-linear-gradient';
+} from "react-native";
+import { Card, Button, Chip, TextInput, ProgressBar } from "react-native-paper";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 const moodOptions = [
-  { id: 1, emoji: '😢', label: 'Very Sad', color: '#FF6B6B' },
-  { id: 2, emoji: '😔', label: 'Sad', color: '#FFA726' },
-  { id: 3, emoji: '😐', label: 'Neutral', color: '#FFD54F' },
-  { id: 4, emoji: '😊', label: 'Happy', color: '#66BB6A' },
-  { id: 5, emoji: '😄', label: 'Very Happy', color: '#42A5F5' },
+  { id: 1, emoji: "😢", label: "Very Sad", color: "#FF6B6B" },
+  { id: 2, emoji: "😔", label: "Sad", color: "#FFA726" },
+  { id: 3, emoji: "😐", label: "Neutral", color: "#FFD54F" },
+  { id: 4, emoji: "😊", label: "Happy", color: "#66BB6A" },
+  { id: 5, emoji: "😄", label: "Very Happy", color: "#42A5F5" },
 ];
 
 const EnhancedMoodTracker = ({ navigation }) => {
   const [selectedMood, setSelectedMood] = useState(null);
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useState("");
   const [intensity, setIntensity] = useState(5);
 
   const handleMoodSelect = (mood) => {
@@ -37,7 +37,7 @@ const EnhancedMoodTracker = ({ navigation }) => {
 
   const handleSubmit = () => {
     if (selectedMood) {
-      console.log('Mood logged:', { mood: selectedMood, notes, intensity });
+      console.log("Mood logged:", { mood: selectedMood, notes, intensity });
       // Navigate back or show success message
       navigation.goBack();
     }
@@ -46,18 +46,18 @@ const EnhancedMoodTracker = ({ navigation }) => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#F7FAFC',
+      backgroundColor: "#F7FAFC",
     },
     header: {
       padding: 20,
-      paddingTop: Platform.OS === 'ios' ? 60 : 40,
-      backgroundColor: '#007AFF',
+      paddingTop: Platform.OS === "ios" ? 60 : 40,
+      backgroundColor: "#007AFF",
     },
     headerText: {
       fontSize: 24,
-      fontWeight: 'bold',
-      color: '#FFFFFF',
-      textAlign: 'center',
+      fontWeight: "bold",
+      color: "#FFFFFF",
+      textAlign: "center",
     },
     content: {
       flex: 1,
@@ -68,31 +68,31 @@ const EnhancedMoodTracker = ({ navigation }) => {
     },
     sectionTitle: {
       fontSize: 18,
-      fontWeight: '600',
-      color: '#2D3748',
+      fontWeight: "600",
+      color: "#2D3748",
       marginBottom: 12,
     },
     moodGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
     },
     moodCard: {
-      width: '18%',
+      width: "18%",
       aspectRatio: 1,
       marginBottom: 12,
       borderRadius: 12,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#FFFFFF',
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#FFFFFF",
       elevation: 2,
-      shadowColor: '#000',
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
     },
     selectedMoodCard: {
-      backgroundColor: '#007AFF',
+      backgroundColor: "#007AFF",
     },
     moodEmoji: {
       fontSize: 32,
@@ -100,51 +100,51 @@ const EnhancedMoodTracker = ({ navigation }) => {
     },
     moodLabel: {
       fontSize: 10,
-      color: '#718096',
-      textAlign: 'center',
+      color: "#718096",
+      textAlign: "center",
     },
     selectedMoodLabel: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     inputContainer: {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: "#FFFFFF",
       borderRadius: 12,
       padding: 16,
       elevation: 2,
-      shadowColor: '#000',
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
     },
     intensityContainer: {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: "#FFFFFF",
       borderRadius: 12,
       padding: 16,
       elevation: 2,
-      shadowColor: '#000',
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
     },
     intensityLabel: {
       fontSize: 16,
-      color: '#2D3748',
+      color: "#2D3748",
       marginBottom: 8,
     },
     submitButton: {
-      backgroundColor: '#007AFF',
+      backgroundColor: "#007AFF",
       borderRadius: 12,
       paddingVertical: 16,
       marginTop: 20,
     },
     submitButtonText: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       fontSize: 16,
-      fontWeight: '600',
-      textAlign: 'center',
+      fontWeight: "600",
+      textAlign: "center",
     },
     disabledButton: {
-      backgroundColor: '#CBD5E1',
+      backgroundColor: "#CBD5E1",
     },
   });
 
@@ -190,7 +190,7 @@ const EnhancedMoodTracker = ({ navigation }) => {
               onChangeText={setNotes}
               multiline
               numberOfLines={4}
-              style={{ backgroundColor: 'transparent' }}
+              style={{ backgroundColor: "transparent" }}
             />
           </View>
         </View>
@@ -203,15 +203,12 @@ const EnhancedMoodTracker = ({ navigation }) => {
               progress={intensity / 10}
               color="#007AFF"
               style={{ height: 8, borderRadius: 4 }}
-      />
-    </View>
+            />
+          </View>
         </View>
 
         <TouchableOpacity
-          style={[
-            styles.submitButton,
-            !selectedMood && styles.disabledButton,
-          ]}
+          style={[styles.submitButton, !selectedMood && styles.disabledButton]}
           onPress={handleSubmit}
           disabled={!selectedMood}
         >

@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Mindful Resources.png
  */
 
-import React from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
 import {
   View,
   Text,
@@ -11,14 +13,12 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface BookmarkedResource {
   id: string;
   title: string;
-  type: 'article' | 'course' | 'audio' | 'video';
+  type: "article" | "course" | "audio" | "video";
   duration: string;
   category: string;
   bookmarkedDate: string;
@@ -31,40 +31,40 @@ export const BookmarkedResourcesScreen = () => {
 
   const bookmarkedResources: BookmarkedResource[] = [
     {
-      id: '1',
-      title: 'Mindfulness for Beginners',
-      type: 'course',
-      duration: '2 hours',
-      category: 'Mindfulness',
-      bookmarkedDate: '2 days ago',
-      icon: '📚',
+      id: "1",
+      title: "Mindfulness for Beginners",
+      type: "course",
+      duration: "2 hours",
+      category: "Mindfulness",
+      bookmarkedDate: "2 days ago",
+      icon: "📚",
     },
     {
-      id: '2',
-      title: '10 Minute Morning Meditation',
-      type: 'audio',
-      duration: '10 min',
-      category: 'Meditation',
-      bookmarkedDate: '1 week ago',
-      icon: '🎧',
+      id: "2",
+      title: "10 Minute Morning Meditation",
+      type: "audio",
+      duration: "10 min",
+      category: "Meditation",
+      bookmarkedDate: "1 week ago",
+      icon: "🎧",
     },
     {
-      id: '3',
-      title: 'Understanding Anxiety',
-      type: 'article',
-      duration: '5 min read',
-      category: 'Mental Health',
-      bookmarkedDate: '2 weeks ago',
-      icon: '📰',
+      id: "3",
+      title: "Understanding Anxiety",
+      type: "article",
+      duration: "5 min read",
+      category: "Mental Health",
+      bookmarkedDate: "2 weeks ago",
+      icon: "📰",
     },
     {
-      id: '4',
-      title: 'Guided Body Scan',
-      type: 'video',
-      duration: '15 min',
-      category: 'Relaxation',
-      bookmarkedDate: '3 weeks ago',
-      icon: '🎬',
+      id: "4",
+      title: "Guided Body Scan",
+      type: "video",
+      duration: "15 min",
+      category: "Relaxation",
+      bookmarkedDate: "3 weeks ago",
+      icon: "🎬",
     },
   ];
 
@@ -74,55 +74,55 @@ export const BookmarkedResourcesScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     sortButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     content: {
       flex: 1,
     },
     statsCard: {
-      backgroundColor: theme.colors.purple['20'],
+      backgroundColor: theme.colors.purple["20"],
       marginHorizontal: 20,
       marginTop: 20,
       borderRadius: 16,
       padding: 16,
-      flexDirection: 'row',
-      justifyContent: 'space-around',
+      flexDirection: "row",
+      justifyContent: "space-around",
     },
     statItem: {
-      alignItems: 'center',
+      alignItems: "center",
     },
     statValue: {
       fontSize: 24,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
     statLabel: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     section: {
@@ -131,17 +131,17 @@ export const BookmarkedResourcesScreen = () => {
     },
     sectionTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     resourceCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 16,
       marginBottom: 12,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
     },
     resourceIcon: {
       fontSize: 40,
@@ -152,20 +152,20 @@ export const BookmarkedResourcesScreen = () => {
     },
     resourceTitle: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
     resourceMeta: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
       marginBottom: 4,
     },
     resourceCategory: {
       fontSize: 11,
-      fontWeight: '700',
-      color: theme.colors.purple['60'],
+      fontWeight: "700",
+      color: theme.colors.purple["60"],
     },
     bookmarkButton: {
       padding: 8,
@@ -174,7 +174,7 @@ export const BookmarkedResourcesScreen = () => {
       fontSize: 24,
     },
     emptyState: {
-      alignItems: 'center',
+      alignItems: "center",
       paddingVertical: 60,
       paddingHorizontal: 40,
     },
@@ -184,39 +184,44 @@ export const BookmarkedResourcesScreen = () => {
     },
     emptyTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
-      textAlign: 'center',
+      textAlign: "center",
     },
     emptyDescription: {
       fontSize: 14,
       lineHeight: 20,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
     },
     exploreButton: {
-      backgroundColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["60"],
       borderRadius: 16,
       paddingVertical: 16,
       marginHorizontal: 20,
       marginTop: 24,
-      alignItems: 'center',
+      alignItems: "center",
     },
     exploreButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
   });
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'article': return '📰';
-      case 'course': return '📚';
-      case 'audio': return '🎧';
-      case 'video': return '🎬';
-      default: return '📄';
+      case "article":
+        return "📰";
+      case "course":
+        return "📚";
+      case "audio":
+        return "🎧";
+      case "video":
+        return "🎬";
+      default:
+        return "📄";
     }
   };
 
@@ -267,14 +272,16 @@ export const BookmarkedResourcesScreen = () => {
               key={resource.id}
               style={styles.resourceCard}
               onPress={() => {
-                if (resource.type === 'course') {
-                  navigation.navigate('CourseDetail', { id: resource.id });
-                } else if (resource.type === 'article') {
-                  navigation.navigate('ArticleDetail', { id: resource.id });
+                if (resource.type === "course") {
+                  navigation.navigate("CourseDetail", { id: resource.id });
+                } else if (resource.type === "article") {
+                  navigation.navigate("ArticleDetail", { id: resource.id });
                 }
               }}
             >
-              <Text style={styles.resourceIcon}>{getTypeIcon(resource.type)}</Text>
+              <Text style={styles.resourceIcon}>
+                {getTypeIcon(resource.type)}
+              </Text>
               <View style={styles.resourceInfo}>
                 <Text style={styles.resourceTitle}>{resource.title}</Text>
                 <Text style={styles.resourceMeta}>
@@ -291,7 +298,7 @@ export const BookmarkedResourcesScreen = () => {
 
         <TouchableOpacity
           style={styles.exploreButton}
-          onPress={() => navigation.navigate('MindfulResources')}
+          onPress={() => navigation.navigate("MindfulResources")}
         >
           <Text style={styles.exploreButtonText}>Explore More Resources</Text>
         </TouchableOpacity>

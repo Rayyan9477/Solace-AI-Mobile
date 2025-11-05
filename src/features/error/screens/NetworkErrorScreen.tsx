@@ -3,16 +3,16 @@
  * Based on ui-designs/Dark-mode/🔒 Error & Other Utilities.png
  */
 
-import React from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 export const NetworkErrorScreen = () => {
   const { theme } = useTheme();
@@ -20,7 +20,7 @@ export const NetworkErrorScreen = () => {
 
   const handleRetry = () => {
     if (__DEV__) {
-      console.log('Retrying connection...');
+      console.log("Retrying connection...");
     }
     // TODO: Implement actual retry logic
   };
@@ -34,8 +34,8 @@ export const NetworkErrorScreen = () => {
     container: {
       flex: 1,
       backgroundColor: theme.colors.background.primary,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       padding: 20,
     },
     illustration: {
@@ -44,21 +44,21 @@ export const NetworkErrorScreen = () => {
     },
     title: {
       fontSize: 24,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 12,
-      textAlign: 'center',
+      textAlign: "center",
     },
     message: {
       fontSize: 16,
       lineHeight: 24,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: 32,
       paddingHorizontal: 20,
     },
     retryButton: {
-      backgroundColor: theme.colors.orange['60'],
+      backgroundColor: theme.colors.orange["60"],
       borderRadius: 16,
       paddingVertical: 16,
       paddingHorizontal: 48,
@@ -66,8 +66,8 @@ export const NetworkErrorScreen = () => {
     },
     retryButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     offlineButton: {
       borderRadius: 16,
@@ -76,18 +76,18 @@ export const NetworkErrorScreen = () => {
     },
     offlineButtonText: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     tipCard: {
-      backgroundColor: theme.colors.blue['20'],
+      backgroundColor: theme.colors.blue["20"],
       borderRadius: 16,
       padding: 16,
       marginTop: 32,
     },
     tipTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -103,7 +103,8 @@ export const NetworkErrorScreen = () => {
       <Text style={styles.illustration}>📡</Text>
       <Text style={styles.title}>No Internet Connection</Text>
       <Text style={styles.message}>
-        Please check your network settings and try again. Some features may be available offline.
+        Please check your network settings and try again. Some features may be
+        available offline.
       </Text>
 
       <TouchableOpacity
@@ -129,9 +130,8 @@ export const NetworkErrorScreen = () => {
       <View style={styles.tipCard}>
         <Text style={styles.tipTitle}>💡 Troubleshooting Tips</Text>
         <Text style={styles.tipText}>
-          • Check if Wi-Fi or mobile data is enabled{'\n'}
-          • Try toggling airplane mode on/off{'\n'}
-          • Restart your device if the issue persists
+          • Check if Wi-Fi or mobile data is enabled{"\n"}• Try toggling
+          airplane mode on/off{"\n"}• Restart your device if the issue persists
         </Text>
       </View>
     </SafeAreaView>

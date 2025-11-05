@@ -4,14 +4,13 @@
  * Combines accessibility, mental health design patterns, and modern UI
  */
 
-import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
-import { View, Text, StyleSheet, Platform, Animated } from "react-native";
-import PropTypes from "prop-types";
-
+import { validateThemeAccessibility } from "@shared/utils/accessibility";
 import { useTheme } from "@theme/ThemeProvider";
 import { lightTheme as themeTokens } from "@theme/theme";
-import { validateThemeAccessibility } from "@shared/utils/accessibility";
+import { LinearGradient } from "expo-linear-gradient";
+import PropTypes from "prop-types";
+import React from "react";
+import { View, Text, StyleSheet, Platform, Animated } from "react-native";
 
 const { spacing, borderRadius, shadows, typography } = themeTokens;
 
@@ -133,7 +132,9 @@ export const MentalHealthCard = ({
 
   const resolvePath = (obj, path) => {
     if (!obj) return undefined;
-    return path.split(".").reduce((acc, seg) => (acc ? acc[seg] : undefined), obj);
+    return path
+      .split(".")
+      .reduce((acc, seg) => (acc ? acc[seg] : undefined), obj);
   };
 
   // Get theme colors for the variant with robust fallbacks
@@ -355,7 +356,9 @@ export const ProgressCard = ({
   // Get theme color helper (robust)
   const resolvePath = (obj, path) => {
     if (!obj) return undefined;
-    return path.split(".").reduce((acc, seg) => (acc ? acc[seg] : undefined), obj);
+    return path
+      .split(".")
+      .reduce((acc, seg) => (acc ? acc[seg] : undefined), obj);
   };
   const getThemeColor = (colorPath) => {
     const fromTheme = resolvePath(theme?.colors || {}, colorPath);
@@ -399,7 +402,10 @@ export const ProgressCard = ({
           />
         </View>
         <Text
-          style={[styles.progressText, { color: getThemeColor("text.secondary") }]}
+          style={[
+            styles.progressText,
+            { color: getThemeColor("text.secondary") },
+          ]}
         >
           {progress} / {maxValue}
         </Text>

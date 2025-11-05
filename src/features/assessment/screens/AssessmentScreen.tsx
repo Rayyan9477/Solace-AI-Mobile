@@ -4,7 +4,12 @@
  * Matches Freud UI design
  */
 
-import React, { useState } from 'react';
+import { MentalHealthIcon } from "@components/icons";
+import Slider from "@react-native-community/slider";
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -14,129 +19,119 @@ import {
   StatusBar,
   ScrollView,
   Dimensions,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import Slider from '@react-native-community/slider';
-import { useTheme } from '@theme/ThemeProvider';
-import { MentalHealthIcon } from '@components/icons';
-import { useNavigation } from '@react-navigation/native';
+} from "react-native";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const QUESTIONS = [
   {
     id: 1,
     question: "What's your health goal for today?",
-    type: 'multi-select',
+    type: "multi-select",
     options: [
-      'Improve my fitness',
-      'Boost mental clarity',
-      'Enhance my sleep',
-      'Learn to be kinder to myself',
+      "Improve my fitness",
+      "Boost mental clarity",
+      "Enhance my sleep",
+      "Learn to be kinder to myself",
     ],
   },
   {
     id: 2,
     question: "What's your official gender?",
-    type: 'single-select',
-    options: ['I am male', 'I am female'],
+    type: "single-select",
+    options: ["I am male", "I am female"],
   },
   {
     id: 3,
     question: "What's your age?",
-    type: 'age-selector',
+    type: "age-selector",
     min: 10,
     max: 100,
   },
   {
     id: 4,
     question: "What's your weight?",
-    type: 'weight-slider',
+    type: "weight-slider",
     min: 30,
     max: 200,
-    unit: 'kg',
+    unit: "kg",
   },
   {
     id: 5,
-    question: 'How would you describe your mood?',
-    type: 'mood-select',
+    question: "How would you describe your mood?",
+    type: "mood-select",
     options: [
-      { label: 'Sad', emoji: '😢', color: '#E8A872' },
-      { label: 'Neutral', emoji: '😐', color: '#B8976B' },
-      { label: 'Happy', emoji: '😊', color: '#8FBC8F' },
+      { label: "Sad", emoji: "😢", color: "#E8A872" },
+      { label: "Neutral", emoji: "😐", color: "#B8976B" },
+      { label: "Happy", emoji: "😊", color: "#8FBC8F" },
     ],
   },
   {
     id: 6,
-    question: 'Have you sought professional help before?',
-    type: 'illustration-select',
-    options: ['Yes', 'No'],
+    question: "Have you sought professional help before?",
+    type: "illustration-select",
+    options: ["Yes", "No"],
   },
   {
     id: 7,
-    question: 'Are you experiencing any physical distress?',
-    type: 'multi-select',
+    question: "Are you experiencing any physical distress?",
+    type: "multi-select",
     options: [
-      'Yes, quite a lot',
-      'Yes, but not much',
-      'No, not experiencing anything physically',
+      "Yes, quite a lot",
+      "Yes, but not much",
+      "No, not experiencing anything physically",
     ],
   },
   {
     id: 8,
-    question: 'How would you rate your sleep quality?',
-    type: 'rating-slider',
+    question: "How would you rate your sleep quality?",
+    type: "rating-slider",
     min: 1,
     max: 10,
-    labels: ['Poor', 'Fair', 'Good', 'Excellent'],
+    labels: ["Poor", "Fair", "Good", "Excellent"],
   },
   {
     id: 9,
-    question: 'Are you taking any medications?',
-    type: 'single-select',
-    options: ['Yes', 'No'],
+    question: "Are you taking any medications?",
+    type: "single-select",
+    options: ["Yes", "No"],
   },
   {
     id: 10,
-    question: 'Please specify your medications:',
-    type: 'multi-select',
+    question: "Please specify your medications:",
+    type: "multi-select",
     options: [
-      'Antidepressants',
-      'Anti-anxiety',
-      'Mood stabilizers',
-      'Antipsychotics',
+      "Antidepressants",
+      "Anti-anxiety",
+      "Mood stabilizers",
+      "Antipsychotics",
     ],
-    conditional: (answers: any) => answers[9] === 'Yes',
+    conditional: (answers: any) => answers[9] === "Yes",
   },
   {
     id: 11,
-    question: 'Do you have other mental health symptoms?',
-    type: 'multi-select',
-    options: [
-      'Anxiety',
-      'Depression',
-      'Panic attacks',
-      'Insomnia',
-    ],
+    question: "Do you have other mental health symptoms?",
+    type: "multi-select",
+    options: ["Anxiety", "Depression", "Panic attacks", "Insomnia"],
   },
   {
     id: 12,
-    question: 'How would you rate your stress level?',
-    type: 'stress-slider',
+    question: "How would you rate your stress level?",
+    type: "stress-slider",
     min: 1,
     max: 5,
   },
   {
     id: 13,
-    question: 'AI Sound Analysis',
-    type: 'sound-analysis',
-    subtitle: 'Record a short voice sample for AI analysis',
+    question: "AI Sound Analysis",
+    type: "sound-analysis",
+    subtitle: "Record a short voice sample for AI analysis",
   },
   {
     id: 14,
-    question: 'Expression Analysis',
-    type: 'expression-analysis',
-    subtitle: 'Let AI analyze your facial expressions',
+    question: "Expression Analysis",
+    type: "expression-analysis",
+    subtitle: "Let AI analyze your facial expressions",
   },
 ];
 
@@ -154,11 +149,11 @@ export const AssessmentScreen = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.isDark ? '#2D1B0E' : '#1A1108',
+      backgroundColor: theme.isDark ? "#2D1B0E" : "#1A1108",
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       paddingHorizontal: 24,
       paddingTop: 60,
       paddingBottom: 20,
@@ -167,16 +162,16 @@ export const AssessmentScreen = () => {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       flex: 1,
       fontSize: 16,
-      fontWeight: '600',
-      color: '#FFFFFF',
-      textAlign: 'center',
+      fontWeight: "600",
+      color: "#FFFFFF",
+      textAlign: "center",
       marginRight: 40,
     },
     progressContainer: {
@@ -185,18 +180,18 @@ export const AssessmentScreen = () => {
     },
     progressBar: {
       height: 6,
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      backgroundColor: "rgba(255, 255, 255, 0.2)",
       borderRadius: 3,
-      overflow: 'hidden',
+      overflow: "hidden",
     },
     progressFill: {
-      height: '100%',
-      backgroundColor: '#8FBC8F',
+      height: "100%",
+      backgroundColor: "#8FBC8F",
       borderRadius: 3,
     },
     progressText: {
       fontSize: 12,
-      color: '#B8A99A',
+      color: "#B8A99A",
       marginTop: 8,
     },
     content: {
@@ -205,8 +200,8 @@ export const AssessmentScreen = () => {
     },
     questionText: {
       fontSize: 28,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
       marginBottom: 32,
       lineHeight: 36,
     },
@@ -214,58 +209,58 @@ export const AssessmentScreen = () => {
       gap: 12,
     },
     optionButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       paddingVertical: 16,
       paddingHorizontal: 20,
       borderRadius: 24,
       borderWidth: 1.5,
-      borderColor: '#6B5444',
-      backgroundColor: 'rgba(45, 27, 14, 0.5)',
+      borderColor: "#6B5444",
+      backgroundColor: "rgba(45, 27, 14, 0.5)",
     },
     optionButtonSelected: {
-      borderColor: '#8FBC8F',
-      backgroundColor: 'rgba(143, 188, 143, 0.15)',
+      borderColor: "#8FBC8F",
+      backgroundColor: "rgba(143, 188, 143, 0.15)",
     },
     optionText: {
       flex: 1,
       fontSize: 16,
-      color: '#E5DDD5',
-      fontWeight: '500',
+      color: "#E5DDD5",
+      fontWeight: "500",
     },
     optionTextSelected: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     checkbox: {
       width: 24,
       height: 24,
       borderRadius: 12,
       borderWidth: 2,
-      borderColor: '#6B5444',
+      borderColor: "#6B5444",
       marginRight: 12,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     checkboxSelected: {
-      backgroundColor: '#8FBC8F',
-      borderColor: '#8FBC8F',
+      backgroundColor: "#8FBC8F",
+      borderColor: "#8FBC8F",
     },
     moodContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
+      flexDirection: "row",
+      justifyContent: "space-around",
       marginTop: 20,
     },
     moodOption: {
-      alignItems: 'center',
+      alignItems: "center",
       padding: 16,
       borderRadius: 20,
       borderWidth: 2,
-      borderColor: 'transparent',
+      borderColor: "transparent",
       minWidth: 100,
     },
     moodOptionSelected: {
-      borderColor: '#8FBC8F',
-      backgroundColor: 'rgba(143, 188, 143, 0.1)',
+      borderColor: "#8FBC8F",
+      backgroundColor: "rgba(143, 188, 143, 0.1)",
     },
     moodEmoji: {
       fontSize: 48,
@@ -273,52 +268,52 @@ export const AssessmentScreen = () => {
     },
     moodLabel: {
       fontSize: 14,
-      color: '#B8A99A',
-      fontWeight: '600',
+      color: "#B8A99A",
+      fontWeight: "600",
     },
     sliderContainer: {
       marginTop: 40,
-      alignItems: 'center',
+      alignItems: "center",
     },
     sliderValue: {
       fontSize: 72,
-      fontWeight: '700',
-      color: '#8FBC8F',
+      fontWeight: "700",
+      color: "#8FBC8F",
       marginBottom: 24,
     },
     sliderTrack: {
-      width: '100%',
+      width: "100%",
       height: 8,
     },
     sliderLabels: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: '100%',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      width: "100%",
       marginTop: 12,
     },
     sliderLabel: {
       fontSize: 12,
-      color: '#6B5444',
+      color: "#6B5444",
     },
     bottomContainer: {
       paddingHorizontal: 24,
       paddingBottom: 32,
     },
     continueButton: {
-      backgroundColor: '#A67C52',
+      backgroundColor: "#A67C52",
       borderRadius: 24,
       paddingVertical: 16,
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'center',
+      alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "center",
     },
     continueButtonDisabled: {
       opacity: 0.5,
     },
     continueButtonText: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       marginRight: 8,
     },
   });
@@ -334,9 +329,9 @@ export const AssessmentScreen = () => {
   }, []);
 
   const handleOptionSelect = (option: string) => {
-    if (question.type === 'multi-select') {
+    if (question.type === "multi-select") {
       const newSelection = selectedOptions.includes(option)
-        ? selectedOptions.filter(o => o !== option)
+        ? selectedOptions.filter((o) => o !== option)
         : [...selectedOptions, option];
       setSelectedOptions(newSelection);
     } else {
@@ -345,12 +340,17 @@ export const AssessmentScreen = () => {
       if (autoAdvanceTimerRef.current) {
         clearTimeout(autoAdvanceTimerRef.current);
       }
-      autoAdvanceTimerRef.current = setTimeout(() => handleContinue(option), 300);
+      autoAdvanceTimerRef.current = setTimeout(
+        () => handleContinue(option),
+        300,
+      );
     }
   };
 
   const handleContinue = (singleAnswer?: string) => {
-    const answer = singleAnswer || (question.type === 'multi-select' ? selectedOptions : sliderValue);
+    const answer =
+      singleAnswer ||
+      (question.type === "multi-select" ? selectedOptions : sliderValue);
     setAnswers({ ...answers, [question.id]: answer });
 
     if (currentQuestion < QUESTIONS.length - 1) {
@@ -359,15 +359,15 @@ export const AssessmentScreen = () => {
       setSliderValue(50);
     } else {
       // Navigate to results
-      navigation.navigate('AssessmentResults' as never, { answers } as never);
+      navigation.navigate("AssessmentResults" as never, { answers } as never);
     }
   };
 
   const canContinue = () => {
-    if (question.type === 'multi-select') {
+    if (question.type === "multi-select") {
       return selectedOptions.length > 0;
     }
-    if (question.type === 'single-select' || question.type === 'mood-select') {
+    if (question.type === "single-select" || question.type === "mood-select") {
       return false; // Auto-advances
     }
     return true;
@@ -375,8 +375,8 @@ export const AssessmentScreen = () => {
 
   const renderQuestion = () => {
     switch (question.type) {
-      case 'multi-select':
-      case 'single-select':
+      case "multi-select":
+      case "single-select":
         return (
           <View style={styles.optionsContainer}>
             {question.options?.map((option, index) => (
@@ -384,30 +384,33 @@ export const AssessmentScreen = () => {
                 key={index}
                 style={[
                   styles.optionButton,
-                  (question.type === 'multi-select'
+                  (question.type === "multi-select"
                     ? selectedOptions.includes(option)
-                    : answers[question.id] === option) && styles.optionButtonSelected,
+                    : answers[question.id] === option) &&
+                    styles.optionButtonSelected,
                 ]}
                 onPress={() => handleOptionSelect(option)}
               >
-                {question.type === 'multi-select' && (
+                {question.type === "multi-select" && (
                   <View
                     style={[
                       styles.checkbox,
-                      selectedOptions.includes(option) && styles.checkboxSelected,
+                      selectedOptions.includes(option) &&
+                        styles.checkboxSelected,
                     ]}
                   >
                     {selectedOptions.includes(option) && (
-                      <Text style={{ color: '#FFFFFF', fontSize: 14 }}>✓</Text>
+                      <Text style={{ color: "#FFFFFF", fontSize: 14 }}>✓</Text>
                     )}
                   </View>
                 )}
                 <Text
                   style={[
                     styles.optionText,
-                    (question.type === 'multi-select'
+                    (question.type === "multi-select"
                       ? selectedOptions.includes(option)
-                      : answers[question.id] === option) && styles.optionTextSelected,
+                      : answers[question.id] === option) &&
+                      styles.optionTextSelected,
                   ]}
                 >
                   {option}
@@ -417,7 +420,7 @@ export const AssessmentScreen = () => {
           </View>
         );
 
-      case 'mood-select':
+      case "mood-select":
         return (
           <View style={styles.moodContainer}>
             {question.options?.map((option: any, index) => (
@@ -425,7 +428,8 @@ export const AssessmentScreen = () => {
                 key={index}
                 style={[
                   styles.moodOption,
-                  answers[question.id] === option.label && styles.moodOptionSelected,
+                  answers[question.id] === option.label &&
+                    styles.moodOptionSelected,
                 ]}
                 onPress={() => handleOptionSelect(option.label)}
               >
@@ -436,15 +440,15 @@ export const AssessmentScreen = () => {
           </View>
         );
 
-      case 'age-selector':
-      case 'weight-slider':
-      case 'rating-slider':
-      case 'stress-slider':
+      case "age-selector":
+      case "weight-slider":
+      case "rating-slider":
+      case "stress-slider":
         return (
           <View style={styles.sliderContainer}>
             <Text style={styles.sliderValue}>
               {Math.round(sliderValue)}
-              {question.unit || ''}
+              {question.unit || ""}
             </Text>
             <Slider
               style={styles.sliderTrack}
@@ -459,7 +463,9 @@ export const AssessmentScreen = () => {
             {question.labels && (
               <View style={styles.sliderLabels}>
                 {question.labels.map((label, index) => (
-                  <Text key={index} style={styles.sliderLabel}>{label}</Text>
+                  <Text key={index} style={styles.sliderLabel}>
+                    {label}
+                  </Text>
                 ))}
               </View>
             )}
@@ -468,7 +474,7 @@ export const AssessmentScreen = () => {
 
       default:
         return (
-          <Text style={{ color: '#B8A99A', fontSize: 16 }}>
+          <Text style={{ color: "#B8A99A", fontSize: 16 }}>
             {question.subtitle}
           </Text>
         );
@@ -477,14 +483,22 @@ export const AssessmentScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
 
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => currentQuestion > 0 ? setCurrentQuestion(currentQuestion - 1) : navigation.goBack()}
+          onPress={() =>
+            currentQuestion > 0
+              ? setCurrentQuestion(currentQuestion - 1)
+              : navigation.goBack()
+          }
         >
-          <Text style={{ color: '#FFFFFF', fontSize: 20 }}>←</Text>
+          <Text style={{ color: "#FFFFFF", fontSize: 20 }}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Assessment</Text>
       </View>
@@ -503,7 +517,7 @@ export const AssessmentScreen = () => {
         {renderQuestion()}
       </ScrollView>
 
-      {question.type !== 'single-select' && question.type !== 'mood-select' && (
+      {question.type !== "single-select" && question.type !== "mood-select" && (
         <View style={styles.bottomContainer}>
           <TouchableOpacity
             style={[
@@ -514,7 +528,7 @@ export const AssessmentScreen = () => {
             disabled={!canContinue()}
           >
             <Text style={styles.continueButtonText}>Continue</Text>
-            <Text style={{ color: '#FFFFFF', fontSize: 18 }}>→</Text>
+            <Text style={{ color: "#FFFFFF", fontSize: 18 }}>→</Text>
           </TouchableOpacity>
         </View>
       )}

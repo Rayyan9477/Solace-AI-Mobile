@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { logger } from "@shared/utils/logger";
+
 import apiService from "../../services/api";
 import secureStorage from "../../services/secureStorage";
 import tokenService from "../../services/tokenService";
@@ -48,7 +49,7 @@ export const secureLogout = createAsyncThunk(
 
       return {};
     } catch (error) {
-      const message = (error as any)?.message || 'Logout failed';
+      const message = (error as any)?.message || "Logout failed";
       return rejectWithValue(message);
     }
   },
@@ -65,7 +66,7 @@ export const restoreAuthState = createAsyncThunk(
 
       // Add timeout to prevent hanging
       const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Auth restoration timeout')), 5000);
+        setTimeout(() => reject(new Error("Auth restoration timeout")), 5000);
       });
 
       const authCheckPromise = async () => {
@@ -104,7 +105,6 @@ export const restoreAuthState = createAsyncThunk(
       };
 
       return await Promise.race([authCheckPromise(), timeoutPromise]);
-
     } catch (error) {
       logger.error("restoreAuthState: Error during restoration:", error);
       try {
@@ -185,7 +185,7 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.user = null;
         state.token = null;
-        state.error = (action.payload as any) ?? 'Login failed';
+        state.error = (action.payload as any) ?? "Login failed";
       })
 
       // Secure logout cases
@@ -197,7 +197,7 @@ const authSlice = createSlice({
       })
       .addCase(secureLogout.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = (action.payload as any) ?? 'Logout failed';
+        state.error = (action.payload as any) ?? "Logout failed";
         // Still clear auth state even if logout fails
         state.isAuthenticated = false;
         state.user = null;

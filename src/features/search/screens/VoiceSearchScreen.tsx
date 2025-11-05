@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Search Screen.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,15 +13,13 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Animated,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 export const VoiceSearchScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const [isListening, setIsListening] = useState(false);
-  const [transcript, setTranscript] = useState('');
+  const [transcript, setTranscript] = useState("");
   const pulseAnim = new Animated.Value(1);
 
   const startListening = () => {
@@ -36,7 +36,7 @@ export const VoiceSearchScreen = () => {
           duration: 800,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     ).start();
   };
 
@@ -57,13 +57,13 @@ export const VoiceSearchScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     cancelButton: {
       paddingHorizontal: 12,
@@ -71,27 +71,27 @@ export const VoiceSearchScreen = () => {
     },
     cancelText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: theme.colors.red['60'],
+      fontWeight: "700",
+      color: theme.colors.red["60"],
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       paddingHorizontal: 40,
     },
     microphoneContainer: {
       width: 120,
       height: 120,
       borderRadius: 60,
-      backgroundColor: theme.colors.purple['20'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.purple["20"],
+      justifyContent: "center",
+      alignItems: "center",
       marginBottom: 32,
     },
     microphoneIcon: {
@@ -99,23 +99,23 @@ export const VoiceSearchScreen = () => {
     },
     statusText: {
       fontSize: 20,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
-      textAlign: 'center',
+      textAlign: "center",
     },
     instructionText: {
       fontSize: 14,
       lineHeight: 20,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: 32,
     },
     transcriptContainer: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 20,
-      width: '100%',
+      width: "100%",
       minHeight: 80,
       marginBottom: 32,
     },
@@ -123,55 +123,55 @@ export const VoiceSearchScreen = () => {
       fontSize: 16,
       lineHeight: 24,
       color: theme.colors.text.primary,
-      textAlign: 'center',
+      textAlign: "center",
     },
     transcriptPlaceholder: {
       fontSize: 14,
       color: theme.colors.text.tertiary,
-      fontStyle: 'italic',
-      textAlign: 'center',
+      fontStyle: "italic",
+      textAlign: "center",
     },
     buttonContainer: {
-      width: '100%',
+      width: "100%",
       gap: 12,
     },
     primaryButton: {
-      backgroundColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["60"],
       borderRadius: 16,
       paddingVertical: 16,
-      alignItems: 'center',
+      alignItems: "center",
     },
     primaryButtonActive: {
-      backgroundColor: theme.colors.red['60'],
+      backgroundColor: theme.colors.red["60"],
     },
     buttonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     secondaryButton: {
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 16,
       paddingVertical: 16,
-      alignItems: 'center',
+      alignItems: "center",
     },
     secondaryButtonText: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     tipsCard: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 40,
       left: 20,
       right: 20,
-      backgroundColor: theme.colors.blue['20'],
+      backgroundColor: theme.colors.blue["20"],
       borderRadius: 12,
       padding: 16,
     },
     tipsTitle: {
       fontSize: 13,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -212,12 +212,12 @@ export const VoiceSearchScreen = () => {
         </Animated.View>
 
         <Text style={styles.statusText}>
-          {isListening ? 'Listening...' : 'Tap to speak'}
+          {isListening ? "Listening..." : "Tap to speak"}
         </Text>
         <Text style={styles.instructionText}>
           {isListening
-            ? 'Speak clearly and we\'ll search for you'
-            : 'Say what you want to search for'}
+            ? "Speak clearly and we'll search for you"
+            : "Say what you want to search for"}
         </Text>
 
         {transcript ? (
@@ -240,11 +240,13 @@ export const VoiceSearchScreen = () => {
             ]}
             onPress={isListening ? stopListening : startListening}
             accessible
-            accessibilityLabel={isListening ? 'Stop listening' : 'Start listening'}
+            accessibilityLabel={
+              isListening ? "Stop listening" : "Start listening"
+            }
             accessibilityRole="button"
           >
             <Text style={styles.buttonText}>
-              {isListening ? 'Stop Listening' : 'Start Listening'}
+              {isListening ? "Stop Listening" : "Start Listening"}
             </Text>
           </TouchableOpacity>
 
@@ -252,7 +254,7 @@ export const VoiceSearchScreen = () => {
             <TouchableOpacity
               style={styles.secondaryButton}
               onPress={() =>
-                navigation.navigate('Search', { query: transcript })
+                navigation.navigate("Search", { query: transcript })
               }
               accessible
               accessibilityLabel="Search with transcript"

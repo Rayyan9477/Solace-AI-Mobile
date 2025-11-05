@@ -3,45 +3,90 @@
  * Based on ui-designs/Dark-mode/Search Screen.png
  */
 
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
-import { sanitizeSearchQuery } from '@shared/utils/sanitization';
+import { useNavigation } from "@react-navigation/native";
+import { sanitizeSearchQuery } from "@shared/utils/sanitization";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 
 interface SearchResult {
   id: string;
   title: string;
   subtitle: string;
-  category: 'mood' | 'sleep' | 'meditation' | 'community' | 'journal';
+  category: "mood" | "sleep" | "meditation" | "community" | "journal";
   icon: string;
   color: string;
 }
 
 const MOCK_RESULTS: SearchResult[] = [
-  { id: '1', title: 'My Mood History', subtitle: 'In Mood & Emotions', category: 'mood', icon: '😊', color: '#98B068' },
-  { id: '2', title: 'Mood Improvements', subtitle: 'In Resources & Videos', category: 'mood', icon: '💪', color: '#C96100' },
-  { id: '3', title: 'Mood Journals', subtitle: 'In Mental Health Journal', category: 'journal', icon: '📝', color: '#E0A500' },
-  { id: '4', title: 'AI Chatbot Mood Suggestion', subtitle: 'In AI Therapy Chatbot', category: 'community', icon: '🤖', color: '#8B7DA8' },
-  { id: '5', title: 'My Current Mood', subtitle: 'In Mood & Emotions', category: 'mood', icon: '😔', color: '#6B6B6B' },
+  {
+    id: "1",
+    title: "My Mood History",
+    subtitle: "In Mood & Emotions",
+    category: "mood",
+    icon: "😊",
+    color: "#98B068",
+  },
+  {
+    id: "2",
+    title: "Mood Improvements",
+    subtitle: "In Resources & Videos",
+    category: "mood",
+    icon: "💪",
+    color: "#C96100",
+  },
+  {
+    id: "3",
+    title: "Mood Journals",
+    subtitle: "In Mental Health Journal",
+    category: "journal",
+    icon: "📝",
+    color: "#E0A500",
+  },
+  {
+    id: "4",
+    title: "AI Chatbot Mood Suggestion",
+    subtitle: "In AI Therapy Chatbot",
+    category: "community",
+    icon: "🤖",
+    color: "#8B7DA8",
+  },
+  {
+    id: "5",
+    title: "My Current Mood",
+    subtitle: "In Mood & Emotions",
+    category: "mood",
+    icon: "😔",
+    color: "#6B6B6B",
+  },
 ];
 
 const CATEGORIES = [
-  { id: 'journal', label: 'Journal', icon: '📝' },
-  { id: 'sleep', label: 'Sleep', icon: '😴' },
-  { id: 'meditation', label: 'Meditation', icon: '🧘' },
-  { id: 'community', label: 'Community', icon: '👥' },
-  { id: 'health', label: 'Health', icon: '❤️' },
+  { id: "journal", label: "Journal", icon: "📝" },
+  { id: "sleep", label: "Sleep", icon: "😴" },
+  { id: "meditation", label: "Meditation", icon: "🧘" },
+  { id: "community", label: "Community", icon: "👥" },
+  { id: "health", label: "Health", icon: "❤️" },
 ];
 
 export const SearchScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>('sleep');
-  const [searchDate, setSearchDate] = useState('25 January, 2052');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    "sleep",
+  );
+  const [searchDate, setSearchDate] = useState("25 January, 2052");
   const [searchLimit, setSearchLimit] = useState(20);
   const [showFilters, setShowFilters] = useState(false);
 
@@ -56,8 +101,8 @@ export const SearchScreen = () => {
       paddingBottom: 12,
     },
     headerTop: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 12,
       marginBottom: 12,
     },
@@ -65,19 +110,19 @@ export const SearchScreen = () => {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['20'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.brown["20"],
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 20,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
     },
     searchBar: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: theme.colors.brown['20'],
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 16,
       paddingHorizontal: 16,
       paddingVertical: 12,
@@ -89,7 +134,7 @@ export const SearchScreen = () => {
     searchInput: {
       flex: 1,
       fontSize: 15,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     filterButton: {
@@ -103,43 +148,43 @@ export const SearchScreen = () => {
     },
     loadingContainer: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     loadingText: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
       marginTop: 16,
     },
     resultsHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 12,
     },
     resultsCount: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     sortButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 6,
       paddingHorizontal: 12,
       paddingVertical: 6,
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 12,
     },
     sortText: {
       fontSize: 13,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     filterChips: {
-      flexDirection: 'row',
+      flexDirection: "row",
       paddingHorizontal: 20,
       paddingVertical: 8,
       gap: 8,
@@ -148,20 +193,20 @@ export const SearchScreen = () => {
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['20'],
-      flexDirection: 'row',
-      alignItems: 'center',
+      backgroundColor: theme.colors.brown["20"],
+      flexDirection: "row",
+      alignItems: "center",
       gap: 6,
     },
     chipActive: {
-      backgroundColor: theme.colors.brown['70'],
+      backgroundColor: theme.colors.brown["70"],
     },
     chipIcon: {
       fontSize: 14,
     },
     chipText: {
       fontSize: 13,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     chipTextActive: {
@@ -172,18 +217,18 @@ export const SearchScreen = () => {
       gap: 12,
     },
     resultCard: {
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 16,
       padding: 16,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
     },
     resultIcon: {
       width: 50,
       height: 50,
       borderRadius: 25,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       marginRight: 12,
     },
     resultIconText: {
@@ -194,13 +239,13 @@ export const SearchScreen = () => {
     },
     resultTitle: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
     resultSubtitle: {
       fontSize: 13,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     resultChevron: {
@@ -209,8 +254,8 @@ export const SearchScreen = () => {
     },
     emptyState: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       padding: 40,
     },
     emptyIcon: {
@@ -219,32 +264,32 @@ export const SearchScreen = () => {
     },
     emptyTitle: {
       fontSize: 20,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
     emptyText: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       lineHeight: 20,
     },
     filterModal: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
       padding: 20,
     },
     filterHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       marginBottom: 20,
     },
     filterTitle: {
       fontSize: 18,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
     },
     filterSection: {
@@ -252,72 +297,72 @@ export const SearchScreen = () => {
     },
     filterLabel: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
       marginBottom: 12,
     },
     categoryGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 12,
     },
     categoryChip: {
       paddingHorizontal: 16,
       paddingVertical: 10,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderWidth: 2,
-      borderColor: 'transparent',
+      borderColor: "transparent",
     },
     categoryChipActive: {
-      backgroundColor: theme.colors.brown['70'],
-      borderColor: theme.colors.brown['70'],
+      backgroundColor: theme.colors.brown["70"],
+      borderColor: theme.colors.brown["70"],
     },
     dateSelector: {
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 12,
       padding: 16,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
     },
     dateText: {
       fontSize: 15,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     slider: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 12,
     },
     sliderTrack: {
       flex: 1,
       height: 8,
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 4,
     },
     sliderFill: {
-      height: '100%',
-      backgroundColor: '#98B068',
+      height: "100%",
+      backgroundColor: "#98B068",
       borderRadius: 4,
     },
     sliderValue: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       minWidth: 30,
     },
     applyButton: {
-      backgroundColor: theme.colors.brown['70'],
+      backgroundColor: theme.colors.brown["70"],
       paddingVertical: 16,
       borderRadius: 16,
-      alignItems: 'center',
+      alignItems: "center",
       marginTop: 12,
     },
     applyButtonText: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.background.secondary,
     },
   });
@@ -329,7 +374,8 @@ export const SearchScreen = () => {
           <Text style={styles.emptyIcon}>🔍</Text>
           <Text style={styles.emptyTitle}>Start Searching</Text>
           <Text style={styles.emptyText}>
-            Search for moods, journals, meditations, and more to track your mental health journey
+            Search for moods, journals, meditations, and more to track your
+            mental health journey
           </Text>
         </View>
       );
@@ -350,7 +396,8 @@ export const SearchScreen = () => {
           <Text style={styles.emptyIcon}>😕</Text>
           <Text style={styles.emptyTitle}>Not Found</Text>
           <Text style={styles.emptyText}>
-            Unfortunately, the key you entered cannot be found. 404 Error. Please try another keyword or check again.
+            Unfortunately, the key you entered cannot be found. 404 Error.
+            Please try another keyword or check again.
           </Text>
         </View>
       );
@@ -381,10 +428,18 @@ export const SearchScreen = () => {
           </TouchableOpacity>
         </View>
 
-        <ScrollView style={styles.resultsList} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={styles.resultsList}
+          showsVerticalScrollIndicator={false}
+        >
           {MOCK_RESULTS.map((result) => (
             <TouchableOpacity key={result.id} style={styles.resultCard}>
-              <View style={[styles.resultIcon, { backgroundColor: `${result.color}30` }]}>
+              <View
+                style={[
+                  styles.resultIcon,
+                  { backgroundColor: `${result.color}30` },
+                ]}
+              >
                 <Text style={styles.resultIconText}>{result.icon}</Text>
               </View>
               <View style={styles.resultContent}>
@@ -404,7 +459,10 @@ export const SearchScreen = () => {
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerTop}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
             <Text style={{ fontSize: 20 }}>←</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Search</Text>
@@ -420,16 +478,17 @@ export const SearchScreen = () => {
             value={searchQuery}
             onChangeText={(text) => setSearchQuery(sanitizeSearchQuery(text))}
           />
-          <TouchableOpacity style={styles.filterButton} onPress={() => setShowFilters(!showFilters)}>
+          <TouchableOpacity
+            style={styles.filterButton}
+            onPress={() => setShowFilters(!showFilters)}
+          >
             <Text style={styles.filterIcon}>⚙️</Text>
           </TouchableOpacity>
         </View>
       </View>
 
       {/* Content */}
-      <View style={styles.content}>
-        {renderResults()}
-      </View>
+      <View style={styles.content}>{renderResults()}</View>
     </SafeAreaView>
   );
 };

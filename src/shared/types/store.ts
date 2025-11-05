@@ -19,7 +19,7 @@ export interface PaginationState {
   hasMore: boolean;
 }
 
-export type LoadingStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
+export type LoadingStatus = "idle" | "loading" | "succeeded" | "failed";
 
 // =============================================================================
 // Auth Slice Types
@@ -30,7 +30,7 @@ export interface AuthUser {
   email: string;
   name: string;
   avatar?: string;
-  userType: 'user' | 'professional';
+  userType: "user" | "professional";
   verified: boolean;
   createdAt: string;
 }
@@ -78,9 +78,9 @@ export interface NotificationPreferences {
 }
 
 export interface ThemePreferences {
-  mode: 'light' | 'dark' | 'auto';
+  mode: "light" | "dark" | "auto";
   reducedMotion: boolean;
-  fontSize: 'small' | 'medium' | 'large';
+  fontSize: "small" | "medium" | "large";
   highContrast: boolean;
 }
 
@@ -116,14 +116,14 @@ export interface UserState extends AsyncState {
 // =============================================================================
 
 export type MoodType =
-  | 'happy'
-  | 'sad'
-  | 'anxious'
-  | 'calm'
-  | 'energetic'
-  | 'tired'
-  | 'angry'
-  | 'neutral';
+  | "happy"
+  | "sad"
+  | "anxious"
+  | "calm"
+  | "energetic"
+  | "tired"
+  | "angry"
+  | "neutral";
 
 export interface MoodEntry {
   id: string;
@@ -145,7 +145,7 @@ export interface WeeklyStats {
 
 export interface MoodInsight {
   id: string;
-  type: 'pattern' | 'suggestion' | 'achievement';
+  type: "pattern" | "suggestion" | "achievement";
   title: string;
   description: string;
   date: string;
@@ -163,12 +163,12 @@ export interface MoodState extends AsyncState {
 // Assessment Slice Types
 // =============================================================================
 
-export type AssessmentType = 'phq9' | 'gad7' | string;
+export type AssessmentType = "phq9" | "gad7" | string;
 
 export interface AssessmentQuestion {
   id: string;
   text: string;
-  type: 'scale' | 'multiple-choice' | 'text';
+  type: "scale" | "multiple-choice" | "text";
   scale?: {
     min: number;
     max: number;
@@ -192,7 +192,7 @@ export interface AssessmentResult {
   responses: Record<string, number | string>;
   totalScore: number;
   completedAt: string;
-  severity: 'Minimal' | 'Mild' | 'Moderate' | 'Severe';
+  severity: "Minimal" | "Mild" | "Moderate" | "Severe";
   recommendations: string[];
   _offline?: boolean;
 }
@@ -217,7 +217,7 @@ export interface AssessmentState extends AsyncState {
 // Chat Slice Types
 // =============================================================================
 
-export type MessageRole = 'user' | 'assistant' | 'system';
+export type MessageRole = "user" | "assistant" | "system";
 
 export interface ChatMessage {
   id: string;
@@ -256,7 +256,7 @@ export interface ChatState extends AsyncState {
 
 export interface TherapyResource {
   id: string;
-  type: 'article' | 'video' | 'meditation' | 'exercise';
+  type: "article" | "video" | "meditation" | "exercise";
   title: string;
   description: string;
   duration?: number;
@@ -267,7 +267,7 @@ export interface TherapyResource {
 
 export interface TherapySession {
   id: string;
-  type: 'cbt' | 'mindfulness' | 'breathing';
+  type: "cbt" | "mindfulness" | "breathing";
   title: string;
   completedAt: string;
   duration: number;
@@ -280,7 +280,7 @@ export interface TherapyGoal {
   description: string;
   targetDate: string;
   progress: number; // 0-100
-  status: 'active' | 'completed' | 'paused';
+  status: "active" | "completed" | "paused";
   createdAt: string;
 }
 
@@ -327,9 +327,11 @@ export type RootStateSelector<T> = (state: RootState) => T;
 export type SliceState<K extends keyof RootState> = RootState[K];
 
 // Extract entity from state
-export type EntityType<
-  S extends { [key: string]: any[] }
-> = S extends { [key: string]: (infer T)[] } ? T : never;
+export type EntityType<S extends { [key: string]: any[] }> = S extends {
+  [key: string]: (infer T)[];
+}
+  ? T
+  : never;
 
 // Pagination helper
 export interface PaginatedResponse<T> {
@@ -355,7 +357,7 @@ export type ThunkSuccess<T> = {
   payload: T;
   meta: {
     requestId: string;
-    requestStatus: 'fulfilled';
+    requestStatus: "fulfilled";
   };
 };
 
@@ -366,7 +368,7 @@ export type ThunkError = {
   };
   meta: {
     requestId: string;
-    requestStatus: 'rejected';
+    requestStatus: "rejected";
   };
 };
 

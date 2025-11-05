@@ -1,3 +1,5 @@
+import { MentalHealthIcon, NavigationIcon } from "@shared/components/icons";
+import { useTheme } from "@theme/ThemeProvider";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState, useEffect, useRef } from "react";
 import {
@@ -10,9 +12,6 @@ import {
   Dimensions,
   SafeAreaView,
 } from "react-native";
-
-import { MentalHealthIcon, NavigationIcon } from "@shared/components/icons";
-import { useTheme } from "@theme/ThemeProvider";
 
 const { width } = Dimensions.get("window");
 
@@ -174,7 +173,7 @@ const MoodStatsScreen = ({ navigation }) => {
                     <TouchableOpacity
                       style={[
                         styles.actionButton,
-                        { backgroundColor: theme.colors.primary['500'] },
+                        { backgroundColor: theme.colors.primary["500"] },
                       ]}
                       onPress={() => navigation.navigate("EnhancedMoodTracker")}
                     >
@@ -249,7 +248,7 @@ const MoodStatsScreen = ({ navigation }) => {
                   <Text
                     style={[
                       styles.seeAllText,
-                      { color: theme.colors.primary['500'] },
+                      { color: theme.colors.primary["500"] },
                     ]}
                   >
                     See All
@@ -302,7 +301,7 @@ const MoodStatsScreen = ({ navigation }) => {
                 <View
                   style={[
                     styles.aiIcon,
-                    { backgroundColor: theme.colors.primary['500'] },
+                    { backgroundColor: theme.colors.primary["500"] },
                   ]}
                 >
                   <MentalHealthIcon

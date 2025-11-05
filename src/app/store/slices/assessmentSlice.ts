@@ -40,19 +40,19 @@ interface AssessmentResult {
 const mockAssessmentAPI = {
   async submitAssessment(data: any): Promise<AssessmentResult> {
     if (__DEV__) {
-      console.log('Mock assessment submission:', data);
+      console.log("Mock assessment submission:", data);
     }
-    throw new Error('API not available'); // Force fallback to local calculation
+    throw new Error("API not available"); // Force fallback to local calculation
   },
   async getAssessmentQuestions(assessmentType: string): Promise<Assessment> {
     if (__DEV__) {
-      console.log('Mock assessment questions fetch for:', assessmentType);
+      console.log("Mock assessment questions fetch for:", assessmentType);
     }
-    throw new Error('API not available'); // Force fallback to local mock data
+    throw new Error("API not available"); // Force fallback to local mock data
   },
   async getAssessmentHistory(): Promise<AssessmentResult[]> {
     if (__DEV__) {
-      console.log('Mock assessment history fetch');
+      console.log("Mock assessment history fetch");
     }
     return [];
   },
@@ -71,12 +71,13 @@ export const startAssessment = createAsyncThunk<
     try {
       // Try to fetch from API first
       try {
-        const assessment = await assessmentAPI.getAssessmentQuestions(assessmentType);
+        const assessment =
+          await assessmentAPI.getAssessmentQuestions(assessmentType);
         return assessment;
       } catch (apiError) {
         // Fallback to mock data if API fails
         if (__DEV__) {
-          console.warn('[Assessment] API unavailable, using mock data');
+          console.warn("[Assessment] API unavailable, using mock data");
         }
       }
 
@@ -224,7 +225,8 @@ export const startAssessment = createAsyncThunk<
 
       return mockAssessments[assessmentType];
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
       return rejectWithValue(errorMessage);
     }
   },
@@ -237,15 +239,24 @@ export const submitAssessment = createAsyncThunk<
   { rejectValue: string }
 >(
   "assessment/submitAssessment",
-  async ({ assessmentId, responses }: { assessmentId: string; responses: AssessmentResponses }, { rejectWithValue }) => {
+  async (
+    {
+      assessmentId,
+      responses,
+    }: { assessmentId: string; responses: AssessmentResponses },
+    { rejectWithValue },
+  ) => {
     try {
       // Try to submit to API first
       try {
-        const result = await assessmentAPI.submitAssessment({ assessmentId, responses });
+        const result = await assessmentAPI.submitAssessment({
+          assessmentId,
+          responses,
+        });
         return result;
       } catch (apiError) {
         // Fallback to local calculation if API fails
-        console.warn('[Assessment] API unavailable, calculating locally');
+        console.warn("[Assessment] API unavailable, calculating locally");
       }
 
       // Local calculation (fallback for offline use)
@@ -281,14 +292,18 @@ export const submitAssessment = createAsyncThunk<
 
       return result;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
       return rejectWithValue(errorMessage);
     }
   },
 );
 
 // Helper function to generate recommendations based on score
-const generateRecommendations = (score: number, assessmentType: string): string[] => {
+const generateRecommendations = (
+  score: number,
+  assessmentType: string,
+): string[] => {
   const recommendations: string[] = [];
 
   if (assessmentType === "phq9") {

@@ -3,9 +3,12 @@
  * Type-safe navigation for React Navigation v6
  */
 
-import type { NavigatorScreenParams, CompositeScreenProps } from '@react-navigation/native';
-import type { StackScreenProps } from '@react-navigation/stack';
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import type {
+  NavigatorScreenParams,
+  CompositeScreenProps,
+} from "@react-navigation/native";
+import type { StackScreenProps } from "@react-navigation/stack";
 
 // =============================================================================
 // Auth Stack Navigator
@@ -16,15 +19,13 @@ export type AuthStackParamList = {
   Login: undefined;
   Signup: undefined;
   Onboarding: {
-    userType?: 'user' | 'professional';
+    userType?: "user" | "professional";
   };
   ProfessionalOnboarding: undefined;
 };
 
-export type AuthStackScreenProps<T extends keyof AuthStackParamList> = StackScreenProps<
-  AuthStackParamList,
-  T
->;
+export type AuthStackScreenProps<T extends keyof AuthStackParamList> =
+  StackScreenProps<AuthStackParamList, T>;
 
 // =============================================================================
 // Main Tab Navigator
@@ -40,15 +41,16 @@ export type MainTabParamList = {
     initialMessage?: string;
   };
   Profile: {
-    section?: 'settings' | 'history' | 'preferences';
+    section?: "settings" | "history" | "preferences";
   };
   Wellness: undefined;
 };
 
-export type MainTabScreenProps<T extends keyof MainTabParamList> = CompositeScreenProps<
-  BottomTabScreenProps<MainTabParamList, T>,
-  RootStackScreenProps<keyof RootStackParamList>
->;
+export type MainTabScreenProps<T extends keyof MainTabParamList> =
+  CompositeScreenProps<
+    BottomTabScreenProps<MainTabParamList, T>,
+    RootStackScreenProps<keyof RootStackParamList>
+  >;
 
 // =============================================================================
 // Mood Stack Navigator
@@ -57,7 +59,7 @@ export type MainTabScreenProps<T extends keyof MainTabParamList> = CompositeScre
 export type MoodStackParamList = {
   MoodTracker: undefined;
   MoodStats: {
-    period?: 'week' | 'month' | 'year';
+    period?: "week" | "month" | "year";
   };
   EnhancedMoodTracker: undefined;
   MoodDetails: {
@@ -66,10 +68,11 @@ export type MoodStackParamList = {
   MoodHistory: undefined;
 };
 
-export type MoodStackScreenProps<T extends keyof MoodStackParamList> = CompositeScreenProps<
-  StackScreenProps<MoodStackParamList, T>,
-  RootStackScreenProps<keyof RootStackParamList>
->;
+export type MoodStackScreenProps<T extends keyof MoodStackParamList> =
+  CompositeScreenProps<
+    StackScreenProps<MoodStackParamList, T>,
+    RootStackScreenProps<keyof RootStackParamList>
+  >;
 
 // =============================================================================
 // Assessment Stack Navigator
@@ -78,7 +81,7 @@ export type MoodStackScreenProps<T extends keyof MoodStackParamList> = Composite
 export type AssessmentStackParamList = {
   AssessmentList: undefined;
   AssessmentIntro: {
-    assessmentId: 'phq9' | 'gad7' | string;
+    assessmentId: "phq9" | "gad7" | string;
   };
   AssessmentQuestions: {
     assessmentId: string;
@@ -91,7 +94,9 @@ export type AssessmentStackParamList = {
   AssessmentHistory: undefined;
 };
 
-export type AssessmentStackScreenProps<T extends keyof AssessmentStackParamList> = CompositeScreenProps<
+export type AssessmentStackScreenProps<
+  T extends keyof AssessmentStackParamList,
+> = CompositeScreenProps<
   StackScreenProps<AssessmentStackParamList, T>,
   RootStackScreenProps<keyof RootStackParamList>
 >;
@@ -109,10 +114,11 @@ export type ChatStackParamList = {
   ChatHistory: undefined;
 };
 
-export type ChatStackScreenProps<T extends keyof ChatStackParamList> = CompositeScreenProps<
-  StackScreenProps<ChatStackParamList, T>,
-  RootStackScreenProps<keyof RootStackParamList>
->;
+export type ChatStackScreenProps<T extends keyof ChatStackParamList> =
+  CompositeScreenProps<
+    StackScreenProps<ChatStackParamList, T>,
+    RootStackScreenProps<keyof RootStackParamList>
+  >;
 
 // =============================================================================
 // Wellness Stack Navigator
@@ -129,14 +135,15 @@ export type WellnessStackParamList = {
     date?: string;
   };
   Resources: {
-    category?: 'crisis' | 'articles' | 'videos';
+    category?: "crisis" | "articles" | "videos";
   };
 };
 
-export type WellnessStackScreenProps<T extends keyof WellnessStackParamList> = CompositeScreenProps<
-  StackScreenProps<WellnessStackParamList, T>,
-  RootStackScreenProps<keyof RootStackParamList>
->;
+export type WellnessStackScreenProps<T extends keyof WellnessStackParamList> =
+  CompositeScreenProps<
+    StackScreenProps<WellnessStackParamList, T>,
+    RootStackScreenProps<keyof RootStackParamList>
+  >;
 
 // =============================================================================
 // Settings Stack Navigator
@@ -152,10 +159,11 @@ export type SettingsStackParamList = {
   ThemeSettings: undefined;
 };
 
-export type SettingsStackScreenProps<T extends keyof SettingsStackParamList> = CompositeScreenProps<
-  StackScreenProps<SettingsStackParamList, T>,
-  RootStackScreenProps<keyof RootStackParamList>
->;
+export type SettingsStackScreenProps<T extends keyof SettingsStackParamList> =
+  CompositeScreenProps<
+    StackScreenProps<SettingsStackParamList, T>,
+    RootStackScreenProps<keyof RootStackParamList>
+  >;
 
 // =============================================================================
 // Root Stack Navigator (Top-level)
@@ -185,42 +193,42 @@ export type RootStackParamList = {
 
   // Standalone screens
   Onboarding: {
-    userType?: 'user' | 'professional';
+    userType?: "user" | "professional";
   };
   Placeholder: {
     name: string;
   };
 };
 
-export type RootStackScreenProps<T extends keyof RootStackParamList> = StackScreenProps<
-  RootStackParamList,
-  T
->;
+export type RootStackScreenProps<T extends keyof RootStackParamList> =
+  StackScreenProps<RootStackParamList, T>;
 
 // =============================================================================
 // Navigation Utilities
 // =============================================================================
 
 // Type for navigation prop in any screen
-export type NavigationProp = RootStackScreenProps<keyof RootStackParamList>['navigation'];
+export type NavigationProp = RootStackScreenProps<
+  keyof RootStackParamList
+>["navigation"];
 
 // Type for route prop in any screen
-export type RouteProp = RootStackScreenProps<keyof RootStackParamList>['route'];
+export type RouteProp = RootStackScreenProps<keyof RootStackParamList>["route"];
 
 // Screen component props helper
 export type ScreenProps<
-  T extends keyof RootStackParamList = keyof RootStackParamList
+  T extends keyof RootStackParamList = keyof RootStackParamList,
 > = RootStackScreenProps<T>;
 
 // Navigation state helper
 export interface NavigationState {
   index: number;
-  routes: Array<{
+  routes: {
     key: string;
     name: string;
     params?: object;
     state?: NavigationState;
-  }>;
+  }[];
 }
 
 // Deep link configuration
@@ -254,7 +262,7 @@ export interface ScreenOptions {
   headerTintColor?: string;
   gestureEnabled?: boolean;
   animationEnabled?: boolean;
-  presentation?: 'card' | 'modal' | 'transparentModal';
+  presentation?: "card" | "modal" | "transparentModal";
 }
 
 // Navigation helpers

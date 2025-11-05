@@ -24,7 +24,7 @@ class RateLimiter {
   async checkLimit(
     key: string,
     maxAttempts: number = 5,
-    windowMs: number = 15 * 60 * 1000
+    windowMs: number = 15 * 60 * 1000,
   ): Promise<{ allowed: boolean; waitTime?: number }> {
     const now = Date.now();
     const record = this.attempts.get(key);

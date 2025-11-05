@@ -1,1 +1,1 @@
-export { default } from '../../features/dashboard/components/QuickActions';
+export { default } from "../../features/dashboard/components/QuickActions";

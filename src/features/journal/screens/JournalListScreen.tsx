@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/Mental Health Journal.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,9 +13,7 @@ import {
   FlatList,
   TouchableOpacity,
   SafeAreaView,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface JournalEntry {
   id: string;
@@ -27,52 +27,53 @@ interface JournalEntry {
 
 const MOCK_JOURNALS: JournalEntry[] = [
   {
-    id: '1',
-    title: 'Feeling Positive Today 😊',
-    preview: "I'm grateful for the supportive phone call from my friend today...",
-    mood: '😊',
-    date: '22',
-    tags: ['Grateful', 'Progress'],
-    color: '#98B068',
+    id: "1",
+    title: "Feeling Positive Today 😊",
+    preview:
+      "I'm grateful for the supportive phone call from my friend today...",
+    mood: "😊",
+    date: "22",
+    tags: ["Grateful", "Progress"],
+    color: "#98B068",
   },
   {
-    id: '2',
-    title: 'Can\'t focus too my day',
-    preview: 'I experienced anxiety today while taking the exam...',
-    mood: '😰',
-    date: '21',
-    tags: ['AI Suggestions', 'Triggers'],
-    color: '#E0A500',
+    id: "2",
+    title: "Can't focus too my day",
+    preview: "I experienced anxiety today while taking the exam...",
+    mood: "😰",
+    date: "21",
+    tags: ["AI Suggestions", "Triggers"],
+    color: "#E0A500",
   },
   {
-    id: '3',
-    title: 'Felt Bad, but I\'m OK',
-    preview: 'I felt stressed doing the team meeting, but at...',
-    mood: '😔',
-    date: '20',
-    tags: ['AI Suggestions', 'Triggers'],
-    color: '#ED7E1C',
+    id: "3",
+    title: "Felt Bad, but I'm OK",
+    preview: "I felt stressed doing the team meeting, but at...",
+    mood: "😔",
+    date: "20",
+    tags: ["AI Suggestions", "Triggers"],
+    color: "#ED7E1C",
   },
   {
-    id: '4',
-    title: 'I was sad & Grateful',
-    preview: 'feeling sad today after knowing the bad news that...',
-    mood: '😢',
-    date: '19',
-    tags: ['AI Suggestions'],
-    color: '#6B5FC8',
+    id: "4",
+    title: "I was sad & Grateful",
+    preview: "feeling sad today after knowing the bad news that...",
+    mood: "😢",
+    date: "19",
+    tags: ["AI Suggestions"],
+    color: "#6B5FC8",
   },
 ];
 
 export const JournalListScreen = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
-  const [filter, setFilter] = useState<'all' | 'recent'>('recent');
+  const [filter, setFilter] = useState<"all" | "recent">("recent");
 
   const renderJournalCard = ({ item }: { item: JournalEntry }) => (
     <TouchableOpacity
-      style={[styles.card, { backgroundColor: theme.colors.brown['10'] }]}
-      onPress={() => navigation.navigate('JournalDetail', { id: item.id })}
+      style={[styles.card, { backgroundColor: theme.colors.brown["10"] }]}
+      onPress={() => navigation.navigate("JournalDetail", { id: item.id })}
       accessible
       accessibilityLabel={`Journal entry: ${item.title}`}
       accessibilityHint="Double tap to view full entry"
@@ -103,9 +104,7 @@ export const JournalListScreen = () => {
             key={index}
             style={[styles.tag, { backgroundColor: `${item.color}20` }]}
           >
-            <Text style={[styles.tagText, { color: item.color }]}>
-              {tag}
-            </Text>
+            <Text style={[styles.tagText, { color: item.color }]}>{tag}</Text>
           </View>
         ))}
         <Text style={[styles.triggers, { color: theme.colors.text.tertiary }]}>
@@ -116,13 +115,24 @@ export const JournalListScreen = () => {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background.primary },
+      ]}
+    >
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={[styles.backButton, { color: theme.colors.text.primary }]}>←</Text>
+          <Text
+            style={[styles.backButton, { color: theme.colors.text.primary }]}
+          >
+            ←
+          </Text>
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[styles.headerTitle, { color: theme.colors.text.primary }]}
+        >
           My Journals
         </Text>
         <View style={styles.headerSpacer} />
@@ -130,21 +140,23 @@ export const JournalListScreen = () => {
 
       {/* Date filter */}
       <View style={styles.dateFilter}>
-        <Text style={[styles.dateLabel, { color: theme.colors.text.secondary }]}>
+        <Text
+          style={[styles.dateLabel, { color: theme.colors.text.secondary }]}
+        >
           Nov
         </Text>
-        {['22', '23', '24', '25', '26'].map((day, index) => (
+        {["22", "23", "24", "25", "26"].map((day, index) => (
           <View
             key={day}
             style={[
               styles.dateCircle,
-              index === 0 && { backgroundColor: theme.colors.green['60'] },
+              index === 0 && { backgroundColor: theme.colors.green["60"] },
             ]}
           >
             <Text
               style={[
                 styles.dateText,
-                { color: index === 0 ? '#fff' : theme.colors.text.primary },
+                { color: index === 0 ? "#fff" : theme.colors.text.primary },
               ]}
             >
               {day}
@@ -158,14 +170,21 @@ export const JournalListScreen = () => {
         <TouchableOpacity
           style={[
             styles.filterButton,
-            filter === 'recent' && { backgroundColor: theme.colors.brown['30'] },
+            filter === "recent" && {
+              backgroundColor: theme.colors.brown["30"],
+            },
           ]}
-          onPress={() => setFilter('recent')}
+          onPress={() => setFilter("recent")}
         >
           <Text
             style={[
               styles.filterText,
-              { color: filter === 'recent' ? theme.colors.brown['100'] : theme.colors.text.secondary },
+              {
+                color:
+                  filter === "recent"
+                    ? theme.colors.brown["100"]
+                    : theme.colors.text.secondary,
+              },
             ]}
           >
             Recent
@@ -184,8 +203,8 @@ export const JournalListScreen = () => {
 
       {/* Add button */}
       <TouchableOpacity
-        style={[styles.fab, { backgroundColor: theme.colors.brown['70'] }]}
-        onPress={() => navigation.navigate('JournalCreate')}
+        style={[styles.fab, { backgroundColor: theme.colors.brown["70"] }]}
+        onPress={() => navigation.navigate("JournalCreate")}
         accessible
         accessibilityLabel="Create new journal entry"
         accessibilityRole="button"
@@ -201,8 +220,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
@@ -212,34 +231,34 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '800',
+    fontWeight: "800",
     flex: 1,
-    textAlign: 'center',
+    textAlign: "center",
   },
   headerSpacer: {
     width: 40,
   },
   dateFilter: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 12,
     gap: 12,
   },
   dateLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   dateCircle: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   dateText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   filterContainer: {
     paddingHorizontal: 20,
@@ -249,11 +268,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   filterText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   list: {
     paddingHorizontal: 20,
@@ -265,36 +284,36 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 12,
   },
   dateBox: {
     width: 32,
     height: 32,
     borderRadius: 8,
-    backgroundColor: 'rgba(0,0,0,0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0,0,0,0.1)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   dateNumber: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   moodBadge: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0,0,0,0.05)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   moodEmoji: {
     fontSize: 18,
   },
   title: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 8,
   },
   preview: {
@@ -303,8 +322,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   tags: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
   },
   tag: {
@@ -314,31 +333,31 @@ const styles = StyleSheet.create({
   },
   tagText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   triggers: {
     fontSize: 12,
-    marginLeft: 'auto',
+    marginLeft: "auto",
   },
   fab: {
-    position: 'absolute',
+    position: "absolute",
     right: 20,
     bottom: 20,
     width: 56,
     height: 56,
     borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     elevation: 4,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },
   fabIcon: {
     fontSize: 32,
-    color: '#fff',
-    fontWeight: '300',
+    color: "#fff",
+    fontWeight: "300",
   },
 });
 

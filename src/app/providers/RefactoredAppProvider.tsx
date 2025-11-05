@@ -5,26 +5,30 @@
  * proper initialization order and error handling for all app contexts.
  */
 
+import { restoreAuthState } from "@app/store/slices/authSlice";
+import { logger } from "@shared/utils/logger";
+import { ThemeProvider } from "@theme/ThemeProvider";
 import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 
 // Import existing providers
-import { ThemeProvider } from "@theme/ThemeProvider";
 import { AppProvider } from "./AppProvider";
-import { logger } from "@shared/utils/logger";
 
 // Auth initialization
-import { restoreAuthState } from "@app/store/slices/authSlice";
 
 /**
  * App Initialization Component
  * Handles the initialization of auth state and other critical app setup
  */
-const AppInitializer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AppInitializer: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const dispatch = useDispatch();
   const [initializationComplete, setInitializationComplete] = useState(false);
-  const [initializationError, setInitializationError] = useState<Error | null>(null);
+  const [initializationError, setInitializationError] = useState<Error | null>(
+    null,
+  );
 
   const initializeApp = useCallback(async () => {
     try {
@@ -127,7 +131,10 @@ interface ProviderErrorBoundaryState {
   retryCount: number;
 }
 
-class ProviderErrorBoundary extends React.Component<ProviderErrorBoundaryProps, ProviderErrorBoundaryState> {
+class ProviderErrorBoundary extends React.Component<
+  ProviderErrorBoundaryProps,
+  ProviderErrorBoundaryState
+> {
   constructor(props: ProviderErrorBoundaryProps) {
     super(props);
     this.state = {
@@ -138,7 +145,9 @@ class ProviderErrorBoundary extends React.Component<ProviderErrorBoundaryProps, 
     };
   }
 
-  static getDerivedStateFromError(error: Error): Partial<ProviderErrorBoundaryState> {
+  static getDerivedStateFromError(
+    error: Error,
+  ): Partial<ProviderErrorBoundaryState> {
     return { hasError: true };
   }
 
@@ -246,7 +255,9 @@ class ProviderErrorBoundary extends React.Component<ProviderErrorBoundaryProps, 
  * 4. PerformanceProvider - Performance optimization
  * 5. AppInitializer - Auth and app state initialization
  */
-export const RefactoredAppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const RefactoredAppProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   logger.debug("Initializing app providers...");
 
   return (

@@ -3,25 +3,30 @@
  * Custom branded icons for the mental health app
  */
 
-import React from 'react';
-import { Text } from 'react-native';
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import React from "react";
+import { Text } from "react-native";
 
 /**
  * FreudLogo - Simple text-based logo component
  * Can be replaced with actual logo asset
  */
-export const FreudLogo = ({ size = 32, color = '#000000', primaryColor, style }) => {
+export const FreudLogo = ({
+  size = 32,
+  color = "#000000",
+  primaryColor,
+  style,
+}) => {
   // Use primaryColor if provided, otherwise use color
   const displayColor = primaryColor || color;
-  
+
   return (
     <Text
       style={[
         {
           fontSize: size,
           color: displayColor,
-          fontWeight: 'bold',
+          fontWeight: "bold",
         },
         style,
       ]}
@@ -41,14 +46,14 @@ FreudLogo.propTypes = {
 /**
  * SolaceLogo - Alternative logo component
  */
-export const SolaceLogo = ({ size = 32, color = '#000000', style }) => {
+export const SolaceLogo = ({ size = 32, color = "#000000", style }) => {
   return (
     <Text
       style={[
         {
           fontSize: size,
-          color: color,
-          fontWeight: 'bold',
+          color,
+          fontWeight: "bold",
         },
         style,
       ]}

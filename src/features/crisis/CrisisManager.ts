@@ -1,9 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Haptics from "expo-haptics";
-import * as Crypto from "expo-crypto";
-import { Alert, Linking, Platform } from "react-native";
-import secureStorage from "../../app/services/secureStorage";
 import { logger } from "@shared/utils/logger";
+import * as Crypto from "expo-crypto";
+import * as Haptics from "expo-haptics";
+import { Alert, Linking, Platform } from "react-native";
+
 import {
   CRISIS_KEYWORDS,
   KEYWORD_WEIGHTS,
@@ -16,6 +16,7 @@ import {
   loadRemoteCrisisConfig,
   mergeCrisisConfig,
 } from "./crisisConfig";
+import secureStorage from "../../app/services/secureStorage";
 
 // TypeScript interfaces for Crisis Management System
 
@@ -215,27 +216,44 @@ class CrisisManager {
       resources: EMERGENCY_RESOURCES as unknown as EmergencyResourcesRegional,
     };
 
-    this.emergencyResources = (EMERGENCY_RESOURCES.US || []) as unknown as EmergencyResource[];
+    this.emergencyResources = (EMERGENCY_RESOURCES.US ||
+      []) as unknown as EmergencyResource[];
     this.safetyPlanTemplate = SAFETY_PLAN_TEMPLATE;
     this.configLoaded = false;
     this.configLoadingPromise = null;
   }
 
   async loadConfiguration(): Promise<void> {
+    // Thread-safe: if already loading or loaded, return immediately
     if (this.configLoadingPromise) {
       return this.configLoadingPromise;
     }
 
+    // If already loaded, no need to load again
+    if (this.configLoaded) {
+      return Promise.resolve();
+    }
+
+    // Create loading promise atomically
     this.configLoadingPromise = (async (): Promise<void> => {
       try {
         const remoteConfig = await loadRemoteCrisisConfig();
         if (remoteConfig) {
           this.config = mergeCrisisConfig(remoteConfig);
-          this.emergencyResources = this.config.resources.US || EMERGENCY_RESOURCES.US;
+          this.emergencyResources =
+            this.config.resources.US || EMERGENCY_RESOURCES.US;
         }
         this.configLoaded = true;
       } catch (error) {
+        console.error(
+          "Failed to load remote crisis config, using defaults:",
+          error,
+        );
+        // Still mark as loaded so app can function with default config
         this.configLoaded = true;
+      } finally {
+        // Clear the promise after completion to allow future reloads if needed
+        this.configLoadingPromise = null;
       }
     })();
 
@@ -243,9 +261,8 @@ class CrisisManager {
   }
 
   async ensureConfigLoaded(): Promise<void> {
-    if (!this.configLoaded) {
-      await this.loadConfiguration();
-    }
+    // Always call loadConfiguration - it handles the race condition internally
+    await this.loadConfiguration();
   }
 
   /**
@@ -291,8 +308,10 @@ class CrisisManager {
 
     // Check for combination patterns (more concerning)
     combinations.forEach(([word1, word2]) => {
-      if (normalizedText.includes(word1.toLowerCase()) &&
-          normalizedText.includes(word2.toLowerCase())) {
+      if (
+        normalizedText.includes(word1.toLowerCase()) &&
+        normalizedText.includes(word2.toLowerCase())
+      ) {
         totalScore += COMBINATION_SCORE;
         detectedKeywords.push(`${word1} + ${word2}`);
       }
@@ -331,7 +350,10 @@ class CrisisManager {
    * @param {Object} userProfile - User profile for personalization
    * @returns {Promise<Object>} Crisis response
    */
-  async handleCrisis(crisisAnalysis: CrisisAnalysisResult, userProfile: UserProfile = {}): Promise<CrisisResponse | null> {
+  async handleCrisis(
+    crisisAnalysis: CrisisAnalysisResult,
+    userProfile: UserProfile = {},
+  ): Promise<CrisisResponse | null> {
     const { risk, confidence, indicators, requiresImmediate } = crisisAnalysis;
 
     // Log crisis event for safety
@@ -659,16 +681,19 @@ class CrisisManager {
    * @param {Object} crisisAnalysis - Crisis analysis result
    * @param {Object} userProfile - User profile
    */
-  async logCrisisEvent(crisisAnalysis: CrisisAnalysisResult, userProfile: UserProfile): Promise<void> {
+  async logCrisisEvent(
+    crisisAnalysis: CrisisAnalysisResult,
+    userProfile: UserProfile,
+  ): Promise<void> {
     try {
       const indicatorsHash = await Crypto.digestStringAsync(
         Crypto.CryptoDigestAlgorithm.SHA256,
-        JSON.stringify(crisisAnalysis.indicators.sort())
+        JSON.stringify(crisisAnalysis.indicators.sort()),
       );
 
       const userIdHash = await Crypto.digestStringAsync(
         Crypto.CryptoDigestAlgorithm.SHA256,
-        (userProfile.id || "anonymous").toString()
+        (userProfile.id || "anonymous").toString(),
       );
 
       const event = {
@@ -682,7 +707,8 @@ class CrisisManager {
         responded: false,
       };
 
-      const existingLogs = await secureStorage.getSecureData("crisis_events") || [];
+      const existingLogs =
+        (await secureStorage.getSecureData("crisis_events")) || [];
       const logs = Array.isArray(existingLogs) ? existingLogs : [];
 
       logs.push(event);
@@ -691,32 +717,120 @@ class CrisisManager {
 
       await secureStorage.storeSensitiveData("crisis_events", trimmedLogs);
 
-      if (crisisAnalysis.risk === "critical" || crisisAnalysis.risk === "high") {
+      if (
+        crisisAnalysis.risk === "critical" ||
+        crisisAnalysis.risk === "high"
+      ) {
         await this.notifyEmergencyContacts(event);
       }
+      console.log(
+        `Crisis event logged successfully: ${crisisAnalysis.risk} risk level`,
+      );
     } catch (error) {
-      this.fallbackCrisisLog(crisisAnalysis, userProfile);
+      console.error("Primary crisis event logging failed:", error);
+      // AWAIT the fallback to ensure it completes
+      await this.fallbackCrisisLog(crisisAnalysis, userProfile, error);
     }
   }
 
-  async fallbackCrisisLog(crisisAnalysis: CrisisAnalysisResult, userProfile: UserProfile): Promise<void> {
+  async fallbackCrisisLog(
+    crisisAnalysis: CrisisAnalysisResult,
+    userProfile: UserProfile,
+    primaryError?: any,
+  ): Promise<void> {
     try {
       const fallbackEvent = {
         timestamp: new Date().toISOString(),
         riskLevel: crisisAnalysis.risk,
+        indicators: crisisAnalysis.indicators,
+        confidence: crisisAnalysis.confidence,
         fallback: true,
+        primaryError: primaryError?.message || "Unknown error",
       };
+
+      // Try secure storage first
       await secureStorage.storeSensitiveData(
         `crisis_fallback_${Date.now()}`,
-        fallbackEvent
+        fallbackEvent,
       );
-    } catch {
-      // Silent fallback failure
+
+      console.log("Crisis event logged to fallback storage");
+    } catch (secureStorageError) {
+      // Last resort: use AsyncStorage (less secure but better than losing data)
+      try {
+        const asyncStorageKey = `crisis_emergency_${Date.now()}`;
+        await AsyncStorage.setItem(
+          asyncStorageKey,
+          JSON.stringify(fallbackEvent),
+        );
+        console.warn(
+          "Crisis event logged to AsyncStorage (emergency fallback)",
+        );
+      } catch (asyncStorageError) {
+        // Absolute last resort: log to console for developer visibility
+        console.error("CRITICAL: All crisis logging mechanisms failed!");
+        console.error("Crisis Data:", JSON.stringify(fallbackEvent, null, 2));
+
+        // Alert user that logging failed (but don't block crisis response)
+        Alert.alert(
+          "Crisis Support",
+          "We were unable to save this crisis event, but help is still available. Please call 988 immediately if you are in danger.",
+          [{ text: "OK" }],
+        );
+      }
     }
   }
 
   async notifyEmergencyContacts(event: CrisisEvent): Promise<void> {
-    // Implementation for notifying emergency contacts if configured
+    try {
+      // Get emergency contacts from secure storage
+      const emergencyContactsData =
+        await secureStorage.getSecureData("emergency_contacts");
+
+      if (
+        !emergencyContactsData ||
+        !Array.isArray(emergencyContactsData) ||
+        emergencyContactsData.length === 0
+      ) {
+        console.log("No emergency contacts configured");
+        return;
+      }
+
+      const { riskLevel, timestamp } = event;
+      const crisisMessage = `CRISIS ALERT: Your loved one has triggered a ${riskLevel} crisis alert at ${new Date(timestamp).toLocaleString()}. Please check on them immediately. If you believe they are in immediate danger, call 911 or text 988.`;
+
+      // Notify each emergency contact
+      for (const contact of emergencyContactsData) {
+        try {
+          if (contact.phoneNumber) {
+            // Send SMS notification
+            const smsUrl = `sms:${contact.phoneNumber}${Platform.OS === "ios" ? "&" : "?"}body=${encodeURIComponent(crisisMessage)}`;
+            const canOpen = await Linking.canOpenURL(smsUrl);
+
+            if (canOpen) {
+              await Linking.openURL(smsUrl);
+              console.log(
+                `Crisis notification sent to ${contact.name || contact.phoneNumber}`,
+              );
+            }
+          }
+        } catch (contactError) {
+          console.error(
+            `Failed to notify emergency contact ${contact.name}:`,
+            contactError,
+          );
+          // Continue to next contact even if one fails
+        }
+      }
+
+      // Log that notifications were attempted
+      console.log(
+        `Emergency contact notifications attempted for ${emergencyContactsData.length} contacts`,
+      );
+    } catch (error) {
+      console.error("Failed to notify emergency contacts:", error);
+      // Don't throw - this is a best-effort notification
+    }
   }
 
   /**
@@ -728,7 +842,7 @@ class CrisisManager {
     try {
       const targetHash = await Crypto.digestStringAsync(
         Crypto.CryptoDigestAlgorithm.SHA256,
-        target || "unknown"
+        target || "unknown",
       );
 
       const action = {
@@ -738,14 +852,18 @@ class CrisisManager {
         successful: true,
       };
 
-      const existingActions = await secureStorage.getSecureData("emergency_actions") || [];
+      const existingActions =
+        (await secureStorage.getSecureData("emergency_actions")) || [];
       const actions = Array.isArray(existingActions) ? existingActions : [];
 
       actions.push(action);
 
       const trimmedActions = actions.slice(-50);
 
-      await secureStorage.storeSensitiveData("emergency_actions", trimmedActions);
+      await secureStorage.storeSensitiveData(
+        "emergency_actions",
+        trimmedActions,
+      );
     } catch (error) {
       // Silent fallback
     }
@@ -757,8 +875,10 @@ class CrisisManager {
    */
   async getCrisisStatistics(): Promise<CrisisStatistics | null> {
     try {
-      const crisisEvents = await secureStorage.getSecureData("crisis_events") || [];
-      const emergencyActions = await secureStorage.getSecureData("emergency_actions") || [];
+      const crisisEvents =
+        (await secureStorage.getSecureData("crisis_events")) || [];
+      const emergencyActions =
+        (await secureStorage.getSecureData("emergency_actions")) || [];
 
       const last30Days = new Date();
       last30Days.setDate(last30Days.getDate() - 30);
@@ -795,7 +915,13 @@ class CrisisManager {
    * @returns {Object} Risk distribution
    */
   calculateRiskDistribution(events: CrisisEvent[]): RiskDistribution {
-    const distribution: RiskDistribution = { none: 0, low: 0, moderate: 0, high: 0, critical: 0 };
+    const distribution: RiskDistribution = {
+      none: 0,
+      low: 0,
+      moderate: 0,
+      high: 0,
+      critical: 0,
+    };
 
     events.forEach((event) => {
       const riskLevel = event.riskLevel as keyof RiskDistribution;
@@ -833,7 +959,10 @@ class CrisisManager {
    * @param {Array} actions - Emergency actions
    * @returns {number} Response rate (0-1)
    */
-  calculateResponseRate(events: CrisisEvent[], actions: EmergencyAction[]): number {
+  calculateResponseRate(
+    events: CrisisEvent[],
+    actions: EmergencyAction[],
+  ): number {
     if (events.length === 0) return 0;
 
     const highRiskEvents = events.filter(
@@ -919,11 +1048,15 @@ class CrisisManager {
    * @param {Object} followUpData - Follow-up scheduling data
    * @returns {Promise<Object>} Scheduled follow-up
    */
-  async scheduleFollowUp(followUpData: FollowUpData): Promise<ScheduledFollowUp> {
+  async scheduleFollowUp(
+    followUpData: FollowUpData,
+  ): Promise<ScheduledFollowUp> {
     const followUp = {
       id: `followup_${Date.now()}`,
       type: followUpData.type || "crisis_followup",
-      scheduled_time: followUpData.scheduledTime || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Default to 24 hours
+      scheduled_time:
+        followUpData.scheduledTime ||
+        new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Default to 24 hours
       provider: followUpData.provider || "crisis_team",
       priority: followUpData.priority || "high",
       notes: followUpData.notes || "",
@@ -932,8 +1065,12 @@ class CrisisManager {
     };
 
     try {
-      const existingFollowUps = await secureStorage.getSecureData("scheduled_followups");
-      const followUps = Array.isArray(existingFollowUps) ? existingFollowUps : [];
+      const existingFollowUps = await secureStorage.getSecureData(
+        "scheduled_followups",
+      );
+      const followUps = Array.isArray(existingFollowUps)
+        ? existingFollowUps
+        : [];
 
       followUps.push(followUp);
       await secureStorage.storeSensitiveData("scheduled_followups", followUps);
@@ -959,7 +1096,7 @@ class CrisisManager {
           "Immediate psychiatric evaluation recommended",
           "Consider inpatient stabilization",
           "Monitor for suicidal ideation",
-          "Coordinate with emergency services"
+          "Coordinate with emergency services",
         );
         break;
       case "high":
@@ -967,7 +1104,7 @@ class CrisisManager {
           "Schedule urgent mental health assessment",
           "Consider crisis intervention therapy",
           "Monitor medication compliance",
-          "Establish safety plan"
+          "Establish safety plan",
         );
         break;
       case "moderate":
@@ -975,7 +1112,7 @@ class CrisisManager {
           "Schedule outpatient therapy appointment",
           "Consider medication evaluation",
           "Implement coping strategies",
-          "Regular follow-up monitoring"
+          "Regular follow-up monitoring",
         );
         break;
       case "low":
@@ -983,7 +1120,7 @@ class CrisisManager {
           "Continue supportive therapy",
           "Monitor symptom progression",
           "Reinforce coping skills",
-          "Regular wellness check-ins"
+          "Regular wellness check-ins",
         );
         break;
     }

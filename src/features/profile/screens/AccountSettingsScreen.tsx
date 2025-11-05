@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/Profile Settings & Help Center.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,9 +14,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Switch,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 export const AccountSettingsScreen = () => {
   const { theme } = useTheme();
@@ -29,23 +29,23 @@ export const AccountSettingsScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
@@ -57,31 +57,31 @@ export const AccountSettingsScreen = () => {
     },
     sectionTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
-      textTransform: 'uppercase',
+      textTransform: "uppercase",
       marginBottom: 12,
     },
     settingItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     settingLeft: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       flex: 1,
     },
     settingIcon: {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['20'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.brown["20"],
+      justifyContent: "center",
+      alignItems: "center",
       marginRight: 12,
     },
     settingIconText: {
@@ -92,7 +92,7 @@ export const AccountSettingsScreen = () => {
     },
     settingTitle: {
       fontSize: 15,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     settingArrow: {
@@ -100,7 +100,7 @@ export const AccountSettingsScreen = () => {
       color: theme.colors.text.tertiary,
     },
     dangerZone: {
-      backgroundColor: theme.colors.red['10'],
+      backgroundColor: theme.colors.red["10"],
       marginHorizontal: 20,
       marginVertical: 24,
       borderRadius: 16,
@@ -108,33 +108,33 @@ export const AccountSettingsScreen = () => {
     },
     dangerTitle: {
       fontSize: 16,
-      fontWeight: '700',
-      color: theme.colors.red['100'],
+      fontWeight: "700",
+      color: theme.colors.red["100"],
       marginBottom: 12,
     },
     dangerButton: {
-      backgroundColor: theme.colors.red['60'],
+      backgroundColor: theme.colors.red["60"],
       borderRadius: 12,
       paddingVertical: 12,
-      alignItems: 'center',
+      alignItems: "center",
     },
     dangerButtonText: {
       fontSize: 14,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     saveButton: {
-      backgroundColor: theme.colors.brown['60'],
+      backgroundColor: theme.colors.brown["60"],
       borderRadius: 16,
       paddingVertical: 16,
       marginHorizontal: 20,
       marginBottom: 20,
-      alignItems: 'center',
+      alignItems: "center",
     },
     saveButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
   });
 
@@ -187,8 +187,14 @@ export const AccountSettingsScreen = () => {
               </View>
               <Text style={styles.settingTitle}>Language</Text>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-              <Text style={{ fontSize: 14, color: theme.colors.text.secondary }}>English (US)</Text>
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+            >
+              <Text
+                style={{ fontSize: 14, color: theme.colors.text.secondary }}
+              >
+                English (US)
+              </Text>
               <Text style={styles.settingArrow}>→</Text>
             </View>
           </TouchableOpacity>
@@ -203,7 +209,10 @@ export const AccountSettingsScreen = () => {
             <Switch
               value={darkMode}
               onValueChange={setDarkMode}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.green['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.green["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>

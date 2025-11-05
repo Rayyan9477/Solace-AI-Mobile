@@ -16,18 +16,21 @@ const initialState: EnhancedMoodState = {
   selectedMood: null,
   intensity: 5,
   activities: [],
-  notes: '',
+  notes: "",
   triggers: [],
   isSubmitting: false,
 };
 
-function reducer(state: EnhancedMoodState = initialState, action: any): EnhancedMoodState {
+function reducer(
+  state: EnhancedMoodState = initialState,
+  action: any,
+): EnhancedMoodState {
   switch (action.type) {
-    case 'mood/UI_STEP':
+    case "mood/UI_STEP":
       return { ...state, currentStep: Number(action.payload) || 1 };
-    case 'mood/UI_INTENSITY':
+    case "mood/UI_INTENSITY":
       return { ...state, intensity: Number(action.payload) || state.intensity };
-    case 'mood/UI_ACTIVITY': {
+    case "mood/UI_ACTIVITY": {
       const id = action.payload;
       const exists = state.activities.includes(id);
       return {
@@ -37,9 +40,9 @@ function reducer(state: EnhancedMoodState = initialState, action: any): Enhanced
           : [...state.activities, id],
       };
     }
-    case 'mood/UI_NOTES':
-      return { ...state, notes: String(action.payload ?? '') };
-    case 'mood/UI_TRIGGER': {
+    case "mood/UI_NOTES":
+      return { ...state, notes: String(action.payload ?? "") };
+    case "mood/UI_TRIGGER": {
       const id = action.payload;
       const exists = state.triggers.includes(id);
       return {
@@ -49,7 +52,7 @@ function reducer(state: EnhancedMoodState = initialState, action: any): Enhanced
           : [...state.triggers, id],
       };
     }
-    case 'mood/setCurrentMood':
+    case "mood/setCurrentMood":
       return { ...state, selectedMood: action.payload };
     default:
       return state;

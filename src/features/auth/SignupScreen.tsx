@@ -3,7 +3,12 @@
  * Matches Freud UI design with brown therapeutic theme
  */
 
-import React, { useState } from 'react';
+import { MentalHealthIcon } from "@components/icons";
+import { FreudLogo } from "@components/icons/FreudIcons";
+import rateLimiter from "@shared/utils/rateLimiter";
+import { useTheme } from "@theme/ThemeProvider";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -16,27 +21,22 @@ import {
   Alert,
   ScrollView,
   StatusBar,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from "@theme/ThemeProvider";
-import { FreudLogo } from '@components/icons/FreudIcons';
-import { MentalHealthIcon } from '@components/icons';
-import rateLimiter from '@shared/utils/rateLimiter';
+} from "react-native";
 
 export const SignupScreen = ({ navigation }: any) => {
   const { theme } = useTheme();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [emailError, setEmailError] = useState('');
+  const [emailError, setEmailError] = useState("");
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.isDark ? '#2D1B0E' : '#8B7355',
+      backgroundColor: theme.isDark ? "#2D1B0E" : "#8B7355",
     },
     gradient: {
       flex: 1,
@@ -44,14 +44,14 @@ export const SignupScreen = ({ navigation }: any) => {
     header: {
       paddingTop: 60,
       paddingBottom: 40,
-      alignItems: 'center',
+      alignItems: "center",
     },
     logoContainer: {
       marginBottom: 24,
     },
     content: {
       flex: 1,
-      backgroundColor: theme.isDark ? '#3D2817' : '#4A3426',
+      backgroundColor: theme.isDark ? "#3D2817" : "#4A3426",
       borderTopLeftRadius: 32,
       borderTopRightRadius: 32,
       paddingTop: 48,
@@ -63,33 +63,33 @@ export const SignupScreen = ({ navigation }: any) => {
     },
     title: {
       fontSize: 32,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
       marginBottom: 40,
-      textAlign: 'center',
+      textAlign: "center",
     },
     inputContainer: {
       marginBottom: 20,
     },
     inputLabel: {
       fontSize: 14,
-      fontWeight: '500',
-      color: '#E5DDD5',
+      fontWeight: "500",
+      color: "#E5DDD5",
       marginBottom: 8,
       letterSpacing: 0.3,
     },
     inputWrapper: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       borderWidth: 1.5,
-      borderColor: '#6B5444',
+      borderColor: "#6B5444",
       borderRadius: 24,
-      backgroundColor: 'rgba(45, 27, 14, 0.5)',
+      backgroundColor: "rgba(45, 27, 14, 0.5)",
       paddingHorizontal: 20,
       paddingVertical: 14,
     },
     inputWrapperError: {
-      borderColor: '#E8A872',
+      borderColor: "#E8A872",
     },
     inputIcon: {
       marginRight: 12,
@@ -97,7 +97,7 @@ export const SignupScreen = ({ navigation }: any) => {
     input: {
       flex: 1,
       fontSize: 16,
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       paddingVertical: 0,
     },
     eyeButton: {
@@ -106,14 +106,14 @@ export const SignupScreen = ({ navigation }: any) => {
     },
     errorText: {
       fontSize: 12,
-      color: '#E8A872',
+      color: "#E8A872",
       marginTop: 4,
       marginLeft: 20,
     },
     errorBadge: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: 'rgba(232, 168, 114, 0.2)',
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: "rgba(232, 168, 114, 0.2)",
       paddingHorizontal: 12,
       paddingVertical: 6,
       borderRadius: 12,
@@ -121,52 +121,52 @@ export const SignupScreen = ({ navigation }: any) => {
     },
     errorBadgeText: {
       fontSize: 12,
-      color: '#E8A872',
+      color: "#E8A872",
       marginLeft: 6,
     },
     signupButton: {
-      backgroundColor: '#A67C52',
+      backgroundColor: "#A67C52",
       borderRadius: 24,
       paddingVertical: 16,
-      alignItems: 'center',
+      alignItems: "center",
       marginTop: 32,
-      flexDirection: 'row',
-      justifyContent: 'center',
+      flexDirection: "row",
+      justifyContent: "center",
     },
     disabledButton: {
       opacity: 0.5,
     },
     signupButtonText: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       marginRight: 8,
     },
     footer: {
-      alignItems: 'center',
+      alignItems: "center",
       marginTop: 24,
     },
     footerText: {
       fontSize: 14,
-      color: '#B8A99A',
+      color: "#B8A99A",
     },
     loginText: {
       fontSize: 14,
-      color: '#E8A872',
-      fontWeight: '600',
+      color: "#E8A872",
+      fontWeight: "600",
     },
   });
 
   const backgroundColors = theme.isDark
-    ? ['#8B7355', '#6B5444']
-    : ['#A67C52', '#8B6F47'];
+    ? ["#8B7355", "#6B5444"]
+    : ["#A67C52", "#8B6F47"];
 
   const validateEmail = (email: string) => {
     if (!/\S+@\S+\.\S+/.test(email)) {
-      setEmailError('Invalid Email Address!!!');
+      setEmailError("Invalid Email Address!!!");
       return false;
     }
-    setEmailError('');
+    setEmailError("");
     return true;
   };
 
@@ -174,27 +174,36 @@ export const SignupScreen = ({ navigation }: any) => {
     const errors: string[] = [];
 
     if (password.length < 12) {
-      errors.push('at least 12 characters');
+      errors.push("at least 12 characters");
     }
     if (password.length > 128) {
-      errors.push('less than 128 characters');
+      errors.push("less than 128 characters");
     }
     if (!/[a-z]/.test(password)) {
-      errors.push('one lowercase letter');
+      errors.push("one lowercase letter");
     }
     if (!/[A-Z]/.test(password)) {
-      errors.push('one uppercase letter');
+      errors.push("one uppercase letter");
     }
     if (!/[0-9]/.test(password)) {
-      errors.push('one number');
+      errors.push("one number");
     }
     if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-      errors.push('one special character');
+      errors.push("one special character");
     }
 
-    const commonPasswords = ['password', 'solace', 'mental', 'health', '123456789', 'qwerty'];
-    if (commonPasswords.some(common => password.toLowerCase().includes(common))) {
-      errors.push('cannot contain common words');
+    const commonPasswords = [
+      "password",
+      "solace",
+      "mental",
+      "health",
+      "123456789",
+      "qwerty",
+    ];
+    if (
+      commonPasswords.some((common) => password.toLowerCase().includes(common))
+    ) {
+      errors.push("cannot contain common words");
     }
 
     return errors;
@@ -202,29 +211,29 @@ export const SignupScreen = ({ navigation }: any) => {
 
   const validateForm = () => {
     if (!email.trim()) {
-      Alert.alert('Error', 'Please enter your email address');
+      Alert.alert("Error", "Please enter your email address");
       return false;
     }
     if (!validateEmail(email)) {
       return false;
     }
     if (!password.trim()) {
-      Alert.alert('Error', 'Please enter a password');
+      Alert.alert("Error", "Please enter a password");
       return false;
     }
 
     const passwordErrors = validatePassword(password);
     if (passwordErrors.length > 0) {
       Alert.alert(
-        'Password Too Weak',
-        `Your password must include:\n• ${passwordErrors.join('\n• ')}`,
-        [{ text: 'OK' }]
+        "Password Too Weak",
+        `Your password must include:\n• ${passwordErrors.join("\n• ")}`,
+        [{ text: "OK" }],
       );
       return false;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
+      Alert.alert("Error", "Passwords do not match");
       return false;
     }
     return true;
@@ -233,49 +242,58 @@ export const SignupScreen = ({ navigation }: any) => {
   const handleSignup = async () => {
     if (!validateForm()) return;
 
-    const rateLimit = await rateLimiter.checkLimit(`signup:${email.toLowerCase()}`, 3, 60 * 60 * 1000);
+    const rateLimit = await rateLimiter.checkLimit(
+      `signup:${email.toLowerCase()}`,
+      3,
+      60 * 60 * 1000,
+    );
 
     if (!rateLimit.allowed) {
       Alert.alert(
-        'Too Many Attempts',
+        "Too Many Attempts",
         `You have exceeded the maximum signup attempts. Please try again in ${rateLimit.waitTime} seconds.`,
-        [{ text: 'OK' }]
+        [{ text: "OK" }],
       );
       return;
     }
 
     setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       rateLimiter.reset(`signup:${email.toLowerCase()}`);
-      Alert.alert(
-        'Success',
-        'Account created successfully!',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation?.navigate?.('Login'),
-          },
-        ]
-      );
+      Alert.alert("Success", "Account created successfully!", [
+        {
+          text: "OK",
+          onPress: () => navigation?.navigate?.("Login"),
+        },
+      ]);
     } catch (error: any) {
       Alert.alert(
-        'Signup Failed',
-        error.message || 'Failed to create account. Please try again.'
+        "Signup Failed",
+        error.message || "Failed to create account. Please try again.",
       );
     } finally {
       setIsLoading(false);
     }
   };
 
-  const canSignup = email.trim() && password.trim() && confirmPassword.trim() && !isLoading && !emailError;
+  const canSignup =
+    email.trim() &&
+    password.trim() &&
+    confirmPassword.trim() &&
+    !isLoading &&
+    !emailError;
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <LinearGradient
           colors={backgroundColors}
@@ -298,8 +316,18 @@ export const SignupScreen = ({ navigation }: any) => {
 
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Email Address</Text>
-                <View style={[styles.inputWrapper, emailError && styles.inputWrapperError]}>
-                  <MentalHealthIcon name="Mail" size={20} color="#B8A99A" style={styles.inputIcon} />
+                <View
+                  style={[
+                    styles.inputWrapper,
+                    emailError && styles.inputWrapperError,
+                  ]}
+                >
+                  <MentalHealthIcon
+                    name="Mail"
+                    size={20}
+                    color="#B8A99A"
+                    style={styles.inputIcon}
+                  />
                   <TextInput
                     style={styles.input}
                     value={email}
@@ -317,7 +345,11 @@ export const SignupScreen = ({ navigation }: any) => {
                 </View>
                 {emailError ? (
                   <View style={styles.errorBadge}>
-                    <MentalHealthIcon name="AlertCircle" size={14} color="#E8A872" />
+                    <MentalHealthIcon
+                      name="AlertCircle"
+                      size={14}
+                      color="#E8A872"
+                    />
                     <Text style={styles.errorBadgeText}>{emailError}</Text>
                   </View>
                 ) : null}
@@ -326,7 +358,12 @@ export const SignupScreen = ({ navigation }: any) => {
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Password</Text>
                 <View style={styles.inputWrapper}>
-                  <MentalHealthIcon name="Lock" size={20} color="#B8A99A" style={styles.inputIcon} />
+                  <MentalHealthIcon
+                    name="Lock"
+                    size={20}
+                    color="#B8A99A"
+                    style={styles.inputIcon}
+                  />
                   <TextInput
                     style={styles.input}
                     value={password}
@@ -340,7 +377,9 @@ export const SignupScreen = ({ navigation }: any) => {
                     style={styles.eyeButton}
                     onPress={() => setShowPassword(!showPassword)}
                     accessible
-                    accessibilityLabel={showPassword ? "Hide password" : "Show password"}
+                    accessibilityLabel={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                     accessibilityRole="button"
                     accessibilityHint="Toggles password visibility"
                   >
@@ -356,7 +395,12 @@ export const SignupScreen = ({ navigation }: any) => {
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Password Confirmation</Text>
                 <View style={styles.inputWrapper}>
-                  <MentalHealthIcon name="Lock" size={20} color="#B8A99A" style={styles.inputIcon} />
+                  <MentalHealthIcon
+                    name="Lock"
+                    size={20}
+                    color="#B8A99A"
+                    style={styles.inputIcon}
+                  />
                   <TextInput
                     style={styles.input}
                     value={confirmPassword}
@@ -370,7 +414,11 @@ export const SignupScreen = ({ navigation }: any) => {
                     style={styles.eyeButton}
                     onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                     accessible
-                    accessibilityLabel={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                    accessibilityLabel={
+                      showConfirmPassword
+                        ? "Hide confirm password"
+                        : "Show confirm password"
+                    }
                     accessibilityRole="button"
                     accessibilityHint="Toggles confirm password visibility"
                   >
@@ -397,17 +445,17 @@ export const SignupScreen = ({ navigation }: any) => {
                 accessibilityHint="Create a new account"
               >
                 <Text style={styles.signupButtonText}>
-                  {isLoading ? 'Creating Account...' : 'Sign Up'}
+                  {isLoading ? "Creating Account..." : "Sign Up"}
                 </Text>
-                <Text style={{ color: '#FFFFFF', fontSize: 18 }}>→</Text>
+                <Text style={{ color: "#FFFFFF", fontSize: 18 }}>→</Text>
               </TouchableOpacity>
 
               <View style={styles.footer}>
                 <Text style={styles.footerText}>
-                  Already have an account?{' '}
+                  Already have an account?{" "}
                   <Text
                     style={styles.loginText}
-                    onPress={() => navigation?.navigate?.('Login')}
+                    onPress={() => navigation?.navigate?.("Login")}
                   >
                     Sign In
                   </Text>

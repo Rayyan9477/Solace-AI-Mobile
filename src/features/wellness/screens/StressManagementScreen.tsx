@@ -3,36 +3,43 @@
  * Based on ui-designs/Dark-mode/Stress Management.png
  */
 
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
 
 type StressLevel = 1 | 2 | 3 | 4 | 5;
 
 const STRESS_LEVELS = [
-  { level: 1 as StressLevel, label: 'Calm', color: '#98B068' },
-  { level: 2 as StressLevel, label: 'Normal', color: '#B8C77F' },
-  { level: 3 as StressLevel, label: 'Elevated', color: '#C96100' },
-  { level: 4 as StressLevel, label: 'Stressed', color: '#D94500' },
-  { level: 5 as StressLevel, label: 'Extreme', color: '#8B7DA8' },
+  { level: 1 as StressLevel, label: "Calm", color: "#98B068" },
+  { level: 2 as StressLevel, label: "Normal", color: "#B8C77F" },
+  { level: 3 as StressLevel, label: "Elevated", color: "#C96100" },
+  { level: 4 as StressLevel, label: "Stressed", color: "#D94500" },
+  { level: 5 as StressLevel, label: "Extreme", color: "#8B7DA8" },
 ];
 
 const STRESSORS = [
-  { id: 'work', label: 'Work', size: 'large' },
-  { id: 'relationships', label: 'Relationships', size: 'medium' },
-  { id: 'loneliness', label: 'Loneliness', size: 'large' },
-  { id: 'kids', label: 'Kids', size: 'small' },
-  { id: 'life', label: 'Life', size: 'medium' },
-  { id: 'other', label: 'Other', size: 'small' },
+  { id: "work", label: "Work", size: "large" },
+  { id: "relationships", label: "Relationships", size: "medium" },
+  { id: "loneliness", label: "Loneliness", size: "large" },
+  { id: "kids", label: "Kids", size: "small" },
+  { id: "life", label: "Life", size: "medium" },
+  { id: "other", label: "Other", size: "small" },
 ];
 
 const STRESS_STATS = [
-  { date: '15', level: 2, label: 'Normal' },
-  { date: '16', level: 3, label: 'Elevated' },
-  { date: '17', level: 4, label: 'Stressed' },
-  { date: '18', level: 2, label: 'Normal' },
-  { date: '19', level: 1, label: 'Calm' },
+  { date: "15", level: 2, label: "Normal" },
+  { date: "16", level: 3, label: "Elevated" },
+  { date: "17", level: 4, label: "Stressed" },
+  { date: "18", level: 2, label: "Normal" },
+  { date: "19", level: 1, label: "Calm" },
 ];
 
 export const StressManagementScreen = () => {
@@ -47,9 +54,9 @@ export const StressManagementScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
     },
@@ -57,13 +64,13 @@ export const StressManagementScreen = () => {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['20'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.brown["20"],
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
@@ -71,86 +78,86 @@ export const StressManagementScreen = () => {
       padding: 20,
     },
     levelCard: {
-      backgroundColor: '#C96100',
+      backgroundColor: "#C96100",
       borderRadius: 24,
       padding: 32,
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: 24,
     },
     levelValue: {
       fontSize: 96,
-      fontWeight: '800',
-      color: '#FFFFFF',
+      fontWeight: "800",
+      color: "#FFFFFF",
       marginBottom: 8,
     },
     levelLabel: {
       fontSize: 24,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     section: {
       marginBottom: 24,
     },
     sectionTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     sectionSubtitle: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
       marginBottom: 16,
       lineHeight: 20,
     },
     levelSelector: {
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 20,
       padding: 24,
-      alignItems: 'center',
+      alignItems: "center",
     },
     levelDisplay: {
       fontSize: 96,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     levelProgress: {
-      width: '100%',
+      width: "100%",
       height: 8,
-      backgroundColor: theme.colors.brown['30'],
+      backgroundColor: theme.colors.brown["30"],
       borderRadius: 4,
       marginBottom: 16,
-      overflow: 'hidden',
+      overflow: "hidden",
     },
     levelProgressFill: {
-      height: '100%',
-      backgroundColor: '#C96100',
+      height: "100%",
+      backgroundColor: "#C96100",
       borderRadius: 4,
     },
     levelText: {
       fontSize: 20,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     stressorsGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 12,
-      justifyContent: 'center',
+      justifyContent: "center",
     },
     stressorButton: {
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 20,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       borderWidth: 2,
-      borderColor: 'transparent',
+      borderColor: "transparent",
     },
     stressorButtonActive: {
-      backgroundColor: '#98B068',
-      borderColor: '#98B068',
+      backgroundColor: "#98B068",
+      borderColor: "#98B068",
     },
     stressorSmall: {
       width: 100,
@@ -166,18 +173,18 @@ export const StressManagementScreen = () => {
     },
     stressorText: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     stressorTextActive: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     impactBanner: {
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 16,
       padding: 16,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 12,
     },
     impactIcon: {
@@ -186,64 +193,64 @@ export const StressManagementScreen = () => {
     impactText: {
       flex: 1,
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     statsSection: {
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 20,
       padding: 20,
     },
     statsGrid: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
       marginTop: 16,
     },
     statCard: {
-      alignItems: 'center',
+      alignItems: "center",
       flex: 1,
     },
     statCircle: {
       width: 60,
       height: 60,
       borderRadius: 30,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       marginBottom: 8,
     },
     statValue: {
       fontSize: 20,
-      fontWeight: '800',
-      color: '#FFFFFF',
+      fontWeight: "800",
+      color: "#FFFFFF",
     },
     statDate: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
       marginBottom: 4,
     },
     statLabel: {
       fontSize: 10,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.tertiary,
     },
     continueButton: {
-      backgroundColor: theme.colors.brown['70'],
+      backgroundColor: theme.colors.brown["70"],
       paddingVertical: 16,
       borderRadius: 16,
-      alignItems: 'center',
+      alignItems: "center",
       marginTop: 24,
     },
     continueButtonText: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.background.secondary,
     },
   });
 
   const toggleStressor = (id: string) => {
     if (selectedStressors.includes(id)) {
-      setSelectedStressors(selectedStressors.filter(s => s !== id));
+      setSelectedStressors(selectedStressors.filter((s) => s !== id));
     } else {
       setSelectedStressors([...selectedStressors, id]);
     }
@@ -253,12 +260,21 @@ export const StressManagementScreen = () => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
           <Text style={{ fontSize: 20 }}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Stress Level</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('StressStats')}>
-          <Text style={{ fontSize: 14, fontWeight: '600', color: theme.colors.brown['70'] }}>
+        <TouchableOpacity onPress={() => navigation.navigate("StressStats")}>
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: "600",
+              color: theme.colors.brown["70"],
+            }}
+          >
             See All
           </Text>
         </TouchableOpacity>
@@ -273,11 +289,18 @@ export const StressManagementScreen = () => {
 
         {/* Stress Level Selector */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>What's your stress level today?</Text>
+          <Text style={styles.sectionTitle}>
+            What's your stress level today?
+          </Text>
           <View style={styles.levelSelector}>
             <Text style={styles.levelDisplay}>{selectedLevel}</Text>
             <View style={styles.levelProgress}>
-              <View style={[styles.levelProgressFill, { width: `${(selectedLevel / 5) * 100}%` }]} />
+              <View
+                style={[
+                  styles.levelProgressFill,
+                  { width: `${(selectedLevel / 5) * 100}%` },
+                ]}
+              />
             </View>
             <Text style={styles.levelText}>Moderate</Text>
           </View>
@@ -287,7 +310,8 @@ export const StressManagementScreen = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Select Stressors</Text>
           <Text style={styles.sectionSubtitle}>
-            Our AI will decide how your stressor will impacts your life in general.
+            Our AI will decide how your stressor will impacts your life in
+            general.
           </Text>
           <View style={styles.stressorsGrid}>
             {STRESSORS.map((stressor) => (
@@ -295,17 +319,21 @@ export const StressManagementScreen = () => {
                 key={stressor.id}
                 style={[
                   styles.stressorButton,
-                  stressor.size === 'small' && styles.stressorSmall,
-                  stressor.size === 'medium' && styles.stressorMedium,
-                  stressor.size === 'large' && styles.stressorLarge,
-                  selectedStressors.includes(stressor.id) && styles.stressorButtonActive,
+                  stressor.size === "small" && styles.stressorSmall,
+                  stressor.size === "medium" && styles.stressorMedium,
+                  stressor.size === "large" && styles.stressorLarge,
+                  selectedStressors.includes(stressor.id) &&
+                    styles.stressorButtonActive,
                 ]}
                 onPress={() => toggleStressor(stressor.id)}
               >
-                <Text style={[
-                  styles.stressorText,
-                  selectedStressors.includes(stressor.id) && styles.stressorTextActive,
-                ]}>
+                <Text
+                  style={[
+                    styles.stressorText,
+                    selectedStressors.includes(stressor.id) &&
+                      styles.stressorTextActive,
+                  ]}
+                >
                   {stressor.label}
                 </Text>
               </TouchableOpacity>
@@ -318,7 +346,8 @@ export const StressManagementScreen = () => {
           <View style={styles.impactBanner}>
             <Text style={styles.impactIcon}>⚠️</Text>
             <Text style={styles.impactText}>
-              Life Impact: Very High - Your selected stressors are significantly affecting your wellbeing
+              Life Impact: Very High - Your selected stressors are significantly
+              affecting your wellbeing
             </Text>
           </View>
         )}
@@ -330,10 +359,16 @@ export const StressManagementScreen = () => {
             <View style={styles.statsGrid}>
               {STRESS_STATS.map((stat, index) => (
                 <View key={index} style={styles.statCard}>
-                  <View style={[
-                    styles.statCircle,
-                    { backgroundColor: STRESS_LEVELS.find(l => l.level === stat.level)?.color }
-                  ]}>
+                  <View
+                    style={[
+                      styles.statCircle,
+                      {
+                        backgroundColor: STRESS_LEVELS.find(
+                          (l) => l.level === stat.level,
+                        )?.color,
+                      },
+                    ]}
+                  >
                     <Text style={styles.statValue}>{stat.level}</Text>
                   </View>
                   <Text style={styles.statDate}>{stat.date}</Text>

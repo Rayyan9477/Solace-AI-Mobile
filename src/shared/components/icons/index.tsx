@@ -3,9 +3,9 @@
  * Provides a single import point for icons across the app
  */
 
-export { default as MentalHealthIcon } from './MentalHealthIcon';
-export { default as NavigationIcon } from './NavigationIcon';
-export { FreudLogo, SolaceLogo } from './FreudIcons';
+export { default as MentalHealthIcon } from "./MentalHealthIcon";
+export { default as NavigationIcon } from "./NavigationIcon";
+export { FreudLogo, SolaceLogo } from "./FreudIcons";
 
 // Re-export for convenience
-export { default } from './MentalHealthIcon';
+export { default } from "./MentalHealthIcon";

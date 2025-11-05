@@ -1,8 +1,9 @@
-import * as SecureStore from 'expo-secure-store';
-import * as Crypto from 'expo-crypto';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform } from 'react-native';
-import { STORAGE_CONFIG } from '../../shared/config/environment';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Crypto from "expo-crypto";
+import * as SecureStore from "expo-secure-store";
+import { Platform } from "react-native";
+
+import { STORAGE_CONFIG } from "../../shared/config/environment";
 
 interface StorageData {
   data: any;
@@ -21,15 +22,15 @@ class SecureStorage {
     }
 
     try {
-      let key = await SecureStore.getItemAsync('device_master_key');
+      let key = await SecureStore.getItemAsync("device_master_key");
 
       if (!key) {
         const randomBytes = await Crypto.getRandomBytesAsync(32);
         key = Array.from(randomBytes)
-          .map(b => b.toString(16).padStart(2, '0'))
-          .join('');
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("");
 
-        await SecureStore.setItemAsync('device_master_key', key, {
+        await SecureStore.setItemAsync("device_master_key", key, {
           keychainAccessible: SecureStore.WHEN_UNLOCKED,
         });
       }
@@ -45,20 +46,24 @@ class SecureStorage {
     const jsonString = JSON.stringify(data);
     return await Crypto.digestStringAsync(
       Crypto.CryptoDigestAlgorithm.SHA256,
-      jsonString
+      jsonString,
     );
   }
 
-  async storeSecureData(key: string, data: any, options: {
-    encrypt?: boolean;
-    dataType?: string;
-    requireAuth?: boolean;
-  } = {}): Promise<void> {
+  async storeSecureData(
+    key: string,
+    data: any,
+    options: {
+      encrypt?: boolean;
+      dataType?: string;
+      requireAuth?: boolean;
+    } = {},
+  ): Promise<void> {
     try {
       const {
         encrypt = true,
-        dataType = 'general',
-        requireAuth = false
+        dataType = "general",
+        requireAuth = false,
       } = options;
 
       const checksum = await this.calculateChecksum(data);
@@ -67,14 +72,14 @@ class SecureStorage {
         data,
         dataType,
         timestamp: Date.now(),
-        version: '2.0',
+        version: "2.0",
         checksum,
       };
 
       const jsonData = JSON.stringify(storageData);
       const fullKey = `${STORAGE_CONFIG.keyPrefix}${key}`;
 
-      if (encrypt && Platform.OS !== 'web') {
+      if (encrypt && Platform.OS !== "web") {
         await SecureStore.setItemAsync(fullKey, jsonData, {
           keychainAccessible: SecureStore.WHEN_UNLOCKED,
           requireAuthentication: requireAuth,
@@ -92,7 +97,7 @@ class SecureStorage {
       const fullKey = `${STORAGE_CONFIG.keyPrefix}${key}`;
       let jsonData: string | null = null;
 
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         try {
           jsonData = await SecureStore.getItemAsync(fullKey);
         } catch {
@@ -109,12 +114,18 @@ class SecureStorage {
       try {
         const parsedData: StorageData = JSON.parse(jsonData);
 
-        if (parsedData && typeof parsedData === 'object' && 'data' in parsedData) {
-          if (parsedData.version === '2.0' && parsedData.checksum) {
-            const expectedChecksum = await this.calculateChecksum(parsedData.data);
+        if (
+          parsedData &&
+          typeof parsedData === "object" &&
+          "data" in parsedData
+        ) {
+          if (parsedData.version === "2.0" && parsedData.checksum) {
+            const expectedChecksum = await this.calculateChecksum(
+              parsedData.data,
+            );
             if (parsedData.checksum !== expectedChecksum) {
               await this.removeSecureData(key);
-              throw new Error('Data integrity check failed');
+              throw new Error("Data integrity check failed");
             }
           }
 
@@ -134,7 +145,7 @@ class SecureStorage {
     try {
       const fullKey = `${STORAGE_CONFIG.keyPrefix}${key}`;
 
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         try {
           await SecureStore.deleteItemAsync(fullKey);
         } catch {
@@ -151,10 +162,12 @@ class SecureStorage {
   async clearAllSecureData(): Promise<void> {
     try {
       const keys = await AsyncStorage.getAllKeys();
-      const secureKeys = keys.filter(key => key.startsWith(STORAGE_CONFIG.keyPrefix));
+      const secureKeys = keys.filter((key) =>
+        key.startsWith(STORAGE_CONFIG.keyPrefix),
+      );
       await AsyncStorage.multiRemove(secureKeys);
 
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         for (const key of secureKeys) {
           try {
             await SecureStore.deleteItemAsync(key);
@@ -172,8 +185,8 @@ class SecureStorage {
     try {
       const keys = await AsyncStorage.getAllKeys();
       return keys
-        .filter(key => key.startsWith(STORAGE_CONFIG.keyPrefix))
-        .map(key => key.replace(STORAGE_CONFIG.keyPrefix, ''));
+        .filter((key) => key.startsWith(STORAGE_CONFIG.keyPrefix))
+        .map((key) => key.replace(STORAGE_CONFIG.keyPrefix, ""));
     } catch (error) {
       return [];
     }
@@ -191,7 +204,7 @@ class SecureStorage {
   async storeSensitiveData(key: string, data: any): Promise<void> {
     return this.storeSecureData(key, data, {
       encrypt: true,
-      dataType: 'sensitive',
+      dataType: "sensitive",
       requireAuth: false,
     });
   }
@@ -199,7 +212,7 @@ class SecureStorage {
   async storeData(key: string, data: any): Promise<void> {
     return this.storeSecureData(key, data, {
       encrypt: false,
-      dataType: 'general',
+      dataType: "general",
     });
   }
 

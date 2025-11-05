@@ -3,7 +3,7 @@
  * Handles all backend communication with proper error handling and retry logic
  */
 
-import { API_CONFIG } from '../config/environment';
+import { API_CONFIG } from "../config/environment";
 
 /**
  * Custom API Error class
@@ -11,7 +11,7 @@ import { API_CONFIG } from '../config/environment';
 class APIError extends Error {
   constructor(message, statusCode, endpoint) {
     super(message);
-    this.name = 'APIError';
+    this.name = "APIError";
     this.statusCode = statusCode;
     this.endpoint = endpoint;
     this.timestamp = new Date().toISOString();
@@ -22,7 +22,11 @@ class APIError extends Error {
  * Helper function to handle API requests with retry logic
  * Throws APIError on failure - callers must handle errors
  */
-async function fetchWithRetry(url, options = {}, attempts = API_CONFIG.retryAttempts) {
+async function fetchWithRetry(
+  url,
+  options = {},
+  attempts = API_CONFIG.retryAttempts,
+) {
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.timeout);
@@ -31,7 +35,7 @@ async function fetchWithRetry(url, options = {}, attempts = API_CONFIG.retryAtte
       ...options,
       signal: controller.signal,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...options.headers,
       },
     });
@@ -43,19 +47,22 @@ async function fetchWithRetry(url, options = {}, attempts = API_CONFIG.retryAtte
       throw new APIError(
         errorData.message || `HTTP ${response.status}: ${response.statusText}`,
         response.status,
-        url
+        url,
       );
     }
 
     return await response.json();
   } catch (error) {
     // Don't retry on abort or client errors (4xx)
-    const shouldRetry = attempts > 1 &&
-                       error.name !== 'AbortError' &&
-                       (!error.statusCode || error.statusCode >= 500);
+    const shouldRetry =
+      attempts > 1 &&
+      error.name !== "AbortError" &&
+      (!error.statusCode || error.statusCode >= 500);
 
     if (shouldRetry) {
-      await new Promise(resolve => setTimeout(resolve, API_CONFIG.retryDelay));
+      await new Promise((resolve) =>
+        setTimeout(resolve, API_CONFIG.retryDelay),
+      );
       return fetchWithRetry(url, options, attempts - 1);
     }
 
@@ -77,12 +84,16 @@ async function fetchWithRetry(url, options = {}, attempts = API_CONFIG.retryAtte
  * @param {boolean} logError - Whether to log errors (default: true)
  * @returns {Promise<*>} API result or fallback value
  */
-export async function safeAPICall(apiCall, fallbackValue = null, logError = true) {
+export async function safeAPICall(
+  apiCall,
+  fallbackValue = null,
+  logError = true,
+) {
   try {
     return await apiCall();
   } catch (error) {
     if (logError) {
-      console.error('[API] Safe call failed:', error.message, error.endpoint);
+      console.error("[API] Safe call failed:", error.message, error.endpoint);
     }
     return fallbackValue;
   }
@@ -100,7 +111,7 @@ export const moodAPI = {
    */
   getMoodHistory: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
-    const url = `${API_CONFIG.baseURL}/mood${queryString ? `?${queryString}` : ''}`;
+    const url = `${API_CONFIG.baseURL}/mood${queryString ? `?${queryString}` : ""}`;
     return await fetchWithRetry(url);
   },
 
@@ -112,7 +123,7 @@ export const moodAPI = {
    */
   saveMood: async (moodData) => {
     return await fetchWithRetry(`${API_CONFIG.baseURL}/mood`, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(moodData),
     });
   },
@@ -126,7 +137,7 @@ export const moodAPI = {
    */
   updateMood: async (id, moodData) => {
     return await fetchWithRetry(`${API_CONFIG.baseURL}/mood/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(moodData),
     });
   },
@@ -139,7 +150,7 @@ export const moodAPI = {
    */
   deleteMood: async (id) => {
     return await fetchWithRetry(`${API_CONFIG.baseURL}/mood/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
   },
 };
@@ -164,7 +175,9 @@ export const assessmentAPI = {
    * @throws {APIError} On request failure
    */
   getAssessmentQuestions: async (assessmentType) => {
-    return await fetchWithRetry(`${API_CONFIG.baseURL}/assessments/${assessmentType}`);
+    return await fetchWithRetry(
+      `${API_CONFIG.baseURL}/assessments/${assessmentType}`,
+    );
   },
 
   /**
@@ -175,10 +188,13 @@ export const assessmentAPI = {
    * @throws {APIError} On request failure
    */
   submitAssessment: async (assessmentId, responses) => {
-    return await fetchWithRetry(`${API_CONFIG.baseURL}/assessments/${assessmentId}/submit`, {
-      method: 'POST',
-      body: JSON.stringify({ responses }),
-    });
+    return await fetchWithRetry(
+      `${API_CONFIG.baseURL}/assessments/${assessmentId}/submit`,
+      {
+        method: "POST",
+        body: JSON.stringify({ responses }),
+      },
+    );
   },
 
   /**
@@ -189,7 +205,7 @@ export const assessmentAPI = {
    */
   getAssessmentHistory: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
-    const url = `${API_CONFIG.baseURL}/assessments/history${queryString ? `?${queryString}` : ''}`;
+    const url = `${API_CONFIG.baseURL}/assessments/history${queryString ? `?${queryString}` : ""}`;
     return await fetchWithRetry(url);
   },
 };
@@ -206,7 +222,7 @@ export const chatAPI = {
    */
   sendMessage: async (message, sessionId) => {
     return await fetchWithRetry(`${API_CONFIG.baseURL}/chat/message`, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({ message, sessionId }),
     });
   },
@@ -218,7 +234,9 @@ export const chatAPI = {
    * @throws {APIError} On request failure
    */
   getChatHistory: async (sessionId) => {
-    return await fetchWithRetry(`${API_CONFIG.baseURL}/chat/history/${sessionId}`);
+    return await fetchWithRetry(
+      `${API_CONFIG.baseURL}/chat/history/${sessionId}`,
+    );
   },
 };
 
@@ -242,7 +260,7 @@ export const userAPI = {
    */
   updateProfile: async (profileData) => {
     return await fetchWithRetry(`${API_CONFIG.baseURL}/user/profile`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(profileData),
     });
   },

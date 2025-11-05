@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Search Screen.png
  */
 
-import React from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
 import {
   View,
   Text,
@@ -11,33 +13,31 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 export const RecentSearchesScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
 
   const recentSearches = [
-    { id: '1', query: 'anxiety coping strategies', timestamp: '2 hours ago' },
-    { id: '2', query: 'sleep meditation', timestamp: '1 day ago' },
-    { id: '3', query: 'depression support groups', timestamp: '2 days ago' },
-    { id: '4', query: 'breathing exercises', timestamp: '3 days ago' },
-    { id: '5', query: 'mood tracking tips', timestamp: '4 days ago' },
-    { id: '6', query: 'stress management', timestamp: '5 days ago' },
-    { id: '7', query: 'journaling prompts', timestamp: '1 week ago' },
+    { id: "1", query: "anxiety coping strategies", timestamp: "2 hours ago" },
+    { id: "2", query: "sleep meditation", timestamp: "1 day ago" },
+    { id: "3", query: "depression support groups", timestamp: "2 days ago" },
+    { id: "4", query: "breathing exercises", timestamp: "3 days ago" },
+    { id: "5", query: "mood tracking tips", timestamp: "4 days ago" },
+    { id: "6", query: "stress management", timestamp: "5 days ago" },
+    { id: "7", query: "journaling prompts", timestamp: "1 week ago" },
   ];
 
   const popularSearches = [
-    'anxiety relief',
-    'meditation techniques',
-    'sleep improvement',
-    'stress management',
-    'mood tracking',
-    'therapy resources',
-    'coping strategies',
-    'mindfulness exercises',
+    "anxiety relief",
+    "meditation techniques",
+    "sleep improvement",
+    "stress management",
+    "mood tracking",
+    "therapy resources",
+    "coping strategies",
+    "mindfulness exercises",
   ];
 
   const styles = StyleSheet.create({
@@ -46,23 +46,23 @@ export const RecentSearchesScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     clearButton: {
@@ -71,8 +71,8 @@ export const RecentSearchesScreen = () => {
     },
     clearButtonText: {
       fontSize: 14,
-      fontWeight: '700',
-      color: theme.colors.red['60'],
+      fontWeight: "700",
+      color: theme.colors.red["60"],
     },
     content: {
       flex: 1,
@@ -83,16 +83,16 @@ export const RecentSearchesScreen = () => {
     },
     sectionTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     searchItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       paddingVertical: 12,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     searchIcon: {
       fontSize: 18,
@@ -104,13 +104,13 @@ export const RecentSearchesScreen = () => {
     },
     searchQuery: {
       fontSize: 15,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
       marginBottom: 2,
     },
     searchTimestamp: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.tertiary,
     },
     deleteButton: {
@@ -121,25 +121,25 @@ export const RecentSearchesScreen = () => {
       color: theme.colors.text.tertiary,
     },
     popularSearchesContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 8,
     },
     popularSearchTag: {
       paddingHorizontal: 14,
       paddingVertical: 8,
       borderRadius: 16,
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderWidth: 1,
-      borderColor: theme.colors.gray['20'],
+      borderColor: theme.colors.gray["20"],
     },
     popularSearchText: {
       fontSize: 13,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     emptyState: {
-      alignItems: 'center',
+      alignItems: "center",
       paddingVertical: 60,
     },
     emptyIcon: {
@@ -148,7 +148,7 @@ export const RecentSearchesScreen = () => {
     },
     emptyTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -156,7 +156,7 @@ export const RecentSearchesScreen = () => {
       fontSize: 14,
       lineHeight: 20,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       paddingHorizontal: 40,
     },
   });
@@ -191,7 +191,9 @@ export const RecentSearchesScreen = () => {
             <TouchableOpacity
               key={search.id}
               style={styles.searchItem}
-              onPress={() => navigation.navigate('Search', { query: search.query })}
+              onPress={() =>
+                navigation.navigate("Search", { query: search.query })
+              }
             >
               <Text style={styles.searchIcon}>🕐</Text>
               <View style={styles.searchContent}>
@@ -212,7 +214,7 @@ export const RecentSearchesScreen = () => {
               <TouchableOpacity
                 key={index}
                 style={styles.popularSearchTag}
-                onPress={() => navigation.navigate('Search', { query: search })}
+                onPress={() => navigation.navigate("Search", { query: search })}
               >
                 <Text style={styles.popularSearchText}>{search}</Text>
               </TouchableOpacity>

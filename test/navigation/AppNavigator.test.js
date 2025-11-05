@@ -2,14 +2,20 @@
  * AppNavigator.test.js - Comprehensive tests for AppNavigator component
  */
 
-import React from 'react';
-import { render, screen } from '@testing-library/react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { configureStore } from '@reduxjs/toolkit';
+import { NavigationContainer } from "@react-navigation/native";
+import { configureStore } from "@reduxjs/toolkit";
+import { render, screen } from "@testing-library/react-native";
+import React from "react";
+import { useSelector, Provider } from "react-redux";
+
+import AppNavigator, {
+  PlaceholderScreen,
+  MainTabs,
+} from "../../src/app/navigation/AppNavigator";
 
 // Mock React Navigation
-jest.mock('@react-navigation/native', () => ({
-  ...jest.requireActual('@react-navigation/native'),
+jest.mock("@react-navigation/native", () => ({
+  ...jest.requireActual("@react-navigation/native"),
   useNavigation: () => ({
     navigate: jest.fn(),
     goBack: jest.fn(),
@@ -17,13 +23,13 @@ jest.mock('@react-navigation/native', () => ({
   }),
   useRoute: () => ({
     params: {},
-    name: 'TestScreen',
+    name: "TestScreen",
   }),
   useFocusEffect: jest.fn((callback) => callback()),
 }));
 
 // Mock React Navigation Stack
-jest.mock('@react-navigation/stack', () => ({
+jest.mock("@react-navigation/stack", () => ({
   createStackNavigator: () => ({
     Navigator: ({ children }) => <>{children}</>,
     Screen: ({ children }) => <>{children}</>,
@@ -31,7 +37,7 @@ jest.mock('@react-navigation/stack', () => ({
 }));
 
 // Mock React Navigation Bottom Tabs
-jest.mock('@react-navigation/bottom-tabs', () => ({
+jest.mock("@react-navigation/bottom-tabs", () => ({
   createBottomTabNavigator: () => ({
     Navigator: ({ children }) => <>{children}</>,
     Screen: ({ children }) => <>{children}</>,
@@ -39,25 +45,25 @@ jest.mock('@react-navigation/bottom-tabs', () => ({
 }));
 
 // Mock theme provider
-jest.mock('@theme/ThemeProvider', () => ({
+jest.mock("@theme/ThemeProvider", () => ({
   useTheme: () => ({
     theme: {
       colors: {
         background: {
-          primary: '#F7FAFC',
-          secondary: '#FFFFFF',
+          primary: "#F7FAFC",
+          secondary: "#FFFFFF",
         },
         text: {
-          primary: '#2D3748',
-          secondary: '#718096',
-          tertiary: '#A0AEC0',
+          primary: "#2D3748",
+          secondary: "#718096",
+          tertiary: "#A0AEC0",
         },
         border: {
-          light: '#E2E8F0',
+          light: "#E2E8F0",
         },
         therapeutic: {
           calming: {
-            600: '#0284c7',
+            600: "#0284c7",
           },
         },
       },
@@ -67,66 +73,107 @@ jest.mock('@theme/ThemeProvider', () => ({
 }));
 
 // Mock feature screens
-jest.mock('@features/auth/LoginScreen', () => {
-  const React = require('react');
+jest.mock("@features/auth/LoginScreen", () => {
+  const React = require("react");
   return function LoginScreen() {
-    return React.createElement(React.Fragment, null, React.createElement('div', { testID: 'login-screen' }, 'LoginScreen'));
+    return React.createElement(
+      React.Fragment,
+      null,
+      React.createElement("div", { testID: "login-screen" }, "LoginScreen"),
+    );
   };
 });
-jest.mock('@features/auth/SignupScreen', () => {
-  const React = require('react');
+jest.mock("@features/auth/SignupScreen", () => {
+  const React = require("react");
   return function SignupScreen() {
-    return React.createElement(React.Fragment, null, React.createElement('div', { testID: 'signup-screen' }, 'SignupScreen'));
+    return React.createElement(
+      React.Fragment,
+      null,
+      React.createElement("div", { testID: "signup-screen" }, "SignupScreen"),
+    );
   };
 });
-jest.mock('@features/dashboard/DashboardScreen', () => {
-  const React = require('react');
+jest.mock("@features/dashboard/DashboardScreen", () => {
+  const React = require("react");
   return function DashboardScreen() {
-    return React.createElement(React.Fragment, null, React.createElement('div', { testID: 'dashboard-screen' }, 'DashboardScreen'));
+    return React.createElement(
+      React.Fragment,
+      null,
+      React.createElement(
+        "div",
+        { testID: "dashboard-screen" },
+        "DashboardScreen",
+      ),
+    );
   };
 });
-jest.mock('@features/chat/ChatScreen', () => {
-  const React = require('react');
+jest.mock("@features/chat/ChatScreen", () => {
+  const React = require("react");
   return function ChatScreen() {
-    return React.createElement(React.Fragment, null, React.createElement('div', { testID: 'chat-screen' }, 'ChatScreen'));
+    return React.createElement(
+      React.Fragment,
+      null,
+      React.createElement("div", { testID: "chat-screen" }, "ChatScreen"),
+    );
   };
 });
-jest.mock('@features/mood/MoodScreen', () => {
-  const React = require('react');
+jest.mock("@features/mood/MoodScreen", () => {
+  const React = require("react");
   return function MoodScreen() {
-    return React.createElement(React.Fragment, null, React.createElement('div', { testID: 'mood-screen' }, 'MoodScreen'));
+    return React.createElement(
+      React.Fragment,
+      null,
+      React.createElement("div", { testID: "mood-screen" }, "MoodScreen"),
+    );
   };
 });
-jest.mock('@features/mood-tracking/EnhancedMoodTrackerScreen', () => {
-  const React = require('react');
+jest.mock("@features/mood-tracking/EnhancedMoodTrackerScreen", () => {
+  const React = require("react");
   return function EnhancedMoodTrackerScreen() {
-    return React.createElement(React.Fragment, null, React.createElement('div', { testID: 'mood-tracker-screen' }, 'EnhancedMoodTrackerScreen'));
+    return React.createElement(
+      React.Fragment,
+      null,
+      React.createElement(
+        "div",
+        { testID: "mood-tracker-screen" },
+        "EnhancedMoodTrackerScreen",
+      ),
+    );
   };
 });
-jest.mock('@features/onboarding/screens/OnboardingScreen', () => {
-  const React = require('react');
+jest.mock("@features/onboarding/screens/OnboardingScreen", () => {
+  const React = require("react");
   return function OnboardingScreen() {
-    return React.createElement(React.Fragment, null, React.createElement('div', { testID: 'onboarding-screen' }, 'OnboardingScreen'));
+    return React.createElement(
+      React.Fragment,
+      null,
+      React.createElement(
+        "div",
+        { testID: "onboarding-screen" },
+        "OnboardingScreen",
+      ),
+    );
   };
 });
-jest.mock('@features/onboarding/screens/WelcomeScreen', () => {
-  const React = require('react');
+jest.mock("@features/onboarding/screens/WelcomeScreen", () => {
+  const React = require("react");
   return function WelcomeScreen() {
-    return React.createElement(React.Fragment, null, React.createElement('div', { testID: 'welcome-screen' }, 'WelcomeScreen'));
+    return React.createElement(
+      React.Fragment,
+      null,
+      React.createElement("div", { testID: "welcome-screen" }, "WelcomeScreen"),
+    );
   };
 });
 
 // Mock Redux useSelector
-jest.mock('react-redux', () => ({
+jest.mock("react-redux", () => ({
   useSelector: jest.fn(),
   useDispatch: jest.fn(),
   Provider: ({ children }) => <>{children}</>,
 }));
 
-import AppNavigator, { PlaceholderScreen, MainTabs } from '../../src/app/navigation/AppNavigator';
-import { useSelector, Provider } from 'react-redux';
-
-describe('AppNavigator', () => {
+describe("AppNavigator", () => {
   let store;
 
   beforeEach(() => {
@@ -142,46 +189,48 @@ describe('AppNavigator', () => {
     jest.clearAllMocks();
   });
 
-  describe('PlaceholderScreen', () => {
-    it('renders with default screen name when no route params', () => {
-      const mockRoute = { name: 'TestScreen' };
+  describe("PlaceholderScreen", () => {
+    it("renders with default screen name when no route params", () => {
+      const mockRoute = { name: "TestScreen" };
 
       render(
         <NavigationContainer>
           <PlaceholderScreen route={mockRoute} />
-        </NavigationContainer>
+        </NavigationContainer>,
       );
 
-      expect(screen.getByText('TestScreen')).toBeTruthy();
-      expect(screen.getByText('This screen is under construction')).toBeTruthy();
+      expect(screen.getByText("TestScreen")).toBeTruthy();
+      expect(
+        screen.getByText("This screen is under construction"),
+      ).toBeTruthy();
     });
 
-    it('renders with custom screen name from route params', () => {
+    it("renders with custom screen name from route params", () => {
       const mockRoute = {
-        params: { name: 'CustomScreen' },
-        name: 'TestScreen'
+        params: { name: "CustomScreen" },
+        name: "TestScreen",
       };
 
       render(
         <NavigationContainer>
           <PlaceholderScreen route={mockRoute} />
-        </NavigationContainer>
+        </NavigationContainer>,
       );
 
-      expect(screen.getByText('CustomScreen')).toBeTruthy();
+      expect(screen.getByText("CustomScreen")).toBeTruthy();
     });
 
-    it('applies theme colors correctly', () => {
-      const mockRoute = { name: 'TestScreen' };
+    it("applies theme colors correctly", () => {
+      const mockRoute = { name: "TestScreen" };
 
       render(
         <NavigationContainer>
           <PlaceholderScreen route={mockRoute} />
-        </NavigationContainer>
+        </NavigationContainer>,
       );
 
-      const title = screen.getByText('TestScreen');
-      const subtitle = screen.getByText('This screen is under construction');
+      const title = screen.getByText("TestScreen");
+      const subtitle = screen.getByText("This screen is under construction");
 
       // Check if elements are rendered (theme colors are applied via style)
       expect(title).toBeTruthy();
@@ -189,79 +238,79 @@ describe('AppNavigator', () => {
     });
   });
 
-  describe('MainTabs', () => {
-    it('can be imported and instantiated', () => {
-      expect(typeof MainTabs).toBe('function');
+  describe("MainTabs", () => {
+    it("can be imported and instantiated", () => {
+      expect(typeof MainTabs).toBe("function");
     });
 
-    it('renders without crashing', () => {
+    it("renders without crashing", () => {
       expect(() => {
         render(
           <NavigationContainer>
             <MainTabs />
-          </NavigationContainer>
+          </NavigationContainer>,
         );
       }).not.toThrow();
     });
   });
 
-  describe('AppNavigator - Unauthenticated State', () => {
+  describe("AppNavigator - Unauthenticated State", () => {
     beforeEach(() => {
       useSelector.mockReturnValue(false); // Not authenticated
     });
 
-    it('can be imported and instantiated', () => {
-      expect(typeof AppNavigator).toBe('function');
+    it("can be imported and instantiated", () => {
+      expect(typeof AppNavigator).toBe("function");
     });
 
-    it('renders without throwing when unauthenticated', () => {
+    it("renders without throwing when unauthenticated", () => {
       expect(() => {
         render(
           <Provider store={store}>
             <NavigationContainer>
               <AppNavigator />
             </NavigationContainer>
-          </Provider>
+          </Provider>,
         );
       }).not.toThrow();
     });
   });
 
-  describe('AppNavigator - Authenticated State', () => {
+  describe("AppNavigator - Authenticated State", () => {
     beforeEach(() => {
       useSelector.mockReturnValue(true); // Authenticated
     });
 
-    it('renders without throwing when authenticated', () => {
+    it("renders without throwing when authenticated", () => {
       expect(() => {
         render(
           <Provider store={store}>
             <NavigationContainer>
               <AppNavigator />
             </NavigationContainer>
-          </Provider>
+          </Provider>,
         );
       }).not.toThrow();
     });
   });
 
-  describe('Error Handling', () => {
-    it('handles missing Redux provider gracefully', () => {
+  describe("Error Handling", () => {
+    it("handles missing Redux provider gracefully", () => {
       // Simulate missing Redux provider
       useSelector.mockImplementation(() => {
-        throw new Error('No Redux provider');
+        throw new Error("No Redux provider");
       });
 
       expect(() => {
         render(
           <NavigationContainer>
             <AppNavigator />
-          </NavigationContainer>
+          </NavigationContainer>,
         );
       }).not.toThrow();
     });
 
-    it('handles invalid useSelector gracefully', () => {
+    it("handles invalid useSelector gracefully", () => {
       // Simulate invalid useSelector
       useSelector.mockReturnValue(undefined);
 
@@ -271,14 +320,14 @@ describe('AppNavigator', () => {
             <NavigationContainer>
               <AppNavigator />
             </NavigationContainer>
-          </Provider>
+          </Provider>,
         );
       }).not.toThrow();
     });
   });
 
-  describe('Navigation Flow', () => {
-    it('switches between authenticated and unauthenticated states', () => {
+  describe("Navigation Flow", () => {
+    it("switches between authenticated and unauthenticated states", () => {
       // Initially unauthenticated
       useSelector.mockReturnValue(false);
       expect(() => {
@@ -287,7 +336,7 @@ describe('AppNavigator', () => {
             <NavigationContainer>
               <AppNavigator />
             </NavigationContainer>
-          </Provider>
+          </Provider>,
         );
       }).not.toThrow();
 
@@ -299,7 +348,7 @@ describe('AppNavigator', () => {
             <NavigationContainer>
               <AppNavigator />
             </NavigationContainer>
-          </Provider>
+          </Provider>,
         );
       }).not.toThrow();
     });

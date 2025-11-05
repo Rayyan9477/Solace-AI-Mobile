@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Mindful Hours.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,16 +13,14 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface Session {
   id: string;
   title: string;
   description: string;
   duration: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  difficulty: "Beginner" | "Intermediate" | "Advanced";
   category: string;
   icon: string;
   instructor: string;
@@ -29,76 +29,76 @@ interface Session {
 export const GuidedSessionsScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const categories = [
-    { id: 'all', name: 'All', icon: '📚' },
-    { id: 'meditation', name: 'Meditation', icon: '🧘' },
-    { id: 'breathing', name: 'Breathing', icon: '🫁' },
-    { id: 'sleep', name: 'Sleep', icon: '😴' },
-    { id: 'stress', name: 'Stress Relief', icon: '🌊' },
+    { id: "all", name: "All", icon: "📚" },
+    { id: "meditation", name: "Meditation", icon: "🧘" },
+    { id: "breathing", name: "Breathing", icon: "🫁" },
+    { id: "sleep", name: "Sleep", icon: "😴" },
+    { id: "stress", name: "Stress Relief", icon: "🌊" },
   ];
 
   const sessions: Session[] = [
     {
-      id: '1',
-      title: 'Morning Mindfulness',
-      description: 'Start your day with clarity and focus',
-      duration: '10 min',
-      difficulty: 'Beginner',
-      category: 'Meditation',
-      icon: '☀️',
-      instructor: 'Dr. Sarah Chen',
+      id: "1",
+      title: "Morning Mindfulness",
+      description: "Start your day with clarity and focus",
+      duration: "10 min",
+      difficulty: "Beginner",
+      category: "Meditation",
+      icon: "☀️",
+      instructor: "Dr. Sarah Chen",
     },
     {
-      id: '2',
-      title: 'Deep Breathing for Anxiety',
-      description: 'Calm your nervous system with breathwork',
-      duration: '5 min',
-      difficulty: 'Beginner',
-      category: 'Breathing',
-      icon: '🫁',
-      instructor: 'Michael Torres',
+      id: "2",
+      title: "Deep Breathing for Anxiety",
+      description: "Calm your nervous system with breathwork",
+      duration: "5 min",
+      difficulty: "Beginner",
+      category: "Breathing",
+      icon: "🫁",
+      instructor: "Michael Torres",
     },
     {
-      id: '3',
-      title: 'Body Scan Meditation',
-      description: 'Release tension from head to toe',
-      duration: '20 min',
-      difficulty: 'Intermediate',
-      category: 'Meditation',
-      icon: '🧘',
-      instructor: 'Dr. Sarah Chen',
+      id: "3",
+      title: "Body Scan Meditation",
+      description: "Release tension from head to toe",
+      duration: "20 min",
+      difficulty: "Intermediate",
+      category: "Meditation",
+      icon: "🧘",
+      instructor: "Dr. Sarah Chen",
     },
     {
-      id: '4',
-      title: 'Sleep Meditation',
-      description: 'Drift into peaceful, restful sleep',
-      duration: '30 min',
-      difficulty: 'Beginner',
-      category: 'Sleep',
-      icon: '🌙',
-      instructor: 'Emma Williams',
+      id: "4",
+      title: "Sleep Meditation",
+      description: "Drift into peaceful, restful sleep",
+      duration: "30 min",
+      difficulty: "Beginner",
+      category: "Sleep",
+      icon: "🌙",
+      instructor: "Emma Williams",
     },
     {
-      id: '5',
-      title: 'Stress Release Visualization',
-      description: 'Let go of stress and tension',
-      duration: '15 min',
-      difficulty: 'Intermediate',
-      category: 'Stress Relief',
-      icon: '🌊',
-      instructor: 'Michael Torres',
+      id: "5",
+      title: "Stress Release Visualization",
+      description: "Let go of stress and tension",
+      duration: "15 min",
+      difficulty: "Intermediate",
+      category: "Stress Relief",
+      icon: "🌊",
+      instructor: "Michael Torres",
     },
     {
-      id: '6',
-      title: 'Advanced Mindfulness',
-      description: 'Deepen your meditation practice',
-      duration: '45 min',
-      difficulty: 'Advanced',
-      category: 'Meditation',
-      icon: '🕉️',
-      instructor: 'Dr. Sarah Chen',
+      id: "6",
+      title: "Advanced Mindfulness",
+      description: "Deepen your meditation practice",
+      duration: "45 min",
+      difficulty: "Advanced",
+      category: "Meditation",
+      icon: "🕉️",
+      instructor: "Dr. Sarah Chen",
     },
   ];
 
@@ -108,23 +108,23 @@ export const GuidedSessionsScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
@@ -135,44 +135,44 @@ export const GuidedSessionsScreen = () => {
       paddingVertical: 16,
     },
     categoriesRow: {
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 8,
     },
     categoryButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       paddingHorizontal: 16,
       paddingVertical: 10,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       gap: 6,
     },
     categoryButtonActive: {
-      backgroundColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["60"],
     },
     categoryIcon: {
       fontSize: 16,
     },
     categoryText: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     categoryTextActive: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     sessionsContainer: {
       paddingHorizontal: 20,
     },
     sessionCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 16,
       marginBottom: 12,
     },
     sessionHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginBottom: 8,
     },
     sessionIcon: {
@@ -184,13 +184,13 @@ export const GuidedSessionsScreen = () => {
     },
     sessionTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 2,
     },
     sessionInstructor: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     difficultyBadge: {
@@ -199,18 +199,18 @@ export const GuidedSessionsScreen = () => {
       borderRadius: 8,
     },
     difficultyBeginner: {
-      backgroundColor: theme.colors.green['60'],
+      backgroundColor: theme.colors.green["60"],
     },
     difficultyIntermediate: {
-      backgroundColor: theme.colors.orange['60'],
+      backgroundColor: theme.colors.orange["60"],
     },
     difficultyAdvanced: {
-      backgroundColor: theme.colors.red['60'],
+      backgroundColor: theme.colors.red["60"],
     },
     difficultyText: {
       fontSize: 10,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     sessionDescription: {
       fontSize: 14,
@@ -219,18 +219,18 @@ export const GuidedSessionsScreen = () => {
       marginBottom: 12,
     },
     sessionFooter: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
     },
     sessionMeta: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 12,
     },
     sessionMetaItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 4,
     },
     sessionMetaIcon: {
@@ -238,38 +238,39 @@ export const GuidedSessionsScreen = () => {
     },
     sessionMetaText: {
       fontSize: 13,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     startButton: {
-      backgroundColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["60"],
       borderRadius: 12,
       paddingVertical: 8,
       paddingHorizontal: 16,
     },
     startButtonText: {
       fontSize: 13,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
   });
 
   const getDifficultyStyle = (difficulty: string) => {
     switch (difficulty) {
-      case 'Beginner':
+      case "Beginner":
         return styles.difficultyBeginner;
-      case 'Intermediate':
+      case "Intermediate":
         return styles.difficultyIntermediate;
-      case 'Advanced':
+      case "Advanced":
         return styles.difficultyAdvanced;
       default:
         return styles.difficultyBeginner;
     }
   };
 
-  const filteredSessions = selectedCategory === 'all'
-    ? sessions
-    : sessions.filter(s => s.category.toLowerCase() === selectedCategory);
+  const filteredSessions =
+    selectedCategory === "all"
+      ? sessions
+      : sessions.filter((s) => s.category.toLowerCase() === selectedCategory);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -301,7 +302,8 @@ export const GuidedSessionsScreen = () => {
                 key={category.id}
                 style={[
                   styles.categoryButton,
-                  selectedCategory === category.id && styles.categoryButtonActive,
+                  selectedCategory === category.id &&
+                    styles.categoryButtonActive,
                 ]}
                 onPress={() => setSelectedCategory(category.id)}
               >
@@ -309,7 +311,8 @@ export const GuidedSessionsScreen = () => {
                 <Text
                   style={[
                     styles.categoryText,
-                    selectedCategory === category.id && styles.categoryTextActive,
+                    selectedCategory === category.id &&
+                      styles.categoryTextActive,
                   ]}
                 >
                   {category.name}
@@ -325,30 +328,45 @@ export const GuidedSessionsScreen = () => {
             <TouchableOpacity
               key={session.id}
               style={styles.sessionCard}
-              onPress={() => navigation.navigate('CourseLesson')}
+              onPress={() => navigation.navigate("CourseLesson")}
             >
               <View style={styles.sessionHeader}>
                 <Text style={styles.sessionIcon}>{session.icon}</Text>
                 <View style={styles.sessionHeaderText}>
                   <Text style={styles.sessionTitle}>{session.title}</Text>
-                  <Text style={styles.sessionInstructor}>with {session.instructor}</Text>
+                  <Text style={styles.sessionInstructor}>
+                    with {session.instructor}
+                  </Text>
                 </View>
-                <View style={[styles.difficultyBadge, getDifficultyStyle(session.difficulty)]}>
-                  <Text style={styles.difficultyText}>{session.difficulty}</Text>
+                <View
+                  style={[
+                    styles.difficultyBadge,
+                    getDifficultyStyle(session.difficulty),
+                  ]}
+                >
+                  <Text style={styles.difficultyText}>
+                    {session.difficulty}
+                  </Text>
                 </View>
               </View>
 
-              <Text style={styles.sessionDescription}>{session.description}</Text>
+              <Text style={styles.sessionDescription}>
+                {session.description}
+              </Text>
 
               <View style={styles.sessionFooter}>
                 <View style={styles.sessionMeta}>
                   <View style={styles.sessionMetaItem}>
                     <Text style={styles.sessionMetaIcon}>⏱️</Text>
-                    <Text style={styles.sessionMetaText}>{session.duration}</Text>
+                    <Text style={styles.sessionMetaText}>
+                      {session.duration}
+                    </Text>
                   </View>
                   <View style={styles.sessionMetaItem}>
                     <Text style={styles.sessionMetaIcon}>📂</Text>
-                    <Text style={styles.sessionMetaText}>{session.category}</Text>
+                    <Text style={styles.sessionMetaText}>
+                      {session.category}
+                    </Text>
                   </View>
                 </View>
                 <View style={styles.startButton}>

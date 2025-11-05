@@ -286,9 +286,9 @@ const EnhancedInput = forwardRef(
       };
 
       const borderColor = hasError
-        ? theme.colors.error['500']
+        ? theme.colors.error["500"]
         : isFocused
-          ? theme.colors.primary['500']
+          ? theme.colors.primary["500"]
           : theme.colors.border.primary;
 
       return {
@@ -306,7 +306,7 @@ const EnhancedInput = forwardRef(
           backgroundColor:
             theme.colors.therapeutic?.calm || theme.colors.background.primary,
           borderColor:
-            theme.colors.therapeutic?.calm || theme.colors.primary['300'],
+            theme.colors.therapeutic?.calm || theme.colors.primary["300"],
         };
       }
 
@@ -316,7 +316,8 @@ const EnhancedInput = forwardRef(
             theme.colors.therapeutic?.nurturing ||
             theme.colors.background.primary,
           borderColor:
-            theme.colors.therapeutic?.nurturing || theme.colors.secondary['300'],
+            theme.colors.therapeutic?.nurturing ||
+            theme.colors.secondary["300"],
         };
       }
 
@@ -326,15 +327,15 @@ const EnhancedInput = forwardRef(
             theme.colors.therapeutic?.peaceful ||
             theme.colors.background.primary,
           borderColor:
-            theme.colors.therapeutic?.peaceful || theme.colors.primary['200'],
+            theme.colors.therapeutic?.peaceful || theme.colors.primary["200"],
         };
       }
 
       if (isCrisisInput) {
         return {
           backgroundColor:
-            theme.colors.error['50'] || theme.colors.background.primary,
-          borderColor: theme.colors.error['300'],
+            theme.colors.error["50"] || theme.colors.background.primary,
+          borderColor: theme.colors.error["300"],
         };
       }
 
@@ -402,13 +403,13 @@ const EnhancedInput = forwardRef(
               styles.label,
               {
                 color: hasError
-                  ? theme.colors.error['500']
+                  ? theme.colors.error["500"]
                   : animated
                     ? focusAnim.interpolate({
                         inputRange: [0, 1],
                         outputRange: [
                           theme.colors.text.secondary,
-                          theme.colors.primary['500'],
+                          theme.colors.primary["500"],
                         ],
                       })
                     : theme.colors.text.primary,
@@ -506,7 +507,7 @@ const EnhancedInput = forwardRef(
             >
               {secureTextEntry ? (
                 <Text
-                  style={{ fontSize: 20, color: theme.colors.primary['500'] }}
+                  style={{ fontSize: 20, color: theme.colors.primary["500"] }}
                 >
                   {isSecureVisible ? "👁️" : "👁️‍🗨️"}
                 </Text>
@@ -547,7 +548,7 @@ const EnhancedInput = forwardRef(
                 styles.helperText,
                 {
                   color: errorMessage
-                    ? theme.colors.error['500']
+                    ? theme.colors.error["500"]
                     : theme.colors.text.secondary,
                 },
               ]}
@@ -566,7 +567,7 @@ const EnhancedInput = forwardRef(
                 {
                   color:
                     (value?.length || 0) > maxLength * 0.9
-                      ? theme.colors.warning['500']
+                      ? theme.colors.warning["500"]
                       : theme.colors.text.secondary,
                 },
               ]}
@@ -583,7 +584,7 @@ const EnhancedInput = forwardRef(
             <Text
               style={[
                 styles.validationText,
-                { color: theme.colors.primary['500'] },
+                { color: theme.colors.primary["500"] },
               ]}
             >
               Validating...

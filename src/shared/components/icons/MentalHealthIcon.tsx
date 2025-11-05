@@ -4,11 +4,11 @@
  * Provides consistent icon usage across the app with mental health themes
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import PropTypes from "prop-types";
+import React from "react";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 /**
  * Icon mapping for mental health related icons
@@ -16,64 +16,64 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
  */
 const ICON_MAP = {
   // Mental Health Specific
-  Brain: { library: MaterialCommunityIcons, name: 'brain' },
-  Heart: { library: Ionicons, name: 'heart' },
-  Therapy: { library: MaterialCommunityIcons, name: 'account-heart' },
-  Journal: { library: MaterialCommunityIcons, name: 'book-open-page-variant' },
-  Meditation: { library: MaterialCommunityIcons, name: 'meditation' },
+  Brain: { library: MaterialCommunityIcons, name: "brain" },
+  Heart: { library: Ionicons, name: "heart" },
+  Therapy: { library: MaterialCommunityIcons, name: "account-heart" },
+  Journal: { library: MaterialCommunityIcons, name: "book-open-page-variant" },
+  Meditation: { library: MaterialCommunityIcons, name: "meditation" },
 
   // Navigation
-  Home: { library: Ionicons, name: 'home' },
-  ArrowBack: { library: Ionicons, name: 'arrow-back' },
-  ArrowForward: { library: Ionicons, name: 'arrow-forward' },
-  Close: { library: Ionicons, name: 'close' },
-  Menu: { library: Ionicons, name: 'menu' },
-  ChevronLeft: { library: Ionicons, name: 'chevron-back' },
-  ChevronRight: { library: Ionicons, name: 'chevron-forward' },
-  ChevronUp: { library: Ionicons, name: 'chevron-up' },
-  ChevronDown: { library: Ionicons, name: 'chevron-down' },
-  Search: { library: Ionicons, name: 'search' },
+  Home: { library: Ionicons, name: "home" },
+  ArrowBack: { library: Ionicons, name: "arrow-back" },
+  ArrowForward: { library: Ionicons, name: "arrow-forward" },
+  Close: { library: Ionicons, name: "close" },
+  Menu: { library: Ionicons, name: "menu" },
+  ChevronLeft: { library: Ionicons, name: "chevron-back" },
+  ChevronRight: { library: Ionicons, name: "chevron-forward" },
+  ChevronUp: { library: Ionicons, name: "chevron-up" },
+  ChevronDown: { library: Ionicons, name: "chevron-down" },
+  Search: { library: Ionicons, name: "search" },
 
   // Actions
-  Add: { library: Ionicons, name: 'add' },
-  Edit: { library: Ionicons, name: 'create' },
-  Delete: { library: Ionicons, name: 'trash' },
-  Save: { library: Ionicons, name: 'save' },
-  Share: { library: Ionicons, name: 'share-social' },
-  Send: { library: Ionicons, name: 'send' },
-  Mic: { library: Ionicons, name: 'mic' },
-  Eye: { library: Ionicons, name: 'eye' },
-  EyeOff: { library: Ionicons, name: 'eye-off' },
-  Lock: { library: Ionicons, name: 'lock-closed' },
+  Add: { library: Ionicons, name: "add" },
+  Edit: { library: Ionicons, name: "create" },
+  Delete: { library: Ionicons, name: "trash" },
+  Save: { library: Ionicons, name: "save" },
+  Share: { library: Ionicons, name: "share-social" },
+  Send: { library: Ionicons, name: "send" },
+  Mic: { library: Ionicons, name: "mic" },
+  Eye: { library: Ionicons, name: "eye" },
+  EyeOff: { library: Ionicons, name: "eye-off" },
+  Lock: { library: Ionicons, name: "lock-closed" },
 
   // Status
-  CheckCircle: { library: Ionicons, name: 'checkmark-circle' },
-  Warning: { library: Ionicons, name: 'warning' },
-  Info: { library: Ionicons, name: 'information-circle' },
-  Error: { library: Ionicons, name: 'close-circle' },
+  CheckCircle: { library: Ionicons, name: "checkmark-circle" },
+  Warning: { library: Ionicons, name: "warning" },
+  Info: { library: Ionicons, name: "information-circle" },
+  Error: { library: Ionicons, name: "close-circle" },
 
   // Mood/Emotions
-  Happy: { library: MaterialCommunityIcons, name: 'emoticon-happy' },
-  Sad: { library: MaterialCommunityIcons, name: 'emoticon-sad' },
-  Neutral: { library: MaterialCommunityIcons, name: 'emoticon-neutral' },
-  Anxious: { library: MaterialCommunityIcons, name: 'emoticon-confused' },
+  Happy: { library: MaterialCommunityIcons, name: "emoticon-happy" },
+  Sad: { library: MaterialCommunityIcons, name: "emoticon-sad" },
+  Neutral: { library: MaterialCommunityIcons, name: "emoticon-neutral" },
+  Anxious: { library: MaterialCommunityIcons, name: "emoticon-confused" },
 
   // Settings
-  Settings: { library: Ionicons, name: 'settings' },
-  Profile: { library: Ionicons, name: 'person' },
-  Notifications: { library: Ionicons, name: 'notifications' },
+  Settings: { library: Ionicons, name: "settings" },
+  Profile: { library: Ionicons, name: "person" },
+  Notifications: { library: Ionicons, name: "notifications" },
 
   // Communication
-  Chat: { library: Ionicons, name: 'chatbubbles' },
-  Call: { library: Ionicons, name: 'call' },
-  Mail: { library: Ionicons, name: 'mail' },
+  Chat: { library: Ionicons, name: "chatbubbles" },
+  Call: { library: Ionicons, name: "call" },
+  Mail: { library: Ionicons, name: "mail" },
 
   // Time
-  Calendar: { library: Ionicons, name: 'calendar' },
-  Clock: { library: Ionicons, name: 'time' },
+  Calendar: { library: Ionicons, name: "calendar" },
+  Clock: { library: Ionicons, name: "time" },
 
   // Default fallback
-  Default: { library: MaterialCommunityIcons, name: 'help-circle' },
+  Default: { library: MaterialCommunityIcons, name: "help-circle" },
 };
 
 /**
@@ -88,8 +88,8 @@ const ICON_MAP = {
 const MentalHealthIcon = ({
   name,
   size = 24,
-  color = '#000000',
-  variant = 'filled',
+  color = "#000000",
+  variant = "filled",
   style,
   ...props
 }) => {
@@ -99,7 +99,7 @@ const MentalHealthIcon = ({
 
   // Handle outline variant for supported icons
   let iconName = iconConfig.name;
-  if (variant === 'outline' && iconName && !iconName.includes('-outline')) {
+  if (variant === "outline" && iconName && !iconName.includes("-outline")) {
     iconName = `${iconName}-outline`;
   }
 
@@ -118,7 +118,7 @@ MentalHealthIcon.propTypes = {
   name: PropTypes.string.isRequired,
   size: PropTypes.number,
   color: PropTypes.string,
-  variant: PropTypes.oneOf(['filled', 'outline']),
+  variant: PropTypes.oneOf(["filled", "outline"]),
   style: PropTypes.object,
 };
 

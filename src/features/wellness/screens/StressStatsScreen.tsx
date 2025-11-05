@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/Stress Management.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,11 +14,9 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 interface StressLevelData {
   level: string;
@@ -35,38 +35,70 @@ interface StressorData {
 export const StressStatsScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month'>('week');
+  const [selectedPeriod, setSelectedPeriod] = useState<"week" | "month">(
+    "week",
+  );
 
   const currentStressLevel = 3;
-  const stressLevelText = 'Moderate';
+  const stressLevelText = "Moderate";
 
   const stressLevels: StressLevelData[] = [
-    { level: 'Calm', count: 33, percentage: 15, color: theme.colors.green['60'], emoji: '😌' },
-    { level: 'Normal', count: 91, percentage: 42, color: theme.colors.yellow['60'], emoji: '😊' },
-    { level: 'Elevated', count: 4, percentage: 18, color: theme.colors.orange['60'], emoji: '😰' },
-    { level: 'Stressed', count: 33, percentage: 15, color: theme.colors.red['60'], emoji: '😤' },
-    { level: 'Extreme', count: 0, percentage: 10, color: theme.colors.purple['60'], emoji: '😱' },
+    {
+      level: "Calm",
+      count: 33,
+      percentage: 15,
+      color: theme.colors.green["60"],
+      emoji: "😌",
+    },
+    {
+      level: "Normal",
+      count: 91,
+      percentage: 42,
+      color: theme.colors.yellow["60"],
+      emoji: "😊",
+    },
+    {
+      level: "Elevated",
+      count: 4,
+      percentage: 18,
+      color: theme.colors.orange["60"],
+      emoji: "😰",
+    },
+    {
+      level: "Stressed",
+      count: 33,
+      percentage: 15,
+      color: theme.colors.red["60"],
+      emoji: "😤",
+    },
+    {
+      level: "Extreme",
+      count: 0,
+      percentage: 10,
+      color: theme.colors.purple["60"],
+      emoji: "😱",
+    },
   ];
 
   const topStressors: StressorData[] = [
-    { name: 'Loneliness', impact: 'Very High', count: 12 },
-    { name: 'Work', impact: 'High', count: 8 },
-    { name: 'Life', impact: 'Moderate', count: 5 },
-    { name: 'Relationship', impact: 'Moderate', count: 4 },
+    { name: "Loneliness", impact: "Very High", count: 12 },
+    { name: "Work", impact: "High", count: 8 },
+    { name: "Life", impact: "Moderate", count: 5 },
+    { name: "Relationship", impact: "Moderate", count: 4 },
   ];
 
   const stressImpact = [
-    { category: 'Stressor', level: 'Loneliness', severity: 'high' },
-    { category: 'Impact', level: 'Very High', severity: 'high' },
+    { category: "Stressor", level: "Loneliness", severity: "high" },
+    { category: "Impact", level: "Very High", severity: "high" },
   ];
 
-  const maxCount = Math.max(...stressLevels.map(s => s.count));
+  const maxCount = Math.max(...stressLevels.map((s) => s.count));
 
   const handleSettings = () => {
     // TODO: Navigate to stress tracking settings
     // navigation.navigate('StressSettings');
     if (__DEV__) {
-      console.log('Stress settings pressed');
+      console.log("Stress settings pressed");
     }
   };
 
@@ -74,7 +106,7 @@ export const StressStatsScreen = () => {
     // TODO: Navigate to detailed stress statistics screen
     // navigation.navigate('StressStatsDetail');
     if (__DEV__) {
-      console.log('Stress stats detail pressed');
+      console.log("Stress stats detail pressed");
     }
   };
 
@@ -82,7 +114,7 @@ export const StressStatsScreen = () => {
     // TODO: Navigate to all stressors list
     // navigation.navigate('AllStressors');
     if (__DEV__) {
-      console.log('See all stressors pressed');
+      console.log("See all stressors pressed");
     }
   };
 
@@ -92,119 +124,119 @@ export const StressStatsScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     settingsButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     content: {
       flex: 1,
       padding: 20,
     },
     currentLevelCard: {
-      backgroundColor: theme.colors.orange['20'],
+      backgroundColor: theme.colors.orange["20"],
       borderRadius: 24,
       padding: 32,
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: 24,
-      position: 'relative',
-      overflow: 'hidden',
+      position: "relative",
+      overflow: "hidden",
     },
     levelCircle: {
       width: 140,
       height: 140,
       borderRadius: 70,
-      backgroundColor: theme.colors.orange['40'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.orange["40"],
+      justifyContent: "center",
+      alignItems: "center",
       marginBottom: 16,
     },
     levelNumber: {
       fontSize: 64,
-      fontWeight: '800',
-      color: theme.colors.orange['100'],
+      fontWeight: "800",
+      color: theme.colors.orange["100"],
     },
     levelText: {
       fontSize: 20,
-      fontWeight: '700',
-      color: theme.colors.orange['100'],
+      fontWeight: "700",
+      color: theme.colors.orange["100"],
       marginBottom: 8,
     },
     periodSelector: {
-      flexDirection: 'row',
-      backgroundColor: theme.colors.brown['10'],
+      flexDirection: "row",
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 12,
       padding: 4,
       marginTop: 16,
-      alignSelf: 'center',
+      alignSelf: "center",
       width: 200,
     },
     periodButton: {
       flex: 1,
       paddingVertical: 8,
-      alignItems: 'center',
+      alignItems: "center",
       borderRadius: 8,
     },
     periodButtonActive: {
-      backgroundColor: theme.colors.brown['60'],
+      backgroundColor: theme.colors.brown["60"],
     },
     periodText: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     periodTextActive: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     statsButton: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 20,
       right: 20,
-      backgroundColor: theme.colors.brown['60'],
+      backgroundColor: theme.colors.brown["60"],
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 16,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 8,
     },
     statsButtonText: {
       fontSize: 12,
-      fontWeight: '600',
-      color: '#FFFFFF',
+      fontWeight: "600",
+      color: "#FFFFFF",
     },
     section: {
       marginBottom: 24,
     },
     sectionHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       marginBottom: 16,
     },
     sectionTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     seeAllButton: {
@@ -213,33 +245,33 @@ export const StressStatsScreen = () => {
     },
     seeAllText: {
       fontSize: 14,
-      fontWeight: '600',
-      color: theme.colors.brown['60'],
+      fontWeight: "600",
+      color: theme.colors.brown["60"],
     },
     chartCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 20,
       padding: 20,
       marginBottom: 24,
     },
     bubbleChart: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-      alignItems: 'center',
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      alignItems: "center",
       minHeight: 300,
       gap: 12,
     },
     bubbleContainer: {
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       margin: 8,
     },
     bubble: {
       borderRadius: 1000,
-      justifyContent: 'center',
-      alignItems: 'center',
-      shadowColor: '#000',
+      justifyContent: "center",
+      alignItems: "center",
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.2,
       shadowRadius: 8,
@@ -251,49 +283,49 @@ export const StressStatsScreen = () => {
     },
     bubbleCount: {
       fontSize: 24,
-      fontWeight: '800',
-      color: '#FFFFFF',
+      fontWeight: "800",
+      color: "#FFFFFF",
     },
     bubbleLabel: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
       marginTop: 8,
-      textAlign: 'center',
+      textAlign: "center",
     },
     monthlyBadge: {
       paddingHorizontal: 12,
       paddingVertical: 6,
       borderRadius: 12,
-      backgroundColor: theme.colors.purple['40'],
-      alignSelf: 'flex-end',
+      backgroundColor: theme.colors.purple["40"],
+      alignSelf: "flex-end",
     },
     monthlyText: {
       fontSize: 12,
-      fontWeight: '700',
-      color: theme.colors.purple['100'],
+      fontWeight: "700",
+      color: theme.colors.purple["100"],
     },
     stressorCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 16,
       marginBottom: 12,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
     },
     stressorName: {
       flex: 1,
     },
     stressorTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
     stressorSubtitle: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     stressorBadge: {
@@ -303,27 +335,27 @@ export const StressStatsScreen = () => {
     },
     stressorBadgeText: {
       fontSize: 12,
-      fontWeight: '700',
+      fontWeight: "700",
     },
     impactGrid: {
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 12,
     },
     impactCard: {
       flex: 1,
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 16,
     },
     impactLabel: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
       marginBottom: 8,
     },
     impactValue: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     impactIcon: {
@@ -340,9 +372,14 @@ export const StressStatsScreen = () => {
   };
 
   const getStressorBadgeColor = (impact: string) => {
-    if (impact === 'Very High') return { bg: theme.colors.red['40'], text: theme.colors.red['100'] };
-    if (impact === 'High') return { bg: theme.colors.orange['40'], text: theme.colors.orange['100'] };
-    return { bg: theme.colors.yellow['40'], text: theme.colors.yellow['100'] };
+    if (impact === "Very High")
+      return { bg: theme.colors.red["40"], text: theme.colors.red["100"] };
+    if (impact === "High")
+      return {
+        bg: theme.colors.orange["40"],
+        text: theme.colors.orange["100"],
+      };
+    return { bg: theme.colors.yellow["40"], text: theme.colors.yellow["100"] };
   };
 
   return (
@@ -381,18 +418,34 @@ export const StressStatsScreen = () => {
 
           <View style={styles.periodSelector}>
             <TouchableOpacity
-              style={[styles.periodButton, selectedPeriod === 'week' && styles.periodButtonActive]}
-              onPress={() => setSelectedPeriod('week')}
+              style={[
+                styles.periodButton,
+                selectedPeriod === "week" && styles.periodButtonActive,
+              ]}
+              onPress={() => setSelectedPeriod("week")}
             >
-              <Text style={[styles.periodText, selectedPeriod === 'week' && styles.periodTextActive]}>
+              <Text
+                style={[
+                  styles.periodText,
+                  selectedPeriod === "week" && styles.periodTextActive,
+                ]}
+              >
                 Week
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.periodButton, selectedPeriod === 'month' && styles.periodButtonActive]}
-              onPress={() => setSelectedPeriod('month')}
+              style={[
+                styles.periodButton,
+                selectedPeriod === "month" && styles.periodButtonActive,
+              ]}
+              onPress={() => setSelectedPeriod("month")}
             >
-              <Text style={[styles.periodText, selectedPeriod === 'month' && styles.periodTextActive]}>
+              <Text
+                style={[
+                  styles.periodText,
+                  selectedPeriod === "month" && styles.periodTextActive,
+                ]}
+              >
                 Month
               </Text>
             </TouchableOpacity>
@@ -449,11 +502,15 @@ export const StressStatsScreen = () => {
 
         {/* Stress Stats Summary */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { marginBottom: 16 }]}>Stress Stats</Text>
+          <Text style={[styles.sectionTitle, { marginBottom: 16 }]}>
+            Stress Stats
+          </Text>
           <View style={styles.impactGrid}>
             {stressImpact.map((item, index) => (
               <View key={index} style={styles.impactCard}>
-                <Text style={styles.impactIcon}>{item.category === 'Stressor' ? '😰' : '⚠️'}</Text>
+                <Text style={styles.impactIcon}>
+                  {item.category === "Stressor" ? "😰" : "⚠️"}
+                </Text>
                 <Text style={styles.impactLabel}>{item.category}</Text>
                 <Text style={styles.impactValue}>{item.level}</Text>
               </View>
@@ -483,10 +540,22 @@ export const StressStatsScreen = () => {
               <View key={index} style={styles.stressorCard}>
                 <View style={styles.stressorName}>
                   <Text style={styles.stressorTitle}>{stressor.name}</Text>
-                  <Text style={styles.stressorSubtitle}>{stressor.count} times this month</Text>
+                  <Text style={styles.stressorSubtitle}>
+                    {stressor.count} times this month
+                  </Text>
                 </View>
-                <View style={[styles.stressorBadge, { backgroundColor: badgeColors.bg }]}>
-                  <Text style={[styles.stressorBadgeText, { color: badgeColors.text }]}>
+                <View
+                  style={[
+                    styles.stressorBadge,
+                    { backgroundColor: badgeColors.bg },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.stressorBadgeText,
+                      { color: badgeColors.text },
+                    ]}
+                  >
                     {stressor.impact}
                   </Text>
                 </View>

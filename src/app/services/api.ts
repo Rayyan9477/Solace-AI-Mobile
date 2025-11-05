@@ -3,10 +3,11 @@
  * Real implementation for production use
  */
 
-import { API_CONFIG } from '../../shared/config/environment';
-import { logger } from '@shared/utils/logger';
-import tokenService from './tokenService';
-import apiCache from './apiCache';
+import { logger } from "@shared/utils/logger";
+
+import apiCache from "./apiCache";
+import tokenService from "./tokenService";
+import { API_CONFIG } from "../../shared/config/environment";
 
 /**
  * Custom API Error class for authentication
@@ -18,7 +19,7 @@ export class AuthAPIError extends Error {
 
   constructor(message: string, statusCode: number | null, endpoint: string) {
     super(message);
-    this.name = 'AuthAPIError';
+    this.name = "AuthAPIError";
     this.statusCode = statusCode;
     this.endpoint = endpoint;
     this.timestamp = new Date().toISOString();
@@ -28,7 +29,11 @@ export class AuthAPIError extends Error {
 /**
  * Helper function for fetch with timeout
  */
-async function fetchWithTimeout(url: string, options: any = {}, timeout = API_CONFIG.timeout): Promise<Response> {
+async function fetchWithTimeout(
+  url: string,
+  options: any = {},
+  timeout = API_CONFIG.timeout,
+): Promise<Response> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -42,8 +47,8 @@ async function fetchWithTimeout(url: string, options: any = {}, timeout = API_CO
     return response;
   } catch (error: any) {
     clearTimeout(timeoutId);
-    if (error.name === 'AbortError') {
-      throw new AuthAPIError('Request timeout', 408, url);
+    if (error.name === "AbortError") {
+      throw new AuthAPIError("Request timeout", 408, url);
     }
     throw error;
   }
@@ -53,18 +58,21 @@ async function fetchWithTimeout(url: string, options: any = {}, timeout = API_CO
  * Helper function to handle token refresh
  */
 async function refreshAccessToken(refreshToken: string): Promise<any> {
-  const response = await fetchWithTimeout(`${API_CONFIG.baseURL}/auth/refresh`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ refreshToken }),
-  });
+  const response = await fetchWithTimeout(
+    `${API_CONFIG.baseURL}/auth/refresh`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    },
+  );
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     throw new AuthAPIError(
-      errorData.message || 'Token refresh failed',
+      errorData.message || "Token refresh failed",
       response.status,
-      '/auth/refresh'
+      "/auth/refresh",
     );
   }
 
@@ -74,10 +82,14 @@ async function refreshAccessToken(refreshToken: string): Promise<any> {
 /**
  * Helper function to retry request with new token
  */
-async function retryWithNewToken(url: string, options: any, newTokens: any): Promise<any> {
+async function retryWithNewToken(
+  url: string,
+  options: any,
+  newTokens: any,
+): Promise<any> {
   const headers = {
     ...options.headers,
-    'Authorization': `Bearer ${newTokens.accessToken}`,
+    Authorization: `Bearer ${newTokens.accessToken}`,
   };
 
   const response = await fetch(url, {
@@ -90,7 +102,7 @@ async function retryWithNewToken(url: string, options: any, newTokens: any): Pro
     throw new AuthAPIError(
       errorData.message || `HTTP ${response.status}: ${response.statusText}`,
       response.status,
-      url
+      url,
     );
   }
 
@@ -101,11 +113,14 @@ const tokenRefreshAttempts = new Map();
 const MAX_REFRESH_ATTEMPTS = 2;
 const REFRESH_ATTEMPT_WINDOW = 60000;
 
-async function authenticatedFetch(url: string, options: any = {}): Promise<any> {
-  const method = options.method || 'GET';
+async function authenticatedFetch(
+  url: string,
+  options: any = {},
+): Promise<any> {
+  const method = options.method || "GET";
 
   // Check cache for GET requests
-  if (method === 'GET') {
+  if (method === "GET") {
     const cached = apiCache.get(url, options);
     if (cached) {
       return cached;
@@ -115,12 +130,12 @@ async function authenticatedFetch(url: string, options: any = {}): Promise<any> 
   const tokens = await tokenService.getTokens();
 
   const headers: any = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
     ...options.headers,
   };
 
   if (tokens?.accessToken) {
-    headers['Authorization'] = `Bearer ${tokens.accessToken}`;
+    headers["Authorization"] = `Bearer ${tokens.accessToken}`;
   }
 
   try {
@@ -140,11 +155,18 @@ async function authenticatedFetch(url: string, options: any = {}): Promise<any> 
       const attemptKey = tokens.refreshToken.substring(0, 10);
       const attemptRecord = tokenRefreshAttempts.get(attemptKey);
 
-      if (attemptRecord && now - attemptRecord.firstAttempt < REFRESH_ATTEMPT_WINDOW) {
+      if (
+        attemptRecord &&
+        now - attemptRecord.firstAttempt < REFRESH_ATTEMPT_WINDOW
+      ) {
         if (attemptRecord.count >= MAX_REFRESH_ATTEMPTS) {
           tokenRefreshAttempts.delete(attemptKey);
           await tokenService.clearTokens();
-          throw new AuthAPIError('Maximum token refresh attempts exceeded', 401, url);
+          throw new AuthAPIError(
+            "Maximum token refresh attempts exceeded",
+            401,
+            url,
+          );
         }
         attemptRecord.count++;
       } else {
@@ -155,7 +177,7 @@ async function authenticatedFetch(url: string, options: any = {}): Promise<any> 
         const newTokens = await refreshAccessToken(tokens.refreshToken);
 
         if (!newTokens?.access_token) {
-          throw new Error('Invalid token response');
+          throw new Error("Invalid token response");
         }
 
         const transformedTokens = {
@@ -169,9 +191,9 @@ async function authenticatedFetch(url: string, options: any = {}): Promise<any> 
 
         return await retryWithNewToken(url, options, transformedTokens);
       } catch (refreshError) {
-        logger.warn('Token refresh failed', refreshError);
+        logger.warn("Token refresh failed", refreshError);
         await tokenService.clearTokens();
-        throw new AuthAPIError('Authentication expired', 401, url);
+        throw new AuthAPIError("Authentication expired", 401, url);
       }
     }
 
@@ -180,27 +202,27 @@ async function authenticatedFetch(url: string, options: any = {}): Promise<any> 
       throw new AuthAPIError(
         errorData.message || `HTTP ${response.status}: ${response.statusText}`,
         response.status,
-        url
+        url,
       );
     }
 
     const data = await response.json();
 
     // Cache GET requests
-    if (method === 'GET') {
+    if (method === "GET") {
       apiCache.set(url, data, options);
     }
 
     // Invalidate related cache on mutations
-    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
-      const urlPattern = new RegExp(url.split('/').slice(0, -1).join('/'));
+    if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
+      const urlPattern = new RegExp(url.split("/").slice(0, -1).join("/"));
       apiCache.invalidatePattern(urlPattern);
     }
 
     return data;
   } catch (error: any) {
-    if (error.name === 'AbortError') {
-      throw new AuthAPIError('Request timeout', 408, url);
+    if (error.name === "AbortError") {
+      throw new AuthAPIError("Request timeout", 408, url);
     }
 
     if (!(error instanceof AuthAPIError)) {
@@ -223,21 +245,28 @@ const authAPI = {
    */
   async login(email: string, password: string): Promise<any> {
     if (!email || !password) {
-      throw new AuthAPIError('Email and password are required', 400, '/auth/login');
+      throw new AuthAPIError(
+        "Email and password are required",
+        400,
+        "/auth/login",
+      );
     }
 
-    const response = await fetchWithTimeout(`${API_CONFIG.baseURL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
+    const response = await fetchWithTimeout(
+      `${API_CONFIG.baseURL}/auth/login`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      },
+    );
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new AuthAPIError(
-        errorData.message || 'Login failed',
+        errorData.message || "Login failed",
         response.status,
-        '/auth/login'
+        "/auth/login",
       );
     }
 
@@ -265,21 +294,28 @@ const authAPI = {
     const { email, password, name, ...additionalData } = userData;
 
     if (!email || !password || !name) {
-      throw new AuthAPIError('Email, password, and name are required', 400, '/auth/register');
+      throw new AuthAPIError(
+        "Email, password, and name are required",
+        400,
+        "/auth/register",
+      );
     }
 
-    const response = await fetchWithTimeout(`${API_CONFIG.baseURL}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, name, ...additionalData }),
-    });
+    const response = await fetchWithTimeout(
+      `${API_CONFIG.baseURL}/auth/register`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, name, ...additionalData }),
+      },
+    );
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new AuthAPIError(
-        errorData.message || 'Registration failed',
+        errorData.message || "Registration failed",
         response.status,
-        '/auth/register'
+        "/auth/register",
       );
     }
 
@@ -292,18 +328,21 @@ const authAPI = {
    * @returns {Promise<Object>} New tokens
    */
   async refreshToken(refreshToken: string): Promise<any> {
-    const response = await fetchWithTimeout(`${API_CONFIG.baseURL}/auth/refresh`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refreshToken }),
-    });
+    const response = await fetchWithTimeout(
+      `${API_CONFIG.baseURL}/auth/refresh`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
+      },
+    );
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new AuthAPIError(
-        errorData.message || 'Token refresh failed',
+        errorData.message || "Token refresh failed",
         response.status,
-        '/auth/refresh'
+        "/auth/refresh",
       );
     }
 
@@ -320,11 +359,11 @@ const authAPI = {
 
       if (tokens?.accessToken) {
         await authenticatedFetch(`${API_CONFIG.baseURL}/auth/logout`, {
-          method: 'POST',
+          method: "POST",
         });
       }
     } catch (error: any) {
-      logger.warn('API logout failed:', error.message);
+      logger.warn("API logout failed:", error.message);
     }
 
     await tokenService.clearTokens();
@@ -347,7 +386,7 @@ const authAPI = {
    */
   async updateProfile(profileData: any): Promise<any> {
     return await authenticatedFetch(`${API_CONFIG.baseURL}/auth/profile`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(profileData),
     });
   },
@@ -358,11 +397,17 @@ const authAPI = {
    * @param {string} newPassword - New password
    * @returns {Promise<Object>} Password change confirmation
    */
-  async changePassword(currentPassword: string, newPassword: string): Promise<any> {
-    return await authenticatedFetch(`${API_CONFIG.baseURL}/auth/change-password`, {
-      method: 'POST',
-      body: JSON.stringify({ currentPassword, newPassword }),
-    });
+  async changePassword(
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<any> {
+    return await authenticatedFetch(
+      `${API_CONFIG.baseURL}/auth/change-password`,
+      {
+        method: "POST",
+        body: JSON.stringify({ currentPassword, newPassword }),
+      },
+    );
   },
 
   /**
@@ -371,18 +416,21 @@ const authAPI = {
    * @returns {Promise<Object>} Reset request confirmation
    */
   async requestPasswordReset(email: string): Promise<any> {
-    const response = await fetchWithTimeout(`${API_CONFIG.baseURL}/auth/forgot-password`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-    });
+    const response = await fetchWithTimeout(
+      `${API_CONFIG.baseURL}/auth/forgot-password`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      },
+    );
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new AuthAPIError(
-        errorData.message || 'Password reset request failed',
+        errorData.message || "Password reset request failed",
         response.status,
-        '/auth/forgot-password'
+        "/auth/forgot-password",
       );
     }
 
@@ -396,18 +444,21 @@ const authAPI = {
    * @returns {Promise<Object>} Password reset confirmation
    */
   async resetPassword(token: string, newPassword: string): Promise<any> {
-    const response = await fetchWithTimeout(`${API_CONFIG.baseURL}/auth/reset-password`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, newPassword }),
-    });
+    const response = await fetchWithTimeout(
+      `${API_CONFIG.baseURL}/auth/reset-password`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, newPassword }),
+      },
+    );
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new AuthAPIError(
-        errorData.message || 'Password reset failed',
+        errorData.message || "Password reset failed",
         response.status,
-        '/auth/reset-password'
+        "/auth/reset-password",
       );
     }
 
@@ -434,7 +485,7 @@ const userAPI = {
    */
   async updatePreferences(preferences: any): Promise<any> {
     return await authenticatedFetch(`${API_CONFIG.baseURL}/user/preferences`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(preferences),
     });
   },
@@ -445,7 +496,7 @@ const userAPI = {
    */
   async deleteAccount() {
     return await authenticatedFetch(`${API_CONFIG.baseURL}/user/account`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
   },
 };

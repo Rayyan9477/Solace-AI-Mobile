@@ -3,7 +3,10 @@
  * Shows mental health score and analysis
  */
 
-import React from 'react';
+import { MentalHealthIcon } from "@components/icons";
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
 import {
   View,
   Text,
@@ -13,12 +16,9 @@ import {
   StatusBar,
   ScrollView,
   Dimensions,
-} from 'react-native';
-import { useTheme } from '@theme/ThemeProvider';
-import { MentalHealthIcon } from '@components/icons';
-import { useNavigation } from '@react-navigation/native';
+} from "react-native";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 export const AssessmentResultsScreen = ({ route }: any) => {
   const { theme } = useTheme();
@@ -33,10 +33,29 @@ export const AssessmentResultsScreen = ({ route }: any) => {
   const score = calculateScore();
 
   const getScoreCategory = (score: number) => {
-    if (score >= 85) return { label: 'Excellent', color: '#8FBC8F', description: 'You are doing great!' };
-    if (score >= 70) return { label: 'Good', color: '#B8976B', description: 'Mentally stable with room for growth' };
-    if (score >= 50) return { label: 'Fair', color: '#E8A872', description: 'Some areas need attention' };
-    return { label: 'Needs Attention', color: '#D97F52', description: 'Consider seeking support' };
+    if (score >= 85)
+      return {
+        label: "Excellent",
+        color: "#8FBC8F",
+        description: "You are doing great!",
+      };
+    if (score >= 70)
+      return {
+        label: "Good",
+        color: "#B8976B",
+        description: "Mentally stable with room for growth",
+      };
+    if (score >= 50)
+      return {
+        label: "Fair",
+        color: "#E8A872",
+        description: "Some areas need attention",
+      };
+    return {
+      label: "Needs Attention",
+      color: "#D97F52",
+      description: "Consider seeking support",
+    };
   };
 
   const category = getScoreCategory(score);
@@ -44,18 +63,18 @@ export const AssessmentResultsScreen = ({ route }: any) => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.isDark ? '#2D1B0E' : '#1A1108',
+      backgroundColor: theme.isDark ? "#2D1B0E" : "#1A1108",
     },
     header: {
       paddingHorizontal: 24,
       paddingTop: 60,
       paddingBottom: 20,
-      alignItems: 'center',
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 20,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     content: {
       flex: 1,
@@ -65,7 +84,7 @@ export const AssessmentResultsScreen = ({ route }: any) => {
       paddingBottom: 100,
     },
     scoreContainer: {
-      alignItems: 'center',
+      alignItems: "center",
       marginTop: 40,
       marginBottom: 40,
     },
@@ -74,140 +93,147 @@ export const AssessmentResultsScreen = ({ route }: any) => {
       height: 200,
       borderRadius: 100,
       borderWidth: 12,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       marginBottom: 24,
     },
     scoreValue: {
       fontSize: 72,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     scoreLabel: {
       fontSize: 18,
-      fontWeight: '600',
-      color: '#FFFFFF',
+      fontWeight: "600",
+      color: "#FFFFFF",
       marginBottom: 8,
     },
     scoreDescription: {
       fontSize: 14,
-      color: '#B8A99A',
-      textAlign: 'center',
+      color: "#B8A99A",
+      textAlign: "center",
     },
     section: {
       marginBottom: 32,
     },
     sectionTitle: {
       fontSize: 20,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
       marginBottom: 16,
     },
     card: {
-      backgroundColor: 'rgba(45, 27, 14, 0.5)',
+      backgroundColor: "rgba(45, 27, 14, 0.5)",
       borderRadius: 20,
       padding: 20,
       borderWidth: 1.5,
-      borderColor: '#6B5444',
+      borderColor: "#6B5444",
       marginBottom: 12,
     },
     cardHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginBottom: 12,
     },
     cardIcon: {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: 'rgba(143, 188, 143, 0.2)',
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: "rgba(143, 188, 143, 0.2)",
+      justifyContent: "center",
+      alignItems: "center",
       marginRight: 12,
     },
     cardTitle: {
       flex: 1,
       fontSize: 16,
-      fontWeight: '600',
-      color: '#FFFFFF',
+      fontWeight: "600",
+      color: "#FFFFFF",
     },
     cardValue: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#8FBC8F',
+      fontWeight: "700",
+      color: "#8FBC8F",
     },
     cardDescription: {
       fontSize: 14,
-      color: '#B8A99A',
+      color: "#B8A99A",
       lineHeight: 20,
     },
     progressBar: {
       height: 8,
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
       borderRadius: 4,
-      overflow: 'hidden',
+      overflow: "hidden",
       marginTop: 12,
     },
     progressFill: {
-      height: '100%',
+      height: "100%",
       borderRadius: 4,
     },
     recommendation: {
-      backgroundColor: 'rgba(143, 188, 143, 0.1)',
+      backgroundColor: "rgba(143, 188, 143, 0.1)",
       borderRadius: 16,
       padding: 16,
       borderWidth: 1,
-      borderColor: '#8FBC8F',
+      borderColor: "#8FBC8F",
       marginBottom: 12,
     },
     recommendationText: {
       fontSize: 14,
-      color: '#E5DDD5',
+      color: "#E5DDD5",
       lineHeight: 20,
     },
     bottomContainer: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 0,
       left: 0,
       right: 0,
       paddingHorizontal: 24,
       paddingBottom: 32,
-      backgroundColor: theme.isDark ? '#2D1B0E' : '#1A1108',
+      backgroundColor: theme.isDark ? "#2D1B0E" : "#1A1108",
     },
     button: {
-      backgroundColor: '#A67C52',
+      backgroundColor: "#A67C52",
       borderRadius: 24,
       paddingVertical: 16,
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'center',
+      alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "center",
       marginBottom: 12,
     },
     buttonText: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       marginRight: 8,
     },
     secondaryButton: {
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
       borderWidth: 1.5,
-      borderColor: '#6B5444',
+      borderColor: "#6B5444",
     },
     secondaryButtonText: {
-      color: '#E5DDD5',
+      color: "#E5DDD5",
     },
   });
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
 
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Your Mental Health Score</Text>
       </View>
 
-      <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}
+      >
         <View style={styles.scoreContainer}>
           <View style={[styles.scoreCircle, { borderColor: category.color }]}>
             <Text style={styles.scoreValue}>{score}</Text>
@@ -230,7 +256,12 @@ export const AssessmentResultsScreen = ({ route }: any) => {
               <Text style={styles.cardValue}>85%</Text>
             </View>
             <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: '85%', backgroundColor: '#8FBC8F' }]} />
+              <View
+                style={[
+                  styles.progressFill,
+                  { width: "85%", backgroundColor: "#8FBC8F" },
+                ]}
+              />
             </View>
           </View>
 
@@ -243,7 +274,12 @@ export const AssessmentResultsScreen = ({ route }: any) => {
               <Text style={styles.cardValue}>72%</Text>
             </View>
             <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: '72%', backgroundColor: '#B8976B' }]} />
+              <View
+                style={[
+                  styles.progressFill,
+                  { width: "72%", backgroundColor: "#B8976B" },
+                ]}
+              />
             </View>
           </View>
 
@@ -256,7 +292,12 @@ export const AssessmentResultsScreen = ({ route }: any) => {
               <Text style={styles.cardValue}>68%</Text>
             </View>
             <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: '68%', backgroundColor: '#E8A872' }]} />
+              <View
+                style={[
+                  styles.progressFill,
+                  { width: "68%", backgroundColor: "#E8A872" },
+                ]}
+              />
             </View>
           </View>
         </View>
@@ -293,10 +334,10 @@ export const AssessmentResultsScreen = ({ route }: any) => {
       <View style={styles.bottomContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Dashboard' as never)}
+          onPress={() => navigation.navigate("Dashboard" as never)}
         >
           <Text style={styles.buttonText}>Continue to Dashboard</Text>
-          <Text style={{ color: '#FFFFFF', fontSize: 18 }}>→</Text>
+          <Text style={{ color: "#FFFFFF", fontSize: 18 }}>→</Text>
         </TouchableOpacity>
 
         <TouchableOpacity

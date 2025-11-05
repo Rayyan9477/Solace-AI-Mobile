@@ -122,7 +122,7 @@ describe("Navigation and Forms Test Suite", () => {
     jest.clearAllMocks();
     AsyncStorage.clear();
     // Clear in-memory session cache to prevent test data leakage
-    Object.keys(__sessionCache).forEach(key => delete __sessionCache[key]);
+    Object.keys(__sessionCache).forEach((key) => delete __sessionCache[key]);
   });
 
   describe("KeyboardAwareScrollView", () => {

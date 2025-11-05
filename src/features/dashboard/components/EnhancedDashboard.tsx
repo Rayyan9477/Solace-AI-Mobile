@@ -3,7 +3,8 @@
  * Basic dashboard interface without complex dependencies
  */
 
-import React, { useState, useEffect } from 'react';
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,11 +13,10 @@ import {
   Dimensions,
   Platform,
   RefreshControl,
-} from 'react-native';
-import { Card, FAB, Avatar, IconButton, Snackbar } from 'react-native-paper';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
+import { Card, FAB, Avatar, IconButton, Snackbar } from "react-native-paper";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 const EnhancedDashboard = ({ navigation }) => {
   const { theme } = useTheme();
@@ -33,25 +33,25 @@ const EnhancedDashboard = ({ navigation }) => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.colors?.background?.primary || '#F7FAFC',
+      backgroundColor: theme.colors?.background?.primary || "#F7FAFC",
     },
     scrollView: {
       flex: 1,
     },
     header: {
       padding: 20,
-      paddingTop: Platform.OS === 'ios' ? 60 : 40,
-      backgroundColor: theme.colors?.primary || '#007AFF',
+      paddingTop: Platform.OS === "ios" ? 60 : 40,
+      backgroundColor: theme.colors?.primary || "#007AFF",
     },
     headerText: {
       fontSize: 28,
-      fontWeight: 'bold',
-      color: '#FFFFFF',
+      fontWeight: "bold",
+      color: "#FFFFFF",
       marginBottom: 8,
     },
     headerSubtext: {
       fontSize: 16,
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       opacity: 0.8,
     },
     content: {
@@ -60,31 +60,31 @@ const EnhancedDashboard = ({ navigation }) => {
     card: {
       marginBottom: 16,
       padding: 16,
-      backgroundColor: '#FFFFFF',
+      backgroundColor: "#FFFFFF",
       borderRadius: 12,
       elevation: 2,
-      shadowColor: '#000',
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
     },
     cardTitle: {
       fontSize: 18,
-      fontWeight: '600',
-      color: theme.colors?.text?.primary || '#2D3748',
+      fontWeight: "600",
+      color: theme.colors?.text?.primary || "#2D3748",
       marginBottom: 8,
     },
     cardContent: {
       fontSize: 14,
-      color: theme.colors?.text?.secondary || '#718096',
+      color: theme.colors?.text?.secondary || "#718096",
       lineHeight: 20,
     },
     fab: {
-      position: 'absolute',
+      position: "absolute",
       margin: 16,
       right: 0,
       bottom: 0,
-      backgroundColor: theme.colors?.primary || '#007AFF',
+      backgroundColor: theme.colors?.primary || "#007AFF",
     },
   });
 
@@ -95,9 +95,9 @@ const EnhancedDashboard = ({ navigation }) => {
         <Text style={styles.headerSubtext}>Your mental health companion</Text>
       </View>
 
-        <ScrollView
-          style={styles.scrollView}
-          refreshControl={
+      <ScrollView
+        style={styles.scrollView}
+        refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
@@ -105,35 +105,39 @@ const EnhancedDashboard = ({ navigation }) => {
           <Card style={styles.card}>
             <Text style={styles.cardTitle}>Mood Tracking</Text>
             <Text style={styles.cardContent}>
-              Track your daily mood and emotional patterns to gain insights into your mental health journey.
+              Track your daily mood and emotional patterns to gain insights into
+              your mental health journey.
             </Text>
           </Card>
 
           <Card style={styles.card}>
             <Text style={styles.cardTitle}>AI Therapy Chat</Text>
             <Text style={styles.cardContent}>
-              Chat with our AI therapist for personalized support and guidance whenever you need it.
+              Chat with our AI therapist for personalized support and guidance
+              whenever you need it.
             </Text>
           </Card>
 
           <Card style={styles.card}>
             <Text style={styles.cardTitle}>Mindfulness Resources</Text>
             <Text style={styles.cardContent}>
-              Access guided meditations, breathing exercises, and mindfulness practices.
+              Access guided meditations, breathing exercises, and mindfulness
+              practices.
             </Text>
           </Card>
 
           <Card style={styles.card}>
             <Text style={styles.cardTitle}>Mental Health Assessment</Text>
             <Text style={styles.cardContent}>
-              Take comprehensive assessments to understand your mental health status and get personalized recommendations.
+              Take comprehensive assessments to understand your mental health
+              status and get personalized recommendations.
             </Text>
           </Card>
         </View>
-        </ScrollView>
+      </ScrollView>
 
       <FAB
-          style={styles.fab}
+        style={styles.fab}
         icon="plus"
         onPress={() => setSnackbarVisible(true)}
       />

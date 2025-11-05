@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Search Screen.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,9 +13,7 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface FilterOption {
   id: string;
@@ -25,58 +25,60 @@ export const SearchFiltersScreen = () => {
   const navigation = useNavigation();
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedContentTypes, setSelectedContentTypes] = useState<string[]>([]);
-  const [selectedDateRange, setSelectedDateRange] = useState<string>('');
-  const [selectedSort, setSelectedSort] = useState<string>('relevance');
+  const [selectedContentTypes, setSelectedContentTypes] = useState<string[]>(
+    [],
+  );
+  const [selectedDateRange, setSelectedDateRange] = useState<string>("");
+  const [selectedSort, setSelectedSort] = useState<string>("relevance");
 
   const categories: FilterOption[] = [
-    { id: 'articles', label: 'Articles' },
-    { id: 'courses', label: 'Courses' },
-    { id: 'exercises', label: 'Exercises' },
-    { id: 'community', label: 'Community' },
-    { id: 'journal', label: 'Journal' },
-    { id: 'mood', label: 'Mood Data' },
+    { id: "articles", label: "Articles" },
+    { id: "courses", label: "Courses" },
+    { id: "exercises", label: "Exercises" },
+    { id: "community", label: "Community" },
+    { id: "journal", label: "Journal" },
+    { id: "mood", label: "Mood Data" },
   ];
 
   const contentTypes: FilterOption[] = [
-    { id: 'text', label: 'Text' },
-    { id: 'video', label: 'Video' },
-    { id: 'audio', label: 'Audio' },
-    { id: 'interactive', label: 'Interactive' },
+    { id: "text", label: "Text" },
+    { id: "video", label: "Video" },
+    { id: "audio", label: "Audio" },
+    { id: "interactive", label: "Interactive" },
   ];
 
   const dateRanges: FilterOption[] = [
-    { id: 'today', label: 'Today' },
-    { id: 'week', label: 'This Week' },
-    { id: 'month', label: 'This Month' },
-    { id: 'year', label: 'This Year' },
-    { id: 'all', label: 'All Time' },
+    { id: "today", label: "Today" },
+    { id: "week", label: "This Week" },
+    { id: "month", label: "This Month" },
+    { id: "year", label: "This Year" },
+    { id: "all", label: "All Time" },
   ];
 
   const sortOptions: FilterOption[] = [
-    { id: 'relevance', label: 'Most Relevant' },
-    { id: 'recent', label: 'Most Recent' },
-    { id: 'popular', label: 'Most Popular' },
-    { id: 'alphabetical', label: 'A-Z' },
+    { id: "relevance", label: "Most Relevant" },
+    { id: "recent", label: "Most Recent" },
+    { id: "popular", label: "Most Popular" },
+    { id: "alphabetical", label: "A-Z" },
   ];
 
   const toggleCategory = (id: string) => {
     setSelectedCategories((prev) =>
-      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id],
     );
   };
 
   const toggleContentType = (id: string) => {
     setSelectedContentTypes((prev) =>
-      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id],
     );
   };
 
   const clearFilters = () => {
     setSelectedCategories([]);
     setSelectedContentTypes([]);
-    setSelectedDateRange('');
-    setSelectedSort('relevance');
+    setSelectedDateRange("");
+    setSelectedSort("relevance");
   };
 
   const applyFilters = () => {
@@ -89,23 +91,23 @@ export const SearchFiltersScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     clearButton: {
@@ -114,8 +116,8 @@ export const SearchFiltersScreen = () => {
     },
     clearButtonText: {
       fontSize: 14,
-      fontWeight: '700',
-      color: theme.colors.red['60'],
+      fontWeight: "700",
+      color: theme.colors.red["60"],
     },
     content: {
       flex: 1,
@@ -124,101 +126,101 @@ export const SearchFiltersScreen = () => {
       paddingHorizontal: 20,
       paddingVertical: 24,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     sectionTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     filterGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 12,
     },
     filterChip: {
       paddingHorizontal: 16,
       paddingVertical: 10,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderWidth: 2,
-      borderColor: 'transparent',
+      borderColor: "transparent",
     },
     filterChipSelected: {
-      backgroundColor: theme.colors.purple['20'],
-      borderColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["20"],
+      borderColor: theme.colors.purple["60"],
     },
     filterChipText: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     filterChipTextSelected: {
-      fontWeight: '700',
-      color: theme.colors.purple['60'],
+      fontWeight: "700",
+      color: theme.colors.purple["60"],
     },
     radioList: {
       gap: 12,
     },
     radioOption: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       paddingVertical: 12,
       paddingHorizontal: 16,
       borderRadius: 12,
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
     },
     radioOptionSelected: {
-      backgroundColor: theme.colors.purple['20'],
+      backgroundColor: theme.colors.purple["20"],
     },
     radioCircle: {
       width: 20,
       height: 20,
       borderRadius: 10,
       borderWidth: 2,
-      borderColor: theme.colors.gray['40'],
+      borderColor: theme.colors.gray["40"],
       marginRight: 12,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     radioCircleSelected: {
-      borderColor: theme.colors.purple['60'],
+      borderColor: theme.colors.purple["60"],
     },
     radioInner: {
       width: 10,
       height: 10,
       borderRadius: 5,
-      backgroundColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["60"],
     },
     radioLabel: {
       fontSize: 15,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     bottomBar: {
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderTopWidth: 1,
-      borderTopColor: theme.colors.gray['20'],
+      borderTopColor: theme.colors.gray["20"],
       backgroundColor: theme.colors.background.primary,
     },
     applyButton: {
-      backgroundColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["60"],
       borderRadius: 16,
       paddingVertical: 16,
-      alignItems: 'center',
+      alignItems: "center",
     },
     applyButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     resultsText: {
       fontSize: 13,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: 12,
     },
   });
@@ -227,7 +229,7 @@ export const SearchFiltersScreen = () => {
     selectedCategories.length +
     selectedContentTypes.length +
     (selectedDateRange ? 1 : 0) +
-    (selectedSort !== 'relevance' ? 1 : 0);
+    (selectedSort !== "relevance" ? 1 : 0);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -340,7 +342,8 @@ export const SearchFiltersScreen = () => {
                 <View
                   style={[
                     styles.radioCircle,
-                    selectedDateRange === range.id && styles.radioCircleSelected,
+                    selectedDateRange === range.id &&
+                      styles.radioCircleSelected,
                   ]}
                 >
                   {selectedDateRange === range.id && (
@@ -388,8 +391,8 @@ export const SearchFiltersScreen = () => {
       <View style={styles.bottomBar}>
         <Text style={styles.resultsText}>
           {activeFiltersCount > 0
-            ? `${activeFiltersCount} filter${activeFiltersCount > 1 ? 's' : ''} active`
-            : 'No filters applied'}
+            ? `${activeFiltersCount} filter${activeFiltersCount > 1 ? "s" : ""} active`
+            : "No filters applied"}
         </Text>
         <TouchableOpacity
           style={styles.applyButton}

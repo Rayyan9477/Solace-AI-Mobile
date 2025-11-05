@@ -134,10 +134,10 @@ const AccessibleTouchable = ({
         };
       case "crisis":
         return {
-          backgroundColor: theme.colors.error['50'],
-          borderColor: theme.colors.error['300'],
+          backgroundColor: theme.colors.error["50"],
+          borderColor: theme.colors.error["300"],
           borderWidth: 2,
-          shadowColor: theme.colors.error['500'],
+          shadowColor: theme.colors.error["500"],
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.2,
           shadowRadius: 4,

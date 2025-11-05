@@ -4,7 +4,11 @@
  * Enhanced with avatars, voice input, and message reactions
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import { MentalHealthIcon } from "@components/icons";
+import { FreudLogo } from "@components/icons/FreudIcons";
+import { sanitizeText } from "@shared/utils/sanitization";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -18,12 +22,9 @@ import {
   StatusBar,
   Animated,
   Alert,
-} from 'react-native';
-import { useTheme } from "@theme/ThemeProvider";
-import { MentalHealthIcon } from '@components/icons';
-import { FreudLogo } from '@components/icons/FreudIcons';
-import CrisisManager from '../crisis/CrisisManager';
-import { sanitizeText } from '@shared/utils/sanitization';
+} from "react-native";
+
+import CrisisManager from "../crisis/CrisisManager";
 
 interface Message {
   id: string;
@@ -37,32 +38,32 @@ export const ChatScreen = ({ navigation, route }: any) => {
   const { theme } = useTheme();
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: '1',
+      id: "1",
       text: "Hello Shinomiya! Thanks for your professional response. I can help you explore this further. What specific aspect would you like to work on today?",
       isUser: false,
       timestamp: new Date(Date.now() - 120000),
-      reaction: '👍',
+      reaction: "👍",
     },
     {
-      id: '2',
+      id: "2",
       text: "I've been feeling really overwhelmed with everything lately. Work, relationships, just everything piling up.",
       isUser: true,
       timestamp: new Date(Date.now() - 60000),
     },
     {
-      id: '3',
+      id: "3",
       text: "Shinomiya, I'm sorry you're going through this challenging time. Feeling overwhelmed when multiple stressors combine is very human. Let's explore these one at a time. When you think about what's weighing on you most heavily right now, what comes to mind first? 💚",
       isUser: false,
       timestamp: new Date(Date.now() - 30000),
     },
     {
-      id: '4',
+      id: "4",
       text: "Honestly, I don't think I'm doing anything I should be doing.",
       isUser: true,
       timestamp: new Date(Date.now() - 10000),
     },
   ]);
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const pulseAnim = useRef(new Animated.Value(1)).current;
@@ -83,9 +84,9 @@ export const ChatScreen = ({ navigation, route }: any) => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       padding: 16,
       paddingTop: 8,
       borderBottomWidth: 1,
@@ -94,16 +95,16 @@ export const ChatScreen = ({ navigation, route }: any) => {
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerCenter: {
       flex: 1,
-      alignItems: 'center',
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     headerSubtitle: {
@@ -114,8 +115,8 @@ export const ChatScreen = ({ navigation, route }: any) => {
     searchButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     chatContainer: {
       flex: 1,
@@ -125,29 +126,29 @@ export const ChatScreen = ({ navigation, route }: any) => {
       marginBottom: 20,
     },
     botMessageWrapper: {
-      flexDirection: 'row',
-      alignItems: 'flex-start',
-      alignSelf: 'flex-start', // Ensure bot messages align left
+      flexDirection: "row",
+      alignItems: "flex-start",
+      alignSelf: "flex-start", // Ensure bot messages align left
     },
     userMessageWrapper: {
-      flexDirection: 'row-reverse',
-      alignItems: 'flex-start',
-      justifyContent: 'flex-start',
-      alignSelf: 'flex-end', // Ensure user messages align right
+      flexDirection: "row-reverse",
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
+      alignSelf: "flex-end", // Ensure user messages align right
     },
     avatar: {
       width: 36,
       height: 36,
       borderRadius: 18,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       marginHorizontal: 8,
     },
     botAvatar: {
-      backgroundColor: theme.colors.green['20'],
+      backgroundColor: theme.colors.green["20"],
     },
     userAvatar: {
-      backgroundColor: theme.colors.orange['20'],
+      backgroundColor: theme.colors.orange["20"],
     },
     messageContent: {
       flex: 1,
@@ -155,16 +156,16 @@ export const ChatScreen = ({ navigation, route }: any) => {
     messageBubble: {
       padding: 16,
       borderRadius: 20,
-      maxWidth: '85%',
+      maxWidth: "85%",
     },
     botBubble: {
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderTopLeftRadius: 4,
     },
     userBubble: {
-      backgroundColor: theme.colors.orange['40'],
+      backgroundColor: theme.colors.orange["40"],
       borderTopRightRadius: 4,
-      alignSelf: 'flex-end',
+      alignSelf: "flex-end",
     },
     messageText: {
       fontSize: 15,
@@ -174,11 +175,11 @@ export const ChatScreen = ({ navigation, route }: any) => {
       color: theme.colors.text.primary,
     },
     userMessageText: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     messageFooter: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginTop: 6,
       paddingHorizontal: 4,
     },
@@ -191,16 +192,16 @@ export const ChatScreen = ({ navigation, route }: any) => {
       fontSize: 14,
     },
     typingIndicator: {
-      flexDirection: 'row',
-      alignItems: 'flex-start',
+      flexDirection: "row",
+      alignItems: "flex-start",
       marginBottom: 20,
     },
     typingBubble: {
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       padding: 16,
       borderRadius: 20,
       borderTopLeftRadius: 4,
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 4,
     },
     typingDot: {
@@ -210,8 +211,8 @@ export const ChatScreen = ({ navigation, route }: any) => {
       backgroundColor: theme.colors.text.tertiary,
     },
     inputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       padding: 16,
       paddingTop: 12,
       borderTopWidth: 1,
@@ -224,16 +225,16 @@ export const ChatScreen = ({ navigation, route }: any) => {
       height: 44,
       borderRadius: 22,
       backgroundColor: theme.colors.background.secondary,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     voiceButtonRecording: {
       backgroundColor: theme.colors.error,
     },
     textInputWrapper: {
       flex: 1,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       borderWidth: 1,
       borderColor: theme.colors.border.main,
       borderRadius: 24,
@@ -254,9 +255,9 @@ export const ChatScreen = ({ navigation, route }: any) => {
       width: 44,
       height: 44,
       borderRadius: 22,
-      backgroundColor: theme.colors.orange['40'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.orange["40"],
+      justifyContent: "center",
+      alignItems: "center",
     },
     sendButtonDisabled: {
       opacity: 0.5,
@@ -268,32 +269,41 @@ export const ChatScreen = ({ navigation, route }: any) => {
       const messageText = sanitizeText(inputText.trim(), 5000);
 
       if (crisisManagerRef.current) {
-        const crisisAnalysis = await crisisManagerRef.current.analyzeCrisisRisk(messageText);
+        const crisisAnalysis =
+          await crisisManagerRef.current.analyzeCrisisRisk(messageText);
 
-        if (crisisAnalysis.risk === 'critical' || crisisAnalysis.risk === 'high') {
+        if (
+          crisisAnalysis.risk === "critical" ||
+          crisisAnalysis.risk === "high"
+        ) {
           const crisisResponse = await crisisManagerRef.current.handleCrisis(
             crisisAnalysis,
-            { id: route.params?.userId || 'anonymous' }
+            { id: route.params?.userId || "anonymous" },
           );
 
           Alert.alert(
-            'Support Available',
+            "Support Available",
             crisisResponse.message,
             [
               ...(crisisResponse.actions || []).map((action: any) => ({
                 text: action.label,
                 onPress: async () => {
-                  if (action.type === 'call' && action.number) {
-                    await crisisManagerRef.current?.callEmergencyNumber(action.number);
-                  } else if (action.type === 'text' && action.number) {
-                    await crisisManagerRef.current?.textCrisisLine(action.number, action.keyword);
+                  if (action.type === "call" && action.number) {
+                    await crisisManagerRef.current?.callEmergencyNumber(
+                      action.number,
+                    );
+                  } else if (action.type === "text" && action.number) {
+                    await crisisManagerRef.current?.textCrisisLine(
+                      action.number,
+                      action.keyword,
+                    );
                   }
                 },
-                style: action.urgent ? 'destructive' : 'default',
+                style: action.urgent ? "destructive" : "default",
               })),
-              { text: 'Continue Talking', style: 'cancel' },
+              { text: "Continue Talking", style: "cancel" },
             ],
-            { cancelable: true }
+            { cancelable: true },
           );
         }
       }
@@ -305,11 +315,12 @@ export const ChatScreen = ({ navigation, route }: any) => {
         timestamp: new Date(),
       };
 
-      setMessages(prev => [...prev, newMessage]);
-      setInputText('');
+      setMessages((prev) => [...prev, newMessage]);
+      setInputText("");
       setIsTyping(true);
 
-      const isJest = typeof process !== 'undefined' && !!process.env?.JEST_WORKER_ID;
+      const isJest =
+        typeof process !== "undefined" && !!process.env?.JEST_WORKER_ID;
       const delay = isJest ? 50 : 2000;
       setTimeout(() => {
         setIsTyping(false);
@@ -322,12 +333,14 @@ export const ChatScreen = ({ navigation, route }: any) => {
 
         const aiResponse: Message = {
           id: (Date.now() + 1).toString(),
-          text: isJest ? responses[1] : responses[Math.floor(Math.random() * responses.length)],
+          text: isJest
+            ? responses[1]
+            : responses[Math.floor(Math.random() * responses.length)],
           isUser: false,
           timestamp: new Date(),
         };
 
-        setMessages(prev => [...prev, aiResponse]);
+        setMessages((prev) => [...prev, aiResponse]);
       }, delay);
     }
   };
@@ -352,7 +365,7 @@ export const ChatScreen = ({ navigation, route }: any) => {
             duration: 500,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       ).start();
     }
   };
@@ -363,7 +376,7 @@ export const ChatScreen = ({ navigation, route }: any) => {
         styles.messageWrapper,
         item.isUser ? styles.userMessageWrapper : styles.botMessageWrapper,
         // Ensure a plain object with alignment is present for test style inspection
-        { alignSelf: item.isUser ? 'flex-end' : 'flex-start' },
+        { alignSelf: item.isUser ? "flex-end" : "flex-start" },
       ]}
     >
       {/* Avatar */}
@@ -376,12 +389,17 @@ export const ChatScreen = ({ navigation, route }: any) => {
         {item.isUser ? (
           <Text style={{ fontSize: 18 }}>👤</Text>
         ) : (
-          <FreudLogo size={20} primaryColor={theme.colors.green['60']} />
+          <FreudLogo size={20} primaryColor={theme.colors.green["60"]} />
         )}
       </View>
 
       {/* Message Content */}
-      <View style={[styles.messageContent, item.isUser ? { alignSelf: 'flex-end' } : { alignSelf: 'flex-start' }]}>
+      <View
+        style={[
+          styles.messageContent,
+          item.isUser ? { alignSelf: "flex-end" } : { alignSelf: "flex-start" },
+        ]}
+      >
         <View
           style={[
             styles.messageBubble,
@@ -402,8 +420,8 @@ export const ChatScreen = ({ navigation, route }: any) => {
         <View style={styles.messageFooter}>
           <Text style={styles.timestamp}>
             {item.timestamp.toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
+              hour: "2-digit",
+              minute: "2-digit",
             })}
           </Text>
           {item.reaction && (
@@ -417,7 +435,7 @@ export const ChatScreen = ({ navigation, route }: any) => {
   const renderTypingIndicator = () => (
     <View style={styles.typingIndicator} testID="typing-indicator">
       <View style={[styles.avatar, styles.botAvatar]}>
-        <FreudLogo size={20} primaryColor={theme.colors.green['60']} />
+        <FreudLogo size={20} primaryColor={theme.colors.green["60"]} />
       </View>
       <View style={styles.typingBubble}>
         <View style={styles.typingDot} />
@@ -430,7 +448,7 @@ export const ChatScreen = ({ navigation, route }: any) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
-        barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+        barStyle={theme.isDark ? "light-content" : "dark-content"}
         backgroundColor="transparent"
         translucent
       />
@@ -456,7 +474,11 @@ export const ChatScreen = ({ navigation, route }: any) => {
           </Text>
         </View>
 
-        <TouchableOpacity style={styles.searchButton} accessibilityRole="button" accessibilityLabel="Search">
+        <TouchableOpacity
+          style={styles.searchButton}
+          accessibilityRole="button"
+          accessibilityLabel="Search"
+        >
           <MentalHealthIcon
             name="Search"
             size={20}
@@ -468,12 +490,12 @@ export const ChatScreen = ({ navigation, route }: any) => {
 
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <FlatList
           data={messages}
           renderItem={renderMessage}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           contentContainerStyle={styles.chatContainer}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={isTyping ? renderTypingIndicator : null}
@@ -490,14 +512,14 @@ export const ChatScreen = ({ navigation, route }: any) => {
               ]}
               onPress={toggleRecording}
               accessibilityRole="button"
-              accessibilityLabel={isRecording ? 'Stop voice recording' : 'Start voice recording'}
+              accessibilityLabel={
+                isRecording ? "Stop voice recording" : "Start voice recording"
+              }
             >
               <MentalHealthIcon
                 name="Mic"
                 size={20}
-                color={
-                  isRecording ? '#FFFFFF' : theme.colors.text.primary
-                }
+                color={isRecording ? "#FFFFFF" : theme.colors.text.primary}
                 style={{}}
               />
             </TouchableOpacity>
@@ -533,7 +555,12 @@ export const ChatScreen = ({ navigation, route }: any) => {
             accessibilityLabel="Send message"
             testID="send-button"
           >
-            <MentalHealthIcon name="Send" size={20} color="#FFFFFF" style={{}} />
+            <MentalHealthIcon
+              name="Send"
+              size={20}
+              color="#FFFFFF"
+              style={{}}
+            />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

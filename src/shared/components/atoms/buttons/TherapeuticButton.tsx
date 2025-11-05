@@ -8,6 +8,9 @@
  * - Multiple variants for different emotional contexts
  */
 
+import { useAccessibility, useMentalHealth } from "@app/providers/AppProvider";
+import { useTheme } from "@theme/ThemeProvider";
+import * as Haptics from "expo-haptics";
 import React, { useCallback, useMemo } from "react";
 import {
   TouchableOpacity,
@@ -17,9 +20,6 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
-import { useTheme } from "@theme/ThemeProvider";
-import { useAccessibility, useMentalHealth } from "@app/providers/AppProvider";
-import * as Haptics from "expo-haptics";
 
 // Button variant configurations
 const BUTTON_VARIANTS = {
@@ -246,8 +246,10 @@ export const TherapeuticButton = ({
   );
 
   // Flatten styles so consumers/tests see a resolved object (not a mix of IDs/arrays)
-  const mergedButtonStyle = useMemo(() => StyleSheet.flatten(buttonStyles), [buttonStyles]);
-
+  const mergedButtonStyle = useMemo(
+    () => StyleSheet.flatten(buttonStyles),
+    [buttonStyles],
+  );
 
   return (
     <TouchableOpacity
@@ -255,7 +257,7 @@ export const TherapeuticButton = ({
       onPress={handlePress}
       onLongPress={onLongPress}
       disabled={disabled || loading}
-      accessible={true}
+      accessible
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}

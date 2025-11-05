@@ -3,7 +3,10 @@
  * Screens: Avatar, Profile Info, Password, RGPT, OTP, Fingerprint, Notifications
  */
 
-import React, { useState } from 'react';
+import { MentalHealthIcon } from "@components/icons";
+import { useTheme } from "@theme/ThemeProvider";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -15,20 +18,17 @@ import {
   TextInput,
   Image,
   Switch,
-} from 'react-native';
-import { useTheme } from '@theme/ThemeProvider';
-import { MentalHealthIcon } from '@components/icons';
-import { LinearGradient } from 'expo-linear-gradient';
+} from "react-native";
 
 type SetupStep =
-  | 'avatar'
-  | 'profile'
-  | 'password'
-  | 'rgpt'
-  | 'otp'
-  | 'fingerprint'
-  | 'notifications'
-  | 'result';
+  | "avatar"
+  | "profile"
+  | "password"
+  | "rgpt"
+  | "otp"
+  | "fingerprint"
+  | "notifications"
+  | "result";
 
 interface ProfileData {
   avatar?: string;
@@ -48,22 +48,35 @@ interface ProfileData {
   };
 }
 
-const AVATARS = ['👨', '👩', '🧑', '👴', '👵', '🧔', '👨‍🦰', '👩‍🦰', '👨‍🦱', '👩‍🦱', '👨‍🦳', '👩‍🦳'];
+const AVATARS = [
+  "👨",
+  "👩",
+  "🧑",
+  "👴",
+  "👵",
+  "🧔",
+  "👨‍🦰",
+  "👩‍🦰",
+  "👨‍🦱",
+  "👩‍🦱",
+  "👨‍🦳",
+  "👩‍🦳",
+];
 
 export const ProfileSetupScreen = ({ navigation }: any) => {
   const { theme } = useTheme();
-  const [currentStep, setCurrentStep] = useState<SetupStep>('avatar');
+  const [currentStep, setCurrentStep] = useState<SetupStep>("avatar");
   const [profileData, setProfileData] = useState<ProfileData>({
-    avatar: '👤',
-    fullName: '',
-    email: '',
-    password: '',
+    avatar: "👤",
+    fullName: "",
+    email: "",
+    password: "",
     height: 170,
     weight: 70,
-    gender: '',
-    location: '',
-    theme: 'Brown',
-    otp: '',
+    gender: "",
+    location: "",
+    theme: "Brown",
+    otp: "",
     notifications: {
       critical: true,
       journal: false,
@@ -71,7 +84,16 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
     },
   });
 
-  const steps: SetupStep[] = ['avatar', 'profile', 'password', 'rgpt', 'otp', 'fingerprint', 'notifications', 'result'];
+  const steps: SetupStep[] = [
+    "avatar",
+    "profile",
+    "password",
+    "rgpt",
+    "otp",
+    "fingerprint",
+    "notifications",
+    "result",
+  ];
   const currentStepIndex = steps.indexOf(currentStep);
   const progress = ((currentStepIndex + 1) / steps.length) * 100;
 
@@ -81,9 +103,9 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingTop: 16,
       paddingBottom: 12,
@@ -93,24 +115,24 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       height: 40,
       borderRadius: 20,
       backgroundColor: theme.colors.background.secondary,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     skipButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'flex-end',
+      justifyContent: "center",
+      alignItems: "flex-end",
     },
     skipText: {
       fontSize: 14,
-      fontWeight: '600',
-      color: theme.colors.orange['40'],
+      fontWeight: "600",
+      color: theme.colors.orange["40"],
     },
     progressContainer: {
       paddingHorizontal: 20,
@@ -120,11 +142,11 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       height: 4,
       backgroundColor: theme.colors.border.primary,
       borderRadius: 2,
-      overflow: 'hidden',
+      overflow: "hidden",
     },
     progressFill: {
-      height: '100%',
-      backgroundColor: theme.colors.green['40'],
+      height: "100%",
+      backgroundColor: theme.colors.green["40"],
       borderRadius: 2,
     },
     content: {
@@ -136,7 +158,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
     },
     stepTitle: {
       fontSize: 28,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -146,16 +168,16 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       marginBottom: 32,
     },
     avatarContainer: {
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: 40,
     },
     avatarCircle: {
       width: 120,
       height: 120,
       borderRadius: 60,
-      backgroundColor: theme.colors.green['20'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.green["20"],
+      justifyContent: "center",
+      alignItems: "center",
       marginBottom: 24,
     },
     avatarEmoji: {
@@ -163,14 +185,14 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
     },
     avatarLabel: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     avatarGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 16,
-      justifyContent: 'center',
+      justifyContent: "center",
       marginBottom: 32,
     },
     avatarOption: {
@@ -179,20 +201,20 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       borderRadius: 30,
       backgroundColor: theme.colors.background.secondary,
       borderWidth: 2,
-      borderColor: 'transparent',
-      justifyContent: 'center',
-      alignItems: 'center',
+      borderColor: "transparent",
+      justifyContent: "center",
+      alignItems: "center",
     },
     avatarOptionSelected: {
-      borderColor: theme.colors.green['40'],
-      backgroundColor: theme.colors.green['10'],
+      borderColor: theme.colors.green["40"],
+      backgroundColor: theme.colors.green["10"],
     },
     avatarOptionEmoji: {
       fontSize: 32,
     },
     inputLabel: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -213,22 +235,22 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       marginBottom: 24,
     },
     sliderLabel: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
       marginBottom: 8,
     },
     sliderValue: {
       fontSize: 18,
-      fontWeight: '700',
-      color: theme.colors.green['40'],
+      fontWeight: "700",
+      color: theme.colors.green["40"],
     },
     slider: {
       height: 40,
     },
     dropdownButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       borderWidth: 1.5,
       borderColor: theme.colors.border.primary,
       borderRadius: 16,
@@ -241,8 +263,8 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       color: theme.colors.text.primary,
     },
     otpContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
+      flexDirection: "row",
+      justifyContent: "center",
       gap: 12,
       marginVertical: 40,
     },
@@ -252,39 +274,39 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       borderWidth: 1.5,
       borderColor: theme.colors.border.primary,
       borderRadius: 12,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       backgroundColor: theme.colors.background.secondary,
     },
     otpBoxFilled: {
-      borderColor: theme.colors.green['40'],
-      backgroundColor: theme.colors.green['10'],
+      borderColor: theme.colors.green["40"],
+      backgroundColor: theme.colors.green["10"],
     },
     otpText: {
       fontSize: 24,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     resendText: {
       fontSize: 14,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
     },
     resendLink: {
-      color: theme.colors.orange['40'],
-      fontWeight: '600',
+      color: theme.colors.orange["40"],
+      fontWeight: "600",
     },
     fingerprintContainer: {
-      alignItems: 'center',
+      alignItems: "center",
       marginVertical: 60,
     },
     fingerprintCircle: {
       width: 180,
       height: 180,
       borderRadius: 90,
-      backgroundColor: theme.colors.green['10'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.green["10"],
+      justifyContent: "center",
+      alignItems: "center",
       marginBottom: 24,
     },
     fingerprintIcon: {
@@ -293,12 +315,12 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
     fingerprintText: {
       fontSize: 14,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
     },
     notificationItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingVertical: 16,
       borderBottomWidth: 1,
       borderBottomColor: theme.colors.border.primary,
@@ -308,7 +330,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
     },
     notificationTitle: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
@@ -317,52 +339,52 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       color: theme.colors.text.secondary,
     },
     resultContainer: {
-      alignItems: 'center',
+      alignItems: "center",
       paddingVertical: 40,
     },
     scoreCircle: {
       width: 200,
       height: 200,
       borderRadius: 100,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       marginBottom: 32,
     },
     scoreValue: {
       fontSize: 72,
-      fontWeight: '800',
-      color: '#FFFFFF',
+      fontWeight: "800",
+      color: "#FFFFFF",
     },
     resultTitle: {
       fontSize: 20,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
-      textAlign: 'center',
+      textAlign: "center",
     },
     resultDescription: {
       fontSize: 14,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: 32,
     },
     continueButton: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 24,
       left: 20,
       right: 20,
-      backgroundColor: theme.colors.orange['40'],
+      backgroundColor: theme.colors.orange["40"],
       borderRadius: 24,
       paddingVertical: 16,
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      ...theme.getShadow('lg'),
+      alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "center",
+      ...theme.getShadow("lg"),
     },
     continueButtonText: {
       fontSize: 16,
-      fontWeight: '600',
-      color: '#FFFFFF',
+      fontWeight: "600",
+      color: "#FFFFFF",
       marginRight: 8,
     },
   });
@@ -372,7 +394,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
     if (nextIndex < steps.length) {
       setCurrentStep(steps[nextIndex]);
     } else {
-      navigation.navigate('Dashboard');
+      navigation.navigate("Dashboard");
     }
   };
 
@@ -386,12 +408,13 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
 
   const renderStepContent = () => {
     switch (currentStep) {
-      case 'avatar':
+      case "avatar":
         return (
           <View>
             <Text style={styles.stepTitle}>Select your Avatar</Text>
             <Text style={styles.stepSubtitle}>
-              This helps users visualize your profile and personalize your bot for better interactions
+              This helps users visualize your profile and personalize your bot
+              for better interactions
             </Text>
 
             <View style={styles.avatarContainer}>
@@ -407,7 +430,8 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
                   key={index}
                   style={[
                     styles.avatarOption,
-                    profileData.avatar === avatar && styles.avatarOptionSelected,
+                    profileData.avatar === avatar &&
+                      styles.avatarOptionSelected,
                   ]}
                   onPress={() => setProfileData({ ...profileData, avatar })}
                 >
@@ -418,7 +442,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
           </View>
         );
 
-      case 'profile':
+      case "profile":
         return (
           <View>
             <Text style={styles.stepTitle}>Profile Setup</Text>
@@ -431,7 +455,9 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
               <TextInput
                 style={styles.input}
                 value={profileData.fullName}
-                onChangeText={(text) => setProfileData({ ...profileData, fullName: text })}
+                onChangeText={(text) =>
+                  setProfileData({ ...profileData, fullName: text })
+                }
                 placeholder="Shinomiya Kaguya"
                 placeholderTextColor={theme.colors.text.tertiary}
               />
@@ -442,7 +468,9 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
               <TextInput
                 style={styles.input}
                 value={profileData.email}
-                onChangeText={(text) => setProfileData({ ...profileData, email: text })}
+                onChangeText={(text) =>
+                  setProfileData({ ...profileData, email: text })
+                }
                 placeholder="shinomiyaguya@gmail.com"
                 placeholderTextColor={theme.colors.text.tertiary}
                 keyboardType="email-address"
@@ -454,7 +482,9 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
               <TextInput
                 style={styles.input}
                 value={profileData.password}
-                onChangeText={(text) => setProfileData({ ...profileData, password: text })}
+                onChangeText={(text) =>
+                  setProfileData({ ...profileData, password: text })
+                }
                 placeholder="••••••••••"
                 placeholderTextColor={theme.colors.text.tertiary}
                 secureTextEntry
@@ -475,7 +505,11 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
               <Text style={styles.inputLabel}>Location</Text>
               <TouchableOpacity style={styles.dropdownButton}>
                 <Text style={styles.dropdownText}>Tokyo, Japan</Text>
-                <MentalHealthIcon name="ChevronDown" size={20} color={theme.colors.text.primary} />
+                <MentalHealthIcon
+                  name="ChevronDown"
+                  size={20}
+                  color={theme.colors.text.primary}
+                />
               </TouchableOpacity>
             </View>
 
@@ -483,18 +517,23 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
               <Text style={styles.inputLabel}>Theme Mode</Text>
               <TouchableOpacity style={styles.dropdownButton}>
                 <Text style={styles.dropdownText}>Brown</Text>
-                <MentalHealthIcon name="ChevronDown" size={20} color={theme.colors.text.primary} />
+                <MentalHealthIcon
+                  name="ChevronDown"
+                  size={20}
+                  color={theme.colors.text.primary}
+                />
               </TouchableOpacity>
             </View>
           </View>
         );
 
-      case 'otp':
+      case "otp":
         return (
           <View>
             <Text style={styles.stepTitle}>Enter 4 digit OTP Code</Text>
             <Text style={styles.stepSubtitle}>
-              Verification code has been sent to your Email Address or Phone Number
+              Verification code has been sent to your Email Address or Phone
+              Number
             </Text>
 
             <View style={styles.otpContainer}>
@@ -507,20 +546,20 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
                   ]}
                 >
                   <Text style={styles.otpText}>
-                    {profileData.otp[index] || ''}
+                    {profileData.otp[index] || ""}
                   </Text>
                 </View>
               ))}
             </View>
 
             <Text style={styles.resendText}>
-              Didn't receive the OTP? Then{' '}
+              Didn't receive the OTP? Then{" "}
               <Text style={styles.resendLink}>resend OTP by again</Text>
             </Text>
           </View>
         );
 
-      case 'fingerprint':
+      case "fingerprint":
         return (
           <View>
             <Text style={styles.stepTitle}>Fingerprint Setup</Text>
@@ -539,7 +578,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
           </View>
         );
 
-      case 'notifications':
+      case "notifications":
         return (
           <View>
             <Text style={styles.stepTitle}>Notification Setup</Text>
@@ -549,19 +588,24 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
 
             <View style={styles.notificationItem}>
               <View style={styles.notificationInfo}>
-                <Text style={styles.notificationTitle}>AI Critical Notification</Text>
+                <Text style={styles.notificationTitle}>
+                  AI Critical Notification
+                </Text>
               </View>
               <Switch
                 value={profileData.notifications.critical}
                 onValueChange={(value) =>
                   setProfileData({
                     ...profileData,
-                    notifications: { ...profileData.notifications, critical: value },
+                    notifications: {
+                      ...profileData.notifications,
+                      critical: value,
+                    },
                   })
                 }
                 trackColor={{
                   false: theme.colors.border.primary,
-                  true: theme.colors.green['40'],
+                  true: theme.colors.green["40"],
                 }}
                 thumbColor="#FFFFFF"
               />
@@ -569,19 +613,24 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
 
             <View style={styles.notificationItem}>
               <View style={styles.notificationInfo}>
-                <Text style={styles.notificationTitle}>Mental Journal Notification</Text>
+                <Text style={styles.notificationTitle}>
+                  Mental Journal Notification
+                </Text>
               </View>
               <Switch
                 value={profileData.notifications.journal}
                 onValueChange={(value) =>
                   setProfileData({
                     ...profileData,
-                    notifications: { ...profileData.notifications, journal: value },
+                    notifications: {
+                      ...profileData.notifications,
+                      journal: value,
+                    },
                   })
                 }
                 trackColor={{
                   false: theme.colors.border.primary,
-                  true: theme.colors.green['40'],
+                  true: theme.colors.green["40"],
                 }}
                 thumbColor="#FFFFFF"
               />
@@ -589,19 +638,24 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
 
             <View style={styles.notificationItem}>
               <View style={styles.notificationInfo}>
-                <Text style={styles.notificationTitle}>Mood Tracker Notification</Text>
+                <Text style={styles.notificationTitle}>
+                  Mood Tracker Notification
+                </Text>
               </View>
               <Switch
                 value={profileData.notifications.moodTracker}
                 onValueChange={(value) =>
                   setProfileData({
                     ...profileData,
-                    notifications: { ...profileData.notifications, moodTracker: value },
+                    notifications: {
+                      ...profileData.notifications,
+                      moodTracker: value,
+                    },
                   })
                 }
                 trackColor={{
                   false: theme.colors.border.primary,
-                  true: theme.colors.green['40'],
+                  true: theme.colors.green["40"],
                 }}
                 thumbColor="#FFFFFF"
               />
@@ -609,12 +663,12 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
           </View>
         );
 
-      case 'result':
+      case "result":
         const score = 87;
         const getScoreColor = (s: number) => {
-          if (s >= 80) return ['#A8D08D', '#6FA93F'];
-          if (s >= 50) return ['#F4B084', '#E87722'];
-          return ['#B4A7D6', '#7030A0'];
+          if (s >= 80) return ["#A8D08D", "#6FA93F"];
+          if (s >= 50) return ["#F4B084", "#E87722"];
+          return ["#B4A7D6", "#7030A0"];
         };
         const scoreColors = getScoreColor(score);
 
@@ -629,14 +683,19 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
               <Text style={styles.scoreValue}>{score}</Text>
             </LinearGradient>
 
-            <Text style={styles.resultTitle}>You're mentally healthy.{'\n'}Are you ready?</Text>
+            <Text style={styles.resultTitle}>
+              You're mentally healthy.{"\n"}Are you ready?
+            </Text>
             <Text style={styles.resultDescription}>
               You're all set! Start exploring and enjoy the journey.
             </Text>
 
             <TouchableOpacity
-              style={[styles.continueButton, { position: 'relative', marginTop: 20 }]}
-              onPress={() => navigation.navigate('Dashboard')}
+              style={[
+                styles.continueButton,
+                { position: "relative", marginTop: 20 },
+              ]}
+              onPress={() => navigation.navigate("Dashboard")}
             >
               <Text style={styles.continueButtonText}>I'm Ready!</Text>
               <MentalHealthIcon name="Check" size={20} color="#FFFFFF" />
@@ -652,7 +711,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
-        barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+        barStyle={theme.isDark ? "light-content" : "dark-content"}
         backgroundColor="transparent"
         translucent
       />
@@ -668,14 +727,14 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>
-          {currentStep === 'avatar' && 'Profile Setup'}
-          {currentStep === 'profile' && 'My Profile Setup'}
-          {currentStep === 'password' && 'Password Setup'}
-          {currentStep === 'rgpt' && 'RGPT Setup'}
-          {currentStep === 'otp' && 'OTP Verification'}
-          {currentStep === 'fingerprint' && 'Fingerprint Setup'}
-          {currentStep === 'notifications' && 'Notification Setup'}
-          {currentStep === 'result' && 'Your Freud Score'}
+          {currentStep === "avatar" && "Profile Setup"}
+          {currentStep === "profile" && "My Profile Setup"}
+          {currentStep === "password" && "Password Setup"}
+          {currentStep === "rgpt" && "RGPT Setup"}
+          {currentStep === "otp" && "OTP Verification"}
+          {currentStep === "fingerprint" && "Fingerprint Setup"}
+          {currentStep === "notifications" && "Notification Setup"}
+          {currentStep === "result" && "Your Freud Score"}
         </Text>
 
         <TouchableOpacity style={styles.skipButton} onPress={handleContinue}>
@@ -684,7 +743,7 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       </View>
 
       {/* Progress Bar */}
-      {currentStep !== 'result' && (
+      {currentStep !== "result" && (
         <View style={styles.progressContainer}>
           <View style={styles.progressBar}>
             <View style={[styles.progressFill, { width: `${progress}%` }]} />
@@ -702,8 +761,11 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
       </ScrollView>
 
       {/* Continue Button */}
-      {currentStep !== 'result' && (
-        <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
+      {currentStep !== "result" && (
+        <TouchableOpacity
+          style={styles.continueButton}
+          onPress={handleContinue}
+        >
           <Text style={styles.continueButtonText}>Continue</Text>
           <MentalHealthIcon name="ArrowRight" size={20} color="#FFFFFF" />
         </TouchableOpacity>

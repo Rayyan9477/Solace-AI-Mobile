@@ -3,30 +3,26 @@
  * Expo-compatible with Material Design 3 and therapeutic styling
  */
 
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-} from 'react-native';
-import { Card, Surface, IconButton } from 'react-native-paper';
-import { motion } from 'framer-motion';
 import { useTheme } from "@theme/ThemeProvider";
+import * as Speech from "expo-speech";
+import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { Card, Surface, IconButton } from "react-native-paper";
 
 // Mock imports for now
-import * as Speech from 'expo-speech';
-import { platform } from '../../../shared/utils/platform';
+
+import { platform } from "../../../shared/utils/platform";
 // Mock FreudColors for now
 const FreudColors = {
   serenityGreen: {
-    60: '#34C759',
+    60: "#34C759",
   },
   optimisticGray: {
-    10: '#F7FAFC',
-    40: '#A0AEC0',
-    60: '#718096',
-    90: '#2D3748',
+    10: "#F7FAFC",
+    40: "#A0AEC0",
+    60: "#718096",
+    90: "#2D3748",
   },
 };
 
@@ -51,7 +47,6 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
   const [isSpeaking, setIsSpeaking] = useState(false);
   const { isDark: isDarkMode } = useTheme();
 
-
   // Handle speech synthesis with Expo compatibility
   const handleSpeak = async () => {
     if (!Speech || isLoading || isSpeaking) {
@@ -66,16 +61,18 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
         setIsSpeaking(false);
       } else {
         setIsSpeaking(true);
-        await Promise.resolve(Speech.speak(message, {
-          language: 'en',
-          pitch: 1,
-          rate: 0.9,
-        }));
+        await Promise.resolve(
+          Speech.speak(message, {
+            language: "en",
+            pitch: 1,
+            rate: 0.9,
+          }),
+        );
         // Reset speaking state after a short delay (speech duration estimate)
         setTimeout(() => setIsSpeaking(false), 1000);
       }
     } catch (error) {
-      console.error('Error in handleSpeak:', error);
+      console.error("Error in handleSpeak:", error);
       setIsSpeaking(false);
     } finally {
       setIsLoading(false);
@@ -87,14 +84,14 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
     if (isUser) {
       return {
         backgroundColor: FreudColors.serenityGreen[60],
-        textColor: '#FFFFFF',
-        timestampColor: 'rgba(255, 255, 255, 0.8)',
+        textColor: "#FFFFFF",
+        timestampColor: "rgba(255, 255, 255, 0.8)",
       };
     } else {
       return {
         backgroundColor: isDarkMode
           ? FreudColors.optimisticGray[90]
-          : '#FFFFFF',
+          : "#FFFFFF",
         textColor: isDarkMode
           ? FreudColors.optimisticGray[10]
           : FreudColors.optimisticGray[90],
@@ -107,8 +104,8 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
 
   const colors = getBubbleColors();
   const formattedTime = new Date(timestamp).toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
+    hour: "2-digit",
+    minute: "2-digit",
   });
 
   // Platform-specific animation configuration
@@ -117,7 +114,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
       initial: { opacity: 0, y: 20, scale: 0.9 },
       animate: { opacity: 1, y: 0, scale: 1 },
       transition: {
-        type: 'spring' as const,
+        type: "spring" as const,
         stiffness: 300,
         damping: 20,
         delay: 0.1,
@@ -127,7 +124,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
       initial: { opacity: 0, x: isUser ? 50 : -50 },
       animate: { opacity: 1, x: 0 },
       transition: {
-        type: 'spring' as const,
+        type: "spring" as const,
         stiffness: 250,
         damping: 25,
         delay: 0.1,
@@ -142,7 +139,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
       initial: { opacity: 0, y: 20, scale: 0.9 },
       animate: { opacity: 1, y: 0, scale: 1 },
       transition: {
-        type: 'spring' as const,
+        type: "spring" as const,
         stiffness: 300,
         damping: 20,
         delay: 0.1,
@@ -154,10 +151,12 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
     <AnimatedCard
       mode="contained"
       {...animationProps}
-      style={[
-        styles.container,
-        isUser ? styles.userContainer : styles.botContainer,
-      ] as any}
+      style={
+        [
+          styles.container,
+          isUser ? styles.userContainer : styles.botContainer,
+        ] as any
+      }
     >
       <Surface
         mode="flat"
@@ -175,7 +174,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
           style={styles.bubbleContent}
           accessibilityLabel={
             accessibilityLabel ||
-            `${isUser ? 'Your' : 'Assistant'} message: ${message}`
+            `${isUser ? "Your" : "Assistant"} message: ${message}`
           }
           accessibilityRole="text"
           accessibilityHint="Double tap to hear message spoken aloud"
@@ -225,17 +224,17 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 6,
     marginHorizontal: 12,
-    maxWidth: '85%',
+    maxWidth: "85%",
   },
   userContainer: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
   botContainer: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   bubble: {
     borderRadius: 20,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   userBubble: {
     borderBottomRightRadius: 8,
@@ -250,17 +249,17 @@ const styles = StyleSheet.create({
   message: {
     fontSize: 16,
     lineHeight: 22,
-    fontWeight: '400',
+    fontWeight: "400",
   },
   footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginTop: 8,
   },
   timestamp: {
     fontSize: 11,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   speakButton: {
     margin: 0,

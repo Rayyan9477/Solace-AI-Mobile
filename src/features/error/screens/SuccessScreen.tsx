@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Error & Other Utilities.png
  */
 
-import React, { useEffect } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -11,9 +13,7 @@ import {
   SafeAreaView,
   Animated,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface SuccessScreenProps {
   icon?: string;
@@ -26,10 +26,10 @@ interface SuccessScreenProps {
 }
 
 export const SuccessScreen: React.FC<SuccessScreenProps> = ({
-  icon = '✅',
-  title = 'Success!',
-  message = 'Your action has been completed successfully.',
-  actionLabel = 'Continue',
+  icon = "✅",
+  title = "Success!",
+  message = "Your action has been completed successfully.",
+  actionLabel = "Continue",
   onAction,
   autoRedirect = false,
   redirectDelay = 3000,
@@ -79,8 +79,8 @@ export const SuccessScreen: React.FC<SuccessScreenProps> = ({
     container: {
       flex: 1,
       backgroundColor: theme.colors.background.primary,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       paddingHorizontal: 40,
     },
     iconContainer: {
@@ -91,51 +91,51 @@ export const SuccessScreen: React.FC<SuccessScreenProps> = ({
     },
     title: {
       fontSize: 28,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 12,
-      textAlign: 'center',
+      textAlign: "center",
     },
     message: {
       fontSize: 16,
       lineHeight: 24,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: 40,
     },
     actionButton: {
-      backgroundColor: theme.colors.green['60'],
+      backgroundColor: theme.colors.green["60"],
       borderRadius: 16,
       paddingVertical: 16,
       paddingHorizontal: 40,
-      alignItems: 'center',
+      alignItems: "center",
       minWidth: 200,
     },
     actionButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     autoRedirectText: {
       fontSize: 13,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.tertiary,
       marginTop: 20,
-      textAlign: 'center',
+      textAlign: "center",
     },
     celebrationContainer: {
-      position: 'absolute',
+      position: "absolute",
       top: 0,
       left: 0,
       right: 0,
       bottom: 0,
-      justifyContent: 'center',
-      alignItems: 'center',
-      pointerEvents: 'none',
+      justifyContent: "center",
+      alignItems: "center",
+      pointerEvents: "none",
     },
     confetti: {
       fontSize: 40,
-      position: 'absolute',
+      position: "absolute",
     },
   });
 
@@ -152,7 +152,7 @@ export const SuccessScreen: React.FC<SuccessScreenProps> = ({
         <Text style={styles.icon}>{icon}</Text>
       </Animated.View>
 
-      <Animated.View style={{ opacity: fadeAnim, alignItems: 'center' }}>
+      <Animated.View style={{ opacity: fadeAnim, alignItems: "center" }}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.message}>{message}</Text>
 

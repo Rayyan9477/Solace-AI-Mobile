@@ -1,8 +1,8 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const NAV_STATE_KEY = '@solace_navigation_state';
-const SESSION_DATA_KEY_PREFIX = '@solace_session_data';
-const ACCESSIBILITY_HISTORY_KEY = '@solace_accessibility_history';
+const NAV_STATE_KEY = "@solace_navigation_state";
+const SESSION_DATA_KEY_PREFIX = "@solace_session_data";
+const ACCESSIBILITY_HISTORY_KEY = "@solace_accessibility_history";
 // In-memory session cache stores the latest data with timestamps per type
 let __sessionCache = {};
 
@@ -12,7 +12,7 @@ export const saveNavigationState = async (state) => {
   const payload = {
     state,
     timestamp: Date.now(),
-    version: '1.0',
+    version: "1.0",
   };
   await AsyncStorage.setItem(NAV_STATE_KEY, JSON.stringify(payload));
 };
@@ -57,7 +57,7 @@ export const saveSessionData = async (type, data) => {
 };
 
 export const restoreSessionData = async () => {
-  const types = ['therapy', 'assessment', 'mood'];
+  const types = ["therapy", "assessment", "mood"];
   const keys = types.map((t) => `${SESSION_DATA_KEY_PREFIX}_${t}`);
   const result = {};
 
@@ -69,7 +69,10 @@ export const restoreSessionData = async () => {
       try {
         const parsed = JSON.parse(raw);
         if (parsed && parsed.type) {
-          persisted[parsed.type] = { data: parsed.data, timestamp: parsed.timestamp ?? 0 };
+          persisted[parsed.type] = {
+            data: parsed.data,
+            timestamp: parsed.timestamp ?? 0,
+          };
         }
       } catch {
         // ignore malformed entries
@@ -99,7 +102,11 @@ export const restoreSessionData = async () => {
   return result;
 };
 
-export const saveAccessibilityHistory = async (screen, action, metadata = {}) => {
+export const saveAccessibilityHistory = async (
+  screen,
+  action,
+  metadata = {},
+) => {
   const entry = { screen, action, metadata, timestamp: Date.now() };
   await AsyncStorage.setItem(ACCESSIBILITY_HISTORY_KEY, JSON.stringify(entry));
 };

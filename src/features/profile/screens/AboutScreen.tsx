@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Profile Settings & Help Center.png
  */
 
-import React from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
 import {
   View,
   Text,
@@ -11,19 +13,17 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 export const AboutScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
 
   const appInfo = {
-    version: '2.1.0',
-    buildNumber: '450',
-    releaseDate: 'October 15, 2024',
-    developer: 'Solace AI Team',
+    version: "2.1.0",
+    buildNumber: "450",
+    releaseDate: "October 15, 2024",
+    developer: "Solace AI Team",
   };
 
   const styles = StyleSheet.create({
@@ -32,30 +32,30 @@ export const AboutScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
       flex: 1,
     },
     logoSection: {
-      alignItems: 'center',
+      alignItems: "center",
       paddingVertical: 40,
     },
     logo: {
@@ -64,13 +64,13 @@ export const AboutScreen = () => {
     },
     appName: {
       fontSize: 24,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
     tagline: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     section: {
@@ -79,44 +79,44 @@ export const AboutScreen = () => {
     },
     sectionTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
-      textTransform: 'uppercase',
+      textTransform: "uppercase",
       marginBottom: 16,
     },
     infoCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 16,
       marginBottom: 16,
     },
     infoRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       marginBottom: 12,
     },
     infoLabel: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     infoValue: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     linkButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     linkText: {
       fontSize: 15,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     linkArrow: {
@@ -124,35 +124,35 @@ export const AboutScreen = () => {
       color: theme.colors.text.tertiary,
     },
     socialSection: {
-      alignItems: 'center',
+      alignItems: "center",
       paddingVertical: 24,
     },
     socialTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
       marginBottom: 16,
     },
     socialRow: {
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 16,
     },
     socialButton: {
       width: 48,
       height: 48,
       borderRadius: 24,
-      backgroundColor: theme.colors.brown['10'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.brown["10"],
+      justifyContent: "center",
+      alignItems: "center",
     },
     socialIcon: {
       fontSize: 24,
     },
     copyrightText: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.tertiary,
-      textAlign: 'center',
+      textAlign: "center",
       paddingVertical: 24,
     },
   });
@@ -245,7 +245,7 @@ export const AboutScreen = () => {
         </View>
 
         <Text style={styles.copyrightText}>
-          © 2024 Solace AI. All rights reserved.{'\n'}
+          © 2024 Solace AI. All rights reserved.{"\n"}
           Made with ❤️ for better mental health
         </Text>
       </ScrollView>

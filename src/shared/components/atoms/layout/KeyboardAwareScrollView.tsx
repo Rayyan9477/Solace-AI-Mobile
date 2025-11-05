@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { ScrollView, TextInput } from 'react-native';
+import React, { useMemo } from "react";
+import { ScrollView, TextInput } from "react-native";
 
 const KeyboardAwareScrollView = ({
   children,
@@ -13,15 +13,15 @@ const KeyboardAwareScrollView = ({
 }) => {
   const resolvedLabel = useMemo(() => {
     if (accessibilityLabel) return accessibilityLabel;
-    if (isTherapyForm) return 'Therapy form container';
-    if (isMoodTracker) return 'Mood tracker form container';
+    if (isTherapyForm) return "Therapy form container";
+    if (isMoodTracker) return "Mood tracker form container";
     return undefined;
   }, [accessibilityLabel, isTherapyForm, isMoodTracker]);
 
   return (
     <ScrollView
       accessible={accessible}
-      accessibilityRole={props.accessibilityRole || 'scrollview'}
+      accessibilityRole={props.accessibilityRole || "scrollview"}
       accessibilityLabel={resolvedLabel}
       accessibilityHint={accessibilityHint}
       {...props}

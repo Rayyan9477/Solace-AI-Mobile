@@ -3,7 +3,8 @@
  * Helps users track and reflect on their emotional states
  */
 
-import React, { useState } from 'react';
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,8 +12,7 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
-} from 'react-native';
-import { useTheme } from "@theme/ThemeProvider";
+} from "react-native";
 
 interface MoodEntry {
   mood: string;
@@ -22,12 +22,12 @@ interface MoodEntry {
 }
 
 const MOODS = [
-  { emoji: '😊', label: 'Happy', color: '#22c55e' },
-  { emoji: '😔', label: 'Sad', color: '#3b82f6' },
-  { emoji: '😰', label: 'Anxious', color: '#f59e0b' },
-  { emoji: '😡', label: 'Angry', color: '#ef4444' },
-  { emoji: '😴', label: 'Tired', color: '#8b5cf6' },
-  { emoji: '😌', label: 'Calm', color: '#10b981' },
+  { emoji: "😊", label: "Happy", color: "#22c55e" },
+  { emoji: "😔", label: "Sad", color: "#3b82f6" },
+  { emoji: "😰", label: "Anxious", color: "#f59e0b" },
+  { emoji: "😡", label: "Angry", color: "#ef4444" },
+  { emoji: "😴", label: "Tired", color: "#8b5cf6" },
+  { emoji: "😌", label: "Calm", color: "#10b981" },
 ];
 
 const INTENSITY_LEVELS = [1, 2, 3, 4, 5];
@@ -35,18 +35,20 @@ const INTENSITY_LEVELS = [1, 2, 3, 4, 5];
 export const MoodScreen = () => {
   const { theme } = useTheme();
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
-  const [selectedIntensity, setSelectedIntensity] = useState<number | null>(null);
+  const [selectedIntensity, setSelectedIntensity] = useState<number | null>(
+    null,
+  );
   const [recentEntries] = useState<MoodEntry[]>([
     {
-      mood: 'Happy',
+      mood: "Happy",
       intensity: 4,
-      note: 'Had a great day with friends',
+      note: "Had a great day with friends",
       timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
     },
     {
-      mood: 'Calm',
+      mood: "Calm",
       intensity: 3,
-      note: 'Morning meditation helped',
+      note: "Morning meditation helped",
       timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
     },
   ]);
@@ -65,7 +67,7 @@ export const MoodScreen = () => {
     },
     title: {
       fontSize: 28,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -78,27 +80,27 @@ export const MoodScreen = () => {
     },
     sectionTitle: {
       fontSize: 20,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     moodGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
     },
     moodButton: {
-      width: '48%',
+      width: "48%",
       backgroundColor: theme.colors.background.secondary,
       padding: 16,
       borderRadius: 12,
       marginBottom: 12,
-      alignItems: 'center',
+      alignItems: "center",
       ...theme.shadows.sm,
     },
     selectedMoodButton: {
       borderWidth: 2,
-      borderColor: theme.colors.therapeutic.nurturing[600] || '#16a34a',
+      borderColor: theme.colors.therapeutic.nurturing[600] || "#16a34a",
     },
     moodEmoji: {
       fontSize: 32,
@@ -106,47 +108,47 @@ export const MoodScreen = () => {
     },
     moodLabel: {
       fontSize: 16,
-      fontWeight: '500',
+      fontWeight: "500",
       color: theme.colors.text.primary,
     },
     intensityContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
+      flexDirection: "row",
+      justifyContent: "space-around",
     },
     intensityButton: {
       width: 50,
       height: 50,
       borderRadius: 25,
       backgroundColor: theme.colors.background.secondary,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       ...theme.shadows.sm,
     },
     selectedIntensityButton: {
-      backgroundColor: theme.colors.therapeutic.nurturing[600] || '#16a34a',
+      backgroundColor: theme.colors.therapeutic.nurturing[600] || "#16a34a",
     },
     intensityText: {
       fontSize: 18,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     selectedIntensityText: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     saveButton: {
-      backgroundColor: theme.colors.therapeutic.nurturing[600] || '#16a34a',
+      backgroundColor: theme.colors.therapeutic.nurturing[600] || "#16a34a",
       padding: 16,
       borderRadius: 12,
-      alignItems: 'center',
+      alignItems: "center",
       marginTop: 24,
     },
     disabledButton: {
       opacity: 0.5,
     },
     saveButtonText: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     historyItem: {
       backgroundColor: theme.colors.background.secondary,
@@ -156,14 +158,14 @@ export const MoodScreen = () => {
       ...theme.shadows.sm,
     },
     historyHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       marginBottom: 8,
     },
     historyMood: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     historyTime: {
@@ -173,14 +175,14 @@ export const MoodScreen = () => {
     historyNote: {
       fontSize: 14,
       color: theme.colors.text.secondary,
-      fontStyle: 'italic',
+      fontStyle: "italic",
     },
   });
 
   const saveMoodEntry = () => {
     if (selectedMood && selectedIntensity) {
       if (__DEV__) {
-        console.log('Saving mood entry:', {
+        console.log("Saving mood entry:", {
           mood: selectedMood,
           intensity: selectedIntensity,
           timestamp: new Date(),
@@ -235,14 +237,16 @@ export const MoodScreen = () => {
                   key={level}
                   style={[
                     styles.intensityButton,
-                    selectedIntensity === level && styles.selectedIntensityButton,
+                    selectedIntensity === level &&
+                      styles.selectedIntensityButton,
                   ]}
                   onPress={() => setSelectedIntensity(level)}
                 >
                   <Text
                     style={[
                       styles.intensityText,
-                      selectedIntensity === level && styles.selectedIntensityText,
+                      selectedIntensity === level &&
+                        styles.selectedIntensityText,
                     ]}
                   >
                     {level}
@@ -254,10 +258,7 @@ export const MoodScreen = () => {
         )}
 
         <TouchableOpacity
-          style={[
-            styles.saveButton,
-            !canSave && styles.disabledButton,
-          ]}
+          style={[styles.saveButton, !canSave && styles.disabledButton]}
           onPress={saveMoodEntry}
           disabled={!canSave}
         >

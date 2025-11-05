@@ -1,3 +1,5 @@
+import { configureStore } from "@reduxjs/toolkit";
+
 import assessmentSlice, {
   startAssessment,
   submitAssessment,
@@ -8,7 +10,6 @@ import assessmentSlice, {
   resetAssessment,
   clearAssessmentError,
 } from "../../../../src/app/store/slices/assessmentSlice";
-import { configureStore } from "@reduxjs/toolkit";
 
 describe("Assessment Slice", () => {
   let store;
@@ -67,24 +68,30 @@ describe("Assessment Slice", () => {
 
     describe("setResponse", () => {
       test("should set response for a question", () => {
-        store.dispatch(setResponse({
-          questionId: "q1",
-          response: 2
-        }));
+        store.dispatch(
+          setResponse({
+            questionId: "q1",
+            response: 2,
+          }),
+        );
 
         const state = store.getState().assessment;
         expect(state.responses.q1).toBe(2);
       });
 
       test("should update existing response", () => {
-        store.dispatch(setResponse({
-          questionId: "q1",
-          response: 1
-        }));
-        store.dispatch(setResponse({
-          questionId: "q1",
-          response: 3
-        }));
+        store.dispatch(
+          setResponse({
+            questionId: "q1",
+            response: 1,
+          }),
+        );
+        store.dispatch(
+          setResponse({
+            questionId: "q1",
+            response: 3,
+          }),
+        );
 
         const state = store.getState().assessment;
         expect(state.responses.q1).toBe(3);
@@ -99,11 +106,26 @@ describe("Assessment Slice", () => {
           payload: {
             id: "phq9",
             questions: [
-              { id: "q1", text: "Question 1", type: "scale", scale: { min: 0, max: 3, labels: [] } },
-              { id: "q2", text: "Question 2", type: "scale", scale: { min: 0, max: 3, labels: [] } },
-              { id: "q3", text: "Question 3", type: "scale", scale: { min: 0, max: 3, labels: [] } }
-            ]
-          }
+              {
+                id: "q1",
+                text: "Question 1",
+                type: "scale",
+                scale: { min: 0, max: 3, labels: [] },
+              },
+              {
+                id: "q2",
+                text: "Question 2",
+                type: "scale",
+                scale: { min: 0, max: 3, labels: [] },
+              },
+              {
+                id: "q3",
+                text: "Question 3",
+                type: "scale",
+                scale: { min: 0, max: 3, labels: [] },
+              },
+            ],
+          },
         });
 
         store.dispatch(nextQuestion());
@@ -118,10 +140,20 @@ describe("Assessment Slice", () => {
           payload: {
             id: "phq9",
             questions: [
-              { id: "q1", text: "Question 1", type: "scale", scale: { min: 0, max: 3, labels: [] } },
-              { id: "q2", text: "Question 2", type: "scale", scale: { min: 0, max: 3, labels: [] } }
-            ]
-          }
+              {
+                id: "q1",
+                text: "Question 1",
+                type: "scale",
+                scale: { min: 0, max: 3, labels: [] },
+              },
+              {
+                id: "q2",
+                text: "Question 2",
+                type: "scale",
+                scale: { min: 0, max: 3, labels: [] },
+              },
+            ],
+          },
         });
 
         // Move to last question
@@ -163,7 +195,7 @@ describe("Assessment Slice", () => {
         // Set up some state
         store.dispatch({
           type: "assessment/startAssessment/fulfilled",
-          payload: { id: "phq9", questions: [] }
+          payload: { id: "phq9", questions: [] },
         });
         store.dispatch(setCurrentQuestion(2));
         store.dispatch(setResponse({ questionId: "q1", response: 2 }));
@@ -202,7 +234,8 @@ describe("Assessment Slice", () => {
         const mockAssessment = {
           id: "phq9",
           title: "PHQ-9 Depression Assessment",
-          description: "Patient Health Questionnaire-9 for depression screening",
+          description:
+            "Patient Health Questionnaire-9 for depression screening",
           questions: [
             {
               id: "q1",
@@ -211,8 +244,13 @@ describe("Assessment Slice", () => {
               scale: {
                 min: 0,
                 max: 3,
-                labels: ["Not at all", "Several days", "More than half the days", "Nearly every day"]
-              }
+                labels: [
+                  "Not at all",
+                  "Several days",
+                  "More than half the days",
+                  "Nearly every day",
+                ],
+              },
             },
             {
               id: "q2",
@@ -221,8 +259,13 @@ describe("Assessment Slice", () => {
               scale: {
                 min: 0,
                 max: 3,
-                labels: ["Not at all", "Several days", "More than half the days", "Nearly every day"]
-              }
+                labels: [
+                  "Not at all",
+                  "Several days",
+                  "More than half the days",
+                  "Nearly every day",
+                ],
+              },
             },
             {
               id: "q3",
@@ -231,8 +274,13 @@ describe("Assessment Slice", () => {
               scale: {
                 min: 0,
                 max: 3,
-                labels: ["Not at all", "Several days", "More than half the days", "Nearly every day"]
-              }
+                labels: [
+                  "Not at all",
+                  "Several days",
+                  "More than half the days",
+                  "Nearly every day",
+                ],
+              },
             },
             {
               id: "q4",
@@ -241,8 +289,13 @@ describe("Assessment Slice", () => {
               scale: {
                 min: 0,
                 max: 3,
-                labels: ["Not at all", "Several days", "More than half the days", "Nearly every day"]
-              }
+                labels: [
+                  "Not at all",
+                  "Several days",
+                  "More than half the days",
+                  "Nearly every day",
+                ],
+              },
             },
             {
               id: "q5",
@@ -251,18 +304,23 @@ describe("Assessment Slice", () => {
               scale: {
                 min: 0,
                 max: 3,
-                labels: ["Not at all", "Several days", "More than half the days", "Nearly every day"]
-              }
-            }
-          ]
+                labels: [
+                  "Not at all",
+                  "Several days",
+                  "More than half the days",
+                  "Nearly every day",
+                ],
+              },
+            },
+          ],
         };
 
         // Mock the API call
         global.fetch = jest.fn(() =>
           Promise.resolve({
             ok: true,
-            json: () => Promise.resolve(mockAssessment)
-          })
+            json: () => Promise.resolve(mockAssessment),
+          }),
         );
 
         await store.dispatch(startAssessment("phq9"));
@@ -291,7 +349,9 @@ describe("Assessment Slice", () => {
 
       test("should handle assessment start failure", async () => {
         // Mock complete failure - this should still succeed with mock data
-        global.fetch = jest.fn(() => Promise.reject(new Error("Network Error")));
+        global.fetch = jest.fn(() =>
+          Promise.reject(new Error("Network Error")),
+        );
 
         await store.dispatch(startAssessment("phq9"));
 
@@ -318,10 +378,12 @@ describe("Assessment Slice", () => {
         // Mock API failure to trigger local calculation
         global.fetch = jest.fn().mockRejectedValue(new Error("API Error"));
 
-        await store.dispatch(submitAssessment({
-          assessmentId: "phq9",
-          responses: mockResponses
-        }));
+        await store.dispatch(
+          submitAssessment({
+            assessmentId: "phq9",
+            responses: mockResponses,
+          }),
+        );
 
         const state = store.getState().assessment;
         expect(state.loading).toBe(false);
@@ -333,10 +395,10 @@ describe("Assessment Slice", () => {
           totalScore: 3,
           severity: "Minimal",
           recommendations: expect.any(Array),
-          _offline: true
+          _offline: true,
         });
-        expect(state.assessmentHistory[0]).toHaveProperty('id');
-        expect(state.assessmentHistory[0]).toHaveProperty('completedAt');
+        expect(state.assessmentHistory[0]).toHaveProperty("id");
+        expect(state.assessmentHistory[0]).toHaveProperty("completedAt");
         expect(state.currentAssessment).toBeNull();
         expect(state.currentQuestion).toBe(0);
         expect(state.responses).toEqual({});
@@ -344,10 +406,26 @@ describe("Assessment Slice", () => {
 
       test("should calculate correct severity levels", async () => {
         const testCases = [
-          { responses: { q1: 0, q2: 0, q3: 0 }, expectedSeverity: "Minimal", totalScore: 0 },
-          { responses: { q1: 1, q2: 1, q3: 1 }, expectedSeverity: "Minimal", totalScore: 3 },
-          { responses: { q1: 2, q2: 2, q3: 2 }, expectedSeverity: "Mild", totalScore: 6 },
-          { responses: { q1: 3, q2: 3, q3: 3 }, expectedSeverity: "Mild", totalScore: 9 }
+          {
+            responses: { q1: 0, q2: 0, q3: 0 },
+            expectedSeverity: "Minimal",
+            totalScore: 0,
+          },
+          {
+            responses: { q1: 1, q2: 1, q3: 1 },
+            expectedSeverity: "Minimal",
+            totalScore: 3,
+          },
+          {
+            responses: { q1: 2, q2: 2, q3: 2 },
+            expectedSeverity: "Mild",
+            totalScore: 6,
+          },
+          {
+            responses: { q1: 3, q2: 3, q3: 3 },
+            expectedSeverity: "Mild",
+            totalScore: 9,
+          },
         ];
 
         for (const { responses, expectedSeverity, totalScore } of testCases) {
@@ -360,10 +438,12 @@ describe("Assessment Slice", () => {
 
           global.fetch = jest.fn().mockRejectedValue(new Error("API Error"));
 
-          await store.dispatch(submitAssessment({
-            assessmentId: "phq9",
-            responses
-          }));
+          await store.dispatch(
+            submitAssessment({
+              assessmentId: "phq9",
+              responses,
+            }),
+          );
 
           const state = store.getState().assessment;
           expect(state.assessmentHistory[0].severity).toBe(expectedSeverity);
@@ -374,38 +454,50 @@ describe("Assessment Slice", () => {
       test("should generate appropriate recommendations for PHQ-9", async () => {
         global.fetch = jest.fn().mockRejectedValue(new Error("API Error"));
 
-        await store.dispatch(submitAssessment({
-          assessmentId: "phq9",
-          responses: { q1: 3, q2: 3, q3: 3 } // Moderate score = 9
-        }));
+        await store.dispatch(
+          submitAssessment({
+            assessmentId: "phq9",
+            responses: { q1: 3, q2: 3, q3: 3 }, // Moderate score = 9
+          }),
+        );
 
         const state = store.getState().assessment;
         const recommendations = state.assessmentHistory[0].recommendations;
-        expect(recommendations).toContain("Your responses suggest mild depressive symptoms. Consider incorporating mood-boosting activities.");
-        expect(recommendations).toContain("Regular exercise and social connection can be helpful.");
+        expect(recommendations).toContain(
+          "Your responses suggest mild depressive symptoms. Consider incorporating mood-boosting activities.",
+        );
+        expect(recommendations).toContain(
+          "Regular exercise and social connection can be helpful.",
+        );
       });
 
       test("should generate appropriate recommendations for GAD-7", async () => {
         global.fetch = jest.fn().mockRejectedValue(new Error("API Error"));
 
-        await store.dispatch(submitAssessment({
-          assessmentId: "gad7",
-          responses: { q1: 3, q2: 3, q3: 3 } // Moderate score = 9
-        }));
+        await store.dispatch(
+          submitAssessment({
+            assessmentId: "gad7",
+            responses: { q1: 3, q2: 3, q3: 3 }, // Moderate score = 9
+          }),
+        );
 
         const state = store.getState().assessment;
         const recommendations = state.assessmentHistory[0].recommendations;
-        expect(recommendations).toContain("Your responses suggest mild anxiety symptoms. Try relaxation techniques like deep breathing.");
+        expect(recommendations).toContain(
+          "Your responses suggest mild anxiety symptoms. Try relaxation techniques like deep breathing.",
+        );
       });
 
       test("should handle submission failure gracefully", async () => {
         // Even with API failure, local calculation should work
         global.fetch = jest.fn().mockRejectedValue(new Error("Network Error"));
 
-        await store.dispatch(submitAssessment({
-          assessmentId: "phq9",
-          responses: { q1: 1 }
-        }));
+        await store.dispatch(
+          submitAssessment({
+            assessmentId: "phq9",
+            responses: { q1: 1 },
+          }),
+        );
 
         const state = store.getState().assessment;
         expect(state.loading).toBe(false);
@@ -444,10 +536,12 @@ describe("Assessment Slice", () => {
       expect(state.responses).toEqual({ q1: 2, q2: 1 });
 
       // Submit assessment
-      await store.dispatch(submitAssessment({
-        assessmentId: "phq9",
-        responses: state.responses
-      }));
+      await store.dispatch(
+        submitAssessment({
+          assessmentId: "phq9",
+          responses: state.responses,
+        }),
+      );
 
       state = store.getState().assessment;
       expect(state.currentAssessment).toBeNull();
@@ -479,17 +573,21 @@ describe("Assessment Slice", () => {
 
       // Complete first assessment
       await store.dispatch(startAssessment("phq9"));
-      await store.dispatch(submitAssessment({
-        assessmentId: "phq9",
-        responses: { q1: 1, q2: 1 }
-      }));
+      await store.dispatch(
+        submitAssessment({
+          assessmentId: "phq9",
+          responses: { q1: 1, q2: 1 },
+        }),
+      );
 
       // Complete second assessment
       await store.dispatch(startAssessment("gad7"));
-      await store.dispatch(submitAssessment({
-        assessmentId: "gad7",
-        responses: { q1: 2, q2: 2 }
-      }));
+      await store.dispatch(
+        submitAssessment({
+          assessmentId: "gad7",
+          responses: { q1: 2, q2: 2 },
+        }),
+      );
 
       const state = store.getState().assessment;
       expect(state.assessmentHistory).toHaveLength(2);

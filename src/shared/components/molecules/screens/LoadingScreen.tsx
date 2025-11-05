@@ -1,3 +1,4 @@
+import { useTheme } from "@theme/ThemeProvider";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -10,7 +11,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import { useTheme } from "@theme/ThemeProvider";
 // Mock accessibility hook
 const useAccessibility = () => ({});
 
@@ -197,7 +197,7 @@ const LoadingScreen = ({
               transform: [{ scale: scaleAnim }],
             },
           ]}
-          accessible={true}
+          accessible
           accessibilityRole="progressbar"
           accessibilityLabel={`Loading: ${message}`}
           accessibilityValue={

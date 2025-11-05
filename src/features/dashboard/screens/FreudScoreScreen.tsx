@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/Home & Mental Health Score.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,12 +14,11 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
-import { MentalHealthScoreWidget } from '../components/MentalHealthScoreWidget';
+} from "react-native";
 
-const { width } = Dimensions.get('window');
+import { MentalHealthScoreWidget } from "../components/MentalHealthScoreWidget";
+
+const { width } = Dimensions.get("window");
 
 interface ScoreHistoryItem {
   date: string;
@@ -34,37 +35,39 @@ interface MoodHistoryItem {
 export const FreudScoreScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const [selectedTab, setSelectedTab] = useState<'positive' | 'negative' | 'monthly'>('positive');
+  const [selectedTab, setSelectedTab] = useState<
+    "positive" | "negative" | "monthly"
+  >("positive");
 
   const scoreHistory: ScoreHistoryItem[] = [
-    { date: '12 Oct', score: 75, status: 'Anxious, Depressed' },
-    { date: '11 Oct', score: 82, status: 'Very Happy' },
-    { date: '10 Oct', score: 68, status: 'Neutral' },
+    { date: "12 Oct", score: 75, status: "Anxious, Depressed" },
+    { date: "11 Oct", score: 82, status: "Very Happy" },
+    { date: "10 Oct", score: 68, status: "Neutral" },
   ];
 
-  const moodHistory = ['😢', '😟', '😐', '😊', '😄'];
+  const moodHistory = ["😢", "😟", "😐", "😊", "😄"];
 
   const barChartData = [
-    { label: 'Mon', positive: 60, negative: 30, monthly: 45 },
-    { label: 'Tue', positive: 40, negative: 50, monthly: 55 },
-    { label: 'Wed', positive: 80, negative: 20, monthly: 65 },
-    { label: 'Thu', positive: 55, negative: 35, monthly: 50 },
-    { label: 'Fri', positive: 70, negative: 25, monthly: 60 },
-    { label: 'Sat', positive: 45, negative: 40, monthly: 48 },
-    { label: 'Sun', positive: 85, negative: 15, monthly: 70 },
+    { label: "Mon", positive: 60, negative: 30, monthly: 45 },
+    { label: "Tue", positive: 40, negative: 50, monthly: 55 },
+    { label: "Wed", positive: 80, negative: 20, monthly: 65 },
+    { label: "Thu", positive: 55, negative: 35, monthly: 50 },
+    { label: "Fri", positive: 70, negative: 25, monthly: 60 },
+    { label: "Sat", positive: 45, negative: 40, monthly: 48 },
+    { label: "Sun", positive: 85, negative: 15, monthly: 70 },
   ];
 
   const getBarColor = () => {
-    if (selectedTab === 'positive') return theme.colors.green['60'];
-    if (selectedTab === 'negative') return theme.colors.red['60'];
-    return theme.colors.orange['60'];
+    if (selectedTab === "positive") return theme.colors.green["60"];
+    if (selectedTab === "negative") return theme.colors.red["60"];
+    return theme.colors.orange["60"];
   };
 
   const handleHelp = () => {
     // TODO: Navigate to help screen or show info modal
     // navigation.navigate('FreudScoreHelp');
     if (__DEV__) {
-      console.log('Freud Score help pressed');
+      console.log("Freud Score help pressed");
     }
   };
 
@@ -72,7 +75,7 @@ export const FreudScoreScreen = () => {
     // TODO: Navigate to detailed insights screen
     // navigation.navigate('MentalHealthInsights');
     if (__DEV__) {
-      console.log('See insights pressed');
+      console.log("See insights pressed");
     }
   };
 
@@ -80,7 +83,7 @@ export const FreudScoreScreen = () => {
     // TODO: Navigate to full score history
     // navigation.navigate('ScoreHistory');
     if (__DEV__) {
-      console.log('See all history pressed');
+      console.log("See all history pressed");
     }
   };
 
@@ -90,86 +93,86 @@ export const FreudScoreScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     helpButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     content: {
       flex: 1,
       padding: 20,
     },
     scoreCard: {
-      backgroundColor: theme.colors.green['20'],
+      backgroundColor: theme.colors.green["20"],
       borderRadius: 24,
       padding: 24,
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: 24,
     },
     scoreLabel: {
       fontSize: 16,
-      fontWeight: '700',
-      color: theme.colors.green['100'],
+      fontWeight: "700",
+      color: theme.colors.green["100"],
       marginBottom: 8,
     },
     normalBadge: {
       paddingHorizontal: 12,
       paddingVertical: 6,
       borderRadius: 12,
-      backgroundColor: theme.colors.green['40'],
+      backgroundColor: theme.colors.green["40"],
       marginTop: 8,
     },
     normalText: {
       fontSize: 12,
-      fontWeight: '700',
-      color: theme.colors.green['100'],
+      fontWeight: "700",
+      color: theme.colors.green["100"],
     },
     seeInsightsButton: {
       marginTop: 16,
-      width: '100%',
+      width: "100%",
       height: 48,
-      backgroundColor: theme.colors.brown['60'],
+      backgroundColor: theme.colors.brown["60"],
       borderRadius: 24,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     seeInsightsText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     section: {
       marginBottom: 24,
     },
     sectionHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       marginBottom: 16,
     },
     sectionTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     seeAllButton: {
@@ -178,17 +181,17 @@ export const FreudScoreScreen = () => {
     },
     seeAllText: {
       fontSize: 14,
-      fontWeight: '600',
-      color: theme.colors.brown['60'],
+      fontWeight: "600",
+      color: theme.colors.brown["60"],
     },
     chartCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 20,
       padding: 20,
       marginBottom: 24,
     },
     tabRow: {
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 8,
       marginBottom: 20,
     },
@@ -196,74 +199,74 @@ export const FreudScoreScreen = () => {
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 16,
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
     },
     tabActive: {
-      backgroundColor: theme.colors.brown['60'],
+      backgroundColor: theme.colors.brown["60"],
     },
     tabText: {
       fontSize: 14,
-      fontWeight: '600',
-      color: theme.colors.brown['80'],
+      fontWeight: "600",
+      color: theme.colors.brown["80"],
     },
     tabTextActive: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     chartContainer: {
-      flexDirection: 'row',
-      alignItems: 'flex-end',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "flex-end",
+      justifyContent: "space-between",
       height: 180,
       marginBottom: 12,
     },
     barColumn: {
       flex: 1,
-      alignItems: 'center',
-      justifyContent: 'flex-end',
+      alignItems: "center",
+      justifyContent: "flex-end",
     },
     bar: {
-      width: '70%',
+      width: "70%",
       borderRadius: 6,
       marginBottom: 8,
     },
     barLabel: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     moodHistoryRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       marginTop: 12,
     },
     moodHistoryLabel: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     moodEmojis: {
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 8,
     },
     moodEmoji: {
       fontSize: 20,
     },
     historyCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 16,
       marginBottom: 12,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
     },
     historyDate: {
       width: 50,
     },
     historyDateText: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     historyContent: {
@@ -272,29 +275,29 @@ export const FreudScoreScreen = () => {
     },
     historyStatus: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
       marginBottom: 4,
     },
     historyProgress: {
       fontSize: 10,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.tertiary,
     },
     historyScore: {
-      alignItems: 'center',
+      alignItems: "center",
     },
     scoreCircle: {
       width: 50,
       height: 50,
       borderRadius: 25,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       borderWidth: 4,
     },
     scoreValue: {
       fontSize: 16,
-      fontWeight: '800',
+      fontWeight: "800",
     },
   });
 
@@ -340,7 +343,9 @@ export const FreudScoreScreen = () => {
             accessibilityRole="button"
             accessibilityHint="Opens detailed analysis of your mental health score"
           >
-            <Text style={styles.seeInsightsText}>See your mental score insights</Text>
+            <Text style={styles.seeInsightsText}>
+              See your mental score insights
+            </Text>
           </TouchableOpacity>
         </View>
 
@@ -353,26 +358,50 @@ export const FreudScoreScreen = () => {
           <View style={styles.chartCard}>
             <View style={styles.tabRow}>
               <TouchableOpacity
-                style={[styles.tab, selectedTab === 'positive' && styles.tabActive]}
-                onPress={() => setSelectedTab('positive')}
+                style={[
+                  styles.tab,
+                  selectedTab === "positive" && styles.tabActive,
+                ]}
+                onPress={() => setSelectedTab("positive")}
               >
-                <Text style={[styles.tabText, selectedTab === 'positive' && styles.tabTextActive]}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    selectedTab === "positive" && styles.tabTextActive,
+                  ]}
+                >
                   😊 Positive
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.tab, selectedTab === 'negative' && styles.tabActive]}
-                onPress={() => setSelectedTab('negative')}
+                style={[
+                  styles.tab,
+                  selectedTab === "negative" && styles.tabActive,
+                ]}
+                onPress={() => setSelectedTab("negative")}
               >
-                <Text style={[styles.tabText, selectedTab === 'negative' && styles.tabTextActive]}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    selectedTab === "negative" && styles.tabTextActive,
+                  ]}
+                >
                   😢 Negative
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.tab, selectedTab === 'monthly' && styles.tabActive]}
-                onPress={() => setSelectedTab('monthly')}
+                style={[
+                  styles.tab,
+                  selectedTab === "monthly" && styles.tabActive,
+                ]}
+                onPress={() => setSelectedTab("monthly")}
               >
-                <Text style={[styles.tabText, selectedTab === 'monthly' && styles.tabTextActive]}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    selectedTab === "monthly" && styles.tabTextActive,
+                  ]}
+                >
                   📅 Monthly
                 </Text>
               </TouchableOpacity>
@@ -433,10 +462,10 @@ export const FreudScoreScreen = () => {
           {scoreHistory.map((item, index) => {
             const scoreColor =
               item.score >= 75
-                ? theme.colors.green['60']
+                ? theme.colors.green["60"]
                 : item.score >= 50
-                ? theme.colors.orange['60']
-                : theme.colors.red['60'];
+                  ? theme.colors.orange["60"]
+                  : theme.colors.red["60"];
 
             return (
               <View key={index} style={styles.historyCard}>
@@ -457,7 +486,9 @@ export const FreudScoreScreen = () => {
                       },
                     ]}
                   >
-                    <Text style={[styles.scoreValue, { color: scoreColor }]}>{item.score}</Text>
+                    <Text style={[styles.scoreValue, { color: scoreColor }]}>
+                      {item.score}
+                    </Text>
                   </View>
                 </View>
               </View>

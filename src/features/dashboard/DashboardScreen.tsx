@@ -3,11 +3,19 @@
  * Based on ui-designs/Dark-mode/Home & Mental Health Score.png
  */
 
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
-import { MentalHealthScoreWidget } from './components/MentalHealthScoreWidget';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
+
+import { MentalHealthScoreWidget } from "./components/MentalHealthScoreWidget";
 
 export const DashboardScreen = () => {
   const { theme } = useTheme();
@@ -23,9 +31,9 @@ export const DashboardScreen = () => {
       padding: 20,
     },
     header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'flex-start',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
       marginBottom: 24,
     },
     greeting: {
@@ -34,7 +42,7 @@ export const DashboardScreen = () => {
     },
     title: {
       fontSize: 24,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
@@ -44,11 +52,11 @@ export const DashboardScreen = () => {
     searchButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     metricsGrid: {
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 12,
       marginBottom: 24,
     },
@@ -59,35 +67,35 @@ export const DashboardScreen = () => {
       minHeight: 140,
     },
     scoreCard: {
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
     },
     metricLabel: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       marginBottom: 8,
     },
     metricValue: {
       fontSize: 48,
-      fontWeight: '800',
+      fontWeight: "800",
       marginVertical: 8,
     },
     metricSubtext: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     section: {
       marginBottom: 24,
     },
     sectionTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 12,
     },
     trackerCard: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       padding: 16,
       borderRadius: 16,
       marginBottom: 8,
@@ -95,8 +103,8 @@ export const DashboardScreen = () => {
     trackerIcon: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     trackerContent: {
       flex: 1,
@@ -104,22 +112,22 @@ export const DashboardScreen = () => {
     },
     trackerTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       marginBottom: 2,
     },
     trackerSubtitle: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     trackerProgress: {
       width: 60,
       height: 4,
-      backgroundColor: 'rgba(0,0,0,0.1)',
+      backgroundColor: "rgba(0,0,0,0.1)",
       borderRadius: 2,
-      overflow: 'hidden',
+      overflow: "hidden",
     },
     progressBar: {
-      height: '100%',
+      height: "100%",
       borderRadius: 2,
     },
     aiCard: {
@@ -128,30 +136,30 @@ export const DashboardScreen = () => {
       marginBottom: 20,
     },
     aiHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       marginBottom: 16,
     },
     aiTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
     },
     aiStats: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       marginBottom: 8,
     },
     aiStat: {},
     aiStatValue: {
       fontSize: 32,
-      fontWeight: '800',
+      fontWeight: "800",
       marginBottom: 4,
     },
     aiStatLabel: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     aiMessages: {},
     aiSubtext: {
@@ -161,9 +169,9 @@ export const DashboardScreen = () => {
 
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
   };
 
   return (
@@ -172,13 +180,15 @@ export const DashboardScreen = () => {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={[styles.greeting, { color: theme.colors.text.secondary }]}>
+            <Text
+              style={[styles.greeting, { color: theme.colors.text.secondary }]}
+            >
               Tue, 28 Oct 2025
             </Text>
-            <Text style={styles.title}>
-              Hi, Shinomiya!
-            </Text>
-            <Text style={[styles.subtitle, { color: theme.colors.text.secondary }]}>
+            <Text style={styles.title}>Hi, Shinomiya!</Text>
+            <Text
+              style={[styles.subtitle, { color: theme.colors.text.secondary }]}
+            >
               By You · 😊 Happy
             </Text>
           </View>
@@ -190,26 +200,50 @@ export const DashboardScreen = () => {
         {/* Mental Health Metrics Grid */}
         <View style={styles.metricsGrid}>
           <TouchableOpacity
-            style={[styles.metricCard, styles.scoreCard, { backgroundColor: theme.colors.green['20'] }]}
-            onPress={() => navigation.navigate('FreudScore')}
+            style={[
+              styles.metricCard,
+              styles.scoreCard,
+              { backgroundColor: theme.colors.green["20"] },
+            ]}
+            onPress={() => navigation.navigate("FreudScore")}
           >
-            <Text style={[styles.metricLabel, { color: theme.colors.green['100'] }]}>
+            <Text
+              style={[styles.metricLabel, { color: theme.colors.green["100"] }]}
+            >
               Freud Score
             </Text>
             <MentalHealthScoreWidget score={80} size={100} label="" />
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.metricCard, { backgroundColor: theme.colors.orange['20'] }]}
-            onPress={() => navigation.navigate('MoodStats')}
+            style={[
+              styles.metricCard,
+              { backgroundColor: theme.colors.orange["20"] },
+            ]}
+            onPress={() => navigation.navigate("MoodStats")}
           >
-            <Text style={[styles.metricLabel, { color: theme.colors.orange['100'] }]}>
+            <Text
+              style={[
+                styles.metricLabel,
+                { color: theme.colors.orange["100"] },
+              ]}
+            >
               Mood
             </Text>
-            <Text style={[styles.metricValue, { color: theme.colors.orange['100'] }]}>
+            <Text
+              style={[
+                styles.metricValue,
+                { color: theme.colors.orange["100"] },
+              ]}
+            >
               😊
             </Text>
-            <Text style={[styles.metricSubtext, { color: theme.colors.orange['80'] }]}>
+            <Text
+              style={[
+                styles.metricSubtext,
+                { color: theme.colors.orange["80"] },
+              ]}
+            >
               Happy today
             </Text>
           </TouchableOpacity>
@@ -220,94 +254,174 @@ export const DashboardScreen = () => {
           <Text style={styles.sectionTitle}>Mindful Tracker</Text>
 
           <TouchableOpacity
-            style={[styles.trackerCard, { backgroundColor: theme.colors.green['20'] }]}
-            onPress={() => navigation.navigate('MindfulHours')}
+            style={[
+              styles.trackerCard,
+              { backgroundColor: theme.colors.green["20"] },
+            ]}
+            onPress={() => navigation.navigate("MindfulHours")}
           >
             <View style={styles.trackerIcon}>
               <Text style={{ fontSize: 24 }}>🫁</Text>
             </View>
             <View style={styles.trackerContent}>
-              <Text style={[styles.trackerTitle, { color: theme.colors.green['100'] }]}>
+              <Text
+                style={[
+                  styles.trackerTitle,
+                  { color: theme.colors.green["100"] },
+                ]}
+              >
                 Mindful Hours
               </Text>
-              <Text style={[styles.trackerSubtitle, { color: theme.colors.green['80'] }]}>
+              <Text
+                style={[
+                  styles.trackerSubtitle,
+                  { color: theme.colors.green["80"] },
+                ]}
+              >
                 5.21h
               </Text>
             </View>
             <View style={styles.trackerProgress}>
-              <View style={[styles.progressBar, { backgroundColor: theme.colors.green['40'] }]} />
+              <View
+                style={[
+                  styles.progressBar,
+                  { backgroundColor: theme.colors.green["40"] },
+                ]}
+              />
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.trackerCard, { backgroundColor: theme.colors.purple['20'] }]}
-            onPress={() => navigation.navigate('SleepQuality')}
+            style={[
+              styles.trackerCard,
+              { backgroundColor: theme.colors.purple["20"] },
+            ]}
+            onPress={() => navigation.navigate("SleepQuality")}
           >
             <View style={styles.trackerIcon}>
               <Text style={{ fontSize: 24 }}>⭐</Text>
             </View>
             <View style={styles.trackerContent}>
-              <Text style={[styles.trackerTitle, { color: theme.colors.purple['100'] }]}>
+              <Text
+                style={[
+                  styles.trackerTitle,
+                  { color: theme.colors.purple["100"] },
+                ]}
+              >
                 Sleep Quality
               </Text>
-              <Text style={[styles.trackerSubtitle, { color: theme.colors.purple['80'] }]}>
+              <Text
+                style={[
+                  styles.trackerSubtitle,
+                  { color: theme.colors.purple["80"] },
+                ]}
+              >
                 Insomnia (7h Avg)
               </Text>
             </View>
             <View style={styles.trackerProgress}>
-              <View style={[styles.progressBar, { backgroundColor: theme.colors.purple['40'], width: '60%' }]} />
+              <View
+                style={[
+                  styles.progressBar,
+                  { backgroundColor: theme.colors.purple["40"], width: "60%" },
+                ]}
+              />
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.trackerCard, { backgroundColor: theme.colors.orange['20'] }]}
-            onPress={() => navigation.navigate('JournalList')}
+            style={[
+              styles.trackerCard,
+              { backgroundColor: theme.colors.orange["20"] },
+            ]}
+            onPress={() => navigation.navigate("JournalList")}
           >
             <View style={styles.trackerIcon}>
               <Text style={{ fontSize: 24 }}>📖</Text>
             </View>
             <View style={styles.trackerContent}>
-              <Text style={[styles.trackerTitle, { color: theme.colors.orange['100'] }]}>
+              <Text
+                style={[
+                  styles.trackerTitle,
+                  { color: theme.colors.orange["100"] },
+                ]}
+              >
                 Mindful Journal
               </Text>
-              <Text style={[styles.trackerSubtitle, { color: theme.colors.orange['80'] }]}>
+              <Text
+                style={[
+                  styles.trackerSubtitle,
+                  { color: theme.colors.orange["80"] },
+                ]}
+              >
                 44 logs (streak)
               </Text>
             </View>
             <View style={styles.trackerProgress}>
-              <View style={[styles.progressBar, { backgroundColor: theme.colors.orange['40'], width: '80%' }]} />
+              <View
+                style={[
+                  styles.progressBar,
+                  { backgroundColor: theme.colors.orange["40"], width: "80%" },
+                ]}
+              />
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.trackerCard, { backgroundColor: theme.colors.yellow['20'] }]}
-            onPress={() => navigation.navigate('StressLevel')}
+            style={[
+              styles.trackerCard,
+              { backgroundColor: theme.colors.yellow["20"] },
+            ]}
+            onPress={() => navigation.navigate("StressLevel")}
           >
             <View style={styles.trackerIcon}>
               <Text style={{ fontSize: 24 }}>😤</Text>
             </View>
             <View style={styles.trackerContent}>
-              <Text style={[styles.trackerTitle, { color: theme.colors.yellow['100'] }]}>
+              <Text
+                style={[
+                  styles.trackerTitle,
+                  { color: theme.colors.yellow["100"] },
+                ]}
+              >
                 Stress Level
               </Text>
-              <Text style={[styles.trackerSubtitle, { color: theme.colors.yellow['80'] }]}>
+              <Text
+                style={[
+                  styles.trackerSubtitle,
+                  { color: theme.colors.yellow["80"] },
+                ]}
+              >
                 Level 3 (Normal)
               </Text>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.trackerCard, { backgroundColor: theme.colors.brown['20'] }]}
-            onPress={() => navigation.navigate('MoodTracker')}
+            style={[
+              styles.trackerCard,
+              { backgroundColor: theme.colors.brown["20"] },
+            ]}
+            onPress={() => navigation.navigate("MoodTracker")}
           >
             <View style={styles.trackerIcon}>
               <Text style={{ fontSize: 24 }}>😊</Text>
             </View>
             <View style={styles.trackerContent}>
-              <Text style={[styles.trackerTitle, { color: theme.colors.brown['100'] }]}>
+              <Text
+                style={[
+                  styles.trackerTitle,
+                  { color: theme.colors.brown["100"] },
+                ]}
+              >
                 Mood Tracker
               </Text>
-              <Text style={[styles.trackerSubtitle, { color: theme.colors.brown['80'] }]}>
+              <Text
+                style={[
+                  styles.trackerSubtitle,
+                  { color: theme.colors.brown["80"] },
+                ]}
+              >
                 😊 Happy (Today)
               </Text>
             </View>
@@ -316,11 +430,13 @@ export const DashboardScreen = () => {
 
         {/* AI Therapy Chatbot */}
         <TouchableOpacity
-          style={[styles.aiCard, { backgroundColor: theme.colors.gray['20'] }]}
-          onPress={() => navigation.navigate('Chat')}
+          style={[styles.aiCard, { backgroundColor: theme.colors.gray["20"] }]}
+          onPress={() => navigation.navigate("Chat")}
         >
           <View style={styles.aiHeader}>
-            <Text style={[styles.aiTitle, { color: theme.colors.text.primary }]}>
+            <Text
+              style={[styles.aiTitle, { color: theme.colors.text.primary }]}
+            >
               AI Therapy Chatbot
             </Text>
             <TouchableOpacity>
@@ -329,10 +445,20 @@ export const DashboardScreen = () => {
           </View>
           <View style={styles.aiStats}>
             <View style={styles.aiStat}>
-              <Text style={[styles.aiStatValue, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.aiStatValue,
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 2,541
               </Text>
-              <Text style={[styles.aiStatLabel, { color: theme.colors.text.secondary }]}>
+              <Text
+                style={[
+                  styles.aiStatLabel,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
                 Conversations
               </Text>
             </View>
@@ -340,7 +466,9 @@ export const DashboardScreen = () => {
               <Text style={{ fontSize: 40 }}>💬</Text>
             </View>
           </View>
-          <Text style={[styles.aiSubtext, { color: theme.colors.text.secondary }]}>
+          <Text
+            style={[styles.aiSubtext, { color: theme.colors.text.secondary }]}
+          >
             10:14 am this month · Get Pro Now!
           </Text>
         </TouchableOpacity>

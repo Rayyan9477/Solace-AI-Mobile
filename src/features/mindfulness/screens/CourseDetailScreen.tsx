@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/Mindful Resources.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,9 +13,7 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface Lesson {
   id: string;
@@ -29,21 +29,46 @@ export const CourseDetailScreen = () => {
   const [isPremium] = useState(false);
 
   const course = {
-    title: 'Mindfulness 101',
-    instructor: 'Dr. Norihual Lenter',
+    title: "Mindfulness 101",
+    instructor: "Dr. Norihual Lenter",
     rating: 4.7,
-    students: '13K',
+    students: "13K",
     lessons: 43,
-    image: 'meditation.jpg',
-    description: 'This course will teach you how to be mindful in your life. Prepare to be Enlightened!',
-    tags: ['Course', 'Practice'],
+    image: "meditation.jpg",
+    description:
+      "This course will teach you how to be mindful in your life. Prepare to be Enlightened!",
+    tags: ["Course", "Practice"],
   };
 
   const lessons: Lesson[] = [
-    { id: '1', title: 'Meditation Intro', duration: '~10 Min', rating: 4.8, isCompleted: false },
-    { id: '2', title: 'Self Reflection', duration: '~15 Min', rating: 5.0, isCompleted: false },
-    { id: '3', title: 'First Session', duration: '~20 Min', rating: 4.1, isCompleted: false },
-    { id: '4', title: 'How To Be Happy', duration: '~10 Min', rating: 4.9, isCompleted: false },
+    {
+      id: "1",
+      title: "Meditation Intro",
+      duration: "~10 Min",
+      rating: 4.8,
+      isCompleted: false,
+    },
+    {
+      id: "2",
+      title: "Self Reflection",
+      duration: "~15 Min",
+      rating: 5.0,
+      isCompleted: false,
+    },
+    {
+      id: "3",
+      title: "First Session",
+      duration: "~20 Min",
+      rating: 4.1,
+      isCompleted: false,
+    },
+    {
+      id: "4",
+      title: "How To Be Happy",
+      duration: "~10 Min",
+      rating: 4.9,
+      isCompleted: false,
+    },
   ];
 
   const styles = StyleSheet.create({
@@ -52,34 +77,34 @@ export const CourseDetailScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
       flex: 1,
     },
     coverImage: {
-      width: '100%',
+      width: "100%",
       height: 240,
-      backgroundColor: theme.colors.gray['20'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.gray["20"],
+      justifyContent: "center",
+      alignItems: "center",
     },
     coverImageText: {
       fontSize: 48,
@@ -88,7 +113,7 @@ export const CourseDetailScreen = () => {
       padding: 20,
     },
     tags: {
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 8,
       marginBottom: 12,
     },
@@ -96,28 +121,28 @@ export const CourseDetailScreen = () => {
       paddingHorizontal: 12,
       paddingVertical: 6,
       borderRadius: 12,
-      backgroundColor: theme.colors.orange['20'],
+      backgroundColor: theme.colors.orange["20"],
     },
     tagText: {
       fontSize: 11,
-      fontWeight: '700',
-      color: theme.colors.orange['80'],
+      fontWeight: "700",
+      color: theme.colors.orange["80"],
     },
     title: {
       fontSize: 24,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 12,
     },
     stats: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 16,
       marginBottom: 16,
     },
     stat: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 4,
     },
     statIcon: {
@@ -125,26 +150,26 @@ export const CourseDetailScreen = () => {
     },
     statText: {
       fontSize: 13,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     instructorRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       marginBottom: 20,
     },
     instructorInfo: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
     },
     instructorAvatar: {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.orange['40'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.orange["40"],
+      justifyContent: "center",
+      alignItems: "center",
       marginRight: 12,
     },
     instructorAvatarText: {
@@ -152,19 +177,19 @@ export const CourseDetailScreen = () => {
     },
     instructorName: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     followButton: {
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 12,
-      backgroundColor: theme.colors.orange['60'],
+      backgroundColor: theme.colors.orange["60"],
     },
     followButtonText: {
       fontSize: 12,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     description: {
       fontSize: 15,
@@ -173,10 +198,10 @@ export const CourseDetailScreen = () => {
       marginBottom: 20,
     },
     downloadSection: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      backgroundColor: theme.colors.brown['10'],
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 16,
       marginBottom: 24,
@@ -186,22 +211,22 @@ export const CourseDetailScreen = () => {
     },
     downloadTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
     downloadSize: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     downloadButton: {
       width: 48,
       height: 48,
       borderRadius: 24,
-      backgroundColor: theme.colors.purple['60'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.purple["60"],
+      justifyContent: "center",
+      alignItems: "center",
     },
     downloadIcon: {
       fontSize: 20,
@@ -211,100 +236,100 @@ export const CourseDetailScreen = () => {
     },
     lessonsTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     lessonCard: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 16,
       marginBottom: 12,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
     },
     playButton: {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['60'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.brown["60"],
+      justifyContent: "center",
+      alignItems: "center",
       marginRight: 12,
     },
     playIcon: {
       fontSize: 16,
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     lessonInfo: {
       flex: 1,
     },
     lessonTitle: {
       fontSize: 15,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
     lessonMeta: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 12,
     },
     lessonDuration: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     lessonRating: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 4,
     },
     ratingText: {
       fontSize: 12,
-      fontWeight: '600',
-      color: theme.colors.orange['80'],
+      fontWeight: "600",
+      color: theme.colors.orange["80"],
     },
     premiumOverlay: {
-      backgroundColor: theme.colors.orange['20'],
+      backgroundColor: theme.colors.orange["20"],
       borderRadius: 20,
       padding: 24,
       marginHorizontal: 20,
       marginVertical: 24,
-      alignItems: 'center',
+      alignItems: "center",
     },
     premiumBadge: {
       paddingHorizontal: 12,
       paddingVertical: 6,
       borderRadius: 12,
-      backgroundColor: theme.colors.orange['40'],
+      backgroundColor: theme.colors.orange["40"],
       marginBottom: 12,
     },
     premiumBadgeText: {
       fontSize: 11,
-      fontWeight: '700',
-      color: theme.colors.orange['100'],
+      fontWeight: "700",
+      color: theme.colors.orange["100"],
     },
     premiumTitle: {
       fontSize: 20,
-      fontWeight: '800',
-      color: theme.colors.orange['100'],
+      fontWeight: "800",
+      color: theme.colors.orange["100"],
       marginBottom: 20,
-      textAlign: 'center',
+      textAlign: "center",
     },
     premiumButton: {
-      backgroundColor: theme.colors.orange['60'],
+      backgroundColor: theme.colors.orange["60"],
       borderRadius: 16,
       paddingVertical: 14,
       paddingHorizontal: 32,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 8,
     },
     premiumButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
   });
 
@@ -395,7 +420,9 @@ export const CourseDetailScreen = () => {
                 <View style={styles.lessonInfo}>
                   <Text style={styles.lessonTitle}>{lesson.title}</Text>
                   <View style={styles.lessonMeta}>
-                    <Text style={styles.lessonDuration}>⏱️ {lesson.duration}</Text>
+                    <Text style={styles.lessonDuration}>
+                      ⏱️ {lesson.duration}
+                    </Text>
                     <View style={styles.lessonRating}>
                       <Text style={{ fontSize: 12 }}>⭐</Text>
                       <Text style={styles.ratingText}>{lesson.rating}</Text>

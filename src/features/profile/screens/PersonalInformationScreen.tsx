@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/Profile Settings & Help Center.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,20 +14,18 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TextInput,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 export const PersonalInformationScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const [name, setName] = useState('Shinomiya Kaguya');
-  const [email, setEmail] = useState('kaguya@example.com');
-  const [phone, setPhone] = useState('+1 234 567 8900');
-  const [dateOfBirth, setDateOfBirth] = useState('Jan 1, 2000');
-  const [gender, setGender] = useState('Female');
+  const [name, setName] = useState("Shinomiya Kaguya");
+  const [email, setEmail] = useState("kaguya@example.com");
+  const [phone, setPhone] = useState("+1 234 567 8900");
+  const [dateOfBirth, setDateOfBirth] = useState("Jan 1, 2000");
+  const [gender, setGender] = useState("Female");
 
-  const avatars = ['👨', '👩', '🧑', '👴', '👵'];
+  const avatars = ["👨", "👩", "🧑", "👴", "👵"];
 
   const styles = StyleSheet.create({
     container: {
@@ -33,23 +33,23 @@ export const PersonalInformationScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
@@ -57,32 +57,32 @@ export const PersonalInformationScreen = () => {
       padding: 20,
     },
     avatarSection: {
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: 32,
     },
     avatarLabel: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
       marginBottom: 16,
     },
     avatarRow: {
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 12,
     },
     avatarButton: {
       width: 64,
       height: 64,
       borderRadius: 32,
-      backgroundColor: theme.colors.brown['20'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.brown["20"],
+      justifyContent: "center",
+      alignItems: "center",
       borderWidth: 2,
-      borderColor: 'transparent',
+      borderColor: "transparent",
     },
     avatarButtonSelected: {
-      borderColor: theme.colors.brown['60'],
-      backgroundColor: theme.colors.brown['40'],
+      borderColor: theme.colors.brown["60"],
+      backgroundColor: theme.colors.brown["40"],
     },
     avatarEmoji: {
       fontSize: 32,
@@ -95,33 +95,33 @@ export const PersonalInformationScreen = () => {
     },
     inputLabel: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
     input: {
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 12,
       paddingHorizontal: 16,
       paddingVertical: 14,
       fontSize: 15,
       color: theme.colors.text.primary,
       borderWidth: 1,
-      borderColor: theme.colors.gray['20'],
+      borderColor: theme.colors.gray["20"],
     },
     inputFocused: {
-      borderColor: theme.colors.brown['60'],
+      borderColor: theme.colors.brown["60"],
     },
     saveButton: {
-      backgroundColor: theme.colors.brown['60'],
+      backgroundColor: theme.colors.brown["60"],
       borderRadius: 16,
       paddingVertical: 16,
-      alignItems: 'center',
+      alignItems: "center",
     },
     saveButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
   });
 
@@ -150,7 +150,10 @@ export const PersonalInformationScreen = () => {
             {avatars.map((avatar, index) => (
               <TouchableOpacity
                 key={index}
-                style={[styles.avatarButton, index === 1 && styles.avatarButtonSelected]}
+                style={[
+                  styles.avatarButton,
+                  index === 1 && styles.avatarButtonSelected,
+                ]}
               >
                 <Text style={styles.avatarEmoji}>{avatar}</Text>
               </TouchableOpacity>

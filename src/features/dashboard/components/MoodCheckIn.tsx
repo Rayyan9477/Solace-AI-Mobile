@@ -1,3 +1,7 @@
+import { useTheme } from "@theme/ThemeProvider";
+import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
+import PropTypes from "prop-types";
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -6,13 +10,8 @@ import {
   Animated,
   StyleSheet,
   Platform,
+  AccessibilityInfo,
 } from "react-native";
-import { AccessibilityInfo } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import * as Haptics from "expo-haptics";
-import PropTypes from "prop-types";
-
-import { useTheme } from "@theme/ThemeProvider";
 
 /**
  * MoodCheckIn Component
@@ -37,7 +36,7 @@ const MoodCheckIn = ({
 
   // Track render start for performance reporting
   useEffect(() => {
-    if (typeof performance !== 'undefined' && performance.now) {
+    if (typeof performance !== "undefined" && performance.now) {
       renderStartRef.current = performance.now();
     }
   }, []);
@@ -108,7 +107,7 @@ const MoodCheckIn = ({
             duration: 1000,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       );
       pulse.start();
 
@@ -130,13 +129,24 @@ const MoodCheckIn = ({
   };
   // Performance tracking hook
   useEffect(() => {
-    if (performanceTracker && typeof performanceTracker.trackAnimation === 'function') {
-      try { performanceTracker.trackAnimation('mood-checkin-mounted'); } catch {}
+    if (
+      performanceTracker &&
+      typeof performanceTracker.trackAnimation === "function"
+    ) {
+      try {
+        performanceTracker.trackAnimation("mood-checkin-mounted");
+      } catch {}
     }
-    if (renderStartRef.current != null && typeof performance !== 'undefined' && performance.now) {
+    if (
+      renderStartRef.current != null &&
+      typeof performance !== "undefined" &&
+      performance.now
+    ) {
       const duration = performance.now() - renderStartRef.current;
       if (onPerformanceIssue && duration > 150) {
-        try { onPerformanceIssue({ type: 'slow_render', duration }); } catch {}
+        try {
+          onPerformanceIssue({ type: "slow_render", duration });
+        } catch {}
       }
     }
   }, []);
@@ -144,7 +154,7 @@ const MoodCheckIn = ({
   const announceMood = (moodId?: string) => {
     try {
       AccessibilityInfo.announceForAccessibility?.(
-        `mood ${moodId || selectedMood || 'selected'}`,
+        `mood ${moodId || selectedMood || "selected"}`,
       );
     } catch {}
   };
@@ -181,10 +191,10 @@ const MoodCheckIn = ({
       testID={testID}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
-      {...({ accessibilityRole: 'group' } as any)}
+      {...({ accessibilityRole: "group" } as any)}
       accessibilityState={{ disabled }}
       accessibilityValue={getAccessibilityValue()}
-      accessible={true}
+      accessible
     >
       <LinearGradient
         colors={[
@@ -199,7 +209,7 @@ const MoodCheckIn = ({
               // Allow quick check-in via title press in tests
               if (disabled) return;
               if (onCheckIn) {
-                const chosen = selectedMood || 'happy';
+                const chosen = selectedMood || "happy";
                 onCheckIn(chosen, { timestamp: new Date().toISOString() });
                 announceMood(chosen);
               }
@@ -208,12 +218,12 @@ const MoodCheckIn = ({
             accessibilityLabel="How are you feeling?"
           >
             <Text
-            style={[
-              styles.title,
-              { color: theme.colors.text?.primary || "#000000" },
-            ]}
-          >
-            How are you feeling?
+              style={[
+                styles.title,
+                { color: theme.colors.text?.primary || "#000000" },
+              ]}
+            >
+              How are you feeling?
             </Text>
           </TouchableOpacity>
 
@@ -255,7 +265,7 @@ const MoodCheckIn = ({
                   selected: selectedMood === mood.id,
                   disabled,
                 }}
-                accessible={true}
+                accessible
               >
                 <Text style={styles.moodEmoji}>{mood.emoji}</Text>
                 <Text
@@ -286,8 +296,10 @@ const MoodCheckIn = ({
             ]}
             onPress={() => {
               if (disabled) return;
-              const chosenId = selectedMood || 'happy';
-              const mood = moodOptions.find((m) => m.id === chosenId) || { id: chosenId, emoji: '', label: chosenId } as any;
+              const chosenId = selectedMood || "happy";
+              const mood =
+                moodOptions.find((m) => m.id === chosenId) ||
+                ({ id: chosenId, emoji: "", label: chosenId } as any);
               if (onCheckIn) {
                 onCheckIn(chosenId, {
                   timestamp: new Date().toISOString(),
@@ -303,8 +315,8 @@ const MoodCheckIn = ({
             accessibilityLabel="Check in with selected mood"
             accessibilityHint="Submit your current mood selection and get support if needed"
             accessibilityRole="button"
-            accessibilityState={{ disabled: disabled }}
-            accessible={true}
+            accessibilityState={{ disabled }}
+            accessible
           >
             <Text
               style={[

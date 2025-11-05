@@ -3,14 +3,9 @@
  * Simple tab bar for navigation
  */
 
-import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const BottomTabBar = ({ state, navigation }) => {
   const { index, routes } = state;
@@ -24,10 +19,7 @@ const BottomTabBar = ({ state, navigation }) => {
       {routes.map((route, routeIndex) => (
         <TouchableOpacity
           key={route.key}
-          style={[
-            styles.tab,
-            index === routeIndex && styles.activeTab,
-          ]}
+          style={[styles.tab, index === routeIndex && styles.activeTab]}
           onPress={() => handleTabPress(route)}
           testID={`tab-${route.key}`}
           accessibilityRole="tab"
@@ -55,7 +47,7 @@ BottomTabBar.propTypes = {
       PropTypes.shape({
         key: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
-      })
+      }),
     ).isRequired,
   }).isRequired,
   navigation: PropTypes.shape({
@@ -65,29 +57,29 @@ BottomTabBar.propTypes = {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
+    flexDirection: "row",
+    backgroundColor: "#FFFFFF",
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: "#E5E7EB",
     paddingBottom: 20, // Account for safe area
   },
   tab: {
     flex: 1,
     paddingVertical: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   activeTab: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: "#F3F4F6",
   },
   tabText: {
     fontSize: 14,
-    color: '#6B7280',
-    fontWeight: '500',
+    color: "#6B7280",
+    fontWeight: "500",
   },
   activeTabText: {
-    color: '#2563EB',
-    fontWeight: '600',
+    color: "#2563EB",
+    fontWeight: "600",
   },
 });
 

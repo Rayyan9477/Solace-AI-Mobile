@@ -328,7 +328,9 @@ class SmartNotificationManager {
   async createNotificationChannels(): Promise<void> {
     if (Platform.OS !== "android") return;
 
-    for (const channel of Object.values(this.notificationChannels) as NotificationChannel[]) {
+    for (const channel of Object.values(
+      this.notificationChannels,
+    ) as NotificationChannel[]) {
       await Notifications.setNotificationChannelAsync(channel.id, {
         name: channel.name,
         description: channel.description,
@@ -415,7 +417,9 @@ class SmartNotificationManager {
   /**
    * Save user notification preferences
    */
-  async saveNotificationPreferences(preferences: Partial<NotificationPreferences>): Promise<void> {
+  async saveNotificationPreferences(
+    preferences: Partial<NotificationPreferences>,
+  ): Promise<void> {
     try {
       this.userPreferences = { ...this.userPreferences, ...preferences };
       await AsyncStorage.setItem(
@@ -515,7 +519,9 @@ class SmartNotificationManager {
   /**
    * Calculate optimal time for mood reminders based on user patterns
    */
-  async calculateOptimalMoodReminderTime(moodHistory: MoodEntry[]): Promise<string> {
+  async calculateOptimalMoodReminderTime(
+    moodHistory: MoodEntry[],
+  ): Promise<string> {
     if (!moodHistory || moodHistory.length < 10) {
       return this.userPreferences.mood_reminders.time; // Use default if insufficient data
     }
@@ -545,7 +551,10 @@ class SmartNotificationManager {
   /**
    * Schedule therapy session reminders
    */
-  async scheduleTherapySessionReminder(sessionDateTime: string, sessionDetails: SessionDetails = {}): Promise<void> {
+  async scheduleTherapySessionReminder(
+    sessionDateTime: string,
+    sessionDetails: SessionDetails = {},
+  ): Promise<void> {
     if (!this.userPreferences.therapy_sessions.enabled) return;
 
     const sessionTime = parseISO(sessionDateTime);
@@ -712,7 +721,9 @@ class SmartNotificationManager {
   /**
    * Schedule intelligent adaptive notifications based on user patterns
    */
-  async scheduleAdaptiveNotifications(userAnalytics: UserAnalytics): Promise<void> {
+  async scheduleAdaptiveNotifications(
+    userAnalytics: UserAnalytics,
+  ): Promise<void> {
     if (!this.userPreferences.adaptive.enabled) return;
 
     const { moodPatterns, usagePatterns, riskFactors } = userAnalytics;
@@ -742,31 +753,48 @@ class SmartNotificationManager {
   }
 
   // Placeholder methods for adaptive notification features
-  private async adjustNotificationTimingForMoodPatterns(lowMoodTimes: string[]): Promise<void> {
+  private async adjustNotificationTimingForMoodPatterns(
+    lowMoodTimes: string[],
+  ): Promise<void> {
     // Implementation placeholder
     if (__DEV__) {
-      console.log("Adjusting notification timing for mood patterns", lowMoodTimes);
+      console.log(
+        "Adjusting notification timing for mood patterns",
+        lowMoodTimes,
+      );
     }
   }
 
-  private async scheduleAdditionalSupportDuringRiskPeriods(highRiskPeriods: string[]): Promise<void> {
+  private async scheduleAdditionalSupportDuringRiskPeriods(
+    highRiskPeriods: string[],
+  ): Promise<void> {
     // Implementation placeholder
     if (__DEV__) {
-      console.log("Scheduling additional support during risk periods", highRiskPeriods);
+      console.log(
+        "Scheduling additional support during risk periods",
+        highRiskPeriods,
+      );
     }
   }
 
-  private async adjustNotificationFrequencyByEngagement(usagePatterns: any): Promise<void> {
+  private async adjustNotificationFrequencyByEngagement(
+    usagePatterns: any,
+  ): Promise<void> {
     // Implementation placeholder
     if (__DEV__) {
-      console.log("Adjusting notification frequency by engagement", usagePatterns);
+      console.log(
+        "Adjusting notification frequency by engagement",
+        usagePatterns,
+      );
     }
   }
 
   /**
    * Schedule recurring notification
    */
-  async scheduleRecurringNotification(config: RecurringNotificationConfig): Promise<void> {
+  async scheduleRecurringNotification(
+    config: RecurringNotificationConfig,
+  ): Promise<void> {
     const { id, channelId, title, body, time, repeat, data } = config;
 
     const [hours, minutes] = time.split(":").map(Number);
@@ -805,7 +833,8 @@ class SmartNotificationManager {
     const scheduledNotifications =
       await Notifications.getAllScheduledNotificationsAsync();
     const categoryNotifications = scheduledNotifications.filter(
-      (notification: any) => notification.content.categoryIdentifier === category,
+      (notification: any) =>
+        notification.content.categoryIdentifier === category,
     );
 
     for (const notification of categoryNotifications) {
@@ -835,7 +864,10 @@ class SmartNotificationManager {
   /**
    * Handle notification interaction
    */
-  async handleNotificationInteraction(notification: any, actionType: string = "opened"): Promise<any> {
+  async handleNotificationInteraction(
+    notification: any,
+    actionType: string = "opened",
+  ): Promise<any> {
     const { data } = notification.request.content;
 
     // Log interaction for analytics
@@ -881,7 +913,10 @@ class SmartNotificationManager {
   /**
    * Log notification interaction for analytics
    */
-  async logNotificationInteraction(notification: any, actionType: string): Promise<void> {
+  async logNotificationInteraction(
+    notification: any,
+    actionType: string,
+  ): Promise<void> {
     try {
       const interaction: NotificationInteraction = {
         timestamp: new Date().toISOString(),
@@ -942,7 +977,10 @@ class SmartNotificationManager {
       });
 
       // Most effective times
-      const timeEffectiveness: Record<number, { sent: number; opened: number }> = {};
+      const timeEffectiveness: Record<
+        number,
+        { sent: number; opened: number }
+      > = {};
       recentInteractions.forEach((log: NotificationInteraction) => {
         const hour = new Date(log.timestamp).getHours();
         if (!timeEffectiveness[hour]) {
@@ -972,7 +1010,9 @@ class SmartNotificationManager {
   /**
    * Generate recommendations based on notification analytics
    */
-  generateNotificationRecommendations(interactions: NotificationInteraction[]): string[] {
+  generateNotificationRecommendations(
+    interactions: NotificationInteraction[],
+  ): string[] {
     const recommendations: string[] = [];
 
     if (interactions.length === 0) {
@@ -992,13 +1032,17 @@ class SmartNotificationManager {
     });
 
     // Find most and least engaging types
-    const engagementRates: EngagementRate[] = Object.entries(typeEngagement).map(
-      ([type, stats]) => ({
-        type,
-        rate: (stats as { sent: number; opened: number }).sent > 0 ? (stats as { sent: number; opened: number }).opened / (stats as { sent: number; opened: number }).sent : 0,
-        count: (stats as { sent: number; opened: number }).sent,
-      }),
-    );
+    const engagementRates: EngagementRate[] = Object.entries(
+      typeEngagement,
+    ).map(([type, stats]) => ({
+      type,
+      rate:
+        (stats as { sent: number; opened: number }).sent > 0
+          ? (stats as { sent: number; opened: number }).opened /
+            (stats as { sent: number; opened: number }).sent
+          : 0,
+      count: (stats as { sent: number; opened: number }).sent,
+    }));
 
     const highEngagement = engagementRates.filter(
       (item) => item.rate > 0.7 && item.count >= 5,

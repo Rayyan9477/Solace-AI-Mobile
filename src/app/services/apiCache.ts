@@ -17,8 +17,8 @@ class APICache {
    * Generate cache key from URL and options
    */
   private getCacheKey(url: string, options?: any): string {
-    const method = options?.method || 'GET';
-    const body = options?.body ? JSON.stringify(options.body) : '';
+    const method = options?.method || "GET";
+    const body = options?.body ? JSON.stringify(options.body) : "";
     return `${method}:${url}:${body}`;
   }
 
@@ -109,7 +109,7 @@ class APICache {
 export const apiCache = new APICache();
 
 // Cleanup expired entries every 10 minutes
-if (typeof setInterval !== 'undefined') {
+if (typeof setInterval !== "undefined") {
   setInterval(() => apiCache.cleanup(), 10 * 60 * 1000);
 }
 

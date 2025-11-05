@@ -6,21 +6,29 @@
  * Internally composes the new base ThemeProvider for persistence and system scheme.
  */
 
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { AccessibilityInfo } from 'react-native';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { AccessibilityInfo } from "react-native";
 
 import {
   ThemeProvider as BaseThemeProvider,
   useTheme as useBaseTheme,
   lightTheme as baseLightTheme,
   darkTheme as baseDarkTheme,
-} from './ThemeProvider';
-import { lightTheme as enhancedTheme } from './theme'; // Use new unified theme
+} from "./ThemeProvider";
+import { lightTheme as enhancedTheme } from "./theme"; // Use new unified theme
 
 // Derive therapeutic color arrays from theme tokens or fallbacks
 const deriveTherapeuticColors = (theme) => {
-  const therapeutic = theme?.colors?.therapeutic || enhancedTheme.colors.therapeutic;
-  const toArray = (obj) => (Array.isArray(obj) ? obj : Object.values(obj || {}));
+  const therapeutic =
+    theme?.colors?.therapeutic || enhancedTheme.colors.therapeutic;
+  const toArray = (obj) =>
+    Array.isArray(obj) ? obj : Object.values(obj || {});
   return {
     calming: toArray(therapeutic.calming),
     nurturing: toArray(therapeutic.nurturing),
@@ -33,7 +41,7 @@ const deriveTherapeuticColors = (theme) => {
 // Add common spacing aliases (sm, md, lg, xl) if missing
 const withSpacingAliases = (theme) => {
   const spacing = theme?.spacing || {};
-  const hasAliases = typeof spacing.md !== 'undefined';
+  const hasAliases = typeof spacing.md !== "undefined";
   if (hasAliases) return theme;
 
   // Reasonable defaults (4px grid)
@@ -53,7 +61,6 @@ const withSpacingAliases = (theme) => {
   };
 };
 
-
 export const ThemeContext = createContext({
   theme: baseLightTheme,
   colors: deriveTherapeuticColors(baseLightTheme),
@@ -67,8 +74,8 @@ const CompatBridge = ({ children, theme: forcedTheme, value }) => {
 
   // Determine active theme (forced via prop, explicit via value, or from base provider)
   let activeTheme = base?.theme || baseLightTheme;
-  if (forcedTheme === 'light') activeTheme = baseLightTheme;
-  if (forcedTheme === 'dark') activeTheme = baseDarkTheme;
+  if (forcedTheme === "light") activeTheme = baseLightTheme;
+  if (forcedTheme === "dark") activeTheme = baseDarkTheme;
   if (value?.theme) activeTheme = value.theme;
 
   // Ensure required tokens/aliases exist
@@ -81,7 +88,7 @@ const CompatBridge = ({ children, theme: forcedTheme, value }) => {
     const load = async () => {
       try {
         const fn = AccessibilityInfo?.isReduceMotionEnabled;
-        if (typeof fn === 'function') {
+        if (typeof fn === "function") {
           const value = await fn();
           if (mounted) setReducedMotion(!!value);
         }
@@ -95,7 +102,10 @@ const CompatBridge = ({ children, theme: forcedTheme, value }) => {
     };
   }, []);
 
-  const colors = useMemo(() => deriveTherapeuticColors(adaptedTheme), [adaptedTheme]);
+  const colors = useMemo(
+    () => deriveTherapeuticColors(adaptedTheme),
+    [adaptedTheme],
+  );
 
   const contextValue = useMemo(
     () => ({
@@ -105,7 +115,13 @@ const CompatBridge = ({ children, theme: forcedTheme, value }) => {
       toggleTheme: base?.toggleTheme || (() => {}),
       setTheme: base?.setTheme || (() => {}),
     }),
-    [adaptedTheme, colors, isReducedMotionEnabled, base?.toggleTheme, base?.setTheme]
+    [
+      adaptedTheme,
+      colors,
+      isReducedMotionEnabled,
+      base?.toggleTheme,
+      base?.setTheme,
+    ],
   );
 
   return (

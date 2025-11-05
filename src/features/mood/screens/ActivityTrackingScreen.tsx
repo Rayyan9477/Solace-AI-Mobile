@@ -1,14 +1,21 @@
-import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
-import { useSelector } from 'react-redux';
-import type { RootState } from '@app/store/store';
+import type { RootState } from "@app/store/store";
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useMemo } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { useSelector } from "react-redux";
 
 interface ActivityCount {
   id: string;
   name: string;
-  impact: 'Positive' | 'Negative' | 'Neutral';
+  impact: "Positive" | "Negative" | "Neutral";
   icon: string;
   count: number;
 }
@@ -18,7 +25,9 @@ export const ActivityTrackingScreen = () => {
   const navigation = useNavigation();
 
   // Get mood history from Redux
-  const moodHistory = useSelector((state: RootState) => state.mood?.moodHistory || []);
+  const moodHistory = useSelector(
+    (state: RootState) => state.mood?.moodHistory || [],
+  );
 
   // Calculate activity counts from mood history
   const activities = useMemo<ActivityCount[]>(() => {
@@ -34,27 +43,31 @@ export const ActivityTrackingScreen = () => {
 
     // Define activity categories with icons and impact
     const activityDefinitions = {
-      'Exercise': { icon: '🏃', impact: 'Positive' as const },
-      'Social Time': { icon: '👥', impact: 'Positive' as const },
-      'Work': { icon: '💼', impact: 'Neutral' as const },
-      'Work Stress': { icon: '💼', impact: 'Negative' as const },
-      'Sleep': { icon: '😴', impact: 'Positive' as const },
-      'Meditation': { icon: '🧘', impact: 'Positive' as const },
-      'Reading': { icon: '📖', impact: 'Positive' as const },
-      'Hobby': { icon: '🎨', impact: 'Positive' as const },
-      'Family Time': { icon: '👨‍👩‍👧‍👦', impact: 'Positive' as const },
-      'Relaxation': { icon: '🛀', impact: 'Positive' as const },
-      'Therapy': { icon: '💭', impact: 'Positive' as const },
-      'Conflict': { icon: '😤', impact: 'Negative' as const },
-      'Isolation': { icon: '🚪', impact: 'Negative' as const },
+      Exercise: { icon: "🏃", impact: "Positive" as const },
+      "Social Time": { icon: "👥", impact: "Positive" as const },
+      Work: { icon: "💼", impact: "Neutral" as const },
+      "Work Stress": { icon: "💼", impact: "Negative" as const },
+      Sleep: { icon: "😴", impact: "Positive" as const },
+      Meditation: { icon: "🧘", impact: "Positive" as const },
+      Reading: { icon: "📖", impact: "Positive" as const },
+      Hobby: { icon: "🎨", impact: "Positive" as const },
+      "Family Time": { icon: "👨‍👩‍👧‍👦", impact: "Positive" as const },
+      Relaxation: { icon: "🛀", impact: "Positive" as const },
+      Therapy: { icon: "💭", impact: "Positive" as const },
+      Conflict: { icon: "😤", impact: "Negative" as const },
+      Isolation: { icon: "🚪", impact: "Negative" as const },
     };
 
     return Array.from(activityMap.entries())
       .map(([name, count]) => ({
         id: name,
         name,
-        icon: activityDefinitions[name as keyof typeof activityDefinitions]?.icon || '📌',
-        impact: activityDefinitions[name as keyof typeof activityDefinitions]?.impact || 'Neutral',
+        icon:
+          activityDefinitions[name as keyof typeof activityDefinitions]?.icon ||
+          "📌",
+        impact:
+          activityDefinitions[name as keyof typeof activityDefinitions]
+            ?.impact || "Neutral",
         count,
       }))
       .sort((a, b) => b.count - a.count);
@@ -62,20 +75,62 @@ export const ActivityTrackingScreen = () => {
 
   const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: theme.colors.background.primary },
-    header: { flexDirection: 'row', alignItems: 'center', padding: 20, borderBottomWidth: 1, borderBottomColor: theme.colors.gray['20'] },
-    backButton: { width: 40, height: 40, justifyContent: 'center' },
-    headerTitle: { flex: 1, fontSize: 18, fontWeight: '700', color: theme.colors.text.primary, textAlign: 'center' },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      padding: 20,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.gray["20"],
+    },
+    backButton: { width: 40, height: 40, justifyContent: "center" },
+    headerTitle: {
+      flex: 1,
+      fontSize: 18,
+      fontWeight: "700",
+      color: theme.colors.text.primary,
+      textAlign: "center",
+    },
     content: { padding: 20 },
-    activityCard: { backgroundColor: theme.colors.brown['10'], borderRadius: 16, padding: 16, marginBottom: 12, flexDirection: 'row', alignItems: 'center' },
+    activityCard: {
+      backgroundColor: theme.colors.brown["10"],
+      borderRadius: 16,
+      padding: 16,
+      marginBottom: 12,
+      flexDirection: "row",
+      alignItems: "center",
+    },
     activityIcon: { fontSize: 32, marginRight: 12 },
     activityInfo: { flex: 1 },
-    activityName: { fontSize: 16, fontWeight: '700', color: theme.colors.text.primary },
+    activityName: {
+      fontSize: 16,
+      fontWeight: "700",
+      color: theme.colors.text.primary,
+    },
     activityImpact: { fontSize: 13, color: theme.colors.text.secondary },
-    activityCount: { fontSize: 20, fontWeight: '800', color: theme.colors.brown['80'] },
-    emptyState: { alignItems: 'center', paddingVertical: 60, paddingHorizontal: 20 },
+    activityCount: {
+      fontSize: 20,
+      fontWeight: "800",
+      color: theme.colors.brown["80"],
+    },
+    emptyState: {
+      alignItems: "center",
+      paddingVertical: 60,
+      paddingHorizontal: 20,
+    },
     emptyEmoji: { fontSize: 64, marginBottom: 16 },
-    emptyTitle: { fontSize: 20, fontWeight: '700', color: theme.colors.text.primary, marginBottom: 8, textAlign: 'center' },
-    emptyMessage: { fontSize: 15, color: theme.colors.text.secondary, textAlign: 'center', lineHeight: 22 },
+    emptyTitle: {
+      fontSize: 20,
+      fontWeight: "700",
+      color: theme.colors.text.primary,
+      marginBottom: 8,
+      textAlign: "center",
+    },
+    emptyMessage: {
+      fontSize: 15,
+      color: theme.colors.text.secondary,
+      textAlign: "center",
+      lineHeight: 22,
+    },
   });
 
   return (
@@ -95,7 +150,7 @@ export const ActivityTrackingScreen = () => {
       </View>
       <ScrollView style={styles.content}>
         {activities.length > 0 ? (
-          activities.map(activity => (
+          activities.map((activity) => (
             <TouchableOpacity
               key={activity.id}
               style={styles.activityCard}
@@ -107,11 +162,17 @@ export const ActivityTrackingScreen = () => {
               <Text style={styles.activityIcon}>{activity.icon}</Text>
               <View style={styles.activityInfo}>
                 <Text style={styles.activityName}>{activity.name}</Text>
-                <Text style={[
-                  styles.activityImpact,
-                  activity.impact === 'Positive' && { color: theme.colors.success },
-                  activity.impact === 'Negative' && { color: theme.colors.error },
-                ]}>
+                <Text
+                  style={[
+                    styles.activityImpact,
+                    activity.impact === "Positive" && {
+                      color: theme.colors.success,
+                    },
+                    activity.impact === "Negative" && {
+                      color: theme.colors.error,
+                    },
+                  ]}
+                >
                   {activity.impact} Impact
                 </Text>
               </View>

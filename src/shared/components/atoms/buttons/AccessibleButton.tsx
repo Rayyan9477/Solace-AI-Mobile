@@ -1,67 +1,92 @@
 // Compatibility bridge for tests
 try {
-	module.exports = require('../../src/ui/components/atoms/common/AccessibleButton');
+  module.exports = require("../../src/ui/components/atoms/common/AccessibleButton");
 } catch (e) {
-	// Fallback minimal stub to satisfy tests
-	const React = require('react');
-	const { TouchableOpacity, Text, AccessibilityInfo } = require('react-native');
-	const { WCAG_CONSTANTS, TouchTargetHelpers } = require('../../utils/accessibilityTesting');
+  // Fallback minimal stub to satisfy tests
+  const React = require("react");
+  const { TouchableOpacity, Text, AccessibilityInfo } = require("react-native");
+  const {
+    WCAG_CONSTANTS,
+    TouchTargetHelpers,
+  } = require("../../utils/accessibilityTesting");
 
-	const AccessibleButton = ({
-		label = 'Button',
-		title,
-		onPress,
-		onFocus,
-		onBlur,
-		accessibilityLabel,
-		accessibilityHint,
-		disabled = false,
-		loading = false,
-		autoFocus = false,
-		size,
-		testID,
-		style,
-	}) => {
-		const resolvedLabel = accessibilityLabel || title || label;
-		const baseStyle = Array.isArray(style) ? Object.assign({}, ...style) : (style || {});
-		const sizeStyle = size === 'small' ? { minWidth: WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE, minHeight: WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE } : {};
-		const { style: ensuredStyle } = TouchTargetHelpers.ensureMinimumTouchTarget({ ...sizeStyle, ...baseStyle });
+  const AccessibleButton = ({
+    label = "Button",
+    title,
+    onPress,
+    onFocus,
+    onBlur,
+    accessibilityLabel,
+    accessibilityHint,
+    disabled = false,
+    loading = false,
+    autoFocus = false,
+    size,
+    testID,
+    style,
+  }) => {
+    const resolvedLabel = accessibilityLabel || title || label;
+    const baseStyle = Array.isArray(style)
+      ? Object.assign({}, ...style)
+      : style || {};
+    const sizeStyle =
+      size === "small"
+        ? {
+            minWidth: WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
+            minHeight: WCAG_CONSTANTS.TOUCH_TARGET_MIN_SIZE,
+          }
+        : {};
+    const { style: ensuredStyle } = TouchTargetHelpers.ensureMinimumTouchTarget(
+      { ...sizeStyle, ...baseStyle },
+    );
 
-		React.useEffect(() => {
-			if (autoFocus) {
-				// announce for accessibility to simulate focus behavior
-				AccessibilityInfo.setAccessibilityFocus && AccessibilityInfo.setAccessibilityFocus({ nativeID: testID || `accessible-button-${resolvedLabel}` });
-				AccessibilityInfo.announceForAccessibility && AccessibilityInfo.announceForAccessibility(`${resolvedLabel} focused`);
-			}
-		}, [autoFocus, resolvedLabel, testID]);
+    React.useEffect(() => {
+      if (autoFocus) {
+        // announce for accessibility to simulate focus behavior
+        AccessibilityInfo.setAccessibilityFocus &&
+          AccessibilityInfo.setAccessibilityFocus({
+            nativeID: testID || `accessible-button-${resolvedLabel}`,
+          });
+        AccessibilityInfo.announceForAccessibility &&
+          AccessibilityInfo.announceForAccessibility(
+            `${resolvedLabel} focused`,
+          );
+      }
+    }, [autoFocus, resolvedLabel, testID]);
 
-		const handlePress = () => {
-			AccessibilityInfo.announceForAccessibility && AccessibilityInfo.announceForAccessibility(`${resolvedLabel} button activated`);
-			onPress && onPress();
-		};
+    const handlePress = () => {
+      AccessibilityInfo.announceForAccessibility &&
+        AccessibilityInfo.announceForAccessibility(
+          `${resolvedLabel} button activated`,
+        );
+      onPress && onPress();
+    };
 
-		return (
-			<TouchableOpacity
-				accessibilityRole="button"
-				accessibilityLabel={resolvedLabel}
-				accessibilityHint={accessibilityHint}
-				testID={testID || `accessible-button-${resolvedLabel}`}
-				onPress={handlePress}
-				onAccessibilityTap={handlePress}
-				onFocus={(e) => {
-					onFocus && onFocus(e);
-					AccessibilityInfo.announceForAccessibility && AccessibilityInfo.announceForAccessibility(`${resolvedLabel} focused`);
-				}}
-				onBlur={(e) => onBlur && onBlur(e)}
-				disabled={disabled}
-				accessibilityState={{ disabled, busy: !!loading, selected: false }}
-				focusable
-				style={ensuredStyle}
-			>
-				<Text>{resolvedLabel}</Text>
-			</TouchableOpacity>
-		);
-	};
+    return (
+      <TouchableOpacity
+        accessibilityRole="button"
+        accessibilityLabel={resolvedLabel}
+        accessibilityHint={accessibilityHint}
+        testID={testID || `accessible-button-${resolvedLabel}`}
+        onPress={handlePress}
+        onAccessibilityTap={handlePress}
+        onFocus={(e) => {
+          onFocus && onFocus(e);
+          AccessibilityInfo.announceForAccessibility &&
+            AccessibilityInfo.announceForAccessibility(
+              `${resolvedLabel} focused`,
+            );
+        }}
+        onBlur={(e) => onBlur && onBlur(e)}
+        disabled={disabled}
+        accessibilityState={{ disabled, busy: !!loading, selected: false }}
+        focusable
+        style={ensuredStyle}
+      >
+        <Text>{resolvedLabel}</Text>
+      </TouchableOpacity>
+    );
+  };
 
-	module.exports = AccessibleButton;
+  module.exports = AccessibleButton;
 }

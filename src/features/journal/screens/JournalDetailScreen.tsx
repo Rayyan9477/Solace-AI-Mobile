@@ -3,10 +3,17 @@
  * Based on ui-designs/Dark-mode/Mental Health Journal.png
  */
 
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
 
 interface JournalDetailProps {
   id: string;
@@ -28,16 +35,17 @@ export const JournalDetailScreen = () => {
 
   // Mock data - in production this would come from Redux/API
   const [entry] = useState<JournalDetailProps>({
-    id: '1',
-    title: 'Feeling Bad Again',
-    content: 'Today I had a hard time concentrating. I was very worried about making mistakes, very angry',
-    mood: '😔',
-    date: 'Oct 22',
-    time: '10:14 am',
-    tags: ['Negative', 'Regret'],
-    color: '#C96100',
+    id: "1",
+    title: "Feeling Bad Again",
+    content:
+      "Today I had a hard time concentrating. I was very worried about making mistakes, very angry",
+    mood: "😔",
+    date: "Oct 22",
+    time: "10:14 am",
+    tags: ["Negative", "Regret"],
+    color: "#C96100",
     isVoice: true,
-    audioUrl: 'mock-audio-url'
+    audioUrl: "mock-audio-url",
   });
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -49,32 +57,32 @@ export const JournalDetailScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.brown['30'],
+      borderBottomColor: theme.colors.brown["30"],
     },
     backButton: {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['20'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.brown["20"],
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     moreButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     content: {
       flex: 1,
@@ -85,13 +93,13 @@ export const JournalDetailScreen = () => {
     },
     date: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
       marginBottom: 4,
     },
     title: {
       fontSize: 28,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 12,
     },
@@ -102,15 +110,15 @@ export const JournalDetailScreen = () => {
       marginBottom: 24,
     },
     audioSection: {
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       borderRadius: 20,
       padding: 20,
       marginBottom: 24,
     },
     audioWaveform: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
       height: 80,
       marginBottom: 16,
     },
@@ -121,9 +129,9 @@ export const JournalDetailScreen = () => {
       marginHorizontal: 2,
     },
     audioControls: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
       gap: 20,
     },
     playButton: {
@@ -131,12 +139,12 @@ export const JournalDetailScreen = () => {
       height: 60,
       borderRadius: 30,
       backgroundColor: theme.colors.background.secondary,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     audioTime: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     tagsSection: {
@@ -144,32 +152,32 @@ export const JournalDetailScreen = () => {
     },
     sectionLabel: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
       marginBottom: 12,
     },
     tagsContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 8,
     },
     tag: {
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
     },
     tagText: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     moodSection: {
       marginBottom: 32,
     },
     moodDisplay: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 12,
     },
     moodEmoji: {
@@ -177,7 +185,7 @@ export const JournalDetailScreen = () => {
     },
     moodLabel: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     footer: {
@@ -185,36 +193,41 @@ export const JournalDetailScreen = () => {
       gap: 12,
     },
     editButton: {
-      backgroundColor: theme.colors.brown['70'],
+      backgroundColor: theme.colors.brown["70"],
       paddingVertical: 16,
       borderRadius: 16,
-      alignItems: 'center',
+      alignItems: "center",
     },
     editButtonText: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.background.secondary,
     },
     deleteButton: {
-      backgroundColor: theme.colors.brown['20'],
+      backgroundColor: theme.colors.brown["20"],
       paddingVertical: 16,
       borderRadius: 16,
-      alignItems: 'center',
+      alignItems: "center",
     },
     deleteButtonText: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
   });
 
-  const waveformHeights = [20, 35, 25, 45, 30, 50, 40, 35, 25, 40, 30, 45, 35, 25, 40];
+  const waveformHeights = [
+    20, 35, 25, 45, 30, 50, 40, 35, 25, 40, 30, 45, 35, 25, 40,
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
           <Text style={{ fontSize: 20 }}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Edit Journal</Text>
@@ -226,8 +239,12 @@ export const JournalDetailScreen = () => {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Date & Title */}
         <View style={styles.dateSection}>
-          <Text style={styles.date}>{entry.date} · {entry.time}</Text>
-          <Text style={styles.title}>{entry.title} {entry.mood}</Text>
+          <Text style={styles.date}>
+            {entry.date} · {entry.time}
+          </Text>
+          <Text style={styles.title}>
+            {entry.title} {entry.mood}
+          </Text>
         </View>
 
         {/* Content */}
@@ -242,7 +259,13 @@ export const JournalDetailScreen = () => {
                   key={index}
                   style={[
                     styles.waveBar,
-                    { height, opacity: index / waveformHeights.length <= audioProgress ? 1 : 0.3 }
+                    {
+                      height,
+                      opacity:
+                        index / waveformHeights.length <= audioProgress
+                          ? 1
+                          : 0.3,
+                    },
                   ]}
                 />
               ))}
@@ -255,13 +278,15 @@ export const JournalDetailScreen = () => {
                 style={styles.playButton}
                 onPress={() => setIsPlaying(!isPlaying)}
               >
-                <Text style={{ fontSize: 24 }}>{isPlaying ? '⏸' : '▶️'}</Text>
+                <Text style={{ fontSize: 24 }}>{isPlaying ? "⏸" : "▶️"}</Text>
               </TouchableOpacity>
               <TouchableOpacity>
                 <Text style={{ fontSize: 24 }}>⏭</Text>
               </TouchableOpacity>
             </View>
-            <Text style={[styles.audioTime, { textAlign: 'center', marginTop: 12 }]}>
+            <Text
+              style={[styles.audioTime, { textAlign: "center", marginTop: 12 }]}
+            >
               00:00 / 02:34
             </Text>
           </View>

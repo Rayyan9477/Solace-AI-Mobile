@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Profile Settings & Help Center.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,9 +14,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Switch,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 export const PrivacySettingsScreen = () => {
   const { theme } = useTheme();
@@ -31,36 +31,36 @@ export const PrivacySettingsScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
       flex: 1,
     },
     warningCard: {
-      backgroundColor: theme.colors.blue['20'],
+      backgroundColor: theme.colors.blue["20"],
       marginHorizontal: 20,
       marginTop: 20,
       borderRadius: 16,
       padding: 16,
-      flexDirection: 'row',
-      alignItems: 'flex-start',
+      flexDirection: "row",
+      alignItems: "flex-start",
     },
     warningIcon: {
       fontSize: 24,
@@ -79,18 +79,18 @@ export const PrivacySettingsScreen = () => {
     },
     sectionTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
-      textTransform: 'uppercase',
+      textTransform: "uppercase",
       marginBottom: 16,
     },
     settingItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     settingLeft: {
       flex: 1,
@@ -98,7 +98,7 @@ export const PrivacySettingsScreen = () => {
     },
     settingTitle: {
       fontSize: 15,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
@@ -108,16 +108,16 @@ export const PrivacySettingsScreen = () => {
       color: theme.colors.text.secondary,
     },
     actionButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     actionText: {
       fontSize: 15,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     actionArrow: {
@@ -130,30 +130,30 @@ export const PrivacySettingsScreen = () => {
       paddingBottom: 12,
     },
     dangerButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     dangerText: {
       fontSize: 15,
-      fontWeight: '600',
-      color: theme.colors.red['60'],
+      fontWeight: "600",
+      color: theme.colors.red["60"],
     },
     saveButton: {
-      backgroundColor: theme.colors.brown['60'],
+      backgroundColor: theme.colors.brown["60"],
       borderRadius: 16,
       paddingVertical: 16,
       marginHorizontal: 20,
       marginVertical: 24,
-      alignItems: 'center',
+      alignItems: "center",
     },
     saveButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
   });
 
@@ -177,7 +177,8 @@ export const PrivacySettingsScreen = () => {
         <View style={styles.warningCard}>
           <Text style={styles.warningIcon}>🔒</Text>
           <Text style={styles.warningText}>
-            Your privacy is important to us. Control what data you share and how it's used.
+            Your privacy is important to us. Control what data you share and how
+            it's used.
           </Text>
         </View>
 
@@ -186,7 +187,9 @@ export const PrivacySettingsScreen = () => {
 
           <View style={styles.settingItem}>
             <View style={styles.settingLeft}>
-              <Text style={styles.settingTitle}>Share Data with Third Parties</Text>
+              <Text style={styles.settingTitle}>
+                Share Data with Third Parties
+              </Text>
               <Text style={styles.settingDescription}>
                 Allow sharing anonymized data with research partners
               </Text>
@@ -194,7 +197,10 @@ export const PrivacySettingsScreen = () => {
             <Switch
               value={dataSharing}
               onValueChange={setDataSharing}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.green['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.green["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -209,7 +215,10 @@ export const PrivacySettingsScreen = () => {
             <Switch
               value={analytics}
               onValueChange={setAnalytics}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.green['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.green["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -224,7 +233,10 @@ export const PrivacySettingsScreen = () => {
             <Switch
               value={personalization}
               onValueChange={setPersonalization}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.green['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.green["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -239,7 +251,10 @@ export const PrivacySettingsScreen = () => {
             <Switch
               value={locationTracking}
               onValueChange={setLocationTracking}
-              trackColor={{ false: theme.colors.gray['40'], true: theme.colors.green['60'] }}
+              trackColor={{
+                false: theme.colors.gray["40"],
+                true: theme.colors.green["60"],
+              }}
               thumbColor="#FFFFFF"
             />
           </View>

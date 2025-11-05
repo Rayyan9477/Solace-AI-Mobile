@@ -3,7 +3,7 @@
  * Provides dynamic color selection for therapeutic UI components
  */
 
-import { colors } from './colors';
+import { colors } from "./colors";
 
 // Map to new color structure for backwards compatibility
 const enhancedColors = {
@@ -18,11 +18,17 @@ const enhancedColors = {
  * @param {boolean} isDarkMode - Whether dark mode is active
  * @returns {string} The hex color value
  */
-export const getTherapeuticColor = (therapeuticColor, shade = 500, isDarkMode = false) => {
+export const getTherapeuticColor = (
+  therapeuticColor,
+  shade = 500,
+  isDarkMode = false,
+) => {
   // Validate therapeutic color
   if (!enhancedColors.therapeutic[therapeuticColor]) {
-    console.warn(`Therapeutic color '${therapeuticColor}' not found, falling back to 'calming'`);
-    therapeuticColor = 'calming';
+    console.warn(
+      `Therapeutic color '${therapeuticColor}' not found, falling back to 'calming'`,
+    );
+    therapeuticColor = "calming";
   }
 
   // Validate shade
@@ -57,8 +63,10 @@ export const getTherapeuticColor = (therapeuticColor, shade = 500, isDarkMode = 
  */
 export const getTherapeuticColorPalette = (therapeuticColor) => {
   if (!enhancedColors.therapeutic[therapeuticColor]) {
-    console.warn(`Therapeutic color '${therapeuticColor}' not found, falling back to 'calming'`);
-    therapeuticColor = 'calming';
+    console.warn(
+      `Therapeutic color '${therapeuticColor}' not found, falling back to 'calming'`,
+    );
+    therapeuticColor = "calming";
   }
 
   return enhancedColors.therapeutic[therapeuticColor];
@@ -71,8 +79,10 @@ export const getTherapeuticColorPalette = (therapeuticColor) => {
  */
 export const getTherapeuticGradient = (gradientName) => {
   if (!enhancedColors.gradients[gradientName]) {
-    console.warn(`Gradient '${gradientName}' not found, falling back to 'therapeutic'`);
-    gradientName = 'therapeutic';
+    console.warn(
+      `Gradient '${gradientName}' not found, falling back to 'therapeutic'`,
+    );
+    gradientName = "therapeutic";
   }
 
   return enhancedColors.gradients[gradientName];
@@ -82,21 +92,21 @@ export const getTherapeuticGradient = (gradientName) => {
  * Available therapeutic color names
  */
 export const THERAPEUTIC_COLORS = {
-  CALMING: 'calming',
-  NURTURING: 'nurturing',
-  PEACEFUL: 'peaceful',
-  GROUNDING: 'grounding',
-  ENERGIZING: 'energizing',
+  CALMING: "calming",
+  NURTURING: "nurturing",
+  PEACEFUL: "peaceful",
+  GROUNDING: "grounding",
+  ENERGIZING: "energizing",
 };
 
 /**
  * Available gradient names
  */
 export const THERAPEUTIC_GRADIENTS = {
-  MORNING: 'morning',
-  AFTERNOON: 'afternoon',
-  EVENING: 'evening',
-  THERAPEUTIC: 'therapeutic',
-  ENERGIZING: 'energizing',
-  CALMING: 'calming',
+  MORNING: "morning",
+  AFTERNOON: "afternoon",
+  EVENING: "evening",
+  THERAPEUTIC: "therapeutic",
+  ENERGIZING: "energizing",
+  CALMING: "calming",
 };

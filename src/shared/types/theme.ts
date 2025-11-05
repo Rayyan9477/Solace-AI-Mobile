@@ -86,7 +86,7 @@ export interface Shadows {
   md: Shadow;
   lg: Shadow;
   xl: Shadow;
-  '2xl': Shadow;
+  "2xl": Shadow;
   therapeutic: Shadow;
   glass: Shadow;
 }
@@ -105,9 +105,9 @@ export interface Typography {
     base: number;
     lg: number;
     xl: number;
-    '2xl': number;
-    '3xl': number;
-    '4xl': number;
+    "2xl": number;
+    "3xl": number;
+    "4xl": number;
   };
   lineHeight: {
     tight: number;
@@ -128,8 +128,8 @@ export interface Spacing {
   md: number;
   lg: number;
   xl: number;
-  '2xl': number;
-  '3xl': number;
+  "2xl": number;
+  "3xl": number;
 }
 
 // Border radius scale
@@ -139,7 +139,7 @@ export interface BorderRadius {
   md: number;
   lg: number;
   xl: number;
-  '2xl': number;
+  "2xl": number;
   full: number;
 }
 
@@ -161,7 +161,7 @@ export interface Animation {
 
 // Main theme interface
 export interface Theme {
-  name: 'light' | 'dark';
+  name: "light" | "dark";
   isDark: boolean;
   colors: {
     // Base colors
@@ -206,7 +206,7 @@ export interface ThemeContextType {
 }
 
 // Theme mode
-export type ThemeMode = 'light' | 'dark' | 'auto';
+export type ThemeMode = "light" | "dark" | "auto";
 
 // Component theme props
 export interface ThemedComponentProps {
@@ -215,7 +215,7 @@ export interface ThemedComponentProps {
 }
 
 // Color utilities
-export type ColorKey = keyof Theme['colors'];
+export type ColorKey = keyof Theme["colors"];
 export type TherapeuticColorKey = keyof TherapeuticColors;
 export type ColorShade = keyof ColorScale;
 

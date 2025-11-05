@@ -1,3 +1,6 @@
+import { store, persistor } from "@app/store/store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { lightTheme, darkTheme } from "@theme/ThemeProvider";
 import React, {
   createContext,
   useContext,
@@ -19,10 +22,6 @@ import {
 import { Provider as PaperProvider } from "react-native-paper";
 import { Provider as ReduxProvider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import { store, persistor } from "@app/store/store";
-import { lightTheme, darkTheme } from "@theme/ThemeProvider";
 
 // Type definitions
 interface AccessibilityContextType {
@@ -178,7 +177,9 @@ const EnterpriseLoadingScreen: React.FC = () => (
 );
 
 // Enhanced Provider Components
-const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [isScreenReaderEnabled, setIsScreenReaderEnabled] = useState(false);
   const [isReduceMotionEnabled, setIsReduceMotionEnabled] = useState(false);
   const [isHighContrastEnabled, setIsHighContrastEnabled] = useState(false);
@@ -287,7 +288,9 @@ const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   );
 };
 
-const MentalHealthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const MentalHealthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [isCrisisMode, setIsCrisisMode] = useState(false);
   const [crisisLevel, setCrisisLevel] = useState("low");
   const [emergencyContacts, setEmergencyContacts] = useState<any[]>([]);
@@ -450,7 +453,9 @@ const MentalHealthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   );
 };
 
-const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [memoryUsage, setMemoryUsage] = useState(0);
   const [frameRate, setFrameRate] = useState(60);
   const [renderTime, setRenderTime] = useState(0);
@@ -509,14 +514,17 @@ const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsOptimizedMode(false);
   }, []);
 
-  const measureRenderTime = useCallback((componentName: string, renderFn: () => any) => {
-    const startTime = Date.now();
-    const result = renderFn();
-    const endTime = Date.now();
-    const duration = endTime - startTime;
-    setRenderTime(duration);
-    return result;
-  }, []);
+  const measureRenderTime = useCallback(
+    (componentName: string, renderFn: () => any) => {
+      const startTime = Date.now();
+      const result = renderFn();
+      const endTime = Date.now();
+      const duration = endTime - startTime;
+      setRenderTime(duration);
+      return result;
+    },
+    [],
+  );
 
   const cleanupMemory = useCallback(() => {
     if (__DEV__ && global.gc) {
@@ -546,7 +554,9 @@ const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 };
 
-export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
 
@@ -567,8 +577,4 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
 export default AppProvider;
 // Re-export named hooks and contexts for stable imports
-export {
-  AccessibilityContext,
-  MentalHealthContext,
-  PerformanceContext,
-};
+export { AccessibilityContext, MentalHealthContext, PerformanceContext };

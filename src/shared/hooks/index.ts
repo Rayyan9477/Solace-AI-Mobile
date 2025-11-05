@@ -5,4 +5,4 @@
  * These hooks provide optimized Redux selectors and reusable logic.
  */
 
-export * from './useOptimizedSelectors';
+export * from "./useOptimizedSelectors";

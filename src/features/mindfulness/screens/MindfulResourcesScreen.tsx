@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/Mindful Resources.png
  */
 
-import React, { useState } from 'react';
+import { MentalHealthIcon } from "@components/icons";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -13,11 +15,9 @@ import {
   SafeAreaView,
   StatusBar,
   Image,
-} from 'react-native';
-import { useTheme } from '@theme/ThemeProvider';
-import { MentalHealthIcon } from '@components/icons';
+} from "react-native";
 
-type TabType = 'resources' | 'articles' | 'courses';
+type TabType = "resources" | "articles" | "courses";
 
 interface Article {
   id: string;
@@ -40,25 +40,25 @@ interface Course {
 }
 
 const FEATURED_RESOURCE = {
-  category: 'Mental Health',
-  title: 'Freud Apps: Your Pocket Therapist for Mental Wellness',
-  image: '🧘‍♂️',
+  category: "Mental Health",
+  title: "Freud Apps: Your Pocket Therapist for Mental Wellness",
+  image: "🧘‍♂️",
 };
 
 const ARTICLES: Article[] = [
   {
-    id: '1',
-    title: 'Will meditation help you get out from the roof?',
-    author: 'By Dr. Johann Lecturer',
-    readTime: '5 min',
+    id: "1",
+    title: "Will meditation help you get out from the roof?",
+    author: "By Dr. Johann Lecturer",
+    readTime: "5 min",
     likes: 2341,
     comments: 52,
   },
   {
-    id: '2',
-    title: 'Will meditation get out from th...',
-    author: 'By Dr. Johann Lecturer',
-    readTime: '8 min',
+    id: "2",
+    title: "Will meditation get out from th...",
+    author: "By Dr. Johann Lecturer",
+    readTime: "8 min",
     likes: 1240,
     comments: 32,
   },
@@ -66,25 +66,25 @@ const ARTICLES: Article[] = [
 
 const COURSES: Course[] = [
   {
-    id: '1',
-    title: 'Mindfulness 101',
-    instructor: 'By Dr. Haroldus Lecturer',
+    id: "1",
+    title: "Mindfulness 101",
+    instructor: "By Dr. Haroldus Lecturer",
     rating: 4.8,
     students: 200,
     lessons: 23,
   },
   {
-    id: '2',
-    title: 'Indian Meditation',
-    instructor: 'By Alan Watts',
+    id: "2",
+    title: "Indian Meditation",
+    instructor: "By Alan Watts",
     rating: 3.1,
     students: 38,
     lessons: 44,
   },
   {
-    id: '3',
-    title: 'African Meditation',
-    instructor: 'By Clayton Bigsby',
+    id: "3",
+    title: "African Meditation",
+    instructor: "By Clayton Bigsby",
     rating: 4.2,
     students: 200,
     lessons: 23,
@@ -93,7 +93,7 @@ const COURSES: Course[] = [
 
 export const MindfulResourcesScreen = ({ navigation }: any) => {
   const { theme } = useTheme();
-  const [activeTab, setActiveTab] = useState<TabType>('resources');
+  const [activeTab, setActiveTab] = useState<TabType>("resources");
 
   const styles = StyleSheet.create({
     container: {
@@ -101,8 +101,8 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       paddingHorizontal: 20,
       paddingTop: 16,
       paddingBottom: 12,
@@ -112,28 +112,28 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
       height: 40,
       borderRadius: 20,
       backgroundColor: theme.colors.background.secondary,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       flex: 1,
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginLeft: 16,
     },
     statsContainer: {
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 12,
     },
     stat: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 4,
     },
     statText: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     content: {
@@ -146,16 +146,16 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
       marginHorizontal: 20,
       marginVertical: 16,
       borderRadius: 20,
-      overflow: 'hidden',
-      backgroundColor: theme.colors.brown['20'],
-      ...theme.getShadow('md'),
+      overflow: "hidden",
+      backgroundColor: theme.colors.brown["20"],
+      ...theme.getShadow("md"),
     },
     featuredImage: {
-      width: '100%',
+      width: "100%",
       height: 180,
-      backgroundColor: theme.colors.brown['30'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.brown["30"],
+      justifyContent: "center",
+      alignItems: "center",
     },
     featuredEmoji: {
       fontSize: 80,
@@ -165,37 +165,37 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
     },
     featuredCategory: {
       fontSize: 12,
-      fontWeight: '600',
-      color: theme.colors.orange['40'],
+      fontWeight: "600",
+      color: theme.colors.orange["40"],
       marginBottom: 8,
     },
     featuredTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     viewButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
     },
     viewButtonText: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
     sectionHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       marginBottom: 16,
       marginTop: 8,
     },
     sectionTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     seeAllButton: {
@@ -204,33 +204,33 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
     },
     seeAllText: {
       fontSize: 14,
-      fontWeight: '600',
-      color: theme.colors.orange['40'],
+      fontWeight: "600",
+      color: theme.colors.orange["40"],
     },
     articleCard: {
-      flexDirection: 'row',
+      flexDirection: "row",
       marginHorizontal: 20,
       marginBottom: 16,
       borderRadius: 16,
       backgroundColor: theme.colors.background.secondary,
-      overflow: 'hidden',
-      ...theme.getShadow('sm'),
+      overflow: "hidden",
+      ...theme.getShadow("sm"),
     },
     articleImage: {
       width: 80,
       height: 80,
-      backgroundColor: theme.colors.green['20'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.green["20"],
+      justifyContent: "center",
+      alignItems: "center",
     },
     articleContent: {
       flex: 1,
       padding: 12,
-      justifyContent: 'space-between',
+      justifyContent: "space-between",
     },
     articleTitle: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
@@ -240,12 +240,12 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
       marginBottom: 8,
     },
     articleStats: {
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 16,
     },
     articleStat: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 4,
     },
     articleStatText: {
@@ -257,20 +257,20 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
       paddingHorizontal: 20,
     },
     courseInner: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       padding: 12,
       borderRadius: 16,
       backgroundColor: theme.colors.background.secondary,
-      ...theme.getShadow('sm'),
+      ...theme.getShadow("sm"),
     },
     courseImage: {
       width: 60,
       height: 60,
       borderRadius: 30,
-      backgroundColor: theme.colors.purple['20'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.purple["20"],
+      justifyContent: "center",
+      alignItems: "center",
       marginRight: 12,
     },
     courseIcon: {
@@ -281,7 +281,7 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
     },
     courseTitle: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
@@ -291,48 +291,50 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
       marginBottom: 8,
     },
     courseStats: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 12,
     },
     courseRating: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 4,
     },
     courseRatingText: {
       fontSize: 12,
-      fontWeight: '600',
-      color: theme.colors.yellow['50'],
+      fontWeight: "600",
+      color: theme.colors.yellow["50"],
     },
     courseStudents: {
       fontSize: 11,
       color: theme.colors.text.tertiary,
     },
     addButton: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 24,
       right: 20,
       width: 56,
       height: 56,
       borderRadius: 28,
-      backgroundColor: theme.colors.green['40'],
-      justifyContent: 'center',
-      alignItems: 'center',
-      ...theme.getShadow('lg'),
+      backgroundColor: theme.colors.green["40"],
+      justifyContent: "center",
+      alignItems: "center",
+      ...theme.getShadow("lg"),
     },
   });
 
   const renderFeaturedResource = () => (
     <TouchableOpacity
       style={styles.featuredCard}
-      onPress={() => navigation.navigate('ArticleDetail', { id: 'featured' })}
+      onPress={() => navigation.navigate("ArticleDetail", { id: "featured" })}
     >
       <View style={styles.featuredImage}>
         <Text style={styles.featuredEmoji}>{FEATURED_RESOURCE.image}</Text>
       </View>
       <View style={styles.featuredContent}>
-        <Text style={styles.featuredCategory}>{FEATURED_RESOURCE.category}</Text>
+        <Text style={styles.featuredCategory}>
+          {FEATURED_RESOURCE.category}
+        </Text>
         <Text style={styles.featuredTitle}>{FEATURED_RESOURCE.title}</Text>
         <View style={styles.viewButton}>
           <Text style={styles.viewButtonText}>Read More</Text>
@@ -359,7 +361,9 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
         <TouchableOpacity
           key={article.id}
           style={styles.articleCard}
-          onPress={() => navigation.navigate('ArticleDetail', { id: article.id })}
+          onPress={() =>
+            navigation.navigate("ArticleDetail", { id: article.id })
+          }
         >
           <View style={styles.articleImage}>
             <Text style={{ fontSize: 40 }}>🌿</Text>
@@ -408,7 +412,9 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
         <View key={course.id} style={styles.courseCard}>
           <TouchableOpacity
             style={styles.courseInner}
-            onPress={() => navigation.navigate('CourseDetail', { id: course.id })}
+            onPress={() =>
+              navigation.navigate("CourseDetail", { id: course.id })
+            }
           >
             <View style={styles.courseImage}>
               <Text style={styles.courseIcon}>🧘</Text>
@@ -418,14 +424,12 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
               <Text style={styles.courseInstructor}>{course.instructor}</Text>
               <View style={styles.courseStats}>
                 <View style={styles.courseRating}>
-                  <Text style={styles.courseRatingText}>⭐ {course.rating}</Text>
+                  <Text style={styles.courseRatingText}>
+                    ⭐ {course.rating}
+                  </Text>
                 </View>
-                <Text style={styles.courseStudents}>
-                  👥 {course.students}K
-                </Text>
-                <Text style={styles.courseStudents}>
-                  📚 {course.lessons}
-                </Text>
+                <Text style={styles.courseStudents}>👥 {course.students}K</Text>
+                <Text style={styles.courseStudents}>📚 {course.lessons}</Text>
               </View>
             </View>
             <MentalHealthIcon
@@ -442,7 +446,7 @@ export const MindfulResourcesScreen = ({ navigation }: any) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
-        barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+        barStyle={theme.isDark ? "light-content" : "dark-content"}
         backgroundColor="transparent"
         translucent
       />

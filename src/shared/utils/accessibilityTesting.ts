@@ -5,7 +5,7 @@ export default class AccessibilityTester {
     // Very rough contrast approximation for tests (not production)
     const toRGB = (hex) =>
       hex
-        .replace('#', '')
+        .replace("#", "")
         .match(/.{2}/g)
         .map((x) => parseInt(x, 16) / 255);
     const luminance = ([r, g, b]) => {
@@ -26,16 +26,16 @@ export default class AccessibilityTester {
     const results = [];
     // Reduced motion support
     results.push({
-      test: 'Reduced Motion Support',
-      status: config.respectsReducedMotion ? 'PASS' : 'FAIL',
+      test: "Reduced Motion Support",
+      status: config.respectsReducedMotion ? "PASS" : "FAIL",
     });
     // Duration guidance (warn if > 5000ms)
     const duration = config.duration ?? 300;
     results.push({
-      test: 'Animation Duration',
-      status: duration > 5000 ? 'WARNING' : 'PASS',
+      test: "Animation Duration",
+      status: duration > 5000 ? "WARNING" : "PASS",
       actual: duration,
-      expected: '≤5000ms',
+      expected: "≤5000ms",
     });
     return results;
   }
@@ -48,14 +48,14 @@ export default class AccessibilityTester {
     const minWidth = props?.style?.minWidth ?? 0;
     const minHeight = props?.style?.minHeight ?? 0;
     results.push({
-      test: 'Touch Target Size',
-      status: minWidth >= 44 && minHeight >= 44 ? 'PASS' : 'FAIL',
+      test: "Touch Target Size",
+      status: minWidth >= 44 && minHeight >= 44 ? "PASS" : "FAIL",
     });
 
     // Accessibility label
     results.push({
-      test: 'Accessibility Label',
-      status: props.accessibilityLabel ? 'PASS' : 'FAIL',
+      test: "Accessibility Label",
+      status: props.accessibilityLabel ? "PASS" : "FAIL",
     });
 
     return results;
@@ -67,15 +67,15 @@ export default class AccessibilityTester {
       totalTests: testResults.reduce((acc, c) => acc + c.results.length, 0),
       passedTests: testResults
         .flatMap((c) => c.results)
-        .filter((r) => r.status === 'PASS').length,
+        .filter((r) => r.status === "PASS").length,
       failedTests: testResults
         .flatMap((c) => c.results)
-        .filter((r) => r.status === 'FAIL').length,
+        .filter((r) => r.status === "FAIL").length,
     };
     const recommendations = testResults
       .flatMap((c) => c.results)
-      .filter((r) => r.status !== 'PASS')
-      .map((r) => r.message || 'Review accessibility for failing tests');
+      .filter((r) => r.status !== "PASS")
+      .map((r) => r.message || "Review accessibility for failing tests");
     return { summary, recommendations };
   }
 
@@ -87,29 +87,31 @@ export const MentalHealthAccessibilityTesting = {
     const { props = {} } = component || {};
     return [
       {
-        test: 'Mood Label Present',
-        status: props.accessibilityLabel ? 'PASS' : 'FAIL',
+        test: "Mood Label Present",
+        status: props.accessibilityLabel ? "PASS" : "FAIL",
       },
       {
-        test: 'Mood Role',
-        status: props.accessibilityRole ? 'PASS' : 'FAIL',
+        test: "Mood Role",
+        status: props.accessibilityRole ? "PASS" : "FAIL",
       },
     ];
   },
   testChatAccessibility(component) {
     const { props = {} } = component || {};
-    const hasContext = props.accessibilityLabel?.toLowerCase().includes('message');
+    const hasContext = props.accessibilityLabel
+      ?.toLowerCase()
+      .includes("message");
     return [
-      { test: 'Chat Message Context', status: hasContext ? 'PASS' : 'WARN' },
+      { test: "Chat Message Context", status: hasContext ? "PASS" : "WARN" },
     ];
   },
   testAssessmentAccessibility(component) {
     const { props = {} } = component || {};
     const hasProgress = /question\s+\d+\s+of\s+\d+/i.test(
-      props.accessibilityLabel || '',
+      props.accessibilityLabel || "",
     );
     return [
-      { test: 'Assessment Progress', status: hasProgress ? 'PASS' : 'WARN' },
+      { test: "Assessment Progress", status: hasProgress ? "PASS" : "WARN" },
     ];
   },
 };
@@ -143,8 +145,11 @@ export const AccessibilityValidators = {
   },
   validateAccessibilityLabel: (label) => ({
     hasLabel: !!label,
-    isDescriptive: typeof label === 'string' && label.trim().length >= 4,
-    isTooShort: typeof label === 'string' && label.trim().length > 0 && label.trim().length < 3,
+    isDescriptive: typeof label === "string" && label.trim().length >= 4,
+    isTooShort:
+      typeof label === "string" &&
+      label.trim().length > 0 &&
+      label.trim().length < 3,
     isEmpty: !label || label.trim().length === 0,
   }),
   validateTouchTarget: (width, height) => ({

@@ -1,6 +1,5 @@
-import React from "react";
 import { render } from "@testing-library/react-native";
-
+import React from "react";
 import Slider from "src/shared/components/atoms/Slider";
 
 // Mock theme context
@@ -53,9 +52,13 @@ jest.mock("src/shared/theme/ThemeContext", () => ({
 }));
 
 // Mock ColorPalette - create a stub since the file doesn't exist
-jest.mock("src/shared/theme/ColorPalette", () => ({
-  getTherapeuticColor: jest.fn(() => "#4A90E2"),
-}), { virtual: true });
+jest.mock(
+  "src/shared/theme/ColorPalette",
+  () => ({
+    getTherapeuticColor: jest.fn(() => "#4A90E2"),
+  }),
+  { virtual: true },
+);
 
 describe("Slider Component", () => {
   beforeEach(() => {
@@ -103,7 +106,7 @@ describe("Slider Component", () => {
   it("renders as disabled", () => {
     const { getByTestId } = render(
       <MockThemeProvider>
-        <Slider disabled={true} testID="test-slider" />
+        <Slider disabled testID="test-slider" />
       </MockThemeProvider>,
     );
 

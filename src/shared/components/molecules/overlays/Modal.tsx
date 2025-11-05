@@ -1,3 +1,7 @@
+import Button from "@shared/components/atoms/buttons/TherapeuticButton";
+import { MentalHealthIcon } from "@shared/components/icons";
+import { getTherapeuticColor } from "@theme/ColorPalette";
+import { useTheme } from "@theme/ThemeProvider";
 import React, { useState, useEffect } from "react";
 import {
   Modal as RNModal,
@@ -12,11 +16,6 @@ import {
   Animated,
   BackHandler,
 } from "react-native";
-
-import { getTherapeuticColor } from "@theme/ColorPalette";
-import { useTheme } from "@theme/ThemeProvider";
-import { MentalHealthIcon } from "@shared/components/icons";
-import Button from "@shared/components/atoms/buttons/TherapeuticButton";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 

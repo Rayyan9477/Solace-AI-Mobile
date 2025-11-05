@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/🔒 Mindful Hours.png
  */
 
-import React from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
 import {
   View,
   Text,
@@ -11,9 +13,7 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface Badge {
   id: string;
@@ -32,90 +32,90 @@ export const AchievementBadgesScreen = () => {
 
   const badges: Badge[] = [
     {
-      id: '1',
-      title: 'First Steps',
-      description: 'Complete your first mindfulness session',
-      icon: '🎯',
+      id: "1",
+      title: "First Steps",
+      description: "Complete your first mindfulness session",
+      icon: "🎯",
       earned: true,
-      requirement: '1 session',
-      category: 'Beginner',
+      requirement: "1 session",
+      category: "Beginner",
     },
     {
-      id: '2',
-      title: 'Week Warrior',
-      description: 'Practice mindfulness for 7 consecutive days',
-      icon: '🔥',
+      id: "2",
+      title: "Week Warrior",
+      description: "Practice mindfulness for 7 consecutive days",
+      icon: "🔥",
       earned: true,
-      requirement: '7 days',
-      category: 'Streak',
+      requirement: "7 days",
+      category: "Streak",
     },
     {
-      id: '3',
-      title: 'Hour Master',
-      description: 'Accumulate 10 hours of mindfulness practice',
-      icon: '⏰',
+      id: "3",
+      title: "Hour Master",
+      description: "Accumulate 10 hours of mindfulness practice",
+      icon: "⏰",
       earned: true,
       progress: 100,
-      requirement: '10 hours',
-      category: 'Time',
+      requirement: "10 hours",
+      category: "Time",
     },
     {
-      id: '4',
-      title: 'Morning Person',
-      description: 'Complete 20 morning meditation sessions',
-      icon: '☀️',
+      id: "4",
+      title: "Morning Person",
+      description: "Complete 20 morning meditation sessions",
+      icon: "☀️",
       earned: false,
       progress: 65,
-      requirement: '20 mornings',
-      category: 'Time of Day',
+      requirement: "20 mornings",
+      category: "Time of Day",
     },
     {
-      id: '5',
-      title: 'Zen Master',
-      description: 'Reach 100 hours of total mindfulness practice',
-      icon: '🧘',
+      id: "5",
+      title: "Zen Master",
+      description: "Reach 100 hours of total mindfulness practice",
+      icon: "🧘",
       earned: false,
       progress: 42,
-      requirement: '100 hours',
-      category: 'Time',
+      requirement: "100 hours",
+      category: "Time",
     },
     {
-      id: '6',
-      title: 'Consistency Champion',
-      description: 'Maintain a 30-day meditation streak',
-      icon: '💪',
+      id: "6",
+      title: "Consistency Champion",
+      description: "Maintain a 30-day meditation streak",
+      icon: "💪",
       earned: false,
       progress: 23,
-      requirement: '30 days',
-      category: 'Streak',
+      requirement: "30 days",
+      category: "Streak",
     },
     {
-      id: '7',
-      title: 'Evening Calm',
-      description: 'Complete 20 evening meditation sessions',
-      icon: '🌙',
+      id: "7",
+      title: "Evening Calm",
+      description: "Complete 20 evening meditation sessions",
+      icon: "🌙",
       earned: false,
       progress: 35,
-      requirement: '20 evenings',
-      category: 'Time of Day',
+      requirement: "20 evenings",
+      category: "Time of Day",
     },
     {
-      id: '8',
-      title: 'Legendary',
-      description: 'Achieve 365 consecutive days of practice',
-      icon: '👑',
+      id: "8",
+      title: "Legendary",
+      description: "Achieve 365 consecutive days of practice",
+      icon: "👑",
       earned: false,
       progress: 8,
-      requirement: '365 days',
-      category: 'Elite',
+      requirement: "365 days",
+      category: "Elite",
     },
   ];
 
   const stats = {
     totalBadges: 8,
     earnedBadges: 3,
-    nextBadge: 'Morning Person',
-    nextProgress: '65%',
+    nextBadge: "Morning Person",
+    nextProgress: "65%",
   };
 
   const styles = StyleSheet.create({
@@ -124,30 +124,30 @@ export const AchievementBadgesScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
       flex: 1,
     },
     progressCard: {
-      backgroundColor: theme.colors.purple['20'],
+      backgroundColor: theme.colors.purple["20"],
       marginHorizontal: 20,
       marginTop: 20,
       borderRadius: 20,
@@ -155,39 +155,39 @@ export const AchievementBadgesScreen = () => {
     },
     progressTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     progressStats: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
+      flexDirection: "row",
+      justifyContent: "space-around",
       marginBottom: 16,
     },
     progressStat: {
-      alignItems: 'center',
+      alignItems: "center",
     },
     progressValue: {
       fontSize: 24,
-      fontWeight: '800',
+      fontWeight: "800",
       color: theme.colors.text.primary,
       marginBottom: 4,
     },
     progressLabel: {
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     nextBadgeCard: {
-      backgroundColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["60"],
       borderRadius: 12,
       padding: 12,
-      alignItems: 'center',
+      alignItems: "center",
     },
     nextBadgeText: {
       fontSize: 13,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     section: {
       paddingHorizontal: 20,
@@ -195,24 +195,24 @@ export const AchievementBadgesScreen = () => {
     },
     sectionTitle: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 16,
     },
     badgesGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 12,
     },
     badgeCard: {
-      width: '48%',
-      backgroundColor: theme.colors.brown['10'],
+      width: "48%",
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 16,
       padding: 16,
-      alignItems: 'center',
+      alignItems: "center",
     },
     badgeCardEarned: {
-      backgroundColor: theme.colors.green['20'],
+      backgroundColor: theme.colors.green["20"],
     },
     badgeIcon: {
       fontSize: 48,
@@ -224,69 +224,69 @@ export const AchievementBadgesScreen = () => {
     },
     badgeTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 4,
-      textAlign: 'center',
+      textAlign: "center",
     },
     badgeDescription: {
       fontSize: 11,
       lineHeight: 16,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: 8,
     },
     badgeRequirement: {
       fontSize: 11,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.tertiary,
       marginBottom: 8,
     },
     progressBarContainer: {
-      width: '100%',
+      width: "100%",
       height: 6,
       borderRadius: 3,
-      backgroundColor: theme.colors.gray['20'],
-      overflow: 'hidden',
+      backgroundColor: theme.colors.gray["20"],
+      overflow: "hidden",
       marginBottom: 4,
     },
     progressBarFill: {
-      height: '100%',
-      backgroundColor: theme.colors.purple['60'],
+      height: "100%",
+      backgroundColor: theme.colors.purple["60"],
       borderRadius: 3,
     },
     progressBarFillEarned: {
-      backgroundColor: theme.colors.green['60'],
+      backgroundColor: theme.colors.green["60"],
     },
     progressPercentage: {
       fontSize: 10,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
     },
     earnedBadge: {
       paddingHorizontal: 8,
       paddingVertical: 4,
       borderRadius: 8,
-      backgroundColor: theme.colors.green['60'],
+      backgroundColor: theme.colors.green["60"],
     },
     earnedBadgeText: {
       fontSize: 10,
-      fontWeight: '700',
-      color: '#FFFFFF',
-      textTransform: 'uppercase',
+      fontWeight: "700",
+      color: "#FFFFFF",
+      textTransform: "uppercase",
     },
     categoryBadge: {
       paddingHorizontal: 8,
       paddingVertical: 4,
       borderRadius: 8,
-      backgroundColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["60"],
       marginBottom: 8,
     },
     categoryText: {
       fontSize: 9,
-      fontWeight: '700',
-      color: '#FFFFFF',
-      textTransform: 'uppercase',
+      fontWeight: "700",
+      color: "#FFFFFF",
+      textTransform: "uppercase",
     },
   });
 
@@ -314,11 +314,15 @@ export const AchievementBadgesScreen = () => {
 
           <View style={styles.progressStats}>
             <View style={styles.progressStat}>
-              <Text style={styles.progressValue}>{stats.earnedBadges}/{stats.totalBadges}</Text>
+              <Text style={styles.progressValue}>
+                {stats.earnedBadges}/{stats.totalBadges}
+              </Text>
               <Text style={styles.progressLabel}>Badges Earned</Text>
             </View>
             <View style={styles.progressStat}>
-              <Text style={styles.progressValue}>{Math.round((stats.earnedBadges / stats.totalBadges) * 100)}%</Text>
+              <Text style={styles.progressValue}>
+                {Math.round((stats.earnedBadges / stats.totalBadges) * 100)}%
+              </Text>
               <Text style={styles.progressLabel}>Complete</Text>
             </View>
           </View>
@@ -337,13 +341,20 @@ export const AchievementBadgesScreen = () => {
             {badges
               .filter((badge) => badge.earned)
               .map((badge) => (
-                <View key={badge.id} style={[styles.badgeCard, styles.badgeCardEarned]}>
+                <View
+                  key={badge.id}
+                  style={[styles.badgeCard, styles.badgeCardEarned]}
+                >
                   <View style={styles.categoryBadge}>
                     <Text style={styles.categoryText}>{badge.category}</Text>
                   </View>
-                  <Text style={[styles.badgeIcon, styles.badgeIconEarned]}>{badge.icon}</Text>
+                  <Text style={[styles.badgeIcon, styles.badgeIconEarned]}>
+                    {badge.icon}
+                  </Text>
                   <Text style={styles.badgeTitle}>{badge.title}</Text>
-                  <Text style={styles.badgeDescription}>{badge.description}</Text>
+                  <Text style={styles.badgeDescription}>
+                    {badge.description}
+                  </Text>
                   <View style={styles.earnedBadge}>
                     <Text style={styles.earnedBadgeText}>✓ Earned</Text>
                   </View>
@@ -365,8 +376,12 @@ export const AchievementBadgesScreen = () => {
                   </View>
                   <Text style={styles.badgeIcon}>{badge.icon}</Text>
                   <Text style={styles.badgeTitle}>{badge.title}</Text>
-                  <Text style={styles.badgeDescription}>{badge.description}</Text>
-                  <Text style={styles.badgeRequirement}>{badge.requirement}</Text>
+                  <Text style={styles.badgeDescription}>
+                    {badge.description}
+                  </Text>
+                  <Text style={styles.badgeRequirement}>
+                    {badge.requirement}
+                  </Text>
                   {badge.progress !== undefined && (
                     <>
                       <View style={styles.progressBarContainer}>
@@ -378,7 +393,9 @@ export const AchievementBadgesScreen = () => {
                           ]}
                         />
                       </View>
-                      <Text style={styles.progressPercentage}>{badge.progress}%</Text>
+                      <Text style={styles.progressPercentage}>
+                        {badge.progress}%
+                      </Text>
                     </>
                   )}
                 </View>

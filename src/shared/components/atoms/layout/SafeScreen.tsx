@@ -3,23 +3,23 @@
  * Provides consistent error handling, performance monitoring, and accessibility
  */
 
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
+import { View, StyleSheet } from "react-native";
 // Mock error boundary
 const EnhancedErrorBoundary = ({ children, ...props }) => children;
-import { useTheme } from '@theme/ThemeProvider';
 // Mock utilities
 const usePerformanceOptimizer = () => ({});
 const useAccessibility = () => ({});
 
-const SafeScreen = ({ 
-  children, 
+const SafeScreen = ({
+  children,
   name,
   fallbackComponent,
   onError,
   onRetry,
   style,
-  ...props 
+  ...props
 }) => {
   const { theme } = useTheme();
   const performance = usePerformanceOptimizer();
@@ -27,7 +27,7 @@ const SafeScreen = ({
 
   const handleError = (errorReport) => {
     console.error(`Screen error in ${name}:`, errorReport);
-    
+
     if (onError) {
       onError(errorReport);
     }
@@ -38,12 +38,12 @@ const SafeScreen = ({
 
   const handleRetry = (retryCount) => {
     console.log(`Retrying ${name}, attempt ${retryCount}`);
-    
+
     if (onRetry) {
       onRetry(retryCount);
     }
 
-    accessibility.announceToScreenReader('Retrying screen');
+    accessibility.announceToScreenReader("Retrying screen");
   };
 
   const styles = StyleSheet.create({
@@ -63,9 +63,7 @@ const SafeScreen = ({
       fallbackComponent={fallbackComponent}
       {...props}
     >
-      <View style={[styles.container, style]}>
-        {children}
-      </View>
+      <View style={[styles.container, style]}>{children}</View>
     </EnhancedErrorBoundary>
   );
 };

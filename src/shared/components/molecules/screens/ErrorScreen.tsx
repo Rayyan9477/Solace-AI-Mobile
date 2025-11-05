@@ -3,7 +3,9 @@
  * Not Found (404), No Internet, Internal Error (500), Maintenance, Not Allowed
  */
 
-import React from 'react';
+import { MentalHealthIcon } from "@components/icons";
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
 import {
   View,
   Text,
@@ -11,11 +13,9 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-} from 'react-native';
-import { useTheme } from '@theme/ThemeProvider';
-import { MentalHealthIcon } from '@components/icons';
+} from "react-native";
 
-type ErrorType = '404' | 'no-internet' | '500' | 'maintenance' | 'forbidden';
+type ErrorType = "404" | "no-internet" | "500" | "maintenance" | "forbidden";
 
 interface ErrorScreenProps {
   type: ErrorType;
@@ -24,40 +24,40 @@ interface ErrorScreenProps {
 }
 
 const ERROR_CONFIG = {
-  '404': {
-    illustration: '🔍',
-    title: 'Not Found',
-    message: 'Whoops! Dr. F can\'t find this page :(',
-    statusCode: 'Status Code: 404',
-    action: 'Refresh or Try Again',
+  "404": {
+    illustration: "🔍",
+    title: "Not Found",
+    message: "Whoops! Dr. F can't find this page :(",
+    statusCode: "Status Code: 404",
+    action: "Refresh or Try Again",
   },
-  'no-internet': {
-    illustration: '📡',
-    title: 'No Internet!',
-    message: 'It seems you don\'t have active internet',
+  "no-internet": {
+    illustration: "📡",
+    title: "No Internet!",
+    message: "It seems you don't have active internet",
     statusCode: null,
-    action: 'Refresh or Try Again',
+    action: "Refresh or Try Again",
   },
-  '500': {
-    illustration: '⚠️',
-    title: 'Internal Error',
-    message: 'Whoops! Our server seems to error :(',
-    statusCode: 'Status Code: 500',
-    action: 'Refresh or Try Again',
+  "500": {
+    illustration: "⚠️",
+    title: "Internal Error",
+    message: "Whoops! Our server seems to error :(",
+    statusCode: "Status Code: 500",
+    action: "Refresh or Try Again",
   },
-  'maintenance': {
-    illustration: '🔧',
-    title: 'Maintenance',
-    message: 'We\'re undergoing maintenance',
-    statusCode: 'Come back in 9h 12m',
+  maintenance: {
+    illustration: "🔧",
+    title: "Maintenance",
+    message: "We're undergoing maintenance",
+    statusCode: "Come back in 9h 12m",
     action: null,
   },
-  'forbidden': {
-    illustration: '🛑',
-    title: 'Not Allowed',
-    message: 'Hey, you don\'t have permission',
+  forbidden: {
+    illustration: "🛑",
+    title: "Not Allowed",
+    message: "Hey, you don't have permission",
     statusCode: null,
-    action: 'Contact Admin',
+    action: "Contact Admin",
   },
 };
 
@@ -84,22 +84,22 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({
       height: 40,
       borderRadius: 20,
       backgroundColor: theme.colors.background.secondary,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     content: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       paddingHorizontal: 40,
     },
     illustrationContainer: {
       width: 240,
       height: 240,
       borderRadius: 120,
-      backgroundColor: theme.colors.brown['20'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.brown["20"],
+      justifyContent: "center",
+      alignItems: "center",
       marginBottom: 40,
     },
     illustration: {
@@ -107,22 +107,22 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({
     },
     title: {
       fontSize: 32,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 12,
-      textAlign: 'center',
+      textAlign: "center",
     },
     message: {
       fontSize: 14,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: 24,
       lineHeight: 20,
     },
     statusCodeBadge: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: theme.colors.orange['10'],
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: theme.colors.orange["10"],
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
@@ -131,8 +131,8 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({
     },
     statusCodeText: {
       fontSize: 13,
-      fontWeight: '600',
-      color: theme.colors.orange['60'],
+      fontWeight: "600",
+      color: theme.colors.orange["60"],
     },
     footer: {
       paddingHorizontal: 20,
@@ -140,23 +140,23 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({
       gap: 12,
     },
     primaryButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: theme.colors.orange['40'],
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: theme.colors.orange["40"],
       paddingVertical: 16,
       borderRadius: 24,
       gap: 8,
     },
     primaryButtonText: {
       fontSize: 16,
-      fontWeight: '600',
-      color: '#FFFFFF',
+      fontWeight: "600",
+      color: "#FFFFFF",
     },
     secondaryButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
       backgroundColor: theme.colors.background.secondary,
       borderWidth: 1.5,
       borderColor: theme.colors.border.primary,
@@ -166,7 +166,7 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({
     },
     secondaryButtonText: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
     },
   });
@@ -174,17 +174,14 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
-        barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+        barStyle={theme.isDark ? "light-content" : "dark-content"}
         backgroundColor="transparent"
         translucent
       />
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={onGoHome}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={onGoHome}>
           <MentalHealthIcon
             name="ChevronLeft"
             size={24}
@@ -207,7 +204,7 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({
             <MentalHealthIcon
               name="AlertCircle"
               size={16}
-              color={theme.colors.orange['60']}
+              color={theme.colors.orange["60"]}
             />
             <Text style={styles.statusCodeText}>{config.statusCode}</Text>
           </View>
@@ -217,12 +214,9 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({
       {/* Footer */}
       <View style={styles.footer}>
         {config.action && (
-          <TouchableOpacity
-            style={styles.primaryButton}
-            onPress={onRetry}
-          >
+          <TouchableOpacity style={styles.primaryButton} onPress={onRetry}>
             <MentalHealthIcon
-              name={type === 'forbidden' ? 'Mail' : 'RotateCw'}
+              name={type === "forbidden" ? "Mail" : "RotateCw"}
               size={20}
               color="#FFFFFF"
             />
@@ -230,10 +224,7 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({
           </TouchableOpacity>
         )}
 
-        <TouchableOpacity
-          style={styles.secondaryButton}
-          onPress={onGoHome}
-        >
+        <TouchableOpacity style={styles.secondaryButton} onPress={onGoHome}>
           <MentalHealthIcon
             name="Home"
             size={20}

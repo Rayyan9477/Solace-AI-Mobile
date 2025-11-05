@@ -3,7 +3,9 @@
  * Based on ui-designs/Dark-mode/Profile Settings & Help Center.png
  */
 
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,9 +13,7 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface Language {
   code: string;
@@ -25,21 +25,21 @@ interface Language {
 export const LanguageSettingsScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const [selectedLanguage, setSelectedLanguage] = useState('en-US');
+  const [selectedLanguage, setSelectedLanguage] = useState("en-US");
 
   const languages: Language[] = [
-    { code: 'en-US', name: 'English (US)', nativeName: 'English', flag: '🇺🇸' },
-    { code: 'en-GB', name: 'English (UK)', nativeName: 'English', flag: '🇬🇧' },
-    { code: 'es', name: 'Spanish', nativeName: 'Español', flag: '🇪🇸' },
-    { code: 'fr', name: 'French', nativeName: 'Français', flag: '🇫🇷' },
-    { code: 'de', name: 'German', nativeName: 'Deutsch', flag: '🇩🇪' },
-    { code: 'it', name: 'Italian', nativeName: 'Italiano', flag: '🇮🇹' },
-    { code: 'pt', name: 'Portuguese', nativeName: 'Português', flag: '🇵🇹' },
-    { code: 'ja', name: 'Japanese', nativeName: '日本語', flag: '🇯🇵' },
-    { code: 'ko', name: 'Korean', nativeName: '한국어', flag: '🇰🇷' },
-    { code: 'zh', name: 'Chinese', nativeName: '中文', flag: '🇨🇳' },
-    { code: 'ar', name: 'Arabic', nativeName: 'العربية', flag: '🇸🇦' },
-    { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳' },
+    { code: "en-US", name: "English (US)", nativeName: "English", flag: "🇺🇸" },
+    { code: "en-GB", name: "English (UK)", nativeName: "English", flag: "🇬🇧" },
+    { code: "es", name: "Spanish", nativeName: "Español", flag: "🇪🇸" },
+    { code: "fr", name: "French", nativeName: "Français", flag: "🇫🇷" },
+    { code: "de", name: "German", nativeName: "Deutsch", flag: "🇩🇪" },
+    { code: "it", name: "Italian", nativeName: "Italiano", flag: "🇮🇹" },
+    { code: "pt", name: "Portuguese", nativeName: "Português", flag: "🇵🇹" },
+    { code: "ja", name: "Japanese", nativeName: "日本語", flag: "🇯🇵" },
+    { code: "ko", name: "Korean", nativeName: "한국어", flag: "🇰🇷" },
+    { code: "zh", name: "Chinese", nativeName: "中文", flag: "🇨🇳" },
+    { code: "ar", name: "Arabic", nativeName: "العربية", flag: "🇸🇦" },
+    { code: "hi", name: "Hindi", nativeName: "हिन्दी", flag: "🇮🇳" },
   ];
 
   const styles = StyleSheet.create({
@@ -48,23 +48,23 @@ export const LanguageSettingsScreen = () => {
       backgroundColor: theme.colors.background.primary,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     backButton: {
       width: 40,
       height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
     },
     content: {
@@ -76,17 +76,17 @@ export const LanguageSettingsScreen = () => {
     },
     sectionTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.secondary,
-      textTransform: 'uppercase',
+      textTransform: "uppercase",
       marginBottom: 16,
     },
     languageItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       paddingVertical: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.gray['20'],
+      borderBottomColor: theme.colors.gray["20"],
     },
     languageFlag: {
       fontSize: 32,
@@ -97,39 +97,39 @@ export const LanguageSettingsScreen = () => {
     },
     languageName: {
       fontSize: 15,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.primary,
       marginBottom: 2,
     },
     languageNative: {
       fontSize: 13,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text.secondary,
     },
     checkmark: {
       width: 24,
       height: 24,
       borderRadius: 12,
-      backgroundColor: theme.colors.green['60'],
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: theme.colors.green["60"],
+      justifyContent: "center",
+      alignItems: "center",
     },
     checkmarkText: {
       fontSize: 14,
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     saveButton: {
-      backgroundColor: theme.colors.brown['60'],
+      backgroundColor: theme.colors.brown["60"],
       borderRadius: 16,
       paddingVertical: 16,
       marginHorizontal: 20,
       marginVertical: 24,
-      alignItems: 'center',
+      alignItems: "center",
     },
     saveButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
   });
 

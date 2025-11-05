@@ -1,3 +1,7 @@
+import { TherapeuticButton } from "@components/atoms/buttons/TherapeuticButton";
+import { MentalHealthIcon, FreudLogo } from "@components/icons";
+import { useTheme } from "@theme/ThemeProvider";
+import { colors } from "@theme/colors";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -9,11 +13,6 @@ import {
   StatusBar,
   Animated,
 } from "react-native";
-
-import { MentalHealthIcon, FreudLogo } from "@components/icons";
-import { TherapeuticButton } from "@components/atoms/buttons/TherapeuticButton";
-import { useTheme } from "@theme/ThemeProvider";
-import { colors } from "@theme/colors";
 
 const { width, height } = Dimensions.get("window");
 
@@ -29,7 +28,7 @@ const WELCOME_STEPS = [
     title: "Welcome to the ultimate\nfreud UI Kit!",
     subtitle:
       "Your mindful mental health AI companion\nfor everyone, anywhere ✓",
-    backgroundColors: ["#FFFFFF", colors.gray['10']],
+    backgroundColors: ["#FFFFFF", colors.gray["10"]],
     illustration: "welcome",
     showGetStarted: true,
   },
@@ -38,10 +37,7 @@ const WELCOME_STEPS = [
     title: "Personalize Your Mental\nHealth State With AI",
     subtitle:
       "Get personalized insights and recommendations based on your unique mental health journey",
-    backgroundColors: [
-      colors.green['50'],
-      colors.green['40'],
-    ],
+    backgroundColors: [colors.green["50"], colors.green["40"]],
     illustration: "personalize",
     stepLabel: "Step One",
   },
@@ -50,10 +46,7 @@ const WELCOME_STEPS = [
     title: "Intelligent Mood Tracking\n& AI Emotion Insights",
     subtitle:
       "Track your emotional patterns and receive AI-powered insights to understand your mental state",
-    backgroundColors: [
-      colors.orange['30'],
-      colors.orange['20'],
-    ],
+    backgroundColors: [colors.orange["30"], colors.orange["20"]],
     illustration: "mood",
     stepLabel: "Step Two",
   },
@@ -62,7 +55,7 @@ const WELCOME_STEPS = [
     title: "AI Mental Journaling &\nAI Therapy Chatbot",
     subtitle:
       "Express yourself through guided journaling and get support from our therapeutic AI chatbot",
-    backgroundColors: [colors.gray['20'], colors.gray['10']],
+    backgroundColors: [colors.gray["20"], colors.gray["10"]],
     illustration: "journal",
     stepLabel: "Step Three",
   },
@@ -71,10 +64,7 @@ const WELCOME_STEPS = [
     title: "Mindful Resources That\nMakes You Happy",
     subtitle:
       "Discover curated mindfulness exercises, meditations, and wellness resources",
-    backgroundColors: [
-      colors.yellow['30'],
-      colors.yellow['20'],
-    ],
+    backgroundColors: [colors.yellow["30"], colors.yellow["20"]],
     illustration: "mindful",
     stepLabel: "Step Four",
   },
@@ -83,10 +73,7 @@ const WELCOME_STEPS = [
     title: "Loving & Supportive\nCommunity",
     subtitle:
       "Connect with others on similar journeys in a safe, supportive environment",
-    backgroundColors: [
-      colors.purple['30'],
-      colors.purple['20'],
-    ],
+    backgroundColors: [colors.purple["30"], colors.purple["20"]],
     illustration: "community",
     stepLabel: "Step Five",
   },
@@ -211,7 +198,7 @@ const WelcomeScreen = ({ navigation }) => {
               <View
                 style={[
                   styles.iconBadge,
-                  { backgroundColor: colors.orange['40'] },
+                  { backgroundColor: colors.orange["40"] },
                 ]}
               >
                 <ThemedIcon name="Brain" size={16} color="#FFFFFF" />
@@ -219,7 +206,7 @@ const WelcomeScreen = ({ navigation }) => {
               <View
                 style={[
                   styles.iconBadge,
-                  { backgroundColor: colors.green['50'] },
+                  { backgroundColor: colors.green["50"] },
                 ]}
               >
                 <Text style={styles.iconText}>✓</Text>
@@ -227,7 +214,7 @@ const WelcomeScreen = ({ navigation }) => {
               <View
                 style={[
                   styles.iconBadge,
-                  { backgroundColor: colors.purple['50'] },
+                  { backgroundColor: colors.purple["50"] },
                 ]}
               >
                 <ThemedIcon name="Heart" size={16} color="#FFFFFF" />
@@ -675,20 +662,20 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   stepTitle: {
-    fontSize: 20,  // theme.typography.sizes.headingLg.fontSize
-    fontWeight: '700',  // theme.typography.weights.bold
-    fontFamily: 'Urbanist',  // theme.typography.fontFamily.primary
+    fontSize: 20, // theme.typography.sizes.headingLg.fontSize
+    fontWeight: "700", // theme.typography.weights.bold
+    fontFamily: "Urbanist", // theme.typography.fontFamily.primary
     textAlign: "center",
-    marginBottom: 24,  // theme.spacing[6]
-    lineHeight: 28,  // theme.typography.sizes.headingLg.lineHeight
+    marginBottom: 24, // theme.spacing[6]
+    lineHeight: 28, // theme.typography.sizes.headingLg.lineHeight
     color: colors.semantic.onSurface,
   },
   stepSubtitle: {
-    fontSize: 16,  // theme.typography.sizes.textMd.fontSize
-    fontWeight: '500',  // theme.typography.weights.medium
-    fontFamily: 'Urbanist',  // theme.typography.fontFamily.primary
+    fontSize: 16, // theme.typography.sizes.textMd.fontSize
+    fontWeight: "500", // theme.typography.weights.medium
+    fontFamily: "Urbanist", // theme.typography.fontFamily.primary
     textAlign: "center",
-    lineHeight: 24,  // theme.typography.sizes.textMd.lineHeight
+    lineHeight: 24, // theme.typography.sizes.textMd.lineHeight
     maxWidth: 300,
     color: colors.semantic.onSurfaceVariant,
   },

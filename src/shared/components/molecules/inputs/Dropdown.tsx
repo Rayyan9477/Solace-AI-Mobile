@@ -1,3 +1,5 @@
+import { MentalHealthIcon } from "@shared/components/icons";
+import { useTheme } from "@theme/ThemeProvider";
 import React, { useState, useRef } from "react";
 import {
   View,
@@ -9,9 +11,6 @@ import {
   Modal,
   Dimensions,
 } from "react-native";
-
-import { useTheme } from "@theme/ThemeProvider";
-import { MentalHealthIcon } from "@shared/components/icons";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -69,7 +68,7 @@ const Dropdown = ({
       case "grounding":
         return theme.colors.therapeutic.grounding[500];
       default:
-        return theme.colors.primary['500'];
+        return theme.colors.primary["500"];
     }
   };
 

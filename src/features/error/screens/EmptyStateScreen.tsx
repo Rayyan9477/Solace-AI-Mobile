@@ -3,16 +3,16 @@
  * Based on ui-designs/Dark-mode/🔒 Error & Other Utilities.png
  */
 
-import React from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '@theme/ThemeProvider';
+} from "react-native";
 
 interface EmptyStateScreenProps {
   icon?: string;
@@ -23,10 +23,10 @@ interface EmptyStateScreenProps {
 }
 
 export const EmptyStateScreen: React.FC<EmptyStateScreenProps> = ({
-  icon = '📭',
-  title = 'Nothing Here Yet',
-  message = 'Start by adding your first item to get started.',
-  actionLabel = 'Get Started',
+  icon = "📭",
+  title = "Nothing Here Yet",
+  message = "Start by adding your first item to get started.",
+  actionLabel = "Get Started",
   onAction,
 }) => {
   const { theme } = useTheme();
@@ -44,8 +44,8 @@ export const EmptyStateScreen: React.FC<EmptyStateScreenProps> = ({
     container: {
       flex: 1,
       backgroundColor: theme.colors.background.primary,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       paddingHorizontal: 40,
     },
     icon: {
@@ -54,41 +54,41 @@ export const EmptyStateScreen: React.FC<EmptyStateScreenProps> = ({
     },
     title: {
       fontSize: 24,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 12,
-      textAlign: 'center',
+      textAlign: "center",
     },
     message: {
       fontSize: 15,
       lineHeight: 22,
       color: theme.colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: 32,
     },
     actionButton: {
-      backgroundColor: theme.colors.purple['60'],
+      backgroundColor: theme.colors.purple["60"],
       borderRadius: 16,
       paddingVertical: 16,
       paddingHorizontal: 32,
-      alignItems: 'center',
+      alignItems: "center",
       minWidth: 200,
     },
     actionButtonText: {
       fontSize: 16,
-      fontWeight: '700',
-      color: '#FFFFFF',
+      fontWeight: "700",
+      color: "#FFFFFF",
     },
     tipCard: {
       marginTop: 40,
-      backgroundColor: theme.colors.brown['10'],
+      backgroundColor: theme.colors.brown["10"],
       borderRadius: 12,
       padding: 16,
-      width: '100%',
+      width: "100%",
     },
     tipTitle: {
       fontSize: 14,
-      fontWeight: '700',
+      fontWeight: "700",
       color: theme.colors.text.primary,
       marginBottom: 8,
     },
@@ -121,7 +121,9 @@ export const EmptyStateScreen: React.FC<EmptyStateScreenProps> = ({
       <View style={styles.tipCard}>
         <Text style={styles.tipTitle}>Quick Tips:</Text>
         <View style={styles.tipsList}>
-          <Text style={styles.tipText}>• Create your first entry to get started</Text>
+          <Text style={styles.tipText}>
+            • Create your first entry to get started
+          </Text>
           <Text style={styles.tipText}>• Track your progress over time</Text>
           <Text style={styles.tipText}>• Use AI suggestions for guidance</Text>
         </View>

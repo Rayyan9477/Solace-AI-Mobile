@@ -1,0 +1,1148 @@
+
+> solace-ai-mobile@1.0.0 lint
+> eslint . --ext .js,.jsx,.ts,.tsx --fix
+
+
+R:\Solace-AI-Mobile\App.tsx
+  29:1  warning  There should be no empty line within import group  import/order
+
+R:\Solace-AI-Mobile\components\common\AccessibleButton.ts
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/components\common\AccessibleButton.ts` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\components\common\Button.tsx
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/components\common\Button.tsx` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\components\common\KeyboardAwareScrollView.ts
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/components\common\KeyboardAwareScrollView.ts` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\components\dashboard\MoodCheckIn.ts
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/components\dashboard\MoodCheckIn.ts` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\components\dashboard\QuickActions.ts
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/components\dashboard\QuickActions.ts` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\components\forms\EnhancedInput.ts
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/components\forms\EnhancedInput.ts` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\components\forms\MentalHealthForms.ts
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/components\forms\MentalHealthForms.ts` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\components\mood\IntensitySlider.tsx
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/components\mood\IntensitySlider.tsx` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\components\mood\MoodSelector.tsx
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/components\mood\MoodSelector.tsx` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\jest.setup.js
+  483:17  error  Parsing error: Unexpected token =
+
+R:\Solace-AI-Mobile\src\app\navigation\AppNavigator.tsx
+   15:1   warning  `@features/dashboard/DashboardScreen` import should occur after import of `@features/crisis/screens/CrisisSupportScreen`                      import/order
+   16:1   warning  `@react-navigation/bottom-tabs` import should occur after import of `@features/error/screens/SuccessScreen`                                   import/order
+   16:74  warning  Delete `␍`                                                                                                                                    prettier/prettier
+   17:1   warning  `@react-navigation/stack` import should occur after import of `@features/error/screens/SuccessScreen`                                         import/order
+   17:64  warning  Delete `␍`                                                                                                                                    prettier/prettier
+   18:1   warning  `@react-navigation/native` import should occur after import of `@features/error/screens/SuccessScreen`                                        import/order
+   18:58  warning  Delete `␍`                                                                                                                                    prettier/prettier
+   19:1   warning  `react` import should occur after import of `@theme/ThemeProvider`                                                                            import/order
+   19:27  warning  Delete `␍`                                                                                                                                    prettier/prettier
+   20:1   warning  `react-native` import should occur after import of `@theme/ThemeProvider`                                                                     import/order
+   20:55  warning  Delete `␍`                                                                                                                                    prettier/prettier
+   21:1   warning  There should be no empty line within import group                                                                                             import/order
+   21:1   warning  `react-redux` import should occur after import of `@theme/ThemeProvider`                                                                      import/order
+   21:63  warning  Delete `␍`                                                                                                                                    prettier/prettier
+   22:1   warning  Delete `␍`                                                                                                                                    prettier/prettier
+   23:32  warning  Delete `␍`                                                                                                                                    prettier/prettier
+   24:1   warning  `@features/mood/MoodScreen` import should occur after import of `@features/error/screens/SuccessScreen`                                       import/order
+   25:1   warning  `@features/mood/screens/EnhancedMoodTrackerScreen` import should occur after import of `@features/error/screens/SuccessScreen`                import/order
+   26:1   warning  `@features/onboarding/screens/OnboardingScreen` import should occur after import of `@features/error/screens/SuccessScreen`                   import/order
+   27:1   warning  `@features/onboarding/screens/WelcomeScreen` import should occur after import of `@features/error/screens/SuccessScreen`                      import/order
+   28:1   warning  `@features/journal` import should occur after import of `@features/error/screens/SuccessScreen`                                               import/order
+   33:1   warning  `@features/mindfulness` import should occur after import of `@features/error/screens/SuccessScreen`                                           import/order
+   38:1   warning  `@features/wellness` import should occur after import of `@features/error/screens/SuccessScreen`                                              import/order
+   39:1   warning  `@features/profile` import should occur after import of `@features/error/screens/SuccessScreen`                                               import/order
+   40:1   warning  `@features/search` import should occur after import of `@features/error/screens/SuccessScreen`                                                import/order
+   41:1   warning  There should be no empty line within import group                                                                                             import/order
+   41:1   warning  `@features/profile/screens/ProfileSetupScreen` import should occur after import of `@features/error/screens/SuccessScreen`                    import/order
+   44:1   warning  `@features/dashboard/screens/FreudScoreScreen` import should occur after import of `@features/crisis/screens/CrisisSupportScreen`             import/order
+   45:1   warning  `@features/dashboard/screens/AISuggestionsScreen` import should occur after import of `@features/crisis/screens/CrisisSupportScreen`          import/order
+   46:1   warning  `@features/mood/screens/MoodStatsScreen` import should occur after import of `@features/error/screens/SuccessScreen`                          import/order
+   47:1   warning  `@features/mood/screens/MoodCalendarScreen` import should occur after import of `@features/error/screens/SuccessScreen`                       import/order
+   48:1   warning  `@features/mood/screens/MoodHistoryScreen` import should occur after import of `@features/error/screens/SuccessScreen`                        import/order
+   49:1   warning  `@features/mood/screens/MoodAnalyticsScreen` import should occur after import of `@features/error/screens/SuccessScreen`                      import/order
+   50:1   warning  `@features/mood/screens/ActivityTrackingScreen` import should occur after import of `@features/error/screens/SuccessScreen`                   import/order
+   51:1   warning  `@features/wellness/screens/StressStatsScreen` import should occur after import of `@features/error/screens/SuccessScreen`                    import/order
+   52:1   warning  `@features/wellness/screens/SleepPatternsScreen` import should occur after import of `@features/error/screens/SuccessScreen`                  import/order
+   53:1   warning  `@features/wellness/screens/SleepGoalsScreen` import should occur after import of `@features/error/screens/SuccessScreen`                     import/order
+   54:1   warning  `@features/wellness/screens/SleepTipsScreen` import should occur after import of `@features/error/screens/SuccessScreen`                      import/order
+   55:1   warning  `@features/wellness/screens/BedtimeRemindersScreen` import should occur after import of `@features/error/screens/SuccessScreen`               import/order
+   56:1   warning  `@features/wellness/screens/RelaxationTechniquesScreen` import should occur after import of `@features/error/screens/SuccessScreen`           import/order
+   57:1   warning  `@features/community/screens/PostDetailScreen` import should occur after import of `@features/community/screens/DiscussionThreadsScreen`      import/order
+   59:1   warning  `@features/community/screens/SupportGroupsScreen` import should occur after import of `@features/community/screens/SuccessStoriesScreen`      import/order
+   63:1   warning  `@features/journal/screens/JournalCalendarScreen` import should occur after import of `@features/error/screens/SuccessScreen`                 import/order
+   64:1   warning  `@features/journal/screens/JournalSearchScreen` import should occur after import of `@features/error/screens/SuccessScreen`                   import/order
+   65:1   warning  `@features/journal/screens/JournalExportScreen` import should occur after import of `@features/error/screens/SuccessScreen`                   import/order
+   66:1   warning  `@features/mindfulness/screens/SessionHistoryScreen` import should occur after import of `@features/error/screens/SuccessScreen`              import/order
+   67:1   warning  `@features/mindfulness/screens/AchievementBadgesScreen` import should occur after import of `@features/error/screens/SuccessScreen`           import/order
+   68:1   warning  `@features/mindfulness/screens/ArticleDetailScreen` import should occur after import of `@features/error/screens/SuccessScreen`               import/order
+   69:1   warning  `@features/mindfulness/screens/CourseDetailScreen` import should occur after import of `@features/error/screens/SuccessScreen`                import/order
+   70:1   warning  `@features/mindfulness/screens/CourseLessonScreen` import should occur after import of `@features/error/screens/SuccessScreen`                import/order
+   71:1   warning  `@features/mindfulness/screens/CourseCompletionScreen` import should occur after import of `@features/error/screens/SuccessScreen`            import/order
+   72:1   warning  `@features/smartNotifications/screens/NotificationHistoryScreen` import should occur after import of `@features/error/screens/SuccessScreen`  import/order
+   73:1   warning  `@features/smartNotifications/screens/NotificationCardsScreen` import should occur after import of `@features/error/screens/SuccessScreen`    import/order
+   74:1   warning  `@features/smartNotifications/screens/SmartNotificationsScreen` import should occur after import of `@features/error/screens/SuccessScreen`   import/order
+   75:1   warning  `@features/mood/screens/MoodSelectionScreen` import should occur after import of `@features/error/screens/SuccessScreen`                      import/order
+   76:1   warning  `@features/profile/screens/HelpCenterScreen` import should occur after import of `@features/error/screens/SuccessScreen`                      import/order
+   77:1   warning  `@features/profile/screens/AccountSettingsScreen` import should occur after import of `@features/error/screens/SuccessScreen`                 import/order
+   78:1   warning  `@features/profile/screens/PersonalInformationScreen` import should occur after import of `@features/error/screens/SuccessScreen`             import/order
+   79:1   warning  `@features/profile/screens/NotificationSettingsScreen` import should occur after import of `@features/error/screens/SuccessScreen`            import/order
+   80:1   warning  `@features/profile/screens/SecuritySettingsScreen` import should occur after import of `@features/error/screens/SuccessScreen`                import/order
+   81:1   warning  `@features/profile/screens/LanguageSettingsScreen` import should occur after import of `@features/error/screens/SuccessScreen`                import/order
+   82:1   warning  `@features/profile/screens/PrivacySettingsScreen` import should occur after import of `@features/error/screens/SuccessScreen`                 import/order
+   83:1   warning  `@features/profile/screens/AboutScreen` import should occur after import of `@features/error/screens/SuccessScreen`                           import/order
+   84:1   warning  `@features/profile/screens/ContactSupportScreen` import should occur after import of `@features/error/screens/SuccessScreen`                  import/order
+   85:1   warning  `@features/wellness/screens/StressAssessmentScreen` import should occur after import of `@features/error/screens/SuccessScreen`               import/order
+   86:1   warning  `@features/wellness/screens/QuickStressReliefScreen` import should occur after import of `@features/error/screens/SuccessScreen`              import/order
+   87:1   warning  `@features/search/screens/RecentSearchesScreen` import should occur after import of `@features/error/screens/SuccessScreen`                   import/order
+   88:1   warning  `@features/search/screens/SearchCategoriesScreen` import should occur after import of `@features/error/screens/SuccessScreen`                 import/order
+   89:1   warning  `@features/mindfulness/screens/GuidedSessionsScreen` import should occur after import of `@features/error/screens/SuccessScreen`              import/order
+   90:1   warning  `@features/mindfulness/screens/MindfulGoalsScreen` import should occur after import of `@features/error/screens/SuccessScreen`                import/order
+   91:1   warning  `@features/mindfulness/screens/MindfulResourcesCategoriesScreen` import should occur after import of `@features/error/screens/SuccessScreen`  import/order
+   92:1   warning  `@features/mindfulness/screens/BookmarkedResourcesScreen` import should occur after import of `@features/error/screens/SuccessScreen`         import/order
+   93:1   warning  `@features/error/screens/NetworkErrorScreen` import should occur after import of `@features/error/screens/EmptyStateScreen`                   import/order
+   94:1   warning  `@features/error/screens/MaintenanceModeScreen` import should occur after import of `@features/error/screens/EmptyStateScreen`                import/order
+   95:1   warning  `@features/onboarding/screens/SplashScreen` import should occur after import of `@features/error/screens/SuccessScreen`                       import/order
+   96:1   warning  `@features/onboarding/screens/LoadingScreen` import should occur after import of `@features/error/screens/SuccessScreen`                      import/order
+   97:1   warning  `@features/search/screens/VoiceSearchScreen` import should occur after import of `@features/error/screens/SuccessScreen`                      import/order
+   98:1   warning  `@features/search/screens/SearchFiltersScreen` import should occur after import of `@features/error/screens/SuccessScreen`                    import/order
+   99:1   warning  `@features/search/screens/PopularSearchesScreen` import should occur after import of `@features/error/screens/SuccessScreen`                  import/order
+  100:1   warning  `@features/error/screens/ServerErrorScreen` import should occur after import of `@features/error/screens/OfflineModeScreen`                   import/order
+  103:1   warning  There should be no empty line within import group                                                                                             import/order
+  150:9   warning  'navigation' is assigned a value but never used                                                                                               no-unused-vars
+  150:9   warning  'navigation' is assigned a value but never used                                                                                               @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\app\providers\AppProvider.tsx
+   32:30  warning  'message' is defined but never used. Allowed unused args must match /^_/u                                                                                             no-unused-vars
+   33:27  warning  'reactTag' is defined but never used. Allowed unused args must match /^_/u                                                                                            no-unused-vars
+   50:23  warning  'level' is defined but never used. Allowed unused args must match /^_/u                                                                                               no-unused-vars
+   50:39  warning  'context' is defined but never used. Allowed unused args must match /^_/u                                                                                             no-unused-vars
+   54:22  warning  'planData' is defined but never used. Allowed unused args must match /^_/u                                                                                            no-unused-vars
+   56:25  warning  'type' is defined but never used. Allowed unused args must match /^_/u                                                                                                no-unused-vars
+   71:23  warning  'componentName' is defined but never used. Allowed unused args must match /^_/u                                                                                       no-unused-vars
+   71:46  warning  'renderFn' is defined but never used. Allowed unused args must match /^_/u                                                                                            no-unused-vars
+  326:7   warning  Unexpected console statement                                                                                                                                          no-console
+  356:5   warning  React Hook useCallback has missing dependencies: 'callEmergencyServices' and 'contactCrisisHotline'. Either include them or remove the dependency array               react-hooks/exhaustive-deps
+  360:5   warning  Unexpected console statement                                                                                                                                          no-console
+  460:21  warning  'setFrameRate' is assigned a value but never used                                                                                                                     no-unused-vars
+  460:21  warning  'setFrameRate' is assigned a value but never used                                                                                                                     @typescript-eslint/no-unused-vars
+  499:6   warning  React Hook useEffect has missing dependencies: 'cleanupMemory', 'enableLowMemoryMode', and 'enableOptimizedMode'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\app\providers\RefactoredAppProvider.tsx
+   29:10  warning  'initializationError' is assigned a value but never used                 no-unused-vars
+   29:10  warning  'initializationError' is assigned a value but never used                 @typescript-eslint/no-unused-vars
+  148:34  warning  Expected error to be handled                                             node/handle-callback-err
+  149:5   warning  'error' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  149:5   warning  'error' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  175:19  warning  Use callback in setState when referencing the previous state             react/no-access-state-in-setstate
+
+R:\Solace-AI-Mobile\src\app\store\slices\assessmentSlice.ts
+  43:7  warning  Unexpected console statement  no-console
+  49:7  warning  Unexpected console statement  no-console
+  55:7  warning  Unexpected console statement  no-console
+
+R:\Solace-AI-Mobile\src\app\store\slices\authSlice.ts
+   12:32  warning  'rememberMe' is assigned a value but never used                                    no-unused-vars
+   12:32  warning  'rememberMe' is assigned a value but never used                                    @typescript-eslint/no-unused-vars
+   61:15  warning  'rejectWithValue' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+   61:15  warning  'rejectWithValue' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  195:41  warning  'state' is defined but never used. Allowed unused args must match /^_/u            no-unused-vars
+  195:41  warning  'state' is defined but never used. Allowed unused args must match /^_/u            @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\app\store\slices\moodSlice.ts
+   45:9   warning  Unexpected console statement                 no-console
+   58:9   warning  Unexpected console statement                 no-console
+  104:35  warning  'params' is assigned a value but never used  no-unused-vars
+  104:35  warning  'params' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\app\store\slices\userSlice.ts
+   73:9   warning  Unexpected console statement                   no-console
+   81:9   warning  Unexpected console statement                   no-console
+   87:9   warning  Unexpected console statement                   no-console
+  202:15  warning  'password' is assigned a value but never used  no-unused-vars
+  202:15  warning  'password' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  202:25  warning  'token' is assigned a value but never used     no-unused-vars
+  202:25  warning  'token' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  202:32  warning  'apiKey' is assigned a value but never used    no-unused-vars
+  202:32  warning  'apiKey' is assigned a value but never used    @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\app\store\store.ts
+   6:3  warning  'UnknownAction' is defined but never used             no-unused-vars
+   6:3  warning  'UnknownAction' is defined but never used             @typescript-eslint/no-unused-vars
+  33:7  warning  'SESSION_TIMEOUT' is assigned a value but never used  no-unused-vars
+  33:7  warning  'SESSION_TIMEOUT' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\app\store\transforms\encryptionTransform.ts
+  11:11  warning  'EncryptedState' is defined but never used  no-unused-vars
+  11:11  warning  'EncryptedState' is defined but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\components\mood\IntensitySlider.tsx
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/src\components\mood\IntensitySlider.tsx` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\src\components\mood\IntensitySlider.view.tsx
+  7:3  warning  'onValueChange' is assigned a value but never used  no-unused-vars
+  7:3  warning  'onValueChange' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\assessment\components\MentalHealthScoreWidget.tsx
+   11:3  warning  'AccessibilityInfo' is defined but never used                                                                     no-unused-vars
+   11:3  warning  'AccessibilityInfo' is defined but never used                                                                     @typescript-eslint/no-unused-vars
+  116:6  warning  React Hook useEffect has a missing dependency: 'animatedValue'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\features\assessment\screens\AssessmentResultsScreen.tsx
+  21:9   warning  'width' is assigned a value but never used                               no-unused-vars
+  21:9   warning  'width' is assigned a value but never used                               @typescript-eslint/no-unused-vars
+  23:43  warning  'route' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  23:43  warning  'route' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\assessment\screens\AssessmentScreen.tsx
+   7:10  warning  'MentalHealthIcon' is defined but never used  no-unused-vars
+   7:10  warning  'MentalHealthIcon' is defined but never used  @typescript-eslint/no-unused-vars
+  11:10  warning  'LinearGradient' is defined but never used    no-unused-vars
+  11:10  warning  'LinearGradient' is defined but never used    @typescript-eslint/no-unused-vars
+  24:9   warning  'width' is assigned a value but never used    no-unused-vars
+  24:9   warning  'width' is assigned a value but never used    @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\auth\ForgotPasswordScreen.tsx
+   7:10  warning  'FreudLogo' is defined but never used  no-unused-vars
+   7:10  warning  'FreudLogo' is defined but never used  @typescript-eslint/no-unused-vars
+  15:3   warning  'TextInput' is defined but never used  no-unused-vars
+  15:3   warning  'TextInput' is defined but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\auth\SignupScreen.tsx
+  191:27  warning  Unnecessary escape character: \[  no-useless-escape
+  191:44  warning  Unnecessary escape character: \/  no-useless-escape
+
+R:\Solace-AI-Mobile\src\features\auth\screens\SocialLoginScreen.tsx
+  63:7  warning  Unexpected console statement  no-console
+
+R:\Solace-AI-Mobile\src\features\chat\NewConversationScreen.tsx
+  28:10  warning  'warmingMode' is assigned a value but never used      no-unused-vars
+  28:10  warning  'warmingMode' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  28:23  warning  'setWarmingMode' is assigned a value but never used   no-unused-vars
+  28:23  warning  'setWarmingMode' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  29:10  warning  'startedModel' is assigned a value but never used     no-unused-vars
+  29:10  warning  'startedModel' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  29:24  warning  'setStartedModel' is assigned a value but never used  no-unused-vars
+  29:24  warning  'setStartedModel' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\community\screens\CommunityNotificationsScreen.tsx
+  13:3  warning  'ScrollView' is defined but never used  no-unused-vars
+  13:3  warning  'ScrollView' is defined but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\community\screens\CommunitySupportScreen.tsx
+  16:3  warning  'Image' is defined but never used  no-unused-vars
+  16:3  warning  'Image' is defined but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\community\screens\PostDetailScreen.tsx
+  16:3  warning  'Image' is defined but never used           no-unused-vars
+  16:3  warning  'Image' is defined but never used           @typescript-eslint/no-unused-vars
+  48:9  warning  'route' is assigned a value but never used  no-unused-vars
+  48:9  warning  'route' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\crisis\CrisisManager.ts
+  357:31  warning  'indicators' is assigned a value but never used  no-unused-vars
+  357:31  warning  'indicators' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  453:33  warning  'actions' is assigned a value but never used     no-unused-vars
+  453:33  warning  'actions' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  726:7   warning  Unexpected console statement                     no-console
+  757:7   warning  Unexpected console statement                     no-console
+  795:9   warning  Unexpected console statement                     no-console
+  812:15  warning  Unexpected console statement                     no-console
+  827:7   warning  Unexpected console statement                     no-console
+
+R:\Solace-AI-Mobile\src\features\crisis\screens\CrisisSupportScreen.tsx
+   22:11  warning  'Resource' is defined but never used                                    no-unused-vars
+   22:11  warning  'Resource' is defined but never used                                    @typescript-eslint/no-unused-vars
+  257:52  warning  Expected error to be handled                                            node/handle-callback-err
+  257:53  warning  'err' is defined but never used. Allowed unused args must match /^_/u   no-unused-vars
+  257:53  warning  'err' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+  268:56  warning  'name' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  268:56  warning  'name' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  270:36  warning  Expected error to be handled                                            node/handle-callback-err
+  270:37  warning  'err' is defined but never used. Allowed unused args must match /^_/u   no-unused-vars
+  270:37  warning  'err' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+  276:32  warning  Expected error to be handled                                            node/handle-callback-err
+  276:33  warning  'err' is defined but never used. Allowed unused args must match /^_/u   no-unused-vars
+  276:33  warning  'err' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\dashboard\DashboardScreen.tsx
+  170:9  warning  'getGreeting' is assigned a value but never used  no-unused-vars
+  170:9  warning  'getGreeting' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\dashboard\components\EnhancedDashboard.tsx
+   7:27  warning  'useEffect' is defined but never used                                         no-unused-vars
+   7:27  warning  'useEffect' is defined but never used                                         @typescript-eslint/no-unused-vars
+  17:21  warning  'Avatar' is defined but never used                                            no-unused-vars
+  17:21  warning  'Avatar' is defined but never used                                            @typescript-eslint/no-unused-vars
+  17:29  warning  'IconButton' is defined but never used                                        no-unused-vars
+  17:29  warning  'IconButton' is defined but never used                                        @typescript-eslint/no-unused-vars
+  19:16  warning  'screenWidth' is assigned a value but never used                              no-unused-vars
+  19:16  warning  'screenWidth' is assigned a value but never used                              @typescript-eslint/no-unused-vars
+  19:37  warning  'screenHeight' is assigned a value but never used                             no-unused-vars
+  19:37  warning  'screenHeight' is assigned a value but never used                             @typescript-eslint/no-unused-vars
+  21:30  warning  'navigation' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  21:30  warning  'navigation' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\dashboard\components\EnhancedDashboardCard.tsx
+  13:3   warning  'Platform' is defined but never used                                     no-unused-vars
+  13:3   warning  'Platform' is defined but never used                                     @typescript-eslint/no-unused-vars
+  15:16  warning  'Surface' is defined but never used                                      no-unused-vars
+  15:16  warning  'Surface' is defined but never used                                      @typescript-eslint/no-unused-vars
+  15:25  warning  'IconButton' is defined but never used                                   no-unused-vars
+  15:25  warning  'IconButton' is defined but never used                                   @typescript-eslint/no-unused-vars
+  17:16  warning  'screenWidth' is assigned a value but never used                         no-unused-vars
+  17:16  warning  'screenWidth' is assigned a value but never used                         @typescript-eslint/no-unused-vars
+  91:50  warning  'props' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  91:50  warning  'props' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  92:49  warning  'props' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  92:49  warning  'props' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\dashboard\components\MentalHealthScoreWidget.tsx
+  8:10  warning  'View' is defined but never used  no-unused-vars
+  8:10  warning  'View' is defined but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\dashboard\components\MoodCheckIn.tsx
+  152:6  warning  React Hook useEffect has missing dependencies: 'onPerformanceIssue' and 'performanceTracker'. Either include them or remove the dependency array. If 'onPerformanceIssue' changes too often, find the parent component that defines it and wrap that definition in useCallback  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\features\dashboard\components\QuickActions.tsx
+   98:6  warning  React Hook useEffect has a missing dependency: 'actions.length'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  116:6  warning  React Hook useEffect has a missing dependency: 'actions'. Either include it or remove the dependency array         react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\features\dashboard\screens\FreudScoreScreen.tsx
+  21:9   warning  'width' is assigned a value but never used   no-unused-vars
+  21:9   warning  'width' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  29:11  warning  'MoodHistoryItem' is defined but never used  no-unused-vars
+  29:11  warning  'MoodHistoryItem' is defined but never used  @typescript-eslint/no-unused-vars
+  70:7   warning  Unexpected console statement                 no-console
+  78:7   warning  Unexpected console statement                 no-console
+  86:7   warning  Unexpected console statement                 no-console
+
+R:\Solace-AI-Mobile\src\features\error\screens\MaintenanceModeScreen.tsx
+  28:7  warning  Unexpected console statement  no-console
+
+R:\Solace-AI-Mobile\src\features\error\screens\NetworkErrorScreen.tsx
+  23:7  warning  Unexpected console statement  no-console
+
+R:\Solace-AI-Mobile\src\features\error\screens\OfflineModeScreen.tsx
+  82:7  warning  Unexpected console statement  no-console
+
+R:\Solace-AI-Mobile\src\features\error\screens\ServerErrorScreen.tsx
+  15:3  warning  'ScrollView' is defined but never used  no-unused-vars
+  15:3  warning  'ScrollView' is defined but never used  @typescript-eslint/no-unused-vars
+  24:7  warning  Unexpected console statement            no-console
+
+R:\Solace-AI-Mobile\src\features\error\screens\SuccessScreen.tsx
+  68:6  warning  React Hook useEffect has missing dependencies: 'autoRedirect', 'fadeAnim', 'navigation', 'onAction', 'redirectDelay', and 'scaleAnim'. Either include them or remove the dependency array. If 'onAction' changes too often, find the parent component that defines it and wrap that definition in useCallback  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\features\journal\screens\JournalCalendarScreen.tsx
+  19:9  warning  'width' is assigned a value but never used  no-unused-vars
+  19:9  warning  'width' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\journal\screens\JournalCreateScreen.tsx
+  57:25  warning  'setRecordingTime' is assigned a value but never used  no-unused-vars
+  57:25  warning  'setRecordingTime' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\journal\screens\JournalDetailScreen.tsx
+  34:9   warning  'route' is assigned a value but never used             no-unused-vars
+  34:9   warning  'route' is assigned a value but never used             @typescript-eslint/no-unused-vars
+  52:25  warning  'setAudioProgress' is assigned a value but never used  no-unused-vars
+  52:25  warning  'setAudioProgress' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\mindfulness\screens\ArticleDetailScreen.tsx
+  16:3  warning  'Image' is defined but never used  no-unused-vars
+  16:3  warning  'Image' is defined but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\mindfulness\screens\BreathingExerciseScreen.tsx
+  21:11  warning  'theme' is assigned a value but never used  no-unused-vars
+  21:11  warning  'theme' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\mindfulness\screens\CourseLessonScreen.tsx
+  18:9  warning  'width' is assigned a value but never used     no-unused-vars
+  18:9  warning  'width' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  49:9  warning  'progress' is assigned a value but never used  no-unused-vars
+  49:9  warning  'progress' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\mindfulness\screens\MindfulHoursScreen.tsx
+   8:17  warning  'useState' is defined but never used                                     no-unused-vars
+   8:17  warning  'useState' is defined but never used                                     @typescript-eslint/no-unused-vars
+  97:37  warning  'index' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  97:37  warning  'index' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\mindfulness\screens\MindfulResourcesScreen.tsx
+  17:3   warning  'Image' is defined but never used                  no-unused-vars
+  17:3   warning  'Image' is defined but never used                  @typescript-eslint/no-unused-vars
+  96:10  warning  'activeTab' is assigned a value but never used     no-unused-vars
+  96:10  warning  'activeTab' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  96:21  warning  'setActiveTab' is assigned a value but never used  no-unused-vars
+  96:21  warning  'setActiveTab' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\mood\MoodScreen.tsx
+  185:9  warning  Unexpected console statement  no-console
+
+R:\Solace-AI-Mobile\src\features\mood\components\EnhancedMoodTracker.tsx
+   6:10  warning  'LinearGradient' is defined but never used         no-unused-vars
+   6:10  warning  'LinearGradient' is defined but never used         @typescript-eslint/no-unused-vars
+  17:10  warning  'Card' is defined but never used                   no-unused-vars
+  17:10  warning  'Card' is defined but never used                   @typescript-eslint/no-unused-vars
+  17:16  warning  'Button' is defined but never used                 no-unused-vars
+  17:16  warning  'Button' is defined but never used                 @typescript-eslint/no-unused-vars
+  17:24  warning  'Chip' is defined but never used                   no-unused-vars
+  17:24  warning  'Chip' is defined but never used                   @typescript-eslint/no-unused-vars
+  19:16  warning  'screenWidth' is assigned a value but never used   no-unused-vars
+  19:16  warning  'screenWidth' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  19:37  warning  'screenHeight' is assigned a value but never used  no-unused-vars
+  19:37  warning  'screenHeight' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  32:21  warning  'setIntensity' is assigned a value but never used  no-unused-vars
+  32:21  warning  'setIntensity' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  40:7   warning  Unexpected console statement                       no-console
+
+R:\Solace-AI-Mobile\src\features\mood\components\IntensitySlider.tsx
+  10:5  warning  'onValueChange' is assigned a value but never used  no-unused-vars
+  10:5  warning  'onValueChange' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\mood\screens\EnhancedMoodTrackerScreen.tsx
+   15:1   warning  There should be no empty line within import group                                                                                                                                                                                                import/order
+  151:7   warning  'MentalHealthAccessibility' is assigned a value but never used                                                                                                                                                                                   no-unused-vars
+  151:7   warning  'MentalHealthAccessibility' is assigned a value but never used                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  153:16  warning  'height' is assigned a value but never used                                                                                                                                                                                                      no-unused-vars
+  153:16  warning  'height' is assigned a value but never used                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+  162:9   warning  The 'dispatch' logical expression could make the dependencies of useCallback Hook (at line 330) change on every render. Move it inside the useCallback callback. Alternatively, wrap the initialization of 'dispatch' in its own useMemo() Hook  react-hooks/exhaustive-deps
+  694:30  warning  Expected '===' and instead saw '=='                                                                                                                                                                                                              eqeqeq
+  705:60  warning  Expected '===' and instead saw '=='                                                                                                                                                                                                              eqeqeq
+
+R:\Solace-AI-Mobile\src\features\mood\screens\MoodCalendarScreen.tsx
+   19:9   warning  'width' is assigned a value but never used  no-unused-vars
+   19:9   warning  'width' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   28:11  warning  'MonthData' is defined but never used       no-unused-vars
+   28:11  warning  'MonthData' is defined but never used       @typescript-eslint/no-unused-vars
+  124:7   warning  Unexpected console statement                no-console
+
+R:\Solace-AI-Mobile\src\features\mood\screens\MoodSelectionScreen.tsx
+  203:9  warning  'handleSwipe' is assigned a value but never used  no-unused-vars
+  203:9  warning  'handleSwipe' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\mood\screens\MoodStatsScreen.tsx
+    4:17  warning  'useState' is defined but never used                                                                                                               no-unused-vars
+    4:17  warning  'useState' is defined but never used                                                                                                               @typescript-eslint/no-unused-vars
+   16:9   warning  'width' is assigned a value but never used                                                                                                         no-unused-vars
+   16:9   warning  'width' is assigned a value but never used                                                                                                         @typescript-eslint/no-unused-vars
+   64:6   warning  React Hook useEffect has missing dependencies: 'fadeAnim' and 'slideAnim'. Either include them or remove the dependency array                      react-hooks/exhaustive-deps
+  366:39  warning  'isDarkMode' is defined but never used. Allowed unused args must match /^_/u                                                                       no-unused-vars
+  366:39  warning  'isDarkMode' is defined but never used. Allowed unused args must match /^_/u                                                                       @typescript-eslint/no-unused-vars
+  386:6   warning  React Hook useEffect has missing dependencies: 'fadeAnim' and 'scaleAnim'. Either include them or remove the dependency array                      react-hooks/exhaustive-deps
+  426:6   warning  React Hook useEffect has missing dependencies: 'fadeAnim', 'mood.percentage', and 'widthAnim'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  479:6   warning  React Hook useEffect has a missing dependency: 'fadeAnim'. Either include it or remove the dependency array                                        react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\features\offlineMode\OfflineManager.ts
+    22:4   warning  'state' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+    90:11  warning  'EssentialData' is defined but never used                                no-unused-vars
+    90:11  warning  'EssentialData' is defined but never used                                @typescript-eslint/no-unused-vars
+   258:7   warning  Unexpected console statement                                             no-console
+   288:7   warning  Unexpected console statement                                             no-console
+   346:9   warning  Unexpected console statement                                             no-console
+   545:7   warning  Unexpected console statement                                             no-console
+   591:7   warning  Unexpected console statement                                             no-console
+   629:7   warning  Unexpected console statement                                             no-console
+   663:7   warning  Unexpected console statement                                             no-console
+   681:7   warning  Unexpected console statement                                             no-console
+   722:7   warning  Unexpected console statement                                             no-console
+   738:7   warning  Unexpected console statement                                             no-console
+   779:9   warning  Unexpected console statement                                             no-console
+   978:9   warning  Unexpected console statement                                             no-console
+   994:7   warning  Unexpected console statement                                             no-console
+  1040:7   warning  Unexpected console statement                                             no-console
+
+R:\Solace-AI-Mobile\src\features\onboarding\screens\LoadingScreen.tsx
+  29:9  warning  The 'loadingMessages' array makes the dependencies of useEffect Hook (at line 58) change on every render. Move it inside the useEffect callback. Alternatively, wrap the initialization of 'loadingMessages' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\features\onboarding\screens\OnboardingScreen.tsx
+   52:9   warning  'fadeAnim' is assigned a value but never used                            no-unused-vars
+   52:9   warning  'fadeAnim' is assigned a value but never used                            @typescript-eslint/no-unused-vars
+  171:37  warning  'index' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  171:37  warning  'index' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\onboarding\screens\ProfessionalOnboardingScreen.tsx
+    8:10  warning  'LinearGradient' is defined but never used                               no-unused-vars
+    8:10  warning  'LinearGradient' is defined but never used                               @typescript-eslint/no-unused-vars
+   19:3   warning  'Platform' is defined but never used                                     no-unused-vars
+   19:3   warning  'Platform' is defined but never used                                     @typescript-eslint/no-unused-vars
+   53:9   warning  'fadeAnim' is assigned a value but never used                            no-unused-vars
+   53:9   warning  'fadeAnim' is assigned a value but never used                            @typescript-eslint/no-unused-vars
+  192:37  warning  'index' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  192:37  warning  'index' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\onboarding\screens\WelcomeScreen.tsx
+  17:9   warning  'width' is assigned a value but never used                                                                              no-unused-vars
+  17:9   warning  'width' is assigned a value but never used                                                                              @typescript-eslint/no-unused-vars
+  17:16  warning  'height' is assigned a value but never used                                                                             no-unused-vars
+  17:16  warning  'height' is assigned a value but never used                                                                             @typescript-eslint/no-unused-vars
+  98:6   warning  React Hook useEffect has a missing dependency: 'animateStepEntrance'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\features\profile\screens\AccountSettingsScreen.tsx
+  22:10  warning  'notifications' is assigned a value but never used     no-unused-vars
+  22:10  warning  'notifications' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  22:25  warning  'setNotifications' is assigned a value but never used  no-unused-vars
+  22:25  warning  'setNotifications' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  24:10  warning  'showProfile' is assigned a value but never used       no-unused-vars
+  24:10  warning  'showProfile' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  24:23  warning  'setShowProfile' is assigned a value but never used    no-unused-vars
+  24:23  warning  'setShowProfile' is assigned a value but never used    @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\profile\screens\ProfileSetupScreen.tsx
+   19:3  warning  'Image' is defined but never used             no-unused-vars
+   19:3  warning  'Image' is defined but never used             @typescript-eslint/no-unused-vars
+  667:9  warning  Unexpected lexical declaration in case block  no-case-declarations
+  668:9  warning  Unexpected lexical declaration in case block  no-case-declarations
+  673:9  warning  Unexpected lexical declaration in case block  no-case-declarations
+
+R:\Solace-AI-Mobile\src\features\search\screens\SearchScreen.tsx
+  72:7   warning  'CATEGORIES' is assigned a value but never used           no-unused-vars
+  72:7   warning  'CATEGORIES' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  85:23  warning  'setIsSearching' is assigned a value but never used       no-unused-vars
+  85:23  warning  'setIsSearching' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  86:10  warning  'selectedCategory' is assigned a value but never used     no-unused-vars
+  86:10  warning  'selectedCategory' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  86:28  warning  'setSelectedCategory' is assigned a value but never used  no-unused-vars
+  86:28  warning  'setSelectedCategory' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  89:10  warning  'searchDate' is assigned a value but never used           no-unused-vars
+  89:10  warning  'searchDate' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  89:22  warning  'setSearchDate' is assigned a value but never used        no-unused-vars
+  89:22  warning  'setSearchDate' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  90:10  warning  'searchLimit' is assigned a value but never used          no-unused-vars
+  90:10  warning  'searchLimit' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  90:23  warning  'setSearchLimit' is assigned a value but never used       no-unused-vars
+  90:23  warning  'setSearchLimit' is assigned a value but never used       @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\search\screens\VoiceSearchScreen.tsx
+  22:22  warning  'setTranscript' is assigned a value but never used  no-unused-vars
+  22:22  warning  'setTranscript' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\smartNotifications\NotificationManager.ts
+     3:3   warning  'format' is defined but never used            no-unused-vars
+     3:3   warning  'format' is defined but never used            @typescript-eslint/no-unused-vars
+     7:3   warning  'isAfter' is defined but never used           no-unused-vars
+     7:3   warning  'isAfter' is defined but never used           @typescript-eslint/no-unused-vars
+     8:3   warning  'isBefore' is defined but never used          no-unused-vars
+     8:3   warning  'isBefore' is defined but never used          @typescript-eslint/no-unused-vars
+   469:9   warning  Unexpected lexical declaration in case block  no-case-declarations
+   470:9   warning  Unexpected lexical declaration in case block  no-case-declarations
+   547:37  warning  Missing radix parameter                       radix
+   761:7   warning  Unexpected console statement                  no-console
+   773:7   warning  Unexpected console statement                  no-console
+   785:7   warning  Unexpected console statement                  no-console
+  1092:23  warning  Missing radix parameter                       radix
+  1093:21  warning  Missing radix parameter                       radix
+
+R:\Solace-AI-Mobile\src\features\smartNotifications\screens\SmartNotificationsScreen.tsx
+  156:20  warning  'setViewMode' is assigned a value but never used  no-unused-vars
+  156:20  warning  'setViewMode' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\wellness\screens\BedtimeRemindersScreen.tsx
+  19:11  warning  'ReminderTime' is defined but never used  no-unused-vars
+  19:11  warning  'ReminderTime' is defined but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\wellness\screens\SleepPatternsScreen.tsx
+  19:9   warning  'width' is assigned a value but never used              no-unused-vars
+  19:9   warning  'width' is assigned a value but never used              @typescript-eslint/no-unused-vars
+  24:10  warning  'selectedPeriod' is assigned a value but never used     no-unused-vars
+  24:10  warning  'selectedPeriod' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  24:26  warning  'setSelectedPeriod' is assigned a value but never used  no-unused-vars
+  24:26  warning  'setSelectedPeriod' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  45:7   warning  Unexpected console statement                            no-console
+
+R:\Solace-AI-Mobile\src\features\wellness\screens\SleepQualityScreen.tsx
+  244:11  warning  'remPercent' is assigned a value but never used  no-unused-vars
+  244:11  warning  'remPercent' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\wellness\screens\StressManagementScreen.tsx
+  48:25  warning  'setSelectedLevel' is assigned a value but never used  no-unused-vars
+  48:25  warning  'setSelectedLevel' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\features\wellness\screens\StressStatsScreen.tsx
+   19:9  warning  'width' is assigned a value but never used  no-unused-vars
+   19:9  warning  'width' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  101:7  warning  Unexpected console statement                no-console
+  109:7  warning  Unexpected console statement                no-console
+  117:7  warning  Unexpected console statement                no-console
+
+R:\Solace-AI-Mobile\src\shared\components\ErrorBoundary.tsx
+  20:14  warning  'error' is defined but never used. Allowed unused args must match /^_/u      no-unused-vars
+  20:28  warning  'errorInfo' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\components\atoms\accessibility\AccessibleTouchable.tsx
+    6:3   warning  'View' is defined but never used                         no-unused-vars
+    6:3   warning  'View' is defined but never used                         @typescript-eslint/no-unused-vars
+    7:3   warning  'Text' is defined but never used                         no-unused-vars
+    7:3   warning  'Text' is defined but never used                         @typescript-eslint/no-unused-vars
+   58:11  warning  'baseProps' is assigned a value but never used           no-unused-vars
+   58:11  warning  'baseProps' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  180:9   warning  'TouchableComponent' is assigned a value but never used  no-unused-vars
+  180:9   warning  'TouchableComponent' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\components\atoms\accessibility\MentalHealthAccessible.tsx
+   8:25  warning  'useEffect' is defined but never used          no-unused-vars
+   8:25  warning  'useEffect' is defined but never used          @typescript-eslint/no-unused-vars
+  10:3   warning  'View' is defined but never used               no-unused-vars
+  10:3   warning  'View' is defined but never used               @typescript-eslint/no-unused-vars
+  11:3   warning  'Text' is defined but never used               no-unused-vars
+  11:3   warning  'Text' is defined but never used               @typescript-eslint/no-unused-vars
+  13:3   warning  'AccessibilityInfo' is defined but never used  no-unused-vars
+  13:3   warning  'AccessibilityInfo' is defined but never used  @typescript-eslint/no-unused-vars
+  15:3   warning  'Animated' is defined but never used           no-unused-vars
+  15:3   warning  'Animated' is defined but never used           @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\components\atoms\buttons\FloatingActionButton.tsx
+   13:8   warning  'FreudDesignSystem' is defined but never used                                                                                       no-unused-vars
+   13:8   warning  'FreudDesignSystem' is defined but never used                                                                                       @typescript-eslint/no-unused-vars
+   49:11  warning  'theme' is assigned a value but never used                                                                                          no-unused-vars
+   49:11  warning  'theme' is assigned a value but never used                                                                                          @typescript-eslint/no-unused-vars
+   49:18  warning  'isDarkMode' is assigned a value but never used                                                                                     no-unused-vars
+   49:18  warning  'isDarkMode' is assigned a value but never used                                                                                     @typescript-eslint/no-unused-vars
+  128:6   warning  React Hook useEffect has missing dependencies: 'opacityValue' and 'pulseValue'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\shared\components\atoms\forms\Checkbox.tsx
+  23:18  warning  'isDarkMode' is assigned a value but never used  no-unused-vars
+  23:18  warning  'isDarkMode' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\components\atoms\forms\EnhancedInput.tsx
+   32:3  warning  'WCAG_CONSTANTS' is defined but never used                                                                    no-unused-vars
+   32:3  warning  'WCAG_CONSTANTS' is defined but never used                                                                    @typescript-eslint/no-unused-vars
+   34:3  warning  'createFormInputAccessibility' is defined but never used                                                      no-unused-vars
+   34:3  warning  'createFormInputAccessibility' is defined but never used                                                      @typescript-eslint/no-unused-vars
+   39:3  warning  'VALIDATION_TYPES' is defined but never used                                                                  no-unused-vars
+   39:3  warning  'VALIDATION_TYPES' is defined but never used                                                                  @typescript-eslint/no-unused-vars
+   68:7  warning  'showValidationOnTouch' is assigned a value but never used                                                    no-unused-vars
+   68:7  warning  'showValidationOnTouch' is assigned a value but never used                                                    @typescript-eslint/no-unused-vars
+  152:8  warning  React Hook useEffect has a missing dependency: 'focusAnim'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  164:8  warning  React Hook useEffect has a missing dependency: 'errorAnim'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\shared\components\atoms\forms\MentalHealthForms.tsx
+   25:3  warning  'useEffect' is defined but never used                  no-unused-vars
+   25:3  warning  'useEffect' is defined but never used                  @typescript-eslint/no-unused-vars
+   33:3  warning  'ScrollView' is defined but never used                 no-unused-vars
+   33:3  warning  'ScrollView' is defined but never used                 @typescript-eslint/no-unused-vars
+   35:3  warning  'TouchableOpacity' is defined but never used           no-unused-vars
+   35:3  warning  'TouchableOpacity' is defined but never used           @typescript-eslint/no-unused-vars
+   37:3  warning  'Animated' is defined but never used                   no-unused-vars
+   37:3  warning  'Animated' is defined but never used                   @typescript-eslint/no-unused-vars
+  262:9  warning  'handleMoodSelect' is assigned a value but never used  no-unused-vars
+  262:9  warning  'handleMoodSelect' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\components\atoms\forms\Slider.tsx
+    7:3   warning  'PanGestureHandler' is defined but never used                            no-unused-vars
+    7:3   warning  'PanGestureHandler' is defined but never used                            @typescript-eslint/no-unused-vars
+   10:3   warning  'Animated' is defined but never used                                     no-unused-vars
+   10:3   warning  'Animated' is defined but never used                                     @typescript-eslint/no-unused-vars
+   15:16  warning  'screenWidth' is assigned a value but never used                         no-unused-vars
+   15:16  warning  'screenWidth' is assigned a value but never used                         @typescript-eslint/no-unused-vars
+   23:3   warning  'onSlidingComplete' is assigned a value but never used                   no-unused-vars
+   23:3   warning  'onSlidingComplete' is assigned a value but never used                   @typescript-eslint/no-unused-vars
+   43:21  warning  'setIsSliding' is assigned a value but never used                        no-unused-vars
+   43:21  warning  'setIsSliding' is assigned a value but never used                        @typescript-eslint/no-unused-vars
+   86:9   warning  'handleValueChange' is assigned a value but never used                   no-unused-vars
+   86:9   warning  'handleValueChange' is assigned a value but never used                   @typescript-eslint/no-unused-vars
+  250:3   warning  'step' is assigned a value but never used                                no-unused-vars
+  250:3   warning  'step' is assigned a value but never used                                @typescript-eslint/no-unused-vars
+  251:3   warning  'onValueChange' is assigned a value but never used                       no-unused-vars
+  251:3   warning  'onValueChange' is assigned a value but never used                       @typescript-eslint/no-unused-vars
+  258:6   warning  'props' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  258:6   warning  'props' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  261:22  warning  'setCurrentLow' is assigned a value but never used                       no-unused-vars
+  261:22  warning  'setCurrentLow' is assigned a value but never used                       @typescript-eslint/no-unused-vars
+  262:23  warning  'setCurrentHigh' is assigned a value but never used                      no-unused-vars
+  262:23  warning  'setCurrentHigh' is assigned a value but never used                      @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\components\atoms\forms\TherapeuticForm.tsx
+   3:23  warning  'styleUtils' is defined but never used                                                                             no-unused-vars
+   3:23  warning  'styleUtils' is defined but never used                                                                             @typescript-eslint/no-unused-vars
+  72:6   warning  React Hook React.useEffect has a missing dependency: 'fadeAnim'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\shared\components\atoms\interactive\DarkModeToggle.tsx
+  49:6  warning  React Hook useEffect has a missing dependency: 'animatedValue'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\shared\components\atoms\interactive\Tag.tsx
+    4:10  warning  'getTherapeuticColor' is defined but never used  no-unused-vars
+    4:10  warning  'getTherapeuticColor' is defined but never used  @typescript-eslint/no-unused-vars
+  154:3   warning  'showMore' is assigned a value but never used    no-unused-vars
+  154:3   warning  'showMore' is assigned a value but never used    @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\components\atoms\layout\ErrorBoundary.tsx
+  15:30  warning  'error' is defined but never used. Allowed unused args must match /^_/u      no-unused-vars
+  15:44  warning  'errorInfo' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\components\atoms\layout\KeyboardAwareScrollView.tsx
+  11:3  warning  'onFocusChange' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  11:3  warning  'onFocusChange' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\components\atoms\layout\SafeScreen.tsx
+  10:47  warning  'props' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  10:47  warning  'props' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  25:9   warning  'performance' is assigned a value but never used                         no-unused-vars
+  25:9   warning  'performance' is assigned a value but never used                         @typescript-eslint/no-unused-vars
+  40:5   warning  Unexpected console statement                                             no-console
+
+R:\Solace-AI-Mobile\src\shared\components\atoms\visual\FeatureCard.tsx
+   5:25  warning  'IconButton' is defined but never used                no-unused-vars
+   5:25  warning  'IconButton' is defined but never used                @typescript-eslint/no-unused-vars
+  14:7   warning  'AnimatedSurface' is assigned a value but never used  no-unused-vars
+  14:7   warning  'AnimatedSurface' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  20:3   warning  'color' is assigned a value but never used            no-unused-vars
+  20:3   warning  'color' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  26:11  warning  'theme' is assigned a value but never used            no-unused-vars
+  26:11  warning  'theme' is assigned a value but never used            @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\components\icons\MentalHealthIcon.tsx
+  9:8  warning  'FontAwesome5' is defined but never used  no-unused-vars
+  9:8  warning  'FontAwesome5' is defined but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\components\molecules\cards\MentalHealthCard.tsx
+  109:3  warning  'animationDelay' is assigned a value but never used  no-unused-vars
+  109:3  warning  'animationDelay' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\components\molecules\data\Table.tsx
+    8:3  warning  'FlatList' is defined but never used          no-unused-vars
+    8:3  warning  'FlatList' is defined but never used          @typescript-eslint/no-unused-vars
+  182:3  warning  'striped' is assigned a value but never used  no-unused-vars
+  182:3  warning  'striped' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\components\molecules\inputs\Dropdown.tsx
+  15:16  warning  'screenWidth' is assigned a value but never used  no-unused-vars
+  15:16  warning  'screenWidth' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\components\molecules\overlays\Modal.tsx
+  34:3  warning  'animationType' is assigned a value but never used                                                                             no-unused-vars
+  34:3  warning  'animationType' is assigned a value but never used                                                                             @typescript-eslint/no-unused-vars
+  38:3  warning  'contentStyle' is assigned a value but never used                                                                              no-unused-vars
+  38:3  warning  'contentStyle' is assigned a value but never used                                                                              @typescript-eslint/no-unused-vars
+  41:3  warning  'footerStyle' is assigned a value but never used                                                                               no-unused-vars
+  41:3  warning  'footerStyle' is assigned a value but never used                                                                               @typescript-eslint/no-unused-vars
+  81:6  warning  React Hook useEffect has missing dependencies: 'fadeAnim' and 'scaleAnim'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\shared\components\molecules\screens\LoadingScreen.tsx
+   17:9   warning  'width' is assigned a value but never used                                                                                                   no-unused-vars
+   17:9   warning  'width' is assigned a value but never used                                                                                                   @typescript-eslint/no-unused-vars
+   17:16  warning  'height' is assigned a value but never used                                                                                                  no-unused-vars
+   17:16  warning  'height' is assigned a value but never used                                                                                                  @typescript-eslint/no-unused-vars
+   29:17  warning  'setError' is assigned a value but never used                                                                                                no-unused-vars
+   29:17  warning  'setError' is assigned a value but never used                                                                                                @typescript-eslint/no-unused-vars
+   34:9   warning  'rotateAnim' is assigned a value but never used                                                                                              no-unused-vars
+   34:9   warning  'rotateAnim' is assigned a value but never used                                                                                              @typescript-eslint/no-unused-vars
+   35:9   warning  'progressAnim' is assigned a value but never used                                                                                            no-unused-vars
+   35:9   warning  'progressAnim' is assigned a value but never used                                                                                            @typescript-eslint/no-unused-vars
+   37:9   warning  'shakeAnim' is assigned a value but never used                                                                                               no-unused-vars
+   37:9   warning  'shakeAnim' is assigned a value but never used                                                                                               @typescript-eslint/no-unused-vars
+   38:9   warning  'circleAnim1' is assigned a value but never used                                                                                             no-unused-vars
+   38:9   warning  'circleAnim1' is assigned a value but never used                                                                                             @typescript-eslint/no-unused-vars
+   39:9   warning  'circleAnim2' is assigned a value but never used                                                                                             no-unused-vars
+   39:9   warning  'circleAnim2' is assigned a value but never used                                                                                             @typescript-eslint/no-unused-vars
+  158:6   warning  React Hook useEffect has missing dependencies: 'fadeAnim', 'pulseAnim', and 'scaleAnim'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\shared\components\molecules\screens\SplashScreen.tsx
+   13:10  warning  'MentalHealthIcon' is defined but never used                                                                                                                                       no-unused-vars
+   13:10  warning  'MentalHealthIcon' is defined but never used                                                                                                                                       @typescript-eslint/no-unused-vars
+   15:10  warning  'colors' is defined but never used                                                                                                                                                 no-unused-vars
+   15:10  warning  'colors' is defined but never used                                                                                                                                                 @typescript-eslint/no-unused-vars
+   20:3   warning  'shadows' is defined but never used                                                                                                                                                no-unused-vars
+   20:3   warning  'shadows' is defined but never used                                                                                                                                                @typescript-eslint/no-unused-vars
+   23:9   warning  'width' is assigned a value but never used                                                                                                                                         no-unused-vars
+   23:9   warning  'width' is assigned a value but never used                                                                                                                                         @typescript-eslint/no-unused-vars
+   23:16  warning  'height' is assigned a value but never used                                                                                                                                        no-unused-vars
+   23:16  warning  'height' is assigned a value but never used                                                                                                                                        @typescript-eslint/no-unused-vars
+  202:6   warning  React Hook useEffect has missing dependencies: 'fadeAnim', 'logoRotateAnim', 'progressAnim', 'quoteFadeAnim', and 'scaleAnim'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\shared\components\organisms\Layout\ResponsiveLayout.tsx
+   22:41  warning  'delay' is assigned a value but never used         no-unused-vars
+   22:41  warning  'delay' is assigned a value but never used         @typescript-eslint/no-unused-vars
+  154:3   warning  'staggerDelay' is assigned a value but never used  no-unused-vars
+  154:3   warning  'staggerDelay' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  237:32  warning  'config' is assigned a value but never used        no-unused-vars
+  237:32  warning  'config' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  332:11  warning  'isMobile' is assigned a value but never used      no-unused-vars
+  332:11  warning  'isMobile' is assigned a value but never used      @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\constants\index.ts
+  44:12  warning  Missing radix parameter  radix
+
+R:\Solace-AI-Mobile\src\shared\hooks\useOptimizedSelectors.ts
+  182:6  warning  React Hook useMemo has a missing dependency: 'chatData.currentSession'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\shared\services\index.ts
+  1:1   error  Multiple exports of name 'api'  import/export
+  2:21  error  Multiple exports of name 'api'  import/export
+
+R:\Solace-AI-Mobile\src\shared\theme\ThemeProvider.tsx
+  73:5  warning  React Hook useMemo has a missing dependency: 'toggleTheme'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+R:\Solace-AI-Mobile\src\shared\theme\index.ts
+   9:3   error  Multiple exports of name 'lightTheme'         import/export
+  10:3   error  Multiple exports of name 'darkTheme'          import/export
+  12:10  error  Multiple exports of name 'colors'             import/export
+  12:18  error  Multiple exports of name 'therapeuticColors'  import/export
+  13:1   error  Multiple exports of name 'lightTheme'         import/export
+  13:1   error  Multiple exports of name 'darkTheme'          import/export
+  13:1   error  Multiple exports of name 'colors'             import/export
+  13:1   error  Multiple exports of name 'therapeuticColors'  import/export
+
+R:\Solace-AI-Mobile\src\shared\types\store.ts
+  320:37  warning  'state' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\types\theme.ts
+  205:14  warning  'isDark' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\utils\BundleOptimization.ts
+  173:7  warning  Unexpected console statement  no-console
+  207:7  warning  Unexpected console statement  no-console
+  224:9  warning  Unexpected console statement  no-console
+  236:9  warning  Unexpected console statement  no-console
+
+R:\Solace-AI-Mobile\src\shared\utils\accessibility.ts
+   13:10  warning  'Platform' is defined but never used                                            no-unused-vars
+   13:10  warning  'Platform' is defined but never used                                            @typescript-eslint/no-unused-vars
+  149:9   warning  'errorText' is assigned a value but never used                                  no-unused-vars
+  149:9   warning  'errorText' is assigned a value but never used                                  @typescript-eslint/no-unused-vars
+  186:67  warning  'step' is assigned a value but never used                                       no-unused-vars
+  186:67  warning  'step' is assigned a value but never used                                       @typescript-eslint/no-unused-vars
+  269:3   warning  Unexpected console statement                                                    no-console
+  443:21  warning  'containerRef' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  443:21  warning  'containerRef' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  447:7   warning  Unexpected console statement                                                    no-console
+  475:5   warning  Unexpected console statement                                                    no-console
+  509:28  warning  'targets' is defined but never used. Allowed unused args must match /^_/u       no-unused-vars
+  509:28  warning  'targets' is defined but never used. Allowed unused args must match /^_/u       @typescript-eslint/no-unused-vars
+  530:25  warning  'tabIndex' is assigned a value but never used                                   no-unused-vars
+  530:25  warning  'tabIndex' is assigned a value but never used                                   @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\utils\accessibilityTesting.ts
+   43:28  warning  'name' is defined but never used. Allowed unused args must match /^_/u   no-unused-vars
+   43:28  warning  'name' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+  132:53  warning  'level' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  132:53  warning  'level' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\utils\formValidation.ts
+  99:3  warning  'options' is assigned a value but never used  no-unused-vars
+  99:3  warning  'options' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\src\shared\utils\logger.ts
+  117:9   warning  Unexpected console statement  no-console
+  124:9   warning  Unexpected console statement  no-console
+  187:36  warning  Unexpected console statement  no-console
+  188:7   warning  Unexpected console statement  no-console
+  196:36  warning  Unexpected console statement  no-console
+  197:7   warning  Unexpected console statement  no-console
+  205:36  warning  Unexpected console statement  no-console
+  206:7   warning  Unexpected console statement  no-console
+  214:36  warning  Unexpected console statement  no-console
+  215:7   warning  Unexpected console statement  no-console
+
+R:\Solace-AI-Mobile\src\types\modules.d.ts
+   6:26  warning  'date' is defined but never used. Allowed unused args must match /^_/u           no-unused-vars
+   6:47  warning  'format' is defined but never used. Allowed unused args must match /^_/u         no-unused-vars
+   7:28  warning  'date' is defined but never used. Allowed unused args must match /^_/u           no-unused-vars
+   7:49  warning  'amount' is defined but never used. Allowed unused args must match /^_/u         no-unused-vars
+   8:27  warning  'date' is defined but never used. Allowed unused args must match /^_/u           no-unused-vars
+   8:48  warning  'amount' is defined but never used. Allowed unused args must match /^_/u         no-unused-vars
+   9:30  warning  'date' is defined but never used. Allowed unused args must match /^_/u           no-unused-vars
+  11:5   warning  'date' is defined but never used. Allowed unused args must match /^_/u           no-unused-vars
+  12:5   warning  'dateToCompare' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  15:5   warning  'date' is defined but never used. Allowed unused args must match /^_/u           no-unused-vars
+  16:5   warning  'dateToCompare' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  18:28  warning  'argument' is defined but never used. Allowed unused args must match /^_/u       no-unused-vars
+  65:42  warning  'handler' is defined but never used. Allowed unused args must match /^_/u        no-unused-vars
+  75:5   warning  'options' is defined but never used. Allowed unused args must match /^_/u        no-unused-vars
+  78:5   warning  'channelId' is defined but never used. Allowed unused args must match /^_/u      no-unused-vars
+  79:5   warning  'channel' is defined but never used. Allowed unused args must match /^_/u        no-unused-vars
+  81:45  warning  'options' is defined but never used. Allowed unused args must match /^_/u        no-unused-vars
+  88:5   warning  'identifier' is defined but never used. Allowed unused args must match /^_/u     no-unused-vars
+
+R:\Solace-AI-Mobile\test\accessibility\MentalHealthAccessibility.test.js
+  321:15  warning  'textInputs' is assigned a value but never used      no-unused-vars
+  321:15  warning  'textInputs' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  459:15  warning  'getAllByTestId' is assigned a value but never used  no-unused-vars
+  459:15  warning  'getAllByTestId' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  494:15  warning  'getByText' is assigned a value but never used       no-unused-vars
+  494:15  warning  'getByText' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  614:15  warning  'getByText' is assigned a value but never used       no-unused-vars
+  614:15  warning  'getByText' is assigned a value but never used       @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\test\accessibility\accessibility.test.js
+   14:8   warning  'Button' is defined but never used                        no-unused-vars
+   14:8   warning  'Button' is defined but never used                        @typescript-eslint/no-unused-vars
+   15:10  warning  'IntensitySlider' is defined but never used               no-unused-vars
+   15:10  warning  'IntensitySlider' is defined but never used               @typescript-eslint/no-unused-vars
+   16:1   warning  There should be no empty line within import group         import/order
+   16:10  warning  'MoodSelector' is defined but never used                  no-unused-vars
+   16:10  warning  'MoodSelector' is defined but never used                  @typescript-eslint/no-unused-vars
+   26:3   warning  'ACCESSIBILITY_TESTING_CONFIG' is defined but never used  no-unused-vars
+   26:3   warning  'ACCESSIBILITY_TESTING_CONFIG' is defined but never used  @typescript-eslint/no-unused-vars
+   73:17  warning  'getByRole' is assigned a value but never used            no-unused-vars
+   73:17  warning  'getByRole' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  182:17  warning  'getByTestId' is assigned a value but never used          no-unused-vars
+  182:17  warning  'getByTestId' is assigned a value but never used          @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\test\app\store\slices\authSlice.test.ts
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/test\app\store\slices\authSlice.test.ts` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\test\app\store\slices\userSlice.test.js
+  17:7  warning  'createTimeoutPromise' is assigned a value but never used  no-unused-vars
+  17:7  warning  'createTimeoutPromise' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\test\components\dashboard\MoodCheckIn.test.js
+  16:10  warning  'Animated' is defined but never used                                     no-unused-vars
+  16:10  warning  'Animated' is defined but never used                                     @typescript-eslint/no-unused-vars
+  23:35  warning  'props' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  23:35  warning  'props' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\test\components\dashboard\QuickActions.test.js
+   16:35  warning  'props' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+   16:35  warning  'props' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  142:11  error    'queryByTestId' is not defined                                           no-undef
+  151:11  error    'queryByTestId' is not defined                                           no-undef
+  160:11  error    'queryByTestId' is not defined                                           no-undef
+  169:11  error    'queryByTestId' is not defined                                           no-undef
+
+R:\Solace-AI-Mobile\test\contexts\ThemeContext.test.tsx
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/test\contexts\ThemeContext.test.tsx` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\test\features\chat\ChatScreen.test.js
+  448:14  error    'Alert' is not defined                            no-undef
+  461:35  warning  'getByTestId' is assigned a value but never used  no-unused-vars
+  461:35  warning  'getByTestId' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  490:14  error    'CrisisManager' is not defined                    no-undef
+  501:14  error    'CrisisManager' is not defined                    no-undef
+  506:5   error    'CrisisManager' is not defined                    no-undef
+  534:7   error    'CrisisManager' is not defined                    no-undef
+  554:18  error    'Alert' is not defined                            no-undef
+  571:5   error    'mockSecureStorage' is not defined                no-undef
+  572:5   error    'mockTokenService' is not defined                 no-undef
+  575:11  error    'store' is not defined                            no-undef
+  575:26  error    'restoreAuthState' is not defined                 no-undef
+  577:19  error    'store' is not defined                            no-undef
+  597:5   error    'mockTokenService' is not defined                 no-undef
+  598:5   error    'mockTokenService' is not defined                 no-undef
+  599:5   error    'mockApiService' is not defined                   no-undef
+  602:26  error    'mockTokenService' is not defined                 no-undef
+  604:12  error    'mockApiService' is not defined                   no-undef
+  617:5   error    'mockTokenService' is not defined                 no-undef
+  618:5   error    'mockApiService' is not defined                   no-undef
+  622:26  error    'mockTokenService' is not defined                 no-undef
+  625:12  error    'mockTokenService' is not defined                 no-undef
+
+R:\Solace-AI-Mobile\test\features\chat\ChatScreen.test.tsx
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/test\features\chat\ChatScreen.test.tsx` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\test\features\crisisIntervention\CrisisManager.test.js
+   44:1   warning  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+   44:1   error    'n' is not defined                                                     no-undef
+  560:11  error    'crisisManager' is not defined                                         no-undef
+  592:27  error    'crisisManager' is not defined                                         no-undef
+  604:27  error    'crisisManager' is not defined                                         no-undef
+  612:27  error    'crisisManager' is not defined                                         no-undef
+  628:29  error    'crisisManager' is not defined                                         no-undef
+  668:11  error    'crisisManager' is not defined                                         no-undef
+  690:7   error    'crisisManager' is not defined                                         no-undef
+  701:11  error    'crisisManager' is not defined                                         no-undef
+
+R:\Solace-AI-Mobile\test\integration\MoodTrackingWorkflow.test.ts
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/test\integration\MoodTrackingWorkflow.test.ts` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\test\integration\MoodTrackingWorkflow.test.tsx
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/test\integration\MoodTrackingWorkflow.test.tsx` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\test\navigation-forms\navigation-forms.test.js
+   13:38  warning  'act' is defined but never used                    no-unused-vars
+   13:38  warning  'act' is defined but never used                    @typescript-eslint/no-unused-vars
+   19:3   warning  'KeyboardAwareInput' is defined but never used     no-unused-vars
+   19:3   warning  'KeyboardAwareInput' is defined but never used     @typescript-eslint/no-unused-vars
+   22:1   warning  There should be no empty line within import group  import/order
+   44:3   warning  'NavigationPersistence' is defined but never used  no-unused-vars
+   44:3   warning  'NavigationPersistence' is defined but never used  @typescript-eslint/no-unused-vars
+  212:28  warning  'getByText' is assigned a value but never used     no-unused-vars
+  212:28  warning  'getByText' is assigned a value but never used     @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\test\navigation\AppNavigation.test.js
+    7:10  warning  'createBottomTabNavigator' is defined but never used                                 no-unused-vars
+    7:10  warning  'createBottomTabNavigator' is defined but never used                                 @typescript-eslint/no-unused-vars
+    9:38  warning  'act' is defined but never used                                                      no-unused-vars
+    9:38  warning  'act' is defined but never used                                                      @typescript-eslint/no-unused-vars
+   14:41  error    Parse errors in imported module '../utils/TestHelpers': Unexpected token = (667:26)  import/namespace
+   20:7   warning  'MockAssessmentScreen' is assigned a value but never used                            no-unused-vars
+   20:7   warning  'MockAssessmentScreen' is assigned a value but never used                            @typescript-eslint/no-unused-vars
+  116:15  warning  'getByText' is assigned a value but never used                                       no-unused-vars
+  116:15  warning  'getByText' is assigned a value but never used                                       @typescript-eslint/no-unused-vars
+  208:15  warning  'getByTestId' is assigned a value but never used                                     no-unused-vars
+  208:15  warning  'getByTestId' is assigned a value but never used                                     @typescript-eslint/no-unused-vars
+  231:17  warning  'getByText' is assigned a value but never used                                       no-unused-vars
+  231:17  warning  'getByText' is assigned a value but never used                                       @typescript-eslint/no-unused-vars
+  304:15  warning  'AccessibilityInfo' is assigned a value but never used                               no-unused-vars
+  304:15  warning  'AccessibilityInfo' is assigned a value but never used                               @typescript-eslint/no-unused-vars
+  305:28  warning  'getByText' is assigned a value but never used                                       no-unused-vars
+  305:28  warning  'getByText' is assigned a value but never used                                       @typescript-eslint/no-unused-vars
+  402:28  warning  'getByText' is assigned a value but never used                                       no-unused-vars
+  402:28  warning  'getByText' is assigned a value but never used                                       @typescript-eslint/no-unused-vars
+  425:28  warning  'getByText' is assigned a value but never used                                       no-unused-vars
+  425:28  warning  'getByText' is assigned a value but never used                                       @typescript-eslint/no-unused-vars
+  526:28  warning  'getByText' is assigned a value but never used                                       no-unused-vars
+  526:28  warning  'getByText' is assigned a value but never used                                       @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\test\navigation\AppNavigator.test.js
+  182:52  warning  'action' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  182:52  warning  'action' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\test\performance\AnimationPerformance.test.js
+    7:29  warning  'waitFor' is defined but never used                                                  no-unused-vars
+    7:29  warning  'waitFor' is defined but never used                                                  @typescript-eslint/no-unused-vars
+   14:43  error    Parse errors in imported module '../utils/TestHelpers': Unexpected token = (667:26)  import/namespace
+   82:15  warning  'getByTestId' is assigned a value but never used                                     no-unused-vars
+   82:15  warning  'getByTestId' is assigned a value but never used                                     @typescript-eslint/no-unused-vars
+  200:15  warning  'getAllByTestId' is assigned a value but never used                                  no-unused-vars
+  200:15  warning  'getAllByTestId' is assigned a value but never used                                  @typescript-eslint/no-unused-vars
+  311:15  warning  'getByTestId' is assigned a value but never used                                     no-unused-vars
+  311:15  warning  'getByTestId' is assigned a value but never used                                     @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\test\shared\services\api.test.js
+  854:32  error  Parsing error: Unexpected token as
+
+R:\Solace-AI-Mobile\test\src\store\slices\authSlice.js
+  3:25  warning  'action' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  3:25  warning  'action' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\test\src\store\slices\chatSlice.js
+  2:25  warning  'action' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  2:25  warning  'action' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\test\src\store\slices\enhancedMoodSlice.js
+  2:25  warning  'action' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  2:25  warning  'action' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\test\src\store\slices\moodSlice.js
+  2:25  warning  'action' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  2:25  warning  'action' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+R:\Solace-AI-Mobile\test\utils\TestHelpers.js
+  667:26  error  Parsing error: Unexpected token =
+
+R:\Solace-AI-Mobile\test\utils\accessibility.js
+   70:53  warning  'level' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+   70:53  warning  'level' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  113:16  warning  Unexpected console statement                                             no-console
+  115:9   warning  Unexpected console statement                                             no-console
+
+R:\Solace-AI-Mobile\utils\accessibility.ts
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/utils\accessibility.ts` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\utils\accessibilityTesting.ts
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/utils\accessibilityTesting.ts` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\utils\formValidation.ts
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/utils\formValidation.ts` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+R:\Solace-AI-Mobile\utils\navigationPersistence.ts
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/utils\navigationPersistence.ts` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
+However, that TSConfig does not include this file. Either:
+- Change ESLint's list of included files to not include this file
+- Change that TSConfig to include this file
+- Create a new TSConfig that includes this file and include it in your parserOptions.project
+See the typescript-eslint docs for more info: https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+
+✖ 765 problems (67 errors, 698 warnings)
+  0 errors and 78 warnings potentially fixable with the `--fix` option.
+

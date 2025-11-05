@@ -4,9 +4,15 @@
  * Critical for mental health app - ensures crisis features remain accessible
  */
 
-import React, { Component, ReactNode } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { logger } from '@shared/utils/logger';
+import { logger } from "@shared/utils/logger";
+import React, { Component, ReactNode } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 
 interface Props {
   children: ReactNode;
@@ -41,7 +47,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error to monitoring service
-    logger.error('ErrorBoundary caught error:', {
+    logger.error("ErrorBoundary caught error:", {
       error: error.toString(),
       componentStack: errorInfo.componentStack,
     });
@@ -79,7 +85,8 @@ export class ErrorBoundary extends Component<Props, State> {
             <Text style={styles.emoji}>😔</Text>
             <Text style={styles.title}>Something went wrong</Text>
             <Text style={styles.message}>
-              We're sorry for the inconvenience. The app encountered an unexpected error.
+              We're sorry for the inconvenience. The app encountered an
+              unexpected error.
             </Text>
 
             {this.props.showDetails && this.state.error && (
@@ -121,13 +128,13 @@ export class ErrorBoundary extends Component<Props, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   content: {
-    alignItems: 'center',
+    alignItems: "center",
     maxWidth: 400,
   },
   emoji: {
@@ -136,53 +143,53 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: '700',
-    color: '#1A1A1A',
+    fontWeight: "700",
+    color: "#1A1A1A",
     marginBottom: 12,
-    textAlign: 'center',
+    textAlign: "center",
   },
   message: {
     fontSize: 16,
-    color: '#666666',
-    textAlign: 'center',
+    color: "#666666",
+    textAlign: "center",
     marginBottom: 24,
     lineHeight: 24,
   },
   detailsContainer: {
-    width: '100%',
+    width: "100%",
     maxHeight: 200,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
     borderRadius: 8,
     padding: 12,
     marginBottom: 24,
   },
   detailsTitle: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#333333',
+    fontWeight: "600",
+    color: "#333333",
     marginBottom: 8,
   },
   detailsText: {
     fontSize: 12,
-    color: '#666666',
-    fontFamily: 'monospace',
+    color: "#666666",
+    fontFamily: "monospace",
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: "#007AFF",
     paddingHorizontal: 32,
     paddingVertical: 14,
     borderRadius: 8,
     marginBottom: 16,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   helpText: {
     fontSize: 14,
-    color: '#999999',
-    textAlign: 'center',
+    color: "#999999",
+    textAlign: "center",
   },
 });
 

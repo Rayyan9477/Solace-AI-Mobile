@@ -4,7 +4,7 @@
  * Based on ui-designs specifications
  */
 
-import { colors } from './colors';
+import { colors } from "./colors";
 
 /**
  * Typography System (Urbanist font family)
@@ -12,41 +12,41 @@ import { colors } from './colors';
  */
 export const typography = {
   fontFamily: {
-    primary: 'Urbanist',  // Primary font
-    fallback: 'System',    // System fallback
+    primary: "Urbanist", // Primary font
+    fallback: "System", // System fallback
   },
 
   // Font sizes with line heights
   sizes: {
     // Display
-    displayLg: { fontSize: 48, lineHeight: 60 },    // Display lg ExtraBold
-    displayMd: { fontSize: 40, lineHeight: 50 },    // Display md ExtraBold
-    displaySm: { fontSize: 32, lineHeight: 40 },    // Display sm ExtraBold
+    displayLg: { fontSize: 48, lineHeight: 60 }, // Display lg ExtraBold
+    displayMd: { fontSize: 40, lineHeight: 50 }, // Display md ExtraBold
+    displaySm: { fontSize: 32, lineHeight: 40 }, // Display sm ExtraBold
 
     // Headings
-    heading2xl: { fontSize: 30, lineHeight: 38 },   // Heading 2xl ExtraBold
-    headingXl: { fontSize: 24, lineHeight: 32 },    // Heading xl ExtraBold
-    headingLg: { fontSize: 20, lineHeight: 28 },    // Heading lg ExtraBold
-    headingMd: { fontSize: 18, lineHeight: 24 },    // Heading md ExtraBold
-    headingSm: { fontSize: 16, lineHeight: 22 },    // Heading sm ExtraBold
-    headingXs: { fontSize: 14, lineHeight: 20 },    // Heading xs ExtraBold
+    heading2xl: { fontSize: 30, lineHeight: 38 }, // Heading 2xl ExtraBold
+    headingXl: { fontSize: 24, lineHeight: 32 }, // Heading xl ExtraBold
+    headingLg: { fontSize: 20, lineHeight: 28 }, // Heading lg ExtraBold
+    headingMd: { fontSize: 18, lineHeight: 24 }, // Heading md ExtraBold
+    headingSm: { fontSize: 16, lineHeight: 22 }, // Heading sm ExtraBold
+    headingXs: { fontSize: 14, lineHeight: 20 }, // Heading xs ExtraBold
 
     // Text/Body
-    text2xl: { fontSize: 24, lineHeight: 32 },      // Text 2xl Extrabold
-    textXl: { fontSize: 20, lineHeight: 28 },       // Text xl Extrabold
-    textLg: { fontSize: 18, lineHeight: 26 },       // Text lg Bold
-    textMd: { fontSize: 16, lineHeight: 24 },       // Text md Bold
-    textSm: { fontSize: 14, lineHeight: 20 },       // Text sm Bold
-    textXs: { fontSize: 12, lineHeight: 18 },       // Text xs Bold
+    text2xl: { fontSize: 24, lineHeight: 32 }, // Text 2xl Extrabold
+    textXl: { fontSize: 20, lineHeight: 28 }, // Text xl Extrabold
+    textLg: { fontSize: 18, lineHeight: 26 }, // Text lg Bold
+    textMd: { fontSize: 16, lineHeight: 24 }, // Text md Bold
+    textSm: { fontSize: 14, lineHeight: 20 }, // Text sm Bold
+    textXs: { fontSize: 12, lineHeight: 18 }, // Text xs Bold
   },
 
   // Font weights
   weights: {
-    extrabold: '800',
-    bold: '700',
-    semibold: '600',
-    medium: '500',
-    regular: '400',
+    extrabold: "800",
+    bold: "700",
+    semibold: "600",
+    medium: "500",
+    regular: "400",
   },
 
   // Letter spacing
@@ -63,24 +63,24 @@ export const typography = {
  */
 export const spacing = {
   0: 0,
-  1: 4,     // 0.5 * 8
-  2: 8,     // 1 * 8
-  3: 12,    // 1.5 * 8
-  4: 16,    // 2 * 8
-  5: 20,    // 2.5 * 8
-  6: 24,    // 3 * 8
-  7: 28,    // 3.5 * 8
-  8: 32,    // 4 * 8
-  10: 40,   // 5 * 8
-  12: 48,   // 6 * 8
-  16: 64,   // 8 * 8
-  20: 80,   // 10 * 8
-  24: 96,   // 12 * 8
-  32: 128,  // 16 * 8
-  40: 160,  // 20 * 8
-  48: 192,  // 24 * 8
-  56: 224,  // 28 * 8
-  64: 256,  // 32 * 8
+  1: 4, // 0.5 * 8
+  2: 8, // 1 * 8
+  3: 12, // 1.5 * 8
+  4: 16, // 2 * 8
+  5: 20, // 2.5 * 8
+  6: 24, // 3 * 8
+  7: 28, // 3.5 * 8
+  8: 32, // 4 * 8
+  10: 40, // 5 * 8
+  12: 48, // 6 * 8
+  16: 64, // 8 * 8
+  20: 80, // 10 * 8
+  24: 96, // 12 * 8
+  32: 128, // 16 * 8
+  40: 160, // 20 * 8
+  48: 192, // 24 * 8
+  56: 224, // 28 * 8
+  64: 256, // 32 * 8
 };
 
 /**
@@ -94,8 +94,8 @@ export const borderRadius = {
   md: 12,
   lg: 16,
   xl: 20,
-  '2xl': 24,
-  '3xl': 28,
+  "2xl": 24,
+  "3xl": 28,
   full: 999,
 };
 
@@ -105,7 +105,7 @@ export const borderRadius = {
  */
 export const shadows = {
   none: {
-    shadowColor: 'transparent',
+    shadowColor: "transparent",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0,
     shadowRadius: 0,
@@ -142,7 +142,7 @@ export const shadows = {
   xl: {
     shadowColor: colors.semantic.shadow,
     shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.20,
+    shadowOpacity: 0.2,
     shadowRadius: 24,
     elevation: 12,
   },
@@ -159,12 +159,12 @@ export const animations = {
     slower: 500,
   },
   easing: {
-    linear: 'linear',
-    ease: 'ease',
-    easeIn: 'ease-in',
-    easeOut: 'ease-out',
-    easeInOut: 'ease-in-out',
-    therapeutic: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
+    linear: "linear",
+    ease: "ease",
+    easeIn: "ease-in",
+    easeOut: "ease-out",
+    easeInOut: "ease-in-out",
+    therapeutic: "cubic-bezier(0.4, 0.0, 0.2, 1)",
   },
 };
 
@@ -182,7 +182,7 @@ export const breakpoints = {
  * Complete Light Theme
  */
 export const lightTheme = {
-  name: 'light',
+  name: "light",
   isDark: false,
   colors: {
     ...colors,
@@ -235,7 +235,7 @@ export const lightTheme = {
   breakpoints,
 
   // Helper function to get shadow
-  getShadow: (size = 'md') => shadows[size],
+  getShadow: (size = "md") => shadows[size],
 };
 
 /**
@@ -244,7 +244,7 @@ export const lightTheme = {
  */
 export const darkTheme = {
   ...lightTheme,
-  name: 'dark',
+  name: "dark",
   isDark: true,
   colors: {
     ...colors,
@@ -297,8 +297,8 @@ export const darkTheme = {
       surfaceVariant: colors.gray[80],
       onSurface: colors.gray[10],
       onSurfaceVariant: colors.gray[30],
-      scrim: 'rgba(255, 255, 255, 0.08)',
-      shadow: 'rgba(0, 0, 0, 0.32)',
+      scrim: "rgba(255, 255, 255, 0.08)",
+      shadow: "rgba(0, 0, 0, 0.32)",
     },
   },
 };
@@ -307,4 +307,4 @@ export const darkTheme = {
 export default lightTheme;
 
 // Named exports
-export { colors, therapeuticColors } from './colors';
+export { colors, therapeuticColors } from "./colors";
