@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from "@theme/ThemeProvider";
+import { sanitizeText } from '@shared/utils/sanitization';
 
 const MOODS = [
   { emoji: '😭', label: 'Sad', color: '#8B7DA8' },
@@ -292,7 +293,7 @@ export const JournalCreateScreen = () => {
             placeholder="Feeling Bad Again"
             placeholderTextColor={theme.colors.text.tertiary}
             value={title}
-            onChangeText={setTitle}
+            onChangeText={(text) => setTitle(sanitizeText(text, 200))}
           />
         </View>
 
@@ -305,7 +306,7 @@ export const JournalCreateScreen = () => {
               placeholder="I had a bad day today, at school. It is fine I guess..."
               placeholderTextColor={theme.colors.text.tertiary}
               value={content}
-              onChangeText={setContent}
+              onChangeText={(text) => setContent(sanitizeText(text, 10000))}
               multiline
               numberOfLines={10}
             />

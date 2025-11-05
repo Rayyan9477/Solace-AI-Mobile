@@ -5,6 +5,7 @@
 
 import { createTransform } from 'redux-persist';
 import encryptionService from '@shared/utils/encryption';
+import { logger } from '@shared/utils/logger';
 
 // TypeScript interfaces for encrypted state
 interface EncryptedState {
@@ -32,7 +33,7 @@ export const encryptionTransform = createTransform(
       const encrypted = encryptionService.encrypt(inboundState);
 
       if (!encrypted) {
-        console.warn(`Failed to encrypt ${key} slice - storing unencrypted as fallback`);
+        logger.warn(`Failed to encrypt ${key} slice - storing unencrypted as fallback`);
         return inboundState;
       }
 
@@ -43,7 +44,7 @@ export const encryptionTransform = createTransform(
         data: encrypted,
       };
     } catch (error) {
-      console.error(`Encryption transform error for ${key}:`, error);
+      logger.error(`Encryption transform error for ${key}:`, error);
       return inboundState;
     }
   },
@@ -56,7 +57,7 @@ export const encryptionTransform = createTransform(
         const decrypted = encryptionService.decrypt(outboundState.data);
 
         if (!decrypted) {
-          console.error(`Failed to decrypt ${key} slice - using initial state`);
+          logger.error(`Failed to decrypt ${key} slice - using initial state`);
           return undefined; // Redux will use initial state
         }
 
@@ -66,7 +67,7 @@ export const encryptionTransform = createTransform(
       // Not encrypted (non-sensitive slice or legacy data)
       return outboundState;
     } catch (error) {
-      console.error(`Decryption transform error for ${key}:`, error);
+      logger.error(`Decryption transform error for ${key}:`, error);
       return undefined;
     }
   },

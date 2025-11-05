@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Card, Surface, IconButton } from "react-native-paper";
 import { motion } from "framer-motion";
 
-import { useTheme } from "../shared/theme/UnifiedThemeProvider";
+import { useTheme } from "@theme/ThemeProvider";
 import { FreudColors, FreudSpacing, FreudTypography } from "../shared/theme/FreudDesignSystem";
 
 const AnimatedCard = motion(Card);

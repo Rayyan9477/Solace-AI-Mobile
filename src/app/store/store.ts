@@ -3,6 +3,7 @@ import { configureStore, combineReducers, Middleware, UnknownAction } from "@red
 import { persistStore, persistReducer, PersistConfig } from "redux-persist";
 import encryptionTransform from "./transforms/encryptionTransform";
 import encryptionService from "@shared/utils/encryption";
+import { logger } from "@shared/utils/logger";
 
 import assessmentSlice from "./slices/assessmentSlice";
 import authSlice from "./slices/authSlice";
@@ -18,9 +19,9 @@ declare const __DEV__: boolean;
 (async () => {
   try {
     await encryptionService.initialize();
-    console.log('✅ Encryption service initialized - HIPAA compliant');
+    logger.info('Encryption service initialized - HIPAA compliant');
   } catch (error) {
-    console.error('❌ Encryption service initialization failed:', error);
+    logger.error('Encryption service initialization failed:', error);
   }
 })();
 
@@ -28,34 +29,39 @@ const SESSION_TIMEOUT = 3600 * 1000;
 const INACTIVITY_TIMEOUT = 15 * 60 * 1000;
 
 const sessionTimeoutMiddleware: Middleware = (store) => (next) => (action: unknown) => {
-  const result = next(action);
-
+  // Check timeout BEFORE processing action
   const state = store.getState() as any;
   const { sessionExpiry, lastActivity, isAuthenticated } = state.auth;
 
   if (isAuthenticated && (action as any).type !== 'auth/secureLogout/pending') {
     const now = Date.now();
 
+    // Session expiry check - block action if expired
     if (sessionExpiry && now > sessionExpiry) {
       store.dispatch({ type: 'auth/secureLogout/pending' });
-      return result;
+      return; // Don't process the action
     }
 
+    // Inactivity timeout check - block action if inactive too long
     if (lastActivity && (now - lastActivity) > INACTIVITY_TIMEOUT) {
       store.dispatch({ type: 'auth/secureLogout/pending' });
-      return result;
+      return; // Don't process the action
     }
+  }
 
-    if ((action as any).type && (
-      (action as any).type.startsWith('mood/') ||
-      (action as any).type.startsWith('chat/') ||
-      (action as any).type.startsWith('user/') ||
-      (action as any).type.startsWith('assessment/')
-    )) {
-      store.dispatch({
-        type: 'auth/updateLastActivity',
-      });
-    }
+  // Process action after timeout checks pass
+  const result = next(action);
+
+  // Update last activity timestamp for relevant actions
+  if (isAuthenticated && (action as any).type && (
+    (action as any).type.startsWith('mood/') ||
+    (action as any).type.startsWith('chat/') ||
+    (action as any).type.startsWith('user/') ||
+    (action as any).type.startsWith('assessment/')
+  )) {
+    store.dispatch({
+      type: 'auth/updateLastActivity',
+    });
   }
 
   return result;
@@ -82,7 +88,7 @@ const persistConfig: PersistConfig<RootState> = {
   transforms: [encryptionTransform as any], // AES-256 encryption for HIPAA compliance
   migrate: (state: any) => {
     if (state) {
-      console.log('🔄 Migrating persisted state with encryption');
+      logger.info('🔄 Migrating persisted state with encryption');
     }
     return Promise.resolve(state);
   },
@@ -109,7 +115,7 @@ export const store = configureStore({
 
 export const persistor = persistStore(store, null, () => {
   if (__DEV__) {
-    console.log('✅ Redux store rehydration complete with encryption');
+    logger.info('Redux store rehydration complete with encryption');
   }
 });
 

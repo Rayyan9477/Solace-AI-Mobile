@@ -6,6 +6,7 @@
 import CryptoJS from 'crypto-js';
 import * as SecureStore from 'expo-secure-store';
 import * as Crypto from 'expo-crypto';
+import { logger } from './logger';
 
 interface EncryptionMetadata {
   version: string;
@@ -54,7 +55,7 @@ class EncryptionService {
 
       this.encryptionKey = key;
     } catch (error) {
-      console.error('Encryption key initialization failed:', error);
+      logger.error('Encryption key initialization failed:', error);
       throw new Error('Failed to initialize encryption');
     }
   }
@@ -64,7 +65,7 @@ class EncryptionService {
    */
   encrypt(data: any): string | null {
     if (!this.encryptionKey) {
-      console.error('Encryption key not initialized');
+      logger.error('Encryption key not initialized');
       return null;
     }
 
@@ -101,7 +102,7 @@ class EncryptionService {
         CryptoJS.enc.Utf8.parse(JSON.stringify(package_))
       );
     } catch (error) {
-      console.error('Encryption failed:', error);
+      logger.error('Encryption failed:', error);
       return null;
     }
   }
@@ -111,7 +112,7 @@ class EncryptionService {
    */
   decrypt(encryptedData: string): any | null {
     if (!this.encryptionKey) {
-      console.error('Encryption key not initialized');
+      logger.error('Encryption key not initialized');
       return null;
     }
 
@@ -127,7 +128,7 @@ class EncryptionService {
       ).toString();
 
       if (computedHmac !== package_.hmac) {
-        console.error('HMAC verification failed');
+        logger.error('HMAC verification failed');
         return null;
       }
 
@@ -153,7 +154,7 @@ class EncryptionService {
 
       return JSON.parse(plaintext);
     } catch (error) {
-      console.error('Decryption failed:', error);
+      logger.error('Decryption failed:', error);
       return null;
     }
   }
@@ -194,7 +195,7 @@ class EncryptionService {
 
       return true;
     } catch (error) {
-      console.error('Key rotation failed:', error);
+      logger.error('Key rotation failed:', error);
       return false;
     }
   }
@@ -207,7 +208,7 @@ class EncryptionService {
       await SecureStore.deleteItemAsync(this.KEY_NAME);
       this.encryptionKey = null;
     } catch (error) {
-      console.error('Key deletion failed:', error);
+      logger.error('Key deletion failed:', error);
       throw error;
     }
   }

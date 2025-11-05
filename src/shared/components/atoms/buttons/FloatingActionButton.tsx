@@ -15,7 +15,7 @@ import FreudDesignSystem, {
   FreudTypography,
   FreudShadows,
 } from "../../shared/theme/FreudDesignSystem";
-import { useTheme } from "../../shared/theme/UnifiedThemeProvider";
+import { useTheme } from "@theme/ThemeProvider";
 import { MentalHealthIcon } from "../icons";
 
 const { width: screenWidth } = Dimensions.get("window");

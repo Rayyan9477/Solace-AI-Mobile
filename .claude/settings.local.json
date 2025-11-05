@@ -38,7 +38,10 @@
       "Bash(del /F \"src\\features\\mood-tracking\\EnhancedMoodTrackerScreen.tsx\" \"src\\screens\\mood\\EnhancedMoodTrackerScreen.tsx\" \"src\\screens\\mood\\EnhancedMoodTrackerScreen.ts\" 2)",
       "Bash(git log:*)",
       "Bash(for file in \"d:\\Repo\\Solace-AI-Mobile\\src\\features\\auth\\LoginScreen.tsx\" \"d:\\Repo\\Solace-AI-Mobile\\src\\features\\auth\\SignupScreen.tsx\" \"d:\\Repo\\Solace-AI-Mobile\\src\\features\\auth\\ForgotPasswordScreen.tsx\" \"d:\\Repo\\Solace-AI-Mobile\\src\\features\\chat\\ChatScreen.tsx\" \"d:\\Repo\\Solace-AI-Mobile\\src\\features\\chat\\ConversationListScreen.tsx\" \"d:\\Repo\\Solace-AI-Mobile\\src\\features\\chat\\NewConversationScreen.tsx\")",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(/plugin marketplace add:*)",
+      "Bash(claude plugin:*)",
+      "Bash(git -C \"R:/Solace-AI-Mobile\" status --porcelain)"
     ],
     "deny": [],
     "ask": []

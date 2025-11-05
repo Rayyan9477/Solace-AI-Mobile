@@ -706,9 +706,9 @@ class CrisisManager {
         riskLevel: crisisAnalysis.risk,
         fallback: true,
       };
-      await AsyncStorage.setItem(
+      await secureStorage.storeSensitiveData(
         `crisis_fallback_${Date.now()}`,
-        JSON.stringify(fallbackEvent)
+        fallbackEvent
       );
     } catch {
       // Silent fallback failure
@@ -865,8 +865,8 @@ class CrisisManager {
    */
   async getCrisisHistory(): Promise<any[]> {
     try {
-      const events = await AsyncStorage.getItem("crisis_events");
-      return events ? JSON.parse(events) : [];
+      const events = await secureStorage.getSecureData("crisis_events");
+      return Array.isArray(events) ? events : [];
     } catch (error) {
       logger.error("Error getting crisis history:", error);
       return [];
@@ -932,11 +932,11 @@ class CrisisManager {
     };
 
     try {
-      const existingFollowUps = await AsyncStorage.getItem("scheduled_followups");
-      const followUps = existingFollowUps ? JSON.parse(existingFollowUps) : [];
+      const existingFollowUps = await secureStorage.getSecureData("scheduled_followups");
+      const followUps = Array.isArray(existingFollowUps) ? existingFollowUps : [];
 
       followUps.push(followUp);
-      await AsyncStorage.setItem("scheduled_followups", JSON.stringify(followUps));
+      await secureStorage.storeSensitiveData("scheduled_followups", followUps);
 
       return followUp;
     } catch (error) {
