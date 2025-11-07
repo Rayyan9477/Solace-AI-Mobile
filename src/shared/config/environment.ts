@@ -71,6 +71,9 @@ export const STORAGE_CONFIG = {
 
   // Enable storage encryption (always true for secure storage)
   encryption: true,
+
+  // Encryption key for secure storage (generated or from environment)
+  encryptionKey: process.env.EXPO_PUBLIC_ENCRYPTION_KEY || "solace-ai-secure-key-2024",
 };
 
 /**

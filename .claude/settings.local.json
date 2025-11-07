@@ -46,7 +46,12 @@
       "Bash(timeout 60 npm test -- --passWithNoTests --silent)",
       "Bash(timeout 90 npm test -- --passWithNoTests --maxWorkers=2)",
       "Bash(timeout 90 npm test -- --passWithNoTests --maxWorkers=2 --coverage)",
-      "Bash(lint-fix-output.txt)"
+      "Bash(lint-fix-output.txt)",
+      "Bash(npx jest --clearCache)",
+      "Bash(nul)",
+      "Bash(netstat:*)",
+      "Bash(taskkill:*)",
+      "Bash(npx playwright:*)"
     ],
     "deny": [],
     "ask": []

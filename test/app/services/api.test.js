@@ -1,21 +1,36 @@
+// Mock logger
+jest.mock("../../../src/shared/utils/logger", () => ({
+  logger: {
+    warn: jest.fn(),
+    error: jest.fn(),
+    info: jest.fn(),
+    debug: jest.fn(),
+  },
+}));
+
+// Mock tokenService before importing apiService
+jest.mock("../../../src/app/services/tokenService", () => {
+  return {
+    __esModule: true,
+    default: {
+      getTokens: jest.fn(() => Promise.resolve(null)),
+      storeTokens: jest.fn(() => Promise.resolve()),
+      clearTokens: jest.fn(() => Promise.resolve()),
+    },
+  };
+});
+
 import apiService from "../../../src/app/services/api";
 import { API_CONFIG } from "../../../src/shared/config/environment";
+import tokenService from "../../../src/app/services/tokenService";
 
 // Mock fetch globally
 global.fetch = jest.fn();
 
-// Mock tokenService as a proper Jest mock
-const mockGetTokens = jest.fn(() => Promise.resolve(null));
-const mockStoreTokens = jest.fn(() => Promise.resolve());
-const mockClearTokens = jest.fn(() => Promise.resolve());
-
-jest.mock("../../../src/app/services/tokenService", () => ({
-  default: {
-    getTokens: mockGetTokens,
-    storeTokens: mockStoreTokens,
-    clearTokens: mockClearTokens,
-  },
-}));
+// Get references to the mocked functions
+const mockGetTokens = tokenService.getTokens;
+const mockStoreTokens = tokenService.storeTokens;
+const mockClearTokens = tokenService.clearTokens;
 
 // Mock environment config
 jest.mock("../../../src/shared/config/environment", () => ({
@@ -80,14 +95,18 @@ describe("API Service", () => {
         "password123",
       );
 
-      expect(fetch).toHaveBeenCalledWith(`${API_CONFIG.baseURL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: "test@example.com",
-          password: "password123",
-        }),
-      });
+      expect(fetch).toHaveBeenCalledWith(
+        `${API_CONFIG.baseURL}/auth/login`,
+        expect.objectContaining({
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: "test@example.com",
+            password: "password123",
+          }),
+          signal: expect.any(AbortSignal),
+        })
+      );
 
       expect(mockStoreTokens).toHaveBeenCalledWith({
         accessToken: "access_token_123",
@@ -143,7 +162,7 @@ describe("API Service", () => {
 
       expect(fetch).toHaveBeenCalledWith(
         `${API_CONFIG.baseURL}/auth/register`,
-        {
+        expect.objectContaining({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -152,7 +171,8 @@ describe("API Service", () => {
             name: "Test User",
             additionalField: "value",
           }),
-        },
+          signal: expect.any(AbortSignal),
+        })
       );
 
       expect(result).toEqual(mockRegisterData);
@@ -300,11 +320,12 @@ describe("API Service", () => {
 
       expect(fetch).toHaveBeenCalledWith(
         `${API_CONFIG.baseURL}/auth/forgot-password`,
-        {
+        expect.objectContaining({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: "test@example.com" }),
-        },
+          signal: expect.any(AbortSignal),
+        })
       );
 
       expect(result).toEqual(mockResponse);
@@ -324,14 +345,15 @@ describe("API Service", () => {
 
       expect(fetch).toHaveBeenCalledWith(
         `${API_CONFIG.baseURL}/auth/reset-password`,
-        {
+        expect.objectContaining({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             token: "reset_token_123",
             newPassword: "newpassword",
           }),
-        },
+          signal: expect.any(AbortSignal),
+        })
       );
 
       expect(result).toEqual(mockResponse);

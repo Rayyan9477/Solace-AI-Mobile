@@ -2,7 +2,7 @@
   "name": "solace-ai-mobile",
   "version": "1.0.0",
   "description": "Solace AI Mobile - Your Empathetic Digital Confidant",
-  "main": "App.js",
+  "main": "App.tsx",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",

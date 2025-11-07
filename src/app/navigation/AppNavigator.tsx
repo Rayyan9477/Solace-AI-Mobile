@@ -8,6 +8,7 @@ import AssessmentResultsScreen from "@features/assessment/screens/AssessmentResu
 import AssessmentScreen from "@features/assessment/screens/AssessmentScreen";
 import LoginScreen from "@features/auth/LoginScreen";
 import SignupScreen from "@features/auth/SignupScreen";
+import ForgotPasswordScreen from "@features/auth/ForgotPasswordScreen";
 import SocialLoginScreen from "@features/auth/screens/SocialLoginScreen";
 import ChatScreen from "@features/chat/ChatScreen";
 import ChatConversationsListScreen from "@features/chat/screens/ChatConversationsListScreen";
@@ -187,8 +188,7 @@ const MainTabs = () => {
         />
         <Tab.Screen
           name="Profile"
-          component={PlaceholderScreen}
-          initialParams={{ name: "Profile" }}
+          component={ProfileSettingsScreen}
           options={{
             tabBarLabel: isJest ? "Profile Tab" : "Profile",
           }}
@@ -300,6 +300,7 @@ const AppNavigator = (props: any) => {
             <Stack.Screen name="Onboarding" component={OnboardingScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Signup" component={SignupScreen} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
             <Stack.Screen name="SocialLogin" component={SocialLoginScreen} />
           </>
         ) : (

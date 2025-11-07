@@ -50,6 +50,7 @@ describe("therapySlice", () => {
       mood: null,
       tags: [],
       notes: "",
+      isPaused: false,
     },
     sessionHistory: [],
     preferences: {
@@ -122,6 +123,7 @@ describe("therapySlice", () => {
         mood: null,
         tags: [],
         notes: "",
+        isPaused: false,
       });
       expect(result.error).toBe(null);
     });
