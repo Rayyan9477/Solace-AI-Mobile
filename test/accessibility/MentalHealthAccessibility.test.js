@@ -16,8 +16,8 @@ import React from "react";
 import { AccessibilityInfo } from "react-native";
 import { Provider } from "react-redux";
 
-import MoodCheckIn from "../../components/dashboard/MoodCheckIn";
-import QuickActions from "../../components/dashboard/QuickActions";
+import MoodCheckIn from "../../src/features/dashboard/components/MoodCheckIn";
+import QuickActions from "../../src/features/dashboard/components/QuickActions";
 import MainAppScreen from "../../src/screens/MainAppScreen";
 import EnhancedMoodTrackerScreen from "../../src/screens/mood/EnhancedMoodTrackerScreen";
 import { ThemeProvider } from "../../src/shared/theme/ThemeContext";

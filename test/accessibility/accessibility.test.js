@@ -10,10 +10,10 @@ import React from "react";
 import { AccessibilityInfo } from "react-native";
 
 // Import components to test
-import AccessibleButton from "../../components/common/AccessibleButton";
-import Button from "../../components/common/Button";
-import { IntensitySlider } from "../../components/mood/IntensitySlider";
-import { MoodSelector } from "../../components/mood/MoodSelector";
+import AccessibleButton from "../../src/shared/components/atoms/buttons/TherapeuticButton";
+import Button from "../../src/shared/components/atoms/buttons/TherapeuticButton";
+import { IntensitySlider } from "../../src/features/mood/components/IntensitySlider";
+import { MoodSelector } from "../../src/features/mood/components/MoodSelector";
 
 // Import testing utilities
 import {

@@ -6,25 +6,15 @@
 import AssessmentHistoryScreen from "@features/assessment/screens/AssessmentHistoryScreen";
 import AssessmentResultsScreen from "@features/assessment/screens/AssessmentResultsScreen";
 import AssessmentScreen from "@features/assessment/screens/AssessmentScreen";
+import ForgotPasswordScreen from "@features/auth/ForgotPasswordScreen";
 import LoginScreen from "@features/auth/LoginScreen";
 import SignupScreen from "@features/auth/SignupScreen";
-import ForgotPasswordScreen from "@features/auth/ForgotPasswordScreen";
 import SocialLoginScreen from "@features/auth/screens/SocialLoginScreen";
 import ChatScreen from "@features/chat/ChatScreen";
 import ChatConversationsListScreen from "@features/chat/screens/ChatConversationsListScreen";
 import { CommunitySupportScreen, CreatePostScreen } from "@features/community";
-import DashboardScreen from "@features/dashboard/DashboardScreen";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { useSelector as useReduxSelector } from "react-redux";
 
 // Feature-based screen imports
-import MoodScreen from "@features/mood/MoodScreen";
-import EnhancedMoodTrackerScreen from "@features/mood/screens/EnhancedMoodTrackerScreen";
-import OnboardingScreen from "@features/onboarding/screens/OnboardingScreen";
 import WelcomeScreen from "@features/onboarding/screens/WelcomeScreen";
 import {
   JournalListScreen,
@@ -40,6 +30,13 @@ import { SleepQualityScreen, StressManagementScreen } from "@features/wellness";
 import { ProfileSettingsScreen } from "@features/profile";
 import { SearchScreen } from "@features/search";
 import ProfileSetupScreen from "@features/profile/screens/ProfileSetupScreen";
+import {
+  TherapySessionScreen,
+  TherapyHistoryScreen,
+  TherapyExercisesScreen,
+  TherapyInsightsScreen,
+  TherapyPreferencesScreen,
+} from "@features/therapy";
 
 // New screen imports
 import FreudScoreScreen from "@features/dashboard/screens/FreudScoreScreen";
@@ -61,8 +58,8 @@ import SupportGroupsScreen from "@features/community/screens/SupportGroupsScreen
 import DiscussionThreadsScreen from "@features/community/screens/DiscussionThreadsScreen";
 import SuccessStoriesScreen from "@features/community/screens/SuccessStoriesScreen";
 import CrisisSupportScreen from "@features/crisis/screens/CrisisSupportScreen";
+import DashboardScreen from "@features/dashboard/DashboardScreen";
 import JournalCalendarScreen from "@features/journal/screens/JournalCalendarScreen";
-import JournalSearchScreen from "@features/journal/screens/JournalSearchScreen";
 import JournalExportScreen from "@features/journal/screens/JournalExportScreen";
 import SessionHistoryScreen from "@features/mindfulness/screens/SessionHistoryScreen";
 import AchievementBadgesScreen from "@features/mindfulness/screens/AchievementBadgesScreen";
@@ -102,9 +99,19 @@ import ServerErrorScreen from "@features/error/screens/ServerErrorScreen";
 import EmptyStateScreen from "@features/error/screens/EmptyStateScreen";
 import OfflineModeScreen from "@features/error/screens/OfflineModeScreen";
 import SuccessScreen from "@features/error/screens/SuccessScreen";
+import JournalSearchScreen from "@features/journal/screens/JournalSearchScreen";
+import MoodScreen from "@features/mood/MoodScreen";
+import EnhancedMoodTrackerScreen from "@features/mood/screens/EnhancedMoodTrackerScreen";
+import OnboardingScreen from "@features/onboarding/screens/OnboardingScreen";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useNavigation } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
 // Theme import
 import { useTheme } from "@theme/ThemeProvider";
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { useSelector as useReduxSelector } from "react-redux";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -184,6 +191,20 @@ const MainTabs = () => {
           component={ChatScreen}
           options={{
             tabBarLabel: isJest ? "Chat Tab" : "Chat",
+          }}
+        />
+        <Tab.Screen
+          name="Journal"
+          component={JournalListScreen}
+          options={{
+            tabBarLabel: isJest ? "Journal Tab" : "Journal",
+          }}
+        />
+        <Tab.Screen
+          name="Mindfulness"
+          component={MindfulHoursScreen}
+          options={{
+            tabBarLabel: isJest ? "Mindfulness Tab" : "Mindfulness",
           }}
         />
         <Tab.Screen
@@ -300,7 +321,10 @@ const AppNavigator = (props: any) => {
             <Stack.Screen name="Onboarding" component={OnboardingScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Signup" component={SignupScreen} />
-            <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+            <Stack.Screen
+              name="ForgotPassword"
+              component={ForgotPasswordScreen}
+            />
             <Stack.Screen name="SocialLogin" component={SocialLoginScreen} />
           </>
         ) : (
@@ -458,6 +482,28 @@ const AppNavigator = (props: any) => {
             <Stack.Screen
               name="ChatConversationsList"
               component={ChatConversationsListScreen}
+            />
+
+            {/* Therapy */}
+            <Stack.Screen
+              name="TherapySession"
+              component={TherapySessionScreen}
+            />
+            <Stack.Screen
+              name="TherapyHistory"
+              component={TherapyHistoryScreen}
+            />
+            <Stack.Screen
+              name="TherapyExercises"
+              component={TherapyExercisesScreen}
+            />
+            <Stack.Screen
+              name="TherapyInsights"
+              component={TherapyInsightsScreen}
+            />
+            <Stack.Screen
+              name="TherapyPreferences"
+              component={TherapyPreferencesScreen}
             />
 
             {/* Notifications */}

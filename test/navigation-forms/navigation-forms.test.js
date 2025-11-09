@@ -17,14 +17,14 @@ import { Platform } from "react-native";
 // Import components to test
 import KeyboardAwareScrollView, {
   KeyboardAwareInput,
-} from "../../components/common/KeyboardAwareScrollView";
-import EnhancedInput from "../../components/forms/EnhancedInput";
+} from "../../src/shared/components/common/KeyboardAwareScrollView";
+import EnhancedInput from "../../src/shared/components/atoms/forms/EnhancedInput";
 import {
   TherapySessionForm,
   MoodTrackingForm,
   AssessmentQuestionForm,
   CrisisSupportForm,
-} from "../../components/forms/MentalHealthForms";
+} from "../../src/shared/components/atoms/forms/MentalHealthForms";
 
 // Import utilities
 import {

@@ -8,8 +8,8 @@ import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
 import React from "react";
 import { Animated } from "react-native";
 
-import MoodCheckIn from "../../components/dashboard/MoodCheckIn";
-import QuickActions from "../../components/dashboard/QuickActions";
+import MoodCheckIn from "../../src/features/dashboard/components/MoodCheckIn";
+import QuickActions from "../../src/features/dashboard/components/QuickActions";
 import EnhancedMoodTrackerScreen from "../../src/screens/mood/EnhancedMoodTrackerScreen";
 import { PerformanceTestingHelpers } from "../utils/TestHelpers";
 

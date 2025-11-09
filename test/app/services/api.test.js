@@ -1,4 +1,8 @@
 // Mock logger
+import apiService from "../../../src/app/services/api";
+import tokenService from "../../../src/app/services/tokenService";
+import { API_CONFIG } from "../../../src/shared/config/environment";
+
 jest.mock("../../../src/shared/utils/logger", () => ({
   logger: {
     warn: jest.fn(),
@@ -19,10 +23,6 @@ jest.mock("../../../src/app/services/tokenService", () => {
     },
   };
 });
-
-import apiService from "../../../src/app/services/api";
-import { API_CONFIG } from "../../../src/shared/config/environment";
-import tokenService from "../../../src/app/services/tokenService";
 
 // Mock fetch globally
 global.fetch = jest.fn();
@@ -105,7 +105,7 @@ describe("API Service", () => {
             password: "password123",
           }),
           signal: expect.any(AbortSignal),
-        })
+        }),
       );
 
       expect(mockStoreTokens).toHaveBeenCalledWith({
@@ -172,7 +172,7 @@ describe("API Service", () => {
             additionalField: "value",
           }),
           signal: expect.any(AbortSignal),
-        })
+        }),
       );
 
       expect(result).toEqual(mockRegisterData);
@@ -325,7 +325,7 @@ describe("API Service", () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: "test@example.com" }),
           signal: expect.any(AbortSignal),
-        })
+        }),
       );
 
       expect(result).toEqual(mockResponse);
@@ -353,7 +353,7 @@ describe("API Service", () => {
             newPassword: "newpassword",
           }),
           signal: expect.any(AbortSignal),
-        })
+        }),
       );
 
       expect(result).toEqual(mockResponse);
