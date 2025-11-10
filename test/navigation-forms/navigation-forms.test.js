@@ -15,9 +15,6 @@ import React from "react";
 import { Platform } from "react-native";
 
 // Import components to test
-import KeyboardAwareScrollView, {
-  KeyboardAwareInput,
-} from "../../src/shared/components/common/KeyboardAwareScrollView";
 import EnhancedInput from "../../src/shared/components/atoms/forms/EnhancedInput";
 import {
   TherapySessionForm,
@@ -25,6 +22,9 @@ import {
   AssessmentQuestionForm,
   CrisisSupportForm,
 } from "../../src/shared/components/atoms/forms/MentalHealthForms";
+import KeyboardAwareScrollView, {
+  KeyboardAwareInput,
+} from "../../src/shared/components/common/KeyboardAwareScrollView";
 
 // Import utilities
 import {

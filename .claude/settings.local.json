@@ -52,7 +52,8 @@
       "Bash(netstat:*)",
       "Bash(taskkill:*)",
       "Bash(npx playwright:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(npx eslint:*)"
     ],
     "deny": [],
     "ask": []

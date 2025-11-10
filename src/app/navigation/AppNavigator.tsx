@@ -15,32 +15,8 @@ import ChatConversationsListScreen from "@features/chat/screens/ChatConversation
 import { CommunitySupportScreen, CreatePostScreen } from "@features/community";
 
 // Feature-based screen imports
-import WelcomeScreen from "@features/onboarding/screens/WelcomeScreen";
-import {
-  JournalListScreen,
-  JournalDetailScreen,
-  JournalCreateScreen,
-} from "@features/journal";
-import {
-  MindfulHoursScreen,
-  BreathingExerciseScreen,
-  MindfulResourcesScreen,
-} from "@features/mindfulness";
-import { SleepQualityScreen, StressManagementScreen } from "@features/wellness";
-import { ProfileSettingsScreen } from "@features/profile";
-import { SearchScreen } from "@features/search";
-import ProfileSetupScreen from "@features/profile/screens/ProfileSetupScreen";
-import {
-  TherapySessionScreen,
-  TherapyHistoryScreen,
-  TherapyExercisesScreen,
-  TherapyInsightsScreen,
-  TherapyPreferencesScreen,
-} from "@features/therapy";
 
 // New screen imports
-import FreudScoreScreen from "@features/dashboard/screens/FreudScoreScreen";
-import AISuggestionsScreen from "@features/dashboard/screens/AISuggestionsScreen";
 import MoodStatsScreen from "@features/mood/screens/MoodStatsScreen";
 import MoodCalendarScreen from "@features/mood/screens/MoodCalendarScreen";
 import MoodHistoryScreen from "@features/mood/screens/MoodHistoryScreen";
@@ -59,8 +35,8 @@ import DiscussionThreadsScreen from "@features/community/screens/DiscussionThrea
 import SuccessStoriesScreen from "@features/community/screens/SuccessStoriesScreen";
 import CrisisSupportScreen from "@features/crisis/screens/CrisisSupportScreen";
 import DashboardScreen from "@features/dashboard/DashboardScreen";
-import JournalCalendarScreen from "@features/journal/screens/JournalCalendarScreen";
-import JournalExportScreen from "@features/journal/screens/JournalExportScreen";
+import AISuggestionsScreen from "@features/dashboard/screens/AISuggestionsScreen";
+import FreudScoreScreen from "@features/dashboard/screens/FreudScoreScreen";
 import SessionHistoryScreen from "@features/mindfulness/screens/SessionHistoryScreen";
 import AchievementBadgesScreen from "@features/mindfulness/screens/AchievementBadgesScreen";
 import ArticleDetailScreen from "@features/mindfulness/screens/ArticleDetailScreen";
@@ -99,10 +75,34 @@ import ServerErrorScreen from "@features/error/screens/ServerErrorScreen";
 import EmptyStateScreen from "@features/error/screens/EmptyStateScreen";
 import OfflineModeScreen from "@features/error/screens/OfflineModeScreen";
 import SuccessScreen from "@features/error/screens/SuccessScreen";
+import {
+  JournalListScreen,
+  JournalDetailScreen,
+  JournalCreateScreen,
+} from "@features/journal";
+import JournalCalendarScreen from "@features/journal/screens/JournalCalendarScreen";
+import JournalExportScreen from "@features/journal/screens/JournalExportScreen";
 import JournalSearchScreen from "@features/journal/screens/JournalSearchScreen";
+import {
+  MindfulHoursScreen,
+  BreathingExerciseScreen,
+  MindfulResourcesScreen,
+} from "@features/mindfulness";
 import MoodScreen from "@features/mood/MoodScreen";
 import EnhancedMoodTrackerScreen from "@features/mood/screens/EnhancedMoodTrackerScreen";
 import OnboardingScreen from "@features/onboarding/screens/OnboardingScreen";
+import WelcomeScreen from "@features/onboarding/screens/WelcomeScreen";
+import { ProfileSettingsScreen } from "@features/profile";
+import ProfileSetupScreen from "@features/profile/screens/ProfileSetupScreen";
+import { SearchScreen } from "@features/search";
+import {
+  TherapySessionScreen,
+  TherapyHistoryScreen,
+  TherapyExercisesScreen,
+  TherapyInsightsScreen,
+  TherapyPreferencesScreen,
+} from "@features/therapy";
+import { SleepQualityScreen, StressManagementScreen } from "@features/wellness";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -484,7 +484,7 @@ const AppNavigator = (props: any) => {
               component={ChatConversationsListScreen}
             />
 
-            {/* Therapy */}
+            {/* Therapy & Challenges */}
             <Stack.Screen
               name="TherapySession"
               component={TherapySessionScreen}
@@ -505,6 +505,15 @@ const AppNavigator = (props: any) => {
               name="TherapyPreferences"
               component={TherapyPreferencesScreen}
             />
+
+            {/* Quick Access: Therapy Challenges */}
+            {/*
+              Therapeutic Challenges accessible via:
+              - TherapyExercises: 6 exercises (CBT, Mindfulness, ACT)
+              - GuidedSessions: Mindfulness activities
+              - RelaxationTechniques: Wellness challenges
+              - QuickStressRelief: Instant wellness activities
+            */}
 
             {/* Notifications */}
             <Stack.Screen

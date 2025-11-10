@@ -428,6 +428,49 @@ export const DashboardScreen = () => {
           </TouchableOpacity>
         </View>
 
+        {/* Therapy Challenges */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Therapy Challenges</Text>
+
+          <TouchableOpacity
+            style={[
+              styles.trackerCard,
+              { backgroundColor: theme.colors.purple["20"] },
+            ]}
+            onPress={() => navigation.navigate("TherapyExercises")}
+          >
+            <View style={styles.trackerIcon}>
+              <Text style={{ fontSize: 24 }}>🧠</Text>
+            </View>
+            <View style={styles.trackerContent}>
+              <Text
+                style={[
+                  styles.trackerTitle,
+                  { color: theme.colors.purple["100"] },
+                ]}
+              >
+                Therapeutic Exercises
+              </Text>
+              <Text
+                style={[
+                  styles.trackerSubtitle,
+                  { color: theme.colors.purple["80"] },
+                ]}
+              >
+                6 exercises • CBT, Mindfulness & More
+              </Text>
+            </View>
+            <View style={styles.trackerProgress}>
+              <View
+                style={[
+                  styles.progressBar,
+                  { backgroundColor: theme.colors.purple["40"], width: "40%" },
+                ]}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+
         {/* AI Therapy Chatbot */}
         <TouchableOpacity
           style={[styles.aiCard, { backgroundColor: theme.colors.gray["20"] }]}
