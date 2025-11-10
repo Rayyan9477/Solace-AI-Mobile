@@ -56,6 +56,7 @@ import LanguageSettingsScreen from "@features/profile/screens/LanguageSettingsSc
 import PrivacySettingsScreen from "@features/profile/screens/PrivacySettingsScreen";
 import AboutScreen from "@features/profile/screens/AboutScreen";
 import ContactSupportScreen from "@features/profile/screens/ContactSupportScreen";
+import { ThemeSettingsScreen } from "@features/profile";
 import StressAssessmentScreen from "@features/wellness/screens/StressAssessmentScreen";
 import QuickStressReliefScreen from "@features/wellness/screens/QuickStressReliefScreen";
 import RecentSearchesScreen from "@features/search/screens/RecentSearchesScreen";
@@ -101,6 +102,8 @@ import {
   TherapyExercisesScreen,
   TherapyInsightsScreen,
   TherapyPreferencesScreen,
+  TherapySessionDetailScreen,
+  ExerciseDetailScreen,
 } from "@features/therapy";
 import { SleepQualityScreen, StressManagementScreen } from "@features/wellness";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -505,6 +508,14 @@ const AppNavigator = (props: any) => {
               name="TherapyPreferences"
               component={TherapyPreferencesScreen}
             />
+            <Stack.Screen
+              name="TherapySessionDetail"
+              component={TherapySessionDetailScreen}
+            />
+            <Stack.Screen
+              name="ExerciseDetail"
+              component={ExerciseDetailScreen}
+            />
 
             {/* Quick Access: Therapy Challenges */}
             {/*
@@ -582,6 +593,10 @@ const AppNavigator = (props: any) => {
               component={ContactSupportScreen}
             />
             <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+            <Stack.Screen
+              name="ThemeSettings"
+              component={ThemeSettingsScreen}
+            />
 
             {/* Search */}
             <Stack.Screen name="Search" component={SearchScreen} />

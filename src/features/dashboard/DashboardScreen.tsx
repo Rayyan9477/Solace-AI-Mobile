@@ -5,6 +5,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
+import { useResponsive } from "@shared/hooks/useResponsive";
 import React from "react";
 import {
   View,
@@ -20,15 +21,29 @@ import { MentalHealthScoreWidget } from "./components/MentalHealthScoreWidget";
 export const DashboardScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
+  const { isWeb, getMaxContentWidth, getContainerPadding } = useResponsive();
+
+  const maxWidth = getMaxContentWidth();
+  const contentMaxWidth = isWeb ? Math.min(maxWidth, 1024) : "100%";
+  const containerPadding = getContainerPadding();
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: theme.colors.background.primary,
     },
-    content: {
-      flex: 1,
-      padding: 20,
+    scrollContent: {
+      flexGrow: 1,
+    },
+    innerContainer: {
+      width: "100%",
+      alignItems: "center",
+    },
+    contentWrapper: {
+      width: "100%",
+      maxWidth: contentMaxWidth,
+      paddingHorizontal: containerPadding,
+      paddingVertical: 20,
     },
     header: {
       flexDirection: "row",
@@ -176,345 +191,377 @@ export const DashboardScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View style={styles.header}>
-          <View>
-            <Text
-              style={[styles.greeting, { color: theme.colors.text.secondary }]}
-            >
-              Tue, 28 Oct 2025
-            </Text>
-            <Text style={styles.title}>Hi, Shinomiya!</Text>
-            <Text
-              style={[styles.subtitle, { color: theme.colors.text.secondary }]}
-            >
-              By You · 😊 Happy
-            </Text>
-          </View>
-          <TouchableOpacity style={styles.searchButton}>
-            <Text style={{ fontSize: 20 }}>🔍</Text>
-          </TouchableOpacity>
-        </View>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.innerContainer}>
+          <View style={styles.contentWrapper}>
+            {/* Header */}
+            <View style={styles.header}>
+              <View>
+                <Text
+                  style={[
+                    styles.greeting,
+                    { color: theme.colors.text.secondary },
+                  ]}
+                >
+                  Tue, 28 Oct 2025
+                </Text>
+                <Text style={styles.title}>Hi, Shinomiya!</Text>
+                <Text
+                  style={[
+                    styles.subtitle,
+                    { color: theme.colors.text.secondary },
+                  ]}
+                >
+                  By You · 😊 Happy
+                </Text>
+              </View>
+              <TouchableOpacity style={styles.searchButton}>
+                <Text style={{ fontSize: 20 }}>🔍</Text>
+              </TouchableOpacity>
+            </View>
 
-        {/* Mental Health Metrics Grid */}
-        <View style={styles.metricsGrid}>
-          <TouchableOpacity
-            style={[
-              styles.metricCard,
-              styles.scoreCard,
-              { backgroundColor: theme.colors.green["20"] },
-            ]}
-            onPress={() => navigation.navigate("FreudScore")}
-          >
-            <Text
-              style={[styles.metricLabel, { color: theme.colors.green["100"] }]}
-            >
-              Freud Score
-            </Text>
-            <MentalHealthScoreWidget score={80} size={100} label="" />
-          </TouchableOpacity>
+            {/* Mental Health Metrics Grid */}
+            <View style={styles.metricsGrid}>
+              <TouchableOpacity
+                style={[
+                  styles.metricCard,
+                  styles.scoreCard,
+                  { backgroundColor: theme.colors.green["20"] },
+                ]}
+                onPress={() => navigation.navigate("FreudScore")}
+              >
+                <Text
+                  style={[
+                    styles.metricLabel,
+                    { color: theme.colors.green["100"] },
+                  ]}
+                >
+                  Freud Score
+                </Text>
+                <MentalHealthScoreWidget score={80} size={100} label="" />
+              </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[
-              styles.metricCard,
-              { backgroundColor: theme.colors.orange["20"] },
-            ]}
-            onPress={() => navigation.navigate("MoodStats")}
-          >
-            <Text
+              <TouchableOpacity
+                style={[
+                  styles.metricCard,
+                  { backgroundColor: theme.colors.orange["20"] },
+                ]}
+                onPress={() => navigation.navigate("MoodStats")}
+              >
+                <Text
+                  style={[
+                    styles.metricLabel,
+                    { color: theme.colors.orange["100"] },
+                  ]}
+                >
+                  Mood
+                </Text>
+                <Text
+                  style={[
+                    styles.metricValue,
+                    { color: theme.colors.orange["100"] },
+                  ]}
+                >
+                  😊
+                </Text>
+                <Text
+                  style={[
+                    styles.metricSubtext,
+                    { color: theme.colors.orange["80"] },
+                  ]}
+                >
+                  Happy today
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Mindful Tracker */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Mindful Tracker</Text>
+
+              <TouchableOpacity
+                style={[
+                  styles.trackerCard,
+                  { backgroundColor: theme.colors.green["20"] },
+                ]}
+                onPress={() => navigation.navigate("MindfulHours")}
+              >
+                <View style={styles.trackerIcon}>
+                  <Text style={{ fontSize: 24 }}>🫁</Text>
+                </View>
+                <View style={styles.trackerContent}>
+                  <Text
+                    style={[
+                      styles.trackerTitle,
+                      { color: theme.colors.green["100"] },
+                    ]}
+                  >
+                    Mindful Hours
+                  </Text>
+                  <Text
+                    style={[
+                      styles.trackerSubtitle,
+                      { color: theme.colors.green["80"] },
+                    ]}
+                  >
+                    5.21h
+                  </Text>
+                </View>
+                <View style={styles.trackerProgress}>
+                  <View
+                    style={[
+                      styles.progressBar,
+                      { backgroundColor: theme.colors.green["40"] },
+                    ]}
+                  />
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.trackerCard,
+                  { backgroundColor: theme.colors.purple["20"] },
+                ]}
+                onPress={() => navigation.navigate("SleepQuality")}
+              >
+                <View style={styles.trackerIcon}>
+                  <Text style={{ fontSize: 24 }}>⭐</Text>
+                </View>
+                <View style={styles.trackerContent}>
+                  <Text
+                    style={[
+                      styles.trackerTitle,
+                      { color: theme.colors.purple["100"] },
+                    ]}
+                  >
+                    Sleep Quality
+                  </Text>
+                  <Text
+                    style={[
+                      styles.trackerSubtitle,
+                      { color: theme.colors.purple["80"] },
+                    ]}
+                  >
+                    Insomnia (7h Avg)
+                  </Text>
+                </View>
+                <View style={styles.trackerProgress}>
+                  <View
+                    style={[
+                      styles.progressBar,
+                      {
+                        backgroundColor: theme.colors.purple["40"],
+                        width: "60%",
+                      },
+                    ]}
+                  />
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.trackerCard,
+                  { backgroundColor: theme.colors.orange["20"] },
+                ]}
+                onPress={() => navigation.navigate("JournalList")}
+              >
+                <View style={styles.trackerIcon}>
+                  <Text style={{ fontSize: 24 }}>📖</Text>
+                </View>
+                <View style={styles.trackerContent}>
+                  <Text
+                    style={[
+                      styles.trackerTitle,
+                      { color: theme.colors.orange["100"] },
+                    ]}
+                  >
+                    Mindful Journal
+                  </Text>
+                  <Text
+                    style={[
+                      styles.trackerSubtitle,
+                      { color: theme.colors.orange["80"] },
+                    ]}
+                  >
+                    44 logs (streak)
+                  </Text>
+                </View>
+                <View style={styles.trackerProgress}>
+                  <View
+                    style={[
+                      styles.progressBar,
+                      {
+                        backgroundColor: theme.colors.orange["40"],
+                        width: "80%",
+                      },
+                    ]}
+                  />
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.trackerCard,
+                  { backgroundColor: theme.colors.yellow["20"] },
+                ]}
+                onPress={() => navigation.navigate("StressLevel")}
+              >
+                <View style={styles.trackerIcon}>
+                  <Text style={{ fontSize: 24 }}>😤</Text>
+                </View>
+                <View style={styles.trackerContent}>
+                  <Text
+                    style={[
+                      styles.trackerTitle,
+                      { color: theme.colors.yellow["100"] },
+                    ]}
+                  >
+                    Stress Level
+                  </Text>
+                  <Text
+                    style={[
+                      styles.trackerSubtitle,
+                      { color: theme.colors.yellow["80"] },
+                    ]}
+                  >
+                    Level 3 (Normal)
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.trackerCard,
+                  { backgroundColor: theme.colors.brown["20"] },
+                ]}
+                onPress={() => navigation.navigate("MoodTracker")}
+              >
+                <View style={styles.trackerIcon}>
+                  <Text style={{ fontSize: 24 }}>😊</Text>
+                </View>
+                <View style={styles.trackerContent}>
+                  <Text
+                    style={[
+                      styles.trackerTitle,
+                      { color: theme.colors.brown["100"] },
+                    ]}
+                  >
+                    Mood Tracker
+                  </Text>
+                  <Text
+                    style={[
+                      styles.trackerSubtitle,
+                      { color: theme.colors.brown["80"] },
+                    ]}
+                  >
+                    😊 Happy (Today)
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            {/* Therapy Challenges */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Therapy Challenges</Text>
+
+              <TouchableOpacity
+                style={[
+                  styles.trackerCard,
+                  { backgroundColor: theme.colors.purple["20"] },
+                ]}
+                onPress={() => navigation.navigate("TherapyExercises")}
+              >
+                <View style={styles.trackerIcon}>
+                  <Text style={{ fontSize: 24 }}>🧠</Text>
+                </View>
+                <View style={styles.trackerContent}>
+                  <Text
+                    style={[
+                      styles.trackerTitle,
+                      { color: theme.colors.purple["100"] },
+                    ]}
+                  >
+                    Therapeutic Exercises
+                  </Text>
+                  <Text
+                    style={[
+                      styles.trackerSubtitle,
+                      { color: theme.colors.purple["80"] },
+                    ]}
+                  >
+                    6 exercises • CBT, Mindfulness & More
+                  </Text>
+                </View>
+                <View style={styles.trackerProgress}>
+                  <View
+                    style={[
+                      styles.progressBar,
+                      {
+                        backgroundColor: theme.colors.purple["40"],
+                        width: "40%",
+                      },
+                    ]}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            {/* AI Therapy Chatbot */}
+            <TouchableOpacity
               style={[
-                styles.metricLabel,
-                { color: theme.colors.orange["100"] },
+                styles.aiCard,
+                { backgroundColor: theme.colors.gray["20"] },
               ]}
+              onPress={() => navigation.navigate("Chat")}
             >
-              Mood
-            </Text>
-            <Text
-              style={[
-                styles.metricValue,
-                { color: theme.colors.orange["100"] },
-              ]}
-            >
-              😊
-            </Text>
-            <Text
-              style={[
-                styles.metricSubtext,
-                { color: theme.colors.orange["80"] },
-              ]}
-            >
-              Happy today
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Mindful Tracker */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Mindful Tracker</Text>
-
-          <TouchableOpacity
-            style={[
-              styles.trackerCard,
-              { backgroundColor: theme.colors.green["20"] },
-            ]}
-            onPress={() => navigation.navigate("MindfulHours")}
-          >
-            <View style={styles.trackerIcon}>
-              <Text style={{ fontSize: 24 }}>🫁</Text>
-            </View>
-            <View style={styles.trackerContent}>
+              <View style={styles.aiHeader}>
+                <Text
+                  style={[styles.aiTitle, { color: theme.colors.text.primary }]}
+                >
+                  AI Therapy Chatbot
+                </Text>
+                <TouchableOpacity>
+                  <Text style={{ fontSize: 20 }}>ℹ️</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.aiStats}>
+                <View style={styles.aiStat}>
+                  <Text
+                    style={[
+                      styles.aiStatValue,
+                      { color: theme.colors.text.primary },
+                    ]}
+                  >
+                    2,541
+                  </Text>
+                  <Text
+                    style={[
+                      styles.aiStatLabel,
+                      { color: theme.colors.text.secondary },
+                    ]}
+                  >
+                    Conversations
+                  </Text>
+                </View>
+                <View style={styles.aiMessages}>
+                  <Text style={{ fontSize: 40 }}>💬</Text>
+                </View>
+              </View>
               <Text
                 style={[
-                  styles.trackerTitle,
-                  { color: theme.colors.green["100"] },
-                ]}
-              >
-                Mindful Hours
-              </Text>
-              <Text
-                style={[
-                  styles.trackerSubtitle,
-                  { color: theme.colors.green["80"] },
-                ]}
-              >
-                5.21h
-              </Text>
-            </View>
-            <View style={styles.trackerProgress}>
-              <View
-                style={[
-                  styles.progressBar,
-                  { backgroundColor: theme.colors.green["40"] },
-                ]}
-              />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.trackerCard,
-              { backgroundColor: theme.colors.purple["20"] },
-            ]}
-            onPress={() => navigation.navigate("SleepQuality")}
-          >
-            <View style={styles.trackerIcon}>
-              <Text style={{ fontSize: 24 }}>⭐</Text>
-            </View>
-            <View style={styles.trackerContent}>
-              <Text
-                style={[
-                  styles.trackerTitle,
-                  { color: theme.colors.purple["100"] },
-                ]}
-              >
-                Sleep Quality
-              </Text>
-              <Text
-                style={[
-                  styles.trackerSubtitle,
-                  { color: theme.colors.purple["80"] },
-                ]}
-              >
-                Insomnia (7h Avg)
-              </Text>
-            </View>
-            <View style={styles.trackerProgress}>
-              <View
-                style={[
-                  styles.progressBar,
-                  { backgroundColor: theme.colors.purple["40"], width: "60%" },
-                ]}
-              />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.trackerCard,
-              { backgroundColor: theme.colors.orange["20"] },
-            ]}
-            onPress={() => navigation.navigate("JournalList")}
-          >
-            <View style={styles.trackerIcon}>
-              <Text style={{ fontSize: 24 }}>📖</Text>
-            </View>
-            <View style={styles.trackerContent}>
-              <Text
-                style={[
-                  styles.trackerTitle,
-                  { color: theme.colors.orange["100"] },
-                ]}
-              >
-                Mindful Journal
-              </Text>
-              <Text
-                style={[
-                  styles.trackerSubtitle,
-                  { color: theme.colors.orange["80"] },
-                ]}
-              >
-                44 logs (streak)
-              </Text>
-            </View>
-            <View style={styles.trackerProgress}>
-              <View
-                style={[
-                  styles.progressBar,
-                  { backgroundColor: theme.colors.orange["40"], width: "80%" },
-                ]}
-              />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.trackerCard,
-              { backgroundColor: theme.colors.yellow["20"] },
-            ]}
-            onPress={() => navigation.navigate("StressLevel")}
-          >
-            <View style={styles.trackerIcon}>
-              <Text style={{ fontSize: 24 }}>😤</Text>
-            </View>
-            <View style={styles.trackerContent}>
-              <Text
-                style={[
-                  styles.trackerTitle,
-                  { color: theme.colors.yellow["100"] },
-                ]}
-              >
-                Stress Level
-              </Text>
-              <Text
-                style={[
-                  styles.trackerSubtitle,
-                  { color: theme.colors.yellow["80"] },
-                ]}
-              >
-                Level 3 (Normal)
-              </Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.trackerCard,
-              { backgroundColor: theme.colors.brown["20"] },
-            ]}
-            onPress={() => navigation.navigate("MoodTracker")}
-          >
-            <View style={styles.trackerIcon}>
-              <Text style={{ fontSize: 24 }}>😊</Text>
-            </View>
-            <View style={styles.trackerContent}>
-              <Text
-                style={[
-                  styles.trackerTitle,
-                  { color: theme.colors.brown["100"] },
-                ]}
-              >
-                Mood Tracker
-              </Text>
-              <Text
-                style={[
-                  styles.trackerSubtitle,
-                  { color: theme.colors.brown["80"] },
-                ]}
-              >
-                😊 Happy (Today)
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        {/* Therapy Challenges */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Therapy Challenges</Text>
-
-          <TouchableOpacity
-            style={[
-              styles.trackerCard,
-              { backgroundColor: theme.colors.purple["20"] },
-            ]}
-            onPress={() => navigation.navigate("TherapyExercises")}
-          >
-            <View style={styles.trackerIcon}>
-              <Text style={{ fontSize: 24 }}>🧠</Text>
-            </View>
-            <View style={styles.trackerContent}>
-              <Text
-                style={[
-                  styles.trackerTitle,
-                  { color: theme.colors.purple["100"] },
-                ]}
-              >
-                Therapeutic Exercises
-              </Text>
-              <Text
-                style={[
-                  styles.trackerSubtitle,
-                  { color: theme.colors.purple["80"] },
-                ]}
-              >
-                6 exercises • CBT, Mindfulness & More
-              </Text>
-            </View>
-            <View style={styles.trackerProgress}>
-              <View
-                style={[
-                  styles.progressBar,
-                  { backgroundColor: theme.colors.purple["40"], width: "40%" },
-                ]}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        {/* AI Therapy Chatbot */}
-        <TouchableOpacity
-          style={[styles.aiCard, { backgroundColor: theme.colors.gray["20"] }]}
-          onPress={() => navigation.navigate("Chat")}
-        >
-          <View style={styles.aiHeader}>
-            <Text
-              style={[styles.aiTitle, { color: theme.colors.text.primary }]}
-            >
-              AI Therapy Chatbot
-            </Text>
-            <TouchableOpacity>
-              <Text style={{ fontSize: 20 }}>ℹ️</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.aiStats}>
-            <View style={styles.aiStat}>
-              <Text
-                style={[
-                  styles.aiStatValue,
-                  { color: theme.colors.text.primary },
-                ]}
-              >
-                2,541
-              </Text>
-              <Text
-                style={[
-                  styles.aiStatLabel,
+                  styles.aiSubtext,
                   { color: theme.colors.text.secondary },
                 ]}
               >
-                Conversations
+                10:14 am this month · Get Pro Now!
               </Text>
-            </View>
-            <View style={styles.aiMessages}>
-              <Text style={{ fontSize: 40 }}>💬</Text>
-            </View>
+            </TouchableOpacity>
           </View>
-          <Text
-            style={[styles.aiSubtext, { color: theme.colors.text.secondary }]}
-          >
-            10:14 am this month · Get Pro Now!
-          </Text>
-        </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

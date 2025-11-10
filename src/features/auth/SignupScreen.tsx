@@ -1,10 +1,11 @@
 /**
  * Signup Screen - User Registration
- * Matches Freud UI design with brown therapeutic theme
+ * Responsive design with Freud UI therapeutic theme
  */
 
 import { MentalHealthIcon } from "@components/icons";
 import { FreudLogo } from "@components/icons/FreudIcons";
+import { useResponsive } from "@shared/hooks/useResponsive";
 import rateLimiter from "@shared/utils/rateLimiter";
 import { useTheme } from "@theme/ThemeProvider";
 import { LinearGradient } from "expo-linear-gradient";
@@ -24,7 +25,8 @@ import {
 } from "react-native";
 
 export const SignupScreen = ({ navigation }: any) => {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
+  const { isWeb, getMaxContentWidth } = useResponsive();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,17 +35,39 @@ export const SignupScreen = ({ navigation }: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [emailError, setEmailError] = useState("");
 
+  // Responsive values
+  const maxWidth = getMaxContentWidth();
+  const contentMaxWidth = isWeb ? Math.min(maxWidth, 480) : "100%";
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.isDark ? "#2D1B0E" : "#8B7355",
+      backgroundColor: isDark ? theme.colors.brown[90] : theme.colors.brown[60],
     },
     gradient: {
       flex: 1,
     },
+    scrollContainer: {
+      flexGrow: 1,
+    },
+    innerContainer: {
+      flex: 1,
+      ...(isWeb && {
+        justifyContent: "center",
+        alignItems: "center",
+      }),
+    },
+    contentWrapper: {
+      flex: 1,
+      width: "100%",
+      maxWidth: contentMaxWidth,
+      ...(isWeb && {
+        minHeight: 700,
+      }),
+    },
     header: {
-      paddingTop: 60,
-      paddingBottom: 40,
+      paddingTop: isWeb ? 40 : 60,
+      paddingBottom: isWeb ? 32 : 40,
       alignItems: "center",
     },
     logoContainer: {
@@ -51,21 +75,27 @@ export const SignupScreen = ({ navigation }: any) => {
     },
     content: {
       flex: 1,
-      backgroundColor: theme.isDark ? "#3D2817" : "#4A3426",
-      borderTopLeftRadius: 32,
-      borderTopRightRadius: 32,
-      paddingTop: 48,
-      paddingHorizontal: 24,
+      backgroundColor: isDark ? theme.colors.brown[80] : theme.colors.brown[70],
+      borderTopLeftRadius: isWeb ? 24 : 32,
+      borderTopRightRadius: isWeb ? 24 : 32,
+      ...(isWeb && {
+        borderBottomLeftRadius: 24,
+        borderBottomRightRadius: 24,
+        marginBottom: 40,
+      }),
+      paddingTop: isWeb ? 40 : 48,
+      paddingHorizontal: isWeb ? 32 : 24,
+      paddingBottom: isWeb ? 32 : 0,
     },
     scrollContent: {
       flexGrow: 1,
-      paddingBottom: 32,
+      paddingBottom: isWeb ? 0 : 32,
     },
     title: {
-      fontSize: 32,
+      fontSize: isWeb ? 28 : 32,
       fontWeight: "700",
-      color: "#FFFFFF",
-      marginBottom: 40,
+      color: theme.colors.brown[10],
+      marginBottom: isWeb ? 32 : 40,
       textAlign: "center",
     },
     inputContainer: {
@@ -74,7 +104,7 @@ export const SignupScreen = ({ navigation }: any) => {
     inputLabel: {
       fontSize: 14,
       fontWeight: "500",
-      color: "#E5DDD5",
+      color: theme.colors.brown[20],
       marginBottom: 8,
       letterSpacing: 0.3,
     },
@@ -82,14 +112,16 @@ export const SignupScreen = ({ navigation }: any) => {
       flexDirection: "row",
       alignItems: "center",
       borderWidth: 1.5,
-      borderColor: "#6B5444",
+      borderColor: theme.colors.brown[60],
       borderRadius: 24,
-      backgroundColor: "rgba(45, 27, 14, 0.5)",
+      backgroundColor: isDark
+        ? `rgba(${parseInt(theme.colors.brown[100].slice(1, 3), 16)}, ${parseInt(theme.colors.brown[100].slice(3, 5), 16)}, ${parseInt(theme.colors.brown[100].slice(5, 7), 16)}, 0.5)`
+        : `rgba(45, 27, 14, 0.5)`,
       paddingHorizontal: 20,
       paddingVertical: 14,
     },
     inputWrapperError: {
-      borderColor: "#E8A872",
+      borderColor: theme.colors.orange[40],
     },
     inputIcon: {
       marginRight: 12,
@@ -97,7 +129,7 @@ export const SignupScreen = ({ navigation }: any) => {
     input: {
       flex: 1,
       fontSize: 16,
-      color: "#FFFFFF",
+      color: theme.colors.brown[10],
       paddingVertical: 0,
     },
     eyeButton: {
@@ -106,14 +138,14 @@ export const SignupScreen = ({ navigation }: any) => {
     },
     errorText: {
       fontSize: 12,
-      color: "#E8A872",
+      color: theme.colors.orange[40],
       marginTop: 4,
       marginLeft: 20,
     },
     errorBadge: {
       flexDirection: "row",
       alignItems: "center",
-      backgroundColor: "rgba(232, 168, 114, 0.2)",
+      backgroundColor: `${theme.colors.orange[40]}33`,
       paddingHorizontal: 12,
       paddingVertical: 6,
       borderRadius: 12,
@@ -121,11 +153,11 @@ export const SignupScreen = ({ navigation }: any) => {
     },
     errorBadgeText: {
       fontSize: 12,
-      color: "#E8A872",
+      color: theme.colors.orange[40],
       marginLeft: 6,
     },
     signupButton: {
-      backgroundColor: "#A67C52",
+      backgroundColor: theme.colors.brown[50],
       borderRadius: 24,
       paddingVertical: 16,
       alignItems: "center",
@@ -137,7 +169,7 @@ export const SignupScreen = ({ navigation }: any) => {
       opacity: 0.5,
     },
     signupButtonText: {
-      color: "#FFFFFF",
+      color: theme.colors.brown[10],
       fontSize: 16,
       fontWeight: "600",
       marginRight: 8,
@@ -148,18 +180,18 @@ export const SignupScreen = ({ navigation }: any) => {
     },
     footerText: {
       fontSize: 14,
-      color: "#B8A99A",
+      color: theme.colors.brown[30],
     },
     loginText: {
       fontSize: 14,
-      color: "#E8A872",
+      color: theme.colors.orange[40],
       fontWeight: "600",
     },
   });
 
-  const backgroundColors = theme.isDark
-    ? ["#8B7355", "#6B5444"]
-    : ["#A67C52", "#8B6F47"];
+  const backgroundColors = isDark
+    ? [theme.colors.brown[60], theme.colors.brown[70]]
+    : [theme.colors.brown[50], theme.colors.brown[60]];
 
   const validateEmail = (email: string) => {
     if (!/\S+@\S+\.\S+/.test(email)) {
@@ -301,168 +333,194 @@ export const SignupScreen = ({ navigation }: any) => {
           start={{ x: 0, y: 0 }}
           end={{ x: 0.5, y: 1 }}
         >
-          <View style={styles.header}>
-            <View style={styles.logoContainer}>
-              <FreudLogo size={64} primaryColor="#FFFFFF" />
-            </View>
-          </View>
-
-          <View style={styles.content}>
-            <ScrollView
-              contentContainerStyle={styles.scrollContent}
-              showsVerticalScrollIndicator={false}
-            >
-              <Text style={styles.title}>Sign Up For Free</Text>
-
-              <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Email Address</Text>
-                <View
-                  style={[
-                    styles.inputWrapper,
-                    emailError && styles.inputWrapperError,
-                  ]}
-                >
-                  <MentalHealthIcon
-                    name="Mail"
-                    size={20}
-                    color="#B8A99A"
-                    style={styles.inputIcon}
-                  />
-                  <TextInput
-                    style={styles.input}
-                    value={email}
-                    onChangeText={(text) => {
-                      setEmail(text);
-                      if (emailError && text.trim()) validateEmail(text);
-                    }}
-                    onBlur={() => email.trim() && validateEmail(email)}
-                    placeholder="Enter your email..."
-                    placeholderTextColor="#6B5444"
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    autoComplete="email"
-                  />
-                </View>
-                {emailError ? (
-                  <View style={styles.errorBadge}>
-                    <MentalHealthIcon
-                      name="AlertCircle"
-                      size={14}
-                      color="#E8A872"
+          <ScrollView
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.innerContainer}>
+              <View style={styles.contentWrapper}>
+                <View style={styles.header}>
+                  <View style={styles.logoContainer}>
+                    <FreudLogo
+                      size={isWeb ? 56 : 64}
+                      primaryColor={theme.colors.brown[10]}
                     />
-                    <Text style={styles.errorBadgeText}>{emailError}</Text>
                   </View>
-                ) : null}
-              </View>
+                </View>
 
-              <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Password</Text>
-                <View style={styles.inputWrapper}>
-                  <MentalHealthIcon
-                    name="Lock"
-                    size={20}
-                    color="#B8A99A"
-                    style={styles.inputIcon}
-                  />
-                  <TextInput
-                    style={styles.input}
-                    value={password}
-                    onChangeText={setPassword}
-                    placeholder="Enter your password..."
-                    placeholderTextColor="#6B5444"
-                    secureTextEntry={!showPassword}
-                    autoComplete="new-password"
-                  />
-                  <TouchableOpacity
-                    style={styles.eyeButton}
-                    onPress={() => setShowPassword(!showPassword)}
-                    accessible
-                    accessibilityLabel={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                    accessibilityRole="button"
-                    accessibilityHint="Toggles password visibility"
+                <View style={styles.content}>
+                  <ScrollView
+                    contentContainerStyle={styles.scrollContent}
+                    showsVerticalScrollIndicator={false}
+                    nestedScrollEnabled
                   >
-                    <MentalHealthIcon
-                      name={showPassword ? "EyeOff" : "Eye"}
-                      size={20}
-                      color="#B8A99A"
-                    />
-                  </TouchableOpacity>
+                    <Text style={styles.title}>Sign Up For Free</Text>
+
+                    <View style={styles.inputContainer}>
+                      <Text style={styles.inputLabel}>Email Address</Text>
+                      <View
+                        style={[
+                          styles.inputWrapper,
+                          emailError && styles.inputWrapperError,
+                        ]}
+                      >
+                        <MentalHealthIcon
+                          name="Mail"
+                          size={20}
+                          color={theme.colors.brown[30]}
+                          style={styles.inputIcon}
+                        />
+                        <TextInput
+                          style={styles.input}
+                          value={email}
+                          onChangeText={(text) => {
+                            setEmail(text);
+                            if (emailError && text.trim()) validateEmail(text);
+                          }}
+                          onBlur={() => email.trim() && validateEmail(email)}
+                          placeholder="Enter your email..."
+                          placeholderTextColor={theme.colors.brown[60]}
+                          keyboardType="email-address"
+                          autoCapitalize="none"
+                          autoComplete="email"
+                        />
+                      </View>
+                      {emailError ? (
+                        <View style={styles.errorBadge}>
+                          <MentalHealthIcon
+                            name="AlertCircle"
+                            size={14}
+                            color={theme.colors.orange[40]}
+                          />
+                          <Text style={styles.errorBadgeText}>
+                            {emailError}
+                          </Text>
+                        </View>
+                      ) : null}
+                    </View>
+
+                    <View style={styles.inputContainer}>
+                      <Text style={styles.inputLabel}>Password</Text>
+                      <View style={styles.inputWrapper}>
+                        <MentalHealthIcon
+                          name="Lock"
+                          size={20}
+                          color={theme.colors.brown[30]}
+                          style={styles.inputIcon}
+                        />
+                        <TextInput
+                          style={styles.input}
+                          value={password}
+                          onChangeText={setPassword}
+                          placeholder="Enter your password..."
+                          placeholderTextColor={theme.colors.brown[60]}
+                          secureTextEntry={!showPassword}
+                          autoComplete="new-password"
+                        />
+                        <TouchableOpacity
+                          style={styles.eyeButton}
+                          onPress={() => setShowPassword(!showPassword)}
+                          accessible
+                          accessibilityLabel={
+                            showPassword ? "Hide password" : "Show password"
+                          }
+                          accessibilityRole="button"
+                          accessibilityHint="Toggles password visibility"
+                        >
+                          <MentalHealthIcon
+                            name={showPassword ? "EyeOff" : "Eye"}
+                            size={20}
+                            color={theme.colors.brown[30]}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+
+                    <View style={styles.inputContainer}>
+                      <Text style={styles.inputLabel}>
+                        Password Confirmation
+                      </Text>
+                      <View style={styles.inputWrapper}>
+                        <MentalHealthIcon
+                          name="Lock"
+                          size={20}
+                          color={theme.colors.brown[30]}
+                          style={styles.inputIcon}
+                        />
+                        <TextInput
+                          style={styles.input}
+                          value={confirmPassword}
+                          onChangeText={setConfirmPassword}
+                          placeholder="Enter your password..."
+                          placeholderTextColor={theme.colors.brown[60]}
+                          secureTextEntry={!showConfirmPassword}
+                          autoComplete="new-password"
+                        />
+                        <TouchableOpacity
+                          style={styles.eyeButton}
+                          onPress={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                          accessible
+                          accessibilityLabel={
+                            showConfirmPassword
+                              ? "Hide confirm password"
+                              : "Show confirm password"
+                          }
+                          accessibilityRole="button"
+                          accessibilityHint="Toggles confirm password visibility"
+                        >
+                          <MentalHealthIcon
+                            name={showConfirmPassword ? "EyeOff" : "Eye"}
+                            size={20}
+                            color={theme.colors.brown[30]}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+
+                    <TouchableOpacity
+                      style={[
+                        styles.signupButton,
+                        !canSignup && styles.disabledButton,
+                      ]}
+                      onPress={handleSignup}
+                      disabled={!canSignup}
+                      accessible
+                      accessibilityLabel="Sign up"
+                      accessibilityRole="button"
+                      accessibilityState={{
+                        disabled: !canSignup,
+                        busy: isLoading,
+                      }}
+                      accessibilityHint="Create a new account"
+                    >
+                      <Text style={styles.signupButtonText}>
+                        {isLoading ? "Creating Account..." : "Sign Up"}
+                      </Text>
+                      <Text
+                        style={{ color: theme.colors.brown[10], fontSize: 18 }}
+                      >
+                        →
+                      </Text>
+                    </TouchableOpacity>
+
+                    <View style={styles.footer}>
+                      <Text style={styles.footerText}>
+                        Already have an account?{" "}
+                        <Text
+                          style={styles.loginText}
+                          onPress={() => navigation.navigate("Login")}
+                        >
+                          Sign In
+                        </Text>
+                      </Text>
+                    </View>
+                  </ScrollView>
                 </View>
               </View>
-
-              <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Password Confirmation</Text>
-                <View style={styles.inputWrapper}>
-                  <MentalHealthIcon
-                    name="Lock"
-                    size={20}
-                    color="#B8A99A"
-                    style={styles.inputIcon}
-                  />
-                  <TextInput
-                    style={styles.input}
-                    value={confirmPassword}
-                    onChangeText={setConfirmPassword}
-                    placeholder="Enter your password..."
-                    placeholderTextColor="#6B5444"
-                    secureTextEntry={!showConfirmPassword}
-                    autoComplete="new-password"
-                  />
-                  <TouchableOpacity
-                    style={styles.eyeButton}
-                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                    accessible
-                    accessibilityLabel={
-                      showConfirmPassword
-                        ? "Hide confirm password"
-                        : "Show confirm password"
-                    }
-                    accessibilityRole="button"
-                    accessibilityHint="Toggles confirm password visibility"
-                  >
-                    <MentalHealthIcon
-                      name={showConfirmPassword ? "EyeOff" : "Eye"}
-                      size={20}
-                      color="#B8A99A"
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <TouchableOpacity
-                style={[
-                  styles.signupButton,
-                  !canSignup && styles.disabledButton,
-                ]}
-                onPress={handleSignup}
-                disabled={!canSignup}
-                accessible
-                accessibilityLabel="Sign up"
-                accessibilityRole="button"
-                accessibilityState={{ disabled: !canSignup, busy: isLoading }}
-                accessibilityHint="Create a new account"
-              >
-                <Text style={styles.signupButtonText}>
-                  {isLoading ? "Creating Account..." : "Sign Up"}
-                </Text>
-                <Text style={{ color: "#FFFFFF", fontSize: 18 }}>→</Text>
-              </TouchableOpacity>
-
-              <View style={styles.footer}>
-                <Text style={styles.footerText}>
-                  Already have an account?{" "}
-                  <Text
-                    style={styles.loginText}
-                    onPress={() => navigation?.navigate?.("Login")}
-                  >
-                    Sign In
-                  </Text>
-                </Text>
-              </View>
-            </ScrollView>
-          </View>
+            </View>
+          </ScrollView>
         </LinearGradient>
       </KeyboardAvoidingView>
     </SafeAreaView>

@@ -53,7 +53,9 @@
       "Bash(taskkill:*)",
       "Bash(npx playwright:*)",
       "Bash(mkdir:*)",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "Bash(npm start)",
+      "Bash(npx prettier:*)"
     ],
     "deny": [],
     "ask": []

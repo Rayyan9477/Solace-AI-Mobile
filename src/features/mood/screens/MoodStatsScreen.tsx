@@ -1,7 +1,7 @@
 import { MentalHealthIcon, NavigationIcon } from "@shared/components/icons";
 import { useTheme } from "@theme/ThemeProvider";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   View,
   Text,
@@ -12,41 +12,146 @@ import {
   Dimensions,
   SafeAreaView,
 } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchMoodHistory } from "@app/store/slices/moodSlice";
 
 const { width } = Dimensions.get("window");
 
 const MoodStatsScreen = ({ navigation }) => {
   const { theme, isDarkMode } = useTheme();
+  const dispatch = useDispatch();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
 
-  // Mock data based on the design
-  const moodStatsData = {
-    weeklyAverage: 3.8,
-    todayMood: "Happy",
-    moodHistory: [
-      { day: "Mon", mood: "😊", score: 4 },
-      { day: "Tue", mood: "😐", score: 3 },
-      { day: "Wed", mood: "😢", score: 2 },
-      { day: "Thu", mood: "😊", score: 4 },
-      { day: "Fri", mood: "😌", score: 3 },
-      { day: "Sat", mood: "😊", score: 4 },
-      { day: "Sun", mood: "😐", score: 3 },
-    ],
-    moodDistribution: [
-      { mood: "Very Happy", emoji: "😄", percentage: 25, color: "#4CAF50" },
-      { mood: "Happy", emoji: "😊", percentage: 35, color: "#8BC34A" },
-      { mood: "Neutral", emoji: "😐", percentage: 20, color: "#FFC107" },
-      { mood: "Sad", emoji: "😢", percentage: 15, color: "#FF9800" },
-      { mood: "Very Sad", emoji: "😞", percentage: 5, color: "#F44336" },
-    ],
-    insights: [
-      "You've been consistently happy this week!",
-      "Anxiety levels have decreased by 15%",
-      "Best day: Friday with 4.2 average mood",
-      "Most productive mood: Happy (87% productivity)",
-    ],
+  // Get mood data from Redux store
+  const { moodHistory, weeklyStats, insights, currentMood } = useSelector(
+    (state: any) => state.mood,
+  );
+
+  // Fetch mood history on mount
+  useEffect(() => {
+    dispatch(fetchMoodHistory());
+  }, [dispatch]);
+
+  // Helper function to get emoji based on mood score
+  const getMoodEmoji = (score: number): string => {
+    if (score >= 8) return "😄";
+    if (score >= 6) return "😊";
+    if (score >= 4) return "😐";
+    if (score >= 2) return "😢";
+    return "😞";
   };
+
+  // Calculate mood stats from Redux data
+  const moodStatsData = useMemo(() => {
+    // Get last 7 days of mood entries
+    const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    const recentMoods = moodHistory.filter((entry: any) => {
+      const entryTime =
+        typeof entry.timestamp === "string"
+          ? new Date(entry.timestamp).getTime()
+          : entry.timestamp;
+      return entryTime >= sevenDaysAgo;
+    });
+
+    // Map mood history to weekly display format
+    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const moodHistoryByDay = daysOfWeek.map((day, index) => {
+      const dayEntries = recentMoods.filter((entry: any) => {
+        const entryDate = new Date(entry.timestamp);
+        return entryDate.getDay() === index;
+      });
+
+      if (dayEntries.length === 0) {
+        return { day, mood: "😐", score: 0 };
+      }
+
+      const avgScore =
+        dayEntries.reduce(
+          (sum: number, entry: any) => sum + entry.intensity,
+          0,
+        ) / dayEntries.length;
+
+      const moodEmoji = getMoodEmoji(avgScore);
+      return { day, mood: moodEmoji, score: Math.round(avgScore) };
+    });
+
+    // Calculate mood distribution
+    const moodCounts: Record<string, number> = {
+      "Very Happy": 0,
+      Happy: 0,
+      Neutral: 0,
+      Sad: 0,
+      "Very Sad": 0,
+    };
+
+    recentMoods.forEach((entry: any) => {
+      const intensity = entry.intensity;
+      if (intensity >= 8) moodCounts["Very Happy"]++;
+      else if (intensity >= 6) moodCounts["Happy"]++;
+      else if (intensity >= 4) moodCounts["Neutral"]++;
+      else if (intensity >= 2) moodCounts["Sad"]++;
+      else moodCounts["Very Sad"]++;
+    });
+
+    const total = recentMoods.length || 1;
+    const moodDistribution = [
+      {
+        mood: "Very Happy",
+        emoji: "😄",
+        percentage: Math.round((moodCounts["Very Happy"] / total) * 100),
+        color: theme.colors.green?.[60] || "#4CAF50",
+      },
+      {
+        mood: "Happy",
+        emoji: "😊",
+        percentage: Math.round((moodCounts["Happy"] / total) * 100),
+        color: theme.colors.green?.[50] || "#8BC34A",
+      },
+      {
+        mood: "Neutral",
+        emoji: "😐",
+        percentage: Math.round((moodCounts["Neutral"] / total) * 100),
+        color: theme.colors.yellow?.[50] || "#FFC107",
+      },
+      {
+        mood: "Sad",
+        emoji: "😢",
+        percentage: Math.round((moodCounts["Sad"] / total) * 100),
+        color: theme.colors.orange?.[50] || "#FF9800",
+      },
+      {
+        mood: "Very Sad",
+        emoji: "😞",
+        percentage: Math.round((moodCounts["Very Sad"] / total) * 100),
+        color: theme.colors.red?.[50] || "#F44336",
+      },
+    ];
+
+    // Use insights from Redux or generate default ones
+    const displayInsights =
+      insights.length > 0
+        ? insights.map((insight: any) => insight.message)
+        : [
+            recentMoods.length > 0
+              ? `You've logged ${recentMoods.length} mood entries this week!`
+              : "Start tracking your mood to see insights",
+            weeklyStats.mostCommonMood
+              ? `Most common mood: ${weeklyStats.mostCommonMood}`
+              : "Track moods regularly to see patterns",
+            weeklyStats.averageIntensity > 0
+              ? `Average mood intensity: ${weeklyStats.averageIntensity.toFixed(1)}/10`
+              : "Log your daily mood to track progress",
+          ];
+
+    return {
+      weeklyAverage: weeklyStats.averageIntensity || 0,
+      todayMood: currentMood || "Neutral",
+      moodHistory: moodHistoryByDay,
+      moodDistribution,
+      insights: displayInsights.slice(0, 4), // Limit to 4 insights
+    };
+  }, [moodHistory, weeklyStats, insights, currentMood, theme]);
 
   useEffect(() => {
     Animated.parallel([

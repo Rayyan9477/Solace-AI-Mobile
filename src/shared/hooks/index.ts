@@ -6,3 +6,4 @@
  */
 
 export * from "./useOptimizedSelectors";
+export * from "./useResponsive";

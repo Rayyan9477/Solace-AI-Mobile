@@ -1,6 +1,7 @@
 /**
  * ThemeProvider - Unified theme management for Solace AI
  * Provides light/dark theme switching with therapeutic colors
+ * Supports custom color palettes
  */
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,42 +14,71 @@ import React, {
 } from "react";
 import { useColorScheme } from "react-native";
 
+import {
+  CustomColors,
+  loadCustomColors,
+  mergeCustomColors,
+} from "./customColors";
 import { lightTheme, darkTheme } from "./theme";
 
 // Re-export themes for convenience
 export { lightTheme, darkTheme } from "./theme";
 export { colors, therapeuticColors } from "./colors";
+export * from "./customColors";
 
 // Theme Context
-export const ThemeContext = createContext({
+interface ThemeContextType {
+  theme: typeof lightTheme;
+  isDark: boolean;
+  toggleTheme: () => void;
+  setTheme: (darkMode: boolean) => void;
+  customColors: CustomColors | null;
+  setCustomColors: (colors: CustomColors) => void;
+  resetCustomColors: () => void;
+}
+
+export const ThemeContext = createContext<ThemeContextType>({
   theme: lightTheme,
   isDark: false,
   toggleTheme: () => {},
   setTheme: () => {},
+  customColors: null,
+  setCustomColors: () => {},
+  resetCustomColors: () => {},
 });
 
 // Theme Provider Component
-export const ThemeProvider = ({ children }) => {
+export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const systemColorScheme = useColorScheme();
   const [isDark, setIsDark] = useState(systemColorScheme === "dark");
+  const [customColors, setCustomColorsState] = useState<CustomColors | null>(
+    null,
+  );
 
-  // Load saved theme preference
+  // Load saved theme preference and custom colors
   useEffect(() => {
-    const loadTheme = async () => {
+    const loadPreferences = async () => {
       try {
+        // Load theme mode
         const savedTheme = await AsyncStorage.getItem("app_theme");
         if (savedTheme) {
           setIsDark(savedTheme === "dark");
         }
+
+        // Load custom colors
+        const savedCustomColors = await loadCustomColors();
+        if (savedCustomColors) {
+          setCustomColorsState(savedCustomColors);
+        }
       } catch (error) {
-        console.error("Failed to load theme preference:", error);
+        console.error("Failed to load theme preferences:", error);
       }
     };
-    loadTheme();
+    loadPreferences();
   }, []);
 
   // Save theme preference
-  const setTheme = async (darkMode) => {
+  const setTheme = async (darkMode: boolean) => {
     try {
       setIsDark(darkMode);
       await AsyncStorage.setItem("app_theme", darkMode ? "dark" : "light");
@@ -61,7 +91,32 @@ export const ThemeProvider = ({ children }) => {
     setTheme(!isDark);
   };
 
-  const theme = useMemo(() => (isDark ? darkTheme : lightTheme), [isDark]);
+  // Set custom colors
+  const setCustomColors = async (colors: CustomColors) => {
+    setCustomColorsState(colors);
+    try {
+      await AsyncStorage.setItem("custom_colors", JSON.stringify(colors));
+    } catch (error) {
+      console.error("Failed to save custom colors:", error);
+    }
+  };
+
+  // Reset to default colors
+  const resetCustomColors = async () => {
+    setCustomColorsState(null);
+    try {
+      await AsyncStorage.removeItem("custom_colors");
+    } catch (error) {
+      console.error("Failed to reset custom colors:", error);
+    }
+  };
+
+  // Apply custom colors to theme
+  const theme = useMemo(() => {
+    const baseTheme = isDark ? darkTheme : lightTheme;
+    const customPalette = isDark ? customColors?.dark : customColors?.light;
+    return mergeCustomColors(baseTheme, customPalette);
+  }, [isDark, customColors]);
 
   const value = useMemo(
     () => ({
@@ -69,8 +124,11 @@ export const ThemeProvider = ({ children }) => {
       isDark,
       toggleTheme,
       setTheme,
+      customColors,
+      setCustomColors,
+      resetCustomColors,
     }),
-    [theme, isDark],
+    [theme, isDark, customColors],
   );
 
   return (

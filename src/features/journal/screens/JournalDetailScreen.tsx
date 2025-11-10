@@ -5,7 +5,7 @@
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -13,7 +13,9 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface JournalDetailProps {
   id: string;
@@ -33,23 +35,74 @@ export const JournalDetailScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  // Mock data - in production this would come from Redux/API
-  const [entry] = useState<JournalDetailProps>({
-    id: "1",
-    title: "Feeling Bad Again",
-    content:
-      "Today I had a hard time concentrating. I was very worried about making mistakes, very angry",
-    mood: "😔",
-    date: "Oct 22",
-    time: "10:14 am",
-    tags: ["Negative", "Regret"],
-    color: "#C96100",
-    isVoice: true,
-    audioUrl: "mock-audio-url",
-  });
-
+  // Load entry from route params or AsyncStorage
+  const [entry, setEntry] = useState<JournalDetailProps | null>(null);
+  const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
+
+  useEffect(() => {
+    const loadEntry = async () => {
+      try {
+        // Try to get entry from route params first
+        if (route.params?.entry) {
+          setEntry(route.params.entry);
+          setLoading(false);
+          return;
+        }
+
+        // Load from AsyncStorage using the entry ID from route params
+        const entryId = route.params?.id || "1";
+        const storedEntries = await AsyncStorage.getItem("journal_entries");
+
+        if (storedEntries) {
+          const entries: JournalDetailProps[] = JSON.parse(storedEntries);
+          const foundEntry = entries.find((e) => e.id === entryId);
+
+          if (foundEntry) {
+            setEntry(foundEntry);
+            setLoading(false);
+            return;
+          }
+        }
+
+        // Fallback to default entry if none found
+        setEntry({
+          id: "1",
+          title: "Feeling Bad Again",
+          content:
+            "Today I had a hard time concentrating. I was very worried about making mistakes, very angry",
+          mood: "😔",
+          date: "Oct 22",
+          time: "10:14 am",
+          tags: ["Negative", "Regret"],
+          color: "#C96100",
+          isVoice: true,
+          audioUrl: undefined,
+        });
+      } catch (error) {
+        console.error("Error loading journal entry:", error);
+        // Set default entry on error
+        setEntry({
+          id: "1",
+          title: "Feeling Bad Again",
+          content:
+            "Today I had a hard time concentrating. I was very worried about making mistakes, very angry",
+          mood: "😔",
+          date: "Oct 22",
+          time: "10:14 am",
+          tags: ["Negative", "Regret"],
+          color: "#C96100",
+          isVoice: true,
+          audioUrl: undefined,
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadEntry();
+  }, [route.params]);
 
   const styles = StyleSheet.create({
     container: {
@@ -219,6 +272,34 @@ export const JournalDetailScreen = () => {
   const waveformHeights = [
     20, 35, 25, 45, 30, 50, 40, 35, 25, 40, 30, 45, 35, 25, 40,
   ];
+
+  // Show loading indicator while loading entry
+  if (loading || !entry) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={{ fontSize: 20 }}>←</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Edit Journal</Text>
+          <TouchableOpacity style={styles.moreButton}>
+            <Text style={{ fontSize: 20 }}>⋮</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" color={theme.colors.brown["70"]} />
+          <Text style={{ marginTop: 16, color: theme.colors.text.secondary }}>
+            Loading journal entry...
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
