@@ -12,7 +12,10 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
+  Alert,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { logMood } from "../../app/store/slices/moodSlice";
 
 interface MoodEntry {
   mood: string;
@@ -34,24 +37,28 @@ const INTENSITY_LEVELS = [1, 2, 3, 4, 5];
 
 export const MoodScreen = () => {
   const { theme } = useTheme();
+  const dispatch = useDispatch();
+
+  // Get mood history from Redux state
+  const moodHistory = useSelector((state: any) => state.mood.moodHistory || []);
+  const weeklyStats = useSelector((state: any) => state.mood.weeklyStats);
+  const insights = useSelector((state: any) => state.mood.insights || []);
+
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
   const [selectedIntensity, setSelectedIntensity] = useState<number | null>(
     null,
   );
-  const [recentEntries] = useState<MoodEntry[]>([
-    {
-      mood: "Happy",
-      intensity: 4,
-      note: "Had a great day with friends",
-      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
-    },
-    {
-      mood: "Calm",
-      intensity: 3,
-      note: "Morning meditation helped",
-      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-    },
-  ]);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Use actual mood history from Redux, show only recent 5 entries
+  const recentEntries = moodHistory.slice(0, 5).map(entry => ({
+    mood: entry.mood,
+    intensity: entry.intensity,
+    note: entry.notes || "",
+    timestamp: typeof entry.timestamp === "string"
+      ? new Date(entry.timestamp)
+      : new Date(entry.timestamp),
+  }));
 
   const styles = StyleSheet.create({
     container: {
@@ -179,21 +186,58 @@ export const MoodScreen = () => {
     },
   });
 
-  const saveMoodEntry = () => {
+  const saveMoodEntry = async () => {
     if (selectedMood && selectedIntensity) {
-      if (__DEV__) {
-        console.log("Saving mood entry:", {
-          mood: selectedMood,
-          intensity: selectedIntensity,
-          timestamp: new Date(),
-        });
+      try {
+        setIsSaving(true);
+
+        if (__DEV__) {
+          console.log("Saving mood entry:", {
+            mood: selectedMood,
+            intensity: selectedIntensity,
+            timestamp: new Date(),
+          });
+        }
+
+        // Dispatch to Redux store and save to local storage
+        const result = await dispatch(
+          logMood({
+            mood: selectedMood,
+            intensity: selectedIntensity,
+            notes: "",
+            activities: [],
+          }) as any
+        );
+
+        if (logMood.fulfilled.match(result)) {
+          // Successfully saved
+          Alert.alert(
+            "Mood Saved",
+            "Your mood has been recorded successfully.",
+            [{ text: "OK" }]
+          );
+
+          // Reset form
+          setSelectedMood(null);
+          setSelectedIntensity(null);
+        } else {
+          // Handle error
+          Alert.alert(
+            "Error",
+            "Failed to save mood entry. Please try again.",
+            [{ text: "OK" }]
+          );
+        }
+      } catch (error) {
+        console.error("Error saving mood:", error);
+        Alert.alert(
+          "Error",
+          "An unexpected error occurred. Please try again.",
+          [{ text: "OK" }]
+        );
+      } finally {
+        setIsSaving(false);
       }
-
-      // TODO: Save to Redux store - dispatch(saveMood({ mood: selectedMood, intensity: selectedIntensity }))
-
-      // Reset form
-      setSelectedMood(null);
-      setSelectedIntensity(null);
     }
   };
 
@@ -258,11 +302,16 @@ export const MoodScreen = () => {
         )}
 
         <TouchableOpacity
-          style={[styles.saveButton, !canSave && styles.disabledButton]}
+          style={[
+            styles.saveButton,
+            (!canSave || isSaving) && styles.disabledButton,
+          ]}
           onPress={saveMoodEntry}
-          disabled={!canSave}
+          disabled={!canSave || isSaving}
         >
-          <Text style={styles.saveButtonText}>Save Mood Entry</Text>
+          <Text style={styles.saveButtonText}>
+            {isSaving ? "Saving..." : "Save Mood Entry"}
+          </Text>
         </TouchableOpacity>
 
         <View style={styles.section}>

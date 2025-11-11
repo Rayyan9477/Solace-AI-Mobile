@@ -118,10 +118,26 @@ export const MoodCalendarScreen = () => {
   };
 
   const handleDayPress = (day: DayMood) => {
-    // TODO: Navigate to mood detail screen or show mood entry modal
-    // navigation.navigate('MoodDetail', { date: day.date, mood: day.mood });
-    if (__DEV__) {
-      console.log("Day pressed:", day);
+    if (day.mood) {
+      // Show mood details in alert
+      Alert.alert(
+        `Mood: ${day.mood}`,
+        `Date: ${day.date.toLocaleDateString()}\nIntensity: ${day.intensity}/5`,
+        [
+          { text: "View History", onPress: () => navigation.navigate("MoodHistory" as never) },
+          { text: "Close", style: "cancel" },
+        ]
+      );
+    } else {
+      // No mood logged for this day
+      Alert.alert(
+        "No Mood Entry",
+        "Would you like to log your mood for this day?",
+        [
+          { text: "Log Mood", onPress: () => navigation.navigate("Mood" as never) },
+          { text: "Cancel", style: "cancel" },
+        ]
+      );
     }
   };
 

@@ -280,7 +280,7 @@ const MoodStatsScreen = ({ navigation }) => {
                         styles.actionButton,
                         { backgroundColor: theme.colors.primary["500"] },
                       ]}
-                      onPress={() => navigation.navigate("EnhancedMoodTracker")}
+                      onPress={() => navigation.navigate("MoodTracker")}
                     >
                       <Text
                         style={[

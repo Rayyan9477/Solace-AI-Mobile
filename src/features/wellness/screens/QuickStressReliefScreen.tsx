@@ -246,7 +246,7 @@ export const QuickStressReliefScreen = () => {
               <TouchableOpacity
                 key={technique.id}
                 style={styles.techniqueCard}
-                onPress={() => navigation.navigate("BreathingExercise")}
+                onPress={() => navigation.navigate("ExerciseCreate")}
               >
                 <Text style={styles.techniqueIcon}>{technique.icon}</Text>
                 <Text style={styles.techniqueTitle}>{technique.title}</Text>

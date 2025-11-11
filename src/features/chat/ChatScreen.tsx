@@ -25,6 +25,8 @@ import {
 } from "react-native";
 
 import CrisisManager from "../crisis/CrisisManager";
+import chatResponseService from "./services/chatResponseService";
+import voiceInputService from "./services/voiceInputService";
 
 interface Message {
   id: string;
@@ -36,31 +38,18 @@ interface Message {
 
 export const ChatScreen = ({ navigation, route }: any) => {
   const { theme } = useTheme();
+
+  // Initialize with a greeting message
+  const initialGreeting = chatResponseService.generateGreeting(
+    route.params?.userName || undefined
+  );
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Hello Shinomiya! Thanks for your professional response. I can help you explore this further. What specific aspect would you like to work on today?",
+      text: initialGreeting,
       isUser: false,
-      timestamp: new Date(Date.now() - 120000),
-      reaction: "👍",
-    },
-    {
-      id: "2",
-      text: "I've been feeling really overwhelmed with everything lately. Work, relationships, just everything piling up.",
-      isUser: true,
-      timestamp: new Date(Date.now() - 60000),
-    },
-    {
-      id: "3",
-      text: "Shinomiya, I'm sorry you're going through this challenging time. Feeling overwhelmed when multiple stressors combine is very human. Let's explore these one at a time. When you think about what's weighing on you most heavily right now, what comes to mind first? 💚",
-      isUser: false,
-      timestamp: new Date(Date.now() - 30000),
-    },
-    {
-      id: "4",
-      text: "Honestly, I don't think I'm doing anything I should be doing.",
-      isUser: true,
-      timestamp: new Date(Date.now() - 10000),
+      timestamp: new Date(),
     },
   ]);
   const [inputText, setInputText] = useState("");
@@ -76,6 +65,11 @@ export const ChatScreen = ({ navigation, route }: any) => {
       await crisisManagerRef.current.loadConfiguration();
     };
     initCrisisManager();
+
+    // Cleanup on unmount
+    return () => {
+      voiceInputService.cleanup();
+    };
   }, []);
 
   const styles = StyleSheet.create({
@@ -319,54 +313,108 @@ export const ChatScreen = ({ navigation, route }: any) => {
       setInputText("");
       setIsTyping(true);
 
+      // Simulate typing delay
       const isJest =
         typeof process !== "undefined" && !!process.env?.JEST_WORKER_ID;
-      const delay = isJest ? 50 : 2000;
+      const delay = isJest ? 50 : Math.random() * 1500 + 1500; // 1.5-3 seconds
+
       setTimeout(() => {
         setIsTyping(false);
-        const responses = [
-          "Shinomiya, I hear you. That feeling of being stuck is really tough. Can you tell me more about what 'should be doing' means to you? Sometimes our 'shoulds' come from external pressures rather than our own values.",
-          "Thank you for sharing that with me. Let's explore this feeling together.",
-          "I understand. It sounds like you're experiencing self-doubt and maybe some guilt. These feelings are valid. Let's explore what's behind them - what would it look like if you were doing what you 'should' be doing?",
-          "Thank you for being honest about that. Many people struggle with this feeling. What if we reframed it - instead of focusing on 'should,' what do you actually want to be doing? What matters to you?",
-        ];
+
+        // Generate response using the chat response service
+        const { message: responseText, emotion } =
+          chatResponseService.generateResponse(messageText);
 
         const aiResponse: Message = {
           id: (Date.now() + 1).toString(),
-          text: isJest
-            ? responses[1]
-            : responses[Math.floor(Math.random() * responses.length)],
+          text: responseText,
           isUser: false,
           timestamp: new Date(),
         };
 
         setMessages((prev) => [...prev, aiResponse]);
+
+        // Optionally add emotion-based reaction
+        if (emotion === "positive" && Math.random() > 0.7) {
+          setTimeout(() => {
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg.id === aiResponse.id
+                  ? { ...msg, reaction: "💚" }
+                  : msg
+              )
+            );
+          }, 500);
+        }
       }, delay);
     }
   };
 
-  const toggleRecording = () => {
-    setIsRecording(!isRecording);
+  const toggleRecording = async () => {
     if (isRecording) {
+      // Stop recording
+      setIsRecording(false);
+
       // Stop pulse animation
       pulseAnim.stopAnimation();
       pulseAnim.setValue(1);
+
+      // Stop the actual recording
+      const { uri, duration } = await voiceInputService.stopRecording();
+
+      if (uri && duration > 500) {
+        // Only process if recording was at least 0.5 seconds
+        // Show typing indicator while processing
+        setIsTyping(true);
+
+        // Simulate speech-to-text (in production, this would use a real API)
+        const transcribedText = await voiceInputService.simulateSpeechToText(
+          duration
+        );
+
+        setIsTyping(false);
+
+        // Set the transcribed text in the input field
+        setInputText(transcribedText);
+
+        // Optionally auto-send the message
+        if (route.params?.autoSendVoice) {
+          // Create a synthetic event to trigger sendMessage
+          setTimeout(() => {
+            sendMessage();
+          }, 500);
+        }
+      }
     } else {
-      // Start pulse animation
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(pulseAnim, {
-            toValue: 1.2,
-            duration: 500,
-            useNativeDriver: true,
-          }),
-          Animated.timing(pulseAnim, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: true,
-          }),
-        ]),
-      ).start();
+      // Start recording
+      const started = await voiceInputService.startRecording();
+
+      if (started) {
+        setIsRecording(true);
+
+        // Start pulse animation
+        Animated.loop(
+          Animated.sequence([
+            Animated.timing(pulseAnim, {
+              toValue: 1.2,
+              duration: 500,
+              useNativeDriver: true,
+            }),
+            Animated.timing(pulseAnim, {
+              toValue: 1,
+              duration: 500,
+              useNativeDriver: true,
+            }),
+          ]),
+        ).start();
+      } else {
+        // Failed to start recording - show alert
+        Alert.alert(
+          "Recording Permission",
+          "Please grant microphone permission to use voice input.",
+          [{ text: "OK" }]
+        );
+      }
     }
   };
 

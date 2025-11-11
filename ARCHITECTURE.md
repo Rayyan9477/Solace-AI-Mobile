@@ -12,10 +12,11 @@
 4. [State Management](#state-management)
 5. [Navigation](#navigation)
 6. [Component Structure](#component-structure)
-7. [Data Flow](#data-flow)
-8. [Performance Optimization](#performance-optimization)
-9. [Error Handling](#error-handling)
-10. [Security](#security)
+7. [Theme System & Responsive Design](#theme-system--responsive-design)
+8. [Data Flow](#data-flow)
+9. [Performance Optimization](#performance-optimization)
+10. [Error Handling](#error-handling)
+11. [Security](#security)
 
 ---
 
@@ -533,6 +534,292 @@ export const ScreenLayout = ({ children, header, footer }) => {
     </SafeAreaView>
   );
 };
+```
+
+---
+
+## Theme System & Responsive Design
+
+### Overview
+
+Solace AI Mobile implements a comprehensive theming system with customizable color palettes and responsive design patterns optimized for web, tablet, and mobile platforms.
+
+### Theme Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              ThemeProvider (Context)                    │
+│  - Light/Dark mode management                           │
+│  - Custom color palette loading                         │
+│  - AsyncStorage persistence                             │
+└────────────────┬────────────────────────────────────────┘
+                 │
+    ┌────────────┴────────────┐
+    │                         │
+┌───▼────────────┐  ┌────────▼────────────┐
+│  Base Themes   │  │  Custom Colors      │
+│  (Light/Dark)  │  │  (5 Presets)        │
+└───┬────────────┘  └────────┬────────────┘
+    │                         │
+    └────────────┬────────────┘
+                 │
+         ┌───────▼────────┐
+         │  Merged Theme  │
+         │  (Final Output)│
+         └────────────────┘
+```
+
+### Theme Provider Implementation
+
+**Location**: `src/shared/theme/ThemeProvider.tsx`
+
+**Features**:
+- Light/Dark mode toggle
+- Custom color palette management
+- Persistent storage across sessions
+- Runtime theme switching
+- Preset color palette selection
+
+**Usage**:
+```javascript
+import { useTheme } from '@theme/ThemeProvider';
+
+export const MyComponent = () => {
+  const { theme, isDark, toggleTheme, setCustomColors, resetCustomColors } = useTheme();
+
+  return (
+    <View style={{ backgroundColor: theme.colors.background.primary }}>
+      <Text style={{ color: theme.colors.text.primary }}>
+        Current mode: {isDark ? 'Dark' : 'Light'}
+      </Text>
+    </View>
+  );
+};
+```
+
+### Color Customization System
+
+**Location**: `src/shared/theme/customColors.ts`
+
+**5 Preset Palettes**:
+
+| Preset | Name | Use Case | Primary Colors |
+|--------|------|----------|----------------|
+| `default` | Mindful Brown | General wellness, evening | Brown tones (#704A33, #AC836C) |
+| `serene` | Serene Green | Anxiety relief, meditation | Green tones (#5A6838, #98B068) |
+| `warm` | Warm Orange | Motivation, morning | Orange/amber (#C96100, #ED7E1C) |
+| `wisdom` | Wisdom Purple | Focus, contemplation | Purple tones (#5849A5, #8978F7) |
+| `sunshine` | Sunshine Yellow | Mood elevation, energy | Yellow tones (#A37A00, #FFB014) |
+
+**Color Structure**:
+```typescript
+interface CustomColorPalette {
+  primary?: string;      // Main brand color
+  secondary?: string;    // Secondary accent
+  accent?: string;       // Highlight color
+  background?: string;   // Background override
+  text?: string;         // Text color override
+}
+
+interface CustomColors {
+  light?: CustomColorPalette;  // Light mode colors
+  dark?: CustomColorPalette;   // Dark mode colors
+}
+```
+
+**Theme Customization UI**: Navigate to **Profile → Theme Settings** to select and preview color palettes.
+
+### Responsive Design System
+
+**Location**: `src/shared/hooks/useResponsive.ts`
+
+**Breakpoint System**:
+
+| Breakpoint | Width | Device Type | Layout Strategy |
+|------------|-------|-------------|-----------------|
+| **base** | < 640px | Mobile phones | Full-width, vertical scroll |
+| **sm** | ≥ 640px | Large phones | Slight padding increase |
+| **md** | ≥ 768px | Tablets (iPad) | Centered content, max-width |
+| **lg** | ≥ 1024px | Laptops | Card-based layout |
+| **xl** | ≥ 1280px | Desktops | Multi-column support |
+| **xxl** | ≥ 1536px | Large displays | Max content constraints |
+
+**useResponsive Hook**:
+```javascript
+import { useResponsive } from '@shared/hooks/useResponsive';
+
+export const MyScreen = () => {
+  const {
+    width,                    // Current screen width
+    height,                   // Current screen height
+    isWeb,                    // true if web platform
+    isMobile,                 // true if mobile platform
+    currentBreakpoint,        // Current breakpoint name
+    getResponsiveValue,       // Get value based on breakpoint
+    getMaxContentWidth,       // Get max content width
+    getContainerPadding,      // Get responsive padding
+    isSm, isMd, isLg, isXl    // Breakpoint boolean flags
+  } = useResponsive();
+
+  return (
+    <View style={{
+      maxWidth: isWeb ? 480 : '100%',
+      padding: getContainerPadding(),
+    }}>
+      <Text>Content adapts to screen size</Text>
+    </View>
+  );
+};
+```
+
+**ResponsiveContainer Component**:
+```javascript
+import { ResponsiveContainer } from '@shared/components/organisms/ResponsiveContainer';
+
+export const MyScreen = () => {
+  return (
+    <ResponsiveContainer maxWidth={800} centerContent>
+      {/* Content automatically centered on large screens */}
+      <Text>Responsive content</Text>
+    </ResponsiveContainer>
+  );
+};
+```
+
+### Responsive Layout Patterns
+
+**Mobile-First Approach**:
+```javascript
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,                    // Mobile default
+    ...(isWeb && {
+      padding: 32,                  // Web override
+      maxWidth: 480,
+      marginHorizontal: 'auto',
+    }),
+  },
+  text: {
+    fontSize: 16,                   // Mobile default
+    ...(isLg && { fontSize: 18 }), // Large screen override
+  },
+});
+```
+
+**Adaptive Components**:
+```javascript
+// Different rendering strategies based on screen size
+const renderLayout = () => {
+  if (isMobile) {
+    return <StackLayout>{content}</StackLayout>;
+  }
+  return <GridLayout columns={2}>{content}</GridLayout>;
+};
+```
+
+### Web Optimization
+
+**Auth Screens** (LoginScreen, SignupScreen):
+- Centered content with max-width 480px on web
+- Card-like appearance with rounded corners
+- Increased padding (32px vs 24px)
+- Adjusted logo sizing (56px vs 64px)
+- Better ScrollView behavior
+
+**Dashboard & Feature Screens**:
+- Responsive grid layouts
+- Adaptive card sizing
+- Web-specific spacing
+- Touch-optimized on mobile
+
+### Theme Persistence
+
+**Storage Keys**:
+- `@solace_theme_mode`: Light/Dark mode preference
+- `custom_colors`: User's selected color palette
+
+**Persistence Flow**:
+```
+User selects theme
+      ↓
+ThemeProvider updates state
+      ↓
+AsyncStorage saves preference
+      ↓
+App restart loads from storage
+      ↓
+Theme applied automatically
+```
+
+### Accessibility Considerations
+
+**Theme System**:
+- ✅ High contrast color ratios (WCAG AA compliant)
+- ✅ Reduced motion support
+- ✅ Screen reader friendly
+- ✅ Keyboard navigation (web)
+
+**Responsive Design**:
+- ✅ Touch targets ≥ 44px (mobile)
+- ✅ Proper focus management (web)
+- ✅ Accessible breakpoint transitions
+- ✅ No content hidden by responsive behavior
+
+### Performance Optimization
+
+**Theme Switching**:
+- Memoized theme objects
+- No re-renders for unchanged components
+- Efficient AsyncStorage operations
+
+**Responsive Calculations**:
+- Cached dimension listeners
+- Debounced resize handlers (web)
+- Minimal layout recalculations
+
+**Bundle Impact**:
+- useResponsive hook: ~3KB
+- ResponsiveContainer: ~1KB
+- customColors module: ~4KB
+- **Total**: ~8KB additional bundle size
+
+### Best Practices
+
+**Using Themes**:
+```javascript
+// ✅ Good - Use theme colors
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: theme.colors.background.primary,
+    borderColor: theme.colors.brown[30],
+  },
+});
+
+// ❌ Bad - Hardcoded colors
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5DDD5',
+  },
+});
+```
+
+**Responsive Styling**:
+```javascript
+// ✅ Good - Progressive enhancement
+const contentMaxWidth = isWeb ? Math.min(width, 800) : '100%';
+
+// ❌ Bad - Platform-specific branching
+const contentMaxWidth = Platform.OS === 'web' ? 800 : width;
+```
+
+**Component Design**:
+```javascript
+// ✅ Good - Flexible components that adapt
+<Card maxWidth={isWeb ? 480 : '100%'} />
+
+// ❌ Bad - Separate web/mobile components
+{isWeb ? <WebCard /> : <MobileCard />}
 ```
 
 ---

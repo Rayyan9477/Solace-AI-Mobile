@@ -5,7 +5,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -13,17 +13,45 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
+import retryService from "@shared/services/retryService";
 
-export const ServerErrorScreen = () => {
+export const ServerErrorScreen = ({ route }: any) => {
   const { theme } = useTheme();
   const navigation = useNavigation();
+  const [isRetrying, setIsRetrying] = useState(false);
 
-  const handleRetry = () => {
-    if (__DEV__) {
-      console.log("Retrying request...");
+  // Get retry callback from route params if provided
+  const retryCallback = route?.params?.onRetry;
+
+  const handleRetry = async () => {
+    setIsRetrying(true);
+
+    try {
+      if (retryCallback) {
+        // Use the provided retry callback with retry logic
+        await retryService.retryApiCall(retryCallback, "server request");
+
+        Alert.alert(
+          "Success",
+          "The request completed successfully!",
+          [{ text: "OK", onPress: () => navigation.goBack() }]
+        );
+      } else {
+        // Generic retry - just go back
+        navigation.goBack();
+      }
+    } catch (error) {
+      Alert.alert(
+        "Still Unable to Connect",
+        "The server is still unavailable. Please try again later or contact support.",
+        [{ text: "OK" }]
+      );
+    } finally {
+      setIsRetrying(false);
     }
-    // TODO: Implement actual retry logic
   };
 
   const handleGoHome = () => {
@@ -161,13 +189,18 @@ export const ServerErrorScreen = () => {
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={styles.primaryButton}
+            style={[styles.primaryButton, isRetrying && { opacity: 0.7 }]}
             onPress={handleRetry}
+            disabled={isRetrying}
             accessible
             accessibilityLabel="Retry request"
             accessibilityRole="button"
           >
-            <Text style={styles.buttonText}>Try Again</Text>
+            {isRetrying ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <Text style={styles.buttonText}>Try Again</Text>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity

@@ -19,7 +19,6 @@ import MoodCheckIn from "../../src/features/dashboard/components/MoodCheckIn";
 import MainAppScreen from "../../src/screens/MainAppScreen";
 import EnhancedMoodTrackerScreen from "../../src/screens/mood/EnhancedMoodTrackerScreen";
 import { ThemeProvider } from "../../src/shared/theme/ThemeContext";
-import enhancedMoodSlice from "../../src/store/slices/enhancedMoodSlice";
 import moodSlice from "../../src/store/slices/moodSlice";
 
 // Mock dependencies

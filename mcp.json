@@ -1,24 +1,10 @@
 {
   "mcpServers": {
-    "eslint": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["@eslint/mcp@latest"],
-      "description": "ESLint MCP server for code quality checks and linting",
-      "env": {}
-    },
     "code-index": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["code-index-mcp", "--project-path", "R:\\Solace-AI-Mobile"],
+      "args": ["code-index-mcp", "--project-path", "D:\\Repo\\Solace-AI-Mobile"],
       "description": "Code indexing and analysis server for debugging and codebase understanding",
-      "env": {}
-    },
-    "sequential-thinking": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["@modelcontextprotocol/server-sequential-thinking"],
-      "description": "Sequential thinking MCP server for complex problem solving",
       "env": {}
     }
   }

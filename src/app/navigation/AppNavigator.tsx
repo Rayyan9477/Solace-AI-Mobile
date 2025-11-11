@@ -12,6 +12,7 @@ import SignupScreen from "@features/auth/SignupScreen";
 import SocialLoginScreen from "@features/auth/screens/SocialLoginScreen";
 import ChatScreen from "@features/chat/ChatScreen";
 import ChatConversationsListScreen from "@features/chat/screens/ChatConversationsListScreen";
+import NewConversationScreen from "@features/chat/NewConversationScreen";
 import { CommunitySupportScreen, CreatePostScreen } from "@features/community";
 
 // Feature-based screen imports
@@ -56,6 +57,7 @@ import LanguageSettingsScreen from "@features/profile/screens/LanguageSettingsSc
 import PrivacySettingsScreen from "@features/profile/screens/PrivacySettingsScreen";
 import AboutScreen from "@features/profile/screens/AboutScreen";
 import ContactSupportScreen from "@features/profile/screens/ContactSupportScreen";
+import AddEmergencyContactScreen from "@features/profile/screens/AddEmergencyContactScreen";
 import { ThemeSettingsScreen } from "@features/profile";
 import StressAssessmentScreen from "@features/wellness/screens/StressAssessmentScreen";
 import QuickStressReliefScreen from "@features/wellness/screens/QuickStressReliefScreen";
@@ -486,6 +488,10 @@ const AppNavigator = (props: any) => {
               name="ChatConversationsList"
               component={ChatConversationsListScreen}
             />
+            <Stack.Screen
+              name="NewConversation"
+              component={NewConversationScreen}
+            />
 
             {/* Therapy & Challenges */}
             <Stack.Screen
@@ -591,6 +597,10 @@ const AppNavigator = (props: any) => {
             <Stack.Screen
               name="ContactSupport"
               component={ContactSupportScreen}
+            />
+            <Stack.Screen
+              name="AddEmergencyContact"
+              component={AddEmergencyContactScreen}
             />
             <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
             <Stack.Screen

@@ -16,7 +16,6 @@ import { ThemeProvider } from "../src/shared/theme/ThemeContext";
 // Mock store slices
 import authSlice from "../src/store/slices/authSlice";
 import chatSlice from "../src/store/slices/chatSlice";
-import enhancedMoodSlice from "../src/store/slices/enhancedMoodSlice";
 import moodSlice from "../src/store/slices/moodSlice";
 
 /**
@@ -124,7 +123,6 @@ export const createMentalHealthTestStore = (initialState = {}) => {
   return configureStore({
     reducer: {
       mood: moodSlice?.reducer || ((state = {}) => state),
-      enhancedMood: enhancedMoodSlice?.reducer || ((state = {}) => state),
       auth: authSlice?.reducer || ((state = {}) => state),
       chat: chatSlice?.reducer || ((state = {}) => state),
     },
@@ -132,26 +130,15 @@ export const createMentalHealthTestStore = (initialState = {}) => {
       mood: {
         currentMood: null,
         moodHistory: [],
+        weeklyStats: {
+          averageIntensity: 0,
+          mostCommonMood: null,
+          totalEntries: 0,
+        },
         insights: [],
         loading: false,
         error: null,
-        analytics: {
-          weeklyAverage: 0,
-          trend: "stable",
-          patterns: [],
-        },
         ...initialState.mood,
-      },
-      enhancedMood: {
-        currentStep: 1,
-        selectedMood: null,
-        intensity: 5,
-        activities: [],
-        notes: "",
-        triggers: [],
-        isSubmitting: false,
-        completedEntries: [],
-        ...initialState.enhancedMood,
       },
       auth: {
         isAuthenticated: true,

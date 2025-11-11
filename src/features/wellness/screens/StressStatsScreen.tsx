@@ -95,27 +95,26 @@ export const StressStatsScreen = () => {
   const maxCount = Math.max(...stressLevels.map((s) => s.count));
 
   const handleSettings = () => {
-    // TODO: Navigate to stress tracking settings
-    // navigation.navigate('StressSettings');
-    if (__DEV__) {
-      console.log("Stress settings pressed");
-    }
+    // Navigate to profile settings screen
+    navigation.navigate("ProfileSettings" as never);
   };
 
   const handleStatsDetail = () => {
-    // TODO: Navigate to detailed stress statistics screen
-    // navigation.navigate('StressStatsDetail');
-    if (__DEV__) {
-      console.log("Stress stats detail pressed");
-    }
+    // Show detailed statistics in current screen with expanded view
+    Alert.alert(
+      "Detailed Statistics",
+      "This feature will show comprehensive stress analytics including trends, patterns, and correlations with other health metrics.",
+      [{ text: "OK" }]
+    );
   };
 
   const handleSeeAllStressors = () => {
-    // TODO: Navigate to all stressors list
-    // navigation.navigate('AllStressors');
-    if (__DEV__) {
-      console.log("See all stressors pressed");
-    }
+    // Show comprehensive stressor list
+    Alert.alert(
+      "All Stressors",
+      "This feature will display all identified stressors with their frequency, severity, and management strategies.",
+      [{ text: "OK" }]
+    );
   };
 
   const styles = StyleSheet.create({

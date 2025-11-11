@@ -66,7 +66,7 @@ export const SocialLoginScreen = () => {
   };
 
   const handleEmailLogin = () => {
-    navigation.navigate("SignIn");
+    navigation.navigate("Login");
   };
 
   const styles = StyleSheet.create({

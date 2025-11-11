@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import moodStorageService from "../../../features/mood/services/moodStorageService";
 
 // TypeScript type declarations
 declare const __DEV__: boolean;
@@ -37,32 +38,141 @@ interface MoodState {
   error: string | null;
 }
 
-// Mock API service for mood tracking
-const mockApiService = {
+// Forward declarations for helper functions
+const calculateWeeklyStats = (moodHistory: MoodEntry[]): WeeklyStats => {
+  // Filter entries from last 7 days (not last 7 entries!)
+  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const recentEntries = moodHistory.filter((entry: MoodEntry) => {
+    const entryTime =
+      typeof entry.timestamp === "string"
+        ? new Date(entry.timestamp).getTime()
+        : entry.timestamp;
+    return entryTime >= sevenDaysAgo;
+  });
+
+  if (recentEntries.length === 0) {
+    return {
+      averageIntensity: 0,
+      mostCommonMood: null,
+      totalEntries: 0,
+    };
+  }
+
+  const avgIntensity =
+    recentEntries.reduce(
+      (sum: number, entry: MoodEntry) => sum + entry.intensity,
+      0,
+    ) / recentEntries.length;
+
+  const moodCounts = recentEntries.reduce(
+    (counts: Record<string, number>, entry: MoodEntry) => {
+      counts[entry.mood] = (counts[entry.mood] || 0) + 1;
+      return counts;
+    },
+    {} as Record<string, number>,
+  );
+
+  const moodEntries = Object.entries(moodCounts);
+  const mostCommon = moodEntries.length
+    ? moodEntries.reduce(
+        (a, b) => (moodCounts[a[0]] > moodCounts[b[0]] ? a : b),
+        moodEntries[0],
+      )[0]
+    : null;
+
+  return {
+    averageIntensity: Math.round(avgIntensity * 10) / 10,
+    mostCommonMood: mostCommon,
+    totalEntries: recentEntries.length,
+  };
+};
+
+const generateInsights = (
+  weeklyStats: WeeklyStats,
+  moodHistory: MoodEntry[] = [],
+): Insight[] => {
+  const insights: Insight[] = [];
+
+  // Generate insights based on mood patterns
+  if (weeklyStats.averageIntensity > 4) {
+    insights.push({
+      id: "positive-trend",
+      type: "positive",
+      title: "Great Progress!",
+      message: "Your mood has been consistently positive this week.",
+      icon: "🌟",
+    });
+  } else if (weeklyStats.averageIntensity < 2) {
+    insights.push({
+      id: "low-mood",
+      type: "suggestion",
+      title: "Self-Care Reminder",
+      message:
+        "Consider trying some relaxation techniques or speaking with a professional.",
+      icon: "🧘",
+    });
+  }
+
+  // Check for anxiety patterns in recent entries
+  const recentEntries = moodHistory.slice(-7);
+  const hasAnxiety = recentEntries.some(
+    (entry) => (entry.mood || "").toLowerCase() === "anxious",
+  );
+
+  if (hasAnxiety) {
+    insights.push({
+      id: "anxiety-pattern",
+      type: "suggestion",
+      title: "Anxiety Management",
+      message: "Try deep breathing exercises or progressive muscle relaxation.",
+      icon: "🫁",
+    });
+  }
+
+  return insights;
+};
+
+// API service using local storage for mood tracking
+const apiService = {
   mood: {
     async logMood(data: Partial<MoodEntry>): Promise<MoodEntry> {
       if (__DEV__) {
-        console.log("Mock mood logging:", data);
+        console.log("Logging mood to local storage:", data);
       }
-      return {
-        id: Date.now().toString(),
+
+      const moodEntry: MoodEntry = {
+        id: data.id || Date.now().toString(),
         mood: data.mood || "",
         intensity: data.intensity || 3,
         timestamp: data.timestamp || new Date().toISOString(),
-        ...data,
+        notes: data.notes,
+        activities: data.activities,
         createdAt: new Date().toISOString(),
       };
+
+      // Save to local storage
+      const savedEntry = await moodStorageService.saveMoodEntry(moodEntry);
+
+      // Also save updated stats
+      const history = await moodStorageService.getMoodHistory();
+      const stats = calculateWeeklyStats(history);
+      await moodStorageService.saveWeeklyStats(stats);
+
+      // Generate and save insights
+      const insights = generateInsights(stats, history);
+      await moodStorageService.saveInsights(insights);
+
+      return savedEntry;
     },
+
     async getMoodHistory(): Promise<MoodEntry[]> {
       if (__DEV__) {
-        console.log("Mock mood history fetch");
+        console.log("Fetching mood history from local storage");
       }
-      return [];
+      return await moodStorageService.getMoodHistory();
     },
   },
 };
-
-const apiService = mockApiService;
 
 // Async thunk for logging mood
 export const logMood = createAsyncThunk<
@@ -118,6 +228,40 @@ export const fetchMoodHistory = createAsyncThunk<
   }
 });
 
+// Async thunk for initializing mood data from local storage
+export const initializeMoodData = createAsyncThunk<
+  {
+    history: MoodEntry[];
+    stats: WeeklyStats;
+    insights: Insight[];
+  },
+  void,
+  { rejectValue: string }
+>("mood/initializeData", async (_, { rejectWithValue }) => {
+  try {
+    if (__DEV__) {
+      console.log("Initializing mood data from local storage");
+    }
+
+    const data = await moodStorageService.getAllMoodData();
+
+    return {
+      history: data.history,
+      stats: data.stats,
+      insights: data.insights,
+    };
+  } catch (error) {
+    if (__DEV__) {
+      console.error("Mood data initialization error:", error);
+    }
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "Failed to initialize mood data.";
+    return rejectWithValue(errorMessage);
+  }
+});
+
 const initialState: MoodState = {
   currentMood: null,
   moodHistory: [],
@@ -131,100 +275,6 @@ const initialState: MoodState = {
   error: null,
 };
 
-// Helper function to calculate weekly stats (pure function)
-const calculateWeeklyStats = (moodHistory: MoodEntry[]): WeeklyStats => {
-  // Filter entries from last 7 days (not last 7 entries!)
-  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-  const recentEntries = moodHistory.filter((entry: MoodEntry) => {
-    const entryTime =
-      typeof entry.timestamp === "string"
-        ? new Date(entry.timestamp).getTime()
-        : entry.timestamp;
-    return entryTime >= sevenDaysAgo;
-  });
-
-  if (recentEntries.length === 0) {
-    return {
-      averageIntensity: 0,
-      mostCommonMood: null,
-      totalEntries: 0,
-    };
-  }
-
-  const avgIntensity =
-    recentEntries.reduce(
-      (sum: number, entry: MoodEntry) => sum + entry.intensity,
-      0,
-    ) / recentEntries.length;
-
-  const moodCounts = recentEntries.reduce(
-    (counts: Record<string, number>, entry: MoodEntry) => {
-      counts[entry.mood] = (counts[entry.mood] || 0) + 1;
-      return counts;
-    },
-    {} as Record<string, number>,
-  );
-
-  const moodEntries = Object.entries(moodCounts);
-  const mostCommon = moodEntries.length
-    ? moodEntries.reduce(
-        (a, b) => (moodCounts[a[0]] > moodCounts[b[0]] ? a : b),
-        moodEntries[0],
-      )[0]
-    : null;
-
-  return {
-    averageIntensity: Math.round(avgIntensity * 10) / 10,
-    mostCommonMood: mostCommon,
-    totalEntries: recentEntries.length,
-  };
-};
-
-// Helper function to generate insights (pure function)
-const generateInsights = (
-  weeklyStats: WeeklyStats,
-  moodHistory: MoodEntry[] = [],
-): Insight[] => {
-  const insights: Insight[] = [];
-
-  // Generate insights based on mood patterns
-  if (weeklyStats.averageIntensity > 4) {
-    insights.push({
-      id: "positive-trend",
-      type: "positive",
-      title: "Great Progress!",
-      message: "Your mood has been consistently positive this week.",
-      icon: "🌟",
-    });
-  } else if (weeklyStats.averageIntensity < 2) {
-    insights.push({
-      id: "low-mood",
-      type: "suggestion",
-      title: "Self-Care Reminder",
-      message:
-        "Consider trying some relaxation techniques or speaking with a professional.",
-      icon: "🧘",
-    });
-  }
-
-  // Check for anxiety patterns in recent entries
-  const recentEntries = moodHistory.slice(-7);
-  const hasAnxiety = recentEntries.some(
-    (entry) => (entry.mood || "").toLowerCase() === "anxious",
-  );
-
-  if (hasAnxiety) {
-    insights.push({
-      id: "anxiety-pattern",
-      type: "suggestion",
-      title: "Anxiety Management",
-      message: "Try deep breathing exercises or progressive muscle relaxation.",
-      icon: "🫁",
-    });
-  }
-
-  return insights;
-};
 
 const moodSlice = createSlice({
   name: "mood",
@@ -298,6 +348,31 @@ const moodSlice = createSlice({
       .addCase(fetchMoodHistory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || null;
+      })
+      .addCase(initializeMoodData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(initializeMoodData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.moodHistory = action.payload.history;
+        state.weeklyStats = action.payload.stats;
+        state.insights = action.payload.insights;
+        if (action.payload.history.length > 0) {
+          state.currentMood = action.payload.history[0].mood;
+        }
+      })
+      .addCase(initializeMoodData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || null;
+        // Initialize with empty data on error
+        state.moodHistory = [];
+        state.weeklyStats = {
+          averageIntensity: 0,
+          mostCommonMood: null,
+          totalEntries: 0,
+        };
+        state.insights = [];
       });
   },
 });

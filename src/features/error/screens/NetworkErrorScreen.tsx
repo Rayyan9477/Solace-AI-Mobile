@@ -5,29 +5,69 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
+import retryService from "@shared/services/retryService";
 
-export const NetworkErrorScreen = () => {
+export const NetworkErrorScreen = ({ route }: any) => {
   const { theme } = useTheme();
   const navigation = useNavigation();
+  const [isChecking, setIsChecking] = useState(false);
 
-  const handleRetry = () => {
-    if (__DEV__) {
-      console.log("Retrying connection...");
+  const retryCallback = route?.params?.onRetry;
+
+  const handleRetry = async () => {
+    setIsChecking(true);
+
+    try {
+      // Check network connectivity
+      const netInfo = await NetInfo.fetch();
+
+      if (!netInfo.isConnected) {
+        Alert.alert(
+          "Still Offline",
+          "Please check your internet connection and try again.",
+          [{ text: "OK" }]
+        );
+        setIsChecking(false);
+        return;
+      }
+
+      // If we have a retry callback, execute it
+      if (retryCallback) {
+        await retryService.retryApiCall(retryCallback, "network request");
+        Alert.alert(
+          "Connected!",
+          "Your connection has been restored.",
+          [{ text: "OK", onPress: () => navigation.goBack() }]
+        );
+      } else {
+        // Just go back if no callback
+        navigation.goBack();
+      }
+    } catch (error) {
+      Alert.alert(
+        "Connection Failed",
+        "Unable to establish connection. Please try again.",
+        [{ text: "OK" }]
+      );
+    } finally {
+      setIsChecking(false);
     }
-    // TODO: Implement actual retry logic
   };
 
   const handleGoOffline = () => {
-    // Navigate to offline mode
-    navigation.goBack();
+    // Navigate to offline mode screen
+    navigation.navigate("OfflineMode" as never);
   };
 
   const styles = StyleSheet.create({
@@ -108,13 +148,18 @@ export const NetworkErrorScreen = () => {
       </Text>
 
       <TouchableOpacity
-        style={styles.retryButton}
+        style={[styles.retryButton, isChecking && { opacity: 0.7 }]}
         onPress={handleRetry}
+        disabled={isChecking}
         accessible
         accessibilityLabel="Retry connection"
         accessibilityRole="button"
       >
-        <Text style={styles.retryButtonText}>Retry Connection</Text>
+        {isChecking ? (
+          <ActivityIndicator color="#FFFFFF" />
+        ) : (
+          <Text style={styles.retryButtonText}>Retry Connection</Text>
+        )}
       </TouchableOpacity>
 
       <TouchableOpacity

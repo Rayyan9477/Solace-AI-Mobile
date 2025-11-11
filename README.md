@@ -21,7 +21,7 @@
 | 🆘 **Crisis Support** | Emergency resources and crisis hotline integration |
 | 👥 **Community** | Moderated support groups and peer connection |
 | 📈 **Assessments** | Evidence-based mental health screening |
-| 🌓 **Dark/Light Themes** | Therapeutic color palettes for mental wellness |
+| 🎨 **Customizable Themes** | 5 therapeutic color palettes + light/dark modes + web responsive design |
 | ♿ **Accessibility** | Full screen reader support and keyboard navigation |
 | 📱 **Cross-Platform** | iOS, Android, and Web support |
 
@@ -170,10 +170,30 @@ npm run theme-preview # Theme preview only
 - **Light Mode**: Clean, energizing colors for daytime use
 - **Dark Mode**: Therapeutic brown palette for evening use
 - **Accessible**: High contrast options and reduced motion support
+- **Web Responsive**: Adaptive layouts for desktop, tablet, and mobile
 
 ### Color Palettes
 
-Both themes use carefully selected therapeutic colors optimized for mental wellness. See [DESIGN_GUIDE.md](./DESIGN_GUIDE.md) for detailed design specifications.
+Choose from 5 therapeutic color presets designed for mental wellness:
+
+| Palette | Description | Best For |
+|---------|-------------|----------|
+| **Mindful Brown** | Original therapeutic brown (default) | General wellness, evening use |
+| **Serene Green** | Calming green tones | Anxiety relief, meditation |
+| **Warm Orange** | Energizing orange/amber | Motivation, morning use |
+| **Wisdom Purple** | Deep purple tones | Focus, contemplation |
+| **Sunshine Yellow** | Bright optimistic yellows | Mood elevation, energy boost |
+
+**Customize your theme**: Navigate to **Profile → Theme Settings** to select your preferred color palette. Changes apply instantly and persist across sessions.
+
+### Responsive Design
+
+- **Mobile First**: Optimized touch targets and layouts for phones
+- **Web Optimized**: Centered content with max-width constraints (480-800px)
+- **Tablet Support**: Adaptive breakpoints for iPad and tablets
+- **Desktop Ready**: Professional card-based layouts for large screens
+
+See [DESIGN_GUIDE.md](./DESIGN_GUIDE.md) for detailed design specifications.
 
 ---
 

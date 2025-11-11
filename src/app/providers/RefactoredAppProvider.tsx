@@ -6,6 +6,7 @@
  */
 
 import { restoreAuthState } from "@app/store/slices/authSlice";
+import { initializeMoodData } from "@app/store/slices/moodSlice";
 import { logger } from "@shared/utils/logger";
 import { ThemeProvider } from "@theme/ThemeProvider";
 import React, { useEffect, useState, useCallback } from "react";
@@ -34,7 +35,7 @@ const AppInitializer: React.FC<{ children: React.ReactNode }> = ({
     try {
       logger.info("Starting app initialization...");
 
-      // Use Promise.race to add timeout protection
+      // Use Promise.race to add timeout protection for auth
       await Promise.race([
         dispatch(restoreAuthState() as any),
         new Promise((_, reject) =>
@@ -44,6 +45,15 @@ const AppInitializer: React.FC<{ children: React.ReactNode }> = ({
           ),
         ),
       ]);
+
+      // Initialize mood data from local storage
+      try {
+        await dispatch(initializeMoodData() as any);
+        logger.info("Mood data initialized from local storage");
+      } catch (moodError) {
+        // Non-critical error - mood initialization failure shouldn't prevent app startup
+        logger.warn("Mood data initialization failed (non-critical):", moodError);
+      }
 
       logger.info("App initialization completed successfully");
       setInitializationComplete(true);

@@ -39,11 +39,8 @@ export const SleepPatternsScreen = () => {
   const sleepGoal = 8.0;
 
   const handleSettings = () => {
-    // TODO: Navigate to sleep settings or open settings modal
-    // navigation.navigate('SleepSettings');
-    if (__DEV__) {
-      console.log("Sleep settings pressed");
-    }
+    // Navigate to sleep goals screen
+    navigation.navigate("SleepGoals" as never);
   };
 
   const styles = StyleSheet.create({

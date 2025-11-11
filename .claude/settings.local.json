@@ -55,7 +55,18 @@
       "Bash(mkdir:*)",
       "Bash(npx eslint:*)",
       "Bash(npm start)",
-      "Bash(npx prettier:*)"
+      "Bash(npx prettier:*)",
+      "Bash(npm install:*)",
+      "Bash(where:*)",
+      "Bash(claude mcp tools)",
+      "Bash(if [ -f \"$APPDATA/Claude/mcp.json\" ])",
+      "Bash(then echo \"System MCP config found\")",
+      "Bash(else echo \"No system-level mcp.json found\")",
+      "Bash(fi)",
+      "Bash(comm -23:*)",
+      "Bash(while read f)",
+      "Bash(do if ! grep -q \"SafeAreaView\" \"$f\")",
+      "Bash(then echo \"$f\")"
     ],
     "deny": [],
     "ask": []

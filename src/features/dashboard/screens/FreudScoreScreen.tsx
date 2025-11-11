@@ -64,27 +64,22 @@ export const FreudScoreScreen = () => {
   };
 
   const handleHelp = () => {
-    // TODO: Navigate to help screen or show info modal
-    // navigation.navigate('FreudScoreHelp');
-    if (__DEV__) {
-      console.log("Freud Score help pressed");
-    }
+    // Show help information about Freud Score
+    Alert.alert(
+      "About Freud Score",
+      "The Freud Score is a comprehensive mental health metric that combines your mood patterns, stress levels, and overall wellbeing indicators.\n\n• 80-100: Excellent\n• 60-79: Good\n• 40-59: Fair\n• Below 40: Needs Attention\n\nThis score is calculated based on your daily mood entries, therapy engagement, and wellness activities.",
+      [{ text: "Got it!" }]
+    );
   };
 
   const handleSeeInsights = () => {
-    // TODO: Navigate to detailed insights screen
-    // navigation.navigate('MentalHealthInsights');
-    if (__DEV__) {
-      console.log("See insights pressed");
-    }
+    // Navigate to assessment history for detailed insights
+    navigation.navigate("AssessmentHistory" as never);
   };
 
   const handleSeeAllHistory = () => {
-    // TODO: Navigate to full score history
-    // navigation.navigate('ScoreHistory');
-    if (__DEV__) {
-      console.log("See all history pressed");
-    }
+    // Navigate to mood history for historical data
+    navigation.navigate("MoodHistory" as never);
   };
 
   const styles = StyleSheet.create({

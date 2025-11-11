@@ -328,7 +328,7 @@ export const RelaxationTechniquesScreen = () => {
             <TouchableOpacity
               key={technique.id}
               style={styles.techniqueCard}
-              onPress={() => navigation.navigate("BreathingExercise")}
+              onPress={() => navigation.navigate("ExerciseCreate")}
             >
               <View style={styles.techniqueHeader}>
                 <Text style={styles.techniqueIcon}>{technique.icon}</Text>

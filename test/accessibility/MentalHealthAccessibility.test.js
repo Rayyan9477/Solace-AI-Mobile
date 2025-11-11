@@ -21,7 +21,6 @@ import QuickActions from "../../src/features/dashboard/components/QuickActions";
 import MainAppScreen from "../../src/screens/MainAppScreen";
 import EnhancedMoodTrackerScreen from "../../src/screens/mood/EnhancedMoodTrackerScreen";
 import { ThemeProvider } from "../../src/shared/theme/ThemeContext";
-import enhancedMoodSlice from "../../src/store/slices/enhancedMoodSlice";
 import moodSlice from "../../src/store/slices/moodSlice";
 import {
   TouchTargetHelpers,
@@ -50,7 +49,6 @@ const createTestStore = (initialState = {}) => {
   return configureStore({
     reducer: {
       mood: moodSlice.reducer,
-      enhancedMood: enhancedMoodSlice.reducer,
     },
     preloadedState: {
       mood: {
@@ -58,17 +56,13 @@ const createTestStore = (initialState = {}) => {
         moodHistory: [],
         loading: false,
         error: null,
+        weeklyStats: {
+          averageIntensity: 0,
+          mostCommonMood: null,
+          totalEntries: 0,
+        },
+        insights: [],
         ...initialState.mood,
-      },
-      enhancedMood: {
-        currentStep: 1,
-        selectedMood: null,
-        intensity: 5,
-        activities: [],
-        notes: "",
-        triggers: [],
-        isSubmitting: false,
-        ...initialState.enhancedMood,
       },
     },
   });
