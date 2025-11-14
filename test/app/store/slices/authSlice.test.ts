@@ -295,7 +295,6 @@ describe("Auth Slice", () => {
       });
     });
   });
-});
 
   describe("Session Timeout Middleware Integration", () => {
     it("blocks actions when session is expired", async () => {

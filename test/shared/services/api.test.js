@@ -851,8 +851,8 @@ describe("Input Sanitization", () => {
     });
 
     it("handles null and undefined gracefully", () => {
-      expect(sanitizeText(null as any, 1000)).toBe("");
-      expect(sanitizeText(undefined as any, 1000)).toBe("");
+      expect(sanitizeText(null, 1000)).toBe("");
+      expect(sanitizeText(undefined, 1000)).toBe("");
     });
   });
 

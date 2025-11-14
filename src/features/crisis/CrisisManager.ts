@@ -738,16 +738,16 @@ class CrisisManager {
     userProfile: UserProfile,
     primaryError?: any,
   ): Promise<void> {
-    try {
-      const fallbackEvent = {
-        timestamp: new Date().toISOString(),
-        riskLevel: crisisAnalysis.risk,
-        indicators: crisisAnalysis.indicators,
-        confidence: crisisAnalysis.confidence,
-        fallback: true,
-        primaryError: primaryError?.message || "Unknown error",
-      };
+    const fallbackEvent = {
+      timestamp: new Date().toISOString(),
+      riskLevel: crisisAnalysis.risk,
+      indicators: crisisAnalysis.indicators,
+      confidence: crisisAnalysis.confidence,
+      fallback: true,
+      primaryError: primaryError?.message || "Unknown error",
+    };
 
+    try {
       // Try secure storage first
       await secureStorage.storeSensitiveData(
         `crisis_fallback_${Date.now()}`,

@@ -66,7 +66,10 @@
       "Bash(comm -23:*)",
       "Bash(while read f)",
       "Bash(do if ! grep -q \"SafeAreaView\" \"$f\")",
-      "Bash(then echo \"$f\")"
+      "Bash(then echo \"$f\")",
+      "Bash(timeout 120 npm test:*)",
+      "Bash(timeout 90 npm test:*)",
+      "Bash(timeout 20 npm test:*)"
     ],
     "deny": [],
     "ask": []

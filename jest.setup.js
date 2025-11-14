@@ -488,6 +488,24 @@ jest.mock("react-native/Libraries/EventEmitter/NativeEventEmitter", () => {
   return MockNativeEventEmitter;
 });
 
+// Mock NetInfo for network connectivity testing
+jest.mock("@react-native-community/netinfo", () => ({
+  fetch: jest.fn(() => Promise.resolve({ isConnected: true, isInternetReachable: true })),
+  addEventListener: jest.fn(() => jest.fn()),
+  useNetInfo: jest.fn(() => ({ isConnected: true, isInternetReachable: true })),
+  NetInfoStateType: {
+    unknown: 'unknown',
+    none: 'none',
+    cellular: 'cellular',
+    wifi: 'wifi',
+    bluetooth: 'bluetooth',
+    ethernet: 'ethernet',
+    wimax: 'wimax',
+    vpn: 'vpn',
+    other: 'other',
+  },
+}));
+
 // Enhanced React Native Reanimated mock for better test compatibility
 jest.mock("react-native-reanimated", () => {
   try {

@@ -10,7 +10,7 @@ import { Animated } from "react-native";
 
 import MoodCheckIn from "../../src/features/dashboard/components/MoodCheckIn";
 import QuickActions from "../../src/features/dashboard/components/QuickActions";
-import EnhancedMoodTrackerScreen from "../../src/screens/mood/EnhancedMoodTrackerScreen";
+import EnhancedMoodTrackerScreen from "../../src/features/mood/screens/EnhancedMoodTrackerScreen";
 import { PerformanceTestingHelpers } from "../utils/TestHelpers";
 
 // Mock performance monitoring

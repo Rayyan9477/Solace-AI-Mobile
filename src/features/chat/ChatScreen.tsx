@@ -283,14 +283,11 @@ export const ChatScreen = ({ navigation, route }: any) => {
                 text: action.label,
                 onPress: async () => {
                   if (action.type === "call" && action.number) {
-                    await crisisManagerRef.current?.callEmergencyNumber(
+                    await crisisManagerRef.current?.makeEmergencyCall(
                       action.number,
                     );
                   } else if (action.type === "text" && action.number) {
-                    await crisisManagerRef.current?.textCrisisLine(
-                      action.number,
-                      action.keyword,
-                    );
+                    await crisisManagerRef.current?.sendCrisisText();
                   }
                 },
                 style: action.urgent ? "destructive" : "default",

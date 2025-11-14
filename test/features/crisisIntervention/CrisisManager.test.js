@@ -41,7 +41,8 @@ jest.mock("@react-native-async-storage/async-storage", () => ({
   setItem: jest.fn(),
   removeItem: jest.fn(),
 }));
-n; // Mock secureStorage for encrypted crisis data
+
+// Mock secureStorage for encrypted crisis data
 jest.mock("../../../src/app/services/secureStorage", () => ({
   default: {
     storeSensitiveData: jest.fn(),

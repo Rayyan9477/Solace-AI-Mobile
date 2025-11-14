@@ -8,7 +8,7 @@ import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
 import PropTypes from "prop-types";
 import React from "react";
 
-import QuickActions from "../../../src/components/dashboard/QuickActions";
+import QuickActions from "../../../src/features/dashboard/components/QuickActions";
 import { ThemeProvider } from "../../../src/shared/theme/ThemeContext";
 
 // Mock dependencies

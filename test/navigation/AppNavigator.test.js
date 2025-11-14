@@ -127,7 +127,7 @@ jest.mock("@features/mood/MoodScreen", () => {
     );
   };
 });
-jest.mock("@features/mood-tracking/EnhancedMoodTrackerScreen", () => {
+jest.mock("@features/mood/screens/EnhancedMoodTrackerScreen", () => {
   const React = require("react");
   return function EnhancedMoodTrackerScreen() {
     return React.createElement(

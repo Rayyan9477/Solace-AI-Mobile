@@ -108,6 +108,91 @@ export const colors = {
     10: "#F0F1FF", // Lightest
   },
 
+  /**
+   * Alert Red - Urgency & crisis
+   * Use for: Crisis alerts, errors, urgent actions
+   */
+  red: {
+    100: "#2E0A0A", // Darkest
+    90: "#5C0F0F",
+    80: "#8B1A1A",
+    70: "#B32424",
+    60: "#DC2626",
+    50: "#EF4444",
+    40: "#F87171",
+    30: "#FCA5A5",
+    20: "#FECACA",
+    10: "#FEE2E2", // Lightest
+  },
+
+  /**
+   * Calm Blue - Trust & stability
+   * Use for: Information, links, calming elements
+   */
+  blue: {
+    100: "#0A1929", // Darkest
+    90: "#0F2942",
+    80: "#1E3A5F",
+    70: "#2E4F7C",
+    60: "#3B82F6",
+    50: "#60A5FA",
+    40: "#93C5FD",
+    30: "#BFDBFE",
+    20: "#DBEAFE",
+    10: "#EFF6FF", // Lightest
+  },
+
+  /**
+   * Nurture Pink - Compassion & care
+   * Use for: Emotional support, gentle actions
+   */
+  pink: {
+    100: "#2E0A1F", // Darkest
+    90: "#4A0F33",
+    80: "#6B1A47",
+    70: "#9D2965",
+    60: "#DB2777",
+    50: "#EC4899",
+    40: "#F472B6",
+    30: "#F9A8D4",
+    20: "#FBCFE8",
+    10: "#FCE7F3", // Lightest
+  },
+
+  /**
+   * Mindful Teal - Focus & clarity
+   * Use for: Meditation, focus features, clarity
+   */
+  teal: {
+    100: "#042F2E", // Darkest
+    90: "#0F4C4A",
+    80: "#115E59",
+    70: "#0D9488",
+    60: "#14B8A6",
+    50: "#2DD4BF",
+    40: "#5EEAD4",
+    30: "#99F6E4",
+    20: "#CCFBF1",
+    10: "#F0FDFA", // Lightest
+  },
+
+  /**
+   * Insight Indigo - Depth & understanding
+   * Use for: Analysis, insights, deep features
+   */
+  indigo: {
+    100: "#0F1433", // Darkest
+    90: "#1E2252",
+    80: "#2E3370",
+    70: "#4338CA",
+    60: "#4F46E5",
+    50: "#6366F1",
+    40: "#818CF8",
+    30: "#A5B4FC",
+    20: "#C7D2FE",
+    10: "#E0E7FF", // Lightest
+  },
+
   // Semantic colors mapped to design system
   semantic: {
     // Brand

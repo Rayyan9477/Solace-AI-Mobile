@@ -3,6 +3,7 @@
 dist/
 web-build/
 .next/
+test-results
 
 # Dependencies
 node_modules/

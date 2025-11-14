@@ -24,7 +24,7 @@ import {
 } from "../../src/shared/components/atoms/forms/MentalHealthForms";
 import KeyboardAwareScrollView, {
   KeyboardAwareInput,
-} from "../../src/shared/components/common/KeyboardAwareScrollView";
+} from "../../src/shared/components/atoms/layout/KeyboardAwareScrollView";
 
 // Import utilities
 import {

@@ -15,7 +15,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Animated } from "react-native";
 
-import MoodCheckIn from "../../../src/components/dashboard/MoodCheckIn";
+import MoodCheckIn from "../../../src/features/dashboard/components/MoodCheckIn";
 import { ThemeProvider } from "../../../src/shared/theme/ThemeContext";
 
 // Mock dependencies
