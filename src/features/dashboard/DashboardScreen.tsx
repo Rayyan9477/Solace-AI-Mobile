@@ -1,11 +1,13 @@
 /**
  * Dashboard Screen - Main Mental Health Dashboard
  * Based on ui-designs/Dark-mode/Home & Mental Health Score.png
+ * Enhanced with accessible components and improved styling
  */
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
 import { useResponsive } from "@shared/hooks/useResponsive";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from "react";
 import {
   View,
@@ -219,8 +221,17 @@ export const DashboardScreen = () => {
                   By You · 😊 Happy
                 </Text>
               </View>
-              <TouchableOpacity style={styles.searchButton}>
-                <Text style={{ fontSize: 20 }}>🔍</Text>
+              <TouchableOpacity 
+                style={styles.searchButton}
+                accessibilityRole="button"
+                accessibilityLabel="Search - Find resources, articles, and help"
+                accessibilityHint="Double tap to open search"
+              >
+                <MaterialCommunityIcons 
+                  name="magnify" 
+                  size={24} 
+                  color={theme.colors.text.primary} 
+                />
               </TouchableOpacity>
             </View>
 

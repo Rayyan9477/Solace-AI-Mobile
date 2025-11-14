@@ -111,6 +111,7 @@ import { SleepQualityScreen, StressManagementScreen } from "@features/wellness";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 // Theme import
 import { useTheme } from "@theme/ThemeProvider";
@@ -172,9 +173,16 @@ const MainTabs = () => {
           tabBarStyle: {
             backgroundColor: theme.colors.background?.secondary || "#FFFFFF",
             borderTopColor: theme.colors.border?.light || "#E2E8F0",
+            height: 60,
+            paddingBottom: 8,
+            paddingTop: 8,
           },
           tabBarActiveTintColor: theme.colors.brown?.[70] || "#704A33",
           tabBarInactiveTintColor: theme.colors.text?.tertiary || "#A0AEC0",
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: '600',
+          },
         }}
       >
         <Tab.Screen
@@ -182,6 +190,14 @@ const MainTabs = () => {
           component={DashboardScreen}
           options={{
             tabBarLabel: "Home",
+            tabBarIcon: ({ color, size, focused }) => (
+              <MaterialCommunityIcons 
+                name={focused ? "home" : "home-outline"} 
+                size={size} 
+                color={color} 
+              />
+            ),
+            tabBarAccessibilityLabel: "Navigate to Home - View your mental health dashboard and overview",
           }}
         />
         <Tab.Screen
@@ -189,6 +205,14 @@ const MainTabs = () => {
           component={MoodScreen}
           options={{
             tabBarLabel: isJest ? "Mood Tab" : "Mood",
+            tabBarIcon: ({ color, size, focused }) => (
+              <MaterialCommunityIcons 
+                name={focused ? "emoticon-happy" : "emoticon-happy-outline"} 
+                size={size} 
+                color={color} 
+              />
+            ),
+            tabBarAccessibilityLabel: "Navigate to Mood - Track and analyze your emotional well-being",
           }}
         />
         <Tab.Screen
@@ -196,6 +220,14 @@ const MainTabs = () => {
           component={ChatScreen}
           options={{
             tabBarLabel: isJest ? "Chat Tab" : "Chat",
+            tabBarIcon: ({ color, size, focused }) => (
+              <MaterialCommunityIcons 
+                name={focused ? "chat" : "chat-outline"} 
+                size={size} 
+                color={color} 
+              />
+            ),
+            tabBarAccessibilityLabel: "Navigate to Chat - Talk with your AI therapy companion",
           }}
         />
         <Tab.Screen
@@ -203,6 +235,14 @@ const MainTabs = () => {
           component={JournalListScreen}
           options={{
             tabBarLabel: isJest ? "Journal Tab" : "Journal",
+            tabBarIcon: ({ color, size, focused }) => (
+              <MaterialCommunityIcons 
+                name={focused ? "book-open-page-variant" : "book-open-page-variant-outline"} 
+                size={size} 
+                color={color} 
+              />
+            ),
+            tabBarAccessibilityLabel: "Navigate to Journal - Write and review your personal entries",
           }}
         />
         <Tab.Screen
@@ -210,6 +250,14 @@ const MainTabs = () => {
           component={MindfulHoursScreen}
           options={{
             tabBarLabel: isJest ? "Mindfulness Tab" : "Mindfulness",
+            tabBarIcon: ({ color, size, focused }) => (
+              <MaterialCommunityIcons 
+                name={focused ? "meditation" : "meditation"} 
+                size={size} 
+                color={color} 
+              />
+            ),
+            tabBarAccessibilityLabel: "Navigate to Mindfulness - Practice meditation and breathing exercises",
           }}
         />
         <Tab.Screen
@@ -217,6 +265,14 @@ const MainTabs = () => {
           component={ProfileSettingsScreen}
           options={{
             tabBarLabel: isJest ? "Profile Tab" : "Profile",
+            tabBarIcon: ({ color, size, focused }) => (
+              <MaterialCommunityIcons 
+                name={focused ? "account-circle" : "account-circle-outline"} 
+                size={size} 
+                color={color} 
+              />
+            ),
+            tabBarAccessibilityLabel: "Navigate to Profile - Manage your account settings and preferences",
           }}
         />
       </Tab.Navigator>

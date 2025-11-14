@@ -10,6 +10,7 @@ import {
   Dimensions,
   AccessibilityInfo,
   Platform,
+  ViewStyle,
 } from "react-native";
 import Svg, {
   Circle,
@@ -17,17 +18,28 @@ import Svg, {
   LinearGradient as SvgGradient,
   Stop,
 } from "react-native-svg";
+import { spacing, borderRadius, elevation } from "@shared/theme/spacing";
+import { typography } from "@shared/theme/typography";
 
-// Mock theme constants
-const spacing = { sm: 8, md: 16, lg: 24 };
-const borderRadius = { sm: 4, md: 8, lg: 12 };
-const shadows = { sm: { elevation: 2 }, md: { elevation: 4 } };
-const typography = { fontSize: { sm: 12, md: 16, lg: 20 } };
+interface MentalHealthScoreWidgetProps {
+  score?: number;
+  size?: number;
+  variant?: "default" | "compact" | "minimal" | "detailed";
+  animated?: boolean;
+  onPress?: () => void;
+  showDescription?: boolean;
+  showTrend?: boolean;
+  trend?: "up" | "down" | "stable";
+  testID?: string;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
+  style?: ViewStyle;
+}
 
 const { width } = Dimensions.get("window");
 
 // Score range mapping for emotional states
-const getScoreState = (score) => {
+const getScoreState = (score: number) => {
   if (score >= 90)
     return {
       state: "Excellent",
@@ -78,7 +90,7 @@ const getScoreState = (score) => {
   };
 };
 
-const MentalHealthScoreWidget = ({
+const MentalHealthScoreWidget: React.FC<MentalHealthScoreWidgetProps> = ({
   score = 80,
   size = 160,
   variant = "default", // default, compact, minimal, detailed
@@ -91,7 +103,6 @@ const MentalHealthScoreWidget = ({
   accessibilityLabel,
   accessibilityHint,
   style,
-  ...props
 }) => {
   const { theme } = useTheme();
   const animatedValue = useRef(new Animated.Value(0)).current;
@@ -155,13 +166,13 @@ const MentalHealthScoreWidget = ({
   const getVariantStyles = () => {
     switch (variant) {
       case "compact":
-        return { size: size * 0.75, fontSize: typography.sizes.lg };
+        return { size: size * 0.75, fontSize: typography.h3.fontSize };
       case "minimal":
-        return { size: size * 0.6, fontSize: typography.sizes.base };
+        return { size: size * 0.6, fontSize: typography.body.fontSize };
       case "detailed":
-        return { size: size * 1.25, fontSize: typography.sizes["2xl"] };
+        return { size: size * 1.25, fontSize: typography.h1.fontSize };
       default:
-        return { size, fontSize: typography.sizes.xl };
+        return { size, fontSize: typography.h2.fontSize };
     }
   };
 
@@ -206,15 +217,15 @@ const MentalHealthScoreWidget = ({
     if (!showTrend) return null;
 
     const trendIcons = {
-      up: "chevron-up",
-      down: "chevron-down",
-      stable: "minus",
-    };
+      up: "ChevronUp",
+      down: "ChevronDown",
+      stable: "ArrowForward", // Using ArrowForward as a substitute for minus/stable
+    } as const;
 
     const trendColors = {
-      up: theme.colors.therapeutic.nurturing[500],
-      down: theme.colors.therapeutic.empathy[500],
-      stable: theme.colors.therapeutic.calm[500],
+      up: theme.colors.green[60],
+      down: theme.colors.orange[60],
+      stable: theme.colors.brown[60],
     };
 
     return (
@@ -223,6 +234,7 @@ const MentalHealthScoreWidget = ({
           name={trendIcons[trend]}
           size={16}
           color={trendColors[trend]}
+          style={{}}
         />
       </View>
     );
@@ -247,18 +259,17 @@ const MentalHealthScoreWidget = ({
         style={[
           styles.touchable,
           {
-            width: variantStyles.size + spacing[8],
+            width: variantStyles.size + spacing.sm,
             height:
-              variantStyles.size + (showDescription ? spacing[16] : spacing[8]),
+              variantStyles.size + (showDescription ? spacing.md : spacing.sm),
           },
-          shadows.md,
+          elevation.md,
         ]}
         testID={testID}
         accessibilityLabel={defaultAccessibilityLabel}
         accessibilityHint={defaultAccessibilityHint}
         accessibilityRole="button"
         accessible
-        {...props}
       >
         <View
           style={[
@@ -302,7 +313,7 @@ const MentalHealthScoreWidget = ({
           {showDescription && variant !== "minimal" && (
             <View style={styles.descriptionContainer}>
               {variant === "detailed" && (
-                <Text style={[styles.emoji, { fontSize: typography.sizes.xl }]}>
+                <Text style={[styles.emoji, { fontSize: typography.h2.fontSize }]}>
                   {scoreState.emoji}
                 </Text>
               )}
@@ -314,8 +325,8 @@ const MentalHealthScoreWidget = ({
                     color: theme.colors.text.primary,
                     fontSize:
                       variant === "compact"
-                        ? typography.sizes.sm
-                        : typography.sizes.base,
+                        ? typography.bodySmall.fontSize
+                        : typography.body.fontSize,
                   },
                 ]}
               >
@@ -350,7 +361,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.xl,
     alignItems: "center",
     justifyContent: "center",
-    padding: spacing[4],
+    padding: spacing.xs,
   },
   content: {
     alignItems: "center",
@@ -367,48 +378,48 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   scoreText: {
-    fontWeight: typography.weights.bold,
-    lineHeight: typography.lineHeights.tight,
+    fontWeight: "700",
+    lineHeight: typography.h1.lineHeight,
   },
   scoreLabel: {
-    fontSize: typography.sizes.xs,
-    fontWeight: typography.weights.medium,
-    marginTop: spacing[1],
+    fontSize: typography.caption.fontSize,
+    fontWeight: "500",
+    marginTop: spacing.xs / 2,
   },
   trendContainer: {
     position: "absolute",
-    top: -spacing[2],
-    right: -spacing[2],
+    top: -spacing.xs / 2,
+    right: -spacing.xs / 2,
     backgroundColor: "#FFFFFF",
     borderRadius: borderRadius.full,
-    padding: spacing[1],
-    ...shadows.sm,
+    padding: spacing.xs / 2,
+    ...elevation.sm,
   },
   descriptionContainer: {
     alignItems: "center",
-    marginTop: spacing[4],
+    marginTop: spacing.xs,
   },
   emoji: {
-    marginBottom: spacing[1],
+    marginBottom: spacing.xs / 2,
   },
   stateText: {
-    fontWeight: typography.weights.semiBold,
+    fontWeight: "600",
     textAlign: "center",
   },
   descriptionText: {
-    fontSize: typography.sizes.xs,
+    fontSize: typography.caption.fontSize,
     textAlign: "center",
-    marginTop: spacing[1],
+    marginTop: spacing.xs / 2,
     maxWidth: width * 0.6,
   },
 });
 
 // Variant exports for convenience
-export const CompactMentalHealthScoreWidget = (props) => (
+export const CompactMentalHealthScoreWidget: React.FC<Omit<MentalHealthScoreWidgetProps, 'variant' | 'size'>> = (props) => (
   <MentalHealthScoreWidget {...props} variant="compact" size={120} />
 );
 
-export const MinimalMentalHealthScoreWidget = (props) => (
+export const MinimalMentalHealthScoreWidget: React.FC<Omit<MentalHealthScoreWidgetProps, 'variant' | 'size' | 'showDescription'>> = (props) => (
   <MentalHealthScoreWidget
     {...props}
     variant="minimal"
@@ -417,7 +428,7 @@ export const MinimalMentalHealthScoreWidget = (props) => (
   />
 );
 
-export const DetailedMentalHealthScoreWidget = (props) => (
+export const DetailedMentalHealthScoreWidget: React.FC<Omit<MentalHealthScoreWidgetProps, 'variant' | 'size' | 'showTrend'>> = (props) => (
   <MentalHealthScoreWidget {...props} variant="detailed" size={200} showTrend />
 );
 
