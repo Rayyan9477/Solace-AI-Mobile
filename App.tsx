@@ -27,6 +27,7 @@ import { APP_CONFIG } from "./src/shared/constants";
 import { StatusBar, SplashScreen } from "./src/shared/expo";
 import { logger } from "./src/shared/utils/logger";
 import { platform } from "./src/shared/utils/platform";
+import { ErrorBoundary } from "./src/shared/components/ErrorBoundary";
 
 // App modules
 // Store providers are applied inside RefactoredAppProvider/AppProvider
@@ -143,13 +144,23 @@ const App = () => {
   logger.debug("App component rendering");
 
   return (
-    <AppRoot>
-      <RefactoredAppProvider>
-        <NavigationWrapper>
-          <AppNavigator />
-        </NavigationWrapper>
-      </RefactoredAppProvider>
-    </AppRoot>
+    <ErrorBoundary
+      showDetails={__DEV__}
+      onError={(error, errorInfo) => {
+        logger.error("Application error caught by ErrorBoundary:", {
+          error: error.toString(),
+          errorInfo: errorInfo.componentStack,
+        });
+      }}
+    >
+      <AppRoot>
+        <RefactoredAppProvider>
+          <NavigationWrapper>
+            <AppNavigator />
+          </NavigationWrapper>
+        </RefactoredAppProvider>
+      </AppRoot>
+    </ErrorBoundary>
   );
 };
 

@@ -11,6 +11,10 @@ import { useResponsive } from "@shared/hooks/useResponsive";
 import rateLimiter from "@shared/utils/rateLimiter";
 import { useTheme } from "@theme/ThemeProvider";
 import { LinearGradient } from "expo-linear-gradient";
+import mockAuthService from "@shared/services/mockAuthService";
+import tokenService from "@app/services/tokenService";
+import secureStorage from "@app/services/secureStorage";
+import { GreenCurvedHeader } from "./components/GreenCurvedHeader";
 import React, { useState } from "react";
 import {
   View,
@@ -21,10 +25,10 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   StatusBar,
   ScrollView,
 } from "react-native";
+import { showAlert } from "@shared/utils/alert";
 
 export const LoginScreen = ({ navigation }: any) => {
   const { theme, isDark } = useTheme();
@@ -200,15 +204,15 @@ export const LoginScreen = ({ navigation }: any) => {
 
   const validateForm = () => {
     if (!email.trim()) {
-      Alert.alert("Error", "Please enter your email address");
+      showAlert("Error", "Please enter your email address", [{ text: "OK" }]);
       return false;
     }
     if (!password.trim()) {
-      Alert.alert("Error", "Please enter your password");
+      showAlert("Error", "Please enter your password", [{ text: "OK" }]);
       return false;
     }
     if (!/\S+@\S+\.\S+/.test(email)) {
-      Alert.alert("Error", "Please enter a valid email address");
+      showAlert("Error", "Please enter a valid email address", [{ text: "OK" }]);
       return false;
     }
     return true;
@@ -224,7 +228,7 @@ export const LoginScreen = ({ navigation }: any) => {
     );
 
     if (!rateLimit.allowed) {
-      Alert.alert(
+      showAlert(
         "Too Many Attempts",
         `You have exceeded the maximum login attempts. Please try again in ${rateLimit.waitTime} seconds.`,
         [{ text: "OK" }],
@@ -232,10 +236,42 @@ export const LoginScreen = ({ navigation }: any) => {
       return;
     }
 
-    const result = await dispatch((secureLogin as any)({ email, password }));
-
-    if (result.type === "auth/secureLogin/fulfilled") {
+    setIsLoading(true);
+    try {
+      // Use mock auth service to login user
+      const response = await mockAuthService.login(email, password);
+      
+      // Store tokens using token service
+      await tokenService.storeTokens({
+        access_token: response.access_token,
+        refresh_token: response.refresh_token,
+        expires_in: response.expires_in,
+      });
+      
+      // Store user profile securely
+      await secureStorage.storeSecureData("user_profile", response.user, {
+        requiresAuthentication: true,
+      });
+      
+      // Manually dispatch auth state (since we're bypassing Redux thunk)
+      dispatch({
+        type: 'auth/secureLogin/fulfilled',
+        payload: {
+          user: response.user,
+          token: response.access_token,
+        },
+      });
+      
       rateLimiter.reset(`login:${email.toLowerCase()}`);
+      showAlert("Success", `Welcome back, ${response.user.name}!`, [{ text: "OK" }]);
+    } catch (error: any) {
+      showAlert(
+        "Login Failed",
+        error.message || "Invalid email or password. Please try again.",
+        [{ text: "OK" }],
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -264,6 +300,7 @@ export const LoginScreen = ({ navigation }: any) => {
           >
             <View style={styles.innerContainer}>
               <View style={styles.contentWrapper}>
+                <GreenCurvedHeader height={isWeb ? 180 : 200} />
                 <View style={styles.header}>
                   <View style={styles.logoContainer}>
                     <FreudLogo

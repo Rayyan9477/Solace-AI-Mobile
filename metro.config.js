@@ -14,6 +14,7 @@ config.resolver.sourceExts.push('ts', 'tsx');
 config.resolver.platforms = ['native', 'ios', 'android', 'web'];
 
 // Ensure proper module resolution for shared components
+// NOTE: @expo alias removed to avoid conflicts with @expo/* packages from node_modules
 config.resolver.alias = {
   '@': './src',
   '@shared': './src/shared',
@@ -21,7 +22,6 @@ config.resolver.alias = {
   '@components': './src/shared/ui',
   '@utils': './src/shared/utils',
   '@theme': './src/shared/theme',
-  '@expo': './src/shared/expo',
   '@app': './src/app',
   '@ui': './src/ui',
 };

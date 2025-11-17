@@ -464,6 +464,48 @@ const authAPI = {
 
     return await response.json();
   },
+
+  /**
+   * Verify MFA code
+   * @param {Object} mfaData - MFA verification data
+   * @returns {Promise<Object>} MFA verification response
+   */
+  async verifyMfa(mfaData: { mfaToken: string; code: string }): Promise<any> {
+    const response = await fetchWithTimeout(
+      `${API_CONFIG.baseURL}/auth/verify-mfa`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(mfaData),
+      },
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new AuthAPIError(
+        errorData.message || "MFA verification failed",
+        response.status,
+        "/auth/verify-mfa",
+      );
+    }
+
+    const data = await response.json();
+
+    // Store tokens after successful MFA
+    if (data.access_token) {
+      await tokenService.storeTokens({
+        accessToken: data.access_token,
+        refreshToken: data.refresh_token,
+        expiresAt: Date.now() + (data.expires_in || 3600) * 1000,
+      });
+    }
+
+    return {
+      user: data.user,
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+    };
+  },
 };
 
 /**

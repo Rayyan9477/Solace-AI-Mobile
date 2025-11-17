@@ -21,14 +21,19 @@ import encryptionTransform from "./transforms/encryptionTransform";
 declare const __DEV__: boolean;
 
 // Initialize encryption service on app startup
+let encryptionInitialized = false;
 (async () => {
   try {
     await encryptionService.initialize();
-    logger.info("Encryption service initialized - HIPAA compliant");
+    encryptionInitialized = true;
+    logger.info("Encryption service initialized successfully");
   } catch (error) {
     logger.error("Encryption service initialization failed:", error);
+    logger.warn("App will continue without encryption");
   }
 })();
+
+export { encryptionInitialized };
 
 const SESSION_TIMEOUT = 3600 * 1000;
 const INACTIVITY_TIMEOUT = 15 * 60 * 1000;

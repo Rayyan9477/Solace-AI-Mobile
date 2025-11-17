@@ -5,6 +5,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
+import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
 import {
   View,
@@ -18,7 +19,7 @@ import {
 interface SocialProvider {
   id: string;
   name: string;
-  icon: string;
+  iconName: string;
   color: string;
   bgColor: string;
 }
@@ -31,28 +32,28 @@ export const SocialLoginScreen = () => {
     {
       id: "google",
       name: "Continue with Google",
-      icon: "🔍",
+      iconName: "google",
       color: "#FFFFFF",
       bgColor: "#4285F4",
     },
     {
       id: "apple",
       name: "Continue with Apple",
-      icon: "",
+      iconName: "apple",
       color: "#FFFFFF",
       bgColor: "#000000",
     },
     {
       id: "facebook",
       name: "Continue with Facebook",
-      icon: "📘",
+      iconName: "facebook",
       color: "#FFFFFF",
       bgColor: "#1877F2",
     },
     {
       id: "microsoft",
       name: "Continue with Microsoft",
-      icon: "🪟",
+      iconName: "windows",
       color: "#FFFFFF",
       bgColor: "#00A4EF",
     },
@@ -142,7 +143,6 @@ export const SocialLoginScreen = () => {
       position: "relative",
     },
     providerIcon: {
-      fontSize: 24,
       position: "absolute",
       left: 20,
     },
@@ -259,7 +259,12 @@ export const SocialLoginScreen = () => {
                 accessibilityLabel={provider.name}
                 accessibilityRole="button"
               >
-                <Text style={styles.providerIcon}>{provider.icon}</Text>
+                <FontAwesome
+                  name={provider.iconName as any}
+                  size={20}
+                  color={provider.color}
+                  style={styles.providerIcon}
+                />
                 <Text style={[styles.providerText, { color: provider.color }]}>
                   {provider.name}
                 </Text>

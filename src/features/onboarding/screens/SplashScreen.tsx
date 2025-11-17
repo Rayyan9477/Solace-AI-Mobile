@@ -5,6 +5,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
+import { FreudDiamondLogo } from "@components/icons";
 import React, { useEffect, useRef } from "react";
 import { View, Text, StyleSheet, SafeAreaView, Animated } from "react-native";
 
@@ -43,10 +44,7 @@ export const SplashScreen = () => {
     logoContainer: {
       alignItems: "center",
       marginBottom: 40,
-    },
-    logo: {
-      fontSize: 80,
-      marginBottom: 20,
+      gap: 20,
     },
     appName: {
       fontSize: 32,
@@ -81,14 +79,14 @@ export const SplashScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Animated.View style={[styles.logoContainer, { opacity: fadeAnim }]}>
-        <Text style={styles.logo}>🧠</Text>
-        <Text style={styles.appName}>Solace AI</Text>
+        <FreudDiamondLogo size={80} color={theme.colors.brown["50"]} />
+        <Text style={styles.appName}>freud.ai</Text>
         <Text style={styles.tagline}>Your Mental Wellness Companion</Text>
       </Animated.View>
 
       <View style={styles.bottomSection}>
         <Text style={styles.version}>Version 2.1.0</Text>
-        <Text style={styles.copyright}>© 2024 Solace AI Team</Text>
+        <Text style={styles.copyright}>© 2024 freud.ai</Text>
       </View>
     </SafeAreaView>
   );

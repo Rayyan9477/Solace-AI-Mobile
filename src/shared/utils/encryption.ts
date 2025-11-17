@@ -3,6 +3,7 @@
  * HIPAA-compliant AES-256 encryption for mental health data
  */
 
+import { Platform } from "react-native";
 import CryptoJS from "crypto-js";
 import * as Crypto from "expo-crypto";
 import * as SecureStore from "expo-secure-store";
@@ -34,9 +35,32 @@ class EncryptionService {
   /**
    * Initialize encryption key from secure storage or generate new one
    * Uses Expo SecureStore (backed by iOS Keychain / Android Keystore)
+   * On web, falls back to sessionStorage with warning
    */
   async initialize(): Promise<void> {
     try {
+      // Web platform fallback - use sessionStorage (less secure but functional)
+      if (Platform.OS === 'web') {
+        logger.warn('Running on web - using sessionStorage instead of SecureStore (less secure)');
+        
+        let key = sessionStorage.getItem(this.KEY_NAME);
+        
+        if (!key) {
+          // Generate key for web session
+          const randomBytes = await Crypto.getRandomBytesAsync(32);
+          key = Array.from(randomBytes)
+            .map((b) => b.toString(16).padStart(2, '0'))
+            .join('');
+          
+          sessionStorage.setItem(this.KEY_NAME, key);
+        }
+        
+        this.encryptionKey = key;
+        logger.info('Encryption service initialized for web platform');
+        return;
+      }
+
+      // Native platforms - use SecureStore
       let key = await SecureStore.getItemAsync(this.KEY_NAME);
 
       if (!key) {
@@ -52,9 +76,11 @@ class EncryptionService {
       }
 
       this.encryptionKey = key;
+      logger.info('Encryption service initialized for native platform');
     } catch (error) {
       logger.error("Encryption key initialization failed:", error);
-      throw new Error("Failed to initialize encryption");
+      // Don't throw - allow app to continue with unencrypted storage as fallback
+      logger.warn('Continuing without encryption - data will be stored unencrypted');
     }
   }
 
@@ -210,7 +236,11 @@ class EncryptionService {
    */
   async deleteKey(): Promise<void> {
     try {
-      await SecureStore.deleteItemAsync(this.KEY_NAME);
+      if (Platform.OS === 'web') {
+        sessionStorage.removeItem(this.KEY_NAME);
+      } else {
+        await SecureStore.deleteItemAsync(this.KEY_NAME);
+      }
       this.encryptionKey = null;
     } catch (error) {
       logger.error("Key deletion failed:", error);

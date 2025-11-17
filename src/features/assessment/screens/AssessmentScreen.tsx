@@ -19,6 +19,7 @@ import {
   StatusBar,
   ScrollView,
   Dimensions,
+  TextInput,
 } from "react-native";
 
 const { width } = Dimensions.get("window");
@@ -26,13 +27,13 @@ const { width } = Dimensions.get("window");
 const QUESTIONS = [
   {
     id: 1,
-    question: "What's your health goal for today?",
+    question: "What's your primary mental health concern?",
     type: "multi-select",
     options: [
-      "Improve my fitness",
-      "Boost mental clarity",
-      "Enhance my sleep",
-      "Learn to be kinder to myself",
+      "Anxiety",
+      "Depression",
+      "Stress",
+      "Relationship issues",
     ],
   },
   {
@@ -61,19 +62,32 @@ const QUESTIONS = [
     question: "How would you describe your mood?",
     type: "mood-select",
     options: [
+      { label: "Very Sad", emoji: "😭", color: "#E07A5F" },
       { label: "Sad", emoji: "😢", color: "#E8A872" },
       { label: "Neutral", emoji: "😐", color: "#B8976B" },
       { label: "Happy", emoji: "😊", color: "#8FBC8F" },
+      { label: "Very Happy", emoji: "😄", color: "#6BBF59" },
     ],
   },
   {
     id: 6,
+    question: "What triggers your stress?",
+    type: "multi-select",
+    options: [
+      "Work pressure",
+      "Relationships",
+      "Financial issues",
+      "Health concerns",
+    ],
+  },
+  {
+    id: 7,
     question: "Have you sought professional help before?",
     type: "illustration-select",
     options: ["Yes", "No"],
   },
   {
-    id: 7,
+    id: 8,
     question: "Are you experiencing any physical distress?",
     type: "multi-select",
     options: [
@@ -83,7 +97,7 @@ const QUESTIONS = [
     ],
   },
   {
-    id: 8,
+    id: 9,
     question: "How would you rate your sleep quality?",
     type: "rating-slider",
     min: 1,
@@ -91,44 +105,39 @@ const QUESTIONS = [
     labels: ["Poor", "Fair", "Good", "Excellent"],
   },
   {
-    id: 9,
+    id: 10,
     question: "Are you taking any medications?",
     type: "single-select",
     options: ["Yes", "No"],
   },
   {
-    id: 10,
+    id: 11,
     question: "Please specify your medications:",
-    type: "multi-select",
-    options: [
-      "Antidepressants",
-      "Anti-anxiety",
-      "Mood stabilizers",
-      "Antipsychotics",
-    ],
-    conditional: (answers: any) => answers[9] === "Yes",
+    type: "text-input",
+    placeholder: "e.g., Prozac, Xanax, etc.",
+    conditional: (answers: any) => answers[10] === "Yes",
   },
   {
-    id: 11,
+    id: 12,
     question: "Do you have other mental health symptoms?",
     type: "multi-select",
     options: ["Anxiety", "Depression", "Panic attacks", "Insomnia"],
   },
   {
-    id: 12,
+    id: 13,
     question: "How would you rate your stress level?",
     type: "stress-slider",
     min: 1,
     max: 5,
   },
   {
-    id: 13,
+    id: 14,
     question: "AI Sound Analysis",
     type: "sound-analysis",
     subtitle: "Record a short voice sample for AI analysis",
   },
   {
-    id: 14,
+    id: 15,
     question: "Expression Analysis",
     type: "expression-analysis",
     subtitle: "Let AI analyze your facial expressions",
@@ -142,6 +151,7 @@ export const AssessmentScreen = () => {
   const [answers, setAnswers] = useState<Record<number, any>>({});
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [sliderValue, setSliderValue] = useState(50);
+  const [textInput, setTextInput] = useState("");
 
   const question = QUESTIONS[currentQuestion];
   const progress = ((currentQuestion + 1) / QUESTIONS.length) * 100;
@@ -295,6 +305,24 @@ export const AssessmentScreen = () => {
       fontSize: 12,
       color: "#6B5444",
     },
+    textInputContainer: {
+      marginTop: 20,
+    },
+    textInput: {
+      backgroundColor: "rgba(45, 27, 14, 0.5)",
+      borderWidth: 1.5,
+      borderColor: "#6B5444",
+      borderRadius: 24,
+      paddingVertical: 16,
+      paddingHorizontal: 20,
+      fontSize: 16,
+      color: "#FFFFFF",
+      fontWeight: "500",
+    },
+    textInputFocused: {
+      borderColor: "#8FBC8F",
+      backgroundColor: "rgba(143, 188, 143, 0.1)",
+    },
     bottomContainer: {
       paddingHorizontal: 24,
       paddingBottom: 32,
@@ -350,13 +378,18 @@ export const AssessmentScreen = () => {
   const handleContinue = (singleAnswer?: string) => {
     const answer =
       singleAnswer ||
-      (question.type === "multi-select" ? selectedOptions : sliderValue);
+      (question.type === "multi-select"
+        ? selectedOptions
+        : question.type === "text-input"
+          ? textInput
+          : sliderValue);
     setAnswers({ ...answers, [question.id]: answer });
 
     if (currentQuestion < QUESTIONS.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedOptions([]);
       setSliderValue(50);
+      setTextInput("");
     } else {
       // Navigate to results
       navigation.navigate("AssessmentResults" as never, { answers } as never);
@@ -369,6 +402,9 @@ export const AssessmentScreen = () => {
     }
     if (question.type === "single-select" || question.type === "mood-select") {
       return false; // Auto-advances
+    }
+    if (question.type === "text-input") {
+      return textInput.trim().length > 0;
     }
     return true;
   };
@@ -469,6 +505,22 @@ export const AssessmentScreen = () => {
                 ))}
               </View>
             )}
+          </View>
+        );
+
+      case "text-input":
+        return (
+          <View style={styles.textInputContainer}>
+            <TextInput
+              style={styles.textInput}
+              value={textInput}
+              onChangeText={setTextInput}
+              placeholder={question.placeholder || "Enter your answer..."}
+              placeholderTextColor="#6B5444"
+              multiline
+              numberOfLines={3}
+              textAlignVertical="top"
+            />
           </View>
         );
 

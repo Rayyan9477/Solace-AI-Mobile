@@ -9,6 +9,8 @@ import { useResponsive } from "@shared/hooks/useResponsive";
 import rateLimiter from "@shared/utils/rateLimiter";
 import { useTheme } from "@theme/ThemeProvider";
 import { LinearGradient } from "expo-linear-gradient";
+import mockAuthService from "@shared/services/mockAuthService";
+import { GreenCurvedHeader } from "./components/GreenCurvedHeader";
 import React, { useState } from "react";
 import {
   View,
@@ -19,10 +21,10 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   ScrollView,
   StatusBar,
 } from "react-native";
+import { showAlert } from "@shared/utils/alert";
 
 export const SignupScreen = ({ navigation }: any) => {
   const { theme, isDark } = useTheme();
@@ -243,20 +245,20 @@ export const SignupScreen = ({ navigation }: any) => {
 
   const validateForm = () => {
     if (!email.trim()) {
-      Alert.alert("Error", "Please enter your email address");
+      showAlert("Error", "Please enter your email address", [{ text: "OK" }]);
       return false;
     }
     if (!validateEmail(email)) {
       return false;
     }
     if (!password.trim()) {
-      Alert.alert("Error", "Please enter a password");
+      showAlert("Error", "Please enter a password", [{ text: "OK" }]);
       return false;
     }
 
     const passwordErrors = validatePassword(password);
     if (passwordErrors.length > 0) {
-      Alert.alert(
+      showAlert(
         "Password Too Weak",
         `Your password must include:\n• ${passwordErrors.join("\n• ")}`,
         [{ text: "OK" }],
@@ -265,7 +267,7 @@ export const SignupScreen = ({ navigation }: any) => {
     }
 
     if (password !== confirmPassword) {
-      Alert.alert("Error", "Passwords do not match");
+      showAlert("Error", "Passwords do not match", [{ text: "OK" }]);
       return false;
     }
     return true;
@@ -281,7 +283,7 @@ export const SignupScreen = ({ navigation }: any) => {
     );
 
     if (!rateLimit.allowed) {
-      Alert.alert(
+      showAlert(
         "Too Many Attempts",
         `You have exceeded the maximum signup attempts. Please try again in ${rateLimit.waitTime} seconds.`,
         [{ text: "OK" }],
@@ -291,18 +293,22 @@ export const SignupScreen = ({ navigation }: any) => {
 
     setIsLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Use mock auth service to register user
+      const response = await mockAuthService.register(email, password, email.split('@')[0]);
+      
       rateLimiter.reset(`signup:${email.toLowerCase()}`);
-      Alert.alert("Success", "Account created successfully!", [
+      
+      showAlert("Success", `Account created successfully! Welcome ${response.user.name}!`, [
         {
           text: "OK",
           onPress: () => navigation?.navigate?.("Login"),
         },
       ]);
     } catch (error: any) {
-      Alert.alert(
+      showAlert(
         "Signup Failed",
         error.message || "Failed to create account. Please try again.",
+        [{ text: "OK" }]
       );
     } finally {
       setIsLoading(false);
@@ -339,6 +345,7 @@ export const SignupScreen = ({ navigation }: any) => {
           >
             <View style={styles.innerContainer}>
               <View style={styles.contentWrapper}>
+                <GreenCurvedHeader height={isWeb ? 180 : 200} />
                 <View style={styles.header}>
                   <View style={styles.logoContainer}>
                     <FreudLogo
