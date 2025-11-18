@@ -25,12 +25,11 @@ interface MoodEntry {
 }
 
 const MOODS = [
-  { emoji: "😊", label: "Happy", color: "#22c55e" },
-  { emoji: "😔", label: "Sad", color: "#3b82f6" },
-  { emoji: "😰", label: "Anxious", color: "#f59e0b" },
-  { emoji: "😡", label: "Angry", color: "#ef4444" },
-  { emoji: "😴", label: "Tired", color: "#8b5cf6" },
-  { emoji: "😌", label: "Calm", color: "#10b981" },
+  { emoji: "😭", label: "Very sad", color: "#E07A5F" },
+  { emoji: "😢", label: "Sad", color: "#E8A872" },
+  { emoji: "😐", label: "Okay", color: "#B8976B" },
+  { emoji: "🙂", label: "Good", color: "#98B068" },
+  { emoji: "😁", label: "Happy", color: "#8FBC8F" },
 ];
 
 const INTENSITY_LEVELS = [1, 2, 3, 4, 5];

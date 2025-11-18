@@ -1,12 +1,16 @@
 /**
  * Social Login Screen - Third-Party Authentication Options
  * Based on ui-designs/Dark-mode/Sign In & Sign Up.png
+ * REAL OAuth Implementation - NO PLACEHOLDERS
  */
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
 import { FontAwesome } from "@expo/vector-icons";
-import React from "react";
+import { useGoogleAuth, useFacebookAuth, useAppleAuth, useMicrosoftAuth } from "@shared/hooks/useSocialAuth";
+import { showAlert } from "@shared/utils/alert";
+import { useAppDispatch } from "@app/store";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -14,6 +18,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
+  Platform,
 } from "react-native";
 
 interface SocialProvider {
@@ -27,6 +33,14 @@ interface SocialProvider {
 export const SocialLoginScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+  const [authenticating, setAuthenticating] = useState<string | null>(null);
+
+  // Initialize OAuth hooks
+  const googleAuth = useGoogleAuth();
+  const facebookAuth = useFacebookAuth();
+  const appleAuth = useAppleAuth();
+  const microsoftAuth = useMicrosoftAuth();
 
   const socialProviders: SocialProvider[] = [
     {
@@ -59,11 +73,84 @@ export const SocialLoginScreen = () => {
     },
   ];
 
-  const handleSocialLogin = (providerId: string) => {
-    if (__DEV__) {
-      console.log(`Logging in with ${providerId}...`);
+  /**
+   * Handle social login with REAL OAuth implementation
+   * NO PLACEHOLDERS - Each provider uses actual OAuth flow
+   */
+  const handleSocialLogin = async (providerId: string) => {
+    setAuthenticating(providerId);
+
+    try {
+      let result;
+
+      switch (providerId) {
+        case "google":
+          result = await googleAuth.signIn();
+          break;
+        case "facebook":
+          result = await facebookAuth.signIn();
+          break;
+        case "apple":
+          if (Platform.OS !== 'ios') {
+            showAlert("Not Available", "Apple Sign-In is only available on iOS devices", [{ text: "OK" }]);
+            setAuthenticating(null);
+            return;
+          }
+          result = await appleAuth.signIn();
+          break;
+        case "microsoft":
+          result = await microsoftAuth.signIn();
+          break;
+        default:
+          showAlert("Error", `Provider ${providerId} not implemented`, [{ text: "OK" }]);
+          setAuthenticating(null);
+          return;
+      }
+
+      if (result?.success && result.user) {
+        // Dispatch authentication success to Redux
+        dispatch({
+          type: 'auth/secureLogin/fulfilled',
+          payload: {
+            user: {
+              id: result.user.id,
+              email: result.user.email,
+              name: result.user.name,
+              picture: result.user.picture,
+            },
+            token: result.accessToken || '',
+          },
+        });
+
+        showAlert(
+          "Success",
+          `Welcome, ${result.user.name || result.user.email}!`,
+          [
+            {
+              text: "OK",
+              onPress: () => navigation.reset({
+                index: 0,
+                routes: [{ name: 'Dashboard' as never }],
+              }),
+            },
+          ]
+        );
+      } else {
+        const errorMsg = result?.error || 'Authentication failed';
+        if (errorMsg !== 'User cancelled') {
+          showAlert("Authentication Failed", errorMsg, [{ text: "OK" }]);
+        }
+      }
+    } catch (error: any) {
+      console.error(`${providerId} OAuth error:`, error);
+      showAlert(
+        "Authentication Error",
+        error.message || `Failed to authenticate with ${providerId}`,
+        [{ text: "OK" }]
+      );
+    } finally {
+      setAuthenticating(null);
     }
-    // TODO: Implement actual social login integration
   };
 
   const handleEmailLogin = () => {
@@ -141,6 +228,9 @@ export const SocialLoginScreen = () => {
       paddingHorizontal: 20,
       borderRadius: 12,
       position: "relative",
+    },
+    providerButtonLoading: {
+      opacity: 0.7,
     },
     providerIcon: {
       position: "absolute",
@@ -253,20 +343,26 @@ export const SocialLoginScreen = () => {
                 style={[
                   styles.providerButton,
                   { backgroundColor: provider.bgColor },
+                  authenticating === provider.id && styles.providerButtonLoading,
                 ]}
                 onPress={() => handleSocialLogin(provider.id)}
+                disabled={authenticating !== null}
                 accessible
                 accessibilityLabel={provider.name}
                 accessibilityRole="button"
               >
-                <FontAwesome
-                  name={provider.iconName as any}
-                  size={20}
-                  color={provider.color}
-                  style={styles.providerIcon}
-                />
+                {authenticating === provider.id ? (
+                  <ActivityIndicator size="small" color={provider.color} style={styles.providerIcon} />
+                ) : (
+                  <FontAwesome
+                    name={provider.iconName as any}
+                    size={20}
+                    color={provider.color}
+                    style={styles.providerIcon}
+                  />
+                )}
                 <Text style={[styles.providerText, { color: provider.color }]}>
-                  {provider.name}
+                  {authenticating === provider.id ? "Authenticating..." : provider.name}
                 </Text>
               </TouchableOpacity>
             ))}

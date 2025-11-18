@@ -15,6 +15,8 @@ import mockAuthService from "@shared/services/mockAuthService";
 import tokenService from "@app/services/tokenService";
 import secureStorage from "@app/services/secureStorage";
 import { GreenCurvedHeader } from "./components/GreenCurvedHeader";
+import { useGoogleAuth, useFacebookAuth, useMicrosoftAuth } from "@shared/hooks/useSocialAuth";
+import { FontAwesome } from "@shared/expo/vector-icons";
 import React, { useState } from "react";
 import {
   View,
@@ -34,10 +36,16 @@ export const LoginScreen = ({ navigation }: any) => {
   const { theme, isDark } = useTheme();
   const { isWeb, isMobile, getMaxContentWidth } = useResponsive();
   const dispatch = useAppDispatch();
-  const { isLoading } = useAppSelector((state) => (state as any).auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [authenticating, setAuthenticating] = useState<string | null>(null);
+
+  // Social auth hooks
+  const googleAuth = useGoogleAuth();
+  const facebookAuth = useFacebookAuth();
+  const microsoftAuth = useMicrosoftAuth();
 
   // Responsive values
   const maxWidth = getMaxContentWidth();
@@ -151,11 +159,28 @@ export const LoginScreen = ({ navigation }: any) => {
       fontWeight: "600",
       marginRight: 8,
     },
+    divider: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: 32,
+      marginBottom: 24,
+    },
+    dividerLine: {
+      flex: 1,
+      height: 1,
+      backgroundColor: theme.colors.brown[60],
+    },
+    dividerText: {
+      marginHorizontal: 16,
+      fontSize: 14,
+      fontWeight: "500",
+      color: theme.colors.brown[40],
+    },
     socialContainer: {
       flexDirection: "row",
       justifyContent: "center",
       gap: 16,
-      marginTop: 32,
+      marginTop: 0,
     },
     socialButton: {
       width: 48,
@@ -240,19 +265,19 @@ export const LoginScreen = ({ navigation }: any) => {
     try {
       // Use mock auth service to login user
       const response = await mockAuthService.login(email, password);
-      
+
       // Store tokens using token service
       await tokenService.storeTokens({
         access_token: response.access_token,
         refresh_token: response.refresh_token,
         expires_in: response.expires_in,
       });
-      
+
       // Store user profile securely
       await secureStorage.storeSecureData("user_profile", response.user, {
         requiresAuthentication: true,
       });
-      
+
       // Manually dispatch auth state (since we're bypassing Redux thunk)
       dispatch({
         type: 'auth/secureLogin/fulfilled',
@@ -261,7 +286,7 @@ export const LoginScreen = ({ navigation }: any) => {
           token: response.access_token,
         },
       });
-      
+
       rateLimiter.reset(`login:${email.toLowerCase()}`);
       showAlert("Success", `Welcome back, ${response.user.name}!`, [{ text: "OK" }]);
     } catch (error: any) {
@@ -272,6 +297,55 @@ export const LoginScreen = ({ navigation }: any) => {
       );
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSocialLogin = async (providerId: string) => {
+    setAuthenticating(providerId);
+    try {
+      let result;
+      switch (providerId) {
+        case "google":
+          result = await googleAuth.signIn();
+          break;
+        case "facebook":
+          result = await facebookAuth.signIn();
+          break;
+        case "microsoft":
+          result = await microsoftAuth.signIn();
+          break;
+      }
+
+      if (result?.success && result.user) {
+        // Store tokens
+        if (result.accessToken) {
+          await tokenService.storeTokens({
+            access_token: result.accessToken,
+            refresh_token: result.refreshToken || "",
+            expires_in: result.expiresIn || 3600,
+          });
+        }
+
+        // Dispatch auth state
+        dispatch({
+          type: "auth/secureLogin/fulfilled",
+          payload: {
+            user: result.user,
+            token: result.accessToken,
+          },
+        });
+
+        showAlert("Success", `Welcome, ${result.user.name || result.user.email}!`, [{ text: "OK" }]);
+        navigation.reset({ index: 0, routes: [{ name: "Dashboard" }] });
+      }
+    } catch (error: any) {
+      showAlert(
+        "Authentication Error",
+        error.message || "Failed to authenticate. Please try again.",
+        [{ text: "OK" }]
+      );
+    } finally {
+      setAuthenticating(null);
     }
   };
 
@@ -398,30 +472,56 @@ export const LoginScreen = ({ navigation }: any) => {
                     </Text>
                   </TouchableOpacity>
 
+                  {/* OR Divider */}
+                  <View style={styles.divider}>
+                    <View style={styles.dividerLine} />
+                    <Text style={styles.dividerText}>OR</Text>
+                    <View style={styles.dividerLine} />
+                  </View>
+
+                  {/* Social Login Buttons */}
                   <View style={styles.socialContainer}>
                     <TouchableOpacity
                       style={styles.socialButton}
+                      onPress={() => handleSocialLogin("facebook")}
+                      disabled={authenticating !== null}
                       accessible
                       accessibilityLabel="Sign in with Facebook"
                       accessibilityRole="button"
                     >
-                      <Text style={styles.socialIcon}>f</Text>
+                      <FontAwesome
+                        name="facebook-f"
+                        size={20}
+                        color={authenticating === "facebook" ? theme.colors.brown[40] : "#1877F2"}
+                      />
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.socialButton}
+                      onPress={() => handleSocialLogin("google")}
+                      disabled={authenticating !== null}
                       accessible
                       accessibilityLabel="Sign in with Google"
                       accessibilityRole="button"
                     >
-                      <Text style={styles.socialIcon}>G</Text>
+                      <FontAwesome
+                        name="google"
+                        size={20}
+                        color={authenticating === "google" ? theme.colors.brown[40] : "#DB4437"}
+                      />
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.socialButton}
+                      onPress={() => handleSocialLogin("microsoft")}
+                      disabled={authenticating !== null}
                       accessible
-                      accessibilityLabel="Sign in with Instagram"
+                      accessibilityLabel="Sign in with Microsoft"
                       accessibilityRole="button"
                     >
-                      <Text style={styles.socialIcon}>📷</Text>
+                      <FontAwesome
+                        name="windows"
+                        size={20}
+                        color={authenticating === "microsoft" ? theme.colors.brown[40] : "#00A4EF"}
+                      />
                     </TouchableOpacity>
                   </View>
 

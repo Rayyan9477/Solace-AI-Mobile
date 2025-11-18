@@ -7,6 +7,7 @@ import { MentalHealthIcon } from "@components/icons";
 import { FreudLogo } from "@components/icons/FreudIcons";
 import { useTheme } from "@theme/ThemeProvider";
 import { LinearGradient } from "expo-linear-gradient";
+import { showAlert } from "@shared/utils/alert";
 import React, { useState } from "react";
 import {
   View,
@@ -17,7 +18,6 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   StatusBar,
   ScrollView,
 } from "react-native";
@@ -25,7 +25,7 @@ import {
 type ResetMethod = "2fa" | "password" | "google";
 
 export const ForgotPasswordScreen = ({ navigation }: any) => {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const [selectedMethod, setSelectedMethod] = useState<ResetMethod>("2fa");
   const [isLoading, setIsLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
@@ -33,7 +33,7 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.isDark ? "#2D1B0E" : "#1A1108",
+      backgroundColor: isDark ? theme.colors.brown[90] : theme.colors.brown[80],
     },
     gradient: {
       flex: 1,
@@ -48,13 +48,13 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
       height: 44,
       borderRadius: 22,
       borderWidth: 1.5,
-      borderColor: "#6B5444",
+      borderColor: theme.colors.brown[60],
       justifyContent: "center",
       alignItems: "center",
     },
     content: {
       flex: 1,
-      backgroundColor: theme.isDark ? "#3D2817" : "#2D1B0E",
+      backgroundColor: isDark ? theme.colors.brown[80] : theme.colors.brown[70],
       borderTopLeftRadius: 32,
       borderTopRightRadius: 32,
       paddingTop: 48,
@@ -67,12 +67,12 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
     title: {
       fontSize: 32,
       fontWeight: "700",
-      color: "#FFFFFF",
+      color: theme.colors.brown[10],
       marginBottom: 12,
     },
     subtitle: {
       fontSize: 14,
-      color: "#B8A99A",
+      color: theme.colors.brown[30],
       marginBottom: 40,
       lineHeight: 20,
     },
@@ -83,27 +83,29 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
       flexDirection: "row",
       alignItems: "center",
       borderWidth: 1.5,
-      borderColor: "#6B5444",
+      borderColor: theme.colors.brown[60],
       borderRadius: 24,
-      backgroundColor: "rgba(45, 27, 14, 0.5)",
+      backgroundColor: isDark
+        ? `rgba(${parseInt(theme.colors.brown[80].slice(1, 3), 16)}, ${parseInt(theme.colors.brown[80].slice(3, 5), 16)}, ${parseInt(theme.colors.brown[80].slice(5, 7), 16)}, 0.5)`
+        : `rgba(45, 27, 14, 0.5)`,
       paddingHorizontal: 20,
       paddingVertical: 18,
     },
     methodButtonSelected: {
-      borderColor: "#8FBC8F",
-      backgroundColor: "rgba(143, 188, 143, 0.1)",
+      borderColor: theme.colors.green[50],
+      backgroundColor: `${theme.colors.green[50]}1A`,
     },
     methodIcon: {
       width: 48,
       height: 48,
       borderRadius: 24,
-      backgroundColor: "#8FBC8F",
+      backgroundColor: theme.colors.green[50],
       justifyContent: "center",
       alignItems: "center",
       marginRight: 16,
     },
     methodIconSelected: {
-      backgroundColor: "#6B9B6B",
+      backgroundColor: theme.colors.green[60],
     },
     methodContent: {
       flex: 1,
@@ -111,19 +113,19 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
     methodTitle: {
       fontSize: 16,
       fontWeight: "600",
-      color: "#FFFFFF",
+      color: theme.colors.brown[10],
       marginBottom: 4,
     },
     checkmark: {
       width: 24,
       height: 24,
       borderRadius: 12,
-      backgroundColor: "#8FBC8F",
+      backgroundColor: theme.colors.green[50],
       justifyContent: "center",
       alignItems: "center",
     },
     sendButton: {
-      backgroundColor: "#A67C52",
+      backgroundColor: theme.colors.brown[50],
       borderRadius: 24,
       paddingVertical: 16,
       alignItems: "center",
@@ -135,7 +137,7 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
       opacity: 0.5,
     },
     sendButtonText: {
-      color: "#FFFFFF",
+      color: theme.colors.brown[10],
       fontSize: 16,
       fontWeight: "600",
       marginRight: 8,
@@ -149,7 +151,7 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
       width: 200,
       height: 200,
       borderRadius: 100,
-      backgroundColor: "#B8976B",
+      backgroundColor: theme.colors.brown[40],
       justifyContent: "center",
       alignItems: "center",
       marginBottom: 32,
@@ -158,20 +160,20 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
       width: 120,
       height: 120,
       borderRadius: 60,
-      backgroundColor: "#8FBC8F",
+      backgroundColor: theme.colors.green[50],
       justifyContent: "center",
       alignItems: "center",
     },
     successTitle: {
       fontSize: 24,
       fontWeight: "700",
-      color: "#FFFFFF",
+      color: theme.colors.brown[10],
       marginBottom: 12,
       textAlign: "center",
     },
     successSubtitle: {
       fontSize: 14,
-      color: "#B8A99A",
+      color: theme.colors.brown[30],
       textAlign: "center",
       lineHeight: 20,
       marginBottom: 8,
@@ -179,16 +181,16 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
     maskedEmail: {
       fontSize: 16,
       fontWeight: "600",
-      color: "#FFFFFF",
+      color: theme.colors.brown[10],
       marginBottom: 24,
     },
     resendText: {
       fontSize: 14,
-      color: "#B8A99A",
+      color: theme.colors.brown[30],
       textAlign: "center",
     },
     resendLink: {
-      color: "#E8A872",
+      color: theme.colors.orange[40],
       fontWeight: "600",
     },
     closeButton: {
@@ -198,17 +200,19 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
       width: 56,
       height: 56,
       borderRadius: 28,
-      backgroundColor: "#FFFFFF",
+      backgroundColor: theme.colors.brown[10],
       justifyContent: "center",
       alignItems: "center",
     },
     closeIcon: {
       fontSize: 24,
-      color: "#3D2817",
+      color: theme.colors.brown[80],
     },
   });
 
-  const backgroundColors = ["#1A1108", "#2D1B0E"];
+  const backgroundColors = isDark
+    ? [theme.colors.brown[90], theme.colors.brown[80]]
+    : [theme.colors.brown[80], theme.colors.brown[70]];
 
   const handleSendPassword = async () => {
     setIsLoading(true);
@@ -216,7 +220,7 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
       await new Promise((resolve) => setTimeout(resolve, 1500));
       setEmailSent(true);
     } catch (error: any) {
-      Alert.alert("Error", "Failed to send reset link. Please try again.");
+      showAlert("Error", "Failed to send reset link. Please try again.", [{ text: "OK" }]);
     } finally {
       setIsLoading(false);
     }
@@ -226,9 +230,9 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
     setIsLoading(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      Alert.alert("Success", "Reset link has been resent to your email.");
+      showAlert("Success", "Reset link has been resent to your email.", [{ text: "OK" }]);
     } catch (error: any) {
-      Alert.alert("Error", "Failed to resend link. Please try again.");
+      showAlert("Error", "Failed to resend link. Please try again.", [{ text: "OK" }]);
     } finally {
       setIsLoading(false);
     }
@@ -252,7 +256,7 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
             <View style={styles.successContainer}>
               <View style={styles.successIllustration}>
                 <View style={styles.illustrationInner}>
-                  <MentalHealthIcon name="Lock" size={48} color="#FFFFFF" />
+                  <MentalHealthIcon name="Lock" size={48} color={theme.colors.brown[10]} />
                 </View>
               </View>
 
@@ -271,7 +275,7 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
                 <MentalHealthIcon
                   name="RotateCw"
                   size={20}
-                  color="#FFFFFF"
+                  color={theme.colors.brown[10]}
                   style={{ marginRight: 8 }}
                 />
                 <Text style={styles.sendButtonText}>
@@ -314,7 +318,7 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
               style={styles.backButton}
               onPress={() => navigation?.goBack?.()}
             >
-              <Text style={{ fontSize: 20, color: "#E5DDD5" }}>←</Text>
+              <Text style={{ fontSize: 20, color: theme.colors.brown[20] }}>←</Text>
             </TouchableOpacity>
           </View>
 
@@ -350,7 +354,7 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
                   </View>
                   {selectedMethod === "2fa" && (
                     <View style={styles.checkmark}>
-                      <Text style={{ color: "#FFFFFF", fontSize: 16 }}>✓</Text>
+                      <Text style={{ color: theme.colors.brown[10], fontSize: 16 }}>✓</Text>
                     </View>
                   )}
                 </TouchableOpacity>
@@ -377,7 +381,7 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
                         width: 24,
                         height: 24,
                         borderRadius: 12,
-                        backgroundColor: "#FFFFFF",
+                        backgroundColor: theme.colors.brown[10],
                       }}
                     />
                   </View>
@@ -386,7 +390,7 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
                   </View>
                   {selectedMethod === "password" && (
                     <View style={styles.checkmark}>
-                      <Text style={{ color: "#FFFFFF", fontSize: 16 }}>✓</Text>
+                      <Text style={{ color: theme.colors.brown[10], fontSize: 16 }}>✓</Text>
                     </View>
                   )}
                 </TouchableOpacity>
@@ -413,7 +417,7 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
                   </View>
                   {selectedMethod === "google" && (
                     <View style={styles.checkmark}>
-                      <Text style={{ color: "#FFFFFF", fontSize: 16 }}>✓</Text>
+                      <Text style={{ color: theme.colors.brown[10], fontSize: 16 }}>✓</Text>
                     </View>
                   )}
                 </TouchableOpacity>
@@ -427,7 +431,7 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
                 <MentalHealthIcon
                   name="Lock"
                   size={20}
-                  color="#FFFFFF"
+                  color={theme.colors.brown[10]}
                   style={{ marginRight: 8 }}
                 />
                 <Text style={styles.sendButtonText}>

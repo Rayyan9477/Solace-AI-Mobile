@@ -1,22 +1,30 @@
 {
   "expo": {
-    "name": "Solace AI Mobile",
-    "slug": "solace-ai-mobile",
-    "version": "1.0.0",
+    "name": "freud.ai",
+    "slug": "freudai-mobile",
+    "scheme": "freudai",
+    "version": "2.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "primaryColor": "#6366f1",
-    "description": "Your empathetic digital confidant for mental health and wellness support",
+    "primaryColor": "#A67C52",
+    "description": "Your Mental Wellness Companion - AI-powered mental health support",
     "platforms": ["ios", "android", "web"],
     "splash": {
       "resizeMode": "contain",
-      "backgroundColor": "#6366f1"
+      "backgroundColor": "#A67C52"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "plugins": [
-      "expo-font"
+      "expo-font",
+      "expo-apple-authentication",
+      [
+        "expo-auth-session",
+        {
+          "scheme": "freudai"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": false
@@ -28,28 +36,48 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.solace.ai.mobile",
-      "buildNumber": "1.0.0",
+      "bundleIdentifier": "com.freudai.mobile",
+      "buildNumber": "2.1.0",
       "requireFullScreen": false,
       "userInterfaceStyle": "automatic",
+      "usesAppleSignIn": true,
       "infoPlist": {
         "NSMicrophoneUsageDescription": "This app needs access to microphone for voice interactions with the AI assistant.",
         "NSSpeechRecognitionUsageDescription": "This app uses speech recognition to understand your voice commands.",
-        "NSCameraUsageDescription": "This app may use camera for profile pictures and document scanning."
+        "NSCameraUsageDescription": "This app may use camera for profile pictures and document scanning.",
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": ["freudai", "fb$(FACEBOOK_APP_ID)"]
+          }
+        ]
       }
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#6366f1"
+        "backgroundColor": "#A67C52"
       },
-      "package": "com.solace.ai.mobile",
-      "versionCode": 1,
+      "package": "com.freudai.mobile",
+      "versionCode": 2,
       "userInterfaceStyle": "automatic",
       "permissions": [
         "android.permission.RECORD_AUDIO",
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE",
         "android.permission.VIBRATE"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "freudai",
+              "host": "auth",
+              "pathPrefix": "/callback"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
       ]
     },
     "web": {

@@ -333,11 +333,9 @@ const WelcomeScreen = ({ navigation }) => {
         end={{ x: 1, y: 1 }}
       >
         <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
-          {/* Step Indicator */}
-          {currentStep > 0 && (
-            <Animated.View
-              style={[styles.stepHeader, { opacity: titleFadeAnim }]}
-            >
+          {/* Skip Button - Top Right (Always Visible) */}
+          <View style={styles.topBar}>
+            {currentStep > 0 && (
               <TouchableOpacity
                 style={styles.backButton}
                 onPress={() => setCurrentStep(Math.max(0, currentStep - 1))}
@@ -351,6 +349,29 @@ const WelcomeScreen = ({ navigation }) => {
                   ←
                 </Text>
               </TouchableOpacity>
+            )}
+            {currentStep === 0 && <View style={styles.backButton} />}
+
+            <TouchableOpacity
+              style={styles.skipButton}
+              onPress={handleSkip}
+            >
+              <Text
+                style={[
+                  styles.skipButtonText,
+                  { color: theme.isDark ? "#FFFFFF" : "#2D3436" },
+                ]}
+              >
+                Skip This
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Step Indicator */}
+          {currentStep > 0 && (
+            <Animated.View
+              style={[styles.stepHeader, { opacity: titleFadeAnim }]}
+            >
 
               <View
                 style={[
@@ -490,10 +511,18 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 60,
   },
-  stepHeader: {
+  topBar: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    paddingHorizontal: 24,
+    paddingTop: 20,
+    marginBottom: 10,
+  },
+  stepHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: 24,
     marginBottom: 20,
   },

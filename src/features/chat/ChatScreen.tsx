@@ -22,7 +22,9 @@ import {
   StatusBar,
   Animated,
   Alert,
+  Share,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import CrisisManager from "../crisis/CrisisManager";
 import chatResponseService from "./services/chatResponseService";
@@ -35,6 +37,27 @@ interface Message {
   timestamp: Date;
   reaction?: string;
 }
+
+interface SuggestedPrompt {
+  id: string;
+  text: string;
+  category: 'greeting' | 'feelings' | 'support' | 'wellness';
+}
+
+// Suggested prompts for quick replies
+const INITIAL_PROMPTS: SuggestedPrompt[] = [
+  { id: '1', text: "I'm feeling anxious today", category: 'feelings' },
+  { id: '2', text: "Can you help me relax?", category: 'support' },
+  { id: '3', text: "Tell me about mindfulness", category: 'wellness' },
+  { id: '4', text: "I need someone to talk to", category: 'support' },
+];
+
+const ONGOING_PROMPTS: SuggestedPrompt[] = [
+  { id: '5', text: "Tell me more", category: 'support' },
+  { id: '6', text: "How can I improve?", category: 'wellness' },
+  { id: '7', text: "What should I do next?", category: 'support' },
+  { id: '8', text: "I'm feeling better now", category: 'feelings' },
+];
 
 export const ChatScreen = ({ navigation, route }: any) => {
   const { theme } = useTheme();
@@ -55,6 +78,11 @@ export const ChatScreen = ({ navigation, route }: any) => {
   const [inputText, setInputText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [showPrompts, setShowPrompts] = useState(true);
+  const [suggestedPrompts, setSuggestedPrompts] = useState<SuggestedPrompt[]>(INITIAL_PROMPTS);
+  const [showSessionSummary, setShowSessionSummary] = useState(false);
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
+  const [sessionStartTime] = useState(new Date());
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const crisisManagerRef = useRef<typeof CrisisManager | null>(null);
 
@@ -65,6 +93,20 @@ export const ChatScreen = ({ navigation, route }: any) => {
       await crisisManagerRef.current.loadConfiguration();
     };
     initCrisisManager();
+
+    // Check if disclaimer has been shown
+    const checkDisclaimer = async () => {
+      try {
+        const disclaimerShown = await AsyncStorage.getItem('chat_disclaimer_shown');
+        if (!disclaimerShown) {
+          setShowDisclaimer(true);
+        }
+      } catch (error) {
+        // If error, show disclaimer to be safe
+        setShowDisclaimer(true);
+      }
+    };
+    checkDisclaimer();
 
     // Cleanup on unmount
     return () => {
@@ -256,11 +298,255 @@ export const ChatScreen = ({ navigation, route }: any) => {
     sendButtonDisabled: {
       opacity: 0.5,
     },
+    promptsContainer: {
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderTopWidth: 1,
+      borderTopColor: theme.colors.border.main,
+      backgroundColor: theme.colors.background.primary,
+    },
+    promptsTitle: {
+      fontSize: 12,
+      fontWeight: "600",
+      color: theme.colors.text.secondary,
+      marginBottom: 8,
+      textTransform: "uppercase",
+      letterSpacing: 0.5,
+    },
+    promptsRow: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: 8,
+    },
+    promptChip: {
+      paddingHorizontal: 16,
+      paddingVertical: 10,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: theme.colors.border.main,
+      backgroundColor: theme.colors.background.secondary,
+    },
+    promptText: {
+      fontSize: 14,
+      color: theme.colors.text.primary,
+    },
+    modalOverlay: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0, 0, 0, 0.7)",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 1000,
+    },
+    summaryModal: {
+      width: "85%",
+      maxWidth: 400,
+      backgroundColor: theme.colors.background.primary,
+      borderRadius: 24,
+      padding: 24,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 8,
+    },
+    summaryHeader: {
+      alignItems: "center",
+      marginBottom: 24,
+    },
+    summaryTitle: {
+      fontSize: 24,
+      fontWeight: "700",
+      color: theme.colors.text.primary,
+      marginBottom: 8,
+    },
+    summarySubtitle: {
+      fontSize: 14,
+      color: theme.colors.text.secondary,
+      textAlign: "center",
+    },
+    summaryStats: {
+      gap: 16,
+      marginBottom: 24,
+    },
+    statRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      backgroundColor: theme.colors.background.secondary,
+      borderRadius: 16,
+    },
+    statIcon: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: theme.colors.green["20"],
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 12,
+    },
+    statContent: {
+      flex: 1,
+    },
+    statLabel: {
+      fontSize: 12,
+      color: theme.colors.text.secondary,
+      marginBottom: 2,
+    },
+    statValue: {
+      fontSize: 18,
+      fontWeight: "700",
+      color: theme.colors.text.primary,
+    },
+    summaryActions: {
+      gap: 12,
+    },
+    summaryButton: {
+      paddingVertical: 14,
+      borderRadius: 24,
+      alignItems: "center",
+    },
+    summaryButtonPrimary: {
+      backgroundColor: theme.colors.orange["40"],
+    },
+    summaryButtonSecondary: {
+      backgroundColor: theme.colors.background.secondary,
+      borderWidth: 1,
+      borderColor: theme.colors.border.main,
+    },
+    summaryButtonText: {
+      fontSize: 16,
+      fontWeight: "600",
+    },
+    summaryButtonTextPrimary: {
+      color: "#FFFFFF",
+    },
+    summaryButtonTextSecondary: {
+      color: theme.colors.text.primary,
+    },
+    disclaimerModal: {
+      width: "90%",
+      maxWidth: 450,
+      backgroundColor: theme.colors.background.primary,
+      borderRadius: 24,
+      padding: 28,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 8,
+    },
+    disclaimerIcon: {
+      alignSelf: "center",
+      width: 72,
+      height: 72,
+      borderRadius: 36,
+      backgroundColor: theme.colors.orange["20"],
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 20,
+    },
+    disclaimerTitle: {
+      fontSize: 22,
+      fontWeight: "700",
+      color: theme.colors.text.primary,
+      textAlign: "center",
+      marginBottom: 12,
+    },
+    disclaimerText: {
+      fontSize: 15,
+      color: theme.colors.text.secondary,
+      textAlign: "center",
+      lineHeight: 22,
+      marginBottom: 8,
+    },
+    disclaimerHighlight: {
+      fontWeight: "600",
+      color: theme.colors.text.primary,
+    },
+    disclaimerPoints: {
+      marginTop: 16,
+      marginBottom: 20,
+      gap: 12,
+    },
+    disclaimerPoint: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+    },
+    disclaimerBullet: {
+      fontSize: 18,
+      marginRight: 12,
+      marginTop: 2,
+    },
+    disclaimerPointText: {
+      flex: 1,
+      fontSize: 14,
+      color: theme.colors.text.secondary,
+      lineHeight: 20,
+    },
   });
 
-  const sendMessage = async () => {
-    if (inputText.trim()) {
-      const messageText = sanitizeText(inputText.trim(), 5000);
+  const handlePromptSelect = (prompt: SuggestedPrompt) => {
+    setInputText(prompt.text);
+    setShowPrompts(false);
+    // Auto-send the message
+    setTimeout(() => {
+      sendMessage(prompt.text);
+    }, 100);
+  };
+
+  const exportChatAsText = async () => {
+    try {
+      // Format conversation as text
+      const header = `Freud AI Therapy Session
+Session Date: ${sessionStartTime.toLocaleDateString()} ${sessionStartTime.toLocaleTimeString()}
+Duration: ${calculateSessionDuration()}
+Messages: ${messages.length}
+${"=".repeat(50)}
+
+`;
+
+      const conversationText = messages
+        .map((msg) => {
+          const sender = msg.isUser ? "You" : "Dr. Freud AI";
+          const time = msg.timestamp.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          return `[${time}] ${sender}:\n${msg.text}\n`;
+        })
+        .join("\n");
+
+      const fullText = header + conversationText;
+
+      // Share the text using native share dialog
+      await Share.share({
+        message: fullText,
+        title: "Freud AI Chat Export",
+      });
+
+      Alert.alert(
+        "Export Complete",
+        "Your conversation has been prepared for sharing.",
+        [{ text: "OK" }]
+      );
+    } catch (error: any) {
+      Alert.alert(
+        "Export Failed",
+        error.message || "Could not export conversation. Please try again.",
+        [{ text: "OK" }]
+      );
+    }
+  };
+
+  const sendMessage = async (customText?: string) => {
+    const messageToSend = customText || inputText.trim();
+    if (messageToSend) {
+      const messageText = sanitizeText(messageToSend, 5000);
 
       if (crisisManagerRef.current) {
         const crisisAnalysis =
@@ -310,6 +596,11 @@ export const ChatScreen = ({ navigation, route }: any) => {
       setInputText("");
       setIsTyping(true);
 
+      // Update prompts to ongoing ones after first user message
+      if (messages.length <= 1) {
+        setSuggestedPrompts(ONGOING_PROMPTS);
+      }
+
       // Simulate typing delay
       const isJest =
         typeof process !== "undefined" && !!process.env?.JEST_WORKER_ID;
@@ -330,6 +621,9 @@ export const ChatScreen = ({ navigation, route }: any) => {
         };
 
         setMessages((prev) => [...prev, aiResponse]);
+
+        // Show prompts again after AI response
+        setShowPrompts(true);
 
         // Optionally add emotion-based reaction
         if (emotion === "positive" && Math.random() > 0.7) {
@@ -490,6 +784,208 @@ export const ChatScreen = ({ navigation, route }: any) => {
     </View>
   );
 
+  const renderSuggestedPrompts = () => {
+    if (!showPrompts || inputText.length > 0 || isTyping) {
+      return null;
+    }
+
+    return (
+      <View style={styles.promptsContainer}>
+        <Text style={styles.promptsTitle}>Suggested Topics</Text>
+        <View style={styles.promptsRow}>
+          {suggestedPrompts.map((prompt) => (
+            <TouchableOpacity
+              key={prompt.id}
+              style={styles.promptChip}
+              onPress={() => handlePromptSelect(prompt)}
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel={prompt.text}
+            >
+              <Text style={styles.promptText}>{prompt.text}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+    );
+  };
+
+  const handleAcceptDisclaimer = async () => {
+    try {
+      await AsyncStorage.setItem('chat_disclaimer_shown', 'true');
+      setShowDisclaimer(false);
+    } catch (error) {
+      // Even if storage fails, close the disclaimer
+      setShowDisclaimer(false);
+    }
+  };
+
+  const calculateSessionDuration = () => {
+    const now = new Date();
+    const durationMs = now.getTime() - sessionStartTime.getTime();
+    const minutes = Math.floor(durationMs / 60000);
+    const seconds = Math.floor((durationMs % 60000) / 1000);
+    return minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+  };
+
+  const renderDisclaimer = () => {
+    if (!showDisclaimer) {
+      return null;
+    }
+
+    return (
+      <View style={styles.modalOverlay}>
+        <View style={styles.disclaimerModal}>
+          <View style={styles.disclaimerIcon}>
+            <MentalHealthIcon name="AlertCircle" size={36} color={theme.colors.orange["40"]} style={{}} />
+          </View>
+
+          <Text style={styles.disclaimerTitle}>
+            Important Disclaimer
+          </Text>
+
+          <Text style={styles.disclaimerText}>
+            Dr. Freud AI is an <Text style={styles.disclaimerHighlight}>AI-powered support tool</Text> designed to provide emotional support and guidance.
+          </Text>
+
+          <View style={styles.disclaimerPoints}>
+            <View style={styles.disclaimerPoint}>
+              <Text style={styles.disclaimerBullet}>⚠️</Text>
+              <Text style={styles.disclaimerPointText}>
+                This is <Text style={styles.disclaimerHighlight}>not a replacement</Text> for professional medical advice, diagnosis, or treatment.
+              </Text>
+            </View>
+
+            <View style={styles.disclaimerPoint}>
+              <Text style={styles.disclaimerBullet}>🏥</Text>
+              <Text style={styles.disclaimerPointText}>
+                If you're experiencing a <Text style={styles.disclaimerHighlight}>mental health crisis</Text>, please contact emergency services or a crisis hotline immediately.
+              </Text>
+            </View>
+
+            <View style={styles.disclaimerPoint}>
+              <Text style={styles.disclaimerBullet}>👨‍⚕️</Text>
+              <Text style={styles.disclaimerPointText}>
+                Always consult with qualified healthcare professionals for medical advice and treatment plans.
+              </Text>
+            </View>
+          </View>
+
+          <TouchableOpacity
+            style={[styles.summaryButton, styles.summaryButtonPrimary]}
+            onPress={handleAcceptDisclaimer}
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel="I understand and accept"
+          >
+            <Text style={[styles.summaryButtonText, styles.summaryButtonTextPrimary]}>
+              I Understand & Accept
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
+  const renderSessionSummary = () => {
+    if (!showSessionSummary) {
+      return null;
+    }
+
+    const userMessages = messages.filter(m => m.isUser).length;
+    const aiMessages = messages.filter(m => !m.isUser).length;
+    const duration = calculateSessionDuration();
+
+    return (
+      <View style={styles.modalOverlay}>
+        <View style={styles.summaryModal}>
+          <View style={styles.summaryHeader}>
+            <Text style={styles.summaryTitle}>Session Summary</Text>
+            <Text style={styles.summarySubtitle}>
+              Here's what we covered in this conversation
+            </Text>
+          </View>
+
+          <View style={styles.summaryStats}>
+            <View style={styles.statRow}>
+              <View style={styles.statIcon}>
+                <MentalHealthIcon name="MessageCircle" size={20} color={theme.colors.green["60"]} style={{}} />
+              </View>
+              <View style={styles.statContent}>
+                <Text style={styles.statLabel}>Messages Exchanged</Text>
+                <Text style={styles.statValue}>{userMessages + aiMessages}</Text>
+              </View>
+            </View>
+
+            <View style={styles.statRow}>
+              <View style={styles.statIcon}>
+                <MentalHealthIcon name="Clock" size={20} color={theme.colors.green["60"]} style={{}} />
+              </View>
+              <View style={styles.statContent}>
+                <Text style={styles.statLabel}>Session Duration</Text>
+                <Text style={styles.statValue}>{duration}</Text>
+              </View>
+            </View>
+
+            <View style={styles.statRow}>
+              <View style={styles.statIcon}>
+                <Text style={{ fontSize: 20 }}>💚</Text>
+              </View>
+              <View style={styles.statContent}>
+                <Text style={styles.statLabel}>Support Provided</Text>
+                <Text style={styles.statValue}>Excellent</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.summaryActions}>
+            <TouchableOpacity
+              style={[styles.summaryButton, styles.summaryButtonSecondary]}
+              onPress={async () => {
+                await exportChatAsText();
+                setShowSessionSummary(false);
+              }}
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel="Export conversation"
+            >
+              <Text style={[styles.summaryButtonText, styles.summaryButtonTextSecondary]}>
+                📤 Export Conversation
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.summaryButton, styles.summaryButtonPrimary]}
+              onPress={() => setShowSessionSummary(false)}
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel="Continue conversation"
+            >
+              <Text style={[styles.summaryButtonText, styles.summaryButtonTextPrimary]}>
+                Continue Conversation
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.summaryButton, styles.summaryButtonSecondary]}
+              onPress={() => {
+                setShowSessionSummary(false);
+                navigation.goBack();
+              }}
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel="End session"
+            >
+              <Text style={[styles.summaryButtonText, styles.summaryButtonTextSecondary]}>
+                End Session
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
@@ -521,11 +1017,12 @@ export const ChatScreen = ({ navigation, route }: any) => {
 
         <TouchableOpacity
           style={styles.searchButton}
+          onPress={() => setShowSessionSummary(true)}
           accessibilityRole="button"
-          accessibilityLabel="Search"
+          accessibilityLabel="View session summary"
         >
           <MentalHealthIcon
-            name="Search"
+            name="MoreVertical"
             size={20}
             color={theme.colors.text.primary}
             style={{}}
@@ -545,6 +1042,9 @@ export const ChatScreen = ({ navigation, route }: any) => {
           showsVerticalScrollIndicator={false}
           ListFooterComponent={isTyping ? renderTypingIndicator : null}
         />
+
+        {/* Suggested Prompts */}
+        {renderSuggestedPrompts()}
 
         {/* Input Container */}
         <View style={styles.inputContainer}>
@@ -609,6 +1109,12 @@ export const ChatScreen = ({ navigation, route }: any) => {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+
+      {/* Professional Disclaimer Modal */}
+      {renderDisclaimer()}
+
+      {/* Session Summary Modal */}
+      {renderSessionSummary()}
     </SafeAreaView>
   );
 };
