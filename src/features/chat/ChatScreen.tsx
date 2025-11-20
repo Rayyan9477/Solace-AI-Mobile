@@ -78,6 +78,7 @@ export const ChatScreen = ({ navigation, route }: any) => {
   const [inputText, setInputText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
   const [showPrompts, setShowPrompts] = useState(true);
   const [suggestedPrompts, setSuggestedPrompts] = useState<SuggestedPrompt[]>(INITIAL_PROMPTS);
   const [showSessionSummary, setShowSessionSummary] = useState(false);
@@ -85,6 +86,7 @@ export const ChatScreen = ({ navigation, route }: any) => {
   const [sessionStartTime] = useState(new Date());
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const crisisManagerRef = useRef<typeof CrisisManager | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const initCrisisManager = async () => {
@@ -545,8 +547,14 @@ ${"=".repeat(50)}
 
   const sendMessage = async (customText?: string) => {
     const messageToSend = customText || inputText.trim();
-    if (messageToSend) {
+    if (messageToSend || !isSendingMessage) {
       const messageText = sanitizeText(messageToSend, 5000);
+
+      // Prevent sending while another message is processing
+      if (isSendingMessage) return;
+
+      setIsSendingMessage(true);
+      setErrorMessage(null);
 
       if (crisisManagerRef.current) {
         const crisisAnalysis =
@@ -563,9 +571,9 @@ ${"=".repeat(50)}
 
           Alert.alert(
             "Support Available",
-            crisisResponse.message,
+            crisisResponse?.message || "Support resources are available",
             [
-              ...(crisisResponse.actions || []).map((action: any) => ({
+              ...(crisisResponse?.actions || []).map((action: any) => ({
                 text: action.label,
                 onPress: async () => {
                   if (action.type === "call" && action.number) {
@@ -576,9 +584,9 @@ ${"=".repeat(50)}
                     await crisisManagerRef.current?.sendCrisisText();
                   }
                 },
-                style: action.urgent ? "destructive" : "default",
+                style: (action.urgent ? "destructive" : "default") as "destructive" | "default",
               })),
-              { text: "Continue Talking", style: "cancel" },
+              { text: "Continue Talking", style: "cancel" as "cancel" },
             ],
             { cancelable: true },
           );
@@ -606,36 +614,52 @@ ${"=".repeat(50)}
         typeof process !== "undefined" && !!process.env?.JEST_WORKER_ID;
       const delay = isJest ? 50 : Math.random() * 1500 + 1500; // 1.5-3 seconds
 
-      setTimeout(() => {
-        setIsTyping(false);
+      setTimeout(async () => {
+        try {
+          setIsTyping(false);
 
-        // Generate response using the chat response service
-        const { message: responseText, emotion } =
-          chatResponseService.generateResponse(messageText);
+          // Generate response using the chat response service
+          const { message: responseText, emotion } =
+            chatResponseService.generateResponse(messageText);
 
-        const aiResponse: Message = {
-          id: (Date.now() + 1).toString(),
-          text: responseText,
-          isUser: false,
-          timestamp: new Date(),
-        };
+          const aiResponse: Message = {
+            id: (Date.now() + 1).toString(),
+            text: responseText,
+            isUser: false,
+            timestamp: new Date(),
+          };
 
-        setMessages((prev) => [...prev, aiResponse]);
+          setMessages((prev) => [...prev, aiResponse]);
 
-        // Show prompts again after AI response
-        setShowPrompts(true);
+          // Show prompts again after AI response
+          setShowPrompts(true);
 
-        // Optionally add emotion-based reaction
-        if (emotion === "positive" && Math.random() > 0.7) {
-          setTimeout(() => {
-            setMessages((prev) =>
-              prev.map((msg) =>
-                msg.id === aiResponse.id
-                  ? { ...msg, reaction: "💚" }
-                  : msg
-              )
-            );
-          }, 500);
+          // Optionally add emotion-based reaction
+          if (emotion === "positive" && Math.random() > 0.7) {
+            setTimeout(() => {
+              setMessages((prev) =>
+                prev.map((msg) =>
+                  msg.id === aiResponse.id
+                    ? { ...msg, reaction: "💚" }
+                    : msg
+                )
+              );
+            }, 500);
+          }
+        } catch (error) {
+          console.error("Failed to generate response:", error);
+          setErrorMessage("Unable to generate response. Please try again.");
+
+          // Add error message to chat
+          const errorResponse: Message = {
+            id: (Date.now() + 1).toString(),
+            text: "I apologize, but I'm having trouble responding right now. Please try again in a moment.",
+            isUser: false,
+            timestamp: new Date(),
+          };
+          setMessages((prev) => [...prev, errorResponse]);
+        } finally {
+          setIsSendingMessage(false);
         }
       }, delay);
     }
@@ -1092,20 +1116,26 @@ ${"=".repeat(50)}
           <TouchableOpacity
             style={[
               styles.sendButton,
-              !inputText.trim() && styles.sendButtonDisabled,
+              (!inputText.trim() || isSendingMessage) && styles.sendButtonDisabled,
             ]}
             onPress={sendMessage}
-            disabled={!inputText.trim()}
+            disabled={!inputText.trim() || isSendingMessage}
             accessibilityRole="button"
-            accessibilityLabel="Send message"
+            accessibilityLabel={isSendingMessage ? "Sending message" : "Send message"}
             testID="send-button"
           >
-            <MentalHealthIcon
-              name="Send"
-              size={20}
-              color="#FFFFFF"
-              style={{}}
-            />
+            {isSendingMessage ? (
+              <View style={{ width: 20, height: 20 }}>
+                <Text style={{ color: "#FFFFFF", fontSize: 10 }}>...</Text>
+              </View>
+            ) : (
+              <MentalHealthIcon
+                name="Send"
+                size={20}
+                color="#FFFFFF"
+                style={{}}
+              />
+            )}
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

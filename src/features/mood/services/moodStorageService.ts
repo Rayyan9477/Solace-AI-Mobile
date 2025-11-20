@@ -18,7 +18,7 @@ const STORAGE_KEYS = {
 };
 
 // TypeScript interfaces
-interface MoodEntry {
+export interface MoodEntry {
   id: string;
   mood: string;
   notes?: string;

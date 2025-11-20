@@ -5,7 +5,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -13,7 +13,11 @@ import {
   FlatList,
   TouchableOpacity,
   SafeAreaView,
+  ActivityIndicator,
+  RefreshControl,
 } from "react-native";
+import mentalHealthAPI from "@app/services/mentalHealthAPI";
+import dataPersistence from "@app/services/dataPersistence";
 
 interface JournalEntry {
   id: string;
@@ -69,6 +73,106 @@ export const JournalListScreen = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
   const [filter, setFilter] = useState<"all" | "recent">("recent");
+  const [journals, setJournals] = useState<JournalEntry[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadJournals();
+  }, []);
+
+  const loadJournals = async (isRefresh = false) => {
+    if (isRefresh) {
+      setIsRefreshing(true);
+    } else {
+      setIsLoading(true);
+    }
+    setErrorMessage(null);
+
+    try {
+      let journalData: JournalEntry[] = [];
+
+      try {
+        // Try to fetch from API
+        const apiJournals = await mentalHealthAPI.journal.getEntries(1, 50);
+
+        // Transform API data to match our interface
+        journalData = apiJournals.map((journal: any) => ({
+          id: journal.id || `journal_${Date.now()}_${Math.random()}`,
+          title: journal.title || "Untitled",
+          preview: journal.content?.substring(0, 100) || "No content",
+          mood: getMoodEmoji(journal.mood || "Neutral"),
+          date: new Date(journal.timestamp).getDate().toString(),
+          tags: journal.tags || [],
+          color: getMoodColor(journal.mood || "Neutral"),
+        }));
+
+        // Cache the data
+        await dataPersistence.saveJournalEntries(apiJournals);
+
+      } catch (apiError) {
+        console.log("API unavailable, using local data");
+
+        // Fallback to local storage
+        const cachedJournals = await dataPersistence.getJournalEntries();
+
+        journalData = cachedJournals.map((journal: any) => ({
+          id: journal.id || `journal_${Date.now()}_${Math.random()}`,
+          title: journal.title || "Untitled",
+          preview: journal.content?.substring(0, 100) || "No content",
+          mood: getMoodEmoji(journal.mood || "Neutral"),
+          date: new Date(journal.timestamp || Date.now()).getDate().toString(),
+          tags: journal.tags || [],
+          color: getMoodColor(journal.mood || "Neutral"),
+        }));
+
+        // If no cached data, use mock data as last resort
+        if (journalData.length === 0) {
+          journalData = MOCK_JOURNALS;
+        }
+      }
+
+      setJournals(journalData);
+
+    } catch (error) {
+      console.error("Failed to load journals:", error);
+      setErrorMessage("Unable to load journals. Please try again.");
+      // Use mock data on error
+      setJournals(MOCK_JOURNALS);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  };
+
+  const getMoodEmoji = (mood: string): string => {
+    const emojiMap: Record<string, string> = {
+      "Happy": "😊",
+      "Sad": "😢",
+      "Anxious": "😰",
+      "Angry": "😠",
+      "Neutral": "😐",
+      "Excited": "🤩",
+      "Stressed": "😔",
+      "Grateful": "🙏",
+    };
+    return emojiMap[mood] || "😐";
+  };
+
+  const getMoodColor = (mood: string): string => {
+    const colorMap: Record<string, string> = {
+      "Happy": "#98B068",
+      "Sad": "#6B5FC8",
+      "Anxious": "#E0A500",
+      "Angry": "#ED7E1C",
+      "Neutral": "#808080",
+      "Excited": "#4CAF50",
+      "Stressed": "#FF5722",
+      "Grateful": "#2196F3",
+    };
+    return colorMap[mood] || "#808080";
+  };
 
   const renderJournalCard = ({ item }: { item: JournalEntry }) => (
     <TouchableOpacity
@@ -192,14 +296,62 @@ export const JournalListScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Journal list */}
-      <FlatList
-        data={MOCK_JOURNALS}
-        renderItem={renderJournalCard}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
-        showsVerticalScrollIndicator={false}
-      />
+      {/* Error state */}
+      {errorMessage && !isLoading && (
+        <View style={{ padding: 20, backgroundColor: theme.colors.red["20"], borderRadius: 12, margin: 16 }}>
+          <Text style={{ color: theme.colors.red["80"], textAlign: "center" }}>
+            {errorMessage}
+          </Text>
+          <TouchableOpacity
+            style={{ marginTop: 12, padding: 8 }}
+            onPress={() => loadJournals()}
+          >
+            <Text style={{ color: theme.colors.red["100"], textAlign: "center", fontWeight: "600" }}>
+              Retry
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Loading state */}
+      {isLoading && !isRefreshing ? (
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", paddingTop: 100 }}>
+          <ActivityIndicator size="large" color={theme.colors.brown["70"]} />
+          <Text style={{ marginTop: 16, color: theme.colors.text.secondary }}>
+            Loading journals...
+          </Text>
+        </View>
+      ) : (
+        /* Journal list */
+        <FlatList
+          data={filter === "recent" ? journals.slice(0, 10) : journals}
+          renderItem={renderJournalCard}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.list}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={() => loadJournals(true)}
+              tintColor={theme.colors.brown["70"]}
+              colors={[theme.colors.brown["70"]]}
+            />
+          }
+          ListEmptyComponent={
+            !isLoading && !errorMessage ? (
+              <View style={{ padding: 40, alignItems: "center" }}>
+                <Text style={{ fontSize: 48, marginBottom: 16 }}>📖</Text>
+                <Text style={{ color: theme.colors.text.primary, fontSize: 18, fontWeight: "600", marginBottom: 8 }}>
+                  No journals yet
+                </Text>
+                <Text style={{ color: theme.colors.text.secondary, textAlign: "center" }}>
+                  Start writing your thoughts and feelings
+                </Text>
+              </View>
+            ) : null
+          }
+        />
+      )}
 
       {/* Add button */}
       <TouchableOpacity

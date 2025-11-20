@@ -1,7 +1,3 @@
-import {
-  // Use moodSlice actions (enhancedMoodSlice was deleted)
-  setCurrentMood as setSelectedMoodAction,
-} from "@app/store/slices/moodSlice";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
 import { LinearGradient } from "expo-linear-gradient";
@@ -12,6 +8,7 @@ import React, {
   useCallback,
   useContext,
 } from "react";
+import { moodStorageService } from "../services/moodStorageService";
 import {
   View,
   Text,
@@ -26,26 +23,7 @@ import {
   Platform,
   TextInput,
 } from "react-native";
-// Note: Avoid requiring Redux Provider during tests
-
-import { ReactReduxContext } from "react-redux";
-
-// Note: These actions don't exist in moodSlice, using local state only
-// This component manages its own UI state and syncs to moodSlice on save
-const setCurrentStepAction = (step) => ({
-  type: "mood/UI_STEP",
-  payload: step,
-});
-const setIntensityAction = (intensity) => ({
-  type: "mood/UI_INTENSITY",
-  payload: intensity,
-});
-const toggleActivityAction = (id) => ({
-  type: "mood/UI_ACTIVITY",
-  payload: id,
-});
-const setNotesAction = (notes) => ({ type: "mood/UI_NOTES", payload: notes });
-const toggleTriggerAction = (id) => ({ type: "mood/UI_TRIGGER", payload: id });
+// This component manages its own UI state and saves to SQLite on completion
 // Build a safe theme object with defaults for tests without ThemeProvider
 const buildSafeTheme = (maybeThemeCtx) => {
   const maybeTheme = maybeThemeCtx?.theme || maybeThemeCtx || {};
@@ -157,23 +135,19 @@ const KeyboardAvoiding =
 
 const EnhancedMoodTrackerScreen = () => {
   const navigation = useNavigation();
-  // Safe Redux access without requiring Provider in tests
-  const reduxCtx = useContext(ReactReduxContext);
-  const dispatch = reduxCtx?.store?.dispatch || (() => {});
   const themeCtx = useTheme();
   const theme = buildSafeTheme(themeCtx);
   const [currentStep, setCurrentStep] = useState(0);
-  // Seed from mood store (updated from enhancedMood to mood)
-  const seed = (reduxCtx?.store?.getState?.() || {})?.mood || {};
-  const [selectedMood, setSelectedMood] = useState(seed.currentMood ?? null);
-  const [intensity, setIntensity] = useState(5); // Default intensity
+  const [selectedMood, setSelectedMood] = useState<string | null>(null);
+  const [intensity, setIntensity] = useState(5); // Default intensity (1-10 scale)
   const [notes, setNotes] = useState("");
-  const [activities, setActivities] = useState([]);
-  const [triggers, setTriggers] = useState([]);
+  const [activities, setActivities] = useState<string[]>([]);
+  const [triggers, setTriggers] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [infoMessage, setInfoMessage] = useState("");
   const [crisisMessage, setCrisisMessage] = useState("");
   const [supportMessage, setSupportMessage] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   // Pull initial values from store for integration tests
 
@@ -294,21 +268,6 @@ const EnhancedMoodTrackerScreen = () => {
     { id: "meditation", label: "Meditation", icon: "🧘" },
   ];
 
-  // Safe dispatch that won't crash tests if store.dispatch throws (e.g., in failing tests)
-  const safeDispatch = useCallback(
-    (action, onError) => {
-      try {
-        // Return true/false for success so callers can branch in tests
-        dispatch(action);
-        return true;
-      } catch (e) {
-        if (onError) onError(e);
-        return false;
-      }
-    },
-    [dispatch],
-  );
-
   const commonTriggers = [
     { id: "stress", label: "Stress", icon: "😤" },
     { id: "lack_sleep", label: "Lack of Sleep", icon: "😴" },
@@ -320,71 +279,44 @@ const EnhancedMoodTrackerScreen = () => {
     { id: "weather", label: "Weather", icon: "🌧️" },
   ];
 
-  // Handlers extracted to reduce nesting and centralize dispatch safety
-  const onSelectMood = useCallback(
-    (id) => {
-      setSelectedMood(id);
-      setErrorMessage("");
-      safeDispatch(setSelectedMoodAction(id), () =>
-        setErrorMessage("Error: update failed, will retry."),
-      );
-    },
-    [safeDispatch],
-  );
+  // Handlers for mood tracking state
+  const onSelectMood = useCallback((id: string) => {
+    setSelectedMood(id);
+    setErrorMessage("");
+  }, []);
 
-  const onSetIntensity = useCallback(
-    (level) => {
-      const v = Number(level);
-      setIntensity(v);
-      safeDispatch(setIntensityAction(v), () =>
-        setErrorMessage("Error: update failed, will retry."),
+  const onSetIntensity = useCallback((level: number | string) => {
+    const v = Number(level);
+    setIntensity(v);
+    const labels = [
+      "Very mild",
+      "Mild",
+      "Moderate",
+      "Strong",
+      "Very intense",
+    ];
+    if (AccessibilityInfo?.announceForAccessibility) {
+      AccessibilityInfo.announceForAccessibility(
+        `Intensity set to ${labels[v - 1] || v} out of 10`,
       );
-      const labels = [
-        "Very mild",
-        "Mild",
-        "Moderate",
-        "Strong",
-        "Very intense",
-      ];
-      if (AccessibilityInfo?.announceForAccessibility) {
-        AccessibilityInfo.announceForAccessibility(
-          `Intensity set to ${labels[v - 1] || v} out of 10`,
-        );
-      }
-    },
-    [safeDispatch],
-  );
+    }
+  }, []);
 
-  const onToggleActivity = useCallback(
-    (id) => {
-      setActivities((prev) =>
-        prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id],
-      );
-      safeDispatch(toggleActivityAction(id), () =>
-        setErrorMessage("Error: update failed, will retry."),
-      );
-    },
-    [safeDispatch],
-  );
+  const onToggleActivity = useCallback((id: string) => {
+    setActivities((prev) =>
+      prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id],
+    );
+  }, []);
 
-  const onToggleTrigger = useCallback(
-    (id) => {
-      setTriggers((prev) =>
-        prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id],
-      );
-      safeDispatch(toggleTriggerAction(id), () =>
-        setErrorMessage("Error: update failed, will retry."),
-      );
-    },
-    [safeDispatch],
-  );
+  const onToggleTrigger = useCallback((id: string) => {
+    setTriggers((prev) =>
+      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id],
+    );
+  }, []);
 
   const onNotesChange = useCallback(
-    (t) => {
+    (t: string) => {
       setNotes(t);
-      safeDispatch(setNotesAction(t), () =>
-        setErrorMessage("Error: update failed, will retry."),
-      );
       // Crisis detection
       if (/hurt\s*myself|kill\s*myself|suicide|hopeless|worthless/i.test(t)) {
         setCrisisMessage(
@@ -403,7 +335,7 @@ const EnhancedMoodTrackerScreen = () => {
         setSupportMessage("");
       }
     },
-    [safeDispatch, selectedMood],
+    [selectedMood],
   );
 
   const handleNext = useCallback(() => {
@@ -425,10 +357,6 @@ const EnhancedMoodTrackerScreen = () => {
 
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
-      // sync 1-indexed step to redux
-      safeDispatch(setCurrentStepAction(currentStep + 2), () =>
-        setErrorMessage("Error: update failed, will retry."),
-      );
       Animated.timing(slideAnim, {
         toValue: 30,
         duration: 200,
@@ -445,14 +373,11 @@ const EnhancedMoodTrackerScreen = () => {
         AccessibilityInfo.setAccessibilityFocus();
       }
     }
-  }, [currentStep, selectedMood, intensity, slideAnim, safeDispatch]);
+  }, [currentStep, selectedMood, intensity, slideAnim]);
 
   const handlePrevious = useCallback(() => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
-      safeDispatch(setCurrentStepAction(currentStep), () =>
-        setErrorMessage("Error: update failed, will retry."),
-      );
       Animated.timing(slideAnim, {
         toValue: -30,
         duration: 200,
@@ -465,100 +390,66 @@ const EnhancedMoodTrackerScreen = () => {
         }).start();
       });
     }
-  }, [currentStep, slideAnim, safeDispatch]);
+  }, [currentStep, slideAnim]);
 
   const handleSave = useCallback(async () => {
     setErrorMessage("");
     setInfoMessage("");
+    setIsSaving(true);
 
     // basic validation - prioritize data integrity first
     if (intensity < 1 || intensity > 10) {
       setErrorMessage("Invalid intensity. Must be within valid range (1-10).");
+      setIsSaving(false);
       return;
     }
     if (!selectedMood) {
       setErrorMessage("Please select a mood before saving.");
+      setIsSaving(false);
       return;
     }
 
-    // Propagate latest values into Redux so tests can assert
-    const okSel = safeDispatch(setSelectedMoodAction(selectedMood));
-    const okInt = safeDispatch(setIntensityAction(intensity));
-    const okNotes = safeDispatch(setNotesAction(notes));
-    if (!okSel || !okInt || !okNotes) {
+    try {
+      // Convert intensity from 1-10 scale to 1-5 scale for SQLite storage
+      const normalizedIntensity = Math.ceil(intensity / 2);
+
+      // Prepare mood entry for SQLite
+      const moodEntry = {
+        mood: selectedMood,
+        intensity: normalizedIntensity,
+        timestamp: new Date().toISOString(),
+        notes: notes || undefined,
+        activities: activities.length > 0 ? activities : undefined,
+      };
+
+      // Save to SQLite
+      await moodStorageService.saveMoodEntry(moodEntry);
+
+      setIsSaving(false);
+
+      Alert.alert(
+        "Mood Saved! 🎉",
+        "Thank you for checking in with yourself. Your mood has been recorded.",
+        [
+          {
+            text: "View Insights",
+            onPress: () => navigation.navigate("Dashboard"),
+          },
+          {
+            text: "Done",
+            onPress: () => navigation.goBack(),
+            style: "cancel",
+          },
+        ],
+      );
+    } catch (error) {
+      console.error("Failed to save mood:", error);
       setErrorMessage(
         "Error: Unable to save your mood entry. Please try again.",
       );
-      return;
+      setIsSaving(false);
     }
-
-    // Simulate async operation
-    await new Promise((resolve) => setTimeout(resolve, 200));
-
-    // Simulate validation error on specific notes content
-    if (notes && /error|invalid|required/i.test(notes)) {
-      setErrorMessage(
-        "Error: invalid notes input. Please adjust and try again.",
-      );
-      return;
-    }
-
-    // Attempt a network call to simulate sync (guard if fetch is undefined in tests)
-    try {
-      if (typeof fetch === "function") {
-        await fetch("https://example.com/mood", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            selectedMood,
-            intensity,
-            activities,
-            triggers,
-            notes,
-          }),
-        });
-      } else {
-        throw new Error("fetch unavailable");
-      }
-    } catch (err) {
-      console?.warn?.("Mood sync failed; storing offline", err);
-      setInfoMessage("Saved locally. Will sync later (offline).");
-    }
-
-    // Finalize save - dispatch to moodSlice (using logMood thunk would be better)
-    const ok = safeDispatch(
-      { type: "mood/FINALIZE_SAVE" }, // Placeholder - real implementation should use logMood thunk
-      () =>
-        setErrorMessage(
-          "Error: Unable to save your mood entry. Please try again.",
-        ),
-    );
-    if (!ok) return;
-
-    Alert.alert(
-      "Mood Saved! 🎉",
-      "Thank you for checking in with yourself. Your mood has been recorded.",
-      [
-        {
-          text: "View Insights",
-          onPress: () => navigation.navigate("Dashboard"),
-        },
-        {
-          text: "Done",
-          onPress: () => navigation.goBack(),
-          style: "cancel",
-        },
-      ],
-    );
-  }, [
-    selectedMood,
-    intensity,
-    notes,
-    activities,
-    triggers,
-    navigation,
-    safeDispatch,
-  ]);
+  }, [selectedMood, intensity, notes, activities, navigation]);
 
   const canProceed = () => {
     if (currentStep === 0) return !!selectedMood;

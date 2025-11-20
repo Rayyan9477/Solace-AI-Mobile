@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
 import { useResponsive } from "@shared/hooks/useResponsive";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -16,7 +16,13 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
+import { moodStorageService } from "@features/mood/services/moodStorageService";
+import type { MoodEntry } from "@features/mood/services/moodStorageService";
+import { useSelector } from "react-redux";
+import mentalHealthAPI from "@app/services/mentalHealthAPI";
+import { typography, spacing } from "@shared/theme/theme";
 
 import { MentalHealthScoreWidget } from "./components/MentalHealthScoreWidget";
 
@@ -24,10 +30,113 @@ export const DashboardScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const { isWeb, getMaxContentWidth, getContainerPadding } = useResponsive();
+  const userProfile = useSelector((state: any) => state.user.profile);
 
   const maxWidth = getMaxContentWidth();
   const contentMaxWidth = isWeb ? Math.min(maxWidth, 1024) : "100%";
   const containerPadding = getContainerPadding();
+
+  // Dashboard data state
+  const [currentMood, setCurrentMood] = useState<MoodEntry | null>(null);
+  const [isLoadingMood, setIsLoadingMood] = useState(true);
+  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [isLoadingDashboard, setIsLoadingDashboard] = useState(true);
+  const [mentalHealthScore, setMentalHealthScore] = useState(75); // Default score
+  const [streakDays, setStreakDays] = useState(0);
+  const [insights, setInsights] = useState<string[]>([]);
+  const [mindfulHours, setMindfulHours] = useState(0);
+  const [sleepAverage, setSleepAverage] = useState(7);
+  const [journalCount, setJournalCount] = useState(0);
+
+  // Load dashboard data on mount
+  useEffect(() => {
+    loadCurrentMood();
+    loadDashboardData();
+  }, []);
+
+  const loadDashboardData = async () => {
+    setIsLoadingDashboard(true);
+    try {
+      // Try to fetch from API, fallback to local storage
+      try {
+        const data = await mentalHealthAPI.dashboard.getDashboardData();
+        setDashboardData(data);
+        setMentalHealthScore(data.mentalHealthScore || 75);
+        setStreakDays(data.streakDays || 0);
+        setInsights(data.insights || []);
+        if (data.todaysMood) {
+          setCurrentMood(data.todaysMood);
+        }
+
+        // Set mindfulness and sleep data from API
+        if (data.mindfulHours) setMindfulHours(data.mindfulHours);
+        if (data.sleepAverage) setSleepAverage(data.sleepAverage);
+        if (data.journalCount) setJournalCount(data.journalCount);
+      } catch (apiError) {
+        // Fallback to local storage if API fails
+        console.log("API unavailable, using local data");
+        const moods = await moodStorageService.getMoodHistory(7);
+        const latestMood = moods[0] || null;
+        setCurrentMood(latestMood);
+
+        // Calculate local mental health score based on recent moods
+        const avgIntensity = moods.reduce((sum, m) => sum + m.intensity, 0) / (moods.length || 1);
+        setMentalHealthScore(Math.round(avgIntensity * 20)); // Convert 1-5 scale to 0-100
+
+        // Calculate streak
+        let streak = 0;
+        const today = new Date();
+        for (let i = 0; i < moods.length; i++) {
+          const moodDate = new Date(moods[i].timestamp);
+          const daysDiff = Math.floor((today.getTime() - moodDate.getTime()) / (1000 * 60 * 60 * 24));
+          if (daysDiff === i) streak++;
+          else break;
+        }
+        setStreakDays(streak);
+
+        // Set default values for other metrics when API is unavailable
+        setMindfulHours(2.5);
+        setSleepAverage(7);
+        setJournalCount(3);
+      }
+    } catch (error) {
+      console.error("Failed to load dashboard data:", error);
+      // Use default values on error
+      setMentalHealthScore(75);
+      setStreakDays(0);
+    } finally {
+      setIsLoadingDashboard(false);
+    }
+  };
+
+  const loadCurrentMood = async () => {
+    setIsLoadingMood(true);
+    try {
+      const moods = await moodStorageService.getMoodHistory(1);
+      if (moods.length > 0) {
+        setCurrentMood(moods[0]);
+      }
+    } catch (error) {
+      console.error("Failed to load current mood:", error);
+    } finally {
+      setIsLoadingMood(false);
+    }
+  };
+
+  // Helper to get mood emoji
+  const getMoodEmoji = (mood: string): string => {
+    const emojiMap: Record<string, string> = {
+      "Very sad": "😭",
+      "Sad": "😢",
+      "Okay": "😐",
+      "Good": "🙂",
+      "Happy": "😁",
+      "Excited": "🤩",
+      "Neutral": "😐",
+      "Depressed": "😞",
+    };
+    return emojiMap[mood] || "😐";
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -54,17 +163,17 @@ export const DashboardScreen = () => {
       marginBottom: 24,
     },
     greeting: {
-      fontSize: 12,
-      marginBottom: 4,
+      ...typography.sizes.textXs,
+      marginBottom: spacing[1],
     },
     title: {
-      fontSize: 24,
-      fontWeight: "800",
+      ...typography.sizes.heading2xl,
+      fontWeight: typography.weights.extrabold,
       color: theme.colors.text.primary,
-      marginBottom: 4,
+      marginBottom: spacing[1],
     },
     subtitle: {
-      fontSize: 14,
+      ...typography.sizes.textSm,
     },
     searchButton: {
       width: 40,
@@ -88,14 +197,14 @@ export const DashboardScreen = () => {
       justifyContent: "center",
     },
     metricLabel: {
-      fontSize: 14,
-      fontWeight: "700",
-      marginBottom: 8,
+      ...typography.sizes.textSm,
+      fontWeight: typography.weights.bold,
+      marginBottom: spacing[2],
     },
     metricValue: {
-      fontSize: 48,
-      fontWeight: "800",
-      marginVertical: 8,
+      ...typography.sizes.displayLg,
+      fontWeight: typography.weights.extrabold,
+      marginVertical: spacing[2],
     },
     metricSubtext: {
       fontSize: 12,
@@ -209,16 +318,16 @@ export const DashboardScreen = () => {
                     { color: theme.colors.text.secondary },
                   ]}
                 >
-                  Tue, 28 Oct 2025
+                  {new Date().toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
                 </Text>
-                <Text style={styles.title}>Hi, Shinomiya!</Text>
+                <Text style={styles.title}>Hi, {userProfile?.name || 'there'}!</Text>
                 <Text
                   style={[
                     styles.subtitle,
                     { color: theme.colors.text.secondary },
                   ]}
                 >
-                  By You · 😊 Happy
+                  {streakDays > 0 ? `${streakDays} day streak · ` : ''}{isLoadingMood ? "Loading..." : currentMood ? `${getMoodEmoji(currentMood.mood)} ${currentMood.mood}` : "No mood logged"}
                 </Text>
               </View>
               <TouchableOpacity 
@@ -253,7 +362,11 @@ export const DashboardScreen = () => {
                 >
                   Freud Score
                 </Text>
-                <MentalHealthScoreWidget score={80} size={100} label="" />
+                {isLoadingDashboard ? (
+                  <ActivityIndicator size="large" color={theme.colors.green["100"]} />
+                ) : (
+                  <MentalHealthScoreWidget score={mentalHealthScore} size={100} label="" />
+                )}
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -271,22 +384,28 @@ export const DashboardScreen = () => {
                 >
                   Mood
                 </Text>
-                <Text
-                  style={[
-                    styles.metricValue,
-                    { color: theme.colors.orange["100"] },
-                  ]}
-                >
-                  😊
-                </Text>
-                <Text
-                  style={[
-                    styles.metricSubtext,
-                    { color: theme.colors.orange["80"] },
-                  ]}
-                >
-                  Happy today
-                </Text>
+                {isLoadingMood ? (
+                  <ActivityIndicator size="large" color={theme.colors.orange["100"]} />
+                ) : (
+                  <>
+                    <Text
+                      style={[
+                        styles.metricValue,
+                        { color: theme.colors.orange["100"] },
+                      ]}
+                    >
+                      {currentMood ? getMoodEmoji(currentMood.mood) : "😐"}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.metricSubtext,
+                        { color: theme.colors.orange["80"] },
+                      ]}
+                    >
+                      {currentMood ? `${currentMood.mood} today` : "Log your mood"}
+                    </Text>
+                  </>
+                )}
               </TouchableOpacity>
             </View>
 
@@ -319,7 +438,7 @@ export const DashboardScreen = () => {
                       { color: theme.colors.green["80"] },
                     ]}
                   >
-                    5.21h
+                    {mindfulHours.toFixed(2)}h
                   </Text>
                 </View>
                 <View style={styles.trackerProgress}>
@@ -357,7 +476,7 @@ export const DashboardScreen = () => {
                       { color: theme.colors.purple["80"] },
                     ]}
                   >
-                    Insomnia (7h Avg)
+                    {sleepAverage < 6 ? 'Poor' : sleepAverage < 7 ? 'Fair' : 'Good'} ({sleepAverage.toFixed(1)}h Avg)
                   </Text>
                 </View>
                 <View style={styles.trackerProgress}>
@@ -398,7 +517,7 @@ export const DashboardScreen = () => {
                       { color: theme.colors.orange["80"] },
                     ]}
                   >
-                    44 logs (streak)
+                    {journalCount} logs {streakDays > 0 ? `(${streakDays} day streak)` : ''}
                   </Text>
                 </View>
                 <View style={styles.trackerProgress}>

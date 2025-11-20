@@ -14,6 +14,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
+  Alert,
 } from "react-native";
 
 const { width } = Dimensions.get("window");

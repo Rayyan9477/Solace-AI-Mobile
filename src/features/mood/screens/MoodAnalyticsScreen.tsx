@@ -568,8 +568,23 @@ export const MoodAnalyticsScreen = () => {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Period Selector */}
-        <View style={styles.periodSelector}>
+        {isLoading ? (
+          <View style={{ padding: 40, alignItems: "center" }}>
+            <ActivityIndicator size="large" color={theme.colors.orange["60"]} />
+            <Text
+              style={{
+                marginTop: 16,
+                color: theme.colors.text.secondary,
+                fontSize: 14,
+              }}
+            >
+              Analyzing mood data...
+            </Text>
+          </View>
+        ) : (
+          <>
+            {/* Period Selector */}
+            <View style={styles.periodSelector}>
           <TouchableOpacity
             style={[
               styles.periodButton,
@@ -706,6 +721,8 @@ export const MoodAnalyticsScreen = () => {
             </Text>
           </TouchableOpacity>
         </View>
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

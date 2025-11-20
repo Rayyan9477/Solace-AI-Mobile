@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import apiService from "../../services/api";
 
 // TypeScript type declarations
 declare const __DEV__: boolean;
@@ -64,41 +65,6 @@ interface UserState {
   error: string | null;
   _idCounter: number;
 }
-
-// Mock API service for user management
-const mockApiService = {
-  user: {
-    async getProfile(): Promise<Partial<UserProfile>> {
-      if (__DEV__) {
-        console.log("Mock user profile fetch");
-      }
-      return { id: "1", name: "Test User", email: "test@example.com" };
-    },
-    async updateProfile(
-      data: Partial<UserProfile>,
-    ): Promise<Partial<UserProfile>> {
-      if (__DEV__) {
-        console.log("Mock user profile update:", data);
-      }
-      return { ...data, updatedAt: new Date().toISOString() };
-    },
-    async getStats(): Promise<UserStats> {
-      if (__DEV__) {
-        console.log("Mock user stats fetch");
-      }
-      return {
-        totalSessions: 10,
-        streakDays: 5,
-        assessmentsCompleted: 3,
-        moodEntriesCount: 25,
-        favoriteActivities: ["meditation", "walking"],
-        joinDate: "2023-01-01T00:00:00.000Z",
-      };
-    },
-  },
-};
-
-const apiService = mockApiService;
 
 // Export apiService for testing purposes
 export { apiService };

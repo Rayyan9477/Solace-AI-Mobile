@@ -11,27 +11,40 @@ import {
   Animated,
   Dimensions,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchMoodHistory } from "@app/store/slices/moodSlice";
+import { moodStorageService } from "../services/moodStorageService";
+import type { MoodEntry as StoredMoodEntry } from "../services/moodStorageService";
 
 const { width } = Dimensions.get("window");
 
 const MoodStatsScreen = ({ navigation }) => {
   const { theme, isDarkMode } = useTheme();
-  const dispatch = useDispatch();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
 
-  // Get mood data from Redux store
-  const { moodHistory, weeklyStats, insights, currentMood } = useSelector(
-    (state: any) => state.mood,
-  );
+  // SQLite state
+  const [isLoading, setIsLoading] = useState(true);
+  const [moodHistory, setMoodHistory] = useState<StoredMoodEntry[]>([]);
 
-  // Fetch mood history on mount
+  // Fetch mood history from SQLite on mount
   useEffect(() => {
-    dispatch(fetchMoodHistory());
-  }, [dispatch]);
+    loadMoodData();
+  }, []);
+
+  const loadMoodData = async () => {
+    setIsLoading(true);
+    try {
+      // Load last 30 days of mood data
+      const moods = await moodStorageService.getMoodHistory(30);
+      setMoodHistory(moods);
+    } catch (error) {
+      console.error("Failed to load mood stats:", error);
+      setMoodHistory([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Helper function to get emoji based on mood score
   const getMoodEmoji = (score: number): string => {
@@ -42,15 +55,22 @@ const MoodStatsScreen = ({ navigation }) => {
     return "😞";
   };
 
-  // Calculate mood stats from Redux data
+  // Calculate mood stats from SQLite data
   const moodStatsData = useMemo(() => {
+    if (moodHistory.length === 0) {
+      return {
+        weeklyAverage: 0,
+        todayMood: "No data yet",
+        moodHistory: [],
+        moodDistribution: [],
+        insights: ["Start tracking your mood to see insights"],
+      };
+    }
+
     // Get last 7 days of mood entries
     const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-    const recentMoods = moodHistory.filter((entry: any) => {
-      const entryTime =
-        typeof entry.timestamp === "string"
-          ? new Date(entry.timestamp).getTime()
-          : entry.timestamp;
+    const recentMoods = moodHistory.filter((entry) => {
+      const entryTime = new Date(entry.timestamp).getTime();
       return entryTime >= sevenDaysAgo;
     });
 
@@ -128,30 +148,51 @@ const MoodStatsScreen = ({ navigation }) => {
       },
     ];
 
-    // Use insights from Redux or generate default ones
-    const displayInsights =
-      insights.length > 0
-        ? insights.map((insight: any) => insight.message)
-        : [
-            recentMoods.length > 0
-              ? `You've logged ${recentMoods.length} mood entries this week!`
-              : "Start tracking your mood to see insights",
-            weeklyStats.mostCommonMood
-              ? `Most common mood: ${weeklyStats.mostCommonMood}`
-              : "Track moods regularly to see patterns",
-            weeklyStats.averageIntensity > 0
-              ? `Average mood intensity: ${weeklyStats.averageIntensity.toFixed(1)}/10`
-              : "Log your daily mood to track progress",
-          ];
+    // Calculate weekly average intensity
+    const weeklyAverage =
+      recentMoods.length > 0
+        ? recentMoods.reduce((sum, entry) => sum + entry.intensity, 0) /
+          recentMoods.length
+        : 0;
+
+    // Get today's mood (most recent entry)
+    const today = moodHistory.length > 0 ? moodHistory[0] : null;
+    const todayMood = today ? today.mood : "No mood logged today";
+
+    // Find most common mood
+    const moodCounts: Record<string, number> = {};
+    recentMoods.forEach((entry) => {
+      moodCounts[entry.mood] = (moodCounts[entry.mood] || 0) + 1;
+    });
+    const mostCommonMood =
+      Object.keys(moodCounts).length > 0
+        ? Object.entries(moodCounts).reduce((a, b) => (b[1] > a[1] ? b : a))[0]
+        : null;
+
+    // Generate insights
+    const displayInsights = [
+      recentMoods.length > 0
+        ? `You've logged ${recentMoods.length} mood entries this week!`
+        : "Start tracking your mood to see insights",
+      mostCommonMood
+        ? `Most common mood: ${mostCommonMood}`
+        : "Track moods regularly to see patterns",
+      weeklyAverage > 0
+        ? `Average mood intensity: ${weeklyAverage.toFixed(1)}/5`
+        : "Log your daily mood to track progress",
+      recentMoods.length >= 5
+        ? "Great job staying consistent with mood tracking!"
+        : "Try to log your mood daily for better insights",
+    ];
 
     return {
-      weeklyAverage: weeklyStats.averageIntensity || 0,
-      todayMood: currentMood || "Neutral",
+      weeklyAverage,
+      todayMood,
       moodHistory: moodHistoryByDay,
       moodDistribution,
       insights: displayInsights.slice(0, 4), // Limit to 4 insights
     };
-  }, [moodHistory, weeklyStats, insights, currentMood, theme]);
+  }, [moodHistory, theme]);
 
   useEffect(() => {
     Animated.parallel([
@@ -222,7 +263,24 @@ const MoodStatsScreen = ({ navigation }) => {
         </View>
 
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <Animated.View
+          {isLoading ? (
+            <View style={{ padding: 40, alignItems: "center" }}>
+              <ActivityIndicator
+                size="large"
+                color={theme.colors.orange["60"]}
+              />
+              <Text
+                style={{
+                  marginTop: 16,
+                  color: theme.colors.text.secondary,
+                  fontSize: 14,
+                }}
+              >
+                Loading mood stats...
+              </Text>
+            </View>
+          ) : (
+            <Animated.View
             style={[
               styles.animatedContainer,
               {
@@ -462,6 +520,7 @@ const MoodStatsScreen = ({ navigation }) => {
               </View>
             </View>
           </Animated.View>
+          )}
         </ScrollView>
       </LinearGradient>
     </SafeAreaView>

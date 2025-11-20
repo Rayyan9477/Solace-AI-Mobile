@@ -15,9 +15,12 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { moodStorageService } from "../services/moodStorageService";
 import type { MoodEntry as StoredMoodEntry } from "../services/moodStorageService";
+import mentalHealthAPI from "@app/services/mentalHealthAPI";
+import dataPersistence from "@app/services/dataPersistence";
 
 interface MoodEntry {
   id: string;
@@ -64,36 +67,83 @@ export const MoodHistoryScreen = () => {
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState<"daily" | "weekly" | "monthly">("daily");
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [dailyMoods, setDailyMoods] = useState<MoodEntry[]>([]);
   const [weeklyMoods, setWeeklyMoods] = useState<MoodEntry[]>([]);
   const [monthlyMoods, setMonthlyMoods] = useState<MoodEntry[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Load mood data from SQLite
   useEffect(() => {
     loadMoodData();
   }, []);
 
-  const loadMoodData = async () => {
-    setIsLoading(true);
+  const loadMoodData = async (isRefresh = false) => {
+    if (isRefresh) {
+      setIsRefreshing(true);
+    } else {
+      setIsLoading(true);
+    }
+    setErrorMessage(null);
+
     try {
-      // Load last 30 days for daily view
-      const dailyData = await moodStorageService.getMoodHistory(30);
+      let dailyData: StoredMoodEntry[] = [];
+      let weeklyData: StoredMoodEntry[] = [];
+      let monthlyData: StoredMoodEntry[] = [];
 
-      // Load last 7 days for weekly view
-      const weekStart = new Date();
-      weekStart.setDate(weekStart.getDate() - 7);
-      const weeklyData = await moodStorageService.getMoodEntriesByDateRange(
-        weekStart,
-        new Date()
-      );
+      // Try to fetch from API first
+      try {
+        const now = new Date();
+        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-      // Load last 30 days for monthly view
-      const monthStart = new Date();
-      monthStart.setDate(monthStart.getDate() - 30);
-      const monthlyData = await moodStorageService.getMoodEntriesByDateRange(
-        monthStart,
-        new Date()
-      );
+        // Fetch from API
+        const apiMoods = await mentalHealthAPI.mood.getMoodEntries(
+          thirtyDaysAgo.toISOString(),
+          now.toISOString()
+        );
+
+        // Transform API data to StoredMoodEntry format
+        const transformedMoods = apiMoods.map((mood: any) => ({
+          id: mood.id || `mood_${Date.now()}_${Math.random()}`,
+          mood: mood.mood,
+          intensity: mood.intensity,
+          timestamp: mood.timestamp,
+          notes: mood.notes,
+          activities: mood.activities || [],
+          triggers: mood.triggers || []
+        }));
+
+        // Cache the data
+        await dataPersistence.saveMoodEntries(transformedMoods);
+
+        // Filter for different views
+        dailyData = transformedMoods;
+        weeklyData = transformedMoods.filter(
+          m => new Date(m.timestamp) >= sevenDaysAgo
+        );
+        monthlyData = transformedMoods;
+
+      } catch (apiError) {
+        console.log("API unavailable, using local storage");
+
+        // Fallback to local storage
+        dailyData = await moodStorageService.getMoodHistory(30);
+
+        const weekStart = new Date();
+        weekStart.setDate(weekStart.getDate() - 7);
+        weeklyData = await moodStorageService.getMoodEntriesByDateRange(
+          weekStart,
+          new Date()
+        );
+
+        const monthStart = new Date();
+        monthStart.setDate(monthStart.getDate() - 30);
+        monthlyData = await moodStorageService.getMoodEntriesByDateRange(
+          monthStart,
+          new Date()
+        );
+      }
 
       // Transform to UI format
       const transformEntry = (entry: StoredMoodEntry): MoodEntry => ({
@@ -110,8 +160,10 @@ export const MoodHistoryScreen = () => {
       setMonthlyMoods(monthlyData.map(transformEntry));
     } catch (error) {
       console.error("Failed to load mood history:", error);
+      setErrorMessage("Unable to load mood history. Please try again.");
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   };
 
@@ -400,7 +452,35 @@ export const MoodHistoryScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.content}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={() => loadMoodData(true)}
+            tintColor={theme.colors.orange["60"]}
+            colors={[theme.colors.orange["60"]]}
+          />
+        }
+      >
+        {/* Error State */}
+        {errorMessage && !isLoading && (
+          <View style={{ padding: 20, backgroundColor: theme.colors.red["20"], borderRadius: 12, marginBottom: 16 }}>
+            <Text style={{ color: theme.colors.red["80"], textAlign: "center" }}>
+              {errorMessage}
+            </Text>
+            <TouchableOpacity
+              style={{ marginTop: 12, padding: 8 }}
+              onPress={() => loadMoodData()}
+            >
+              <Text style={{ color: theme.colors.red["100"], textAlign: "center", fontWeight: "600" }}>
+                Retry
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         {/* Loading State */}
         {isLoading && (
           <View style={{ padding: 40, alignItems: "center" }}>
