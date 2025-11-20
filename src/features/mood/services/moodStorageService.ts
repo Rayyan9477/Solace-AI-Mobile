@@ -1,10 +1,12 @@
 /**
  * Mood Storage Service
- * Provides local persistence for mood entries using AsyncStorage
+ * Provides local persistence for mood entries using SQLite
  * Implements offline-first approach with local data caching
+ * Auto-migrates from AsyncStorage to SQLite for better performance
  */
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SQLite from "expo-sqlite";
 import { logger } from "@shared/utils/logger";
 
 // Storage keys
@@ -51,40 +53,143 @@ interface MoodData {
 }
 
 class MoodStorageService {
-  private maxHistorySize = 1000; // Maximum number of mood entries to store
+  private db: SQLite.SQLiteDatabase | null = null;
+  private dbInitialized = false;
+  private maxHistorySize = 1000; // Maximum number of mood entries to store (for AsyncStorage fallback)
   private cacheExpiry = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+
+  /**
+   * Initialize SQLite database and create tables
+   */
+  private async initializeDatabase(): Promise<void> {
+    if (this.dbInitialized) return;
+
+    try {
+      this.db = await SQLite.openDatabaseAsync("solace_mood.db");
+
+      // Create mood entries table
+      await this.db.execAsync(`
+        CREATE TABLE IF NOT EXISTS mood_entries (
+          id TEXT PRIMARY KEY,
+          mood TEXT NOT NULL,
+          notes TEXT,
+          intensity INTEGER NOT NULL,
+          activities TEXT,
+          timestamp TEXT NOT NULL,
+          createdAt TEXT NOT NULL,
+          synced INTEGER DEFAULT 0
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_mood_timestamp ON mood_entries(timestamp);
+        CREATE INDEX IF NOT EXISTS idx_mood_mood ON mood_entries(mood);
+        CREATE INDEX IF NOT EXISTS idx_mood_synced ON mood_entries(synced);
+      `);
+
+      this.dbInitialized = true;
+      logger.info("Mood SQLite database initialized successfully");
+
+      // Auto-migrate from AsyncStorage if data exists
+      await this.migrateFromAsyncStorage();
+    } catch (error) {
+      logger.error("Failed to initialize mood database", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Migrate existing AsyncStorage data to SQLite
+   */
+  private async migrateFromAsyncStorage(): Promise<void> {
+    try {
+      // Check if migration already happened
+      const migrated = await AsyncStorage.getItem("@solace_mood_migrated");
+      if (migrated === "true") {
+        logger.info("Mood data already migrated to SQLite");
+        return;
+      }
+
+      // Get existing AsyncStorage data
+      const asyncData = await AsyncStorage.getItem(STORAGE_KEYS.MOOD_HISTORY);
+      if (!asyncData) {
+        await AsyncStorage.setItem("@solace_mood_migrated", "true");
+        return;
+      }
+
+      const entries = JSON.parse(asyncData) as MoodEntry[];
+      if (entries.length === 0) {
+        await AsyncStorage.setItem("@solace_mood_migrated", "true");
+        return;
+      }
+
+      // Migrate each entry to SQLite
+      logger.info(`Migrating ${entries.length} mood entries from AsyncStorage to SQLite`);
+
+      for (const entry of entries) {
+        const timestamp = typeof entry.timestamp === "string"
+          ? entry.timestamp
+          : new Date(entry.timestamp).toISOString();
+
+        await this.db!.runAsync(
+          `INSERT OR REPLACE INTO mood_entries
+           (id, mood, notes, intensity, activities, timestamp, createdAt, synced)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            entry.id,
+            entry.mood,
+            entry.notes || null,
+            entry.intensity,
+            entry.activities ? JSON.stringify(entry.activities) : null,
+            timestamp,
+            entry.createdAt || timestamp,
+            entry.synced ? 1 : 0,
+          ]
+        );
+      }
+
+      // Mark migration as complete
+      await AsyncStorage.setItem("@solace_mood_migrated", "true");
+      logger.info("Mood migration to SQLite completed successfully");
+    } catch (error) {
+      logger.error("Failed to migrate mood data from AsyncStorage", error);
+      // Don't throw - allow fallback to AsyncStorage
+    }
+  }
 
   /**
    * Save a new mood entry to local storage
    */
   async saveMoodEntry(entry: MoodEntry): Promise<MoodEntry> {
-    try {
-      // Get existing history
-      const history = await this.getMoodHistory();
+    await this.initializeDatabase();
 
-      // Add new entry with unique ID if not present
+    try {
       const newEntry = {
         ...entry,
         id: entry.id || `mood_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         createdAt: entry.createdAt || new Date().toISOString(),
-        synced: false, // Mark as unsynced for future backend sync
+        synced: false,
       };
 
-      // Add to beginning of array (most recent first)
-      history.unshift(newEntry);
+      const timestamp = typeof newEntry.timestamp === "string"
+        ? newEntry.timestamp
+        : new Date(newEntry.timestamp).toISOString();
 
-      // Limit history size
-      if (history.length > this.maxHistorySize) {
-        history.pop();
-      }
-
-      // Save updated history
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.MOOD_HISTORY,
-        JSON.stringify(history)
+      await this.db!.runAsync(
+        `INSERT INTO mood_entries
+         (id, mood, notes, intensity, activities, timestamp, createdAt, synced)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          newEntry.id,
+          newEntry.mood,
+          newEntry.notes || null,
+          newEntry.intensity,
+          newEntry.activities ? JSON.stringify(newEntry.activities) : null,
+          timestamp,
+          newEntry.createdAt,
+          newEntry.synced ? 1 : 0,
+        ]
       );
 
-      logger.info("Mood entry saved locally", { id: newEntry.id });
+      logger.info("Mood entry saved to SQLite", { id: newEntry.id });
       return newEntry;
     } catch (error) {
       logger.error("Failed to save mood entry", error);
@@ -96,46 +201,62 @@ class MoodStorageService {
    * Get mood history from local storage
    */
   async getMoodHistory(limit?: number): Promise<MoodEntry[]> {
+    await this.initializeDatabase();
+
     try {
-      const data = await AsyncStorage.getItem(STORAGE_KEYS.MOOD_HISTORY);
-      if (!data) {
-        return [];
-      }
+      let sql = "SELECT * FROM mood_entries ORDER BY timestamp DESC";
+      const params: any[] = [];
 
-      const history = JSON.parse(data) as MoodEntry[];
-
-      // Apply limit if specified
       if (limit && limit > 0) {
-        return history.slice(0, limit);
+        sql += " LIMIT ?";
+        params.push(limit);
       }
 
-      return history;
+      const rows = await this.db!.getAllAsync<any>(sql, params);
+
+      return rows.map((row) => ({
+        id: row.id,
+        mood: row.mood,
+        notes: row.notes,
+        intensity: row.intensity,
+        activities: row.activities ? JSON.parse(row.activities) : undefined,
+        timestamp: row.timestamp,
+        createdAt: row.createdAt,
+        synced: row.synced === 1,
+      }));
     } catch (error) {
-      logger.error("Failed to get mood history", error);
+      logger.error("Failed to get mood history from SQLite", error);
       return [];
     }
   }
 
   /**
-   * Get mood entries for a specific date range
+   * Get mood entries for a specific date range (using SQL WHERE for performance)
    */
   async getMoodEntriesByDateRange(
     startDate: Date,
     endDate: Date
   ): Promise<MoodEntry[]> {
+    await this.initializeDatabase();
+
     try {
-      const history = await this.getMoodHistory();
+      const rows = await this.db!.getAllAsync<any>(
+        `SELECT * FROM mood_entries
+         WHERE timestamp >= ? AND timestamp <= ?
+         ORDER BY timestamp DESC`,
+        [startDate.toISOString(), endDate.toISOString()]
+      );
 
-      const start = startDate.getTime();
-      const end = endDate.getTime();
-
-      return history.filter((entry) => {
-        const entryTime =
-          typeof entry.timestamp === "string"
-            ? new Date(entry.timestamp).getTime()
-            : entry.timestamp;
-        return entryTime >= start && entryTime <= end;
-      });
+      return rows.map((row) => ({
+        id: row.id,
+        mood: row.mood,
+        notes: row.notes,
+        intensity: row.intensity,
+        activities: row.activities ? JSON.parse(row.activities) : undefined,
+        timestamp: row.timestamp,
+        createdAt: row.createdAt,
+        synced: row.synced === 1,
+      }));
     } catch (error) {
       logger.error("Failed to get mood entries by date range", error);
       return [];
@@ -149,30 +270,60 @@ class MoodStorageService {
     entryId: string,
     updates: Partial<MoodEntry>
   ): Promise<MoodEntry | null> {
-    try {
-      const history = await this.getMoodHistory();
-      const index = history.findIndex((entry) => entry.id === entryId);
+    await this.initializeDatabase();
 
-      if (index === -1) {
+    try {
+      const fieldsToUpdate: string[] = ["synced = 0"];
+      const params: any[] = [];
+
+      if (updates.mood !== undefined) {
+        fieldsToUpdate.push("mood = ?");
+        params.push(updates.mood);
+      }
+      if (updates.notes !== undefined) {
+        fieldsToUpdate.push("notes = ?");
+        params.push(updates.notes);
+      }
+      if (updates.intensity !== undefined) {
+        fieldsToUpdate.push("intensity = ?");
+        params.push(updates.intensity);
+      }
+      if (updates.activities !== undefined) {
+        fieldsToUpdate.push("activities = ?");
+        params.push(JSON.stringify(updates.activities));
+      }
+
+      params.push(entryId); // for WHERE clause
+
+      const result = await this.db!.runAsync(
+        `UPDATE mood_entries SET ${fieldsToUpdate.join(", ")} WHERE id = ?`,
+        params
+      );
+
+      if (result.changes === 0) {
         logger.warn("Mood entry not found", { entryId });
         return null;
       }
 
-      // Update entry
-      history[index] = {
-        ...history[index],
-        ...updates,
-        synced: false, // Mark as unsynced
-      };
-
-      // Save updated history
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.MOOD_HISTORY,
-        JSON.stringify(history)
+      // Return updated entry
+      const row = await this.db!.getFirstAsync<any>(
+        `SELECT * FROM mood_entries WHERE id = ?`,
+        [entryId]
       );
 
+      if (!row) return null;
+
       logger.info("Mood entry updated", { entryId });
-      return history[index];
+      return {
+        id: row.id,
+        mood: row.mood,
+        notes: row.notes,
+        intensity: row.intensity,
+        activities: row.activities ? JSON.parse(row.activities) : undefined,
+        timestamp: row.timestamp,
+        createdAt: row.createdAt,
+        synced: row.synced === 1,
+      };
     } catch (error) {
       logger.error("Failed to update mood entry", error);
       throw error;
@@ -183,19 +334,18 @@ class MoodStorageService {
    * Delete a mood entry
    */
   async deleteMoodEntry(entryId: string): Promise<boolean> {
-    try {
-      const history = await this.getMoodHistory();
-      const filteredHistory = history.filter((entry) => entry.id !== entryId);
+    await this.initializeDatabase();
 
-      if (filteredHistory.length === history.length) {
+    try {
+      const result = await this.db!.runAsync(
+        `DELETE FROM mood_entries WHERE id = ?`,
+        [entryId]
+      );
+
+      if (result.changes === 0) {
         logger.warn("Mood entry not found for deletion", { entryId });
         return false;
       }
-
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.MOOD_HISTORY,
-        JSON.stringify(filteredHistory)
-      );
 
       logger.info("Mood entry deleted", { entryId });
       return true;
@@ -362,18 +512,25 @@ class MoodStorageService {
   }
 
   /**
-   * Clear all mood data (use with caution)
+   * Clear all mood data (SQLite and AsyncStorage)
    */
   async clearAllData(): Promise<void> {
+    await this.initializeDatabase();
+
     try {
+      // Clear SQLite data
+      await this.db!.runAsync(`DELETE FROM mood_entries`);
+
+      // Clear AsyncStorage legacy data
       await Promise.all([
         AsyncStorage.removeItem(STORAGE_KEYS.MOOD_HISTORY),
         AsyncStorage.removeItem(STORAGE_KEYS.MOOD_STATS),
         AsyncStorage.removeItem(STORAGE_KEYS.MOOD_INSIGHTS),
         AsyncStorage.removeItem(STORAGE_KEYS.LAST_SYNC),
+        AsyncStorage.removeItem("@solace_mood_migrated"),
       ]);
 
-      logger.info("All mood data cleared");
+      logger.info("All mood data cleared from SQLite and AsyncStorage");
     } catch (error) {
       logger.error("Failed to clear mood data", error);
     }

@@ -5,7 +5,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,11 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
+import { moodStorageService } from "../services/moodStorageService";
+import type { MoodEntry as StoredMoodEntry } from "../services/moodStorageService";
 
 const { width } = Dimensions.get("window");
 
@@ -35,6 +39,8 @@ export const MoodCalendarScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const [selectedMonth, setSelectedMonth] = useState(new Date());
+  const [isLoading, setIsLoading] = useState(true);
+  const [monthMoods, setMonthMoods] = useState<StoredMoodEntry[]>([]);
 
   const getDaysInMonth = (month: number, year: number) => {
     return new Date(year, month + 1, 0).getDate();
@@ -61,20 +67,68 @@ export const MoodCalendarScreen = () => {
 
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  const moodData: { [key: number]: DayMood } = {
-    1: { date: 1, mood: "Happy", emoji: "😊", intensity: 4 },
-    3: { date: 3, mood: "Sad", emoji: "😢", intensity: 2 },
-    5: { date: 5, mood: "Excited", emoji: "😄", intensity: 5 },
-    7: { date: 7, mood: "Neutral", emoji: "😐", intensity: 3 },
-    10: { date: 10, mood: "Happy", emoji: "😊", intensity: 4 },
-    12: { date: 12, mood: "Depressed", emoji: "😞", intensity: 1 },
-    15: { date: 15, mood: "Happy", emoji: "😊", intensity: 4 },
-    18: { date: 18, mood: "Excited", emoji: "😄", intensity: 5 },
-    20: { date: 20, mood: "Neutral", emoji: "😐", intensity: 3 },
-    22: { date: 22, mood: "Happy", emoji: "😊", intensity: 4 },
-    25: { date: 25, mood: "Sad", emoji: "😢", intensity: 2 },
-    28: { date: 28, mood: "Happy", emoji: "😊", intensity: 4 },
+  // Load mood data for the selected month
+  useEffect(() => {
+    loadMonthData();
+  }, [selectedMonth]);
+
+  const loadMonthData = async () => {
+    setIsLoading(true);
+    try {
+      const month = selectedMonth.getMonth();
+      const year = selectedMonth.getFullYear();
+
+      // Get first and last day of the month
+      const startDate = new Date(year, month, 1);
+      const endDate = new Date(year, month + 1, 0, 23, 59, 59);
+
+      // Load moods for the month
+      const moods = await moodStorageService.getMoodEntriesByDateRange(
+        startDate,
+        endDate
+      );
+
+      setMonthMoods(moods);
+    } catch (error) {
+      console.error("Failed to load month moods:", error);
+      setMonthMoods([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  // Helper function to get mood emoji
+  const getMoodEmoji = (mood: string): string => {
+    const emojiMap: Record<string, string> = {
+      "Very sad": "😭",
+      "Sad": "😢",
+      "Okay": "😐",
+      "Good": "🙂",
+      "Happy": "😁",
+      "Excited": "🤩",
+      "Neutral": "😐",
+      "Depressed": "😞",
+    };
+    return emojiMap[mood] || "😐";
+  };
+
+  // Convert stored mood entries to calendar format
+  const moodData: { [key: number]: DayMood } = monthMoods.reduce(
+    (acc, entry) => {
+      const date = new Date(entry.timestamp);
+      const day = date.getDate();
+
+      acc[day] = {
+        date: day,
+        mood: entry.mood,
+        emoji: getMoodEmoji(entry.mood),
+        intensity: entry.intensity,
+      };
+
+      return acc;
+    },
+    {} as { [key: number]: DayMood }
+  );
 
   const getMoodColor = (intensity: number) => {
     if (intensity >= 5) return theme.colors.green["60"];
@@ -117,14 +171,21 @@ export const MoodCalendarScreen = () => {
     setSelectedMonth(new Date());
   };
 
-  const handleDayPress = (day: DayMood) => {
-    if (day.mood) {
+  const handleDayPress = (day: DayMood | null, dayNumber: number) => {
+    const month = selectedMonth.getMonth();
+    const year = selectedMonth.getFullYear();
+    const dateStr = new Date(year, month, dayNumber).toLocaleDateString();
+
+    if (day && day.mood) {
       // Show mood details in alert
       Alert.alert(
         `Mood: ${day.mood}`,
-        `Date: ${day.date.toLocaleDateString()}\nIntensity: ${day.intensity}/5`,
+        `Date: ${dateStr}\nIntensity: ${day.intensity}/5`,
         [
-          { text: "View History", onPress: () => navigation.navigate("MoodHistory" as never) },
+          {
+            text: "View History",
+            onPress: () => navigation.navigate("MoodHistory" as never),
+          },
           { text: "Close", style: "cancel" },
         ]
       );
@@ -134,7 +195,10 @@ export const MoodCalendarScreen = () => {
         "No Mood Entry",
         "Would you like to log your mood for this day?",
         [
-          { text: "Log Mood", onPress: () => navigation.navigate("Mood" as never) },
+          {
+            text: "Log Mood",
+            onPress: () => navigation.navigate("Mood" as never),
+          },
           { text: "Cancel", style: "cancel" },
         ]
       );
@@ -357,8 +421,26 @@ export const MoodCalendarScreen = () => {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Month Selector */}
-        <View style={styles.monthSelector}>
+        {/* Loading State */}
+        {isLoading && (
+          <View style={{ padding: 40, alignItems: "center" }}>
+            <ActivityIndicator size="large" color={theme.colors.orange["60"]} />
+            <Text
+              style={{
+                marginTop: 16,
+                color: theme.colors.text.secondary,
+                fontSize: 14,
+              }}
+            >
+              Loading calendar...
+            </Text>
+          </View>
+        )}
+
+        {!isLoading && (
+          <>
+            {/* Month Selector */}
+            <View style={styles.monthSelector}>
           <TouchableOpacity
             style={styles.monthButton}
             onPress={() => changeMonth("prev")}
@@ -390,7 +472,21 @@ export const MoodCalendarScreen = () => {
           {/* Calendar Grid */}
           <View style={styles.calendarGrid}>
             {calendarDays.map((day, index) => {
-              if (!day) {
+              // Calculate the actual day number for this cell
+              const firstDay = getFirstDayOfMonth(
+                selectedMonth.getMonth(),
+                selectedMonth.getFullYear()
+              );
+              const dayNumber = index - firstDay + 1;
+              const isValidDay =
+                dayNumber > 0 &&
+                dayNumber <=
+                  getDaysInMonth(
+                    selectedMonth.getMonth(),
+                    selectedMonth.getFullYear()
+                  );
+
+              if (!isValidDay) {
                 return (
                   <View key={`empty-${index}`} style={styles.dayCell}>
                     <View style={[styles.dayButton, styles.emptyDay]} />
@@ -398,7 +494,9 @@ export const MoodCalendarScreen = () => {
                 );
               }
 
-              const moodColor = getMoodColor(day.intensity);
+              const moodColor = day
+                ? getMoodColor(day.intensity)
+                : theme.colors.gray["20"];
 
               return (
                 <View key={index} style={styles.dayCell}>
@@ -406,16 +504,28 @@ export const MoodCalendarScreen = () => {
                     style={[
                       styles.dayButton,
                       day && styles.dayWithMood,
-                      { borderColor: moodColor },
+                      day && { borderColor: moodColor },
                     ]}
-                    onPress={() => handleDayPress(day)}
+                    onPress={() => handleDayPress(day, dayNumber)}
                     accessible
-                    accessibilityLabel={`${day.mood} mood on day ${day.date}`}
+                    accessibilityLabel={
+                      day
+                        ? `${day.mood} mood on day ${dayNumber}`
+                        : `No mood entry for day ${dayNumber}`
+                    }
                     accessibilityRole="button"
-                    accessibilityHint="View mood details for this day"
+                    accessibilityHint="View or log mood for this day"
                   >
-                    <Text style={styles.dayEmoji}>{day.emoji}</Text>
-                    <Text style={styles.dayNumber}>{day.date}</Text>
+                    {day ? (
+                      <>
+                        <Text style={styles.dayEmoji}>{day.emoji}</Text>
+                        <Text style={styles.dayNumber}>{dayNumber}</Text>
+                      </>
+                    ) : (
+                      <Text style={[styles.dayNumber, { fontSize: 14 }]}>
+                        {dayNumber}
+                      </Text>
+                    )}
                   </TouchableOpacity>
                 </View>
               );
@@ -468,6 +578,8 @@ export const MoodCalendarScreen = () => {
             </View>
           </View>
         </View>
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

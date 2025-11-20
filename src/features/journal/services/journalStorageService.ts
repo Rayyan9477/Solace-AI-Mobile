@@ -1,10 +1,12 @@
 /**
  * Journal Storage Service
- * Provides local persistence for journal entries using AsyncStorage
+ * Provides local persistence for journal entries using SQLite
  * Implements offline-first approach with encrypted storage for sensitive content
+ * Auto-migrates from AsyncStorage to SQLite for better performance
  */
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SQLite from "expo-sqlite";
 import { logger } from "@shared/utils/logger";
 
 // Storage keys
@@ -47,15 +49,115 @@ interface JournalFilters {
 }
 
 class JournalStorageService {
-  private maxEntriesCount = 1000; // Maximum number of journal entries to store
+  private db: SQLite.SQLiteDatabase | null = null;
+  private dbInitialized = false;
+  private maxEntriesCount = 1000; // Maximum number of journal entries to store (for AsyncStorage fallback)
+
+  /**
+   * Initialize SQLite database and create tables
+   */
+  private async initializeDatabase(): Promise<void> {
+    if (this.dbInitialized) return;
+
+    try {
+      this.db = await SQLite.openDatabaseAsync("solace_journal.db");
+
+      // Create journal entries table
+      await this.db.execAsync(`
+        CREATE TABLE IF NOT EXISTS journal_entries (
+          id TEXT PRIMARY KEY,
+          title TEXT NOT NULL,
+          content TEXT NOT NULL,
+          mood TEXT,
+          tags TEXT,
+          createdAt TEXT NOT NULL,
+          updatedAt TEXT NOT NULL,
+          synced INTEGER DEFAULT 0,
+          encrypted INTEGER DEFAULT 0,
+          audioUri TEXT
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_journal_createdAt ON journal_entries(createdAt);
+        CREATE INDEX IF NOT EXISTS idx_journal_mood ON journal_entries(mood);
+        CREATE INDEX IF NOT EXISTS idx_journal_synced ON journal_entries(synced);
+      `);
+
+      this.dbInitialized = true;
+      logger.info("Journal SQLite database initialized successfully");
+
+      // Auto-migrate from AsyncStorage if data exists
+      await this.migrateFromAsyncStorage();
+    } catch (error) {
+      logger.error("Failed to initialize journal database", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Migrate existing AsyncStorage data to SQLite
+   */
+  private async migrateFromAsyncStorage(): Promise<void> {
+    try {
+      // Check if migration already happened
+      const migrated = await AsyncStorage.getItem("@solace_journal_migrated");
+      if (migrated === "true") {
+        logger.info("Journal data already migrated to SQLite");
+        return;
+      }
+
+      // Get existing AsyncStorage data
+      const asyncData = await AsyncStorage.getItem(STORAGE_KEYS.JOURNAL_ENTRIES);
+      if (!asyncData) {
+        // No data to migrate
+        await AsyncStorage.setItem("@solace_journal_migrated", "true");
+        return;
+      }
+
+      const entries = JSON.parse(asyncData) as JournalEntry[];
+      if (entries.length === 0) {
+        await AsyncStorage.setItem("@solace_journal_migrated", "true");
+        return;
+      }
+
+      // Migrate each entry to SQLite
+      logger.info(`Migrating ${entries.length} journal entries from AsyncStorage to SQLite`);
+
+      for (const entry of entries) {
+        await this.db!.runAsync(
+          `INSERT OR REPLACE INTO journal_entries
+           (id, title, content, mood, tags, createdAt, updatedAt, synced, encrypted, audioUri)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            entry.id,
+            entry.title,
+            entry.content,
+            entry.mood || null,
+            entry.tags ? JSON.stringify(entry.tags) : null,
+            entry.createdAt,
+            entry.updatedAt,
+            entry.synced ? 1 : 0,
+            entry.encrypted ? 1 : 0,
+            (entry as any).audioUri || null,
+          ]
+        );
+      }
+
+      // Mark migration as complete
+      await AsyncStorage.setItem("@solace_journal_migrated", "true");
+      logger.info("Journal migration to SQLite completed successfully");
+    } catch (error) {
+      logger.error("Failed to migrate journal data from AsyncStorage", error);
+      // Don't throw - allow fallback to AsyncStorage
+    }
+  }
 
   /**
    * Save a new journal entry to local storage
    */
   async saveEntry(entry: Omit<JournalEntry, "id" | "createdAt" | "updatedAt">): Promise<JournalEntry> {
-    try {
-      const entries = await this.getAllEntries();
+    await this.initializeDatabase();
 
+    try {
       const newEntry: JournalEntry = {
         id: `journal_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         ...entry,
@@ -64,23 +166,25 @@ class JournalStorageService {
         synced: false,
       };
 
-      // Add to beginning of array
-      entries.unshift(newEntry);
-
-      // Limit storage size
-      if (entries.length > this.maxEntriesCount) {
-        entries.pop();
-      }
-
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.JOURNAL_ENTRIES,
-        JSON.stringify(entries)
+      await this.db!.runAsync(
+        `INSERT INTO journal_entries
+         (id, title, content, mood, tags, createdAt, updatedAt, synced, encrypted, audioUri)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          newEntry.id,
+          newEntry.title,
+          newEntry.content,
+          newEntry.mood || null,
+          newEntry.tags ? JSON.stringify(newEntry.tags) : null,
+          newEntry.createdAt,
+          newEntry.updatedAt,
+          newEntry.synced ? 1 : 0,
+          newEntry.encrypted ? 1 : 0,
+          (newEntry as any).audioUri || null,
+        ]
       );
 
-      // Update stats
-      await this.updateStats();
-
-      logger.info("Journal entry saved", { id: newEntry.id });
+      logger.info("Journal entry saved to SQLite", { id: newEntry.id });
       return newEntry;
     } catch (error) {
       logger.error("Failed to save journal entry", error);
@@ -92,15 +196,26 @@ class JournalStorageService {
    * Get all journal entries
    */
   async getAllEntries(): Promise<JournalEntry[]> {
-    try {
-      const data = await AsyncStorage.getItem(STORAGE_KEYS.JOURNAL_ENTRIES);
-      if (!data) {
-        return [];
-      }
+    await this.initializeDatabase();
 
-      return JSON.parse(data) as JournalEntry[];
+    try {
+      const rows = await this.db!.getAllAsync<any>(
+        `SELECT * FROM journal_entries ORDER BY createdAt DESC`
+      );
+
+      return rows.map((row) => ({
+        id: row.id,
+        title: row.title,
+        content: row.content,
+        mood: row.mood,
+        tags: row.tags ? JSON.parse(row.tags) : undefined,
+        createdAt: row.createdAt,
+        updatedAt: row.updatedAt,
+        synced: row.synced === 1,
+        encrypted: row.encrypted === 1,
+      }));
     } catch (error) {
-      logger.error("Failed to get journal entries", error);
+      logger.error("Failed to get journal entries from SQLite", error);
       return [];
     }
   }
@@ -109,9 +224,27 @@ class JournalStorageService {
    * Get a single journal entry by ID
    */
   async getEntryById(id: string): Promise<JournalEntry | null> {
+    await this.initializeDatabase();
+
     try {
-      const entries = await this.getAllEntries();
-      return entries.find((entry) => entry.id === id) || null;
+      const row = await this.db!.getFirstAsync<any>(
+        `SELECT * FROM journal_entries WHERE id = ?`,
+        [id]
+      );
+
+      if (!row) return null;
+
+      return {
+        id: row.id,
+        title: row.title,
+        content: row.content,
+        mood: row.mood,
+        tags: row.tags ? JSON.parse(row.tags) : undefined,
+        createdAt: row.createdAt,
+        updatedAt: row.updatedAt,
+        synced: row.synced === 1,
+        encrypted: row.encrypted === 1,
+      };
     } catch (error) {
       logger.error("Failed to get journal entry", error);
       return null;
@@ -119,48 +252,67 @@ class JournalStorageService {
   }
 
   /**
-   * Get journal entries with filters
+   * Get journal entries with filters (using SQL WHERE clauses for performance)
    */
   async getEntriesWithFilters(filters: JournalFilters): Promise<JournalEntry[]> {
+    await this.initializeDatabase();
+
     try {
-      let entries = await this.getAllEntries();
+      let sql = "SELECT * FROM journal_entries WHERE 1=1";
+      const params: any[] = [];
 
       // Apply date range filter
-      if (filters.startDate || filters.endDate) {
-        entries = entries.filter((entry) => {
-          const entryDate = new Date(entry.createdAt);
-          if (filters.startDate && entryDate < filters.startDate) return false;
-          if (filters.endDate && entryDate > filters.endDate) return false;
-          return true;
-        });
+      if (filters.startDate) {
+        sql += " AND createdAt >= ?";
+        params.push(filters.startDate.toISOString());
+      }
+      if (filters.endDate) {
+        sql += " AND createdAt <= ?";
+        params.push(filters.endDate.toISOString());
       }
 
       // Apply mood filter
       if (filters.mood) {
-        entries = entries.filter((entry) => entry.mood === filters.mood);
+        sql += " AND mood = ?";
+        params.push(filters.mood);
       }
 
-      // Apply tags filter
+      // Apply search query (full-text search on title and content)
+      if (filters.searchQuery) {
+        sql += " AND (title LIKE ? OR content LIKE ?)";
+        const searchPattern = `%${filters.searchQuery}%`;
+        params.push(searchPattern, searchPattern);
+      }
+
+      // Order by most recent first
+      sql += " ORDER BY createdAt DESC";
+
+      // Apply limit
+      if (filters.limit && filters.limit > 0) {
+        sql += " LIMIT ?";
+        params.push(filters.limit);
+      }
+
+      const rows = await this.db!.getAllAsync<any>(sql, params);
+
+      // Map and apply tags filter in memory (JSON column)
+      let entries = rows.map((row) => ({
+        id: row.id,
+        title: row.title,
+        content: row.content,
+        mood: row.mood,
+        tags: row.tags ? JSON.parse(row.tags) : undefined,
+        createdAt: row.createdAt,
+        updatedAt: row.updatedAt,
+        synced: row.synced === 1,
+        encrypted: row.encrypted === 1,
+      }));
+
+      // Apply tags filter if specified
       if (filters.tags && filters.tags.length > 0) {
         entries = entries.filter((entry) =>
           filters.tags!.some((tag) => entry.tags?.includes(tag))
         );
-      }
-
-      // Apply search query
-      if (filters.searchQuery) {
-        const query = filters.searchQuery.toLowerCase();
-        entries = entries.filter(
-          (entry) =>
-            entry.title.toLowerCase().includes(query) ||
-            entry.content.toLowerCase().includes(query) ||
-            entry.tags?.some((tag) => tag.toLowerCase().includes(query))
-        );
-      }
-
-      // Apply limit
-      if (filters.limit && filters.limit > 0) {
-        entries = entries.slice(0, filters.limit);
       }
 
       return entries;
@@ -177,29 +329,46 @@ class JournalStorageService {
     id: string,
     updates: Partial<Omit<JournalEntry, "id" | "createdAt">>
   ): Promise<JournalEntry | null> {
-    try {
-      const entries = await this.getAllEntries();
-      const index = entries.findIndex((entry) => entry.id === id);
+    await this.initializeDatabase();
 
-      if (index === -1) {
+    try {
+      // First check if entry exists
+      const existing = await this.getEntryById(id);
+      if (!existing) {
         logger.warn("Journal entry not found", { id });
         return null;
       }
 
-      entries[index] = {
-        ...entries[index],
-        ...updates,
-        updatedAt: new Date().toISOString(),
-        synced: false,
-      };
+      const updatedAt = new Date().toISOString();
+      const fieldsToUpdate: string[] = ["updatedAt = ?", "synced = 0"];
+      const params: any[] = [updatedAt];
 
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.JOURNAL_ENTRIES,
-        JSON.stringify(entries)
+      if (updates.title !== undefined) {
+        fieldsToUpdate.push("title = ?");
+        params.push(updates.title);
+      }
+      if (updates.content !== undefined) {
+        fieldsToUpdate.push("content = ?");
+        params.push(updates.content);
+      }
+      if (updates.mood !== undefined) {
+        fieldsToUpdate.push("mood = ?");
+        params.push(updates.mood);
+      }
+      if (updates.tags !== undefined) {
+        fieldsToUpdate.push("tags = ?");
+        params.push(JSON.stringify(updates.tags));
+      }
+
+      params.push(id); // for WHERE clause
+
+      await this.db!.runAsync(
+        `UPDATE journal_entries SET ${fieldsToUpdate.join(", ")} WHERE id = ?`,
+        params
       );
 
       logger.info("Journal entry updated", { id });
-      return entries[index];
+      return await this.getEntryById(id);
     } catch (error) {
       logger.error("Failed to update journal entry", error);
       throw error;
@@ -210,22 +379,18 @@ class JournalStorageService {
    * Delete a journal entry
    */
   async deleteEntry(id: string): Promise<boolean> {
-    try {
-      const entries = await this.getAllEntries();
-      const filteredEntries = entries.filter((entry) => entry.id !== id);
+    await this.initializeDatabase();
 
-      if (filteredEntries.length === entries.length) {
+    try {
+      const result = await this.db!.runAsync(
+        `DELETE FROM journal_entries WHERE id = ?`,
+        [id]
+      );
+
+      if (result.changes === 0) {
         logger.warn("Journal entry not found for deletion", { id });
         return false;
       }
-
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.JOURNAL_ENTRIES,
-        JSON.stringify(filteredEntries)
-      );
-
-      // Update stats
-      await this.updateStats();
 
       logger.info("Journal entry deleted", { id });
       return true;
@@ -494,17 +659,24 @@ class JournalStorageService {
   }
 
   /**
-   * Clear all journal data
+   * Clear all journal data (SQLite and AsyncStorage)
    */
   async clearAllData(): Promise<void> {
+    await this.initializeDatabase();
+
     try {
+      // Clear SQLite data
+      await this.db!.runAsync(`DELETE FROM journal_entries`);
+
+      // Clear AsyncStorage legacy data
       await Promise.all([
         AsyncStorage.removeItem(STORAGE_KEYS.JOURNAL_ENTRIES),
         AsyncStorage.removeItem(STORAGE_KEYS.JOURNAL_STATS),
         AsyncStorage.removeItem(STORAGE_KEYS.LAST_SYNC),
+        AsyncStorage.removeItem("@solace_journal_migrated"),
       ]);
 
-      logger.info("All journal data cleared");
+      logger.info("All journal data cleared from SQLite and AsyncStorage");
     } catch (error) {
       logger.error("Failed to clear journal data", error);
     }

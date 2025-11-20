@@ -9,6 +9,7 @@ import Slider from "@react-native-community/slider";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
 import { LinearGradient } from "expo-linear-gradient";
+import { Audio } from "expo-av";
 import React, { useState, useRef, useEffect } from "react";
 import {
   View,
@@ -20,6 +21,8 @@ import {
   ScrollView,
   Dimensions,
   TextInput,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 
 const { width } = Dimensions.get("window");
@@ -152,6 +155,13 @@ export const AssessmentScreen = () => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [sliderValue, setSliderValue] = useState(50);
   const [textInput, setTextInput] = useState("");
+
+  // Audio recording state
+  const [recording, setRecording] = useState<Audio.Recording | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingDuration, setRecordingDuration] = useState(0);
+  const [audioUri, setAudioUri] = useState<string | null>(null);
+  const recordingInterval = useRef<NodeJS.Timeout | null>(null);
 
   const question = QUESTIONS[currentQuestion];
   const progress = ((currentQuestion + 1) / QUESTIONS.length) * 100;
@@ -375,6 +385,100 @@ export const AssessmentScreen = () => {
     }
   };
 
+  // Audio recording functions
+  const requestAudioPermission = async (): Promise<boolean> => {
+    try {
+      const { status } = await Audio.requestPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert(
+          'Permission Required',
+          'Microphone access is needed for sound analysis.',
+          [{ text: 'OK' }]
+        );
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error('Error requesting audio permission:', error);
+      return false;
+    }
+  };
+
+  const startRecording = async () => {
+    try {
+      const hasPermission = await requestAudioPermission();
+      if (!hasPermission) return;
+
+      // Stop any existing recording
+      if (recording) {
+        await recording.stopAndUnloadAsync();
+      }
+
+      // Set audio mode for recording
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+
+      // Create and start new recording
+      const { recording: newRecording } = await Audio.Recording.createAsync(
+        Audio.RecordingOptionsPresets.HIGH_QUALITY
+      );
+
+      setRecording(newRecording);
+      setIsRecording(true);
+      setRecordingDuration(0);
+      setAudioUri(null);
+
+      // Start duration timer
+      recordingInterval.current = setInterval(() => {
+        setRecordingDuration((prev) => prev + 1);
+      }, 1000);
+    } catch (error) {
+      console.error('Failed to start recording:', error);
+      Alert.alert('Recording Error', 'Failed to start recording. Please try again.');
+    }
+  };
+
+  const stopRecording = async () => {
+    try {
+      if (!recording) return;
+
+      // Stop duration timer
+      if (recordingInterval.current) {
+        clearInterval(recordingInterval.current);
+        recordingInterval.current = null;
+      }
+
+      setIsRecording(false);
+      await recording.stopAndUnloadAsync();
+      const uri = recording.getURI();
+
+      if (uri) {
+        setAudioUri(uri);
+        // Save URI to answers
+        setAnswers({ ...answers, [question.id]: uri });
+      }
+
+      setRecording(null);
+    } catch (error) {
+      console.error('Failed to stop recording:', error);
+      Alert.alert('Recording Error', 'Failed to stop recording.');
+    }
+  };
+
+  // Cleanup recording on unmount or question change
+  useEffect(() => {
+    return () => {
+      if (recording) {
+        recording.stopAndUnloadAsync().catch(console.error);
+      }
+      if (recordingInterval.current) {
+        clearInterval(recordingInterval.current);
+      }
+    };
+  }, [recording]);
+
   const handleContinue = (singleAnswer?: string) => {
     const answer =
       singleAnswer ||
@@ -382,8 +486,17 @@ export const AssessmentScreen = () => {
         ? selectedOptions
         : question.type === "text-input"
           ? textInput
-          : sliderValue);
-    setAnswers({ ...answers, [question.id]: answer });
+          : question.type === "sound-analysis"
+            ? audioUri
+            : sliderValue);
+
+    const updatedAnswers = { ...answers, [question.id]: answer };
+    setAnswers(updatedAnswers);
+
+    // Reset recording state when moving to next question
+    setIsRecording(false);
+    setRecordingDuration(0);
+    setAudioUri(null);
 
     if (currentQuestion < QUESTIONS.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
@@ -391,8 +504,8 @@ export const AssessmentScreen = () => {
       setSliderValue(50);
       setTextInput("");
     } else {
-      // Navigate to results
-      navigation.navigate("AssessmentResults" as never, { answers } as never);
+      // Navigate to results with complete answers
+      navigation.navigate("AssessmentResults" as never, { answers: updatedAnswers } as never);
     }
   };
 
@@ -405,6 +518,12 @@ export const AssessmentScreen = () => {
     }
     if (question.type === "text-input") {
       return textInput.trim().length > 0;
+    }
+    if (question.type === "sound-analysis") {
+      return audioUri !== null; // Can continue if recording exists
+    }
+    if (question.type === "expression-analysis") {
+      return true; // Can skip for now (not yet implemented)
     }
     return true;
   };
@@ -521,6 +640,185 @@ export const AssessmentScreen = () => {
               numberOfLines={3}
               textAlignVertical="top"
             />
+          </View>
+        );
+
+      case "sound-analysis":
+        return (
+          <View style={{ alignItems: "center", paddingVertical: 30 }}>
+            <Text style={{ color: "#B8A99A", fontSize: 14, marginBottom: 20, textAlign: "center" }}>
+              {question.subtitle}
+            </Text>
+
+            {/* Recording indicator */}
+            <View
+              style={{
+                width: 120,
+                height: 120,
+                borderRadius: 60,
+                backgroundColor: isRecording ? "rgba(231, 76, 60, 0.2)" : "rgba(143, 188, 143, 0.2)",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 20,
+                borderWidth: 3,
+                borderColor: isRecording ? "#E74C3C" : "#8FBC8F",
+              }}
+            >
+              {isRecording ? (
+                <ActivityIndicator size="large" color="#E74C3C" />
+              ) : audioUri ? (
+                <Text style={{ fontSize: 40 }}>✓</Text>
+              ) : (
+                <Text style={{ fontSize: 40 }}>🎤</Text>
+              )}
+            </View>
+
+            {/* Duration display */}
+            {isRecording && (
+              <Text style={{ color: "#E74C3C", fontSize: 18, fontWeight: "700", marginBottom: 20 }}>
+                Recording: {Math.floor(recordingDuration / 60)}:
+                {(recordingDuration % 60).toString().padStart(2, "0")}
+              </Text>
+            )}
+
+            {audioUri && !isRecording && (
+              <Text style={{ color: "#8FBC8F", fontSize: 16, fontWeight: "600", marginBottom: 20 }}>
+                Recording saved ✓
+              </Text>
+            )}
+
+            {/* Record button */}
+            <TouchableOpacity
+              style={{
+                backgroundColor: isRecording ? "#E74C3C" : "#8FBC8F",
+                paddingHorizontal: 32,
+                paddingVertical: 14,
+                borderRadius: 24,
+                minWidth: 160,
+                alignItems: "center",
+              }}
+              onPress={isRecording ? stopRecording : startRecording}
+            >
+              <Text style={{ color: "#FFFFFF", fontSize: 16, fontWeight: "700" }}>
+                {isRecording ? "Stop Recording" : audioUri ? "Re-record" : "Start Recording"}
+              </Text>
+            </TouchableOpacity>
+
+            {audioUri && (
+              <Text
+                style={{
+                  color: "#6B5444",
+                  fontSize: 12,
+                  marginTop: 16,
+                  fontStyle: "italic",
+                }}
+              >
+                Tap Continue to proceed
+              </Text>
+            )}
+          </View>
+        );
+
+      case "expression-analysis":
+        return (
+          <View style={{ alignItems: "center", paddingVertical: 30 }}>
+            <Text style={{ color: "#B8A99A", fontSize: 14, marginBottom: 20, textAlign: "center" }}>
+              {question.subtitle}
+            </Text>
+
+            {/* Camera placeholder */}
+            <View
+              style={{
+                width: 200,
+                height: 200,
+                borderRadius: 100,
+                backgroundColor: "rgba(143, 188, 143, 0.2)",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 20,
+                borderWidth: 3,
+                borderColor: "#8FBC8F",
+                borderStyle: "dashed",
+              }}
+            >
+              <Text style={{ fontSize: 60 }}>📸</Text>
+            </View>
+
+            <Text style={{  color: "#B8A99A",
+                fontSize: 14,
+                textAlign: "center",
+                marginBottom: 24,
+                paddingHorizontal: 20,
+              }}
+            >
+              Facial expression analysis helps us better understand your emotional state.
+            </Text>
+
+            <View
+              style={{
+                backgroundColor: "rgba(184, 169, 154, 0.1)",
+                padding: 16,
+                borderRadius: 12,
+                marginBottom: 24,
+                width: "90%",
+              }}
+            >
+              <Text
+                style={{
+                  color: "#B8A99A",
+                  fontSize: 12,
+                  textAlign: "center",
+                  fontStyle: "italic",
+                }}
+              >
+                🔒 Your privacy matters: Images are processed locally and never stored or shared.
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#8FBC8F",
+                paddingHorizontal: 32,
+                paddingVertical: 14,
+                borderRadius: 24,
+                minWidth: 160,
+                alignItems: "center",
+                marginBottom: 12,
+              }}
+              onPress={() => {
+                // Mark as completed (camera feature to be implemented)
+                setAnswers({ ...answers, [question.id]: "skipped" });
+                Alert.alert(
+                  "Coming Soon",
+                  "Camera-based expression analysis will be available in a future update. You can skip this step for now.",
+                  [{ text: "OK" }]
+                );
+              }}
+            >
+              <Text style={{ color: "#FFFFFF", fontSize: 16, fontWeight: "700" }}>
+                Enable Camera (Coming Soon)
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: 32,
+                paddingVertical: 14,
+                borderRadius: 24,
+                minWidth: 160,
+                alignItems: "center",
+                borderWidth: 1.5,
+                borderColor: "#6B5444",
+              }}
+              onPress={() => {
+                // Skip this step
+                setAnswers({ ...answers, [question.id]: "skipped" });
+              }}
+            >
+              <Text style={{ color: "#E5DDD5", fontSize: 16, fontWeight: "600" }}>
+                Skip This Step
+              </Text>
+            </TouchableOpacity>
           </View>
         );
 

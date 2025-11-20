@@ -6,7 +6,8 @@
 import { useNavigation } from "@react-navigation/native";
 import { sanitizeText } from "@shared/utils/sanitization";
 import { useTheme } from "@theme/ThemeProvider";
-import React, { useState } from "react";
+import { Audio } from "expo-av";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -15,6 +16,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from "react-native";
 
 const MOODS = [
@@ -55,6 +57,11 @@ export const JournalCreateScreen = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
+
+  // Audio recording state
+  const [recording, setRecording] = useState<Audio.Recording | null>(null);
+  const [audioUri, setAudioUri] = useState<string | null>(null);
+  const recordingInterval = useRef<NodeJS.Timeout | null>(null);
 
   const styles = StyleSheet.create({
     container: {
@@ -262,6 +269,107 @@ export const JournalCreateScreen = () => {
     },
   });
 
+  // Audio recording functions
+  const requestAudioPermission = async (): Promise<boolean> => {
+    try {
+      const { status } = await Audio.requestPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert(
+          'Permission Required',
+          'Microphone access is needed for voice journaling.',
+          [{ text: 'OK' }]
+        );
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error('Error requesting audio permission:', error);
+      return false;
+    }
+  };
+
+  const startRecording = async () => {
+    try {
+      const hasPermission = await requestAudioPermission();
+      if (!hasPermission) return;
+
+      // Stop any existing recording
+      if (recording) {
+        await recording.stopAndUnloadAsync();
+      }
+
+      // Set audio mode for recording
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+
+      // Create and start new recording
+      const { recording: newRecording } = await Audio.Recording.createAsync(
+        Audio.RecordingOptionsPresets.HIGH_QUALITY
+      );
+
+      setRecording(newRecording);
+      setIsRecording(true);
+      setRecordingTime(0);
+      setAudioUri(null);
+
+      // Start duration timer
+      recordingInterval.current = setInterval(() => {
+        setRecordingTime((prev) => prev + 1);
+      }, 1000);
+    } catch (error) {
+      console.error('Failed to start recording:', error);
+      Alert.alert('Recording Error', 'Failed to start recording. Please try again.');
+    }
+  };
+
+  const stopRecording = async () => {
+    try {
+      if (!recording) return;
+
+      // Stop duration timer
+      if (recordingInterval.current) {
+        clearInterval(recordingInterval.current);
+        recordingInterval.current = null;
+      }
+
+      setIsRecording(false);
+      await recording.stopAndUnloadAsync();
+      const uri = recording.getURI();
+
+      if (uri) {
+        setAudioUri(uri);
+        Alert.alert('Success', 'Voice recording saved!');
+      }
+
+      setRecording(null);
+    } catch (error) {
+      console.error('Failed to stop recording:', error);
+      Alert.alert('Recording Error', 'Failed to stop recording.');
+    }
+  };
+
+  const toggleRecording = async () => {
+    if (isRecording) {
+      await stopRecording();
+    } else {
+      await startRecording();
+    }
+  };
+
+  // Cleanup recording on unmount
+  useEffect(() => {
+    return () => {
+      if (recording) {
+        recording.stopAndUnloadAsync().catch(console.error);
+      }
+      if (recordingInterval.current) {
+        clearInterval(recordingInterval.current);
+      }
+    };
+  }, [recording]);
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -364,7 +472,7 @@ export const JournalCreateScreen = () => {
                   styles.recordButton,
                   isRecording && styles.recordButtonActive,
                 ]}
-                onPress={() => setIsRecording(!isRecording)}
+                onPress={toggleRecording}
               >
                 <Text style={{ fontSize: 32 }}>
                   {isRecording ? "⏸" : "🎤"}

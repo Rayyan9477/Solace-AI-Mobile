@@ -17,6 +17,12 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
+import {
+  calculateAssessmentScore,
+  getCategoryLabel,
+  getCategoryDescription,
+  type AssessmentAnswers
+} from "../services/scoringAlgorithm";
 
 const { width } = Dimensions.get("window");
 
@@ -24,13 +30,12 @@ export const AssessmentResultsScreen = ({ route }: any) => {
   const { theme } = useTheme();
   const navigation = useNavigation();
 
-  // Calculate score based on answers (simplified)
-  const calculateScore = () => {
-    // This would be a complex algorithm in production
-    return Math.floor(Math.random() * 30) + 70; // 70-100 range
-  };
+  // Get answers from route params (passed from AssessmentScreen)
+  const answers: AssessmentAnswers = route?.params?.answers || {};
 
-  const score = calculateScore();
+  // Calculate real score based on assessment answers
+  const result = calculateAssessmentScore(answers);
+  const score = result.overallScore;
 
   const getScoreCategory = (score: number) => {
     if (score >= 85)
@@ -250,16 +255,21 @@ export const AssessmentResultsScreen = ({ route }: any) => {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <View style={styles.cardIcon}>
-                <MentalHealthIcon name="Brain" size={20} color="#8FBC8F" />
+                <MentalHealthIcon name="Brain" size={20} color={result.categories.mentalClarity.color} />
               </View>
               <Text style={styles.cardTitle}>Mental Clarity</Text>
-              <Text style={styles.cardValue}>85%</Text>
+              <Text style={[styles.cardValue, { color: result.categories.mentalClarity.color }]}>
+                {result.categories.mentalClarity.score}%
+              </Text>
             </View>
             <View style={styles.progressBar}>
               <View
                 style={[
                   styles.progressFill,
-                  { width: "85%", backgroundColor: "#8FBC8F" },
+                  {
+                    width: `${result.categories.mentalClarity.score}%`,
+                    backgroundColor: result.categories.mentalClarity.color,
+                  },
                 ]}
               />
             </View>
@@ -268,16 +278,21 @@ export const AssessmentResultsScreen = ({ route }: any) => {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <View style={styles.cardIcon}>
-                <MentalHealthIcon name="Heart" size={20} color="#B8976B" />
+                <MentalHealthIcon name="Heart" size={20} color={result.categories.emotionalBalance.color} />
               </View>
               <Text style={styles.cardTitle}>Emotional Balance</Text>
-              <Text style={styles.cardValue}>72%</Text>
+              <Text style={[styles.cardValue, { color: result.categories.emotionalBalance.color }]}>
+                {result.categories.emotionalBalance.score}%
+              </Text>
             </View>
             <View style={styles.progressBar}>
               <View
                 style={[
                   styles.progressFill,
-                  { width: "72%", backgroundColor: "#B8976B" },
+                  {
+                    width: `${result.categories.emotionalBalance.score}%`,
+                    backgroundColor: result.categories.emotionalBalance.color,
+                  },
                 ]}
               />
             </View>
@@ -286,16 +301,44 @@ export const AssessmentResultsScreen = ({ route }: any) => {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <View style={styles.cardIcon}>
-                <MentalHealthIcon name="Activity" size={20} color="#E8A872" />
+                <MentalHealthIcon name="Activity" size={20} color={result.categories.stressManagement.color} />
               </View>
               <Text style={styles.cardTitle}>Stress Management</Text>
-              <Text style={styles.cardValue}>68%</Text>
+              <Text style={[styles.cardValue, { color: result.categories.stressManagement.color }]}>
+                {result.categories.stressManagement.score}%
+              </Text>
             </View>
             <View style={styles.progressBar}>
               <View
                 style={[
                   styles.progressFill,
-                  { width: "68%", backgroundColor: "#E8A872" },
+                  {
+                    width: `${result.categories.stressManagement.score}%`,
+                    backgroundColor: result.categories.stressManagement.color,
+                  },
+                ]}
+              />
+            </View>
+          </View>
+
+          <View style={styles.card}>
+            <View style={styles.cardHeader}>
+              <View style={styles.cardIcon}>
+                <MentalHealthIcon name="Activity" size={20} color={result.categories.sleepQuality.color} />
+              </View>
+              <Text style={styles.cardTitle}>Sleep Quality</Text>
+              <Text style={[styles.cardValue, { color: result.categories.sleepQuality.color }]}>
+                {result.categories.sleepQuality.score}%
+              </Text>
+            </View>
+            <View style={styles.progressBar}>
+              <View
+                style={[
+                  styles.progressFill,
+                  {
+                    width: `${result.categories.sleepQuality.score}%`,
+                    backgroundColor: result.categories.sleepQuality.color,
+                  },
                 ]}
               />
             </View>
@@ -305,29 +348,13 @@ export const AssessmentResultsScreen = ({ route }: any) => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Recommendations</Text>
 
-          <View style={styles.recommendation}>
-            <Text style={styles.recommendationText}>
-              • Practice daily mindfulness meditation for 10-15 minutes
-            </Text>
-          </View>
-
-          <View style={styles.recommendation}>
-            <Text style={styles.recommendationText}>
-              • Maintain a consistent sleep schedule of 7-8 hours
-            </Text>
-          </View>
-
-          <View style={styles.recommendation}>
-            <Text style={styles.recommendationText}>
-              • Engage in regular physical activity 3-4 times per week
-            </Text>
-          </View>
-
-          <View style={styles.recommendation}>
-            <Text style={styles.recommendationText}>
-              • Consider joining support groups or therapy sessions
-            </Text>
-          </View>
+          {result.recommendations.map((recommendation, index) => (
+            <View key={index} style={styles.recommendation}>
+              <Text style={styles.recommendationText}>
+                • {recommendation}
+              </Text>
+            </View>
+          ))}
         </View>
       </ScrollView>
 

@@ -1,11 +1,12 @@
 /**
  * Mood History Screen - Daily/Weekly/Monthly Mood Trends
  * Based on ui-designs/Dark-mode/🔒 Mood Tracker.png
+ * Now connected to SQLite for real mood data
  */
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -13,7 +14,10 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
+import { moodStorageService } from "../services/moodStorageService";
+import type { MoodEntry as StoredMoodEntry } from "../services/moodStorageService";
 
 interface MoodEntry {
   id: string;
@@ -24,62 +28,168 @@ interface MoodEntry {
   note?: string;
 }
 
+const getMoodEmoji = (mood: string): string => {
+  const emojiMap: Record<string, string> = {
+    "Very sad": "😭",
+    "Sad": "😢",
+    "Okay": "😐",
+    "Good": "🙂",
+    "Happy": "😁",
+    "Excited": "🤩",
+    "Neutral": "😐",
+    "Depressed": "😞",
+  };
+  return emojiMap[mood] || "😐";
+};
+
+const formatRelativeDate = (timestamp: string): string => {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diff = now.getTime() - date.getTime();
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+  const timeStr = date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+
+  if (days === 0) return `Today, ${timeStr}`;
+  if (days === 1) return `Yesterday, ${timeStr}`;
+  if (days < 7) return `${days} days ago, ${timeStr}`;
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+};
+
 export const MoodHistoryScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const [activeTab, setActiveTab] = useState<"daily" | "weekly" | "monthly">(
-    "daily",
-  );
+  const [activeTab, setActiveTab] = useState<"daily" | "weekly" | "monthly">("daily");
+  const [isLoading, setIsLoading] = useState(true);
+  const [dailyMoods, setDailyMoods] = useState<MoodEntry[]>([]);
+  const [weeklyMoods, setWeeklyMoods] = useState<MoodEntry[]>([]);
+  const [monthlyMoods, setMonthlyMoods] = useState<MoodEntry[]>([]);
 
-  const dailyMoods: MoodEntry[] = [
-    {
-      id: "1",
-      date: "Today, 2:30 PM",
-      mood: "Happy",
-      emoji: "😊",
-      intensity: 80,
-    },
-    {
-      id: "2",
-      date: "Today, 10:00 AM",
-      mood: "Neutral",
-      emoji: "😐",
-      intensity: 50,
-    },
-    {
-      id: "3",
-      date: "Yesterday, 6:00 PM",
-      mood: "Excited",
-      emoji: "🤩",
-      intensity: 95,
-    },
-    {
-      id: "4",
-      date: "Yesterday, 2:00 PM",
-      mood: "Sad",
-      emoji: "😢",
-      intensity: 30,
-    },
-    {
-      id: "5",
-      date: "2 days ago, 4:00 PM",
-      mood: "Happy",
-      emoji: "😊",
-      intensity: 75,
-    },
-  ];
+  // Load mood data from SQLite
+  useEffect(() => {
+    loadMoodData();
+  }, []);
 
-  const weeklyStats = {
-    mostCommonMood: "Happy",
-    averageIntensity: 66,
-    totalEntries: 28,
-    moodDistribution: [
-      { mood: "Happy", count: 12, percentage: 43 },
-      { mood: "Neutral", count: 8, percentage: 29 },
-      { mood: "Sad", count: 5, percentage: 18 },
-      { mood: "Excited", count: 3, percentage: 10 },
-    ],
+  const loadMoodData = async () => {
+    setIsLoading(true);
+    try {
+      // Load last 30 days for daily view
+      const dailyData = await moodStorageService.getMoodHistory(30);
+
+      // Load last 7 days for weekly view
+      const weekStart = new Date();
+      weekStart.setDate(weekStart.getDate() - 7);
+      const weeklyData = await moodStorageService.getMoodEntriesByDateRange(
+        weekStart,
+        new Date()
+      );
+
+      // Load last 30 days for monthly view
+      const monthStart = new Date();
+      monthStart.setDate(monthStart.getDate() - 30);
+      const monthlyData = await moodStorageService.getMoodEntriesByDateRange(
+        monthStart,
+        new Date()
+      );
+
+      // Transform to UI format
+      const transformEntry = (entry: StoredMoodEntry): MoodEntry => ({
+        id: entry.id,
+        date: formatRelativeDate(entry.timestamp),
+        mood: entry.mood,
+        emoji: getMoodEmoji(entry.mood),
+        intensity: entry.intensity * 20, // Convert 1-5 scale to 0-100
+        note: entry.notes,
+      });
+
+      setDailyMoods(dailyData.map(transformEntry));
+      setWeeklyMoods(weeklyData.map(transformEntry));
+      setMonthlyMoods(monthlyData.map(transformEntry));
+    } catch (error) {
+      console.error("Failed to load mood history:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  // Calculate weekly stats from real data
+  const weeklyStats = React.useMemo(() => {
+    if (weeklyMoods.length === 0) {
+      return {
+        mostCommonMood: "No data",
+        averageIntensity: 0,
+        totalEntries: 0,
+        moodDistribution: [],
+      };
+    }
+
+    // Count mood occurrences
+    const moodCounts: Record<string, number> = {};
+    let totalIntensity = 0;
+
+    weeklyMoods.forEach((entry) => {
+      moodCounts[entry.mood] = (moodCounts[entry.mood] || 0) + 1;
+      totalIntensity += entry.intensity;
+    });
+
+    // Find most common mood
+    const mostCommonMood = Object.entries(moodCounts).reduce((a, b) =>
+      a[1] > b[1] ? a : b
+    )[0];
+
+    // Calculate distribution
+    const moodDistribution = Object.entries(moodCounts)
+      .map(([mood, count]) => ({
+        mood,
+        count,
+        percentage: Math.round((count / weeklyMoods.length) * 100),
+      }))
+      .sort((a, b) => b.count - a.count);
+
+    return {
+      mostCommonMood,
+      averageIntensity: Math.round(totalIntensity / weeklyMoods.length),
+      totalEntries: weeklyMoods.length,
+      moodDistribution,
+    };
+  }, [weeklyMoods]);
+
+  // Calculate monthly stats
+  const monthlyStats = React.useMemo(() => {
+    if (monthlyMoods.length === 0) {
+      return {
+        daysTracked: 0,
+        bestDay: "N/A",
+        avgMood: "No data",
+      };
+    }
+
+    const bestEntry = monthlyMoods.reduce((best, current) =>
+      current.intensity > best.intensity ? current : best
+    );
+
+    const avgIntensity =
+      monthlyMoods.reduce((sum, entry) => sum + entry.intensity, 0) /
+      monthlyMoods.length;
+
+    const avgMoodName =
+      avgIntensity >= 80
+        ? "Happy"
+        : avgIntensity >= 60
+          ? "Good"
+          : avgIntensity >= 40
+            ? "Okay"
+            : "Sad";
+
+    return {
+      daysTracked: monthlyMoods.length,
+      bestDay: bestEntry.date.split(",")[0],
+      avgMood: avgMoodName,
+    };
+  }, [monthlyMoods]);
 
   const styles = StyleSheet.create({
     container: {
@@ -291,6 +401,19 @@ export const MoodHistoryScreen = () => {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Loading State */}
+        {isLoading && (
+          <View style={{ padding: 40, alignItems: "center" }}>
+            <ActivityIndicator size="large" color={theme.colors.orange["60"]} />
+            <Text style={{ marginTop: 16, color: theme.colors.text.secondary }}>
+              Loading mood history...
+            </Text>
+          </View>
+        )}
+
+        {!isLoading && (
+          <>
+
         {/* Tabs */}
         <View style={styles.tabsRow}>
           <TouchableOpacity
@@ -387,7 +510,12 @@ export const MoodHistoryScreen = () => {
         {activeTab === "daily" && (
           <View style={styles.historyList}>
             <Text style={styles.sectionTitle}>Recent Moods</Text>
-            {dailyMoods.map((entry) => (
+            {dailyMoods.length === 0 ? (
+              <Text style={{ textAlign: "center", padding: 20, color: theme.colors.text.secondary }}>
+                No mood entries yet. Start tracking your mood!
+              </Text>
+            ) : (
+              dailyMoods.map((entry) => (
               <TouchableOpacity key={entry.id} style={styles.moodCard}>
                 <Text style={styles.moodEmoji}>{entry.emoji}</Text>
                 <View style={styles.moodInfo}>
@@ -407,7 +535,8 @@ export const MoodHistoryScreen = () => {
                 </View>
                 <Text style={styles.moodIntensity}>{entry.intensity}%</Text>
               </TouchableOpacity>
-            ))}
+              ))
+            )}
           </View>
         )}
 
@@ -418,18 +547,20 @@ export const MoodHistoryScreen = () => {
             <View style={styles.statsRow}>
               <View style={styles.statItem}>
                 <Text style={styles.statLabel}>Days Tracked</Text>
-                <Text style={styles.statValue}>28</Text>
+                <Text style={styles.statValue}>{monthlyStats.daysTracked}</Text>
               </View>
               <View style={styles.statItem}>
                 <Text style={styles.statLabel}>Best Day</Text>
-                <Text style={styles.statValue}>Oct 15</Text>
+                <Text style={styles.statValue}>{monthlyStats.bestDay}</Text>
               </View>
               <View style={styles.statItem}>
                 <Text style={styles.statLabel}>Avg Mood</Text>
-                <Text style={styles.statValue}>Happy</Text>
+                <Text style={styles.statValue}>{monthlyStats.avgMood}</Text>
               </View>
             </View>
           </View>
+        )}
+          </>
         )}
       </ScrollView>
     </SafeAreaView>

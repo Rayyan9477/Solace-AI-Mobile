@@ -1,7 +1,6 @@
-import type { RootState } from "@app/store/store";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
-import React, { useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -9,8 +8,10 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { moodStorageService } from "../services/moodStorageService";
+import type { MoodEntry as StoredMoodEntry } from "../services/moodStorageService";
 
 interface ActivityCount {
   id: string;
@@ -23,11 +24,27 @@ interface ActivityCount {
 export const ActivityTrackingScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(true);
+  const [moodHistory, setMoodHistory] = useState<StoredMoodEntry[]>([]);
 
-  // Get mood history from Redux
-  const moodHistory = useSelector(
-    (state: RootState) => state.mood?.moodHistory || [],
-  );
+  // Load mood history from SQLite on mount
+  useEffect(() => {
+    loadMoodData();
+  }, []);
+
+  const loadMoodData = async () => {
+    setIsLoading(true);
+    try {
+      // Load last 90 days of mood data to get activity patterns
+      const moods = await moodStorageService.getMoodHistory(90);
+      setMoodHistory(moods);
+    } catch (error) {
+      console.error("Failed to load mood history:", error);
+      setMoodHistory([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Calculate activity counts from mood history
   const activities = useMemo<ActivityCount[]>(() => {
@@ -149,7 +166,20 @@ export const ActivityTrackingScreen = () => {
         <View style={{ width: 40 }} />
       </View>
       <ScrollView style={styles.content}>
-        {activities.length > 0 ? (
+        {isLoading ? (
+          <View style={styles.emptyState}>
+            <ActivityIndicator size="large" color={theme.colors.orange["60"]} />
+            <Text
+              style={{
+                marginTop: 16,
+                color: theme.colors.text.secondary,
+                fontSize: 14,
+              }}
+            >
+              Loading activities...
+            </Text>
+          </View>
+        ) : activities.length > 0 ? (
           activities.map((activity) => (
             <TouchableOpacity
               key={activity.id}

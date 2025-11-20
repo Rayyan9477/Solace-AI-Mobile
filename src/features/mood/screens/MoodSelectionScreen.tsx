@@ -1,6 +1,7 @@
 /**
  * Mood Selection Screen - Select current mood
  * Based on ui-designs/Dark-mode/Mood Tracker.png
+ * Now connected to SQLite for persistent mood tracking
  */
 
 import { useNavigation } from "@react-navigation/native";
@@ -13,7 +14,10 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Animated,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
+import { moodStorageService } from "../services/moodStorageService";
 
 type MoodType = "depressed" | "sad" | "neutral" | "happy" | "overjoyed";
 
@@ -74,6 +78,7 @@ export const MoodSelectionScreen = () => {
   const navigation = useNavigation();
   const [selectedMood, setSelectedMood] = useState<MoodType | null>(null);
   const [scaleAnim] = useState(new Animated.Value(1));
+  const [isSaving, setIsSaving] = useState(false);
 
   const currentMood = MOODS.find((m) => m.type === selectedMood);
   const backgroundColor =
@@ -193,9 +198,41 @@ export const MoodSelectionScreen = () => {
     ]).start();
   };
 
-  const handleSetMood = () => {
-    if (selectedMood) {
-      navigation.navigate("MoodStats", { mood: selectedMood });
+  const handleSetMood = async () => {
+    if (!selectedMood || isSaving) return;
+
+    const currentMoodOption = MOODS.find((m) => m.type === selectedMood);
+    if (!currentMoodOption) return;
+
+    setIsSaving(true);
+
+    try {
+      // Calculate intensity (1-5 scale based on mood position)
+      const moodIndex = MOODS.findIndex((m) => m.type === selectedMood);
+      const intensity = moodIndex + 1; // 1 (very_sad) to 5 (happy)
+
+      // Save mood to SQLite
+      await moodStorageService.saveMoodEntry({
+        mood: currentMoodOption.label,
+        intensity,
+        timestamp: new Date().toISOString(),
+        notes: currentMoodOption.description,
+      });
+
+      // Navigate to stats screen with success
+      navigation.navigate("MoodStats", {
+        mood: selectedMood,
+        justSaved: true,
+      });
+    } catch (error: any) {
+      console.error("Failed to save mood:", error);
+      Alert.alert(
+        "Save Failed",
+        "Failed to save your mood. Please try again.",
+        [{ text: "OK" }]
+      );
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -267,12 +304,24 @@ export const MoodSelectionScreen = () => {
       {/* Footer */}
       <View style={styles.footer}>
         <TouchableOpacity
-          style={styles.setMoodButton}
+          style={[
+            styles.setMoodButton,
+            (!selectedMood || isSaving) && { opacity: 0.5 },
+          ]}
           onPress={handleSetMood}
-          disabled={!selectedMood}
+          disabled={!selectedMood || isSaving}
         >
-          <Text style={styles.setMoodButtonText}>Set Mood</Text>
-          <Text style={styles.setMoodButtonText}>✓</Text>
+          {isSaving ? (
+            <>
+              <ActivityIndicator color={backgroundColor} size="small" />
+              <Text style={styles.setMoodButtonText}>Saving...</Text>
+            </>
+          ) : (
+            <>
+              <Text style={styles.setMoodButtonText}>Set Mood</Text>
+              <Text style={styles.setMoodButtonText}>✓</Text>
+            </>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

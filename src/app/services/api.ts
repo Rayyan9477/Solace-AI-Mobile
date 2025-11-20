@@ -1,6 +1,6 @@
 /**
  * API Service for authentication and user management
- * Real implementation for production use
+ * Enterprise-grade implementation with interceptors, logging, and retry logic
  */
 
 import { logger } from "@shared/utils/logger";
@@ -8,6 +8,106 @@ import { logger } from "@shared/utils/logger";
 import apiCache from "./apiCache";
 import tokenService from "./tokenService";
 import { API_CONFIG } from "../../shared/config/environment";
+
+// ==================== TYPES ====================
+type RequestInterceptor = (config: RequestConfig) => Promise<RequestConfig> | RequestConfig;
+type ResponseInterceptor = (response: any) => Promise<any> | any;
+type ErrorInterceptor = (error: any) => Promise<any> | any;
+
+interface RequestConfig {
+  url: string;
+  options: RequestInit;
+  metadata?: {
+    startTime?: number;
+    retryCount?: number;
+    [key: string]: any;
+  };
+}
+
+// ==================== INTERCEPTORS ====================
+class InterceptorManager {
+  private requestInterceptors: RequestInterceptor[] = [];
+  private responseInterceptors: ResponseInterceptor[] = [];
+  private errorInterceptors: ErrorInterceptor[] = [];
+
+  addRequestInterceptor(interceptor: RequestInterceptor) {
+    this.requestInterceptors.push(interceptor);
+  }
+
+  addResponseInterceptor(interceptor: ResponseInterceptor) {
+    this.responseInterceptors.push(interceptor);
+  }
+
+  addErrorInterceptor(interceptor: ErrorInterceptor) {
+    this.errorInterceptors.push(interceptor);
+  }
+
+  async runRequestInterceptors(config: RequestConfig): Promise<RequestConfig> {
+    let modifiedConfig = config;
+    for (const interceptor of this.requestInterceptors) {
+      modifiedConfig = await interceptor(modifiedConfig);
+    }
+    return modifiedConfig;
+  }
+
+  async runResponseInterceptors(response: any): Promise<any> {
+    let modifiedResponse = response;
+    for (const interceptor of this.responseInterceptors) {
+      modifiedResponse = await interceptor(modifiedResponse);
+    }
+    return modifiedResponse;
+  }
+
+  async runErrorInterceptors(error: any): Promise<any> {
+    let modifiedError = error;
+    for (const interceptor of this.errorInterceptors) {
+      modifiedError = await interceptor(modifiedError);
+    }
+    return modifiedError;
+  }
+}
+
+const interceptors = new InterceptorManager();
+
+// ==================== DEFAULT INTERCEPTORS ====================
+
+// Request logging interceptor
+interceptors.addRequestInterceptor((config) => {
+  config.metadata = config.metadata || {};
+  config.metadata.startTime = Date.now();
+
+  logger.debug(`[API Request] ${config.options.method || 'GET'} ${config.url}`, {
+    headers: config.options.headers,
+    body: config.options.body,
+  });
+
+  return config;
+});
+
+// Response logging interceptor
+interceptors.addResponseInterceptor((response) => {
+  const duration = response.metadata?.startTime
+    ? Date.now() - response.metadata.startTime
+    : 0;
+
+  logger.debug(`[API Response] ${response.status} ${response.url}`, {
+    duration: `${duration}ms`,
+    retryCount: response.metadata?.retryCount || 0,
+  });
+
+  return response;
+});
+
+// Error logging interceptor
+interceptors.addErrorInterceptor((error) => {
+  logger.error(`[API Error] ${error.endpoint}`, {
+    message: error.message,
+    statusCode: error.statusCode,
+    timestamp: error.timestamp,
+  });
+
+  return error;
+});
 
 /**
  * Custom API Error class for authentication
@@ -26,31 +126,83 @@ export class AuthAPIError extends Error {
   }
 }
 
+// ==================== RETRY WITH EXPONENTIAL BACKOFF ====================
+
 /**
- * Helper function for fetch with timeout
+ * Calculate exponential backoff delay
+ * @param retryCount - Current retry attempt (0-indexed)
+ * @param baseDelay - Base delay in milliseconds (default: 1000ms)
+ * @param maxDelay - Maximum delay in milliseconds (default: 30000ms)
+ * @returns Delay in milliseconds with jitter
+ */
+function getExponentialBackoffDelay(
+  retryCount: number,
+  baseDelay: number = 1000,
+  maxDelay: number = 30000,
+): number {
+  // Calculate: baseDelay * 2^retryCount
+  const exponentialDelay = Math.min(baseDelay * Math.pow(2, retryCount), maxDelay);
+
+  // Add jitter: ±20% randomness to prevent thundering herd
+  const jitter = exponentialDelay * 0.2 * (Math.random() - 0.5);
+
+  return Math.floor(exponentialDelay + jitter);
+}
+
+/**
+ * Enhanced fetch with timeout, interceptors, and exponential backoff
  */
 async function fetchWithTimeout(
   url: string,
   options: any = {},
   timeout = API_CONFIG.timeout,
+  retryCount = 0,
 ): Promise<Response> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-  try {
-    const response = await fetch(url, {
+  // Run request interceptors
+  let config: RequestConfig = {
+    url,
+    options: {
       ...options,
       signal: controller.signal,
-    });
+    },
+    metadata: { retryCount },
+  };
 
+  try {
+    config = await interceptors.runRequestInterceptors(config);
+  } catch (error: any) {
     clearTimeout(timeoutId);
+    throw new AuthAPIError(`Request interceptor failed: ${error.message}`, null, url);
+  }
+
+  try {
+    const response = await fetch(config.url, config.options);
+    clearTimeout(timeoutId);
+
+    // Attach metadata for response interceptors
+    (response as any).metadata = config.metadata;
+    (response as any).url = config.url;
+
+    // Run response interceptors
+    await interceptors.runResponseInterceptors(response);
+
     return response;
   } catch (error: any) {
     clearTimeout(timeoutId);
+
     if (error.name === "AbortError") {
-      throw new AuthAPIError("Request timeout", 408, url);
+      const timeoutError = new AuthAPIError("Request timeout", 408, url);
+      await interceptors.runErrorInterceptors(timeoutError);
+      throw timeoutError;
     }
-    throw error;
+
+    // Run error interceptors
+    const wrappedError = new AuthAPIError(error.message, null, url);
+    await interceptors.runErrorInterceptors(wrappedError);
+    throw wrappedError;
   }
 }
 
@@ -112,17 +264,23 @@ async function retryWithNewToken(
 const tokenRefreshAttempts = new Map();
 const MAX_REFRESH_ATTEMPTS = 2;
 const REFRESH_ATTEMPT_WINDOW = 60000;
+const MAX_RETRY_ATTEMPTS = 3;
 
+/**
+ * Enhanced authenticated fetch with retry logic, exponential backoff, and token refresh
+ */
 async function authenticatedFetch(
   url: string,
   options: any = {},
+  retryCount: number = 0,
 ): Promise<any> {
   const method = options.method || "GET";
 
   // Check cache for GET requests
-  if (method === "GET") {
+  if (method === "GET" && retryCount === 0) {
     const cached = apiCache.get(url, options);
     if (cached) {
+      logger.debug(`[API Cache HIT] ${url}`);
       return cached;
     }
   }
@@ -139,17 +297,12 @@ async function authenticatedFetch(
   }
 
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.timeout);
-
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       ...options,
-      signal: controller.signal,
       headers,
-    });
+    }, API_CONFIG.timeout, retryCount);
 
-    clearTimeout(timeoutId);
-
+    // Handle 401 Unauthorized - attempt token refresh
     if (response.status === 401 && tokens?.refreshToken) {
       const now = Date.now();
       const attemptKey = tokens.refreshToken.substring(0, 10);
@@ -221,6 +374,31 @@ async function authenticatedFetch(
 
     return data;
   } catch (error: any) {
+    // Determine if request should be retried
+    const isRetryableError =
+      error.statusCode === 408 || // Timeout
+      error.statusCode === 429 || // Rate limit
+      error.statusCode === 503 || // Service unavailable
+      error.statusCode === 504 || // Gateway timeout
+      (error.statusCode >= 500 && error.statusCode < 600); // Server errors
+
+    const shouldRetry =
+      retryCount < MAX_RETRY_ATTEMPTS &&
+      isRetryableError &&
+      method === "GET"; // Only retry GET requests for safety
+
+    if (shouldRetry) {
+      const delay = getExponentialBackoffDelay(retryCount);
+      logger.warn(`[API Retry] Attempt ${retryCount + 1}/${MAX_RETRY_ATTEMPTS} after ${delay}ms`, {
+        url,
+        error: error.message,
+        statusCode: error.statusCode,
+      });
+
+      await new Promise(resolve => setTimeout(resolve, delay));
+      return authenticatedFetch(url, options, retryCount + 1);
+    }
+
     if (error.name === "AbortError") {
       throw new AuthAPIError("Request timeout", 408, url);
     }
@@ -547,5 +725,11 @@ const apiService = {
   auth: authAPI,
   user: userAPI,
 };
+
+// Export interceptors for custom middleware
+export { interceptors };
+
+// Export types
+export type { RequestInterceptor, ResponseInterceptor, ErrorInterceptor, RequestConfig };
 
 export default apiService;

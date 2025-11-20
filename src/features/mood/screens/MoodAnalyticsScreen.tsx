@@ -5,7 +5,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -13,7 +13,10 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
+import { moodStorageService } from "../services/moodStorageService";
+import type { MoodEntry as StoredMoodEntry } from "../services/moodStorageService";
 
 interface InsightCard {
   id: string;
@@ -36,73 +39,260 @@ export const MoodAnalyticsScreen = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<
     "week" | "month" | "year"
   >("week");
+  const [isLoading, setIsLoading] = useState(true);
+  const [moodData, setMoodData] = useState<StoredMoodEntry[]>([]);
 
-  const insights: InsightCard[] = [
-    {
-      id: "1",
-      title: "Consistent Sleep Schedule",
-      description: "Your mood improves by 20% when you sleep before 11 PM",
-      icon: "😴",
-      type: "positive",
-    },
-    {
-      id: "2",
-      title: "Weekend Effect",
-      description: "Your mood tends to be 15% higher on weekends",
-      icon: "🎉",
-      type: "positive",
-    },
-    {
-      id: "3",
-      title: "Morning Meditation",
-      description:
-        "Morning meditation correlates with better mood throughout the day",
-      icon: "🧘",
-      type: "positive",
-    },
-    {
-      id: "4",
-      title: "Stress Trigger Detected",
-      description: "Work meetings on Mondays tend to lower your mood by 10%",
-      icon: "⚠️",
-      type: "warning",
-    },
-  ];
+  // Load mood data based on selected period
+  useEffect(() => {
+    loadMoodData();
+  }, [selectedPeriod]);
 
-  const patterns: Pattern[] = [
-    {
-      id: "1",
-      pattern: "Morning journaling",
-      frequency: "5x this week",
-      impact: "positive",
-    },
-    {
-      id: "2",
-      pattern: "Social interactions",
-      frequency: "3x this week",
-      impact: "positive",
-    },
-    {
-      id: "3",
-      pattern: "Late night work",
-      frequency: "4x this week",
-      impact: "negative",
-    },
-    {
-      id: "4",
-      pattern: "Exercise routine",
-      frequency: "6x this week",
-      impact: "positive",
-    },
-  ];
+  const loadMoodData = async () => {
+    setIsLoading(true);
+    try {
+      const days =
+        selectedPeriod === "week" ? 7 : selectedPeriod === "month" ? 30 : 365;
 
-  const moodTrends = {
-    averageMood: "Happy",
-    trendDirection: "improving",
-    changePercentage: "+12%",
-    bestTime: "Morning (8-10 AM)",
-    worstTime: "Late Evening (9-11 PM)",
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - days);
+
+      const moods = await moodStorageService.getMoodEntriesByDateRange(
+        startDate,
+        new Date()
+      );
+
+      setMoodData(moods);
+    } catch (error) {
+      console.error("Failed to load mood analytics:", error);
+      setMoodData([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  // Calculate activity patterns from mood data
+  const patterns: Pattern[] = useMemo(() => {
+    if (moodData.length === 0) return [];
+
+    const activityMap = new Map<string, number>();
+
+    // Count activities
+    moodData.forEach((entry) => {
+      if (entry.activities && Array.isArray(entry.activities)) {
+        entry.activities.forEach((activity: string) => {
+          activityMap.set(activity, (activityMap.get(activity) || 0) + 1);
+        });
+      }
+    });
+
+    // Define positive/negative activities
+    const positiveActivities = [
+      "Exercise",
+      "Social Time",
+      "Sleep",
+      "Meditation",
+      "Reading",
+      "Hobby",
+      "Family Time",
+      "Relaxation",
+      "Therapy",
+    ];
+    const negativeActivities = [
+      "Work Stress",
+      "Conflict",
+      "Isolation",
+      "Late Work",
+    ];
+
+    const periodText =
+      selectedPeriod === "week"
+        ? "this week"
+        : selectedPeriod === "month"
+          ? "this month"
+          : "this year";
+
+    return Array.from(activityMap.entries())
+      .map(([name, count]) => ({
+        id: name,
+        pattern: name,
+        frequency: `${count}x ${periodText}`,
+        impact: positiveActivities.includes(name)
+          ? ("positive" as const)
+          : negativeActivities.includes(name)
+            ? ("negative" as const)
+            : ("neutral" as const),
+      }))
+      .sort((a, b) => {
+        // Sort by frequency
+        const aCount = parseInt(a.frequency);
+        const bCount = parseInt(b.frequency);
+        return bCount - aCount;
+      })
+      .slice(0, 8); // Top 8 patterns
+  }, [moodData, selectedPeriod]);
+
+  // Calculate mood trends from data
+  const moodTrends = useMemo(() => {
+    if (moodData.length === 0) {
+      return {
+        averageMood: "No data",
+        trendDirection: "stable",
+        changePercentage: "0%",
+        bestTime: "N/A",
+        worstTime: "N/A",
+      };
+    }
+
+    // Calculate average mood
+    const avgIntensity =
+      moodData.reduce((sum, entry) => sum + entry.intensity, 0) /
+      moodData.length;
+
+    const avgMoodName =
+      avgIntensity >= 4.5
+        ? "Excited"
+        : avgIntensity >= 3.5
+          ? "Happy"
+          : avgIntensity >= 2.5
+            ? "Okay"
+            : avgIntensity >= 1.5
+              ? "Sad"
+              : "Very sad";
+
+    // Calculate trend (compare first half vs second half)
+    const midpoint = Math.floor(moodData.length / 2);
+    const firstHalf = moodData.slice(0, midpoint);
+    const secondHalf = moodData.slice(midpoint);
+
+    const firstAvg =
+      firstHalf.reduce((sum, e) => sum + e.intensity, 0) / firstHalf.length;
+    const secondAvg =
+      secondHalf.reduce((sum, e) => sum + e.intensity, 0) / secondHalf.length;
+
+    const change = ((secondAvg - firstAvg) / firstAvg) * 100;
+    const trendDirection =
+      change > 5 ? "improving" : change < -5 ? "declining" : "stable";
+    const changePercentage =
+      change > 0 ? `+${change.toFixed(0)}%` : `${change.toFixed(0)}%`;
+
+    // Find best and worst times of day
+    const timeSlots = {
+      morning: [] as number[],
+      afternoon: [] as number[],
+      evening: [] as number[],
+      night: [] as number[],
+    };
+
+    moodData.forEach((entry) => {
+      const hour = new Date(entry.timestamp).getHours();
+      if (hour >= 6 && hour < 12) timeSlots.morning.push(entry.intensity);
+      else if (hour >= 12 && hour < 17)
+        timeSlots.afternoon.push(entry.intensity);
+      else if (hour >= 17 && hour < 21)
+        timeSlots.evening.push(entry.intensity);
+      else timeSlots.night.push(entry.intensity);
+    });
+
+    const avgByTime = {
+      Morning: timeSlots.morning.length
+        ? timeSlots.morning.reduce((a, b) => a + b, 0) /
+          timeSlots.morning.length
+        : 0,
+      Afternoon: timeSlots.afternoon.length
+        ? timeSlots.afternoon.reduce((a, b) => a + b, 0) /
+          timeSlots.afternoon.length
+        : 0,
+      Evening: timeSlots.evening.length
+        ? timeSlots.evening.reduce((a, b) => a + b, 0) /
+          timeSlots.evening.length
+        : 0,
+      Night: timeSlots.night.length
+        ? timeSlots.night.reduce((a, b) => a + b, 0) / timeSlots.night.length
+        : 0,
+    };
+
+    const bestTime =
+      Object.entries(avgByTime).reduce((a, b) => (b[1] > a[1] ? b : a))[0] ||
+      "N/A";
+    const worstTime =
+      Object.entries(avgByTime).reduce((a, b) => (b[1] < a[1] ? b : a))[0] ||
+      "N/A";
+
+    return {
+      averageMood: avgMoodName,
+      trendDirection,
+      changePercentage,
+      bestTime,
+      worstTime,
+    };
+  }, [moodData]);
+
+  // Generate insights based on patterns and trends
+  const insights: InsightCard[] = useMemo(() => {
+    if (moodData.length === 0) {
+      return [
+        {
+          id: "1",
+          title: "Start Tracking",
+          description:
+            "Begin logging your moods regularly to receive personalized insights",
+          icon: "📊",
+          type: "neutral" as const,
+        },
+      ];
+    }
+
+    const generatedInsights: InsightCard[] = [];
+
+    // Trend insight
+    if (moodTrends.trendDirection === "improving") {
+      generatedInsights.push({
+        id: "trend",
+        title: "Positive Trend Detected",
+        description: `Your mood is ${moodTrends.trendDirection} by ${moodTrends.changePercentage}. Keep up the great work!`,
+        icon: "📈",
+        type: "positive",
+      });
+    } else if (moodTrends.trendDirection === "declining") {
+      generatedInsights.push({
+        id: "trend",
+        title: "Mood Decline Noticed",
+        description: `Your mood has decreased by ${moodTrends.changePercentage}. Consider talking to someone or trying relaxation techniques.`,
+        icon: "📉",
+        type: "warning",
+      });
+    }
+
+    // Time of day insight
+    if (moodTrends.bestTime !== "N/A") {
+      generatedInsights.push({
+        id: "time",
+        title: `Best Time: ${moodTrends.bestTime}`,
+        description: `Your mood tends to be highest during ${moodTrends.bestTime.toLowerCase()}. Try scheduling important tasks then.`,
+        icon: "⏰",
+        type: "positive",
+      });
+    }
+
+    // Activity insight
+    const topPattern = patterns[0];
+    if (topPattern) {
+      generatedInsights.push({
+        id: "activity",
+        title: `${topPattern.pattern} Pattern`,
+        description: `You've engaged in ${topPattern.pattern.toLowerCase()} ${topPattern.frequency}. ${topPattern.impact === "positive" ? "This appears to help your mood!" : topPattern.impact === "negative" ? "Consider reducing this activity." : ""}`,
+        icon: topPattern.impact === "positive" ? "✨" : "💭",
+        type:
+          topPattern.impact === "positive"
+            ? "positive"
+            : topPattern.impact === "negative"
+              ? "warning"
+              : "neutral",
+      });
+    }
+
+    return generatedInsights;
+  }, [moodData, moodTrends, patterns]);
 
   const styles = StyleSheet.create({
     container: {

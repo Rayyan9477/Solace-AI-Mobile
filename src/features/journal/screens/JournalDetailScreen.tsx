@@ -5,7 +5,8 @@
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
-import React, { useState, useEffect } from "react";
+import { Audio } from "expo-av";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -14,6 +15,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -40,6 +42,11 @@ export const JournalDetailScreen = () => {
   const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
+
+  // Audio playback state
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const [position, setPosition] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   useEffect(() => {
     const loadEntry = async () => {
@@ -103,6 +110,94 @@ export const JournalDetailScreen = () => {
 
     loadEntry();
   }, [route.params]);
+
+  // Audio playback functions
+  const loadSound = async (uri: string) => {
+    try {
+      // Unload any existing sound
+      if (sound) {
+        await sound.unloadAsync();
+      }
+
+      // Create new sound from URI
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        { uri },
+        { shouldPlay: false },
+        onPlaybackStatusUpdate
+      );
+
+      setSound(newSound);
+    } catch (error) {
+      console.error('Failed to load audio:', error);
+      Alert.alert('Playback Error', 'Failed to load audio recording.');
+    }
+  };
+
+  const onPlaybackStatusUpdate = (status: any) => {
+    if (status.isLoaded) {
+      setPosition(status.positionMillis);
+      setDuration(status.durationMillis || 0);
+      setIsPlaying(status.isPlaying);
+
+      // Update progress for waveform visualization
+      if (status.durationMillis > 0) {
+        setAudioProgress(status.positionMillis / status.durationMillis);
+      }
+
+      // Reset when playback finishes
+      if (status.didJustFinish) {
+        setIsPlaying(false);
+        setPosition(0);
+        setAudioProgress(0);
+      }
+    }
+  };
+
+  const togglePlayback = async () => {
+    if (!entry?.audioUrl) {
+      Alert.alert('No Audio', 'This journal entry has no audio recording.');
+      return;
+    }
+
+    try {
+      if (!sound) {
+        await loadSound(entry.audioUrl);
+        return;
+      }
+
+      if (isPlaying) {
+        await sound.pauseAsync();
+      } else {
+        await sound.playAsync();
+      }
+    } catch (error) {
+      console.error('Playback error:', error);
+      Alert.alert('Playback Error', 'Failed to play audio.');
+    }
+  };
+
+  const formatDuration = (millis: number): string => {
+    const totalSeconds = Math.floor(millis / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  // Load audio when entry changes
+  useEffect(() => {
+    if (entry?.audioUrl && entry.isVoice) {
+      loadSound(entry.audioUrl);
+    }
+  }, [entry?.audioUrl]);
+
+  // Cleanup sound on unmount
+  useEffect(() => {
+    return () => {
+      if (sound) {
+        sound.unloadAsync().catch(console.error);
+      }
+    };
+  }, [sound]);
 
   const styles = StyleSheet.create({
     container: {
@@ -352,23 +447,36 @@ export const JournalDetailScreen = () => {
               ))}
             </View>
             <View style={styles.audioControls}>
-              <TouchableOpacity onPress={() => setIsPlaying(!isPlaying)}>
+              <TouchableOpacity
+                onPress={async () => {
+                  if (sound) {
+                    await sound.setPositionAsync(0);
+                  }
+                }}
+              >
                 <Text style={{ fontSize: 24 }}>⏮</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.playButton}
-                onPress={() => setIsPlaying(!isPlaying)}
+                onPress={togglePlayback}
               >
                 <Text style={{ fontSize: 24 }}>{isPlaying ? "⏸" : "▶️"}</Text>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={async () => {
+                  // Skip forward 10 seconds
+                  if (sound && position + 10000 < duration) {
+                    await sound.setPositionAsync(position + 10000);
+                  }
+                }}
+              >
                 <Text style={{ fontSize: 24 }}>⏭</Text>
               </TouchableOpacity>
             </View>
             <Text
               style={[styles.audioTime, { textAlign: "center", marginTop: 12 }]}
             >
-              00:00 / 02:34
+              {formatDuration(position)} / {formatDuration(duration)}
             </Text>
           </View>
         )}
