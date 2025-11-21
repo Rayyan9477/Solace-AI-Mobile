@@ -9,6 +9,7 @@ import React, {
   useContext,
 } from "react";
 import { moodStorageService } from "../services/moodStorageService";
+import { logger } from "@shared/utils/logger";
 import {
   View,
   Text,
@@ -443,7 +444,7 @@ const EnhancedMoodTrackerScreen = () => {
         ],
       );
     } catch (error) {
-      console.error("Failed to save mood:", error);
+      logger.error("Failed to save mood:", error);
       setErrorMessage(
         "Error: Unable to save your mood entry. Please try again.",
       );

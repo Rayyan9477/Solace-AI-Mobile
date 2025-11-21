@@ -1,11 +1,15 @@
 /**
- * Analytics Service
- * Provides local analytics tracking for user behavior and app usage
+ * Enhanced Analytics Service
+ * Provides comprehensive analytics tracking for user behavior and app usage
  * HIPAA-compliant - no PHI is tracked
+ * Integrates with error handling and provides mental health specific insights
  */
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logger } from "@shared/utils/logger";
+import { ErrorReport, ErrorCategory } from "@shared/services/errorHandlingService";
+import { i18n } from "@shared/services/i18nService";
+import { retryService } from "@shared/services/retryService";
 
 // Storage keys
 const STORAGE_KEYS = {

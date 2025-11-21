@@ -11,8 +11,10 @@
  * Overall score is a weighted average of these dimensions
  */
 
+export type AssessmentAnswer = string | string[] | number | boolean | undefined;
+
 export interface AssessmentAnswers {
-  [questionId: number]: any;
+  [questionId: number]: AssessmentAnswer;
 }
 
 export interface CategoryScore {

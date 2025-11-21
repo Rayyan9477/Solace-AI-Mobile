@@ -1,14 +1,15 @@
 import React from "react";
 import { View, Text, AccessibilityInfo } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@app/store/store";
 
 import MoodCheckIn from "../features/dashboard/components/MoodCheckIn";
 import moodSliceShim from "../store/slices/moodSlice";
 
 const MainAppScreen = () => {
   const dispatch = useDispatch();
-  const { setCurrentMood } = (moodSliceShim as any) || {};
-  const moodState = useSelector((state: any) => state.mood);
+  const { setCurrentMood } = moodSliceShim || {};
+  const moodState = useSelector((state: RootState) => state.mood);
   React.useEffect(() => {
     // Trigger screen reader state fetch for accessibility tests
     try {
