@@ -18,6 +18,7 @@ class TokenService {
 
   /**
    * Store authentication tokens securely
+   * Default expiration is 15 minutes for health data security
    */
   async storeTokens({
     accessToken,
@@ -35,7 +36,9 @@ class TokenService {
     const tokenData = {
       accessToken,
       refreshToken,
-      expiresAt: expiresAt || Date.now() + 3600 * 1000, // Default 1 hour
+      // Reduced to 15 minutes (900 seconds) for health data security
+      // Previous default was 1 hour (3600 seconds)
+      expiresAt: expiresAt || Date.now() + 900 * 1000, // Default 15 minutes
       storedAt: Date.now(),
     };
 
@@ -205,7 +208,8 @@ class TokenService {
   }
 
   /**
-   * Check if token needs refresh (expires within next 5 minutes)
+   * Check if token needs refresh (expires within next 2 minutes)
+   * Reduced threshold from 5 to 2 minutes to match shorter token expiration
    * @returns {Promise<boolean>} True if refresh needed
    */
   async shouldRefreshToken() {
@@ -214,8 +218,9 @@ class TokenService {
       return true;
     }
 
-    const fiveMinutesFromNow = Date.now() + 5 * 60 * 1000;
-    return tokens.expiresAt < fiveMinutesFromNow;
+    // Refresh if expires within next 2 minutes (reduced from 5 minutes)
+    const twoMinutesFromNow = Date.now() + 2 * 60 * 1000;
+    return tokens.expiresAt < twoMinutesFromNow;
   }
 }
 

@@ -69,7 +69,8 @@
       "Bash(then echo \"$f\")",
       "Bash(timeout 120 npm test:*)",
       "Bash(timeout 90 npm test:*)",
-      "Bash(timeout 20 npm test:*)"
+      "Bash(timeout 20 npm test:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []

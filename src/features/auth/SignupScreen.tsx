@@ -26,7 +26,7 @@ import {
 } from "react-native";
 import { showAlert } from "@shared/utils/alert";
 
-export const SignupScreen = ({ navigation }: any) => {
+const SignupScreenComponent = ({ navigation }: any) => {
   const { theme, isDark } = useTheme();
   const { isWeb, getMaxContentWidth } = useResponsive();
   const [email, setEmail] = useState("");
@@ -533,5 +533,12 @@ export const SignupScreen = ({ navigation }: any) => {
     </SafeAreaView>
   );
 };
+
+
+export const SignupScreen = (props: any) => (
+  <ScreenErrorBoundary screenName="Signup">
+    <SignupScreenComponent {...props} />
+  </ScreenErrorBoundary>
+);
 
 export default SignupScreen;

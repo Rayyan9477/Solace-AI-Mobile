@@ -30,7 +30,7 @@ interface SocialProvider {
   bgColor: string;
 }
 
-export const SocialLoginScreen = () => {
+const SocialLoginScreenComponent = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
@@ -406,5 +406,12 @@ export const SocialLoginScreen = () => {
     </SafeAreaView>
   );
 };
+
+
+export const SocialLoginScreen = (props: any) => (
+  <ScreenErrorBoundary screenName="Social Login">
+    <SocialLoginScreenComponent {...props} />
+  </ScreenErrorBoundary>
+);
 
 export default SocialLoginScreen;

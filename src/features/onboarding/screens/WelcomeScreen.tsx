@@ -13,6 +13,7 @@ import {
   StatusBar,
   Animated,
 } from "react-native";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 
 const { width, height } = Dimensions.get("window");
 
@@ -79,7 +80,7 @@ const WELCOME_STEPS = [
   },
 ];
 
-const WelcomeScreen = ({ navigation }) => {
+const WelcomeScreenComponent = ({ navigation }) => {
   const { theme } = useTheme();
   const [currentStep, setCurrentStep] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -770,5 +771,11 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
 });
+
+const WelcomeScreen = (props: any) => (
+  <ScreenErrorBoundary screenName="Welcome">
+    <WelcomeScreenComponent {...props} />
+  </ScreenErrorBoundary>
+);
 
 export default WelcomeScreen;

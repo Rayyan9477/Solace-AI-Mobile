@@ -31,7 +31,7 @@ interface Resource {
   url?: string;
 }
 
-export const CrisisSupportScreen = () => {
+const CrisisSupportScreenComponent = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const [country] = useState("US");
@@ -432,5 +432,12 @@ export const CrisisSupportScreen = () => {
     </SafeAreaView>
   );
 };
+
+
+export const CrisisSupportScreen = (props: any) => (
+  <ScreenErrorBoundary screenName="Crisis Support">
+    <CrisisSupportScreenComponent {...props} />
+  </ScreenErrorBoundary>
+);
 
 export default CrisisSupportScreen;

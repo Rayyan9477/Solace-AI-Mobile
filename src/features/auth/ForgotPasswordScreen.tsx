@@ -24,7 +24,7 @@ import {
 
 type ResetMethod = "2fa" | "password" | "google";
 
-export const ForgotPasswordScreen = ({ navigation }: any) => {
+const ForgotPasswordScreenComponent = ({ navigation }: any) => {
   const { theme, isDark } = useTheme();
   const [selectedMethod, setSelectedMethod] = useState<ResetMethod>("2fa");
   const [isLoading, setIsLoading] = useState(false);
@@ -445,5 +445,12 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
     </SafeAreaView>
   );
 };
+
+
+export const ForgotPasswordScreen = (props: any) => (
+  <ScreenErrorBoundary screenName="Forgot Password">
+    <ForgotPasswordScreenComponent {...props} />
+  </ScreenErrorBoundary>
+);
 
 export default ForgotPasswordScreen;

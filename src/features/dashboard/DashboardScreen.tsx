@@ -23,10 +23,11 @@ import type { MoodEntry } from "@features/mood/services/moodStorageService";
 import { useSelector } from "react-redux";
 import mentalHealthAPI from "@app/services/mentalHealthAPI";
 import { typography, spacing } from "@shared/theme/theme";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 
 import { MentalHealthScoreWidget } from "./components/MentalHealthScoreWidget";
 
-export const DashboardScreen = () => {
+const DashboardScreenComponent = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const { isWeb, getMaxContentWidth, getContainerPadding } = useResponsive();
@@ -696,5 +697,11 @@ export const DashboardScreen = () => {
     </SafeAreaView>
   );
 };
+
+export const DashboardScreen = () => (
+  <ScreenErrorBoundary screenName="Dashboard">
+    <DashboardScreenComponent />
+  </ScreenErrorBoundary>
+);
 
 export default DashboardScreen;

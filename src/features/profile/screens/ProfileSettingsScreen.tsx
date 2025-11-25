@@ -82,7 +82,7 @@ const HELP_CENTER: SettingItem[] = [
   { id: "logout", icon: "🚪", label: "Log Out", type: "navigation" },
 ];
 
-export const ProfileSettingsScreen = () => {
+const ProfileSettingsScreenComponent = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const [settings, setSettings] = useState(GENERAL_SETTINGS);
@@ -405,5 +405,12 @@ export const ProfileSettingsScreen = () => {
     </SafeAreaView>
   );
 };
+
+
+export const ProfileSettingsScreen = (props: any) => (
+  <ScreenErrorBoundary screenName="Profile Settings">
+    <ProfileSettingsScreenComponent {...props} />
+  </ScreenErrorBoundary>
+);
 
 export default ProfileSettingsScreen;

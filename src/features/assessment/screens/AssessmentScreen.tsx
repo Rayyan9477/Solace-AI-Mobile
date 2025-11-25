@@ -25,6 +25,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 
 const { width } = Dimensions.get("window");
 
@@ -148,7 +149,7 @@ const QUESTIONS = [
   },
 ];
 
-export const AssessmentScreen = () => {
+const AssessmentScreenComponent = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -1031,5 +1032,11 @@ export const AssessmentScreen = () => {
     </SafeAreaView>
   );
 };
+
+export const AssessmentScreen = () => (
+  <ScreenErrorBoundary screenName="Assessment">
+    <AssessmentScreenComponent />
+  </ScreenErrorBoundary>
+);
 
 export default AssessmentScreen;

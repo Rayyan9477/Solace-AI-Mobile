@@ -21,15 +21,37 @@ interface LoggerConfig {
 
 class Logger {
   private config: LoggerConfig;
+  private readonly MAX_LOG_LENGTH = 10000; // Maximum characters per log entry
+
+  // Patterns for sensitive data that should be redacted
   private sensitivePatterns: RegExp[] = [
+    // JWT tokens and Bearer tokens
     /Bearer\s+[\w-]+\.[\w-]+\.[\w-]+/gi,
     /token["\s:]+["']?[\w-]+\.[\w-]+\.[\w-]+["']?/gi,
-    /password["\s:]+["']?[^"'\s]+["']?/gi,
+
+    // API keys and secrets
     /api[_-]?key["\s:]+["']?[^"'\s]+["']?/gi,
     /secret["\s:]+["']?[^"'\s]+["']?/gi,
+
+    // Passwords
+    /password["\s:]+["']?[^"'\s]+["']?/gi,
+
+    // Email addresses (PII)
     /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/gi,
+
+    // Social Security Numbers (US)
     /\b\d{3}-\d{2}-\d{4}\b/g,
+
+    // Credit card numbers
     /\b\d{16}\b/g,
+    /\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/g,
+
+    // Phone numbers
+    /\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/g,
+    /\b\+?1?\s*\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}\b/g,
+
+    // IP addresses (potential PII)
+    /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g,
   ];
 
   constructor(config?: Partial<LoggerConfig>) {
@@ -51,12 +73,30 @@ class Logger {
     return requestedLevelIndex >= currentLevelIndex;
   }
 
+  /**
+   * Prevent log injection attacks by escaping control characters
+   * Removes newlines, carriage returns, and other control characters that could
+   * be used to inject malicious content into logs
+   */
+  private preventLogInjection(str: string): string {
+    return str
+      .replace(/\n/g, "\\n") // Escape newlines
+      .replace(/\r/g, "\\r") // Escape carriage returns
+      .replace(/\t/g, "\\t") // Escape tabs
+      .replace(/[\x00-\x1F\x7F]/g, "") // Remove other control characters
+      .substring(0, this.MAX_LOG_LENGTH); // Limit length
+  }
+
   private sanitize(data: any): any {
     if (typeof data === "string") {
-      let sanitized = data;
+      // First prevent log injection attacks
+      let sanitized = this.preventLogInjection(data);
+
+      // Then redact sensitive data
       this.sensitivePatterns.forEach((pattern) => {
         sanitized = sanitized.replace(pattern, "[REDACTED]");
       });
+
       return sanitized;
     }
 

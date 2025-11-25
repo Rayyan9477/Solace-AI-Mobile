@@ -15,7 +15,12 @@ interface StorageData {
 
 class SecureStorage {
   private deviceKeyCache: string | null = null;
+  private encryptionKeyCache: string | null = null;
 
+  /**
+   * Get or generate device-specific encryption key
+   * This provides a secure fallback when environment encryption key is not set
+   */
   async getDeviceKey(): Promise<string> {
     if (this.deviceKeyCache) {
       return this.deviceKeyCache;
@@ -40,6 +45,27 @@ class SecureStorage {
     } catch (error) {
       throw new Error(`Failed to get device key: ${error}`);
     }
+  }
+
+  /**
+   * Get encryption key from environment or generate device-specific key
+   * Priority: Environment Key > Device-Specific Generated Key
+   */
+  async getEncryptionKey(): Promise<string> {
+    if (this.encryptionKeyCache) {
+      return this.encryptionKeyCache;
+    }
+
+    // If environment key is provided, use it
+    if (STORAGE_CONFIG.encryptionKey) {
+      this.encryptionKeyCache = STORAGE_CONFIG.encryptionKey;
+      return this.encryptionKeyCache;
+    }
+
+    // Otherwise, generate or retrieve device-specific key
+    // This is secure because it's stored in SecureStore and unique per device
+    this.encryptionKeyCache = await this.getDeviceKey();
+    return this.encryptionKeyCache;
   }
 
   async calculateChecksum(data: any): Promise<string> {

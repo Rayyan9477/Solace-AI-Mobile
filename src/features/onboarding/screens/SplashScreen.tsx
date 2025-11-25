@@ -9,7 +9,7 @@ import { FreudDiamondLogo } from "@components/icons";
 import React, { useEffect, useRef } from "react";
 import { View, Text, StyleSheet, SafeAreaView, Animated } from "react-native";
 
-export const SplashScreen = () => {
+const SplashScreenComponent = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -91,5 +91,12 @@ export const SplashScreen = () => {
     </SafeAreaView>
   );
 };
+
+
+export const SplashScreen = (props: any) => (
+  <ScreenErrorBoundary screenName="Splash">
+    <SplashScreenComponent {...props} />
+  </ScreenErrorBoundary>
+);
 
 export default SplashScreen;

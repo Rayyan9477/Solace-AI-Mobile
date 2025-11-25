@@ -25,6 +25,7 @@ import {
   Share,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 
 import CrisisManager from "../crisis/CrisisManager";
 import chatResponseService from "./services/chatResponseService";
@@ -59,7 +60,7 @@ const ONGOING_PROMPTS: SuggestedPrompt[] = [
   { id: '8', text: "I'm feeling better now", category: 'feelings' },
 ];
 
-export const ChatScreen = ({ navigation, route }: any) => {
+const ChatScreenComponent = ({ navigation, route }: any) => {
   const { theme } = useTheme();
 
   // Initialize with a greeting message
@@ -1148,5 +1149,11 @@ ${"=".repeat(50)}
     </SafeAreaView>
   );
 };
+
+export const ChatScreen = (props: any) => (
+  <ScreenErrorBoundary screenName="Chat">
+    <ChatScreenComponent {...props} />
+  </ScreenErrorBoundary>
+);
 
 export default ChatScreen;

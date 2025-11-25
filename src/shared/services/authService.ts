@@ -96,10 +96,11 @@ const STORAGE_KEYS = {
   LAST_EMAIL: "auth_last_email",
 } as const;
 
-const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+// Security configuration - Reduced for health data protection
+const SESSION_TIMEOUT = 15 * 60 * 1000; // 15 minutes (reduced from 30)
 const MAX_LOGIN_ATTEMPTS = 5;
 const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
-const TOKEN_REFRESH_THRESHOLD = 5 * 60 * 1000; // Refresh if expires in 5 minutes
+const TOKEN_REFRESH_THRESHOLD = 2 * 60 * 1000; // Refresh if expires in 2 minutes (reduced from 5)
 
 /**
  * Authentication Service Class

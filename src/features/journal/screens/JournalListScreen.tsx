@@ -18,6 +18,7 @@ import {
 } from "react-native";
 import mentalHealthAPI from "@app/services/mentalHealthAPI";
 import dataPersistence from "@app/services/dataPersistence";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 
 interface JournalEntry {
   id: string;
@@ -69,7 +70,7 @@ const MOCK_JOURNALS: JournalEntry[] = [
   },
 ];
 
-export const JournalListScreen = () => {
+const JournalListScreenComponent = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
   const [filter, setFilter] = useState<"all" | "recent">("recent");
@@ -512,5 +513,11 @@ const styles = StyleSheet.create({
     fontWeight: "300",
   },
 });
+
+export const JournalListScreen = () => (
+  <ScreenErrorBoundary screenName="Journal List">
+    <JournalListScreenComponent />
+  </ScreenErrorBoundary>
+);
 
 export default JournalListScreen;

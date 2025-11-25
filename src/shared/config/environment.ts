@@ -9,24 +9,54 @@
 
 /**
  * API Configuration
+ * SECURITY: Enforces HTTPS in production environment
  */
-export const API_CONFIG = {
-  // Base URL for API requests
-  // Set via EXPO_PUBLIC_API_URL environment variable
-  baseURL: process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000/api",
+export const API_CONFIG = (() => {
+  const baseURL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000/api";
+  const environment = process.env.EXPO_PUBLIC_ENVIRONMENT || "development";
 
-  // Request timeout in milliseconds
-  timeout: parseInt(process.env.EXPO_PUBLIC_API_TIMEOUT || "10000", 10),
+  // Validate HTTPS in production
+  if (
+    environment === "production" &&
+    !baseURL.startsWith("https://")
+  ) {
+    throw new Error(
+      "SECURITY ERROR: API_URL must use HTTPS in production environment. " +
+      `Current URL: ${baseURL}. ` +
+      "Please update EXPO_PUBLIC_API_URL to use HTTPS."
+    );
+  }
 
-  // Number of retry attempts for failed requests
-  retryAttempts: parseInt(
-    process.env.EXPO_PUBLIC_API_RETRY_ATTEMPTS || "3",
-    10,
-  ),
+  // Warn if using HTTP in staging (except localhost)
+  if (
+    environment === "staging" &&
+    !baseURL.startsWith("https://") &&
+    !baseURL.includes("localhost")
+  ) {
+    console.warn(
+      "WARNING: API_URL should use HTTPS in staging environment. " +
+      `Current URL: ${baseURL}`
+    );
+  }
 
-  // Delay between retries in milliseconds
-  retryDelay: parseInt(process.env.EXPO_PUBLIC_API_RETRY_DELAY || "1000", 10),
-};
+  return {
+    // Base URL for API requests
+    // Set via EXPO_PUBLIC_API_URL environment variable
+    baseURL,
+
+    // Request timeout in milliseconds
+    timeout: parseInt(process.env.EXPO_PUBLIC_API_TIMEOUT || "10000", 10),
+
+    // Number of retry attempts for failed requests
+    retryAttempts: parseInt(
+      process.env.EXPO_PUBLIC_API_RETRY_ATTEMPTS || "3",
+      10,
+    ),
+
+    // Delay between retries in milliseconds
+    retryDelay: parseInt(process.env.EXPO_PUBLIC_API_RETRY_DELAY || "1000", 10),
+  };
+})();
 
 /**
  * Feature Flags
@@ -72,9 +102,21 @@ export const STORAGE_CONFIG = {
   // Enable storage encryption (always true for secure storage)
   encryption: true,
 
-  // Encryption key for secure storage (generated or from environment)
-  encryptionKey:
-    process.env.EXPO_PUBLIC_ENCRYPTION_KEY || "solace-ai-secure-key-2024",
+  // Encryption key for secure storage (must be from environment in production)
+  encryptionKey: (() => {
+    const envKey = process.env.EXPO_PUBLIC_ENCRYPTION_KEY;
+
+    // In production, encryption key MUST be provided
+    if (APP_CONFIG.environment === "production" && !envKey) {
+      throw new Error(
+        "EXPO_PUBLIC_ENCRYPTION_KEY must be set in production environment. " +
+        "Application cannot start without proper encryption configuration."
+      );
+    }
+
+    // In development/staging, use environment key or null (will be generated at runtime)
+    return envKey || null;
+  })(),
 };
 
 /**

@@ -32,7 +32,7 @@ import {
 } from "react-native";
 import { showAlert } from "@shared/utils/alert";
 
-export const LoginScreen = ({ navigation }: any) => {
+const LoginScreenComponent = ({ navigation }: any) => {
   const { theme, isDark } = useTheme();
   const { isWeb, isMobile, getMaxContentWidth } = useResponsive();
   const dispatch = useAppDispatch();
@@ -557,5 +557,12 @@ export const LoginScreen = ({ navigation }: any) => {
     </SafeAreaView>
   );
 };
+
+
+export const LoginScreen = (props: any) => (
+  <ScreenErrorBoundary screenName="Login">
+    <LoginScreenComponent {...props} />
+  </ScreenErrorBoundary>
+);
 
 export default LoginScreen;

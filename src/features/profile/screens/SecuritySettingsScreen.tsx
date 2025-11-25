@@ -16,7 +16,7 @@ import {
   Switch,
 } from "react-native";
 
-export const SecuritySettingsScreen = () => {
+const SecuritySettingsScreenComponent = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
 
@@ -257,5 +257,12 @@ export const SecuritySettingsScreen = () => {
     </SafeAreaView>
   );
 };
+
+
+export const SecuritySettingsScreen = (props: any) => (
+  <ScreenErrorBoundary screenName="Security Settings">
+    <SecuritySettingsScreenComponent {...props} />
+  </ScreenErrorBoundary>
+);
 
 export default SecuritySettingsScreen;

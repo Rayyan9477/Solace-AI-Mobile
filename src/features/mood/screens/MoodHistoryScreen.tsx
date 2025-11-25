@@ -21,6 +21,7 @@ import { moodStorageService } from "../services/moodStorageService";
 import type { MoodEntry as StoredMoodEntry } from "../services/moodStorageService";
 import mentalHealthAPI from "@app/services/mentalHealthAPI";
 import dataPersistence from "@app/services/dataPersistence";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 
 interface MoodEntry {
   id: string;
@@ -62,7 +63,7 @@ const formatRelativeDate = (timestamp: string): string => {
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 };
 
-export const MoodHistoryScreen = () => {
+const MoodHistoryScreenComponent = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState<"daily" | "weekly" | "monthly">("daily");
@@ -646,5 +647,11 @@ export const MoodHistoryScreen = () => {
     </SafeAreaView>
   );
 };
+
+export const MoodHistoryScreen = () => (
+  <ScreenErrorBoundary screenName="Mood History">
+    <MoodHistoryScreenComponent />
+  </ScreenErrorBoundary>
+);
 
 export default MoodHistoryScreen;

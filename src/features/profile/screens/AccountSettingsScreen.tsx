@@ -16,7 +16,7 @@ import {
   Switch,
 } from "react-native";
 
-export const AccountSettingsScreen = () => {
+const AccountSettingsScreenComponent = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const [notifications, setNotifications] = useState(true);
@@ -269,5 +269,12 @@ export const AccountSettingsScreen = () => {
     </SafeAreaView>
   );
 };
+
+
+export const AccountSettingsScreen = (props: any) => (
+  <ScreenErrorBoundary screenName="Account Settings">
+    <AccountSettingsScreenComponent {...props} />
+  </ScreenErrorBoundary>
+);
 
 export default AccountSettingsScreen;
