@@ -3,8 +3,10 @@
  * For crisis support and safety features
  */
 
+import { logger } from "@shared/utils/logger";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
 import {
   View,
@@ -15,7 +17,10 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
+  ActivityIndicator,
 } from "react-native";
+
+const EMERGENCY_CONTACTS_KEY = "@solace_emergency_contacts";
 
 export const AddEmergencyContactScreen = () => {
   const { theme } = useTheme();
@@ -25,8 +30,9 @@ export const AddEmergencyContactScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [relationship, setRelationship] = useState("");
   const [email, setEmail] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!contactName || !phoneNumber) {
       Alert.alert("Required Fields", "Please enter contact name and phone number.", [
         { text: "OK" },
@@ -34,17 +40,44 @@ export const AddEmergencyContactScreen = () => {
       return;
     }
 
-    // TODO: Save to local storage or backend
-    Alert.alert(
-      "Contact Saved",
-      `${contactName} has been added as an emergency contact.`,
-      [
-        {
-          text: "OK",
-          onPress: () => navigation.goBack(),
-        },
-      ]
-    );
+    setIsSaving(true);
+    try {
+      // Load existing contacts
+      const existingData = await AsyncStorage.getItem(EMERGENCY_CONTACTS_KEY);
+      const existingContacts = existingData ? JSON.parse(existingData) : [];
+
+      // Create new contact
+      const newContact = {
+        id: `contact_${Date.now()}`,
+        name: contactName,
+        phoneNumber,
+        relationship,
+        email,
+        createdAt: new Date().toISOString(),
+      };
+
+      // Save updated contacts list
+      const updatedContacts = [...existingContacts, newContact];
+      await AsyncStorage.setItem(EMERGENCY_CONTACTS_KEY, JSON.stringify(updatedContacts));
+
+      logger.debug("Emergency contact saved:", newContact);
+
+      Alert.alert(
+        "Contact Saved",
+        `${contactName} has been added as an emergency contact.`,
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.goBack(),
+          },
+        ]
+      );
+    } catch (error) {
+      logger.error("Failed to save emergency contact:", error);
+      Alert.alert("Save Failed", "Unable to save contact. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const styles = StyleSheet.create({

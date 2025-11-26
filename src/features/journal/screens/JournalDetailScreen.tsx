@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Journal Detail Screen - View/Edit Journal Entry
  * Based on ui-designs/Dark-mode/Mental Health Journal.png
@@ -5,6 +7,7 @@
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 import { Audio } from "expo-av";
 import React, { useState, useEffect, useRef } from "react";
 import {
@@ -88,7 +91,7 @@ export const JournalDetailScreen = () => {
           audioUrl: undefined,
         });
       } catch (error) {
-        console.error("Error loading journal entry:", error);
+        logger.error("Error loading journal entry:", error);
         // Set default entry on error
         setEntry({
           id: "1",
@@ -128,7 +131,7 @@ export const JournalDetailScreen = () => {
 
       setSound(newSound);
     } catch (error) {
-      console.error('Failed to load audio:', error);
+      logger.error('Failed to load audio:', error);
       Alert.alert('Playback Error', 'Failed to load audio recording.');
     }
   };
@@ -171,7 +174,7 @@ export const JournalDetailScreen = () => {
         await sound.playAsync();
       }
     } catch (error) {
-      console.error('Playback error:', error);
+      logger.error('Playback error:', error);
       Alert.alert('Playback Error', 'Failed to play audio.');
     }
   };
@@ -194,7 +197,7 @@ export const JournalDetailScreen = () => {
   useEffect(() => {
     return () => {
       if (sound) {
-        sound.unloadAsync().catch(console.error);
+        sound.unloadAsync().catch((err) => logger.error('Failed to unload sound:', err));
       }
     };
   }, [sound]);
@@ -516,4 +519,10 @@ export const JournalDetailScreen = () => {
   );
 };
 
-export default JournalDetailScreen;
+export const JournalDetailScreenWithBoundary = () => (
+  <ScreenErrorBoundary screenName="Journal Detail">
+    <JournalDetailScreen />
+  </ScreenErrorBoundary>
+);
+
+export default JournalDetailScreenWithBoundary;

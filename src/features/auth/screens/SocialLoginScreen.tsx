@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Social Login Screen - Third-Party Authentication Options
  * Based on ui-designs/Dark-mode/Sign In & Sign Up.png
@@ -142,7 +144,7 @@ const SocialLoginScreenComponent = () => {
         }
       }
     } catch (error: any) {
-      console.error(`${providerId} OAuth error:`, error);
+      logger.error(`${providerId} OAuth error:`, error);
       showAlert(
         "Authentication Error",
         error.message || `Failed to authenticate with ${providerId}`,

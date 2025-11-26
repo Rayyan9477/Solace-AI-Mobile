@@ -11,7 +11,8 @@ import { useTheme } from "@theme/ThemeProvider";
 import { LinearGradient } from "expo-linear-gradient";
 import mockAuthService from "@shared/services/mockAuthService";
 import { GreenCurvedHeader } from "./components/GreenCurvedHeader";
-import React, { useState } from "react";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -26,7 +27,13 @@ import {
 } from "react-native";
 import { showAlert } from "@shared/utils/alert";
 
-const SignupScreenComponent = ({ navigation }: any) => {
+interface SignupScreenProps {
+  navigation: {
+    navigate: (screen: string) => void;
+  };
+}
+
+const SignupScreenComponent = ({ navigation }: SignupScreenProps) => {
   const { theme, isDark } = useTheme();
   const { isWeb, getMaxContentWidth } = useResponsive();
   const [email, setEmail] = useState("");
@@ -36,6 +43,9 @@ const SignupScreenComponent = ({ navigation }: any) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   // Responsive values
   const maxWidth = getMaxContentWidth();
@@ -204,25 +214,25 @@ const SignupScreenComponent = ({ navigation }: any) => {
     return true;
   };
 
-  const validatePassword = (password: string) => {
+  const validatePassword = useCallback((pwd: string): string[] => {
     const errors: string[] = [];
 
-    if (password.length < 12) {
+    if (pwd.length < 12) {
       errors.push("at least 12 characters");
     }
-    if (password.length > 128) {
+    if (pwd.length > 128) {
       errors.push("less than 128 characters");
     }
-    if (!/[a-z]/.test(password)) {
+    if (!/[a-z]/.test(pwd)) {
       errors.push("one lowercase letter");
     }
-    if (!/[A-Z]/.test(password)) {
+    if (!/[A-Z]/.test(pwd)) {
       errors.push("one uppercase letter");
     }
-    if (!/[0-9]/.test(password)) {
+    if (!/[0-9]/.test(pwd)) {
       errors.push("one number");
     }
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd)) {
       errors.push("one special character");
     }
 
@@ -235,13 +245,42 @@ const SignupScreenComponent = ({ navigation }: any) => {
       "qwerty",
     ];
     if (
-      commonPasswords.some((common) => password.toLowerCase().includes(common))
+      commonPasswords.some((common) => pwd.toLowerCase().includes(common))
     ) {
       errors.push("cannot contain common words");
     }
 
     return errors;
-  };
+  }, []);
+
+  // Validate password on blur
+  const handlePasswordBlur = useCallback(() => {
+    setTouched(prev => ({ ...prev, password: true }));
+    if (!password.trim()) {
+      setPasswordError("Password is required");
+      return;
+    }
+    const errors = validatePassword(password);
+    if (errors.length > 0) {
+      setPasswordError(`Must include: ${errors[0]}`);
+    } else {
+      setPasswordError("");
+    }
+  }, [password, validatePassword]);
+
+  // Validate confirm password on blur
+  const handleConfirmPasswordBlur = useCallback(() => {
+    setTouched(prev => ({ ...prev, confirmPassword: true }));
+    if (!confirmPassword.trim()) {
+      setConfirmPasswordError("Please confirm your password");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setConfirmPasswordError("Passwords do not match");
+    } else {
+      setConfirmPasswordError("");
+    }
+  }, [password, confirmPassword]);
 
   const validateForm = () => {
     if (!email.trim()) {
@@ -320,7 +359,9 @@ const SignupScreenComponent = ({ navigation }: any) => {
     password.trim() &&
     confirmPassword.trim() &&
     !isLoading &&
-    !emailError;
+    !emailError &&
+    !passwordError &&
+    !confirmPasswordError;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -408,7 +449,10 @@ const SignupScreenComponent = ({ navigation }: any) => {
 
                     <View style={styles.inputContainer}>
                       <Text style={styles.inputLabel}>Password</Text>
-                      <View style={styles.inputWrapper}>
+                      <View style={[
+                        styles.inputWrapper,
+                        touched.password && passwordError && styles.inputWrapperError,
+                      ]}>
                         <MentalHealthIcon
                           name="Lock"
                           size={20}
@@ -418,7 +462,14 @@ const SignupScreenComponent = ({ navigation }: any) => {
                         <TextInput
                           style={styles.input}
                           value={password}
-                          onChangeText={setPassword}
+                          onChangeText={(text) => {
+                            setPassword(text);
+                            if (touched.password && text.trim()) {
+                              const errors = validatePassword(text);
+                              setPasswordError(errors.length > 0 ? `Must include: ${errors[0]}` : "");
+                            }
+                          }}
+                          onBlur={handlePasswordBlur}
                           placeholder="Enter your password..."
                           placeholderTextColor={theme.colors.brown[60]}
                           secureTextEntry={!showPassword}
@@ -441,13 +492,28 @@ const SignupScreenComponent = ({ navigation }: any) => {
                           />
                         </TouchableOpacity>
                       </View>
+                      {touched.password && passwordError ? (
+                        <View style={styles.errorBadge}>
+                          <MentalHealthIcon
+                            name="AlertCircle"
+                            size={14}
+                            color={theme.colors.orange[40]}
+                          />
+                          <Text style={styles.errorBadgeText}>
+                            {passwordError}
+                          </Text>
+                        </View>
+                      ) : null}
                     </View>
 
                     <View style={styles.inputContainer}>
                       <Text style={styles.inputLabel}>
                         Password Confirmation
                       </Text>
-                      <View style={styles.inputWrapper}>
+                      <View style={[
+                        styles.inputWrapper,
+                        touched.confirmPassword && confirmPasswordError && styles.inputWrapperError,
+                      ]}>
                         <MentalHealthIcon
                           name="Lock"
                           size={20}
@@ -457,8 +523,16 @@ const SignupScreenComponent = ({ navigation }: any) => {
                         <TextInput
                           style={styles.input}
                           value={confirmPassword}
-                          onChangeText={setConfirmPassword}
-                          placeholder="Enter your password..."
+                          onChangeText={(text) => {
+                            setConfirmPassword(text);
+                            if (touched.confirmPassword && text.trim()) {
+                              setConfirmPasswordError(
+                                password !== text ? "Passwords do not match" : ""
+                              );
+                            }
+                          }}
+                          onBlur={handleConfirmPasswordBlur}
+                          placeholder="Confirm your password..."
                           placeholderTextColor={theme.colors.brown[60]}
                           secureTextEntry={!showConfirmPassword}
                           autoComplete="new-password"
@@ -484,6 +558,18 @@ const SignupScreenComponent = ({ navigation }: any) => {
                           />
                         </TouchableOpacity>
                       </View>
+                      {touched.confirmPassword && confirmPasswordError ? (
+                        <View style={styles.errorBadge}>
+                          <MentalHealthIcon
+                            name="AlertCircle"
+                            size={14}
+                            color={theme.colors.orange[40]}
+                          />
+                          <Text style={styles.errorBadgeText}>
+                            {confirmPasswordError}
+                          </Text>
+                        </View>
+                      ) : null}
                     </View>
 
                     <TouchableOpacity
@@ -535,7 +621,7 @@ const SignupScreenComponent = ({ navigation }: any) => {
 };
 
 
-export const SignupScreen = (props: any) => (
+export const SignupScreen = (props: SignupScreenProps) => (
   <ScreenErrorBoundary screenName="Signup">
     <SignupScreenComponent {...props} />
   </ScreenErrorBoundary>

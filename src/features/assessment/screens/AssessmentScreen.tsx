@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Mental Health Assessment Screen
  * 14-question comprehensive mental health evaluation
@@ -409,7 +411,7 @@ const AssessmentScreenComponent = () => {
       }
       return true;
     } catch (error) {
-      console.error('Error requesting audio permission:', error);
+      logger.error('Error requesting audio permission:', error);
       return false;
     }
   };
@@ -445,7 +447,7 @@ const AssessmentScreenComponent = () => {
         setRecordingDuration((prev) => prev + 1);
       }, 1000);
     } catch (error) {
-      console.error('Failed to start recording:', error);
+      logger.error('Failed to start recording:', error);
       Alert.alert('Recording Error', 'Failed to start recording. Please try again.');
     }
   };
@@ -472,7 +474,7 @@ const AssessmentScreenComponent = () => {
 
       setRecording(null);
     } catch (error) {
-      console.error('Failed to stop recording:', error);
+      logger.error('Failed to stop recording:', error);
       Alert.alert('Recording Error', 'Failed to stop recording.');
     }
   };
@@ -492,7 +494,7 @@ const AssessmentScreenComponent = () => {
       setHasPermission(true);
       return true;
     } catch (error) {
-      console.error('Error requesting camera permission:', error);
+      logger.error('Error requesting camera permission:', error);
       return false;
     }
   };
@@ -524,7 +526,7 @@ const AssessmentScreenComponent = () => {
         });
       }, 2000);
     } catch (error) {
-      console.error('Failed to take picture:', error);
+      logger.error('Failed to take picture:', error);
       Alert.alert('Camera Error', 'Failed to capture image. Please try again.');
       setIsAnalyzing(false);
     }
@@ -542,7 +544,7 @@ const AssessmentScreenComponent = () => {
   useEffect(() => {
     return () => {
       if (recording) {
-        recording.stopAndUnloadAsync().catch(console.error);
+        recording.stopAndUnloadAsync().catch((err) => logger.error('Failed to stop recording:', err));
       }
       if (recordingInterval.current) {
         clearInterval(recordingInterval.current);

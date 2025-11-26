@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 import { store, persistor } from "@app/store/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { lightTheme, darkTheme } from "@theme/ThemeProvider";
@@ -200,7 +202,7 @@ const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
           setIsReduceMotionEnabled(reduceMotion);
         }
       } catch (error) {
-        console.warn(
+        logger.warn(
           "AccessibilityProvider: Failed to check accessibility features:",
           error,
         );
@@ -317,13 +319,13 @@ const MentalHealthProvider: React.FC<{ children: React.ReactNode }> = ({
         setSafetyPlan(JSON.parse(safetyPlanData));
       }
     } catch (error) {
-      console.error("MentalHealthProvider: Failed to load stored data:", error);
+      logger.error("MentalHealthProvider: Failed to load stored data:", error);
     }
   };
 
   const triggerCrisisMode = useCallback(
     async (level = "medium", context = {}) => {
-      console.log("🚨 MentalHealthProvider: Crisis mode triggered", {
+      logger.debug("🚨 MentalHealthProvider: Crisis mode triggered", {
         level,
         context,
       });
@@ -357,7 +359,7 @@ const MentalHealthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const exitCrisisMode = useCallback(() => {
-    console.log("✅ MentalHealthProvider: Exiting crisis mode");
+    logger.debug("✅ MentalHealthProvider: Exiting crisis mode");
     setIsCrisisMode(false);
     setCrisisLevel("low");
   }, []);
@@ -368,7 +370,7 @@ const MentalHealthProvider: React.FC<{ children: React.ReactNode }> = ({
         ? `tel:${CRISIS_HOTLINES.emergency}`
         : `tel:${CRISIS_HOTLINES.emergency}`;
     Linking.openURL(phoneNumber).catch((error) => {
-      console.error("Failed to open emergency dialer:", error);
+      logger.error("Failed to open emergency dialer:", error);
       Alert.alert(
         "Unable to Call",
         `Please dial ${CRISIS_HOTLINES.emergency} directly for emergency services.`,
@@ -382,7 +384,7 @@ const MentalHealthProvider: React.FC<{ children: React.ReactNode }> = ({
         ? `tel:${CRISIS_HOTLINES.US.suicide}`
         : `tel:${CRISIS_HOTLINES.US.suicide}`;
     Linking.openURL(phoneNumber).catch((error) => {
-      console.error("Failed to open crisis hotline dialer:", error);
+      logger.error("Failed to open crisis hotline dialer:", error);
       Alert.alert(
         "Unable to Call",
         `Please dial ${CRISIS_HOTLINES.US.suicide} directly for the ${CRISIS_HOTLINES.US.name}.`,
@@ -398,7 +400,7 @@ const MentalHealthProvider: React.FC<{ children: React.ReactNode }> = ({
         JSON.stringify(planData),
       );
     } catch (error) {
-      console.error(
+      logger.error(
         "MentalHealthProvider: Failed to update safety plan:",
         error,
       );
@@ -469,7 +471,7 @@ const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({
       setMemoryUsage(simulatedMemoryUsage);
 
       if (simulatedMemoryUsage > 80 && !isLowMemoryMode) {
-        console.warn("⚠️ PerformanceProvider: High memory usage detected");
+        logger.warn("⚠️ PerformanceProvider: High memory usage detected");
         enableLowMemoryMode();
       }
     };

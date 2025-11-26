@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * API Service - Centralized API client for Solace AI Mobile
  * Handles all backend communication with proper error handling and retry logic
@@ -93,7 +95,7 @@ export async function safeAPICall(
     return await apiCall();
   } catch (error) {
     if (logError) {
-      console.error("[API] Safe call failed:", error.message, error.endpoint);
+      logger.error("[API] Safe call failed:", error.message, error.endpoint);
     }
     return fallbackValue;
   }

@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import moodStorageService from "../../../features/mood/services/moodStorageService";
 
@@ -137,7 +139,7 @@ const apiService = {
   mood: {
     async logMood(data: Partial<MoodEntry>): Promise<MoodEntry> {
       if (__DEV__) {
-        console.log("Logging mood to local storage:", data);
+        logger.debug("Logging mood to local storage:", data);
       }
 
       const moodEntry: MoodEntry = {
@@ -167,7 +169,7 @@ const apiService = {
 
     async getMoodHistory(): Promise<MoodEntry[]> {
       if (__DEV__) {
-        console.log("Fetching mood history from local storage");
+        logger.debug("Fetching mood history from local storage");
       }
       return await moodStorageService.getMoodHistory();
     },
@@ -195,7 +197,7 @@ export const logMood = createAsyncThunk<
       return moodEntry;
     } catch (error) {
       if (__DEV__) {
-        console.error("Mood logging error:", error);
+        logger.error("Mood logging error:", error);
       }
       const errorMessage =
         error instanceof Error
@@ -218,7 +220,7 @@ export const fetchMoodHistory = createAsyncThunk<
     return moodHistory;
   } catch (error) {
     if (__DEV__) {
-      console.error("Mood history fetch error:", error);
+      logger.error("Mood history fetch error:", error);
     }
     const errorMessage =
       error instanceof Error
@@ -240,7 +242,7 @@ export const initializeMoodData = createAsyncThunk<
 >("mood/initializeData", async (_, { rejectWithValue }) => {
   try {
     if (__DEV__) {
-      console.log("Initializing mood data from local storage");
+      logger.debug("Initializing mood data from local storage");
     }
 
     const data = await moodStorageService.getAllMoodData();
@@ -252,7 +254,7 @@ export const initializeMoodData = createAsyncThunk<
     };
   } catch (error) {
     if (__DEV__) {
-      console.error("Mood data initialization error:", error);
+      logger.error("Mood data initialization error:", error);
     }
     const errorMessage =
       error instanceof Error

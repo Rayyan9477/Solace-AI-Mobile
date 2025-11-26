@@ -15,6 +15,7 @@ import {
 } from "@app/store/slices/therapySlice";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -495,4 +496,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TherapySessionScreen;
+export const TherapySessionScreenWithBoundary = () => (
+  <ScreenErrorBoundary screenName="Therapy Session">
+    <TherapySessionScreen />
+  </ScreenErrorBoundary>
+);
+
+export default TherapySessionScreenWithBoundary;

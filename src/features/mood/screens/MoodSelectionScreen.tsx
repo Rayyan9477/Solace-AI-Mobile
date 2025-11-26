@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Mood Selection Screen - Select current mood
  * Based on ui-designs/Dark-mode/Mood Tracker.png
@@ -6,6 +8,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 import React, { useState } from "react";
 import {
   View,
@@ -225,7 +228,7 @@ export const MoodSelectionScreen = () => {
         justSaved: true,
       });
     } catch (error: any) {
-      console.error("Failed to save mood:", error);
+      logger.error("Failed to save mood:", error);
       Alert.alert(
         "Save Failed",
         "Failed to save your mood. Please try again.",
@@ -328,4 +331,10 @@ export const MoodSelectionScreen = () => {
   );
 };
 
-export default MoodSelectionScreen;
+export const MoodSelectionScreenWithBoundary = () => (
+  <ScreenErrorBoundary screenName="Mood Selection">
+    <MoodSelectionScreen />
+  </ScreenErrorBoundary>
+);
+
+export default MoodSelectionScreenWithBoundary;

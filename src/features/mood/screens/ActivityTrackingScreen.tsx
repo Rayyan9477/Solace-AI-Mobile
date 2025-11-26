@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
 import React, { useState, useEffect, useMemo } from "react";
@@ -39,7 +41,7 @@ export const ActivityTrackingScreen = () => {
       const moods = await moodStorageService.getMoodHistory(90);
       setMoodHistory(moods);
     } catch (error) {
-      console.error("Failed to load mood history:", error);
+      logger.error("Failed to load mood history:", error);
       setMoodHistory([]);
     } finally {
       setIsLoading(false);

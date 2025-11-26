@@ -5,6 +5,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 import React, { useState } from "react";
 import {
   View,
@@ -388,4 +389,10 @@ export const StressManagementScreen = () => {
   );
 };
 
-export default StressManagementScreen;
+export const StressManagementScreenWithBoundary = () => (
+  <ScreenErrorBoundary screenName="Stress Management">
+    <StressManagementScreen />
+  </ScreenErrorBoundary>
+);
+
+export default StressManagementScreenWithBoundary;

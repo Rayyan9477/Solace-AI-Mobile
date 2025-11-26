@@ -255,7 +255,7 @@ export const AssessmentResultsScreen = ({ route }: any) => {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <View style={styles.cardIcon}>
-                <MentalHealthIcon name="Brain" size={20} color={result.categories.mentalClarity.color} />
+                <MentalHealthIcon name="Brain" size={20} color={result.categories.mentalClarity.color} style={{}} />
               </View>
               <Text style={styles.cardTitle}>Mental Clarity</Text>
               <Text style={[styles.cardValue, { color: result.categories.mentalClarity.color }]}>
@@ -278,7 +278,7 @@ export const AssessmentResultsScreen = ({ route }: any) => {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <View style={styles.cardIcon}>
-                <MentalHealthIcon name="Heart" size={20} color={result.categories.emotionalBalance.color} />
+                <MentalHealthIcon name="Heart" size={20} color={result.categories.emotionalBalance.color} style={{}} />
               </View>
               <Text style={styles.cardTitle}>Emotional Balance</Text>
               <Text style={[styles.cardValue, { color: result.categories.emotionalBalance.color }]}>
@@ -301,7 +301,7 @@ export const AssessmentResultsScreen = ({ route }: any) => {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <View style={styles.cardIcon}>
-                <MentalHealthIcon name="Activity" size={20} color={result.categories.stressManagement.color} />
+                <MentalHealthIcon name="Activity" size={20} color={result.categories.stressManagement.color} style={{}} />
               </View>
               <Text style={styles.cardTitle}>Stress Management</Text>
               <Text style={[styles.cardValue, { color: result.categories.stressManagement.color }]}>
@@ -324,7 +324,7 @@ export const AssessmentResultsScreen = ({ route }: any) => {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <View style={styles.cardIcon}>
-                <MentalHealthIcon name="Activity" size={20} color={result.categories.sleepQuality.color} />
+                <MentalHealthIcon name="Activity" size={20} color={result.categories.sleepQuality.color} style={{}} />
               </View>
               <Text style={styles.cardTitle}>Sleep Quality</Text>
               <Text style={[styles.cardValue, { color: result.categories.sleepQuality.color }]}>

@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Offline Mode Screen - App Functionality Without Internet
  * Based on ui-designs/Dark-mode/🔒 Error & Other Utilities.png
@@ -13,7 +15,9 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 
 interface OfflineFeature {
   id: string;
@@ -77,11 +81,30 @@ export const OfflineModeScreen = () => {
     },
   ];
 
-  const handleCheckConnection = () => {
+  const handleCheckConnection = async () => {
     if (__DEV__) {
-      console.log("Checking connection...");
+      logger.debug("Checking connection...");
     }
-    // TODO: Implement actual connection check
+
+    try {
+      const state = await NetInfo.fetch();
+      if (state.isConnected && state.isInternetReachable) {
+        Alert.alert(
+          "Connection Restored",
+          "You're back online! Your data will now sync.",
+          [{ text: "Continue", onPress: () => navigation.navigate("Dashboard" as never) }]
+        );
+      } else {
+        Alert.alert(
+          "Still Offline",
+          "No internet connection detected. Please check your network settings.",
+          [{ text: "OK" }]
+        );
+      }
+    } catch (error) {
+      logger.error("Connection check failed:", error);
+      Alert.alert("Error", "Failed to check connection status.");
+    }
   };
 
   const handleContinueOffline = () => {

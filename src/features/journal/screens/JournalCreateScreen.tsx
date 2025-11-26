@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Journal Create Screen - Create New Journal Entry
  * Based on ui-designs/Dark-mode/Mental Health Journal.png
@@ -6,6 +8,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { sanitizeText } from "@shared/utils/sanitization";
 import { useTheme } from "@theme/ThemeProvider";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 import { Audio } from "expo-av";
 import React, { useState, useEffect, useRef } from "react";
 import {
@@ -283,7 +286,7 @@ export const JournalCreateScreen = () => {
       }
       return true;
     } catch (error) {
-      console.error('Error requesting audio permission:', error);
+      logger.error('Error requesting audio permission:', error);
       return false;
     }
   };
@@ -319,7 +322,7 @@ export const JournalCreateScreen = () => {
         setRecordingTime((prev) => prev + 1);
       }, 1000);
     } catch (error) {
-      console.error('Failed to start recording:', error);
+      logger.error('Failed to start recording:', error);
       Alert.alert('Recording Error', 'Failed to start recording. Please try again.');
     }
   };
@@ -345,7 +348,7 @@ export const JournalCreateScreen = () => {
 
       setRecording(null);
     } catch (error) {
-      console.error('Failed to stop recording:', error);
+      logger.error('Failed to stop recording:', error);
       Alert.alert('Recording Error', 'Failed to stop recording.');
     }
   };
@@ -362,7 +365,7 @@ export const JournalCreateScreen = () => {
   useEffect(() => {
     return () => {
       if (recording) {
-        recording.stopAndUnloadAsync().catch(console.error);
+        recording.stopAndUnloadAsync().catch((err) => logger.error('Failed to stop recording:', err));
       }
       if (recordingInterval.current) {
         clearInterval(recordingInterval.current);
@@ -560,4 +563,10 @@ export const JournalCreateScreen = () => {
   );
 };
 
-export default JournalCreateScreen;
+export const JournalCreateScreenWithBoundary = () => (
+  <ScreenErrorBoundary screenName="Journal Create">
+    <JournalCreateScreen />
+  </ScreenErrorBoundary>
+);
+
+export default JournalCreateScreenWithBoundary;

@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Enhanced Accessibility utilities for Solace AI Mobile App
  * Provides WCAG 2.1 AA compliant accessibility patterns across components
@@ -266,7 +268,7 @@ export const createListItemAccessibility = (
 export const announceForAccessibility = (message) => {
   // This would typically use AccessibilityInfo.announceForAccessibility
   // but we'll create a mock for now since we're in development
-  console.log(`[Accessibility Announcement]: ${message}`);
+  logger.debug(`[Accessibility Announcement]: ${message}`);
 };
 
 /**
@@ -444,7 +446,7 @@ export const FocusManagement = {
     accessibilityViewIsModal: true,
     onAccessibilityEscape: () => {
       // Handle escape key for modal dismissal
-      console.log("Modal dismissed via accessibility escape");
+      logger.debug("Modal dismissed via accessibility escape");
     },
   }),
 
@@ -472,7 +474,7 @@ export const FocusManagement = {
     if (typeof AccessibilityInfo !== "undefined") {
       AccessibilityInfo.announceForAccessibility(message);
     }
-    console.log(`[Screen Reader ${priority.toUpperCase()}]: ${message}`);
+    logger.debug(`[Screen Reader ${priority.toUpperCase()}]: ${message}`);
   },
 };
 

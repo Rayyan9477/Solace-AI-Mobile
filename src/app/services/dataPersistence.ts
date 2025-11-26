@@ -14,11 +14,95 @@ interface CacheEntry<T> {
   expiresAt?: number;
 }
 
+// Domain-specific types for persistence
+interface UserProfile {
+  id: string;
+  email: string;
+  name?: string;
+  avatar?: string;
+  preferences?: Record<string, unknown>;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+interface MoodEntry {
+  id: string;
+  mood: number;
+  moodLabel?: string;
+  notes?: string;
+  activities?: string[];
+  factors?: string[];
+  timestamp: string;
+  createdAt?: string;
+}
+
+interface JournalEntry {
+  id: string;
+  title: string;
+  content: string;
+  mood?: number;
+  tags?: string[];
+  attachments?: string[];
+  timestamp: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+interface AssessmentResult {
+  id: string;
+  assessmentType: string;
+  score: number;
+  answers: Record<string, unknown>;
+  interpretation?: string;
+  recommendations?: string[];
+  timestamp: string;
+  createdAt?: string;
+}
+
+interface DashboardData {
+  moodTrend?: number[];
+  recentActivities?: Array<{ type: string; timestamp: string }>;
+  streakDays?: number;
+  weeklyGoals?: Record<string, unknown>;
+  insights?: string[];
+  lastUpdated?: string;
+}
+
+interface AppSettings {
+  notifications?: boolean;
+  darkMode?: boolean;
+  language?: string;
+  reminderTime?: string;
+  privacyMode?: boolean;
+  analyticsEnabled?: boolean;
+  [key: string]: unknown;
+}
+
+// API Service interface for sync operations
+interface ApiServiceInterface {
+  mood: {
+    createMoodEntry: (data: MoodEntry) => Promise<unknown>;
+    updateMoodEntry: (id: string, data: Partial<MoodEntry>) => Promise<unknown>;
+    deleteMoodEntry: (id: string) => Promise<unknown>;
+  };
+  journal: {
+    createEntry: (data: JournalEntry) => Promise<unknown>;
+    updateEntry: (id: string, data: Partial<JournalEntry>) => Promise<unknown>;
+    deleteEntry: (id: string) => Promise<unknown>;
+  };
+  assessment: {
+    submitAssessment: (data: AssessmentResult) => Promise<unknown>;
+  };
+}
+
+// Generic sync data type
+type SyncData = MoodEntry | JournalEntry | AssessmentResult | Record<string, unknown>;
+
 interface SyncQueueItem {
   id: string;
   type: "create" | "update" | "delete";
   endpoint: string;
-  data: any;
+  data: SyncData;
   timestamp: number;
   retryCount: number;
 }
@@ -146,26 +230,26 @@ class DataPersistenceService {
 
   // ==================== USER DATA ====================
 
-  async saveUserProfile(profile: any): Promise<void> {
+  async saveUserProfile(profile: UserProfile): Promise<void> {
     await this.setItem(STORAGE_KEYS.USER_PROFILE, profile, CACHE_DURATION.DAY);
   }
 
-  async getUserProfile(): Promise<any> {
-    return await this.getItem(STORAGE_KEYS.USER_PROFILE);
+  async getUserProfile(): Promise<UserProfile | null> {
+    return await this.getItem<UserProfile>(STORAGE_KEYS.USER_PROFILE);
   }
 
   // ==================== MOOD DATA ====================
 
-  async saveMoodEntries(entries: any[]): Promise<void> {
+  async saveMoodEntries(entries: MoodEntry[]): Promise<void> {
     await this.setItem(STORAGE_KEYS.MOOD_ENTRIES, entries, CACHE_DURATION.WEEK);
   }
 
-  async getMoodEntries(): Promise<any[]> {
-    const entries = await this.getItem<any[]>(STORAGE_KEYS.MOOD_ENTRIES);
+  async getMoodEntries(): Promise<MoodEntry[]> {
+    const entries = await this.getItem<MoodEntry[]>(STORAGE_KEYS.MOOD_ENTRIES);
     return entries || [];
   }
 
-  async addMoodEntry(entry: any): Promise<void> {
+  async addMoodEntry(entry: MoodEntry): Promise<void> {
     const entries = await this.getMoodEntries();
     entries.unshift(entry); // Add to beginning
 
@@ -179,16 +263,16 @@ class DataPersistenceService {
 
   // ==================== JOURNAL DATA ====================
 
-  async saveJournalEntries(entries: any[]): Promise<void> {
+  async saveJournalEntries(entries: JournalEntry[]): Promise<void> {
     await this.setItem(STORAGE_KEYS.JOURNAL_ENTRIES, entries, CACHE_DURATION.WEEK);
   }
 
-  async getJournalEntries(): Promise<any[]> {
-    const entries = await this.getItem<any[]>(STORAGE_KEYS.JOURNAL_ENTRIES);
+  async getJournalEntries(): Promise<JournalEntry[]> {
+    const entries = await this.getItem<JournalEntry[]>(STORAGE_KEYS.JOURNAL_ENTRIES);
     return entries || [];
   }
 
-  async addJournalEntry(entry: any): Promise<void> {
+  async addJournalEntry(entry: JournalEntry): Promise<void> {
     const entries = await this.getJournalEntries();
     entries.unshift(entry);
 
@@ -202,16 +286,16 @@ class DataPersistenceService {
 
   // ==================== ASSESSMENT DATA ====================
 
-  async saveAssessmentResults(results: any[]): Promise<void> {
+  async saveAssessmentResults(results: AssessmentResult[]): Promise<void> {
     await this.setItem(STORAGE_KEYS.ASSESSMENT_RESULTS, results, CACHE_DURATION.WEEK);
   }
 
-  async getAssessmentResults(): Promise<any[]> {
-    const results = await this.getItem<any[]>(STORAGE_KEYS.ASSESSMENT_RESULTS);
+  async getAssessmentResults(): Promise<AssessmentResult[]> {
+    const results = await this.getItem<AssessmentResult[]>(STORAGE_KEYS.ASSESSMENT_RESULTS);
     return results || [];
   }
 
-  async addAssessmentResult(result: any): Promise<void> {
+  async addAssessmentResult(result: AssessmentResult): Promise<void> {
     const results = await this.getAssessmentResults();
     results.unshift(result);
 
@@ -225,12 +309,12 @@ class DataPersistenceService {
 
   // ==================== DASHBOARD CACHE ====================
 
-  async saveDashboardCache(data: any): Promise<void> {
+  async saveDashboardCache(data: DashboardData): Promise<void> {
     await this.setItem(STORAGE_KEYS.DASHBOARD_CACHE, data, CACHE_DURATION.SHORT);
   }
 
-  async getDashboardCache(): Promise<any> {
-    return await this.getItem(STORAGE_KEYS.DASHBOARD_CACHE);
+  async getDashboardCache(): Promise<DashboardData | null> {
+    return await this.getItem<DashboardData>(STORAGE_KEYS.DASHBOARD_CACHE);
   }
 
   // ==================== OFFLINE SYNC QUEUE ====================
@@ -241,7 +325,7 @@ class DataPersistenceService {
   async addToSyncQueue(
     type: "create" | "update" | "delete",
     endpoint: string,
-    data: any
+    data: SyncData
   ): Promise<void> {
     const item: SyncQueueItem = {
       id: `sync_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -283,7 +367,7 @@ class DataPersistenceService {
   /**
    * Process sync queue when online
    */
-  async processSyncQueue(apiService: any): Promise<void> {
+  async processSyncQueue(apiService: ApiServiceInterface): Promise<void> {
     if (this.isSyncing || this.syncQueue.length === 0) return;
 
     this.isSyncing = true;
@@ -334,16 +418,16 @@ class DataPersistenceService {
   /**
    * Sync create operation
    */
-  private async syncCreate(apiService: any, item: SyncQueueItem): Promise<void> {
+  private async syncCreate(apiService: ApiServiceInterface, item: SyncQueueItem): Promise<void> {
     const endpoint = item.endpoint;
 
-    // Map endpoints to API methods
+    // Map endpoints to API methods - use type assertions based on endpoint
     if (endpoint.includes("/mood/entries")) {
-      await apiService.mood.createMoodEntry(item.data);
+      await apiService.mood.createMoodEntry(item.data as MoodEntry);
     } else if (endpoint.includes("/journal/entries")) {
-      await apiService.journal.createEntry(item.data);
+      await apiService.journal.createEntry(item.data as JournalEntry);
     } else if (endpoint.includes("/assessments")) {
-      await apiService.assessment.submitAssessment(item.data);
+      await apiService.assessment.submitAssessment(item.data as AssessmentResult);
     } else {
       throw new Error(`Unknown endpoint: ${endpoint}`);
     }
@@ -352,14 +436,17 @@ class DataPersistenceService {
   /**
    * Sync update operation
    */
-  private async syncUpdate(apiService: any, item: SyncQueueItem): Promise<void> {
+  private async syncUpdate(apiService: ApiServiceInterface, item: SyncQueueItem): Promise<void> {
     const endpoint = item.endpoint;
-    const { id, ...data } = item.data;
+    const data = item.data as Record<string, unknown>;
+    const id = data.id as string;
+    const updateData = { ...data };
+    delete updateData.id;
 
     if (endpoint.includes("/mood/entries")) {
-      await apiService.mood.updateMoodEntry(id, data);
+      await apiService.mood.updateMoodEntry(id, updateData as Partial<MoodEntry>);
     } else if (endpoint.includes("/journal/entries")) {
-      await apiService.journal.updateEntry(id, data);
+      await apiService.journal.updateEntry(id, updateData as Partial<JournalEntry>);
     } else {
       throw new Error(`Unknown endpoint: ${endpoint}`);
     }
@@ -368,9 +455,10 @@ class DataPersistenceService {
   /**
    * Sync delete operation
    */
-  private async syncDelete(apiService: any, item: SyncQueueItem): Promise<void> {
+  private async syncDelete(apiService: ApiServiceInterface, item: SyncQueueItem): Promise<void> {
     const endpoint = item.endpoint;
-    const { id } = item.data;
+    const data = item.data as Record<string, unknown>;
+    const id = data.id as string;
 
     if (endpoint.includes("/mood/entries")) {
       await apiService.mood.deleteMoodEntry(id);
@@ -383,12 +471,12 @@ class DataPersistenceService {
 
   // ==================== SETTINGS ====================
 
-  async saveSettings(settings: any): Promise<void> {
+  async saveSettings(settings: AppSettings): Promise<void> {
     await this.setItem(STORAGE_KEYS.SETTINGS, settings);
   }
 
-  async getSettings(): Promise<any> {
-    return await this.getItem(STORAGE_KEYS.SETTINGS);
+  async getSettings(): Promise<AppSettings | null> {
+    return await this.getItem<AppSettings>(STORAGE_KEYS.SETTINGS);
   }
 
   // ==================== UTILITY METHODS ====================
@@ -397,7 +485,7 @@ class DataPersistenceService {
    * Get storage info (size, keys)
    */
   async getStorageInfo(): Promise<{
-    keys: string[];
+    keys: readonly string[];
     sizeInBytes: number;
   }> {
     try {
@@ -444,6 +532,17 @@ class DataPersistenceService {
 const dataPersistence = new DataPersistenceService();
 export default dataPersistence;
 
-// Export types
+// Export types and constants
 export { STORAGE_KEYS, CACHE_DURATION };
-export type { CacheEntry, SyncQueueItem };
+export type {
+  CacheEntry,
+  SyncQueueItem,
+  UserProfile,
+  MoodEntry,
+  JournalEntry,
+  AssessmentResult,
+  DashboardData,
+  AppSettings,
+  ApiServiceInterface,
+  SyncData,
+};

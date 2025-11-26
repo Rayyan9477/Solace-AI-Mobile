@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Theme Settings Screen - Color Palette Customization
  * Allows users to select from preset color palettes and customize app appearance
@@ -85,7 +87,7 @@ export const ThemeSettingsScreen = () => {
         [{ text: "OK" }],
       );
     } catch (error) {
-      console.error("Failed to save theme:", error);
+      logger.error("Failed to save theme:", error);
       Alert.alert("Error", "Failed to save theme settings. Please try again.", [
         { text: "OK" },
       ]);
@@ -110,7 +112,7 @@ export const ThemeSettingsScreen = () => {
                 { text: "OK" },
               ]);
             } catch (error) {
-              console.error("Failed to reset theme:", error);
+              logger.error("Failed to reset theme:", error);
               Alert.alert("Error", "Failed to reset theme. Please try again.", [
                 { text: "OK" },
               ]);

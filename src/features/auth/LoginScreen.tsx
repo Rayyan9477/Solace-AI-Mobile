@@ -17,7 +17,7 @@ import secureStorage from "@app/services/secureStorage";
 import { GreenCurvedHeader } from "./components/GreenCurvedHeader";
 import { useGoogleAuth, useFacebookAuth, useMicrosoftAuth } from "@shared/hooks/useSocialAuth";
 import { FontAwesome } from "@shared/expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -31,6 +31,7 @@ import {
   ScrollView,
 } from "react-native";
 import { showAlert } from "@shared/utils/alert";
+import { validateField, VALIDATION_SCHEMAS, getFieldError } from "@shared/utils/formValidation";
 
 const LoginScreenComponent = ({ navigation }: any) => {
   const { theme, isDark } = useTheme();
@@ -41,6 +42,8 @@ const LoginScreenComponent = ({ navigation }: any) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [authenticating, setAuthenticating] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string | null>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   // Social auth hooks
   const googleAuth = useGoogleAuth();
@@ -127,6 +130,15 @@ const LoginScreenComponent = ({ navigation }: any) => {
         : `rgba(45, 27, 14, 0.5)`,
       paddingHorizontal: 20,
       paddingVertical: 14,
+    },
+    inputWrapperError: {
+      borderColor: theme.colors.red?.[60] || '#E57373',
+    },
+    errorText: {
+      color: theme.colors.red?.[60] || '#E57373',
+      fontSize: 12,
+      marginTop: 6,
+      marginLeft: 20,
     },
     inputIcon: {
       marginRight: 12,
@@ -227,24 +239,48 @@ const LoginScreenComponent = ({ navigation }: any) => {
     ? [theme.colors.brown[60], theme.colors.brown[70]]
     : [theme.colors.brown[50], theme.colors.brown[60]];
 
-  const validateForm = () => {
-    if (!email.trim()) {
-      showAlert("Error", "Please enter your email address", [{ text: "OK" }]);
-      return false;
+  // Validate a single field on blur
+  const handleFieldBlur = useCallback(async (fieldName: string, value: string) => {
+    setTouched(prev => ({ ...prev, [fieldName]: true }));
+    const result = await validateField(fieldName, value, VALIDATION_SCHEMAS.LOGIN[fieldName] || []);
+    setErrors(prev => ({
+      ...prev,
+      [fieldName]: result.errors.length > 0 ? result.errors[0].message : null
+    }));
+  }, []);
+
+  // Validate entire form on submit
+  const validateForm = async (): Promise<boolean> => {
+    const formData = { email, password };
+    const newErrors: Record<string, string | null> = {};
+    let isValid = true;
+
+    for (const [field, rules] of Object.entries(VALIDATION_SCHEMAS.LOGIN)) {
+      const result = await validateField(field, formData[field as keyof typeof formData], rules);
+      if (result.errors.length > 0) {
+        newErrors[field] = result.errors[0].message;
+        isValid = false;
+      } else {
+        newErrors[field] = null;
+      }
     }
-    if (!password.trim()) {
-      showAlert("Error", "Please enter your password", [{ text: "OK" }]);
-      return false;
+
+    setErrors(newErrors);
+    setTouched({ email: true, password: true });
+
+    if (!isValid) {
+      const firstError = Object.values(newErrors).find(e => e !== null);
+      if (firstError) {
+        showAlert("Validation Error", firstError, [{ text: "OK" }]);
+      }
     }
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      showAlert("Error", "Please enter a valid email address", [{ text: "OK" }]);
-      return false;
-    }
-    return true;
+
+    return isValid;
   };
 
   const handleLogin = async () => {
-    if (!validateForm()) return;
+    const isValid = await validateForm();
+    if (!isValid) return;
 
     const rateLimit = await rateLimiter.checkLimit(
       `login:${email.toLowerCase()}`,
@@ -389,17 +425,26 @@ const LoginScreenComponent = ({ navigation }: any) => {
 
                   <View style={styles.inputContainer}>
                     <Text style={styles.inputLabel}>Email Address</Text>
-                    <View style={styles.inputWrapper}>
+                    <View style={[
+                      styles.inputWrapper,
+                      touched.email && errors.email && styles.inputWrapperError
+                    ]}>
                       <MentalHealthIcon
                         name="Mail"
                         size={20}
-                        color={theme.colors.brown[30]}
+                        color={touched.email && errors.email ? (theme.colors.red?.[60] || '#E57373') : theme.colors.brown[30]}
                         style={styles.inputIcon}
                       />
                       <TextInput
                         style={styles.input}
                         value={email}
-                        onChangeText={setEmail}
+                        onChangeText={(text) => {
+                          setEmail(text);
+                          if (touched.email) {
+                            handleFieldBlur('email', text);
+                          }
+                        }}
+                        onBlur={() => handleFieldBlur('email', email)}
                         placeholder="princesskaguya@gmail.com"
                         placeholderTextColor={theme.colors.brown[60]}
                         keyboardType="email-address"
@@ -407,21 +452,33 @@ const LoginScreenComponent = ({ navigation }: any) => {
                         autoComplete="email"
                       />
                     </View>
+                    {touched.email && errors.email && (
+                      <Text style={styles.errorText}>{errors.email}</Text>
+                    )}
                   </View>
 
                   <View style={styles.inputContainer}>
                     <Text style={styles.inputLabel}>Password</Text>
-                    <View style={styles.inputWrapper}>
+                    <View style={[
+                      styles.inputWrapper,
+                      touched.password && errors.password && styles.inputWrapperError
+                    ]}>
                       <MentalHealthIcon
                         name="Lock"
                         size={20}
-                        color={theme.colors.brown[30]}
+                        color={touched.password && errors.password ? (theme.colors.red?.[60] || '#E57373') : theme.colors.brown[30]}
                         style={styles.inputIcon}
                       />
                       <TextInput
                         style={styles.input}
                         value={password}
-                        onChangeText={setPassword}
+                        onChangeText={(text) => {
+                          setPassword(text);
+                          if (touched.password) {
+                            handleFieldBlur('password', text);
+                          }
+                        }}
+                        onBlur={() => handleFieldBlur('password', password)}
                         placeholder="Enter your password..."
                         placeholderTextColor={theme.colors.brown[60]}
                         secureTextEntry={!showPassword}
@@ -444,6 +501,9 @@ const LoginScreenComponent = ({ navigation }: any) => {
                         />
                       </TouchableOpacity>
                     </View>
+                    {touched.password && errors.password && (
+                      <Text style={styles.errorText}>{errors.password}</Text>
+                    )}
                   </View>
 
                   <TouchableOpacity

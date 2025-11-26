@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Enhanced Chat Bubble Component
  * Expo-compatible with Material Design 3 and therapeutic styling
@@ -72,7 +74,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
         setTimeout(() => setIsSpeaking(false), 1000);
       }
     } catch (error) {
-      console.error("Error in handleSpeak:", error);
+      logger.error("Error in handleSpeak:", error);
       setIsSpeaking(false);
     } finally {
       setIsLoading(false);

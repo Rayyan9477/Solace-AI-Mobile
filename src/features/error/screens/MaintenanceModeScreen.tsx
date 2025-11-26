@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Maintenance Mode Screen - App Maintenance Notifications
  * Based on ui-designs/Dark-mode/🔒 Error & Other Utilities.png
@@ -11,10 +13,15 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
+import { useState } from "react";
+import { API_CONFIG } from "@shared/config/environment";
 
 export const MaintenanceModeScreen = () => {
   const { theme } = useTheme();
+  const [isChecking, setIsChecking] = useState(false);
 
   const maintenanceInfo = {
     estimatedTime: "2 hours",
@@ -23,11 +30,44 @@ export const MaintenanceModeScreen = () => {
     endTime: "12:00 AM EST",
   };
 
-  const handleCheckStatus = () => {
+  const handleCheckStatus = async () => {
     if (__DEV__) {
-      console.log("Checking maintenance status...");
+      logger.debug("Checking maintenance status...");
     }
-    // TODO: Implement actual maintenance status check
+
+    setIsChecking(true);
+    try {
+      // Check health endpoint to see if maintenance is over
+      const response = await fetch(`${API_CONFIG.baseUrl}/health`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.ok) {
+        Alert.alert(
+          "Service Restored",
+          "The app is back online! Please restart to continue.",
+          [{ text: "OK" }]
+        );
+      } else if (response.status === 503) {
+        Alert.alert(
+          "Still Under Maintenance",
+          "We're still working on improvements. Please try again later.",
+          [{ text: "OK" }]
+        );
+      } else {
+        Alert.alert("Status Check", "Unable to determine maintenance status.");
+      }
+    } catch (error) {
+      logger.error("Maintenance status check failed:", error);
+      Alert.alert(
+        "Check Failed",
+        "Unable to check server status. Please ensure you have an internet connection.",
+        [{ text: "OK" }]
+      );
+    } finally {
+      setIsChecking(false);
+    }
   };
 
   const styles = StyleSheet.create({

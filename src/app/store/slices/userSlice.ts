@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import apiService from "../../services/api";
 
@@ -83,7 +85,7 @@ export const updateUserProfile = createAsyncThunk<
       return updatedProfile;
     } catch (error) {
       if (__DEV__) {
-        console.error("Profile update error:", error);
+        logger.error("Profile update error:", error);
       }
       const errorMessage =
         error instanceof Error
@@ -106,7 +108,7 @@ export const fetchUserStats = createAsyncThunk<
     return userStats;
   } catch (error) {
     if (__DEV__) {
-      console.error("User stats fetch error:", error);
+      logger.error("User stats fetch error:", error);
     }
     const errorMessage =
       error instanceof Error

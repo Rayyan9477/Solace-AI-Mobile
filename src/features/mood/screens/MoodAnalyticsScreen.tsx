@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Mood Analytics Screen - AI-Generated Mood Insights
  * Based on ui-designs/Dark-mode/🔒 Mood Tracker.png
@@ -63,7 +65,7 @@ export const MoodAnalyticsScreen = () => {
 
       setMoodData(moods);
     } catch (error) {
-      console.error("Failed to load mood analytics:", error);
+      logger.error("Failed to load mood analytics:", error);
       setMoodData([]);
     } finally {
       setIsLoading(false);

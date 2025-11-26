@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Social Authentication Hooks - Real OAuth Implementation
  * Uses expo-auth-session for Google, Facebook, Microsoft
@@ -93,7 +95,7 @@ export const useGoogleAuth = () => {
           },
         };
       } catch (error) {
-        console.error('Google user info error:', error);
+        logger.error('Google user info error:', error);
         return { success: false, provider: 'google', error: 'Failed to fetch user info' };
       } finally {
         setLoading(false);
@@ -185,7 +187,7 @@ export const useFacebookAuth = () => {
           },
         };
       } catch (error) {
-        console.error('Facebook user info error:', error);
+        logger.error('Facebook user info error:', error);
         return { success: false, provider: 'facebook', error: 'Failed to fetch user info' };
       } finally {
         setLoading(false);
@@ -299,7 +301,7 @@ export const useMicrosoftAuth = () => {
           },
         };
       } catch (error) {
-        console.error('Microsoft auth error:', error);
+        logger.error('Microsoft auth error:', error);
         return { success: false, provider: 'microsoft', error: 'Authentication failed' };
       } finally {
         setLoading(false);

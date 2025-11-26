@@ -5,6 +5,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 import React, { useState } from "react";
 import {
   View,
@@ -381,4 +382,10 @@ export const GuidedSessionsScreen = () => {
   );
 };
 
-export default GuidedSessionsScreen;
+export const GuidedSessionsScreenWithBoundary = () => (
+  <ScreenErrorBoundary screenName="Guided Sessions">
+    <GuidedSessionsScreen />
+  </ScreenErrorBoundary>
+);
+
+export default GuidedSessionsScreenWithBoundary;

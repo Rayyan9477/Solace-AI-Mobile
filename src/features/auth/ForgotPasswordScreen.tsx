@@ -8,6 +8,7 @@ import { FreudLogo } from "@components/icons/FreudIcons";
 import { useTheme } from "@theme/ThemeProvider";
 import { LinearGradient } from "expo-linear-gradient";
 import { showAlert } from "@shared/utils/alert";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 import React, { useState } from "react";
 import {
   View,
@@ -24,7 +25,13 @@ import {
 
 type ResetMethod = "2fa" | "password" | "google";
 
-const ForgotPasswordScreenComponent = ({ navigation }: any) => {
+interface ForgotPasswordScreenProps {
+  navigation: {
+    goBack: () => void;
+  };
+}
+
+const ForgotPasswordScreenComponent = ({ navigation }: ForgotPasswordScreenProps) => {
   const { theme, isDark } = useTheme();
   const [selectedMethod, setSelectedMethod] = useState<ResetMethod>("2fa");
   const [isLoading, setIsLoading] = useState(false);
@@ -256,7 +263,7 @@ const ForgotPasswordScreenComponent = ({ navigation }: any) => {
             <View style={styles.successContainer}>
               <View style={styles.successIllustration}>
                 <View style={styles.illustrationInner}>
-                  <MentalHealthIcon name="Lock" size={48} color={theme.colors.brown[10]} />
+                  <MentalHealthIcon name="Lock" size={48} color={theme.colors.brown[10]} style={{}} />
                 </View>
               </View>
 
@@ -447,7 +454,7 @@ const ForgotPasswordScreenComponent = ({ navigation }: any) => {
 };
 
 
-export const ForgotPasswordScreen = (props: any) => (
+export const ForgotPasswordScreen = (props: ForgotPasswordScreenProps) => (
   <ScreenErrorBoundary screenName="Forgot Password">
     <ForgotPasswordScreenComponent {...props} />
   </ScreenErrorBoundary>

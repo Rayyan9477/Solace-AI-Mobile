@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Social Authentication Service - Real OAuth Implementation
  * Supports Google, Facebook, Apple, and Microsoft authentication
@@ -145,7 +147,7 @@ class SocialAuthService {
         error: result.type === 'cancel' ? 'User cancelled' : 'Authentication failed',
       };
     } catch (error: any) {
-      console.error('Google OAuth error:', error);
+      logger.error('Google OAuth error:', error);
       return {
         success: false,
         provider: 'google',
@@ -213,7 +215,7 @@ class SocialAuthService {
         error: result.type === 'cancel' ? 'User cancelled' : 'Authentication failed',
       };
     } catch (error: any) {
-      console.error('Facebook OAuth error:', error);
+      logger.error('Facebook OAuth error:', error);
       return {
         success: false,
         provider: 'facebook',
@@ -262,7 +264,7 @@ class SocialAuthService {
         },
       };
     } catch (error: any) {
-      console.error('Apple Sign-In error:', error);
+      logger.error('Apple Sign-In error:', error);
 
       if (error.code === 'ERR_CANCELED') {
         return {
@@ -361,7 +363,7 @@ class SocialAuthService {
         error: result.type === 'cancel' ? 'User cancelled' : 'Authentication failed',
       };
     } catch (error: any) {
-      console.error('Microsoft OAuth error:', error);
+      logger.error('Microsoft OAuth error:', error);
       return {
         success: false,
         provider: 'microsoft',

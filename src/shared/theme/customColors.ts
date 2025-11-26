@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Custom Color System
  * Allows users to customize color palettes at runtime
@@ -29,7 +31,7 @@ export const saveCustomColors = async (
   try {
     await AsyncStorage.setItem(CUSTOM_COLORS_KEY, JSON.stringify(customColors));
   } catch (error) {
-    console.error("Failed to save custom colors:", error);
+    logger.error("Failed to save custom colors:", error);
     throw error;
   }
 };
@@ -45,7 +47,7 @@ export const loadCustomColors = async (): Promise<CustomColors | null> => {
     }
     return null;
   } catch (error) {
-    console.error("Failed to load custom colors:", error);
+    logger.error("Failed to load custom colors:", error);
     return null;
   }
 };
@@ -57,7 +59,7 @@ export const clearCustomColors = async (): Promise<void> => {
   try {
     await AsyncStorage.removeItem(CUSTOM_COLORS_KEY);
   } catch (error) {
-    console.error("Failed to clear custom colors:", error);
+    logger.error("Failed to clear custom colors:", error);
     throw error;
   }
 };

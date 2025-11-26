@@ -5,6 +5,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 import React, { useState } from "react";
 import {
   View,
@@ -496,4 +497,10 @@ export const FreudScoreScreen = () => {
   );
 };
 
-export default FreudScoreScreen;
+export const FreudScoreScreenWithBoundary = () => (
+  <ScreenErrorBoundary screenName="Freud Score">
+    <FreudScoreScreen />
+  </ScreenErrorBoundary>
+);
+
+export default FreudScoreScreenWithBoundary;

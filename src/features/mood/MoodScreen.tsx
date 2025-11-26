@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Mood Screen - Mood Tracking Interface
  * Helps users track and reflect on their emotional states
@@ -191,7 +193,7 @@ export const MoodScreen = () => {
         setIsSaving(true);
 
         if (__DEV__) {
-          console.log("Saving mood entry:", {
+          logger.debug("Saving mood entry:", {
             mood: selectedMood,
             intensity: selectedIntensity,
             timestamp: new Date(),
@@ -228,7 +230,7 @@ export const MoodScreen = () => {
           );
         }
       } catch (error) {
-        console.error("Error saving mood:", error);
+        logger.error("Error saving mood:", error);
         Alert.alert(
           "Error",
           "An unexpected error occurred. Please try again.",

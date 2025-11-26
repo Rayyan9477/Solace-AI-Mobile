@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Chat Screen - AI Therapy Chat Interface
  * Provides supportive conversation with AI therapist
@@ -648,7 +650,7 @@ ${"=".repeat(50)}
             }, 500);
           }
         } catch (error) {
-          console.error("Failed to generate response:", error);
+          logger.error("Failed to generate response:", error);
           setErrorMessage("Unable to generate response. Please try again.");
 
           // Add error message to chat

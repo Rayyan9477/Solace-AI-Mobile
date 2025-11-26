@@ -54,8 +54,13 @@ export class ErrorBoundaryWrapper extends Component<Props, State> {
       onError(error, errorInfo);
     }
 
-    // TODO: Send to error tracking service (Sentry, Bugsnag, etc.)
-    // trackError(error, errorInfo, componentName);
+    // Error tracking integration point - sends to logging service
+    // In production, this would integrate with Sentry, Bugsnag, etc.
+    logger.error(`[ErrorBoundary:${componentName}] Error tracked:`, {
+      errorMessage: error.message,
+      errorStack: error.stack,
+      componentStack: errorInfo.componentStack,
+    });
   }
 
   componentDidUpdate(prevProps: Props) {

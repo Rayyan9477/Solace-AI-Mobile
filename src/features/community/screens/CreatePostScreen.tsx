@@ -3,6 +3,7 @@
  * Based on ui-designs/Dark-mode/Community Support.png
  */
 
+import { logger } from "@shared/utils/logger";
 import { useNavigation } from "@react-navigation/native";
 import { sanitizeInput } from "@shared/utils/sanitization";
 import { useTheme } from "@theme/ThemeProvider";
@@ -57,8 +58,17 @@ export const CreatePostScreen = () => {
       return;
     }
 
-    // TODO: Dispatch to Redux when community slice is implemented
-    // dispatch(createPost({ content: postContent, type: postType, mood: selectedMood, activities: selectedActivities }));
+    // Post data ready for API/Redux integration
+    const postData = {
+      content: postContent,
+      type: postType,
+      mood: selectedMood,
+      activities: selectedActivities,
+      hideFromCommunity,
+      isDraft: saveAsDraft,
+      timestamp: new Date().toISOString(),
+    };
+    logger.debug("Creating post:", postData);
 
     // For now, show success and navigate back
     Alert.alert("Success", "Your post has been created successfully!", [

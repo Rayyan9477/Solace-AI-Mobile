@@ -245,7 +245,7 @@ class CrisisManager {
         }
         this.configLoaded = true;
       } catch (error) {
-        console.error(
+        logger.error(
           "Failed to load remote crisis config, using defaults:",
           error,
         );
@@ -723,11 +723,11 @@ class CrisisManager {
       ) {
         await this.notifyEmergencyContacts(event);
       }
-      console.log(
+      logger.debug(
         `Crisis event logged successfully: ${crisisAnalysis.risk} risk level`,
       );
     } catch (error) {
-      console.error("Primary crisis event logging failed:", error);
+      logger.error("Primary crisis event logging failed:", error);
       // AWAIT the fallback to ensure it completes
       await this.fallbackCrisisLog(crisisAnalysis, userProfile, error);
     }
@@ -754,7 +754,7 @@ class CrisisManager {
         fallbackEvent,
       );
 
-      console.log("Crisis event logged to fallback storage");
+      logger.debug("Crisis event logged to fallback storage");
     } catch (secureStorageError) {
       // Last resort: use AsyncStorage (less secure but better than losing data)
       try {
@@ -763,13 +763,13 @@ class CrisisManager {
           asyncStorageKey,
           JSON.stringify(fallbackEvent),
         );
-        console.warn(
+        logger.warn(
           "Crisis event logged to AsyncStorage (emergency fallback)",
         );
       } catch (asyncStorageError) {
         // Absolute last resort: log to console for developer visibility
-        console.error("CRITICAL: All crisis logging mechanisms failed!");
-        console.error("Crisis Data:", JSON.stringify(fallbackEvent, null, 2));
+        logger.error("CRITICAL: All crisis logging mechanisms failed!");
+        logger.error("Crisis Data:", JSON.stringify(fallbackEvent, null, 2));
 
         // Alert user that logging failed (but don't block crisis response)
         Alert.alert(
@@ -792,7 +792,7 @@ class CrisisManager {
         !Array.isArray(emergencyContactsData) ||
         emergencyContactsData.length === 0
       ) {
-        console.log("No emergency contacts configured");
+        logger.debug("No emergency contacts configured");
         return;
       }
 
@@ -809,13 +809,13 @@ class CrisisManager {
 
             if (canOpen) {
               await Linking.openURL(smsUrl);
-              console.log(
+              logger.debug(
                 `Crisis notification sent to ${contact.name || contact.phoneNumber}`,
               );
             }
           }
         } catch (contactError) {
-          console.error(
+          logger.error(
             `Failed to notify emergency contact ${contact.name}:`,
             contactError,
           );
@@ -824,11 +824,11 @@ class CrisisManager {
       }
 
       // Log that notifications were attempted
-      console.log(
+      logger.debug(
         `Emergency contact notifications attempted for ${emergencyContactsData.length} contacts`,
       );
     } catch (error) {
-      console.error("Failed to notify emergency contacts:", error);
+      logger.error("Failed to notify emergency contacts:", error);
       // Don't throw - this is a best-effort notification
     }
   }

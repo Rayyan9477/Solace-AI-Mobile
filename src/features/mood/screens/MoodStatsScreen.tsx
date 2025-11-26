@@ -1,5 +1,8 @@
+import { logger } from "@shared/utils/logger";
+
 import { MentalHealthIcon, NavigationIcon } from "@shared/components/icons";
 import { useTheme } from "@theme/ThemeProvider";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
@@ -39,7 +42,7 @@ const MoodStatsScreen = ({ navigation }) => {
       const moods = await moodStorageService.getMoodHistory(30);
       setMoodHistory(moods);
     } catch (error) {
-      console.error("Failed to load mood stats:", error);
+      logger.error("Failed to load mood stats:", error);
       setMoodHistory([]);
     } finally {
       setIsLoading(false);
@@ -964,4 +967,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MoodStatsScreen;
+export const MoodStatsScreenWithBoundary = (props: { navigation: any }) => (
+  <ScreenErrorBoundary screenName="Mood Stats">
+    <MoodStatsScreen {...props} />
+  </ScreenErrorBoundary>
+);
+
+export default MoodStatsScreenWithBoundary;

@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Therapeutic Color Palette Utility
  * Provides dynamic color selection for therapeutic UI components
@@ -25,7 +27,7 @@ export const getTherapeuticColor = (
 ) => {
   // Validate therapeutic color
   if (!enhancedColors.therapeutic[therapeuticColor]) {
-    console.warn(
+    logger.warn(
       `Therapeutic color '${therapeuticColor}' not found, falling back to 'calming'`,
     );
     therapeuticColor = "calming";
@@ -34,7 +36,7 @@ export const getTherapeuticColor = (
   // Validate shade
   const validShades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
   if (!validShades.includes(shade)) {
-    console.warn(`Invalid shade ${shade}, using 500`);
+    logger.warn(`Invalid shade ${shade}, using 500`);
     shade = 500;
   }
 
@@ -63,7 +65,7 @@ export const getTherapeuticColor = (
  */
 export const getTherapeuticColorPalette = (therapeuticColor) => {
   if (!enhancedColors.therapeutic[therapeuticColor]) {
-    console.warn(
+    logger.warn(
       `Therapeutic color '${therapeuticColor}' not found, falling back to 'calming'`,
     );
     therapeuticColor = "calming";
@@ -79,7 +81,7 @@ export const getTherapeuticColorPalette = (therapeuticColor) => {
  */
 export const getTherapeuticGradient = (gradientName) => {
   if (!enhancedColors.gradients[gradientName]) {
-    console.warn(
+    logger.warn(
       `Gradient '${gradientName}' not found, falling back to 'therapeutic'`,
     );
     gradientName = "therapeutic";

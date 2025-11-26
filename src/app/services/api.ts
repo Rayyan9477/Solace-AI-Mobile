@@ -10,9 +10,71 @@ import tokenService from "./tokenService";
 import { API_CONFIG } from "../../shared/config/environment";
 
 // ==================== TYPES ====================
+
+// API Response types
+interface ApiResponse<T = unknown> {
+  data?: T;
+  message?: string;
+  success?: boolean;
+  error?: string;
+  status?: number;
+  url?: string;
+  metadata?: {
+    startTime?: number;
+    retryCount?: number;
+    [key: string]: unknown;
+  };
+}
+
+interface ApiError {
+  message: string;
+  status?: number;
+  code?: string;
+  details?: Record<string, unknown>;
+  endpoint?: string;
+  statusCode?: number | null;
+  timestamp?: string;
+}
+
+// Auth types
+interface AuthTokens {
+  accessToken: string;
+  refreshToken?: string;
+  expiresIn?: number;
+}
+
+interface UserProfile {
+  id: string;
+  email: string;
+  name?: string;
+  avatar?: string;
+  preferences?: Record<string, unknown>;
+}
+
+interface RegisterData {
+  email: string;
+  password: string;
+  name?: string;
+}
+
+interface ProfileUpdateData {
+  name?: string;
+  avatar?: string;
+  bio?: string;
+  preferences?: Record<string, unknown>;
+}
+
+interface UserPreferences {
+  theme?: 'light' | 'dark' | 'system';
+  notifications?: boolean;
+  language?: string;
+  [key: string]: unknown;
+}
+
+// Request types
 type RequestInterceptor = (config: RequestConfig) => Promise<RequestConfig> | RequestConfig;
-type ResponseInterceptor = (response: any) => Promise<any> | any;
-type ErrorInterceptor = (error: any) => Promise<any> | any;
+type ResponseInterceptor = <T>(response: ApiResponse<T>) => Promise<ApiResponse<T>> | ApiResponse<T>;
+type ErrorInterceptor = (error: ApiError) => Promise<ApiError> | ApiError;
 
 interface RequestConfig {
   url: string;
@@ -20,8 +82,14 @@ interface RequestConfig {
   metadata?: {
     startTime?: number;
     retryCount?: number;
-    [key: string]: any;
+    [key: string]: unknown;
   };
+}
+
+interface FetchOptions extends Omit<RequestInit, 'cache'> {
+  timeout?: number;
+  retries?: number;
+  useCache?: boolean;
 }
 
 // ==================== INTERCEPTORS ====================
@@ -50,7 +118,7 @@ class InterceptorManager {
     return modifiedConfig;
   }
 
-  async runResponseInterceptors(response: any): Promise<any> {
+  async runResponseInterceptors<T>(response: ApiResponse<T>): Promise<ApiResponse<T>> {
     let modifiedResponse = response;
     for (const interceptor of this.responseInterceptors) {
       modifiedResponse = await interceptor(modifiedResponse);
@@ -58,7 +126,7 @@ class InterceptorManager {
     return modifiedResponse;
   }
 
-  async runErrorInterceptors(error: any): Promise<any> {
+  async runErrorInterceptors(error: ApiError): Promise<ApiError> {
     let modifiedError = error;
     for (const interceptor of this.errorInterceptors) {
       modifiedError = await interceptor(modifiedError);
@@ -421,7 +489,7 @@ const authAPI = {
    * @param {string} password - User password
    * @returns {Promise<Object>} Login response with user and tokens
    */
-  async login(email: string, password: string): Promise<any> {
+  async login(email: string, password: string): Promise<{ user: UserProfile; access_token: string; refresh_token: string }> {
     if (!email || !password) {
       throw new AuthAPIError(
         "Email and password are required",
@@ -468,7 +536,7 @@ const authAPI = {
    * @param {Object} userData - User registration data
    * @returns {Promise<Object>} Registration response
    */
-  async register(userData: any): Promise<any> {
+  async register(userData: RegisterData & Record<string, unknown>): Promise<ApiResponse<UserProfile>> {
     const { email, password, name, ...additionalData } = userData;
 
     if (!email || !password || !name) {
@@ -505,7 +573,7 @@ const authAPI = {
    * @param {string} refreshToken - Refresh token
    * @returns {Promise<Object>} New tokens
    */
-  async refreshToken(refreshToken: string): Promise<any> {
+  async refreshToken(refreshToken: string): Promise<ApiResponse<AuthTokens>> {
     const response = await fetchWithTimeout(
       `${API_CONFIG.baseURL}/auth/refresh`,
       {
@@ -562,7 +630,7 @@ const authAPI = {
    * @param {Object} profileData - Profile data to update
    * @returns {Promise<Object>} Updated profile
    */
-  async updateProfile(profileData: any): Promise<any> {
+  async updateProfile(profileData: ProfileUpdateData): Promise<ApiResponse<UserProfile>> {
     return await authenticatedFetch(`${API_CONFIG.baseURL}/auth/profile`, {
       method: "PUT",
       body: JSON.stringify(profileData),
@@ -578,7 +646,7 @@ const authAPI = {
   async changePassword(
     currentPassword: string,
     newPassword: string,
-  ): Promise<any> {
+  ): Promise<ApiResponse<{ success: boolean }>> {
     return await authenticatedFetch(
       `${API_CONFIG.baseURL}/auth/change-password`,
       {
@@ -593,7 +661,7 @@ const authAPI = {
    * @param {string} email - User email
    * @returns {Promise<Object>} Reset request confirmation
    */
-  async requestPasswordReset(email: string): Promise<any> {
+  async requestPasswordReset(email: string): Promise<ApiResponse<{ success: boolean; message: string }>> {
     const response = await fetchWithTimeout(
       `${API_CONFIG.baseURL}/auth/forgot-password`,
       {

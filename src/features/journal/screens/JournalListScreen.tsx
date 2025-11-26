@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Journal List Screen - My Journals view
  * Based on ui-designs/Dark-mode/Mental Health Journal.png
@@ -99,7 +101,15 @@ const JournalListScreenComponent = () => {
         const apiJournals = await mentalHealthAPI.journal.getEntries(1, 50);
 
         // Transform API data to match our interface
-        journalData = apiJournals.map((journal: any) => ({
+        interface APIJournalEntry {
+          id?: string;
+          title?: string;
+          content?: string;
+          mood?: string;
+          timestamp: string;
+          tags?: string[];
+        }
+        journalData = (apiJournals as APIJournalEntry[]).map((journal) => ({
           id: journal.id || `journal_${Date.now()}_${Math.random()}`,
           title: journal.title || "Untitled",
           preview: journal.content?.substring(0, 100) || "No content",
@@ -113,19 +123,19 @@ const JournalListScreenComponent = () => {
         await dataPersistence.saveJournalEntries(apiJournals);
 
       } catch (apiError) {
-        console.log("API unavailable, using local data");
+        logger.debug("API unavailable, using local data");
 
         // Fallback to local storage
         const cachedJournals = await dataPersistence.getJournalEntries();
 
-        journalData = cachedJournals.map((journal: any) => ({
+        journalData = cachedJournals.map((journal) => ({
           id: journal.id || `journal_${Date.now()}_${Math.random()}`,
           title: journal.title || "Untitled",
           preview: journal.content?.substring(0, 100) || "No content",
-          mood: getMoodEmoji(journal.mood || "Neutral"),
+          mood: getMoodEmoji(String(journal.mood) || "Neutral"),
           date: new Date(journal.timestamp || Date.now()).getDate().toString(),
           tags: journal.tags || [],
-          color: getMoodColor(journal.mood || "Neutral"),
+          color: getMoodColor(String(journal.mood) || "Neutral"),
         }));
 
         // If no cached data, use mock data as last resort
@@ -137,7 +147,7 @@ const JournalListScreenComponent = () => {
       setJournals(journalData);
 
     } catch (error) {
-      console.error("Failed to load journals:", error);
+      logger.error("Failed to load journals:", error);
       setErrorMessage("Unable to load journals. Please try again.");
       // Use mock data on error
       setJournals(MOCK_JOURNALS);

@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Mood Calendar Screen - Visual Mood Tracking Over Time
  * Based on ui-designs/Dark-mode/Mood Tracker.png
@@ -5,6 +7,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -90,7 +93,7 @@ export const MoodCalendarScreen = () => {
 
       setMonthMoods(moods);
     } catch (error) {
-      console.error("Failed to load month moods:", error);
+      logger.error("Failed to load month moods:", error);
       setMonthMoods([]);
     } finally {
       setIsLoading(false);
@@ -585,4 +588,10 @@ export const MoodCalendarScreen = () => {
   );
 };
 
-export default MoodCalendarScreen;
+export const MoodCalendarScreenWithBoundary = () => (
+  <ScreenErrorBoundary screenName="Mood Calendar">
+    <MoodCalendarScreen />
+  </ScreenErrorBoundary>
+);
+
+export default MoodCalendarScreenWithBoundary;

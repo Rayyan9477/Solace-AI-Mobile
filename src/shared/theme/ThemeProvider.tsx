@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * ThemeProvider - Unified theme management for Solace AI
  * Provides light/dark theme switching with therapeutic colors
@@ -71,7 +73,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
           setCustomColorsState(savedCustomColors);
         }
       } catch (error) {
-        console.error("Failed to load theme preferences:", error);
+        logger.error("Failed to load theme preferences:", error);
       }
     };
     loadPreferences();
@@ -83,7 +85,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       setIsDark(darkMode);
       await AsyncStorage.setItem("app_theme", darkMode ? "dark" : "light");
     } catch (error) {
-      console.error("Failed to save theme preference:", error);
+      logger.error("Failed to save theme preference:", error);
     }
   };
 
@@ -97,7 +99,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await AsyncStorage.setItem("custom_colors", JSON.stringify(colors));
     } catch (error) {
-      console.error("Failed to save custom colors:", error);
+      logger.error("Failed to save custom colors:", error);
     }
   };
 
@@ -107,7 +109,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await AsyncStorage.removeItem("custom_colors");
     } catch (error) {
-      console.error("Failed to reset custom colors:", error);
+      logger.error("Failed to reset custom colors:", error);
     }
   };
 

@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Environment Configuration
  * Centralized configuration for environment-specific values
@@ -33,7 +35,7 @@ export const API_CONFIG = (() => {
     !baseURL.startsWith("https://") &&
     !baseURL.includes("localhost")
   ) {
-    console.warn(
+    logger.warn(
       "WARNING: API_URL should use HTTPS in staging environment. " +
       `Current URL: ${baseURL}`
     );
@@ -207,8 +209,8 @@ export function validateEnvironmentConfig() {
 
   // Log warnings
   if (warnings.length > 0) {
-    console.warn("Environment configuration warnings:");
-    warnings.forEach((warning) => console.warn(`  - ${warning}`));
+    logger.warn("Environment configuration warnings:");
+    warnings.forEach((warning) => logger.warn(`  - ${warning}`));
   }
 
   return {

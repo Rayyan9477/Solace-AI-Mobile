@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Mental Health Card Component
  * Enhanced shadcn UI-inspired card component for therapeutic interfaces
@@ -165,7 +167,7 @@ export const MentalHealthCard = ({
   if (variant === "crisis" && __DEV__) {
     const contrastResult = validateThemeAccessibility(theme);
     if (contrastResult.issues.length > 0) {
-      console.warn(
+      logger.warn(
         "Crisis card may have accessibility issues:",
         contrastResult.issues,
       );

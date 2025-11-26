@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Mood History Screen - Daily/Weekly/Monthly Mood Trends
  * Based on ui-designs/Dark-mode/🔒 Mood Tracker.png
@@ -105,7 +107,16 @@ const MoodHistoryScreenComponent = () => {
         );
 
         // Transform API data to StoredMoodEntry format
-        const transformedMoods = apiMoods.map((mood: any) => ({
+        interface APIMoodEntry {
+          id?: string;
+          mood: string;
+          intensity: number;
+          timestamp: string;
+          notes?: string;
+          activities?: string[];
+          triggers?: string[];
+        }
+        const transformedMoods = (apiMoods as APIMoodEntry[]).map((mood) => ({
           id: mood.id || `mood_${Date.now()}_${Math.random()}`,
           mood: mood.mood,
           intensity: mood.intensity,
@@ -126,7 +137,7 @@ const MoodHistoryScreenComponent = () => {
         monthlyData = transformedMoods;
 
       } catch (apiError) {
-        console.log("API unavailable, using local storage");
+        logger.debug("API unavailable, using local storage");
 
         // Fallback to local storage
         dailyData = await moodStorageService.getMoodHistory(30);
@@ -160,7 +171,7 @@ const MoodHistoryScreenComponent = () => {
       setWeeklyMoods(weeklyData.map(transformEntry));
       setMonthlyMoods(monthlyData.map(transformEntry));
     } catch (error) {
-      console.error("Failed to load mood history:", error);
+      logger.error("Failed to load mood history:", error);
       setErrorMessage("Unable to load mood history. Please try again.");
     } finally {
       setIsLoading(false);

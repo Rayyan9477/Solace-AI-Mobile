@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Safe Screen Component - Enhanced screen wrapper with error boundaries
  * Provides consistent error handling, performance monitoring, and accessibility
@@ -26,7 +28,7 @@ const SafeScreen = ({
   const accessibility = useAccessibility();
 
   const handleError = (errorReport) => {
-    console.error(`Screen error in ${name}:`, errorReport);
+    logger.error(`Screen error in ${name}:`, errorReport);
 
     if (onError) {
       onError(errorReport);
@@ -37,7 +39,7 @@ const SafeScreen = ({
   };
 
   const handleRetry = (retryCount) => {
-    console.log(`Retrying ${name}, attempt ${retryCount}`);
+    logger.debug(`Retrying ${name}, attempt ${retryCount}`);
 
     if (onRetry) {
       onRetry(retryCount);

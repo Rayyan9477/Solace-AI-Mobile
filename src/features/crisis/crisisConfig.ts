@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Crisis Intervention Configuration
  * Centralized configuration for crisis detection keywords and resources
@@ -214,7 +216,7 @@ export async function loadRemoteCrisisConfig(
       return remoteConfig;
     }
   } catch (error) {
-    console.warn(
+    logger.warn(
       "Failed to load remote crisis config, using defaults:",
       error.message,
     );

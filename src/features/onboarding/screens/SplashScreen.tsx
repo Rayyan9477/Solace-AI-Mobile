@@ -1,38 +1,211 @@
 /**
- * Splash Screen - Initial App Launch
+ * Splash Screen - Initial App Launch with 4-State Progression
  * Based on ui-designs/Dark-mode/Splash & Loading.png
+ *
+ * States:
+ * 1. Loading - Initial app loading/initialization
+ * 2. Authenticating - Checking user authentication status
+ * 3. Syncing - Loading user data/syncing with backend
+ * 4. Ready - Ready to navigate to appropriate screen
  */
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
 import { FreudDiamondLogo } from "@components/icons";
-import React, { useEffect, useRef } from "react";
-import { View, Text, StyleSheet, SafeAreaView, Animated } from "react-native";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
+import { logger } from "@shared/utils/logger";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Animated,
+  ActivityIndicator,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import tokenService from "@app/services/tokenService";
+
+// Splash screen states
+type SplashState = "loading" | "authenticating" | "syncing" | "ready";
+
+interface StateConfig {
+  message: string;
+  icon: string;
+  color: string;
+  duration: number;
+}
+
+const STATE_CONFIGS: Record<SplashState, StateConfig> = {
+  loading: {
+    message: "Initializing...",
+    icon: "🔄",
+    color: "#98B068",
+    duration: 800,
+  },
+  authenticating: {
+    message: "Checking authentication...",
+    icon: "🔐",
+    color: "#ED7E1C",
+    duration: 600,
+  },
+  syncing: {
+    message: "Loading your data...",
+    icon: "☁️",
+    color: "#6B5FC8",
+    duration: 800,
+  },
+  ready: {
+    message: "Ready!",
+    icon: "✨",
+    color: "#98B068",
+    duration: 500,
+  },
+};
 
 const SplashScreenComponent = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
+
+  // Animation refs
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const progressAnim = useRef(new Animated.Value(0)).current;
+  const stateMessageAnim = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    const animation = Animated.timing(fadeAnim, {
+  // State
+  const [currentState, setCurrentState] = useState<SplashState>("loading");
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Get current state config
+  const stateConfig = STATE_CONFIGS[currentState];
+
+  // Animate state message change
+  const animateStateMessage = useCallback(() => {
+    stateMessageAnim.setValue(0);
+    Animated.timing(stateMessageAnim, {
       toValue: 1,
-      duration: 1500,
+      duration: 300,
       useNativeDriver: true,
-    });
+    }).start();
+  }, [stateMessageAnim]);
 
-    animation.start();
+  // State progression logic
+  useEffect(() => {
+    let isMounted = true;
 
-    const timer = setTimeout(() => {
-      navigation.replace("Welcome");
-    }, 3000);
+    const runStateProgression = async () => {
+      try {
+        // State 1: Loading - Initial fade in
+        logger.debug("[SplashScreen] Starting state progression");
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 800,
+          useNativeDriver: true,
+        }).start();
+
+        await new Promise(resolve => setTimeout(resolve, STATE_CONFIGS.loading.duration));
+        if (!isMounted) return;
+
+        // Update progress bar (25%)
+        Animated.timing(progressAnim, {
+          toValue: 0.25,
+          duration: 300,
+          useNativeDriver: false,
+        }).start();
+
+        // State 2: Authenticating
+        setCurrentState("authenticating");
+        animateStateMessage();
+
+        // Check authentication status
+        const tokens = await tokenService.getTokens();
+        const authenticated = !!(tokens?.accessToken);
+        setIsAuthenticated(authenticated);
+        logger.debug("[SplashScreen] Authentication check:", { authenticated });
+
+        await new Promise(resolve => setTimeout(resolve, STATE_CONFIGS.authenticating.duration));
+        if (!isMounted) return;
+
+        // Update progress bar (50%)
+        Animated.timing(progressAnim, {
+          toValue: 0.5,
+          duration: 300,
+          useNativeDriver: false,
+        }).start();
+
+        // State 3: Syncing
+        setCurrentState("syncing");
+        animateStateMessage();
+
+        // Check onboarding status
+        const onboardingComplete = await AsyncStorage.getItem("@onboarding_complete");
+        setHasCompletedOnboarding(onboardingComplete === "true");
+        logger.debug("[SplashScreen] Onboarding status:", { complete: onboardingComplete === "true" });
+
+        await new Promise(resolve => setTimeout(resolve, STATE_CONFIGS.syncing.duration));
+        if (!isMounted) return;
+
+        // Update progress bar (75%)
+        Animated.timing(progressAnim, {
+          toValue: 0.75,
+          duration: 300,
+          useNativeDriver: false,
+        }).start();
+
+        // State 4: Ready
+        setCurrentState("ready");
+        animateStateMessage();
+
+        // Complete progress bar (100%)
+        Animated.timing(progressAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: false,
+        }).start();
+
+        await new Promise(resolve => setTimeout(resolve, STATE_CONFIGS.ready.duration));
+        if (!isMounted) return;
+
+        // Navigate based on state
+        navigateToNextScreen(authenticated, onboardingComplete === "true");
+
+      } catch (err) {
+        logger.error("[SplashScreen] Error during initialization:", err);
+        setError("Failed to initialize app. Please try again.");
+        // Still navigate after a delay even on error
+        setTimeout(() => {
+          if (isMounted) {
+            navigation.replace("Welcome");
+          }
+        }, 2000);
+      }
+    };
+
+    runStateProgression();
 
     return () => {
-      clearTimeout(timer);
-      fadeAnim.stopAnimation();
-      animation.stop();
+      isMounted = false;
     };
-  }, [fadeAnim, navigation]);
+  }, [fadeAnim, progressAnim, animateStateMessage, navigation]);
+
+  // Navigation logic based on auth and onboarding state
+  const navigateToNextScreen = (authenticated: boolean, onboardingComplete: boolean) => {
+    if (!onboardingComplete) {
+      // New user - show onboarding
+      logger.info("[SplashScreen] Navigating to Welcome (new user)");
+      navigation.replace("Welcome");
+    } else if (authenticated) {
+      // Returning user with valid session
+      logger.info("[SplashScreen] Navigating to Dashboard (authenticated)");
+      navigation.replace("Dashboard");
+    } else {
+      // Returning user but not authenticated
+      logger.info("[SplashScreen] Navigating to Login (returning user)");
+      navigation.replace("Login");
+    }
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -59,6 +232,55 @@ const SplashScreenComponent = () => {
       textAlign: "center",
       paddingHorizontal: 40,
     },
+    stateContainer: {
+      alignItems: "center",
+      marginTop: 40,
+      minHeight: 80,
+    },
+    stateIcon: {
+      fontSize: 24,
+      marginBottom: 8,
+    },
+    stateMessage: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: theme.colors.text.secondary,
+      marginBottom: 16,
+    },
+    progressContainer: {
+      width: 200,
+      height: 4,
+      backgroundColor: theme.colors.gray?.["20"] || "rgba(255,255,255,0.1)",
+      borderRadius: 2,
+      overflow: "hidden",
+    },
+    progressBar: {
+      height: "100%",
+      borderRadius: 2,
+    },
+    stateIndicators: {
+      flexDirection: "row",
+      justifyContent: "center",
+      marginTop: 16,
+      gap: 8,
+    },
+    stateDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+    },
+    stateDotActive: {
+      transform: [{ scale: 1.2 }],
+    },
+    errorContainer: {
+      marginTop: 20,
+      paddingHorizontal: 20,
+    },
+    errorText: {
+      fontSize: 14,
+      color: theme.colors.red?.["60"] || "#E57373",
+      textAlign: "center",
+    },
     bottomSection: {
       position: "absolute",
       bottom: 60,
@@ -76,12 +298,68 @@ const SplashScreenComponent = () => {
     },
   });
 
+  // Get state index for indicators
+  const states: SplashState[] = ["loading", "authenticating", "syncing", "ready"];
+  const currentStateIndex = states.indexOf(currentState);
+
   return (
     <SafeAreaView style={styles.container}>
       <Animated.View style={[styles.logoContainer, { opacity: fadeAnim }]}>
-        <FreudDiamondLogo size={80} color={theme.colors.brown["50"]} />
+        <FreudDiamondLogo size={80} color={theme.colors.brown?.["50"] || stateConfig.color} />
         <Text style={styles.appName}>freud.ai</Text>
         <Text style={styles.tagline}>Your Mental Wellness Companion</Text>
+      </Animated.View>
+
+      {/* State progression indicator */}
+      <Animated.View style={[styles.stateContainer, { opacity: fadeAnim }]}>
+        <Animated.View style={{ opacity: stateMessageAnim }}>
+          <Text style={styles.stateIcon}>{stateConfig.icon}</Text>
+          <Text style={[styles.stateMessage, { color: stateConfig.color }]}>
+            {stateConfig.message}
+          </Text>
+        </Animated.View>
+
+        {/* Progress bar */}
+        <View style={styles.progressContainer}>
+          <Animated.View
+            style={[
+              styles.progressBar,
+              {
+                backgroundColor: stateConfig.color,
+                width: progressAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: ["0%", "100%"],
+                }),
+              },
+            ]}
+          />
+        </View>
+
+        {/* State dots */}
+        <View style={styles.stateIndicators}>
+          {states.map((state, index) => (
+            <View
+              key={state}
+              style={[
+                styles.stateDot,
+                {
+                  backgroundColor:
+                    index <= currentStateIndex
+                      ? STATE_CONFIGS[state].color
+                      : theme.colors.gray?.["40"] || "rgba(255,255,255,0.2)",
+                },
+                index === currentStateIndex && styles.stateDotActive,
+              ]}
+            />
+          ))}
+        </View>
+
+        {/* Error message */}
+        {error && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        )}
       </Animated.View>
 
       <View style={styles.bottomSection}>
@@ -91,7 +369,6 @@ const SplashScreenComponent = () => {
     </SafeAreaView>
   );
 };
-
 
 export const SplashScreen = (props: any) => (
   <ScreenErrorBoundary screenName="Splash">

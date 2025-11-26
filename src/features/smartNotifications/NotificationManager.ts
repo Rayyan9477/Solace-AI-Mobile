@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   format,
@@ -283,7 +285,7 @@ class SmartNotificationManager {
     try {
       // Check if device supports notifications
       if (!Device.isDevice) {
-        console.warn("Notifications not supported on simulator");
+        logger.warn("Notifications not supported on simulator");
         return false;
       }
 
@@ -317,7 +319,7 @@ class SmartNotificationManager {
       this.isInitialized = true;
       return true;
     } catch (error) {
-      console.error("Error initializing notifications:", error);
+      logger.error("Error initializing notifications:", error);
       return false;
     }
   }
@@ -365,7 +367,7 @@ class SmartNotificationManager {
         ? JSON.parse(preferences)
         : this.getDefaultPreferences();
     } catch (error) {
-      console.error("Error loading notification preferences:", error);
+      logger.error("Error loading notification preferences:", error);
       this.userPreferences = this.getDefaultPreferences();
     }
   }
@@ -430,7 +432,7 @@ class SmartNotificationManager {
       // Reschedule notifications based on new preferences
       await this.scheduleAllNotifications();
     } catch (error) {
-      console.error("Error saving notification preferences:", error);
+      logger.error("Error saving notification preferences:", error);
     }
   }
 
@@ -758,7 +760,7 @@ class SmartNotificationManager {
   ): Promise<void> {
     // Implementation placeholder
     if (__DEV__) {
-      console.log(
+      logger.debug(
         "Adjusting notification timing for mood patterns",
         lowMoodTimes,
       );
@@ -770,7 +772,7 @@ class SmartNotificationManager {
   ): Promise<void> {
     // Implementation placeholder
     if (__DEV__) {
-      console.log(
+      logger.debug(
         "Scheduling additional support during risk periods",
         highRiskPeriods,
       );
@@ -782,7 +784,7 @@ class SmartNotificationManager {
   ): Promise<void> {
     // Implementation placeholder
     if (__DEV__) {
-      console.log(
+      logger.debug(
         "Adjusting notification frequency by engagement",
         usagePatterns,
       );
@@ -942,7 +944,7 @@ class SmartNotificationManager {
         JSON.stringify(trimmedLogs),
       );
     } catch (error) {
-      console.error("Error logging notification interaction:", error);
+      logger.error("Error logging notification interaction:", error);
     }
   }
 
@@ -1002,7 +1004,7 @@ class SmartNotificationManager {
           this.generateNotificationRecommendations(recentInteractions),
       };
     } catch (error) {
-      console.error("Error getting notification analytics:", error);
+      logger.error("Error getting notification analytics:", error);
       return null;
     }
   }
@@ -1108,7 +1110,7 @@ class SmartNotificationManager {
       const { status } = await Notifications.getPermissionsAsync();
       return status;
     } catch (error) {
-      console.error("Error getting permission status:", error);
+      logger.error("Error getting permission status:", error);
       return "undetermined";
     }
   }
@@ -1140,7 +1142,7 @@ class SmartNotificationManager {
         return false;
       }
     } catch (error) {
-      console.error("Error requesting permissions:", error);
+      logger.error("Error requesting permissions:", error);
       return false;
     }
   }

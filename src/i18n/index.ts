@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Internationalization (i18n) Configuration
  * Supports multiple languages with automatic locale detection
@@ -50,7 +52,7 @@ class LanguageService {
     try {
       return await AsyncStorage.getItem(this.STORAGE_KEY);
     } catch (error) {
-      console.error('Failed to load language preference:', error);
+      logger.error('Failed to load language preference:', error);
       return null;
     }
   }
@@ -59,7 +61,7 @@ class LanguageService {
     try {
       await AsyncStorage.setItem(this.STORAGE_KEY, language);
     } catch (error) {
-      console.error('Failed to save language preference:', error);
+      logger.error('Failed to save language preference:', error);
     }
   }
 
@@ -67,7 +69,7 @@ class LanguageService {
     try {
       await AsyncStorage.removeItem(this.STORAGE_KEY);
     } catch (error) {
-      console.error('Failed to clear language preference:', error);
+      logger.error('Failed to clear language preference:', error);
     }
   }
 
@@ -124,7 +126,7 @@ const initI18n = async () => {
       saveMissing: true,
       missingKeyHandler: (lng, ns, key, fallbackValue) => {
         if (__DEV__) {
-          console.warn(`Missing translation: ${lng}:${key}`);
+          logger.warn(`Missing translation: ${lng}:${key}`);
         }
       },
 
@@ -193,7 +195,7 @@ export const changeLanguage = async (language: string) => {
 
     return true;
   } catch (error) {
-    console.error('Failed to change language:', error);
+    logger.error('Failed to change language:', error);
     return false;
   }
 };

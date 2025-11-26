@@ -58,8 +58,9 @@ class SecureStorage {
 
     // If environment key is provided, use it
     if (STORAGE_CONFIG.encryptionKey) {
-      this.encryptionKeyCache = STORAGE_CONFIG.encryptionKey;
-      return this.encryptionKeyCache;
+      const key = STORAGE_CONFIG.encryptionKey;
+      this.encryptionKeyCache = key;
+      return key;
     }
 
     // Otherwise, generate or retrieve device-specific key

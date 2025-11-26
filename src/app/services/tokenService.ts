@@ -155,19 +155,25 @@ class TokenService {
         }
 
         const apiService = await import("./api");
-        const newTokens =
+        const response =
           await apiService.default.auth.refreshToken(refreshToken);
 
+        // Extract tokens from response data (handle multiple response formats)
+        const tokenData = (response as any)?.data || response;
+        const accessToken = (tokenData as any)?.access_token || (tokenData as any)?.accessToken;
+        const newRefreshToken = (tokenData as any)?.refresh_token || (tokenData as any)?.refreshToken || refreshToken;
+        const expiresIn = (tokenData as any)?.expires_in || (tokenData as any)?.expiresIn || 3600;
+
         await this.storeTokens({
-          accessToken: newTokens.access_token,
-          refreshToken: newTokens.refresh_token || refreshToken,
-          expiresAt: Date.now() + (newTokens.expires_in || 3600) * 1000,
+          accessToken,
+          refreshToken: newRefreshToken,
+          expiresAt: Date.now() + expiresIn * 1000,
         });
 
         return {
-          accessToken: newTokens.access_token,
-          refreshToken: newTokens.refresh_token || refreshToken,
-          expiresAt: Date.now() + (newTokens.expires_in || 3600) * 1000,
+          accessToken,
+          refreshToken: newRefreshToken,
+          expiresAt: Date.now() + expiresIn * 1000,
         };
       } catch (error) {
         logger.warn("Failed to refresh access token:", error);

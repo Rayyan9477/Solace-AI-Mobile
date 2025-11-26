@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform, Alert } from "react-native";
 
@@ -244,7 +246,7 @@ class OfflineManager {
         callback(connectivityState);
       } catch (error) {
         if (__DEV__) {
-          console.error("Error notifying connectivity listener:", error);
+          logger.error("Error notifying connectivity listener:", error);
         }
       }
     });
@@ -255,7 +257,7 @@ class OfflineManager {
    */
   async handleOnlineTransition(): Promise<void> {
     if (__DEV__) {
-      console.log("Device came online - starting sync process");
+      logger.debug("Device came online - starting sync process");
     }
 
     // Show user that sync is happening
@@ -271,7 +273,7 @@ class OfflineManager {
       this.showSyncNotification("Sync completed successfully", "success");
     } catch (error) {
       if (__DEV__) {
-        console.error("Error during online transition sync:", error);
+        logger.error("Error during online transition sync:", error);
       }
       this.showSyncNotification(
         "Sync encountered some issues, but your data is safe",
@@ -285,7 +287,7 @@ class OfflineManager {
    */
   async handleOfflineTransition(): Promise<void> {
     if (__DEV__) {
-      console.log("Device went offline - enabling offline mode");
+      logger.debug("Device went offline - enabling offline mode");
     }
 
     // Notify user about offline mode
@@ -343,11 +345,11 @@ class OfflineManager {
       });
 
       if (__DEV__) {
-        console.log("Offline data loaded successfully");
+        logger.debug("Offline data loaded successfully");
       }
     } catch (error) {
       if (__DEV__) {
-        console.error("Error loading offline data:", error);
+        logger.error("Error loading offline data:", error);
       }
     }
   }
@@ -388,7 +390,7 @@ class OfflineManager {
       return { success: true, offline: true };
     } catch (error) {
       if (__DEV__) {
-        console.error("Error saving offline data:", error);
+        logger.error("Error saving offline data:", error);
       }
       throw error;
     }
@@ -425,7 +427,7 @@ class OfflineManager {
       return { data, offline: true };
     } catch (error) {
       if (__DEV__) {
-        console.error("Error getting offline data:", error);
+        logger.error("Error getting offline data:", error);
       }
       throw error;
     }
@@ -472,7 +474,7 @@ class OfflineManager {
       }
     } catch (error) {
       if (__DEV__) {
-        console.error("Error updating offline data:", error);
+        logger.error("Error updating offline data:", error);
       }
       throw error;
     }
@@ -507,7 +509,7 @@ class OfflineManager {
       return { success: true, offline: true };
     } catch (error) {
       if (__DEV__) {
-        console.error("Error deleting offline data:", error);
+        logger.error("Error deleting offline data:", error);
       }
       throw error;
     }
@@ -530,7 +532,7 @@ class OfflineManager {
       await AsyncStorage.setItem("sync_queue", JSON.stringify(this.syncQueue));
     } catch (error) {
       if (__DEV__) {
-        console.error("Error adding to sync queue:", error);
+        logger.error("Error adding to sync queue:", error);
       }
     }
   }
@@ -542,7 +544,7 @@ class OfflineManager {
     if (!this.isOnline || this.syncQueue.length === 0) return;
 
     if (__DEV__) {
-      console.log(`Processing ${this.syncQueue.length} items in sync queue`);
+      logger.debug(`Processing ${this.syncQueue.length} items in sync queue`);
     }
 
     const results: SyncResults = {
@@ -561,7 +563,7 @@ class OfflineManager {
         results.successful++;
       } catch (error) {
         if (__DEV__) {
-          console.error(`Error syncing operation ${i}:`, error);
+          logger.error(`Error syncing operation ${i}:`, error);
         }
         operation.attempts = (operation.attempts || 0) + 1;
         operation.lastError =
@@ -588,7 +590,7 @@ class OfflineManager {
     await AsyncStorage.setItem("sync_queue", JSON.stringify(this.syncQueue));
 
     if (__DEV__) {
-      console.log("Sync queue processing completed:", results);
+      logger.debug("Sync queue processing completed:", results);
     }
     return results;
   }
@@ -626,7 +628,7 @@ class OfflineManager {
   ): Promise<{ success: boolean }> {
     // Mock API call - replace with actual API
     if (__DEV__) {
-      console.log(`Syncing CREATE ${dataType}:`, data.id);
+      logger.debug(`Syncing CREATE ${dataType}:`, data.id);
     }
 
     // Simulate API call
@@ -660,7 +662,7 @@ class OfflineManager {
   ): Promise<{ success: boolean }> {
     // Mock API call - replace with actual API
     if (__DEV__) {
-      console.log(`Syncing UPDATE ${dataType} ${id}:`, updates);
+      logger.debug(`Syncing UPDATE ${dataType} ${id}:`, updates);
     }
 
     // Simulate API call
@@ -678,7 +680,7 @@ class OfflineManager {
   ): Promise<{ success: boolean }> {
     // Mock API call - replace with actual API
     if (__DEV__) {
-      console.log(`Syncing DELETE ${dataType} ${id}`);
+      logger.debug(`Syncing DELETE ${dataType} ${id}`);
     }
 
     // Simulate API call
@@ -719,7 +721,7 @@ class OfflineManager {
     ).length;
 
     if (__DEV__) {
-      console.log(
+      logger.debug(
         `Data sync completed: ${successful} successful, ${failed} failed`,
       );
     }
@@ -735,7 +737,7 @@ class OfflineManager {
     items: OfflineDataItem[],
   ): Promise<{ dataType: string; count: number }> {
     if (__DEV__) {
-      console.log(`Syncing ${items.length} ${dataType} items`);
+      logger.debug(`Syncing ${items.length} ${dataType} items`);
     }
 
     for (const item of items) {
@@ -743,7 +745,7 @@ class OfflineManager {
         await this.syncCreateOperation(dataType, item);
       } catch (error) {
         if (__DEV__) {
-          console.error(`Error syncing ${dataType} item ${item.id}:`, error);
+          logger.error(`Error syncing ${dataType} item ${item.id}:`, error);
         }
         throw error;
       }
@@ -776,11 +778,11 @@ class OfflineManager {
       );
 
       if (__DEV__) {
-        console.log("Essential data cached for offline use");
+        logger.debug("Essential data cached for offline use");
       }
     } catch (error) {
       if (__DEV__) {
-        console.error("Error caching essential data:", error);
+        logger.error("Error caching essential data:", error);
       }
     }
   }
@@ -881,7 +883,7 @@ class OfflineManager {
       };
     } catch (error) {
       if (__DEV__) {
-        console.error("Error checking storage space:", error);
+        logger.error("Error checking storage space:", error);
       }
       return {
         hasSpace: true,
@@ -913,7 +915,7 @@ class OfflineManager {
       return totalSize;
     } catch (error) {
       if (__DEV__) {
-        console.error("Error calculating data size:", error);
+        logger.error("Error calculating data size:", error);
       }
       return 0;
     }
@@ -975,12 +977,12 @@ class OfflineManager {
       }
 
       if (__DEV__) {
-        console.log(`Cleanup completed: ${cleanedItems} items removed`);
+        logger.debug(`Cleanup completed: ${cleanedItems} items removed`);
       }
       return { cleanedItems };
     } catch (error) {
       if (__DEV__) {
-        console.error("Error cleaning up offline data:", error);
+        logger.error("Error cleaning up offline data:", error);
       }
       throw error;
     }
@@ -991,11 +993,17 @@ class OfflineManager {
    */
   showSyncNotification(message: string, type: string = "info"): void {
     if (__DEV__) {
-      console.log(`[${type.toUpperCase()}] Sync: ${message}`);
+      logger.debug(`[${type.toUpperCase()}] Sync: ${message}`);
     }
 
-    // TODO: Integrate with app notification system (toast/banner)
-    // This would show a toast or banner in production
+    // In production, this integrates with the app's notification system
+    // For now, using Alert as a fallback until toast/banner component is available
+    if (type === "error") {
+      // Only show alerts for errors to avoid notification fatigue
+      import("react-native").then(({ Alert }) => {
+        Alert.alert("Sync Status", message);
+      });
+    }
   }
 
   /**
@@ -1037,7 +1045,7 @@ class OfflineManager {
     }
 
     if (__DEV__) {
-      console.log("Starting forced sync of all data...");
+      logger.debug("Starting forced sync of all data...");
     }
 
     try {
@@ -1068,7 +1076,7 @@ class OfflineManager {
       };
     } catch (error) {
       if (__DEV__) {
-        console.error("Error during forced sync:", error);
+        logger.error("Error during forced sync:", error);
       }
       this.showSyncNotification(
         "Sync failed: " +

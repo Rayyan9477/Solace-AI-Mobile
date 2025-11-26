@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Enhanced Mood Tracker Component - Simplified version
  * Basic mood tracking interface without complex dependencies
@@ -37,7 +39,7 @@ const EnhancedMoodTracker = ({ navigation }) => {
 
   const handleSubmit = () => {
     if (selectedMood) {
-      console.log("Mood logged:", { mood: selectedMood, notes, intensity });
+      logger.debug("Mood logged:", { mood: selectedMood, notes, intensity });
       // Navigate back or show success message
       navigation.goBack();
     }

@@ -5,6 +5,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 import React, { useState } from "react";
 import {
   View,
@@ -419,4 +420,10 @@ export const ChatConversationsListScreen = () => {
   );
 };
 
-export default ChatConversationsListScreen;
+export const ChatConversationsListScreenWithBoundary = () => (
+  <ScreenErrorBoundary screenName="Chat Conversations">
+    <ChatConversationsListScreen />
+  </ScreenErrorBoundary>
+);
+
+export default ChatConversationsListScreenWithBoundary;

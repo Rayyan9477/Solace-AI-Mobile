@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 // PERFORMANCE OPTIMIZATION: Bundle size optimization strategies
 import { Platform } from "react-native";
 
@@ -62,7 +64,7 @@ export const OptimizedIcons = {
       const iconModule = await OptimizedIcons[platform]();
       return iconModule[iconName] || iconModule.default;
     } catch (error) {
-      console.warn(`Failed to load platform icon for ${platform}:`, error);
+      logger.warn(`Failed to load platform icon for ${platform}:`, error);
       // Fallback to custom SVG icons
       const customIcons = await import("../components/icons/IconSystem");
       return customIcons.MentalHealthIcons[iconName];
@@ -170,7 +172,7 @@ export const BundleAnalysis = {
     );
 
     if (highFrequency.length > 0) {
-      console.log("High-frequency renders detected:", highFrequency);
+      logger.debug("High-frequency renders detected:", highFrequency);
     }
   },
 };
@@ -204,7 +206,7 @@ export const MemoryOptimization = {
   monitorMemory: () => {
     if (__DEV__ && Platform.OS === "web" && performance.memory) {
       const memory = performance.memory;
-      console.log("Memory usage:", {
+      logger.debug("Memory usage:", {
         used: Math.round(memory.usedJSHeapSize / 1048576) + " MB",
         total: Math.round(memory.totalJSHeapSize / 1048576) + " MB",
         limit: Math.round(memory.jsHeapSizeLimit / 1048576) + " MB",
@@ -221,7 +223,7 @@ export const PerformanceMonitoring = {
       const startTime = Date.now();
       return () => {
         const endTime = Date.now();
-        console.log(`${screenName} TTI: ${endTime - startTime}ms`);
+        logger.debug(`${screenName} TTI: ${endTime - startTime}ms`);
       };
     }
     return () => {};
@@ -233,7 +235,7 @@ export const PerformanceMonitoring = {
       const startTime = performance.now();
       return () => {
         const endTime = performance.now();
-        console.log(
+        logger.debug(
           `${componentName} mount time: ${(endTime - startTime).toFixed(2)}ms`,
         );
       };

@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // TypeScript type declarations
@@ -40,19 +42,19 @@ interface AssessmentResult {
 const mockAssessmentAPI = {
   async submitAssessment(data: any): Promise<AssessmentResult> {
     if (__DEV__) {
-      console.log("Mock assessment submission:", data);
+      logger.debug("Mock assessment submission:", data);
     }
     throw new Error("API not available"); // Force fallback to local calculation
   },
   async getAssessmentQuestions(assessmentType: string): Promise<Assessment> {
     if (__DEV__) {
-      console.log("Mock assessment questions fetch for:", assessmentType);
+      logger.debug("Mock assessment questions fetch for:", assessmentType);
     }
     throw new Error("API not available"); // Force fallback to local mock data
   },
   async getAssessmentHistory(): Promise<AssessmentResult[]> {
     if (__DEV__) {
-      console.log("Mock assessment history fetch");
+      logger.debug("Mock assessment history fetch");
     }
     return [];
   },
@@ -77,7 +79,7 @@ export const startAssessment = createAsyncThunk<
       } catch (apiError) {
         // Fallback to mock data if API fails
         if (__DEV__) {
-          console.warn("[Assessment] API unavailable, using mock data");
+          logger.warn("[Assessment] API unavailable, using mock data");
         }
       }
 
@@ -256,7 +258,7 @@ export const submitAssessment = createAsyncThunk<
         return result;
       } catch (apiError) {
         // Fallback to local calculation if API fails
-        console.warn("[Assessment] API unavailable, calculating locally");
+        logger.warn("[Assessment] API unavailable, calculating locally");
       }
 
       // Local calculation (fallback for offline use)

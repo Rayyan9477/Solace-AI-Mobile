@@ -1,3 +1,5 @@
+import { logger } from "@shared/utils/logger";
+
 /**
  * Dashboard Screen - Main Mental Health Dashboard
  * Based on ui-designs/Dark-mode/Home & Mental Health Score.png
@@ -27,11 +29,21 @@ import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 
 import { MentalHealthScoreWidget } from "./components/MentalHealthScoreWidget";
 
+interface DashboardData {
+  mentalHealthScore?: number;
+  streakDays?: number;
+  insights?: string[];
+  todaysMood?: MoodEntry;
+  mindfulHours?: number;
+  sleepAverage?: number;
+  journalCount?: number;
+}
+
 const DashboardScreenComponent = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const { isWeb, getMaxContentWidth, getContainerPadding } = useResponsive();
-  const userProfile = useSelector((state: any) => state.user.profile);
+  const userProfile = useSelector((state: { user: { profile: { name?: string } | null } }) => state.user.profile);
 
   const maxWidth = getMaxContentWidth();
   const contentMaxWidth = isWeb ? Math.min(maxWidth, 1024) : "100%";
@@ -40,7 +52,7 @@ const DashboardScreenComponent = () => {
   // Dashboard data state
   const [currentMood, setCurrentMood] = useState<MoodEntry | null>(null);
   const [isLoadingMood, setIsLoadingMood] = useState(true);
-  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [isLoadingDashboard, setIsLoadingDashboard] = useState(true);
   const [mentalHealthScore, setMentalHealthScore] = useState(75); // Default score
   const [streakDays, setStreakDays] = useState(0);
@@ -75,7 +87,7 @@ const DashboardScreenComponent = () => {
         if (data.journalCount) setJournalCount(data.journalCount);
       } catch (apiError) {
         // Fallback to local storage if API fails
-        console.log("API unavailable, using local data");
+        logger.debug("API unavailable, using local data");
         const moods = await moodStorageService.getMoodHistory(7);
         const latestMood = moods[0] || null;
         setCurrentMood(latestMood);
@@ -101,7 +113,7 @@ const DashboardScreenComponent = () => {
         setJournalCount(3);
       }
     } catch (error) {
-      console.error("Failed to load dashboard data:", error);
+      logger.error("Failed to load dashboard data:", error);
       // Use default values on error
       setMentalHealthScore(75);
       setStreakDays(0);
@@ -118,7 +130,7 @@ const DashboardScreenComponent = () => {
         setCurrentMood(moods[0]);
       }
     } catch (error) {
-      console.error("Failed to load current mood:", error);
+      logger.error("Failed to load current mood:", error);
     } finally {
       setIsLoadingMood(false);
     }
