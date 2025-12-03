@@ -90,6 +90,9 @@ const ChatScreenComponent = ({ navigation, route }: any) => {
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const crisisManagerRef = useRef<typeof CrisisManager | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // CRIT-003 FIX: Flag to prevent concurrent crisis handling race conditions
+  const [isHandlingCrisis, setIsHandlingCrisis] = useState(false);
+  const crisisHandlingRef = useRef(false); // Use ref for immediate access in async context
 
   useEffect(() => {
     const initCrisisManager = async () => {
@@ -559,40 +562,60 @@ ${"=".repeat(50)}
       setIsSendingMessage(true);
       setErrorMessage(null);
 
-      if (crisisManagerRef.current) {
+      // CRIT-003 FIX: Guard against concurrent crisis handling with ref for immediate check
+      if (crisisManagerRef.current && !crisisHandlingRef.current) {
         const crisisAnalysis =
           await crisisManagerRef.current.analyzeCrisisRisk(messageText);
 
         if (
-          crisisAnalysis.risk === "critical" ||
-          crisisAnalysis.risk === "high"
+          (crisisAnalysis.risk === "critical" ||
+          crisisAnalysis.risk === "high") &&
+          !crisisHandlingRef.current // Double-check after async operation
         ) {
-          const crisisResponse = await crisisManagerRef.current.handleCrisis(
-            crisisAnalysis,
-            { id: route.params?.userId || "anonymous" },
-          );
+          // Set both state and ref to prevent race conditions
+          crisisHandlingRef.current = true;
+          setIsHandlingCrisis(true);
 
-          Alert.alert(
-            "Support Available",
-            crisisResponse?.message || "Support resources are available",
-            [
-              ...(crisisResponse?.actions || []).map((action: any) => ({
-                text: action.label,
-                onPress: async () => {
-                  if (action.type === "call" && action.number) {
-                    await crisisManagerRef.current?.makeEmergencyCall(
-                      action.number,
-                    );
-                  } else if (action.type === "text" && action.number) {
-                    await crisisManagerRef.current?.sendCrisisText();
-                  }
-                },
-                style: (action.urgent ? "destructive" : "default") as "destructive" | "default",
-              })),
-              { text: "Continue Talking", style: "cancel" as "cancel" },
-            ],
-            { cancelable: true },
-          );
+          try {
+            const crisisResponse = await crisisManagerRef.current.handleCrisis(
+              crisisAnalysis,
+              { id: route.params?.userId || "anonymous" },
+            );
+
+            Alert.alert(
+              "Support Available",
+              crisisResponse?.message || "Support resources are available",
+              [
+                ...(crisisResponse?.actions || []).map((action: any) => ({
+                  text: action.label,
+                  onPress: async () => {
+                    if (action.type === "call" && action.number) {
+                      await crisisManagerRef.current?.makeEmergencyCall(
+                        action.number,
+                      );
+                    } else if (action.type === "text" && action.number) {
+                      await crisisManagerRef.current?.sendCrisisText();
+                    }
+                  },
+                  style: (action.urgent ? "destructive" : "default") as "destructive" | "default",
+                })),
+                { text: "Continue Talking", style: "cancel" as "cancel", onPress: () => {
+                  // Reset crisis handling flag when alert is dismissed
+                  crisisHandlingRef.current = false;
+                  setIsHandlingCrisis(false);
+                }},
+              ],
+              { cancelable: true, onDismiss: () => {
+                // Reset on dismiss as well (Android)
+                crisisHandlingRef.current = false;
+                setIsHandlingCrisis(false);
+              }},
+            );
+          } catch (crisisError) {
+            logger.error("Crisis handling failed:", crisisError);
+            crisisHandlingRef.current = false;
+            setIsHandlingCrisis(false);
+          }
         }
       }
 
@@ -617,53 +640,62 @@ ${"=".repeat(50)}
         typeof process !== "undefined" && !!process.env?.JEST_WORKER_ID;
       const delay = isJest ? 50 : Math.random() * 1500 + 1500; // 1.5-3 seconds
 
-      setTimeout(async () => {
-        try {
-          setIsTyping(false);
+      // HIGH-014 FIX: Wrap async setTimeout callback with proper error handling
+      // Unhandled promise rejections in setTimeout can crash the app
+      setTimeout(() => {
+        (async () => {
+          try {
+            setIsTyping(false);
 
-          // Generate response using the chat response service
-          const { message: responseText, emotion } =
-            chatResponseService.generateResponse(messageText);
+            // Generate response using the chat response service
+            const { message: responseText, emotion } =
+              chatResponseService.generateResponse(messageText);
 
-          const aiResponse: Message = {
-            id: (Date.now() + 1).toString(),
-            text: responseText,
-            isUser: false,
-            timestamp: new Date(),
-          };
+            const aiResponse: Message = {
+              id: (Date.now() + 1).toString(),
+              text: responseText,
+              isUser: false,
+              timestamp: new Date(),
+            };
 
-          setMessages((prev) => [...prev, aiResponse]);
+            setMessages((prev) => [...prev, aiResponse]);
 
-          // Show prompts again after AI response
-          setShowPrompts(true);
+            // Show prompts again after AI response
+            setShowPrompts(true);
 
-          // Optionally add emotion-based reaction
-          if (emotion === "positive" && Math.random() > 0.7) {
-            setTimeout(() => {
-              setMessages((prev) =>
-                prev.map((msg) =>
-                  msg.id === aiResponse.id
-                    ? { ...msg, reaction: "💚" }
+            // Optionally add emotion-based reaction
+            if (emotion === "positive" && Math.random() > 0.7) {
+              setTimeout(() => {
+                setMessages((prev) =>
+                  prev.map((msg) =>
+                    msg.id === aiResponse.id
+                      ? { ...msg, reaction: "💚" }
                     : msg
                 )
               );
             }, 500);
           }
         } catch (error) {
-          logger.error("Failed to generate response:", error);
-          setErrorMessage("Unable to generate response. Please try again.");
+            logger.error("Failed to generate response:", error);
+            setErrorMessage("Unable to generate response. Please try again.");
 
-          // Add error message to chat
-          const errorResponse: Message = {
-            id: (Date.now() + 1).toString(),
-            text: "I apologize, but I'm having trouble responding right now. Please try again in a moment.",
-            isUser: false,
-            timestamp: new Date(),
-          };
-          setMessages((prev) => [...prev, errorResponse]);
-        } finally {
+            // Add error message to chat
+            const errorResponse: Message = {
+              id: (Date.now() + 1).toString(),
+              text: "I apologize, but I'm having trouble responding right now. Please try again in a moment.",
+              isUser: false,
+              timestamp: new Date(),
+            };
+            setMessages((prev) => [...prev, errorResponse]);
+          } finally {
+            setIsSendingMessage(false);
+          }
+        })().catch((err) => {
+          // HIGH-014 FIX: Catch any unhandled promise rejection from IIFE
+          logger.error("Unhandled chat response error:", err);
+          setIsTyping(false);
           setIsSendingMessage(false);
-        }
+        });
       }, delay);
     }
   };

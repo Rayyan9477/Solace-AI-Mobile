@@ -2,7 +2,7 @@ import Button from "@shared/components/atoms/buttons/TherapeuticButton";
 import { MentalHealthIcon } from "@shared/components/icons";
 import { getTherapeuticColor } from "@theme/ColorPalette";
 import { useTheme } from "@theme/ThemeProvider";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Modal as RNModal,
   View,
@@ -49,6 +49,12 @@ const Modal = ({
   const [fadeAnim] = useState(new Animated.Value(0));
   const [scaleAnim] = useState(new Animated.Value(0.9));
 
+  // HIGH-016 FIX: Use ref to avoid listener churn when onClose changes
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
   useEffect(() => {
     if (visible) {
       Animated.parallel([
@@ -80,19 +86,21 @@ const Modal = ({
     }
   }, [visible]);
 
+  // HIGH-016 FIX: Use ref to prevent listener churn when onClose changes
   useEffect(() => {
     if (closeOnBackPress && visible) {
       const backHandler = BackHandler.addEventListener(
         "hardwareBackPress",
         () => {
-          onClose();
+          // HIGH-016 FIX: Use ref to get current onClose without dependency
+          onCloseRef.current?.();
           return true;
         },
       );
 
       return () => backHandler.remove();
     }
-  }, [visible, closeOnBackPress, onClose]);
+  }, [visible, closeOnBackPress]); // Removed onClose from deps - using ref instead
 
   const getModalStyles = () => {
     const therapeuticColors = getTherapeuticColor(

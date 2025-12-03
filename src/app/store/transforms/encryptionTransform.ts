@@ -23,7 +23,8 @@ export const encryptionTransform = createTransform(
   // Encrypt on persist (inbound)
   (inboundState: any, key: string): any => {
     try {
-      // Only encrypt sensitive slices containing PHI
+      // HIGH-008 FIX: Include ALL slices containing PHI for HIPAA compliance
+      // Added "therapy" which was missing - therapy data is PHI
       const sensitiveSlices = [
         "auth",
         "user",
@@ -31,6 +32,7 @@ export const encryptionTransform = createTransform(
         "chat",
         "assessment",
         "journal",
+        "therapy", // HIGH-008 FIX: Therapy data contains sensitive PHI
       ];
 
       if (!sensitiveSlices.includes(key)) {
@@ -81,8 +83,8 @@ export const encryptionTransform = createTransform(
     }
   },
 
-  // Apply to these slices only
-  { whitelist: ["auth", "user", "mood", "chat", "assessment", "journal"] },
+  // HIGH-008 FIX: Apply to ALL slices containing PHI including therapy
+  { whitelist: ["auth", "user", "mood", "chat", "assessment", "journal", "therapy"] },
 );
 
 export default encryptionTransform;

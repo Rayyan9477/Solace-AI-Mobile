@@ -482,21 +482,23 @@ class MoodStorageService {
 
   /**
    * Mark entries as synced
+   * CRIT-005 FIX: Use SQLite atomic UPDATE instead of read-modify-write to prevent race conditions
    */
   async markEntriesAsSynced(entryIds: string[]): Promise<void> {
+    if (!entryIds || entryIds.length === 0) {
+      return;
+    }
+
+    await this.initializeDatabase();
+
     try {
-      const history = await this.getMoodHistory();
+      // CRIT-005 FIX: Use SQLite transaction for atomic batch update
+      // This prevents race conditions when multiple sync operations run concurrently
+      const placeholders = entryIds.map(() => "?").join(", ");
 
-      const updatedHistory = history.map((entry) => {
-        if (entryIds.includes(entry.id)) {
-          return { ...entry, synced: true };
-        }
-        return entry;
-      });
-
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.MOOD_HISTORY,
-        JSON.stringify(updatedHistory)
+      await this.db!.runAsync(
+        `UPDATE mood_entries SET synced = 1 WHERE id IN (${placeholders})`,
+        entryIds
       );
 
       // Update last sync timestamp
@@ -505,9 +507,10 @@ class MoodStorageService {
         new Date().toISOString()
       );
 
-      logger.info("Entries marked as synced", { count: entryIds.length });
+      logger.info("Entries marked as synced in SQLite", { count: entryIds.length });
     } catch (error) {
       logger.error("Failed to mark entries as synced", error);
+      throw error; // Re-throw so caller knows sync marking failed
     }
   }
 

@@ -224,25 +224,30 @@ class CrisisManager {
   }
 
   async loadConfiguration(): Promise<void> {
-    // Thread-safe: if already loading or loaded, return immediately
-    if (this.configLoadingPromise) {
-      return this.configLoadingPromise;
-    }
-
-    // If already loaded, no need to load again
+    // HIGH-013 FIX: Thread-safe config loading with proper race condition handling
+    // Check configLoaded FIRST to avoid unnecessary promise checks
     if (this.configLoaded) {
       return Promise.resolve();
     }
 
-    // Create loading promise atomically
-    this.configLoadingPromise = (async (): Promise<void> => {
+    // If loading is in progress, wait for the existing promise
+    if (this.configLoadingPromise) {
+      return this.configLoadingPromise;
+    }
+
+    // HIGH-013 FIX: Store promise reference before async execution starts
+    // This ensures all concurrent callers get the same promise
+    const loadPromise = (async (): Promise<void> => {
       try {
         const remoteConfig = await loadRemoteCrisisConfig();
         if (remoteConfig) {
-          this.config = mergeCrisisConfig(remoteConfig);
+          // HIGH-013 FIX: Apply config atomically
+          const mergedConfig = mergeCrisisConfig(remoteConfig);
+          this.config = mergedConfig;
           this.emergencyResources =
-            this.config.resources.US || EMERGENCY_RESOURCES.US;
+            mergedConfig.resources.US || EMERGENCY_RESOURCES.US;
         }
+        // HIGH-013 FIX: Set loaded flag AFTER config is fully applied
         this.configLoaded = true;
       } catch (error) {
         logger.error(
@@ -252,12 +257,18 @@ class CrisisManager {
         // Still mark as loaded so app can function with default config
         this.configLoaded = true;
       } finally {
-        // Clear the promise after completion to allow future reloads if needed
-        this.configLoadingPromise = null;
+        // HIGH-013 FIX: Clear promise AFTER setting configLoaded
+        // Use setTimeout to ensure all awaiting callers receive their result first
+        setTimeout(() => {
+          this.configLoadingPromise = null;
+        }, 0);
       }
     })();
 
-    return this.configLoadingPromise;
+    // Store the promise immediately so concurrent calls can await it
+    this.configLoadingPromise = loadPromise;
+
+    return loadPromise;
   }
 
   async ensureConfigLoaded(): Promise<void> {
@@ -296,22 +307,31 @@ class CrisisManager {
 
     const { keywords, weights, combinations, thresholds } = this.config;
 
-    // Check for crisis keywords by category
+    // HIGH-011 FIX: Use word boundary matching to prevent false positives
+    // e.g., "therapist" shouldn't match "the", "assignment" shouldn't match "ass"
     Object.entries(keywords).forEach(([category, keywordList]) => {
       keywordList.forEach((keyword: string) => {
-        if (normalizedText.includes(keyword.toLowerCase())) {
+        const keywordLower = keyword.toLowerCase();
+        // Create regex with word boundaries for whole-word matching
+        // Escape special regex characters in the keyword
+        const escapedKeyword = keywordLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const wordBoundaryRegex = new RegExp(`\\b${escapedKeyword}\\b`, 'i');
+
+        if (wordBoundaryRegex.test(normalizedText)) {
           detectedKeywords.push(keyword);
           totalScore += weights[category] || 3;
         }
       });
     });
 
-    // Check for combination patterns (more concerning)
+    // HIGH-011 FIX: Check for combination patterns with word boundary matching
     combinations.forEach(([word1, word2]) => {
-      if (
-        normalizedText.includes(word1.toLowerCase()) &&
-        normalizedText.includes(word2.toLowerCase())
-      ) {
+      const escaped1 = word1.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const escaped2 = word2.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex1 = new RegExp(`\\b${escaped1}\\b`, 'i');
+      const regex2 = new RegExp(`\\b${escaped2}\\b`, 'i');
+
+      if (regex1.test(normalizedText) && regex2.test(normalizedText)) {
         totalScore += COMBINATION_SCORE;
         detectedKeywords.push(`${word1} + ${word2}`);
       }
@@ -717,19 +737,34 @@ class CrisisManager {
 
       await secureStorage.storeSensitiveData("crisis_events", trimmedLogs);
 
+      // CRIT-004 FIX: Notify emergency contacts with proper error isolation
+      // This should not cause logging to fail if notification fails
       if (
         crisisAnalysis.risk === "critical" ||
         crisisAnalysis.risk === "high"
       ) {
-        await this.notifyEmergencyContacts(event);
+        try {
+          await this.notifyEmergencyContacts(event);
+        } catch (notifyError) {
+          // Log but don't throw - notification failure shouldn't fail crisis logging
+          logger.error("Emergency contact notification failed:", notifyError);
+        }
       }
       logger.debug(
         `Crisis event logged successfully: ${crisisAnalysis.risk} risk level`,
       );
     } catch (error) {
       logger.error("Primary crisis event logging failed:", error);
-      // AWAIT the fallback to ensure it completes
-      await this.fallbackCrisisLog(crisisAnalysis, userProfile, error);
+      // CRIT-004 FIX: AWAIT the fallback to ensure it completes
+      try {
+        await this.fallbackCrisisLog(crisisAnalysis, userProfile, error);
+      } catch (fallbackError) {
+        // Last resort - log both errors but don't crash
+        logger.error("Both primary and fallback crisis logging failed:", {
+          primaryError: error,
+          fallbackError,
+        });
+      }
     }
   }
 
@@ -865,7 +900,8 @@ class CrisisManager {
         trimmedActions,
       );
     } catch (error) {
-      // Silent fallback
+      // CRIT-004 FIX: Log error instead of silent swallow
+      logger.warn("Failed to log emergency action (non-critical):", error);
     }
   }
 

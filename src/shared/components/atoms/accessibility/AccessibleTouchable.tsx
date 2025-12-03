@@ -8,12 +8,40 @@ import {
   Platform,
 } from "react-native";
 
-import { PLATFORM_CONFIG } from "../../config/environment";
-import { useTheme } from "../../shared/theme/ThemeContext";
-import {
-  hapticUtils,
-  accessibilityUtils,
-} from "../../utils/platformOptimizations";
+// HIGH-021 FIX: Use correct import paths with aliases
+import { PLATFORM_CONFIG } from "@shared/config/environment";
+import { useTheme } from "@theme/ThemeContext";
+import { haptic } from "@shared/services/hapticService";
+import { MentalHealthAccessibility } from "@shared/utils/accessibility";
+
+// HIGH-021 FIX: Create compatibility layer for missing utilities
+const hapticUtils = {
+  impact: (style: 'light' | 'medium' | 'heavy' = 'medium') => haptic.impact(style),
+  notification: (type: 'success' | 'warning' | 'error' = 'success') => haptic.notification(type),
+  selection: () => haptic.selection(),
+};
+
+const accessibilityUtils = {
+  createMentalHealthAccessibility: (context: string, label: string) => {
+    // Map context to appropriate accessibility creator
+    switch (context) {
+      case 'mood':
+      case 'mood-selector':
+        return MentalHealthAccessibility.moodTracker.moodSelection(label, false);
+      case 'crisis':
+      case 'crisis-button':
+        return MentalHealthAccessibility.buttons.therapeutic(label, 'Double tap for immediate support');
+      case 'assessment':
+      case 'assessment-question':
+        return MentalHealthAccessibility.assessment.answerOption(label, false);
+      case 'chat':
+      case 'chat-message':
+        return MentalHealthAccessibility.chat.message(false, label);
+      default:
+        return MentalHealthAccessibility.buttons.primary(label, undefined);
+    }
+  },
+};
 
 // Enhanced touchable component with mental health accessibility considerations
 const AccessibleTouchable = ({

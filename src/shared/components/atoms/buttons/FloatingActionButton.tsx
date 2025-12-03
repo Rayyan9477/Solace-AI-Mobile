@@ -97,17 +97,45 @@ const FloatingActionButton = ({
   };
 
   // Setup animations
+  // HIGH-015 FIX: Store animation references for proper cleanup
+  const entranceAnimRef = useRef<Animated.CompositeAnimation | null>(null);
+  const pulseAnimRef = useRef<Animated.CompositeAnimation | null>(null);
+
   useEffect(() => {
+    // HIGH-015 FIX: Stop any existing entrance animation before starting new one
+    if (entranceAnimRef.current) {
+      entranceAnimRef.current.stop();
+    }
+
     // Entrance animation
-    Animated.timing(opacityValue, {
+    entranceAnimRef.current = Animated.timing(opacityValue, {
       toValue: 1,
       duration: 800,
       useNativeDriver: true,
-    }).start();
+    });
+    entranceAnimRef.current.start();
+
+    // HIGH-015 FIX: Cleanup entrance animation on unmount
+    return () => {
+      if (entranceAnimRef.current) {
+        entranceAnimRef.current.stop();
+        entranceAnimRef.current = null;
+      }
+    };
+  }, []); // Run once on mount
+
+  useEffect(() => {
+    // HIGH-015 FIX: Stop existing pulse animation before creating new one
+    if (pulseAnimRef.current) {
+      pulseAnimRef.current.stop();
+      pulseAnimRef.current = null;
+      // Reset pulse value to avoid stuck state
+      pulseValue.setValue(1);
+    }
 
     // Pulse animation (if enabled)
     if (showPulse && !disabled) {
-      const pulseAnimation = Animated.loop(
+      pulseAnimRef.current = Animated.loop(
         Animated.sequence([
           Animated.timing(pulseValue, {
             toValue: 1.05,
@@ -121,11 +149,18 @@ const FloatingActionButton = ({
           }),
         ]),
       );
-      pulseAnimation.start();
-
-      return () => pulseAnimation.stop();
+      pulseAnimRef.current.start();
     }
-  }, [showPulse, disabled]);
+
+    // HIGH-015 FIX: Proper cleanup with animation reference
+    return () => {
+      if (pulseAnimRef.current) {
+        pulseAnimRef.current.stop();
+        pulseAnimRef.current = null;
+      }
+      pulseValue.setValue(1); // Reset to initial state
+    };
+  }, [showPulse, disabled, pulseValue]);
 
   // Handle press interactions
   const handlePressIn = () => {

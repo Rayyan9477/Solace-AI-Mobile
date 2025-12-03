@@ -23,6 +23,10 @@ class EncryptionService {
   private readonly ALGORITHM = "AES-256-CBC";
   private readonly VERSION = "1.0";
 
+  // HIGH-018 FIX: Add mutex for initialization race condition
+  private initializationPromise: Promise<void> | null = null;
+  private isInitialized: boolean = false;
+
   private constructor() {}
 
   static getInstance(): EncryptionService {
@@ -36,26 +40,53 @@ class EncryptionService {
    * Initialize encryption key from secure storage or generate new one
    * Uses Expo SecureStore (backed by iOS Keychain / Android Keystore)
    * On web, falls back to sessionStorage with warning
+   * HIGH-018 FIX: Implements mutex to prevent race conditions
    */
   async initialize(): Promise<void> {
+    // HIGH-018 FIX: Return early if already initialized
+    if (this.isInitialized && this.encryptionKey) {
+      return;
+    }
+
+    // HIGH-018 FIX: Return existing promise if initialization is in progress
+    if (this.initializationPromise) {
+      return this.initializationPromise;
+    }
+
+    // HIGH-018 FIX: Create and store the initialization promise
+    this.initializationPromise = this.doInitialize();
+
+    try {
+      await this.initializationPromise;
+    } finally {
+      // HIGH-018 FIX: Clear promise after completion (allows retry on failure)
+      this.initializationPromise = null;
+    }
+  }
+
+  /**
+   * HIGH-018 FIX: Internal initialization logic - separated for mutex pattern
+   */
+  private async doInitialize(): Promise<void> {
     try {
       // Web platform fallback - use sessionStorage (less secure but functional)
       if (Platform.OS === 'web') {
         logger.warn('Running on web - using sessionStorage instead of SecureStore (less secure)');
-        
+
         let key = sessionStorage.getItem(this.KEY_NAME);
-        
+
         if (!key) {
           // Generate key for web session
           const randomBytes = await Crypto.getRandomBytesAsync(32);
           key = Array.from(randomBytes)
             .map((b) => b.toString(16).padStart(2, '0'))
             .join('');
-          
+
           sessionStorage.setItem(this.KEY_NAME, key);
         }
-        
+
         this.encryptionKey = key;
+        this.isInitialized = true;
         logger.info('Encryption service initialized for web platform');
         return;
       }
@@ -76,11 +107,14 @@ class EncryptionService {
       }
 
       this.encryptionKey = key;
+      this.isInitialized = true;
       logger.info('Encryption service initialized for native platform');
     } catch (error) {
       logger.error("Encryption key initialization failed:", error);
       // Don't throw - allow app to continue with unencrypted storage as fallback
       logger.warn('Continuing without encryption - data will be stored unencrypted');
+      // HIGH-018 FIX: Mark as initialized even on failure to prevent infinite retries
+      this.isInitialized = true;
     }
   }
 

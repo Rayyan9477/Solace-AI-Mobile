@@ -375,44 +375,52 @@ class DataPersistenceService {
 
     const processedIds: string[] = [];
 
-    for (const item of this.syncQueue) {
-      try {
-        // Call appropriate API method based on type and endpoint
-        switch (item.type) {
-          case "create":
-            await this.syncCreate(apiService, item);
-            break;
-          case "update":
-            await this.syncUpdate(apiService, item);
-            break;
-          case "delete":
-            await this.syncDelete(apiService, item);
-            break;
-        }
+    // HIGH-023 FIX: Wrap in try/finally to ensure isSyncing is always reset
+    try {
+      for (const item of this.syncQueue) {
+        try {
+          // Call appropriate API method based on type and endpoint
+          switch (item.type) {
+            case "create":
+              await this.syncCreate(apiService, item);
+              break;
+            case "update":
+              await this.syncUpdate(apiService, item);
+              break;
+            case "delete":
+              await this.syncDelete(apiService, item);
+              break;
+          }
 
-        processedIds.push(item.id);
-        logger.debug(`Successfully synced item: ${item.id}`);
-      } catch (error) {
-        logger.error(`Failed to sync item: ${item.id}`, error);
-        item.retryCount++;
-
-        // Remove from queue if max retries exceeded
-        if (item.retryCount >= 3) {
           processedIds.push(item.id);
-          logger.warn(`Removing item from sync queue after 3 failed attempts: ${item.id}`);
+          logger.debug(`Successfully synced item: ${item.id}`);
+        } catch (error) {
+          logger.error(`Failed to sync item: ${item.id}`, error);
+          item.retryCount++;
+
+          // Remove from queue if max retries exceeded
+          if (item.retryCount >= 3) {
+            processedIds.push(item.id);
+            logger.warn(`Removing item from sync queue after 3 failed attempts: ${item.id}`);
+          }
         }
       }
+
+      // Remove processed items from queue
+      this.syncQueue = this.syncQueue.filter(item => !processedIds.includes(item.id));
+      await this.saveSyncQueue();
+
+      // Update last sync timestamp
+      await AsyncStorage.setItem(STORAGE_KEYS.LAST_SYNC, new Date().toISOString());
+
+      logger.info(`Sync queue processing complete. ${processedIds.length} items processed`);
+    } catch (error) {
+      // HIGH-023 FIX: Log any unexpected errors during sync cleanup
+      logger.error("Unexpected error during sync queue processing:", error);
+    } finally {
+      // HIGH-023 FIX: Always reset isSyncing to prevent deadlock
+      this.isSyncing = false;
     }
-
-    // Remove processed items from queue
-    this.syncQueue = this.syncQueue.filter(item => !processedIds.includes(item.id));
-    await this.saveSyncQueue();
-
-    // Update last sync timestamp
-    await AsyncStorage.setItem(STORAGE_KEYS.LAST_SYNC, new Date().toISOString());
-
-    this.isSyncing = false;
-    logger.info(`Sync queue processing complete. ${processedIds.length} items processed`);
   }
 
   /**

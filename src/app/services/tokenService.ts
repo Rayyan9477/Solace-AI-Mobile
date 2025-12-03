@@ -125,14 +125,62 @@ class TokenService {
 
   /**
    * Check if access token is expired
+   * HIGH-002 FIX: Enhanced validation for token expiration
    * @returns {Promise<boolean>} True if expired
    */
-  async isTokenExpired() {
+  async isTokenExpired(): Promise<boolean> {
     const tokens = await this.getTokens();
-    if (!tokens?.expiresAt) {
+
+    // No tokens means expired
+    if (!tokens) {
       return true;
     }
+
+    // Missing access token means expired
+    if (!tokens.accessToken) {
+      return true;
+    }
+
+    // No expiration set means we treat as expired for safety
+    if (!tokens.expiresAt || typeof tokens.expiresAt !== 'number') {
+      return true;
+    }
+
+    // Check if expiration is in the past
     return Date.now() > tokens.expiresAt;
+  }
+
+  /**
+   * Validate token structure and expiration
+   * HIGH-002 FIX: Comprehensive token validation
+   * @returns {Promise<{valid: boolean, reason?: string}>} Validation result
+   */
+  async validateToken(): Promise<{valid: boolean; reason?: string}> {
+    try {
+      const tokens = await this.getTokens();
+
+      if (!tokens) {
+        return { valid: false, reason: 'no_tokens' };
+      }
+
+      if (!tokens.accessToken || typeof tokens.accessToken !== 'string') {
+        return { valid: false, reason: 'invalid_access_token' };
+      }
+
+      if (!tokens.expiresAt || typeof tokens.expiresAt !== 'number') {
+        return { valid: false, reason: 'missing_expiration' };
+      }
+
+      if (Date.now() > tokens.expiresAt) {
+        return { valid: false, reason: 'expired' };
+      }
+
+      // Token is valid
+      return { valid: true };
+    } catch (error) {
+      logger.warn("Token validation failed:", error);
+      return { valid: false, reason: 'validation_error' };
+    }
   }
   /**
    * Refresh access token using refresh token

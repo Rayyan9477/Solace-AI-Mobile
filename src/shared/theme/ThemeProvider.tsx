@@ -39,15 +39,8 @@ interface ThemeContextType {
   resetCustomColors: () => void;
 }
 
-export const ThemeContext = createContext<ThemeContextType>({
-  theme: lightTheme,
-  isDark: false,
-  toggleTheme: () => {},
-  setTheme: () => {},
-  customColors: null,
-  setCustomColors: () => {},
-  resetCustomColors: () => {},
-});
+// HIGH-019 FIX: Use undefined as default to properly detect usage outside provider
+export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Theme Provider Component
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
@@ -139,9 +132,10 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 // Hook to use theme
-export const useTheme = () => {
+// HIGH-019 FIX: Now properly detects usage outside ThemeProvider
+export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error("useTheme must be used within ThemeProvider");
   }
   return context;

@@ -301,7 +301,24 @@ const MentalHealthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [sessionType, setSessionType] = useState<string | null>(null);
 
   useEffect(() => {
-    loadStoredData();
+    // HIGH-001 FIX: Properly handle async function and track mount state
+    let isMounted = true;
+
+    const loadData = async () => {
+      try {
+        await loadStoredData();
+      } catch (error) {
+        if (isMounted) {
+          logger.error("MentalHealthProvider: loadStoredData failed:", error);
+        }
+      }
+    };
+
+    loadData();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const loadStoredData = async () => {

@@ -527,12 +527,19 @@ class AuthService {
 
   /**
    * Authenticate with biometrics
+   * HIGH-017 FIX: Properly handle specific biometric error types
    */
-  async authenticateWithBiometric(): Promise<boolean> {
+  async authenticateWithBiometric(): Promise<{ success: boolean; error?: string; errorType?: string }> {
     try {
       const config = await secureStorage.getSecureData(STORAGE_KEYS.BIOMETRIC_CONFIG);
       if (!config?.enabled) {
-        throw new Error("Biometric authentication is not enabled");
+        return { success: false, error: "Biometric authentication is not enabled", errorType: "not_enabled" };
+      }
+
+      // HIGH-017 FIX: Check availability before attempting authentication
+      const isAvailable = await this.isBiometricAvailable();
+      if (!isAvailable) {
+        return { success: false, error: "Biometric hardware not available", errorType: "unavailable" };
       }
 
       const result = await LocalAuthentication.authenticateAsync({
@@ -552,13 +559,41 @@ class AuthService {
           await this.logAuthEvent("biometric_login", user.id, "success");
         }
 
-        return true;
+        return { success: true };
       }
 
-      return false;
+      // HIGH-017 FIX: Handle specific error types from LocalAuthentication
+      const errorType = result.error;
+      let errorMessage = "Authentication failed";
+
+      switch (errorType) {
+        case "user_cancel":
+          errorMessage = "Authentication was cancelled";
+          break;
+        case "system_cancel":
+          errorMessage = "Authentication was cancelled by the system";
+          break;
+        case "not_enrolled":
+          errorMessage = "No biometrics enrolled on this device";
+          break;
+        case "lockout":
+          errorMessage = "Too many failed attempts. Please try again later";
+          break;
+        case "lockout_permanent":
+          errorMessage = "Biometric authentication is locked. Use passcode to unlock";
+          break;
+        case "passcode_not_set":
+          errorMessage = "Device passcode is not set";
+          break;
+        default:
+          errorMessage = result.warning || "Biometric authentication failed";
+      }
+
+      logger.warn(`Biometric authentication failed: ${errorType} - ${errorMessage}`);
+      return { success: false, error: errorMessage, errorType };
     } catch (error) {
-      logger.error("Biometric authentication failed:", error);
-      return false;
+      logger.error("Biometric authentication error:", error);
+      return { success: false, error: "An unexpected error occurred", errorType: "exception" };
     }
   }
 

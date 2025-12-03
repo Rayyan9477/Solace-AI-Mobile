@@ -411,13 +411,15 @@ const EnhancedMoodTrackerScreen = () => {
     }
 
     try {
-      // Convert intensity from 1-10 scale to 1-5 scale for SQLite storage
-      const normalizedIntensity = Math.ceil(intensity / 2);
+      // HIGH-010 FIX: Store full 1-10 intensity scale for better precision
+      // Previous code used Math.ceil(intensity / 2) which lost data (1,2→1, 3,4→2, etc.)
+      // SQLite schema supports any integer, so no conversion needed
+      // Analytics and insights work better with full granularity
 
-      // Prepare mood entry for SQLite
+      // Prepare mood entry for SQLite with full precision
       const moodEntry = {
         mood: selectedMood,
-        intensity: normalizedIntensity,
+        intensity: intensity, // HIGH-010 FIX: Store original 1-10 value, not converted
         timestamp: new Date().toISOString(),
         notes: notes || undefined,
         activities: activities.length > 0 ? activities : undefined,

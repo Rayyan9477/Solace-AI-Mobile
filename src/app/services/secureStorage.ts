@@ -139,10 +139,15 @@ class SecureStorage {
       }
 
       try {
-        const parsedData: StorageData = JSON.parse(jsonData);
+        const parsedData: StorageData | null = JSON.parse(jsonData);
+
+        // HIGH-003 FIX: Explicit null check after JSON.parse
+        // JSON.parse("null") returns null, which could cause issues
+        if (parsedData === null || parsedData === undefined) {
+          return null;
+        }
 
         if (
-          parsedData &&
           typeof parsedData === "object" &&
           "data" in parsedData
         ) {

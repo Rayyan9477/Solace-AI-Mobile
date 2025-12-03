@@ -1,5 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+// HIGH-024 FIX: Secure ID generation to prevent collisions
+let idCounter = 0;
+function generateSecureId(prefix: string = ''): string {
+  // Combine multiple entropy sources for collision resistance:
+  // 1. Timestamp (ms precision)
+  // 2. Monotonic counter (prevents collision in same ms)
+  // 3. Random component (prevents collision across instances)
+  const timestamp = Date.now().toString(36);
+  const counter = (idCounter++).toString(36).padStart(4, '0');
+  const random = Math.random().toString(36).substring(2, 10);
+  return `${prefix}${timestamp}-${counter}-${random}`;
+}
+
 // TypeScript interfaces
 interface Conversation {
   id: string;
@@ -49,7 +62,8 @@ const chatSlice = createSlice({
       action: PayloadAction<{ title?: string }>,
     ) => {
       const newConversation: Conversation = {
-        id: Date.now().toString(),
+        // HIGH-024 FIX: Use secure ID generation
+        id: generateSecureId('conv-'),
         title: action.payload.title || "New Conversation",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -62,7 +76,8 @@ const chatSlice = createSlice({
 
     addMessage: (state, action: PayloadAction<Partial<Message>>) => {
       const message: Message = {
-        id: Date.now().toString() + Math.random(),
+        // HIGH-024 FIX: Use secure ID generation
+        id: generateSecureId('msg-'),
         timestamp: new Date().toISOString(),
         ...action.payload,
       };

@@ -296,7 +296,16 @@ async function refreshAccessToken(refreshToken: string): Promise<any> {
     );
   }
 
-  return await response.json();
+  // HIGH-020 FIX: Wrap JSON parse with try-catch for malformed responses
+  try {
+    return await response.json();
+  } catch (parseError) {
+    throw new AuthAPIError(
+      "Invalid JSON response from server",
+      response.status,
+      "/auth/refresh",
+    );
+  }
 }
 
 /**
@@ -326,7 +335,16 @@ async function retryWithNewToken(
     );
   }
 
-  return await response.json();
+  // HIGH-020 FIX: Wrap JSON parse with try-catch for malformed responses
+  try {
+    return await response.json();
+  } catch (parseError) {
+    throw new AuthAPIError(
+      "Invalid JSON response from server",
+      response.status,
+      url,
+    );
+  }
 }
 
 const tokenRefreshAttempts = new Map();
@@ -334,10 +352,208 @@ const MAX_REFRESH_ATTEMPTS = 2;
 const REFRESH_ATTEMPT_WINDOW = 60000;
 const MAX_RETRY_ATTEMPTS = 3;
 
+// CRIT-001 FIX: Mutex for token refresh to prevent race conditions
+let isRefreshingToken = false;
+let refreshTokenPromise: Promise<any> | null = null;
+
+// HIGH-007 FIX: Track in-flight requests to prevent duplicate API calls
+const inFlightRequests = new Map<string, Promise<any>>();
+
+/**
+ * Generate a unique request key for deduplication
+ */
+function getRequestKey(url: string, options: any): string {
+  const method = options?.method || "GET";
+  const body = options?.body ? JSON.stringify(options.body) : "";
+  return `${method}:${url}:${body}`;
+}
+
+/**
+ * Thread-safe token refresh that ensures only one refresh happens at a time
+ * Other concurrent requests wait for the same refresh to complete
+ */
+async function safeRefreshToken(refreshToken: string): Promise<any> {
+  // If already refreshing, wait for the existing refresh to complete
+  if (isRefreshingToken && refreshTokenPromise) {
+    return refreshTokenPromise;
+  }
+
+  isRefreshingToken = true;
+  refreshTokenPromise = (async () => {
+    try {
+      const newTokens = await refreshAccessToken(refreshToken);
+      return newTokens;
+    } finally {
+      isRefreshingToken = false;
+      refreshTokenPromise = null;
+    }
+  })();
+
+  return refreshTokenPromise;
+}
+
 /**
  * Enhanced authenticated fetch with retry logic, exponential backoff, and token refresh
+ * HIGH-007 FIX: Added request deduplication to prevent duplicate concurrent calls
  */
 async function authenticatedFetch(
+  url: string,
+  options: any = {},
+  retryCount: number = 0,
+): Promise<any> {
+  const method = options.method || "GET";
+
+  // Check cache for GET requests
+  if (method === "GET" && retryCount === 0) {
+    const cached = apiCache.get(url, options);
+    if (cached) {
+      logger.debug(`[API Cache HIT] ${url}`);
+      return cached;
+    }
+
+    // HIGH-007 FIX: Deduplicate concurrent identical GET requests
+    const requestKey = getRequestKey(url, options);
+    const inFlight = inFlightRequests.get(requestKey);
+
+    if (inFlight) {
+      logger.debug(`[API Dedup] Reusing in-flight request: ${url}`);
+      return inFlight;
+    }
+  }
+
+  // For GET requests on first attempt, track the promise for deduplication
+  const shouldTrack = method === "GET" && retryCount === 0;
+  const requestKey = shouldTrack ? getRequestKey(url, options) : "";
+
+  const executeRequest = async (): Promise<any> => {
+    const tokens = await tokenService.getTokens();
+
+    const headers: any = {
+      "Content-Type": "application/json",
+      ...options.headers,
+    };
+
+    if (tokens?.accessToken) {
+      headers["Authorization"] = `Bearer ${tokens.accessToken}`;
+    }
+
+    try {
+      const response = await fetchWithTimeout(url, {
+        ...options,
+        headers,
+      }, API_CONFIG.timeout, retryCount);
+
+      // Handle 401 Unauthorized - attempt token refresh
+      if (response.status === 401 && tokens?.refreshToken) {
+        return handle401Response(url, options, tokens, retryCount);
+      }
+
+      // Handle other error responses with retry logic
+      if (!response.ok) {
+        return handleErrorResponse(response, url, options, retryCount);
+      }
+
+      // Parse successful response
+      const data = await response.json();
+
+      // Cache successful GET responses
+      if (method === "GET") {
+        apiCache.set(url, data, options);
+      }
+
+      return data;
+    } catch (error: any) {
+      // Handle network errors with retry
+      if (retryCount < MAX_RETRY_ATTEMPTS) {
+        const delay = Math.pow(2, retryCount) * 1000;
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return authenticatedFetch(url, options, retryCount + 1);
+      }
+      throw error;
+    }
+  };
+
+  if (shouldTrack) {
+    const requestPromise = executeRequest();
+    inFlightRequests.set(requestKey, requestPromise);
+    requestPromise.finally(() => inFlightRequests.delete(requestKey));
+    return requestPromise;
+  }
+
+  return executeRequest();
+}
+
+/**
+ * Handle 401 response with token refresh
+ */
+async function handle401Response(
+  url: string,
+  options: any,
+  tokens: any,
+  retryCount: number
+): Promise<any> {
+  const now = Date.now();
+  const attemptKey = tokens.refreshToken.substring(0, 10);
+  const attemptRecord = tokenRefreshAttempts.get(attemptKey);
+
+  if (
+    attemptRecord &&
+    now - attemptRecord.firstAttempt < REFRESH_ATTEMPT_WINDOW &&
+    attemptRecord.count >= MAX_REFRESH_ATTEMPTS
+  ) {
+    throw new Error("Maximum token refresh attempts exceeded");
+  }
+
+  if (attemptRecord) {
+    attemptRecord.count++;
+  } else {
+    tokenRefreshAttempts.set(attemptKey, { count: 1, firstAttempt: now });
+  }
+
+  try {
+    const newTokens = await safeRefreshToken(tokens.refreshToken);
+
+    if (!newTokens?.access_token) {
+      throw new Error("Invalid token response");
+    }
+
+    const transformedTokens = {
+      accessToken: newTokens.access_token,
+      refreshToken: newTokens.refresh_token || tokens.refreshToken,
+      expiresAt: Date.now() + (newTokens.expires_in || 3600) * 1000,
+    };
+
+    await tokenService.storeTokens(transformedTokens);
+    return authenticatedFetch(url, options, retryCount);
+  } catch (refreshError) {
+    await tokenService.clearTokens();
+    throw new Error("Session expired. Please log in again.");
+  }
+}
+
+/**
+ * Handle error responses with retry logic
+ */
+async function handleErrorResponse(
+  response: Response,
+  url: string,
+  options: any,
+  retryCount: number
+): Promise<any> {
+  const isRetryable = response.status >= 500 || response.status === 429;
+
+  if (isRetryable && retryCount < MAX_RETRY_ATTEMPTS) {
+    const delay = Math.pow(2, retryCount) * 1000;
+    await new Promise(resolve => setTimeout(resolve, delay));
+    return authenticatedFetch(url, options, retryCount + 1);
+  }
+
+  const errorData = await response.json().catch(() => ({}));
+  throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+}
+
+// Legacy authenticatedFetch helper - kept for compatibility with existing code
+async function legacyAuthenticatedFetchHelper(
   url: string,
   options: any = {},
   retryCount: number = 0,
@@ -395,7 +611,8 @@ async function authenticatedFetch(
       }
 
       try {
-        const newTokens = await refreshAccessToken(tokens.refreshToken);
+        // CRIT-001 FIX: Use thread-safe token refresh
+        const newTokens = await safeRefreshToken(tokens.refreshToken);
 
         if (!newTokens?.access_token) {
           throw new Error("Invalid token response");
@@ -786,6 +1003,28 @@ const userAPI = {
     return await authenticatedFetch(`${API_CONFIG.baseURL}/user/account`, {
       method: "DELETE",
     });
+  },
+
+  // HIGH-022 FIX: Add missing updateProfile method
+  /**
+   * Update user profile
+   * @param {Object} profileData - Profile data to update
+   * @returns {Promise<Object>} Updated profile
+   */
+  async updateProfile(profileData: ProfileUpdateData): Promise<any> {
+    return await authenticatedFetch(`${API_CONFIG.baseURL}/user/profile`, {
+      method: "PUT",
+      body: JSON.stringify(profileData),
+    });
+  },
+
+  // HIGH-022 FIX: Add missing getStats method
+  /**
+   * Get user statistics
+   * @returns {Promise<Object>} User stats
+   */
+  async getStats(): Promise<any> {
+    return await authenticatedFetch(`${API_CONFIG.baseURL}/user/stats`);
   },
 };
 

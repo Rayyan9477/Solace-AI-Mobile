@@ -691,42 +691,56 @@ class OfflineManager {
 
   /**
    * Sync all offline data with server
+   * HIGH-012 FIX: Implement batched sync to prevent memory exhaustion
    */
   async syncOfflineData(): Promise<
     { successful: number; failed: number } | undefined
   > {
     if (!this.isOnline) return;
 
-    const syncPromises = [];
+    // HIGH-012 FIX: Batch size limit to prevent memory exhaustion
+    const BATCH_SIZE = 10;
+    let totalSuccessful = 0;
+    let totalFailed = 0;
 
-    // Sync each data type
+    // Sync each data type with batching
     for (const [dataType, items] of Object.entries(this.offlineData)) {
       if (Array.isArray(items)) {
         const unsyncedItems = items.filter((item) => !item.synced);
 
         if (unsyncedItems.length > 0) {
-          syncPromises.push(this.syncDataType(dataType, unsyncedItems));
+          // HIGH-012 FIX: Process in batches to prevent memory exhaustion
+          for (let i = 0; i < unsyncedItems.length; i += BATCH_SIZE) {
+            const batch = unsyncedItems.slice(i, i + BATCH_SIZE);
+            const batchPromises = batch.map((item) =>
+              this.syncDataType(dataType, [item])
+            );
+
+            const results = await Promise.allSettled(batchPromises);
+
+            totalSuccessful += results.filter(
+              (result) => result.status === "fulfilled"
+            ).length;
+            totalFailed += results.filter(
+              (result) => result.status === "rejected"
+            ).length;
+
+            // HIGH-012 FIX: Allow event loop to breathe between batches
+            if (i + BATCH_SIZE < unsyncedItems.length) {
+              await new Promise((resolve) => setTimeout(resolve, 50));
+            }
+          }
         }
       }
     }
 
-    const results = await Promise.allSettled(syncPromises);
-
-    // Process results
-    const successful = results.filter(
-      (result) => result.status === "fulfilled",
-    ).length;
-    const failed = results.filter(
-      (result) => result.status === "rejected",
-    ).length;
-
     if (__DEV__) {
       logger.debug(
-        `Data sync completed: ${successful} successful, ${failed} failed`,
+        `Data sync completed: ${totalSuccessful} successful, ${totalFailed} failed`,
       );
     }
 
-    return { successful, failed };
+    return { successful: totalSuccessful, failed: totalFailed };
   }
 
   /**

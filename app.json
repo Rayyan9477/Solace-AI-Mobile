@@ -8,7 +8,11 @@
     "userInterfaceStyle": "automatic",
     "primaryColor": "#A67C52",
     "description": "Your Mental Wellness Companion - AI-powered mental health support",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#A67C52"
@@ -17,14 +21,7 @@
       "**/*"
     ],
     "plugins": [
-      "expo-font",
-      "expo-apple-authentication",
-      [
-        "expo-auth-session",
-        {
-          "scheme": "freudai"
-        }
-      ]
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": false
@@ -47,7 +44,10 @@
         "NSCameraUsageDescription": "This app may use camera for profile pictures and document scanning.",
         "CFBundleURLTypes": [
           {
-            "CFBundleURLSchemes": ["freudai", "fb$(FACEBOOK_APP_ID)"]
+            "CFBundleURLSchemes": [
+              "freudai",
+              "fb$(FACEBOOK_APP_ID)"
+            ]
           }
         ]
       }
@@ -76,7 +76,10 @@
               "pathPrefix": "/callback"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },

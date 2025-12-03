@@ -70,7 +70,8 @@
       "Bash(timeout 120 npm test:*)",
       "Bash(timeout 90 npm test:*)",
       "Bash(timeout 20 npm test:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(touch:*)"
     ],
     "deny": [],
     "ask": []

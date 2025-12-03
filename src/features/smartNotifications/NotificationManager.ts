@@ -932,7 +932,17 @@ class SmartNotificationManager {
       const existingLogs = await AsyncStorage.getItem(
         "notification_interactions",
       );
-      const logs = existingLogs ? JSON.parse(existingLogs) : [];
+      // HIGH-009 FIX: Wrap JSON.parse in explicit try-catch with fallback
+      let logs: any[] = [];
+      if (existingLogs) {
+        try {
+          logs = JSON.parse(existingLogs);
+          if (!Array.isArray(logs)) logs = [];
+        } catch (parseError) {
+          logger.warn("Failed to parse notification_interactions, using empty array:", parseError);
+          logs = [];
+        }
+      }
 
       logs.push(interaction);
 
@@ -956,7 +966,17 @@ class SmartNotificationManager {
       const interactions = await AsyncStorage.getItem(
         "notification_interactions",
       );
-      const notificationLogs = interactions ? JSON.parse(interactions) : [];
+      // HIGH-009 FIX: Wrap JSON.parse in explicit try-catch with fallback
+      let notificationLogs: any[] = [];
+      if (interactions) {
+        try {
+          notificationLogs = JSON.parse(interactions);
+          if (!Array.isArray(notificationLogs)) notificationLogs = [];
+        } catch (parseError) {
+          logger.warn("Failed to parse notification_interactions for analytics:", parseError);
+          notificationLogs = [];
+        }
+      }
 
       const last30Days = new Date();
       last30Days.setDate(last30Days.getDate() - 30);

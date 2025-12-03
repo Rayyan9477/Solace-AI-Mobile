@@ -20,45 +20,113 @@ import encryptionTransform from "./transforms/encryptionTransform";
 // TypeScript type declarations
 declare const __DEV__: boolean;
 
-// Initialize encryption service on app startup
+// CRIT-002 FIX: Promise-based encryption initialization to prevent race conditions
 let encryptionInitialized = false;
-(async () => {
-  try {
-    await encryptionService.initialize();
-    encryptionInitialized = true;
-    logger.info("Encryption service initialized successfully");
-  } catch (error) {
-    logger.error("Encryption service initialization failed:", error);
-    logger.warn("App will continue without encryption");
+let encryptionInitPromise: Promise<boolean> | null = null;
+
+/**
+ * Initialize encryption service with proper async handling
+ * Returns a promise that resolves when encryption is ready
+ * Multiple calls will return the same promise (idempotent)
+ */
+export async function initializeEncryption(): Promise<boolean> {
+  // If already initialized, return immediately
+  if (encryptionInitialized) {
+    return true;
   }
-})();
+
+  // If initialization is in progress, wait for it
+  if (encryptionInitPromise) {
+    return encryptionInitPromise;
+  }
+
+  // Start initialization
+  encryptionInitPromise = (async () => {
+    try {
+      await encryptionService.initialize();
+      encryptionInitialized = true;
+      logger.info("Encryption service initialized successfully");
+      return true;
+    } catch (error) {
+      logger.error("Encryption service initialization failed:", error);
+      logger.warn("App will continue without encryption - HIPAA compliance at risk");
+      encryptionInitialized = false;
+      return false;
+    }
+  })();
+
+  return encryptionInitPromise;
+}
+
+/**
+ * Wait for encryption to be ready before performing sensitive operations
+ * Use this before any HIPAA-sensitive data operations
+ */
+export async function ensureEncryptionReady(): Promise<boolean> {
+  if (encryptionInitialized) return true;
+  return initializeEncryption();
+}
+
+// Start initialization immediately but don't block
+initializeEncryption();
 
 export { encryptionInitialized };
 
 const SESSION_TIMEOUT = 3600 * 1000;
 const INACTIVITY_TIMEOUT = 15 * 60 * 1000;
 
+// HIGH-005 FIX: Track if we're currently handling session timeout to prevent infinite loops
+let isHandlingSessionTimeout = false;
+
+// HIGH-005 FIX: Actions that should bypass timeout checks
+const BYPASS_TIMEOUT_ACTIONS = [
+  'auth/secureLogout',
+  'auth/logout',
+  'auth/clearAuth',
+  'persist/PERSIST',
+  'persist/REHYDRATE',
+  'persist/REGISTER',
+  'persist/PURGE',
+];
+
 const sessionTimeoutMiddleware: Middleware =
   (store) => (next) => (action: unknown) => {
+    const actionType = (action as any)?.type || '';
+
+    // HIGH-005 FIX: Skip timeout checks for auth/persist actions and when already handling timeout
+    if (
+      isHandlingSessionTimeout ||
+      BYPASS_TIMEOUT_ACTIONS.some(type => actionType.startsWith(type))
+    ) {
+      return next(action);
+    }
+
     // Check timeout BEFORE processing action
     const state = store.getState() as any;
-    const { sessionExpiry, lastActivity, isAuthenticated } = state.auth;
+    const { sessionExpiry, lastActivity, isAuthenticated } = state.auth || {};
 
-    if (
-      isAuthenticated &&
-      (action as any).type !== "auth/secureLogout/pending"
-    ) {
+    if (isAuthenticated) {
       const now = Date.now();
 
-      // Session expiry check - block action if expired
+      // Session expiry check - trigger logout if expired
       if (sessionExpiry && now > sessionExpiry) {
-        store.dispatch({ type: "auth/secureLogout/pending" });
+        isHandlingSessionTimeout = true;
+        try {
+          store.dispatch({ type: "auth/sessionExpired" });
+        } finally {
+          isHandlingSessionTimeout = false;
+        }
         return; // Don't process the action
       }
 
-      // Inactivity timeout check - block action if inactive too long
+      // Inactivity timeout check - trigger logout if inactive too long
       if (lastActivity && now - lastActivity > INACTIVITY_TIMEOUT) {
-        store.dispatch({ type: "auth/secureLogout/pending" });
+        isHandlingSessionTimeout = true;
+        try {
+          store.dispatch({ type: "auth/inactivityTimeout" });
+        } finally {
+          isHandlingSessionTimeout = false;
+        }
         return; // Don't process the action
       }
     }
@@ -66,14 +134,16 @@ const sessionTimeoutMiddleware: Middleware =
     // Process action after timeout checks pass
     const result = next(action);
 
-    // Update last activity timestamp for relevant actions
+    // Update last activity timestamp for relevant user actions (after action processed)
+    // HIGH-005 FIX: Check isAuthenticated from fresh state after action
+    const newState = store.getState() as any;
     if (
-      isAuthenticated &&
-      (action as any).type &&
-      ((action as any).type.startsWith("mood/") ||
-        (action as any).type.startsWith("chat/") ||
-        (action as any).type.startsWith("user/") ||
-        (action as any).type.startsWith("assessment/"))
+      newState.auth?.isAuthenticated &&
+      actionType &&
+      (actionType.startsWith("mood/") ||
+        actionType.startsWith("chat/") ||
+        actionType.startsWith("user/") ||
+        actionType.startsWith("assessment/"))
     ) {
       store.dispatch({
         type: "auth/updateLastActivity",

@@ -66,7 +66,14 @@ interface TherapySession {
 
 // ==================== HELPER FUNCTIONS ====================
 
-async function authenticatedFetch(url: string, options: any = {}): Promise<any> {
+// HIGH-004 FIX: Default timeout for API calls (30 seconds)
+const DEFAULT_API_TIMEOUT = 30000;
+
+async function authenticatedFetch(
+  url: string,
+  options: any = {},
+  timeout: number = DEFAULT_API_TIMEOUT
+): Promise<any> {
   const tokens = await tokenService.getTokens();
 
   const headers: any = {
@@ -78,17 +85,34 @@ async function authenticatedFetch(url: string, options: any = {}): Promise<any> 
     headers["Authorization"] = `Bearer ${tokens.accessToken}`;
   }
 
-  const response = await fetch(url, {
-    ...options,
-    headers,
-  });
+  // HIGH-004 FIX: Add timeout using AbortController to prevent hanging requests
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers,
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error: any) {
+    clearTimeout(timeoutId);
+
+    if (error.name === 'AbortError') {
+      throw new Error(`Request timeout after ${timeout}ms: ${url}`);
+    }
+
+    throw error;
   }
-
-  return await response.json();
 }
 
 // ==================== MOOD API ====================
