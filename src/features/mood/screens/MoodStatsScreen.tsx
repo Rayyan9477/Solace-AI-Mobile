@@ -163,13 +163,13 @@ const MoodStatsScreen = ({ navigation }) => {
     const todayMood = today ? today.mood : "No mood logged today";
 
     // Find most common mood
-    const moodCounts: Record<string, number> = {};
+    const commonMoodCounts: Record<string, number> = {};
     recentMoods.forEach((entry) => {
-      moodCounts[entry.mood] = (moodCounts[entry.mood] || 0) + 1;
+      commonMoodCounts[entry.mood] = (commonMoodCounts[entry.mood] || 0) + 1;
     });
     const mostCommonMood =
-      Object.keys(moodCounts).length > 0
-        ? Object.entries(moodCounts).reduce((a, b) => (b[1] > a[1] ? b : a))[0]
+      Object.keys(commonMoodCounts).length > 0
+        ? Object.entries(commonMoodCounts).reduce((a, b) => (b[1] > a[1] ? b : a))[0]
         : null;
 
     // Generate insights

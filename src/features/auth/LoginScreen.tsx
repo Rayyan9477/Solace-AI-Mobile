@@ -362,7 +362,7 @@ const LoginScreenComponent = ({ navigation }: any) => {
           });
         }
 
-        // Dispatch auth state
+        // Dispatch auth state - AppNavigator will automatically switch to authenticated stack
         dispatch({
           type: "auth/secureLogin/fulfilled",
           payload: {
@@ -372,7 +372,7 @@ const LoginScreenComponent = ({ navigation }: any) => {
         });
 
         showAlert("Success", `Welcome, ${result.user.name || result.user.email}!`, [{ text: "OK" }]);
-        navigation.reset({ index: 0, routes: [{ name: "Dashboard" }] });
+        // Navigation handled automatically by AppNavigator when auth state changes
       }
     } catch (error: any) {
       showAlert(

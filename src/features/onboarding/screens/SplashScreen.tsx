@@ -21,10 +21,9 @@ import {
   StyleSheet,
   SafeAreaView,
   Animated,
-  ActivityIndicator,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import tokenService from "@app/services/tokenService";
+import { useSelector } from "react-redux";
 
 // Splash screen states
 type SplashState = "loading" | "authenticating" | "syncing" | "ready";
@@ -65,7 +64,11 @@ const STATE_CONFIGS: Record<SplashState, StateConfig> = {
 
 const SplashScreenComponent = () => {
   const { theme } = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
+
+  // Get auth state from Redux (set by AppInitializer via restoreAuthState)
+  const authChecked = useSelector((state: any) => state.auth?.authChecked ?? false);
+  const isAuthenticated = useSelector((state: any) => state.auth?.isAuthenticated ?? false);
 
   // Animation refs
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -75,8 +78,8 @@ const SplashScreenComponent = () => {
   // State
   const [currentState, setCurrentState] = useState<SplashState>("loading");
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [animationComplete, setAnimationComplete] = useState(false);
 
   // Get current state config
   const stateConfig = STATE_CONFIGS[currentState];
@@ -91,7 +94,7 @@ const SplashScreenComponent = () => {
     }).start();
   }, [stateMessageAnim]);
 
-  // State progression logic
+  // State progression logic - visual animation
   useEffect(() => {
     let isMounted = true;
 
@@ -115,15 +118,9 @@ const SplashScreenComponent = () => {
           useNativeDriver: false,
         }).start();
 
-        // State 2: Authenticating
+        // State 2: Authenticating (visual only - actual auth handled by Redux)
         setCurrentState("authenticating");
         animateStateMessage();
-
-        // Check authentication status
-        const tokens = await tokenService.getTokens();
-        const authenticated = !!(tokens?.accessToken);
-        setIsAuthenticated(authenticated);
-        logger.debug("[SplashScreen] Authentication check:", { authenticated });
 
         await new Promise(resolve => setTimeout(resolve, STATE_CONFIGS.authenticating.duration));
         if (!isMounted) return;
@@ -141,7 +138,9 @@ const SplashScreenComponent = () => {
 
         // Check onboarding status
         const onboardingComplete = await AsyncStorage.getItem("@onboarding_complete");
-        setHasCompletedOnboarding(onboardingComplete === "true");
+        if (isMounted) {
+          setHasCompletedOnboarding(onboardingComplete === "true");
+        }
         logger.debug("[SplashScreen] Onboarding status:", { complete: onboardingComplete === "true" });
 
         await new Promise(resolve => setTimeout(resolve, STATE_CONFIGS.syncing.duration));
@@ -168,16 +167,15 @@ const SplashScreenComponent = () => {
         await new Promise(resolve => setTimeout(resolve, STATE_CONFIGS.ready.duration));
         if (!isMounted) return;
 
-        // Navigate based on state
-        navigateToNextScreen(authenticated, onboardingComplete === "true");
+        setAnimationComplete(true);
 
       } catch (err) {
         logger.error("[SplashScreen] Error during initialization:", err);
         setError("Failed to initialize app. Please try again.");
-        // Still navigate after a delay even on error
+        // Still mark animation complete after a delay even on error
         setTimeout(() => {
           if (isMounted) {
-            navigation.replace("Welcome");
+            setAnimationComplete(true);
           }
         }, 2000);
       }
@@ -188,24 +186,32 @@ const SplashScreenComponent = () => {
     return () => {
       isMounted = false;
     };
-  }, [fadeAnim, progressAnim, animateStateMessage, navigation]);
+  }, [fadeAnim, progressAnim, animateStateMessage]);
 
-  // Navigation logic based on auth and onboarding state
-  const navigateToNextScreen = (authenticated: boolean, onboardingComplete: boolean) => {
-    if (!onboardingComplete) {
-      // New user - show onboarding
+  // Navigate when both animation is complete and auth state is checked
+  useEffect(() => {
+    if (!animationComplete || !authChecked) return;
+
+    // If authenticated, AppNavigator will switch to authenticated stack automatically
+    // We just need to handle the unauthenticated cases here
+    if (isAuthenticated) {
+      // User is authenticated - AppNavigator will show MainTabs
+      // No navigation needed as stack will change
+      logger.info("[SplashScreen] User authenticated - AppNavigator will handle navigation");
+      return;
+    }
+
+    // User is not authenticated - navigate within unauthenticated stack
+    if (hasCompletedOnboarding === false || hasCompletedOnboarding === null) {
+      // New user - show welcome/onboarding
       logger.info("[SplashScreen] Navigating to Welcome (new user)");
       navigation.replace("Welcome");
-    } else if (authenticated) {
-      // Returning user with valid session
-      logger.info("[SplashScreen] Navigating to Dashboard (authenticated)");
-      navigation.replace("Dashboard");
     } else {
-      // Returning user but not authenticated
+      // Returning user but not authenticated - show login
       logger.info("[SplashScreen] Navigating to Login (returning user)");
       navigation.replace("Login");
     }
-  };
+  }, [animationComplete, authChecked, isAuthenticated, hasCompletedOnboarding, navigation]);
 
   const styles = StyleSheet.create({
     container: {
