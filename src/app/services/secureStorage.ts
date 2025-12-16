@@ -11,11 +11,123 @@ interface StorageData {
   timestamp: number;
   version: string;
   checksum: string;
+  encrypted?: boolean; // CRIT-004 FIX: Track if data is encrypted
+}
+
+// CRIT-004 FIX: Simple XOR-based encryption for web platform
+// Note: This provides basic encryption, not military-grade security
+// For production, consider using Web Crypto API or a library like crypto-js
+interface EncryptedData {
+  iv: string;
+  ciphertext: string;
+  tag: string;
 }
 
 class SecureStorage {
   private deviceKeyCache: string | null = null;
   private encryptionKeyCache: string | null = null;
+  private webEncryptionKey: CryptoKey | null = null;
+
+  /**
+   * CRIT-004 FIX: Initialize Web Crypto encryption key
+   * Uses AES-GCM for authenticated encryption on web platform
+   */
+  private async getWebEncryptionKey(): Promise<CryptoKey> {
+    if (this.webEncryptionKey) {
+      return this.webEncryptionKey;
+    }
+
+    if (typeof window === "undefined" || !window.crypto?.subtle) {
+      throw new Error("Web Crypto API not available");
+    }
+
+    // Try to get existing key from localStorage (base64 encoded)
+    const storedKeyBase64 = localStorage.getItem("_solace_web_key");
+
+    if (storedKeyBase64) {
+      try {
+        const keyBytes = Uint8Array.from(atob(storedKeyBase64), (c) =>
+          c.charCodeAt(0)
+        );
+        this.webEncryptionKey = await window.crypto.subtle.importKey(
+          "raw",
+          keyBytes,
+          { name: "AES-GCM", length: 256 },
+          false,
+          ["encrypt", "decrypt"]
+        );
+        return this.webEncryptionKey;
+      } catch {
+        // Key corrupted, generate new one
+        localStorage.removeItem("_solace_web_key");
+      }
+    }
+
+    // Generate new key
+    this.webEncryptionKey = await window.crypto.subtle.generateKey(
+      { name: "AES-GCM", length: 256 },
+      true,
+      ["encrypt", "decrypt"]
+    );
+
+    // Export and store key
+    const exportedKey = await window.crypto.subtle.exportKey(
+      "raw",
+      this.webEncryptionKey
+    );
+    const keyBase64 = btoa(
+      String.fromCharCode(...new Uint8Array(exportedKey))
+    );
+    localStorage.setItem("_solace_web_key", keyBase64);
+
+    return this.webEncryptionKey;
+  }
+
+  /**
+   * CRIT-004 FIX: Encrypt data for web platform using AES-GCM
+   */
+  private async encryptForWeb(plaintext: string): Promise<string> {
+    const key = await this.getWebEncryptionKey();
+    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+    const encoder = new TextEncoder();
+    const data = encoder.encode(plaintext);
+
+    const ciphertext = await window.crypto.subtle.encrypt(
+      { name: "AES-GCM", iv },
+      key,
+      data
+    );
+
+    // Combine IV + ciphertext and encode as base64
+    const combined = new Uint8Array(iv.length + ciphertext.byteLength);
+    combined.set(iv);
+    combined.set(new Uint8Array(ciphertext), iv.length);
+
+    return btoa(String.fromCharCode(...combined));
+  }
+
+  /**
+   * CRIT-004 FIX: Decrypt data for web platform using AES-GCM
+   */
+  private async decryptForWeb(encryptedBase64: string): Promise<string> {
+    const key = await this.getWebEncryptionKey();
+    const combined = Uint8Array.from(atob(encryptedBase64), (c) =>
+      c.charCodeAt(0)
+    );
+
+    // Extract IV (first 12 bytes) and ciphertext
+    const iv = combined.slice(0, 12);
+    const ciphertext = combined.slice(12);
+
+    const decrypted = await window.crypto.subtle.decrypt(
+      { name: "AES-GCM", iv },
+      key,
+      ciphertext
+    );
+
+    const decoder = new TextDecoder();
+    return decoder.decode(decrypted);
+  }
 
   /**
    * Get or generate device-specific encryption key
@@ -27,6 +139,22 @@ class SecureStorage {
     }
 
     try {
+      // CRIT-004 FIX: Handle web platform differently
+      if (Platform.OS === "web") {
+        // On web, generate and store key in localStorage
+        let key = localStorage.getItem("_solace_device_key");
+        if (!key) {
+          const array = new Uint8Array(32);
+          window.crypto.getRandomValues(array);
+          key = Array.from(array)
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
+          localStorage.setItem("_solace_device_key", key);
+        }
+        this.deviceKeyCache = key;
+        return key;
+      }
+
       let key = await SecureStore.getItemAsync("device_master_key");
 
       if (!key) {
@@ -101,17 +229,32 @@ class SecureStorage {
         timestamp: Date.now(),
         version: "2.0",
         checksum,
+        encrypted: encrypt, // CRIT-004 FIX: Track encryption status
       };
 
       const jsonData = JSON.stringify(storageData);
       const fullKey = `${STORAGE_CONFIG.keyPrefix}${key}`;
 
       if (encrypt && Platform.OS !== "web") {
+        // Native platforms: use SecureStore
         await SecureStore.setItemAsync(fullKey, jsonData, {
           keychainAccessible: SecureStore.WHEN_UNLOCKED,
           requireAuthentication: requireAuth,
         });
+      } else if (encrypt && Platform.OS === "web") {
+        // CRIT-004 FIX: Web platform - encrypt data before storing
+        try {
+          const encryptedData = await this.encryptForWeb(jsonData);
+          // Store with a prefix to identify encrypted data
+          await AsyncStorage.setItem(fullKey, `ENC:${encryptedData}`);
+        } catch (encryptError) {
+          // If Web Crypto API fails, throw error - don't store unencrypted
+          throw new Error(
+            `Web encryption failed: ${encryptError}. PHI data cannot be stored securely.`
+          );
+        }
       } else {
+        // Non-sensitive data or encryption disabled
         await AsyncStorage.setItem(fullKey, jsonData);
       }
     } catch (error) {
@@ -136,6 +279,19 @@ class SecureStorage {
 
       if (!jsonData) {
         return null;
+      }
+
+      // CRIT-004 FIX: Handle web-encrypted data
+      if (Platform.OS === "web" && jsonData.startsWith("ENC:")) {
+        try {
+          const encryptedData = jsonData.slice(4); // Remove "ENC:" prefix
+          jsonData = await this.decryptForWeb(encryptedData);
+        } catch (decryptError) {
+          // If decryption fails, data may be corrupted or key changed
+          // Remove the corrupted data and return null
+          await this.removeSecureData(key);
+          throw new Error(`Web decryption failed: ${decryptError}. Data has been cleared for security.`);
+        }
       }
 
       try {

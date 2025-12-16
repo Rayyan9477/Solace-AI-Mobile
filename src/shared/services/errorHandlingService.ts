@@ -20,6 +20,13 @@ import { i18n } from '@shared/services/i18nService';
 import { retryService } from '@shared/services/retryService';
 import { hapticService, HapticFeedbackType } from '@shared/services/hapticService';
 
+// HIGH-007 FIX: Declare ErrorUtils type for React Native global error handling
+// ErrorUtils is a global object provided by React Native, not a module export
+declare const ErrorUtils: {
+  getGlobalHandler: () => ((error: Error, isFatal?: boolean) => void) | null;
+  setGlobalHandler: (handler: (error: Error, isFatal?: boolean) => void) => void;
+};
+
 // ============ TYPES ============
 
 export enum ErrorSeverity {

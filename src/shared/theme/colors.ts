@@ -259,4 +259,51 @@ export const therapeuticColors = {
   zen: colors.yellow,
 };
 
+// HIGH-009 FIX: Utility function to apply opacity to hex colors
+// Properly converts hex to rgba format instead of concatenating opacity string
+export const colorWithOpacity = (hexColor: string, opacity: number): string => {
+  // Handle already rgba colors
+  if (hexColor.startsWith("rgba")) {
+    return hexColor;
+  }
+
+  // Handle rgb colors - convert to rgba
+  if (hexColor.startsWith("rgb(")) {
+    const rgbMatch = hexColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+    if (rgbMatch) {
+      return `rgba(${rgbMatch[1]}, ${rgbMatch[2]}, ${rgbMatch[3]}, ${opacity})`;
+    }
+    return hexColor;
+  }
+
+  // Handle hex colors
+  let hex = hexColor.replace("#", "");
+
+  // Handle shorthand hex (#RGB -> #RRGGBB)
+  if (hex.length === 3) {
+    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+  }
+
+  // Handle 8-character hex (already has alpha)
+  if (hex.length === 8) {
+    hex = hex.slice(0, 6);
+  }
+
+  // Validate hex length
+  if (hex.length !== 6) {
+    return hexColor; // Return original if invalid
+  }
+
+  const r = parseInt(hex.slice(0, 2), 16);
+  const g = parseInt(hex.slice(2, 4), 16);
+  const b = parseInt(hex.slice(4, 6), 16);
+
+  // Validate parsed values
+  if (isNaN(r) || isNaN(g) || isNaN(b)) {
+    return hexColor; // Return original if parsing failed
+  }
+
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
+
 export default colors;

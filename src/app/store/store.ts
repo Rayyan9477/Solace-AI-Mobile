@@ -20,38 +20,56 @@ import encryptionTransform from "./transforms/encryptionTransform";
 // TypeScript type declarations
 declare const __DEV__: boolean;
 
-// CRIT-002 FIX: Promise-based encryption initialization to prevent race conditions
+// CRIT-001 FIX: Thread-safe encryption initialization with proper gating
 let encryptionInitialized = false;
 let encryptionInitPromise: Promise<boolean> | null = null;
+let encryptionInitializationFailed = false;
 
 /**
  * Initialize encryption service with proper async handling
  * Returns a promise that resolves when encryption is ready
  * Multiple calls will return the same promise (idempotent)
+ * CRIT-001 FIX: Added mutex pattern to prevent race conditions
  */
 export async function initializeEncryption(): Promise<boolean> {
-  // If already initialized, return immediately
+  // If already initialized successfully, return immediately
   if (encryptionInitialized) {
     return true;
   }
 
-  // If initialization is in progress, wait for it
+  // If initialization failed previously, don't retry automatically
+  // This prevents infinite retry loops
+  if (encryptionInitializationFailed) {
+    logger.warn("Encryption initialization previously failed - manual retry required");
+    return false;
+  }
+
+  // If initialization is in progress, wait for the existing promise
   if (encryptionInitPromise) {
     return encryptionInitPromise;
   }
 
-  // Start initialization
+  // Start initialization with mutex
   encryptionInitPromise = (async () => {
     try {
       await encryptionService.initialize();
       encryptionInitialized = true;
+      encryptionInitializationFailed = false;
       logger.info("Encryption service initialized successfully");
       return true;
     } catch (error) {
       logger.error("Encryption service initialization failed:", error);
-      logger.warn("App will continue without encryption - HIPAA compliance at risk");
       encryptionInitialized = false;
-      return false;
+      encryptionInitializationFailed = true;
+      // CRIT-001 FIX: Throw error instead of silently continuing
+      // This ensures PHI is never stored unencrypted
+      throw new Error(
+        "CRITICAL: Encryption service failed to initialize. " +
+        "PHI data cannot be safely stored. Please restart the app."
+      );
+    } finally {
+      // Clear the promise so retry is possible after failure
+      encryptionInitPromise = null;
     }
   })();
 
@@ -61,14 +79,35 @@ export async function initializeEncryption(): Promise<boolean> {
 /**
  * Wait for encryption to be ready before performing sensitive operations
  * Use this before any HIPAA-sensitive data operations
+ * CRIT-001 FIX: This MUST be called before any persist operations
  */
 export async function ensureEncryptionReady(): Promise<boolean> {
   if (encryptionInitialized) return true;
   return initializeEncryption();
 }
 
-// Start initialization immediately but don't block
-initializeEncryption();
+/**
+ * CRIT-001 FIX: Force retry encryption initialization
+ * Call this after fixing encryption issues
+ */
+export async function retryEncryptionInitialization(): Promise<boolean> {
+  encryptionInitializationFailed = false;
+  encryptionInitPromise = null;
+  return initializeEncryption();
+}
+
+/**
+ * CRIT-001 FIX: Check if encryption is ready without triggering initialization
+ */
+export function isEncryptionReady(): boolean {
+  return encryptionInitialized;
+}
+
+// CRIT-001 FIX: Start initialization but don't block module load
+// The app entry point MUST await ensureEncryptionReady() before rendering
+initializeEncryption().catch((error) => {
+  logger.error("Background encryption init failed:", error);
+});
 
 export { encryptionInitialized };
 
@@ -116,7 +155,10 @@ const sessionTimeoutMiddleware: Middleware =
         } finally {
           isHandlingSessionTimeout = false;
         }
-        return; // Don't process the action
+        // CRIT-003 FIX: Still process the action after dispatching session expired
+        // This prevents user data loss - the action will be processed and the
+        // sessionExpired handler will handle the logout flow
+        return next(action);
       }
 
       // Inactivity timeout check - trigger logout if inactive too long
@@ -127,7 +169,10 @@ const sessionTimeoutMiddleware: Middleware =
         } finally {
           isHandlingSessionTimeout = false;
         }
-        return; // Don't process the action
+        // CRIT-003 FIX: Still process the action after dispatching inactivity timeout
+        // This prevents user data loss - the action will be processed and the
+        // inactivityTimeout handler will handle the logout flow
+        return next(action);
       }
     }
 

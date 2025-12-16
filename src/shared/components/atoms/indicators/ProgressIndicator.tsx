@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from "react";
 import { View, Text, Animated, StyleSheet } from "react-native";
 
-import { useFixedTheme } from "./FixedThemeProvider";
+// HIGH-008 FIX: Import useTheme from correct location (was importing non-existent useFixedTheme)
+import { useTheme } from "@shared/theme/ThemeContext";
 
 const ProgressIndicator = ({
   progress = 0,
@@ -11,7 +12,7 @@ const ProgressIndicator = ({
   barStyle = {},
   ...props
 }) => {
-  const { theme } = useFixedTheme();
+  const { theme } = useTheme();
   const progressAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {

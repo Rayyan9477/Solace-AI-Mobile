@@ -359,6 +359,25 @@ let refreshTokenPromise: Promise<any> | null = null;
 // HIGH-007 FIX: Track in-flight requests to prevent duplicate API calls
 const inFlightRequests = new Map<string, Promise<any>>();
 
+// HIGH-004 FIX: Track reserved request slots to prevent race conditions
+// A reserved slot is set immediately when we decide to make a request,
+// preventing concurrent requests from both proceeding
+interface DeferredPromise<T> {
+  promise: Promise<T>;
+  resolve: (value: T) => void;
+  reject: (error: any) => void;
+}
+
+function createDeferredPromise<T>(): DeferredPromise<T> {
+  let resolve!: (value: T) => void;
+  let reject!: (error: any) => void;
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return { promise, resolve, reject };
+}
+
 /**
  * Generate a unique request key for deduplication
  */
@@ -411,7 +430,8 @@ async function authenticatedFetch(
       return cached;
     }
 
-    // HIGH-007 FIX: Deduplicate concurrent identical GET requests
+    // HIGH-004 FIX: Atomic check-and-reserve to prevent race conditions
+    // We check for in-flight AND reserve the slot in the same operation
     const requestKey = getRequestKey(url, options);
     const inFlight = inFlightRequests.get(requestKey);
 
@@ -419,72 +439,89 @@ async function authenticatedFetch(
       logger.debug(`[API Dedup] Reusing in-flight request: ${url}`);
       return inFlight;
     }
+
+    // HIGH-004 FIX: Immediately reserve the slot with a deferred promise
+    // This prevents concurrent requests from both proceeding past this check
+    const deferred = createDeferredPromise<any>();
+    inFlightRequests.set(requestKey, deferred.promise);
+
+    // Execute request and resolve/reject the deferred promise
+    try {
+      const result = await executeAuthenticatedRequest(url, options, retryCount);
+      deferred.resolve(result);
+      return result;
+    } catch (error) {
+      deferred.reject(error);
+      throw error;
+    } finally {
+      inFlightRequests.delete(requestKey);
+    }
   }
 
-  // For GET requests on first attempt, track the promise for deduplication
-  const shouldTrack = method === "GET" && retryCount === 0;
-  const requestKey = shouldTrack ? getRequestKey(url, options) : "";
+  // For non-GET or retry requests, execute directly without deduplication
+  return executeAuthenticatedRequest(url, options, retryCount);
+}
 
-  const executeRequest = async (): Promise<any> => {
-    const tokens = await tokenService.getTokens();
+/**
+ * HIGH-004 FIX: Extracted request execution logic for deduplication support
+ * This function handles the actual HTTP request with token management and retry logic
+ */
+async function executeAuthenticatedRequest(
+  url: string,
+  options: any,
+  retryCount: number
+): Promise<any> {
+  const method = options.method || "GET";
+  const tokens = await tokenService.getTokens();
 
-    const headers: any = {
-      "Content-Type": "application/json",
-      ...options.headers,
-    };
-
-    if (tokens?.accessToken) {
-      headers["Authorization"] = `Bearer ${tokens.accessToken}`;
-    }
-
-    try {
-      const response = await fetchWithTimeout(url, {
-        ...options,
-        headers,
-      }, API_CONFIG.timeout, retryCount);
-
-      // Handle 401 Unauthorized - attempt token refresh
-      if (response.status === 401 && tokens?.refreshToken) {
-        return handle401Response(url, options, tokens, retryCount);
-      }
-
-      // Handle other error responses with retry logic
-      if (!response.ok) {
-        return handleErrorResponse(response, url, options, retryCount);
-      }
-
-      // Parse successful response
-      const data = await response.json();
-
-      // Cache successful GET responses
-      if (method === "GET") {
-        apiCache.set(url, data, options);
-      }
-
-      return data;
-    } catch (error: any) {
-      // Handle network errors with retry
-      if (retryCount < MAX_RETRY_ATTEMPTS) {
-        const delay = Math.pow(2, retryCount) * 1000;
-        await new Promise(resolve => setTimeout(resolve, delay));
-        return authenticatedFetch(url, options, retryCount + 1);
-      }
-      throw error;
-    }
+  const headers: any = {
+    "Content-Type": "application/json",
+    ...options.headers,
   };
 
-  if (shouldTrack) {
-    const requestPromise = executeRequest();
-    inFlightRequests.set(requestKey, requestPromise);
-    requestPromise.finally(() => inFlightRequests.delete(requestKey));
-    return requestPromise;
+  if (tokens?.accessToken) {
+    headers["Authorization"] = `Bearer ${tokens.accessToken}`;
   }
 
-  return executeRequest();
+  try {
+    const response = await fetchWithTimeout(url, {
+      ...options,
+      headers,
+    }, API_CONFIG.timeout, retryCount);
+
+    // Handle 401 Unauthorized - attempt token refresh
+    if (response.status === 401 && tokens?.refreshToken) {
+      return handle401Response(url, options, tokens, retryCount);
+    }
+
+    // Handle other error responses with retry logic
+    if (!response.ok) {
+      return handleErrorResponse(response, url, options, retryCount);
+    }
+
+    // Parse successful response
+    const data = await response.json();
+
+    // Cache successful GET responses
+    if (method === "GET") {
+      apiCache.set(url, data, options);
+    }
+
+    return data;
+  } catch (error: any) {
+    // Handle network errors with retry
+    if (retryCount < MAX_RETRY_ATTEMPTS) {
+      const delay = Math.pow(2, retryCount) * 1000;
+      await new Promise(resolve => setTimeout(resolve, delay));
+      return authenticatedFetch(url, options, retryCount + 1);
+    }
+    throw error;
+  }
 }
 
 /**
  * Handle 401 response with token refresh
+ * CRIT-002 FIX: Properly retry with new tokens to prevent infinite recursion
  */
 async function handle401Response(
   url: string,
@@ -501,7 +538,14 @@ async function handle401Response(
     now - attemptRecord.firstAttempt < REFRESH_ATTEMPT_WINDOW &&
     attemptRecord.count >= MAX_REFRESH_ATTEMPTS
   ) {
-    throw new Error("Maximum token refresh attempts exceeded");
+    // Clear tokens and throw - don't continue trying
+    await tokenService.clearTokens();
+    tokenRefreshAttempts.delete(attemptKey);
+    throw new AuthAPIError(
+      "Maximum token refresh attempts exceeded. Please log in again.",
+      401,
+      url
+    );
   }
 
   if (attemptRecord) {
@@ -514,7 +558,7 @@ async function handle401Response(
     const newTokens = await safeRefreshToken(tokens.refreshToken);
 
     if (!newTokens?.access_token) {
-      throw new Error("Invalid token response");
+      throw new Error("Invalid token response - missing access_token");
     }
 
     const transformedTokens = {
@@ -524,10 +568,65 @@ async function handle401Response(
     };
 
     await tokenService.storeTokens(transformedTokens);
-    return authenticatedFetch(url, options, retryCount);
-  } catch (refreshError) {
+
+    // Clear successful refresh attempt tracking
+    tokenRefreshAttempts.delete(attemptKey);
+
+    // CRIT-002 FIX: Directly retry the request with the new access token
+    // instead of calling authenticatedFetch which would re-fetch tokens
+    // This prevents potential race conditions and infinite loops
+    const headers = {
+      ...options.headers,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${transformedTokens.accessToken}`,
+    };
+
+    const response = await fetchWithTimeout(url, {
+      ...options,
+      headers,
+    }, API_CONFIG.timeout, retryCount + 1);
+
+    if (!response.ok) {
+      // If still getting 401 after refresh, the new token is also invalid
+      if (response.status === 401) {
+        await tokenService.clearTokens();
+        throw new AuthAPIError(
+          "Session expired. Please log in again.",
+          401,
+          url
+        );
+      }
+
+      const errorData = await response.json().catch(() => ({}));
+      throw new AuthAPIError(
+        errorData.message || `HTTP ${response.status}: ${response.statusText}`,
+        response.status,
+        url
+      );
+    }
+
+    const data = await response.json();
+
+    // Cache successful GET responses
+    if ((options.method || "GET") === "GET") {
+      apiCache.set(url, data, options);
+    }
+
+    return data;
+  } catch (refreshError: any) {
+    // If refresh failed, clear tokens and re-throw with clear message
     await tokenService.clearTokens();
-    throw new Error("Session expired. Please log in again.");
+    tokenRefreshAttempts.delete(attemptKey);
+
+    if (refreshError instanceof AuthAPIError) {
+      throw refreshError;
+    }
+
+    throw new AuthAPIError(
+      "Session expired. Please log in again.",
+      401,
+      url
+    );
   }
 }
 

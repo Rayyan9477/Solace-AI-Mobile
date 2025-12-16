@@ -20,6 +20,7 @@ import {
   AppState,
   View,
   Text,
+  PixelRatio,
 } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { Provider as ReduxProvider } from "react-redux";
@@ -209,9 +210,11 @@ const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     };
 
+    // HIGH-010 FIX: Use PixelRatio.getFontScale() instead of Dimensions
+    // Dimensions.get("window") does not have a fontScale property
     const updateFontScale = () => {
       if (isMounted) {
-        const { fontScale: currentFontScale } = Dimensions.get("window");
+        const currentFontScale = PixelRatio.getFontScale();
         setFontScale(currentFontScale);
       }
     };
@@ -381,32 +384,63 @@ const MentalHealthProvider: React.FC<{ children: React.ReactNode }> = ({
     setCrisisLevel("low");
   }, []);
 
-  const callEmergencyServices = useCallback(() => {
-    const phoneNumber =
-      Platform.OS === "ios"
-        ? `tel:${CRISIS_HOTLINES.emergency}`
-        : `tel:${CRISIS_HOTLINES.emergency}`;
-    Linking.openURL(phoneNumber).catch((error) => {
+  // HIGH-001 FIX: Validate phone link availability before attempting to open
+  // This prevents crashes on devices without phone capability (simulators, tablets)
+  const callEmergencyServices = useCallback(async () => {
+    const phoneNumber = `tel:${CRISIS_HOTLINES.emergency}`;
+
+    try {
+      const canOpen = await Linking.canOpenURL(phoneNumber);
+
+      if (canOpen) {
+        await Linking.openURL(phoneNumber);
+      } else {
+        // Device cannot make phone calls (simulator, tablet, etc.)
+        logger.warn("Device cannot make phone calls - showing manual dial instructions");
+        Alert.alert(
+          "Phone Call Not Available",
+          `This device cannot make phone calls. Please use another device to dial ${CRISIS_HOTLINES.emergency} for emergency services.`,
+          [
+            { text: "OK", style: "default" },
+          ]
+        );
+      }
+    } catch (error) {
       logger.error("Failed to open emergency dialer:", error);
       Alert.alert(
         "Unable to Call",
         `Please dial ${CRISIS_HOTLINES.emergency} directly for emergency services.`,
       );
-    });
+    }
   }, []);
 
-  const contactCrisisHotline = useCallback(() => {
-    const phoneNumber =
-      Platform.OS === "ios"
-        ? `tel:${CRISIS_HOTLINES.US.suicide}`
-        : `tel:${CRISIS_HOTLINES.US.suicide}`;
-    Linking.openURL(phoneNumber).catch((error) => {
+  // HIGH-001 FIX: Validate phone link availability before attempting to open
+  const contactCrisisHotline = useCallback(async () => {
+    const phoneNumber = `tel:${CRISIS_HOTLINES.US.suicide}`;
+
+    try {
+      const canOpen = await Linking.canOpenURL(phoneNumber);
+
+      if (canOpen) {
+        await Linking.openURL(phoneNumber);
+      } else {
+        // Device cannot make phone calls - offer text alternative
+        logger.warn("Device cannot make phone calls - offering alternatives");
+        Alert.alert(
+          "Phone Call Not Available",
+          `This device cannot make phone calls. You can:\n\n• Text HOME to ${CRISIS_HOTLINES.US.text}\n• Call ${CRISIS_HOTLINES.US.suicide} from another device\n• Visit 988lifeline.org for chat support`,
+          [
+            { text: "OK", style: "default" },
+          ]
+        );
+      }
+    } catch (error) {
       logger.error("Failed to open crisis hotline dialer:", error);
       Alert.alert(
         "Unable to Call",
         `Please dial ${CRISIS_HOTLINES.US.suicide} directly for the ${CRISIS_HOTLINES.US.name}.`,
       );
-    });
+    }
   }, []);
 
   const updateSafetyPlan = useCallback(async (planData: any) => {

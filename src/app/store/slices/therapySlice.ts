@@ -305,11 +305,30 @@ const therapySlice = createSlice({
       if (state.currentSession.isActive) {
         state.currentSession.isActive = false;
         state.currentSession.endTime = endTime || new Date().toISOString();
+
+        // HIGH-005 FIX: Validate dates before calculating duration to prevent NaN
+        // new Date("") creates Invalid Date, and getTime() returns NaN
         const endTimeDate = new Date(state.currentSession.endTime);
-        const startTimeDate = new Date(state.currentSession.startTime || "");
-        state.currentSession.duration = Math.floor(
-          (endTimeDate.getTime() - startTimeDate.getTime()) / 1000,
-        );
+        const startTimeStr = state.currentSession.startTime;
+
+        // Only calculate duration if we have a valid startTime
+        if (startTimeStr && startTimeStr.length > 0) {
+          const startTimeDate = new Date(startTimeStr);
+
+          // Verify both dates are valid before calculating
+          if (!isNaN(endTimeDate.getTime()) && !isNaN(startTimeDate.getTime())) {
+            state.currentSession.duration = Math.floor(
+              (endTimeDate.getTime() - startTimeDate.getTime()) / 1000,
+            );
+          } else {
+            // HIGH-005 FIX: Default to 0 instead of NaN if dates are invalid
+            state.currentSession.duration = 0;
+          }
+        } else {
+          // No startTime available - default to 0
+          state.currentSession.duration = 0;
+        }
+
         if (mood) state.currentSession.mood = mood;
         if (notes) state.currentSession.notes = notes;
       }

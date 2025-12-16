@@ -21,6 +21,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '@theme/ThemeProvider';
+import { colorWithOpacity } from '@shared/theme/colors';
 import { haptic } from '@shared/services/hapticService';
 
 // ============ TYPES ============
@@ -386,7 +387,8 @@ export const ChatMessageSkeleton: React.FC<{ isUser?: boolean }> = ({ isUser = f
         style={[
           styles.messageContent,
           { backgroundColor: theme.colors.background.secondary },
-          isUser && { backgroundColor: theme.colors.primary + '20' },
+          // HIGH-009 FIX: Use colorWithOpacity instead of invalid string concatenation
+          isUser && { backgroundColor: colorWithOpacity(theme.colors.primary, 0.125) },
         ]}
       >
         <Skeleton width="80%" height={16} style={{ marginBottom: 8 }} />

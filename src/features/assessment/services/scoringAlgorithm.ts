@@ -2,13 +2,25 @@
  * Mental Health Assessment Scoring Algorithm
  * Evidence-based scoring system for comprehensive mental health evaluation
  *
- * This algorithm calculates scores across four key dimensions:
- * - Anxiety (0-100)
- * - Depression (0-100)
- * - Stress (0-100)
- * - Sleep Quality (0-100)
+ * CRIT-005 FIX: Updated to align with clinical PHQ-9 and GAD-7 standards
  *
- * Overall score is a weighted average of these dimensions
+ * This algorithm supports:
+ * - PHQ-9 (Patient Health Questionnaire-9): Depression screening (0-27 scale)
+ * - GAD-7 (Generalized Anxiety Disorder-7): Anxiety screening (0-21 scale)
+ * - Custom wellness assessment with four key dimensions
+ *
+ * Clinical Severity Thresholds (PHQ-9):
+ * - 0-4: Minimal/None
+ * - 5-9: Mild
+ * - 10-14: Moderate
+ * - 15-19: Moderately Severe
+ * - 20-27: Severe
+ *
+ * Clinical Severity Thresholds (GAD-7):
+ * - 0-4: Minimal
+ * - 5-9: Mild
+ * - 10-14: Moderate
+ * - 15-21: Severe
  */
 
 export type AssessmentAnswer = string | string[] | number | boolean | undefined;
@@ -17,9 +29,34 @@ export interface AssessmentAnswers {
   [questionId: number]: AssessmentAnswer;
 }
 
+// CRIT-005 FIX: Added clinical severity levels including 'moderately-severe'
+export type ClinicalSeverity = 'minimal' | 'mild' | 'moderate' | 'moderately-severe' | 'severe';
+export type WellnessSeverity = 'excellent' | 'good' | 'fair' | 'needs-attention';
+
 export interface CategoryScore {
-  score: number; // 0-100
-  severity: 'excellent' | 'good' | 'fair' | 'needs-attention';
+  score: number; // 0-100 for wellness, raw score for clinical
+  severity: WellnessSeverity;
+  color: string;
+}
+
+// CRIT-005 FIX: PHQ-9 Clinical Score Interface
+export interface PHQ9Result {
+  totalScore: number; // 0-27
+  severity: ClinicalSeverity;
+  severityLabel: string;
+  requiresFollowUp: boolean;
+  suicidalIdeation: boolean; // Question 9 positive
+  recommendations: string[];
+  color: string;
+}
+
+// CRIT-005 FIX: GAD-7 Clinical Score Interface
+export interface GAD7Result {
+  totalScore: number; // 0-21
+  severity: ClinicalSeverity;
+  severityLabel: string;
+  requiresFollowUp: boolean;
+  recommendations: string[];
   color: string;
 }
 
@@ -414,4 +451,381 @@ export const getCategoryDescription = (score: number): string => {
   if (score >= 70) return 'Mentally stable with room for growth';
   if (score >= 50) return 'Some areas need attention';
   return 'Consider seeking support';
+};
+
+// ============================================================================
+// CRIT-005 FIX: PHQ-9 Clinical Depression Screening
+// ============================================================================
+
+/**
+ * PHQ-9 Question Response Values
+ * Each question is scored 0-3:
+ * 0 = Not at all
+ * 1 = Several days
+ * 2 = More than half the days
+ * 3 = Nearly every day
+ */
+export interface PHQ9Answers {
+  q1_interest: number;      // Little interest or pleasure in doing things
+  q2_depressed: number;     // Feeling down, depressed, or hopeless
+  q3_sleep: number;         // Trouble falling/staying asleep or sleeping too much
+  q4_energy: number;        // Feeling tired or having little energy
+  q5_appetite: number;      // Poor appetite or overeating
+  q6_failure: number;       // Feeling bad about yourself/feeling like a failure
+  q7_concentration: number; // Trouble concentrating on things
+  q8_movement: number;      // Moving/speaking slowly or being fidgety/restless
+  q9_selfharm: number;      // Thoughts of being better off dead or hurting yourself
+}
+
+/**
+ * Calculate PHQ-9 Depression Score
+ * Based on Kroenke K, Spitzer RL, Williams JB. The PHQ-9: validity of a brief
+ * depression severity measure. J Gen Intern Med. 2001;16(9):606-613.
+ *
+ * CRIT-005 FIX: Uses clinically validated thresholds
+ */
+export const calculatePHQ9Score = (answers: PHQ9Answers): PHQ9Result => {
+  // Calculate total score (0-27)
+  const totalScore =
+    answers.q1_interest +
+    answers.q2_depressed +
+    answers.q3_sleep +
+    answers.q4_energy +
+    answers.q5_appetite +
+    answers.q6_failure +
+    answers.q7_concentration +
+    answers.q8_movement +
+    answers.q9_selfharm;
+
+  // CRIT-005 FIX: Clinical severity thresholds per PHQ-9 validation study
+  let severity: ClinicalSeverity;
+  let severityLabel: string;
+  let color: string;
+  let requiresFollowUp = false;
+
+  if (totalScore <= 4) {
+    severity = 'minimal';
+    severityLabel = 'Minimal or None';
+    color = '#4CAF50'; // Green
+  } else if (totalScore <= 9) {
+    severity = 'mild';
+    severityLabel = 'Mild Depression';
+    color = '#8BC34A'; // Light green
+  } else if (totalScore <= 14) {
+    severity = 'moderate';
+    severityLabel = 'Moderate Depression';
+    color = '#FFC107'; // Amber
+    requiresFollowUp = true;
+  } else if (totalScore <= 19) {
+    // CRIT-005 FIX: Added missing 'Moderately Severe' category
+    severity = 'moderately-severe';
+    severityLabel = 'Moderately Severe Depression';
+    color = '#FF9800'; // Orange
+    requiresFollowUp = true;
+  } else {
+    severity = 'severe';
+    severityLabel = 'Severe Depression';
+    color = '#F44336'; // Red
+    requiresFollowUp = true;
+  }
+
+  // CRIT-005 FIX: Flag suicidal ideation for immediate attention
+  const suicidalIdeation = answers.q9_selfharm > 0;
+  if (suicidalIdeation) {
+    requiresFollowUp = true;
+  }
+
+  // Generate clinical recommendations based on PHQ-9 treatment guidelines
+  const recommendations = generatePHQ9Recommendations(totalScore, severity, suicidalIdeation);
+
+  return {
+    totalScore,
+    severity,
+    severityLabel,
+    requiresFollowUp,
+    suicidalIdeation,
+    recommendations,
+    color,
+  };
+};
+
+/**
+ * Generate PHQ-9 recommendations based on clinical guidelines
+ */
+const generatePHQ9Recommendations = (
+  score: number,
+  severity: ClinicalSeverity,
+  suicidalIdeation: boolean
+): string[] => {
+  const recommendations: string[] = [];
+
+  // CRITICAL: Suicidal ideation requires immediate intervention
+  if (suicidalIdeation) {
+    recommendations.push(
+      'URGENT: You indicated thoughts of self-harm. Please contact a mental health professional or crisis line immediately.'
+    );
+    recommendations.push(
+      'National Suicide Prevention Lifeline: 988 (US) or contact your local emergency services.'
+    );
+  }
+
+  // Severity-based recommendations per PHQ-9 treatment guidelines
+  switch (severity) {
+    case 'minimal':
+      recommendations.push('Continue monitoring your mental health with periodic self-assessments.');
+      recommendations.push('Maintain healthy lifestyle habits including regular exercise and sleep.');
+      break;
+
+    case 'mild':
+      recommendations.push('Consider watchful waiting with reassessment in 2-4 weeks.');
+      recommendations.push('Lifestyle modifications such as exercise, sleep hygiene, and stress management may help.');
+      recommendations.push('If symptoms persist, consult with a healthcare provider about treatment options.');
+      break;
+
+    case 'moderate':
+      recommendations.push('Treatment is recommended. Consult with a mental health professional.');
+      recommendations.push('Evidence-based treatments include cognitive behavioral therapy (CBT) or antidepressant medication.');
+      recommendations.push('Regular follow-up assessments are important to monitor progress.');
+      break;
+
+    case 'moderately-severe':
+      recommendations.push('Active treatment with pharmacotherapy and/or psychotherapy is strongly recommended.');
+      recommendations.push('Please schedule an appointment with a mental health professional as soon as possible.');
+      recommendations.push('Treatment should include regular monitoring and follow-up within 2-4 weeks.');
+      break;
+
+    case 'severe':
+      recommendations.push('Immediate treatment initiation is recommended. Please seek professional help today.');
+      recommendations.push('Combination treatment (medication plus psychotherapy) is often most effective for severe depression.');
+      recommendations.push('If you cannot access care today, please call a crisis helpline or go to your nearest emergency room.');
+      break;
+  }
+
+  return recommendations;
+};
+
+// ============================================================================
+// CRIT-005 FIX: GAD-7 Clinical Anxiety Screening
+// ============================================================================
+
+/**
+ * GAD-7 Question Response Values
+ * Each question is scored 0-3:
+ * 0 = Not at all
+ * 1 = Several days
+ * 2 = More than half the days
+ * 3 = Nearly every day
+ */
+export interface GAD7Answers {
+  q1_nervous: number;     // Feeling nervous, anxious, or on edge
+  q2_worry: number;       // Not being able to stop or control worrying
+  q3_toomuch: number;     // Worrying too much about different things
+  q4_relax: number;       // Trouble relaxing
+  q5_restless: number;    // Being so restless it's hard to sit still
+  q6_annoyed: number;     // Becoming easily annoyed or irritable
+  q7_afraid: number;      // Feeling afraid as if something awful might happen
+}
+
+/**
+ * Calculate GAD-7 Anxiety Score
+ * Based on Spitzer RL, Kroenke K, Williams JBW, Löwe B. A Brief Measure for
+ * Assessing Generalized Anxiety Disorder. Arch Intern Med. 2006;166(10):1092-1097.
+ *
+ * CRIT-005 FIX: Uses clinically validated thresholds
+ */
+export const calculateGAD7Score = (answers: GAD7Answers): GAD7Result => {
+  // Calculate total score (0-21)
+  const totalScore =
+    answers.q1_nervous +
+    answers.q2_worry +
+    answers.q3_toomuch +
+    answers.q4_relax +
+    answers.q5_restless +
+    answers.q6_annoyed +
+    answers.q7_afraid;
+
+  // CRIT-005 FIX: Clinical severity thresholds per GAD-7 validation study
+  let severity: ClinicalSeverity;
+  let severityLabel: string;
+  let color: string;
+  let requiresFollowUp = false;
+
+  if (totalScore <= 4) {
+    severity = 'minimal';
+    severityLabel = 'Minimal Anxiety';
+    color = '#4CAF50'; // Green
+  } else if (totalScore <= 9) {
+    severity = 'mild';
+    severityLabel = 'Mild Anxiety';
+    color = '#8BC34A'; // Light green
+  } else if (totalScore <= 14) {
+    severity = 'moderate';
+    severityLabel = 'Moderate Anxiety';
+    color = '#FFC107'; // Amber
+    requiresFollowUp = true;
+  } else {
+    severity = 'severe';
+    severityLabel = 'Severe Anxiety';
+    color = '#F44336'; // Red
+    requiresFollowUp = true;
+  }
+
+  // Generate clinical recommendations based on GAD-7 treatment guidelines
+  const recommendations = generateGAD7Recommendations(totalScore, severity);
+
+  return {
+    totalScore,
+    severity,
+    severityLabel,
+    requiresFollowUp,
+    recommendations,
+    color,
+  };
+};
+
+/**
+ * Generate GAD-7 recommendations based on clinical guidelines
+ */
+const generateGAD7Recommendations = (
+  score: number,
+  severity: ClinicalSeverity
+): string[] => {
+  const recommendations: string[] = [];
+
+  // Severity-based recommendations per GAD-7 treatment guidelines
+  switch (severity) {
+    case 'minimal':
+      recommendations.push('Your anxiety levels are within normal range. Continue healthy coping practices.');
+      recommendations.push('Regular mindfulness or relaxation exercises can help maintain low anxiety levels.');
+      break;
+
+    case 'mild':
+      recommendations.push('Monitor your symptoms and consider self-management strategies.');
+      recommendations.push('Techniques like deep breathing, progressive muscle relaxation, and regular exercise may help.');
+      recommendations.push('If symptoms worsen or persist, consult with a healthcare provider.');
+      break;
+
+    case 'moderate':
+      recommendations.push('Professional evaluation is recommended. Consult with a mental health provider.');
+      recommendations.push('Evidence-based treatments include cognitive behavioral therapy (CBT) and/or medication.');
+      recommendations.push('Self-management strategies should complement professional treatment.');
+      break;
+
+    case 'severe':
+      recommendations.push('Active treatment is strongly recommended. Please seek professional help soon.');
+      recommendations.push('Severe anxiety significantly impacts daily functioning and quality of life.');
+      recommendations.push('Both psychotherapy (especially CBT) and pharmacotherapy are effective treatment options.');
+      recommendations.push('If anxiety is causing panic attacks or severe distress, contact a crisis helpline or healthcare provider immediately.');
+      break;
+
+    default:
+      recommendations.push('Please consult with a healthcare provider for proper evaluation.');
+  }
+
+  return recommendations;
+};
+
+// ============================================================================
+// CRIT-005 FIX: Combined Clinical Assessment
+// ============================================================================
+
+export interface ClinicalAssessmentResult {
+  phq9?: PHQ9Result;
+  gad7?: GAD7Result;
+  overallRiskLevel: 'low' | 'moderate' | 'high' | 'critical';
+  requiresImmediateAttention: boolean;
+  combinedRecommendations: string[];
+}
+
+/**
+ * Calculate combined clinical assessment from PHQ-9 and GAD-7
+ * CRIT-005 FIX: Provides comprehensive clinical picture with proper risk stratification
+ */
+export const calculateClinicalAssessment = (
+  phq9Answers?: PHQ9Answers,
+  gad7Answers?: GAD7Answers
+): ClinicalAssessmentResult => {
+  const phq9 = phq9Answers ? calculatePHQ9Score(phq9Answers) : undefined;
+  const gad7 = gad7Answers ? calculateGAD7Score(gad7Answers) : undefined;
+
+  // Determine overall risk level
+  let overallRiskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
+  let requiresImmediateAttention = false;
+
+  // Check for suicidal ideation first (critical)
+  if (phq9?.suicidalIdeation) {
+    overallRiskLevel = 'critical';
+    requiresImmediateAttention = true;
+  }
+  // Check for severe symptoms
+  else if (phq9?.severity === 'severe' || gad7?.severity === 'severe') {
+    overallRiskLevel = 'high';
+  }
+  // Check for moderately-severe or moderate symptoms
+  else if (
+    phq9?.severity === 'moderately-severe' ||
+    phq9?.severity === 'moderate' ||
+    gad7?.severity === 'moderate'
+  ) {
+    overallRiskLevel = 'moderate';
+  }
+
+  // Combine recommendations, prioritizing urgent ones
+  const combinedRecommendations: string[] = [];
+
+  if (phq9?.suicidalIdeation) {
+    combinedRecommendations.push(
+      'IMMEDIATE ACTION REQUIRED: Please contact a crisis helpline (988 in US) or go to your nearest emergency room.'
+    );
+  }
+
+  // Add PHQ-9 recommendations
+  if (phq9?.recommendations) {
+    combinedRecommendations.push(...phq9.recommendations.filter(r => !r.includes('URGENT')));
+  }
+
+  // Add GAD-7 recommendations (avoid duplicates)
+  if (gad7?.recommendations) {
+    gad7.recommendations.forEach(rec => {
+      if (!combinedRecommendations.some(existing => existing.includes(rec.substring(0, 30)))) {
+        combinedRecommendations.push(rec);
+      }
+    });
+  }
+
+  return {
+    phq9,
+    gad7,
+    overallRiskLevel,
+    requiresImmediateAttention,
+    combinedRecommendations: combinedRecommendations.slice(0, 8), // Limit to top recommendations
+  };
+};
+
+/**
+ * CRIT-005 FIX: Get clinical severity label for display
+ */
+export const getClinicalSeverityLabel = (severity: ClinicalSeverity): string => {
+  const labels: Record<ClinicalSeverity, string> = {
+    'minimal': 'Minimal',
+    'mild': 'Mild',
+    'moderate': 'Moderate',
+    'moderately-severe': 'Moderately Severe',
+    'severe': 'Severe',
+  };
+  return labels[severity] || 'Unknown';
+};
+
+/**
+ * CRIT-005 FIX: Get clinical color for severity visualization
+ */
+export const getClinicalSeverityColor = (severity: ClinicalSeverity): string => {
+  const colors: Record<ClinicalSeverity, string> = {
+    'minimal': '#4CAF50',       // Green
+    'mild': '#8BC34A',          // Light green
+    'moderate': '#FFC107',      // Amber
+    'moderately-severe': '#FF9800', // Orange
+    'severe': '#F44336',        // Red
+  };
+  return colors[severity] || '#9E9E9E';
 };

@@ -117,6 +117,7 @@ import { useTheme } from "@theme/ThemeProvider";
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useSelector as useReduxSelector } from "react-redux";
+import { logger } from "@shared/utils/logger";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -289,7 +290,10 @@ const AppNavigator = (_props: any) => {
     if (selector) {
       isAuthenticated = selector((state: any) => state.auth?.isAuthenticated);
     }
-  } catch {
+  } catch (error) {
+    // MED-001 FIX: Log error instead of silently swallowing
+    // This helps debug Redux store issues while maintaining graceful degradation
+    logger.warn("[AppNavigator] Failed to read auth state from Redux store:", error);
     isAuthenticated = false;
   }
 

@@ -18,27 +18,47 @@ class TokenService {
 
   /**
    * Store authentication tokens securely
-   * Default expiration is 15 minutes for health data security
+   * HIGH-006 FIX: Accepts both camelCase and snake_case parameters for flexibility
+   * Uses API-provided expiration when available, with sensible fallback
    */
-  async storeTokens({
-    accessToken,
-    refreshToken,
-    expiresAt,
-  }: {
-    accessToken: string;
-    refreshToken: string;
+  async storeTokens(params: {
+    // CamelCase format (preferred)
+    accessToken?: string;
+    refreshToken?: string;
     expiresAt?: number;
+    // Snake_case format (API response format) - HIGH-006/CRIT-006 FIX
+    access_token?: string;
+    refresh_token?: string;
+    expires_in?: number;
   }) {
+    // HIGH-006 FIX: Support both camelCase and snake_case property names
+    const accessToken = params.accessToken || params.access_token;
+    const refreshToken = params.refreshToken || params.refresh_token;
+
     if (!accessToken || !refreshToken) {
       throw new Error("Access token and refresh token are required");
+    }
+
+    // HIGH-006 FIX: Calculate expiration from multiple sources
+    // Priority: expiresAt > expires_in > default
+    let expiresAt: number;
+    if (params.expiresAt) {
+      // Explicit expiresAt timestamp provided
+      expiresAt = params.expiresAt;
+    } else if (params.expires_in) {
+      // API-provided expires_in (in seconds) - convert to timestamp
+      // Add 60-second buffer before expiration to allow for proactive refresh
+      expiresAt = Date.now() + (params.expires_in - 60) * 1000;
+    } else {
+      // Default: 55 minutes (typical OAuth2 tokens are 1 hour)
+      // This avoids unnecessary refreshes while still being conservative
+      expiresAt = Date.now() + 55 * 60 * 1000;
     }
 
     const tokenData = {
       accessToken,
       refreshToken,
-      // Reduced to 15 minutes (900 seconds) for health data security
-      // Previous default was 1 hour (3600 seconds)
-      expiresAt: expiresAt || Date.now() + 900 * 1000, // Default 15 minutes
+      expiresAt,
       storedAt: Date.now(),
     };
 
