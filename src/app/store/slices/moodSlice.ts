@@ -15,6 +15,9 @@ interface MoodEntry {
   activities?: string[];
   timestamp: string | number;
   createdAt?: string;
+  // MED-006 FIX: Add timezone metadata for accurate date/time interpretation
+  timezone?: string;           // IANA timezone string (e.g., "America/New_York")
+  timezoneOffset?: number;     // UTC offset in minutes (e.g., -300 for EST)
 }
 
 interface WeeklyStats {
@@ -142,14 +145,19 @@ const apiService = {
         logger.debug("Logging mood to local storage:", data);
       }
 
+      // MED-006 FIX: Include timezone metadata for accurate date/time analytics
+      const now = new Date();
       const moodEntry: MoodEntry = {
         id: data.id || Date.now().toString(),
         mood: data.mood || "",
         intensity: data.intensity || 3,
-        timestamp: data.timestamp || new Date().toISOString(),
+        timestamp: data.timestamp || now.toISOString(),
         notes: data.notes,
         activities: data.activities,
-        createdAt: new Date().toISOString(),
+        createdAt: now.toISOString(),
+        // MED-006 FIX: Store timezone info for cross-timezone accuracy
+        timezone: data.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+        timezoneOffset: data.timezoneOffset ?? now.getTimezoneOffset(),
       };
 
       // Save to local storage
@@ -319,11 +327,26 @@ const moodSlice = createSlice({
       .addCase(logMood.fulfilled, (state, action) => {
         state.loading = false;
         if (action.payload) {
-          const existingIndex = state.moodHistory.findIndex(
-            (entry) => entry.timestamp === action.payload.timestamp,
-          );
+          // MED-003 FIX: Improved duplicate detection
+          // Check by ID first (most reliable), then by timestamp + mood combination
+          const existingIndex = state.moodHistory.findIndex((entry) => {
+            // If both have IDs, compare IDs (most reliable)
+            if (entry.id && action.payload.id) {
+              return entry.id === action.payload.id;
+            }
+            // If no IDs, check timestamp + mood + intensity combination
+            // This prevents collision from same-millisecond entries
+            return (
+              entry.timestamp === action.payload.timestamp &&
+              entry.mood === action.payload.mood &&
+              entry.intensity === action.payload.intensity
+            );
+          });
           if (existingIndex === -1) {
             state.moodHistory.unshift(action.payload);
+          } else {
+            // MED-003 FIX: Update existing entry instead of silently ignoring
+            state.moodHistory[existingIndex] = action.payload;
           }
           state.currentMood = action.payload.mood;
           state.weeklyStats = calculateWeeklyStats(state.moodHistory);

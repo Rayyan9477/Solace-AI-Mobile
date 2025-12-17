@@ -12,13 +12,49 @@ interface CacheEntry {
 class APICache {
   private cache: Map<string, CacheEntry> = new Map();
   private readonly defaultTTL: number = 5 * 60 * 1000; // 5 minutes
+  // MED-008 FIX: Add maximum cache size to prevent memory issues
+  private readonly maxCacheSize: number = 100;
+
+  /**
+   * MED-007 FIX: Sort query parameters for consistent cache key generation
+   * URLs like ?b=2&a=1 and ?a=1&b=2 should produce the same cache key
+   */
+  private normalizeUrl(url: string): string {
+    if (!url.includes("?")) {
+      return url;
+    }
+
+    const [baseUrl, queryString] = url.split("?");
+    if (!queryString) {
+      return baseUrl;
+    }
+
+    // Parse and sort query params
+    const params = new URLSearchParams(queryString);
+    const sortedParams = new URLSearchParams();
+
+    // Sort parameter names alphabetically
+    const paramNames = Array.from(params.keys()).sort();
+    for (const name of paramNames) {
+      const values = params.getAll(name).sort();
+      for (const value of values) {
+        sortedParams.append(name, value);
+      }
+    }
+
+    const sortedQueryString = sortedParams.toString();
+    return sortedQueryString ? `${baseUrl}?${sortedQueryString}` : baseUrl;
+  }
 
   /**
    * Generate cache key from URL and options
    * HIGH-006 FIX: Use hash-based key generation to prevent collisions
+   * MED-007 FIX: Normalize URL with sorted query params
    */
   private getCacheKey(url: string, options?: any): string {
     const method = options?.method || "GET";
+    // MED-007 FIX: Normalize URL to sort query params
+    const normalizedUrl = this.normalizeUrl(url);
 
     // HIGH-006 FIX: Normalize body to string safely
     let bodyKey = "";
@@ -37,12 +73,11 @@ class APICache {
       }
     }
 
-    // HIGH-006 FIX: Include query params and headers that affect response
-    const queryParams = url.includes("?") ? url.split("?")[1] : "";
+    // HIGH-006 FIX: Include headers that affect response
     const acceptHeader = options?.headers?.Accept || "";
 
     // Create a deterministic key
-    return `${method}:${url}:${bodyKey}:${acceptHeader}`;
+    return `${method}:${normalizedUrl}:${bodyKey}:${acceptHeader}`;
   }
 
   /**
@@ -82,6 +117,7 @@ class APICache {
 
   /**
    * Set cache entry
+   * MED-008 FIX: Enforce cache size limit with LRU eviction
    */
   set(url: string, data: any, options?: any, ttl?: number): void {
     const rawKey = this.getCacheKey(url, options);
@@ -89,11 +125,33 @@ class APICache {
     const now = Date.now();
     const cacheTTL = ttl || this.defaultTTL;
 
+    // MED-008 FIX: Evict oldest entries if cache is at capacity
+    if (this.cache.size >= this.maxCacheSize && !this.cache.has(key)) {
+      this.evictOldestEntries(1);
+    }
+
     this.cache.set(key, {
       data,
       timestamp: now,
       expiresAt: now + cacheTTL,
     });
+  }
+
+  /**
+   * MED-008 FIX: Evict oldest entries by timestamp (LRU-like eviction)
+   */
+  private evictOldestEntries(count: number): void {
+    if (count <= 0) return;
+
+    // Find entries sorted by timestamp (oldest first)
+    const entries = Array.from(this.cache.entries())
+      .map(([key, entry]) => ({ key, timestamp: entry.timestamp }))
+      .sort((a, b) => a.timestamp - b.timestamp);
+
+    // Remove the oldest entries
+    for (let i = 0; i < Math.min(count, entries.length); i++) {
+      this.cache.delete(entries[i].key);
+    }
   }
 
   /**

@@ -136,17 +136,30 @@ function DefaultErrorFallback({ error, errorInfo, componentName, onReset }: Fall
         {'\n'}Don't worry, your data is safe.
       </Text>
 
-      <TouchableOpacity style={styles.button} onPress={onReset} activeOpacity={0.7}>
+      {/* LOW-001 FIX: Add accessibility props for screen reader support */}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={onReset}
+        activeOpacity={0.7}
+        accessibilityRole="button"
+        accessibilityLabel="Try again"
+        accessibilityHint="Attempts to reload the component that crashed"
+      >
         <MaterialCommunityIcons name="refresh" size={20} color="#FFFFFF" />
         <Text style={styles.buttonText}>Try Again</Text>
       </TouchableOpacity>
 
       {__DEV__ && (
         <>
+          {/* LOW-001 FIX: Add accessibility props for screen reader support */}
           <TouchableOpacity
             style={styles.detailsButton}
             onPress={() => setShowDetails(!showDetails)}
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel={`${showDetails ? 'Hide' : 'Show'} technical details`}
+            accessibilityHint="Toggles visibility of error stack trace"
+            accessibilityState={{ expanded: showDetails }}
           >
             <Text style={styles.detailsButtonText}>
               {showDetails ? 'Hide' : 'Show'} Technical Details
@@ -331,7 +344,14 @@ export function ScreenErrorBoundary({
             <Text style={styles.message}>
               Something unexpected happened. Please try refreshing.
             </Text>
-            <TouchableOpacity style={styles.button} onPress={reset}>
+            {/* LOW-001 FIX: Add accessibility props for screen reader support */}
+            <TouchableOpacity
+              style={styles.button}
+              onPress={reset}
+              accessibilityRole="button"
+              accessibilityLabel="Refresh"
+              accessibilityHint={`Attempts to reload ${screenName}`}
+            >
               <MaterialCommunityIcons name="refresh" size={20} color="#FFFFFF" />
               <Text style={styles.buttonText}>Refresh</Text>
             </TouchableOpacity>

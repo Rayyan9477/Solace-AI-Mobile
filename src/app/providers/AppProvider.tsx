@@ -517,13 +517,35 @@ const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({
   const [backgroundTasksActive, setBackgroundTasksActive] = useState(false);
 
   useEffect(() => {
+    // MED-009 FIX: Use actual performance API instead of random simulation
+    // Random values were triggering false low-memory warnings 20% of the time
     const checkMemoryUsage = () => {
-      const simulatedMemoryUsage = Math.random() * 100;
-      setMemoryUsage(simulatedMemoryUsage);
+      let memoryPercent = 0;
 
-      if (simulatedMemoryUsage > 80 && !isLowMemoryMode) {
-        logger.warn("⚠️ PerformanceProvider: High memory usage detected");
+      // Try to get actual memory info from performance API (web)
+      if (typeof performance !== "undefined" && (performance as any).memory) {
+        const memoryInfo = (performance as any).memory;
+        if (memoryInfo.usedJSHeapSize && memoryInfo.jsHeapSizeLimit) {
+          memoryPercent = (memoryInfo.usedJSHeapSize / memoryInfo.jsHeapSizeLimit) * 100;
+        }
+      }
+      // For React Native, use a conservative estimate based on app state
+      // Actual memory monitoring would require native modules
+      else if (Platform.OS !== "web") {
+        // Default to moderate usage - actual monitoring needs native implementation
+        // This prevents false positives while still allowing manual triggers
+        memoryPercent = isLowMemoryMode ? 75 : 40;
+      }
+
+      setMemoryUsage(memoryPercent);
+
+      // Only trigger low memory mode if we have actual high usage data
+      if (memoryPercent > 80 && !isLowMemoryMode) {
+        logger.warn("⚠️ PerformanceProvider: High memory usage detected:", memoryPercent.toFixed(1) + "%");
         enableLowMemoryMode();
+      } else if (memoryPercent < 60 && isLowMemoryMode) {
+        // MED-009 FIX: Auto-recover from low memory mode when usage drops
+        disableLowMemoryMode();
       }
     };
 

@@ -65,6 +65,9 @@ export const Card: React.FC<CardProps> = ({
   );
 };
 
+// LOW-006 FIX: Add displayName for debugging and dev tools
+Card.displayName = "Card";
+
 const styles = StyleSheet.create({
   base: {
     borderRadius: borderRadius.md,

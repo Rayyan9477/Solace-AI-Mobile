@@ -23,6 +23,16 @@ class Logger {
   private config: LoggerConfig;
   private readonly MAX_LOG_LENGTH = 10000; // Maximum characters per log entry
 
+  // MED-012 FIX: Minimum length thresholds for patterns
+  // Short strings below these lengths cannot possibly match sensitive patterns
+  private readonly MIN_SENSITIVE_LENGTH = 7; // Shortest pattern match: "1.1.1.1" (IP)
+  private readonly MIN_BEARER_LENGTH = 20; // Shortest Bearer token pattern
+
+  // MED-012 FIX: Quick pre-check regex to avoid running all patterns on clean strings
+  // This single regex checks for common indicators of sensitive data
+  private readonly quickCheckPattern =
+    /Bearer|token|api[_-]?key|secret|password|@|\d{3}[-.\s]?\d{3}/i;
+
   // Patterns for sensitive data that should be redacted
   private sensitivePatterns: RegExp[] = [
     // JWT tokens and Bearer tokens
@@ -91,6 +101,17 @@ class Logger {
     if (typeof data === "string") {
       // First prevent log injection attacks
       let sanitized = this.preventLogInjection(data);
+
+      // MED-012 FIX: Early bailout for short strings that can't contain sensitive data
+      if (sanitized.length < this.MIN_SENSITIVE_LENGTH) {
+        return sanitized;
+      }
+
+      // MED-012 FIX: Quick pre-check to avoid running all patterns on clean strings
+      // If the quick check doesn't find any sensitive indicators, skip full pattern matching
+      if (!this.quickCheckPattern.test(sanitized)) {
+        return sanitized;
+      }
 
       // Then redact sensitive data
       this.sensitivePatterns.forEach((pattern) => {

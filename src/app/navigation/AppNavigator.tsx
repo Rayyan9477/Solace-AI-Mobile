@@ -248,11 +248,13 @@ const MainTabs = () => {
           component={MindfulHoursScreen}
           options={{
             tabBarLabel: isJest ? "Mindfulness Tab" : "Mindfulness",
+            // MED-004 FIX: Use lotus icons which have proper outline variant for focus state
+            // "meditation" icon doesn't have an outline variant
             tabBarIcon: ({ color, size, focused }) => (
-              <MaterialCommunityIcons 
-                name={focused ? "meditation" : "meditation"} 
-                size={size} 
-                color={color} 
+              <MaterialCommunityIcons
+                name={focused ? "lotus" : "lotus-outline"}
+                size={size}
+                color={color}
               />
             ),
             tabBarAccessibilityLabel: "Navigate to Mindfulness - Practice meditation and breathing exercises",
@@ -649,6 +651,149 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+// MED-002 FIX: Deep linking configuration for React Navigation
+// Enables navigation via URLs like solace://mood/check-in or https://solace.app/mood/check-in
+export const linkingConfig = {
+  prefixes: [
+    "solace://",
+    "https://solace.app",
+    "https://app.solace.ai",
+  ],
+  config: {
+    screens: {
+      // Auth screens (unauthenticated)
+      Splash: "splash",
+      Welcome: "welcome",
+      Login: "login",
+      Signup: "signup",
+      ForgotPassword: "forgot-password",
+      SocialLogin: "social-login",
+
+      // Main tabs (authenticated)
+      MainTabs: {
+        screens: {
+          Home: "home",
+          Mood: "mood",
+          Mindfulness: "mindfulness",
+          Journal: "journal",
+          Profile: "profile",
+        },
+      },
+
+      // Dashboard & Insights
+      Dashboard: "dashboard",
+      FreudScore: "freud-score",
+      AISuggestions: "ai-suggestions",
+
+      // Mood tracking
+      MoodSelection: "mood/select",
+      MoodStats: "mood/stats",
+      MoodCalendar: "mood/calendar",
+      MoodHistory: "mood/history",
+      MoodAnalytics: "mood/analytics",
+      ActivityTracking: "mood/activities",
+      EnhancedMoodTracker: "mood/check-in",
+
+      // Journal
+      JournalList: "journal",
+      JournalDetail: "journal/:id",
+      JournalCreate: "journal/create",
+      JournalCalendar: "journal/calendar",
+      JournalSearch: "journal/search",
+      JournalExport: "journal/export",
+
+      // Mindfulness
+      MindfulHours: "mindfulness/hours",
+      BreathingExercise: "mindfulness/breathing",
+      MindfulResources: "mindfulness/resources",
+      GuidedSessions: "mindfulness/guided",
+      SessionHistory: "mindfulness/history",
+      AchievementBadges: "mindfulness/achievements",
+      CourseDetail: "mindfulness/course/:courseId",
+      CourseLesson: "mindfulness/course/:courseId/lesson/:lessonId",
+      ArticleDetail: "mindfulness/article/:articleId",
+
+      // Therapy
+      TherapySession: "therapy/session",
+      TherapyHistory: "therapy/history",
+      TherapyExercises: "therapy/exercises",
+      TherapyInsights: "therapy/insights",
+      TherapyPreferences: "therapy/preferences",
+      TherapySessionDetail: "therapy/session/:sessionId",
+      ExerciseDetail: "therapy/exercise/:exerciseId",
+
+      // Wellness
+      SleepQuality: "wellness/sleep",
+      SleepPatterns: "wellness/sleep/patterns",
+      SleepGoals: "wellness/sleep/goals",
+      SleepTips: "wellness/sleep/tips",
+      BedtimeReminders: "wellness/sleep/reminders",
+      StressLevel: "wellness/stress",
+      StressStats: "wellness/stress/stats",
+      StressAssessment: "wellness/stress/assessment",
+      QuickStressRelief: "wellness/stress/relief",
+      RelaxationTechniques: "wellness/relaxation",
+
+      // Assessment
+      Assessment: "assessment/:type",
+      AssessmentHistory: "assessment/history",
+      AssessmentResults: "assessment/results/:id",
+
+      // Community
+      Community: "community",
+      CreatePost: "community/create",
+      PostDetail: "community/post/:postId",
+      SupportGroups: "community/groups",
+      DiscussionThreads: "community/discussions",
+      SuccessStories: "community/stories",
+      CommunityNotifications: "community/notifications",
+
+      // Chat
+      Chat: "chat",
+      ChatConversationsList: "chat/conversations",
+      NewConversation: "chat/new",
+
+      // Crisis Support (high priority deep link)
+      CrisisSupport: "crisis",
+
+      // Profile & Settings
+      ProfileSettings: "profile/settings",
+      AccountSettings: "settings/account",
+      NotificationSettings: "settings/notifications",
+      SecuritySettings: "settings/security",
+      PrivacySettings: "settings/privacy",
+      LanguageSettings: "settings/language",
+      ThemeSettings: "settings/theme",
+      HelpCenter: "help",
+      ContactSupport: "support",
+      About: "about",
+
+      // Search
+      Search: "search",
+      SearchFilters: "search/filters",
+
+      // Smart Notifications
+      SmartNotifications: "notifications",
+      NotificationHistory: "notifications/history",
+
+      // Error screens (for testing/debugging)
+      NetworkError: "error/network",
+      ServerError: "error/server",
+      OfflineMode: "offline",
+    },
+  },
+};
+
+// MED-002 FIX: Helper to generate deep link URLs
+export const createDeepLink = (path: string): string => {
+  return `solace://${path}`;
+};
+
+// MED-002 FIX: Helper to generate web URLs
+export const createWebLink = (path: string): string => {
+  return `https://solace.app/${path}`;
+};
 
 export { PlaceholderScreen, MainTabs };
 export default AppNavigator;

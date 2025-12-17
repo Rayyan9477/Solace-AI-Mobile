@@ -7,3 +7,6 @@
 
 export * from "./useOptimizedSelectors";
 export * from "./useResponsive";
+// MED-014 FIX: Add missing hook exports
+export * from "./useI18n";
+export * from "./useSocialAuth";

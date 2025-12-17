@@ -3,14 +3,33 @@
  * Simple tab bar for navigation
  */
 
-import PropTypes from "prop-types";
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-const BottomTabBar = ({ state, navigation }) => {
+// LOW-002 FIX: Replace PropTypes with TypeScript interfaces
+interface TabRoute {
+  key: string;
+  name: string;
+}
+
+interface TabState {
+  index: number;
+  routes: TabRoute[];
+}
+
+interface NavigationProp {
+  navigate: (name: string) => void;
+}
+
+interface BottomTabBarProps {
+  state: TabState;
+  navigation: NavigationProp;
+}
+
+const BottomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
   const { index, routes } = state;
 
-  const handleTabPress = (route) => {
+  const handleTabPress = (route: TabRoute) => {
     navigation.navigate(route.name);
   };
 
@@ -25,6 +44,8 @@ const BottomTabBar = ({ state, navigation }) => {
           accessibilityRole="tab"
           accessibilityState={{ selected: index === routeIndex }}
           accessibilityLabel={`${route.name} tab`}
+          // LOW-003 FIX: Add accessibilityHint for better screen reader support
+          accessibilityHint={`Double tap to navigate to ${route.name}`}
         >
           <Text
             style={[
@@ -40,20 +61,8 @@ const BottomTabBar = ({ state, navigation }) => {
   );
 };
 
-BottomTabBar.propTypes = {
-  state: PropTypes.shape({
-    index: PropTypes.number.isRequired,
-    routes: PropTypes.arrayOf(
-      PropTypes.shape({
-        key: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-      }),
-    ).isRequired,
-  }).isRequired,
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
-};
+// LOW-002 FIX: Add displayName for debugging
+BottomTabBar.displayName = "BottomTabBar";
 
 const styles = StyleSheet.create({
   container: {

@@ -95,9 +95,17 @@ interface TherapyState {
   preferencesLoading: boolean;
 }
 
+// MED-005 FIX: Updated return type to include trimming metadata
+interface SaveSessionResult {
+  sessionData: SessionData;
+  sessionSummary: SessionSummary;
+  historyTrimmed: boolean;
+  trimmedSessionCount: number;
+}
+
 // Async thunks for therapy session management
 export const saveTherapySession = createAsyncThunk<
-  { sessionData: SessionData; sessionSummary: SessionSummary },
+  SaveSessionResult,
   SessionData,
   { rejectValue: string }
 >(
@@ -126,11 +134,29 @@ export const saveTherapySession = createAsyncThunk<
       };
 
       history.unshift(sessionSummary);
-      // Keep only last 50 sessions
-      const trimmedHistory = history.slice(0, 50);
+
+      // MED-005 FIX: Log warning when trimming history and track trimmed count
+      const MAX_HISTORY_SIZE = 50;
+      let trimmedCount = 0;
+
+      if (history.length > MAX_HISTORY_SIZE) {
+        trimmedCount = history.length - MAX_HISTORY_SIZE;
+        logger.warn(
+          `[TherapySlice] Trimming therapy history from ${history.length} to ${MAX_HISTORY_SIZE} sessions. ` +
+          `${trimmedCount} oldest session(s) will be removed from history (session data files are preserved).`
+        );
+      }
+
+      const trimmedHistory = history.slice(0, MAX_HISTORY_SIZE);
       await AsyncStorage.setItem(historyKey, JSON.stringify(trimmedHistory));
 
-      return { sessionData, sessionSummary };
+      // MED-005 FIX: Return metadata about trimming for UI awareness
+      return {
+        sessionData,
+        sessionSummary,
+        historyTrimmed: trimmedCount > 0,
+        trimmedSessionCount: trimmedCount,
+      };
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Failed to save session";

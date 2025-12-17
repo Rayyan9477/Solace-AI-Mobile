@@ -8,12 +8,26 @@ import { logger } from "@shared/utils/logger";
 import secureStorage from "./secureStorage";
 import { STORAGE_CONFIG } from "../../shared/config/environment";
 
+// MED-010 FIX: Type for refresh token callback to avoid circular imports
+type RefreshTokenCallback = (refreshToken: string) => Promise<any>;
+
 class TokenService {
   private storage: typeof secureStorage;
   private refreshPromise: Promise<any> | null = null;
+  // MED-010 FIX: Callback registration pattern instead of dynamic import
+  private refreshTokenCallback: RefreshTokenCallback | null = null;
 
   constructor() {
     this.storage = secureStorage;
+  }
+
+  /**
+   * MED-010 FIX: Register the refresh token callback from the API service
+   * This avoids circular imports by late-binding the dependency
+   * Call this from api.ts during initialization
+   */
+  registerRefreshCallback(callback: RefreshTokenCallback): void {
+    this.refreshTokenCallback = callback;
   }
 
   /**
@@ -222,9 +236,14 @@ class TokenService {
           return null;
         }
 
-        const apiService = await import("./api");
-        const response =
-          await apiService.default.auth.refreshToken(refreshToken);
+        // MED-010 FIX: Use registered callback instead of dynamic import
+        // This avoids circular dependencies between tokenService and api
+        if (!this.refreshTokenCallback) {
+          logger.error("Token refresh callback not registered. Call tokenService.registerRefreshCallback() from api.ts");
+          return null;
+        }
+
+        const response = await this.refreshTokenCallback(refreshToken);
 
         // Extract tokens from response data (handle multiple response formats)
         const tokenData = (response as any)?.data || response;

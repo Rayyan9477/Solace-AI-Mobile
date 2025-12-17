@@ -238,8 +238,19 @@ const FloatingActionButton = ({
   );
 };
 
+// LOW-004 & LOW-005 FIX: Add TypeScript types for FAB variant props
+interface FABVariantProps {
+  onPress?: () => void;
+  position?: "bottomRight" | "bottomLeft" | "bottomCenter";
+  size?: number;
+  disabled?: boolean;
+  showPulse?: boolean;
+  testID?: string;
+  style?: object;
+}
+
 // Specialized FAB variants for common mental health actions
-export const TherapyFAB = (props) => (
+export const TherapyFAB: React.FC<FABVariantProps> = (props) => (
   <FloatingActionButton
     icon="Therapy"
     label="Dr. Freud"
@@ -249,8 +260,9 @@ export const TherapyFAB = (props) => (
     {...props}
   />
 );
+TherapyFAB.displayName = "TherapyFAB";
 
-export const MoodTrackerFAB = (props) => (
+export const MoodTrackerFAB: React.FC<FABVariantProps> = (props) => (
   <FloatingActionButton
     icon="Heart"
     label="Mood"
@@ -260,8 +272,9 @@ export const MoodTrackerFAB = (props) => (
     {...props}
   />
 );
+MoodTrackerFAB.displayName = "MoodTrackerFAB";
 
-export const MeditationFAB = (props) => (
+export const MeditationFAB: React.FC<FABVariantProps> = (props) => (
   <FloatingActionButton
     icon="Mindfulness"
     label="Breathe"
@@ -271,8 +284,9 @@ export const MeditationFAB = (props) => (
     {...props}
   />
 );
+MeditationFAB.displayName = "MeditationFAB";
 
-export const JournalFAB = (props) => (
+export const JournalFAB: React.FC<FABVariantProps> = (props) => (
   <FloatingActionButton
     icon="Journal"
     label="Journal"
@@ -282,6 +296,7 @@ export const JournalFAB = (props) => (
     {...props}
   />
 );
+JournalFAB.displayName = "JournalFAB";
 
 const styles = StyleSheet.create({
   button: {

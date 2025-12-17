@@ -511,7 +511,12 @@ async function executeAuthenticatedRequest(
   } catch (error: any) {
     // Handle network errors with retry
     if (retryCount < MAX_RETRY_ATTEMPTS) {
-      const delay = Math.pow(2, retryCount) * 1000;
+      // MED-013 FIX: Use consistent exponential backoff with jitter
+      const delay = getExponentialBackoffDelay(retryCount);
+      logger.warn(`[API Retry] Network error, attempt ${retryCount + 1}/${MAX_RETRY_ATTEMPTS} after ${delay}ms`, {
+        url,
+        error: error.message,
+      });
       await new Promise(resolve => setTimeout(resolve, delay));
       return authenticatedFetch(url, options, retryCount + 1);
     }
@@ -642,7 +647,12 @@ async function handleErrorResponse(
   const isRetryable = response.status >= 500 || response.status === 429;
 
   if (isRetryable && retryCount < MAX_RETRY_ATTEMPTS) {
-    const delay = Math.pow(2, retryCount) * 1000;
+    // MED-013 FIX: Use consistent exponential backoff with jitter
+    const delay = getExponentialBackoffDelay(retryCount);
+    logger.warn(`[API Retry] HTTP ${response.status}, attempt ${retryCount + 1}/${MAX_RETRY_ATTEMPTS} after ${delay}ms`, {
+      url,
+      status: response.status,
+    });
     await new Promise(resolve => setTimeout(resolve, delay));
     return authenticatedFetch(url, options, retryCount + 1);
   }
@@ -1131,6 +1141,12 @@ const apiService = {
   auth: authAPI,
   user: userAPI,
 };
+
+// MED-010 FIX: Register the refresh token callback with tokenService
+// This avoids circular imports by late-binding the dependency
+tokenService.registerRefreshCallback(async (refreshToken: string) => {
+  return authAPI.refreshToken(refreshToken);
+});
 
 // Export interceptors for custom middleware
 export { interceptors };

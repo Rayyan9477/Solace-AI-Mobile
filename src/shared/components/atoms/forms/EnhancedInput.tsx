@@ -26,6 +26,8 @@ import {
   Platform,
 } from "react-native";
 
+// MED-015 FIX: Import MaterialCommunityIcons for accessible password visibility icons
+import { MaterialCommunityIcons } from "../../../expo/vector-icons";
 import { useTheme } from "../../../theme/ThemeContext";
 import {
   TouchTargetHelpers,
@@ -506,11 +508,15 @@ const EnhancedInput = forwardRef(
               }
             >
               {secureTextEntry ? (
-                <Text
-                  style={{ fontSize: 20, color: theme.colors.primary["500"] }}
-                >
-                  {isSecureVisible ? "👁️" : "👁️‍🗨️"}
-                </Text>
+                // MED-015 FIX: Use MaterialCommunityIcons instead of emojis for accessibility
+                // Emojis may not be properly announced by screen readers
+                <MaterialCommunityIcons
+                  name={isSecureVisible ? "eye" : "eye-off"}
+                  size={22}
+                  color={theme.colors.primary["500"]}
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no-hide-descendants"
+                />
               ) : (
                 rightIcon
               )}

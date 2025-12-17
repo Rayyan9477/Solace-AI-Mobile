@@ -205,6 +205,14 @@ class SecureStorage {
     );
   }
 
+  // MED-011 FIX: Calculate checksum directly from a string for consistency
+  async calculateChecksumFromString(str: string): Promise<string> {
+    return await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256,
+      str,
+    );
+  }
+
   async storeSecureData(
     key: string,
     data: any,
@@ -221,7 +229,11 @@ class SecureStorage {
         requireAuth = false,
       } = options;
 
-      const checksum = await this.calculateChecksum(data);
+      // MED-011 FIX: Calculate checksum on JSON-serialized data for consistency
+      // This ensures the checksum matches exactly what will be stored and retrieved
+      // Previously, differences in JSON serialization (key ordering, etc.) could cause mismatches
+      const serializedData = JSON.stringify(data);
+      const checksum = await this.calculateChecksumFromString(serializedData);
 
       const storageData: StorageData = {
         data,
@@ -308,9 +320,9 @@ class SecureStorage {
           "data" in parsedData
         ) {
           if (parsedData.version === "2.0" && parsedData.checksum) {
-            const expectedChecksum = await this.calculateChecksum(
-              parsedData.data,
-            );
+            // MED-011 FIX: Use same serialization approach for consistency
+            const serializedData = JSON.stringify(parsedData.data);
+            const expectedChecksum = await this.calculateChecksumFromString(serializedData);
             if (parsedData.checksum !== expectedChecksum) {
               await this.removeSecureData(key);
               throw new Error("Data integrity check failed");
