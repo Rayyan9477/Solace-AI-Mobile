@@ -103,6 +103,9 @@ export const Button: React.FC<ButtonProps> = ({
   );
 };
 
+// LOW-007 FIX: Add displayName for debugging and React DevTools
+Button.displayName = "Button";
+
 const styles = StyleSheet.create({
   // Base styles
   base: {

@@ -50,6 +50,9 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   );
 };
 
+// LOW-008 FIX: Add displayName for debugging and React DevTools
+EmptyState.displayName = "EmptyState";
+
 /**
  * Predefined empty states for common scenarios
  */
@@ -64,6 +67,7 @@ export const EmptyJournal: React.FC<{ action?: React.ReactNode }> = ({ action })
     action={action}
   />
 );
+EmptyJournal.displayName = "EmptyJournal";
 
 // No mood entries
 export const EmptyMood: React.FC<{ action?: React.ReactNode }> = ({ action }) => (
@@ -75,6 +79,7 @@ export const EmptyMood: React.FC<{ action?: React.ReactNode }> = ({ action }) =>
     action={action}
   />
 );
+EmptyMood.displayName = "EmptyMood";
 
 // No chat conversations
 export const EmptyChat: React.FC<{ action?: React.ReactNode }> = ({ action }) => (
@@ -86,6 +91,7 @@ export const EmptyChat: React.FC<{ action?: React.ReactNode }> = ({ action }) =>
     action={action}
   />
 );
+EmptyChat.displayName = "EmptyChat";
 
 // No mindfulness sessions
 export const EmptyMindfulness: React.FC<{ action?: React.ReactNode }> = ({ action }) => (
@@ -97,6 +103,7 @@ export const EmptyMindfulness: React.FC<{ action?: React.ReactNode }> = ({ actio
     action={action}
   />
 );
+EmptyMindfulness.displayName = "EmptyMindfulness";
 
 // No community posts
 export const EmptyCommunity: React.FC<{ action?: React.ReactNode }> = ({ action }) => (
@@ -108,6 +115,7 @@ export const EmptyCommunity: React.FC<{ action?: React.ReactNode }> = ({ action 
     action={action}
   />
 );
+EmptyCommunity.displayName = "EmptyCommunity";
 
 // No search results
 export const EmptySearch: React.FC<{ action?: React.ReactNode }> = ({ action }) => (
@@ -119,6 +127,7 @@ export const EmptySearch: React.FC<{ action?: React.ReactNode }> = ({ action }) 
     action={action}
   />
 );
+EmptySearch.displayName = "EmptySearch";
 
 // No notifications
 export const EmptyNotifications: React.FC<{ action?: React.ReactNode }> = ({ action }) => (
@@ -130,6 +139,7 @@ export const EmptyNotifications: React.FC<{ action?: React.ReactNode }> = ({ act
     action={action}
   />
 );
+EmptyNotifications.displayName = "EmptyNotifications";
 
 // Offline state
 export const OfflineState: React.FC<{ action?: React.ReactNode }> = ({ action }) => (
@@ -141,6 +151,7 @@ export const OfflineState: React.FC<{ action?: React.ReactNode }> = ({ action })
     action={action}
   />
 );
+OfflineState.displayName = "OfflineState";
 
 // Error state
 export const ErrorState: React.FC<{ action?: React.ReactNode }> = ({ action }) => (
@@ -152,6 +163,7 @@ export const ErrorState: React.FC<{ action?: React.ReactNode }> = ({ action }) =
     action={action}
   />
 );
+ErrorState.displayName = "ErrorState";
 
 // Loading state
 export const LoadingState: React.FC = () => (
@@ -162,6 +174,7 @@ export const LoadingState: React.FC = () => (
     iconColor={colors.semantic.primary}
   />
 );
+LoadingState.displayName = "LoadingState";
 
 const styles = StyleSheet.create({
   container: {

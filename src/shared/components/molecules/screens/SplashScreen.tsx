@@ -110,21 +110,26 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
     [progressAnim],
   );
 
+  // CRITICAL FIX: Use imported colors instead of undefined freudtheme variable
   // Get theme-appropriate gradient colors following Freud design references
-  const getGradientColors = () => {
+  const getGradientColors = (): string[] => {
     if (showQuote) {
       return [
-        freudtheme.colors.orange["50"], // Empathy Orange from design reference
-        freudtheme.colors.orange["40"],
+        colors.orange?.[50] || "#FFF7ED", // Empathy Orange from design reference
+        colors.orange?.[40] || "#FFEDD5",
       ];
     }
     return [
       "#FFFFFF", // Clean white background like design reference
-      freudtheme.colors.gray["10"],
+      colors.gray?.[10] || "#F9FAFB",
     ];
   };
 
   useEffect(() => {
+    // LOW-016 FIX: Store timeout IDs for proper cleanup
+    let rotationTimeoutId: NodeJS.Timeout | null = null;
+    let completionTimeoutId: NodeJS.Timeout | null = null;
+
     // Start main animations
     Animated.sequence([
       // Logo entrance
@@ -162,15 +167,17 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
       }),
     );
 
+    // LOW-016 FIX: Store timeout ID for cleanup
     // Start rotation after initial animation
-    setTimeout(() => rotateAnimation.start(), 1000);
+    rotationTimeoutId = setTimeout(() => rotateAnimation.start(), 1000);
 
     // Progress simulation
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(progressInterval);
-          setTimeout(onComplete, 500);
+          // LOW-016 FIX: Store completion timeout ID for cleanup
+          completionTimeoutId = setTimeout(onComplete, 500);
           return 100;
         }
         const increment = Math.random() * 15 + 5;
@@ -195,9 +202,16 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
       useNativeDriver: false,
     }).start();
 
+    // LOW-016 FIX: Comprehensive cleanup for all timers
     return () => {
       clearInterval(progressInterval);
       rotateAnimation.stop();
+      if (rotationTimeoutId) {
+        clearTimeout(rotationTimeoutId);
+      }
+      if (completionTimeoutId) {
+        clearTimeout(completionTimeoutId);
+      }
     };
   }, [showQuote, onComplete]);
 
@@ -218,16 +232,17 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
         {/* Main Content */}
         <View style={styles.contentContainer}>
           {/* Logo Section - Freud Design System */}
+          {/* CRITICAL FIX: Use theme from useTheme() instead of undefined freudTheme */}
           <Animated.View style={[styles.logoContainer, logoContainerStyle]}>
-            <FreudLogo size={80} primaryColor={freudtheme.colors.brown["80"]} />
+            <FreudLogo size={80} primaryColor={colors.brown?.[80] || "#78350F"} />
 
             <Animated.Text
               style={[
                 styles.appTitle,
                 {
                   color: showQuote
-                    ? freudTheme.colors.text.inverse
-                    : freudTheme.colors.text.primary,
+                    ? "#FFFFFF"
+                    : theme.colors?.text?.primary || "#1F2937",
                 },
                 fadeStyle,
               ]}
@@ -239,7 +254,7 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
               <Animated.Text
                 style={[
                   styles.appSubtitle,
-                  { color: freudTheme.colors.text.secondary },
+                  { color: theme.colors?.text?.secondary || "#6B7280" },
                   fadeStyle,
                 ]}
               >
@@ -253,13 +268,13 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
             <Animated.View style={[styles.quoteContainer, quoteFadeStyle]}>
               <FreudLogo
                 size={48}
-                primaryColor={freudTheme.colors.text.inverse}
+                primaryColor="#FFFFFF"
               />
               <Text
                 style={[
                   styles.quoteText,
                   {
-                    color: freudTheme.colors.text.inverse,
+                    color: "#FFFFFF",
                   },
                 ]}
               >
@@ -269,7 +284,7 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
                 style={[
                   styles.quoteAuthor,
                   {
-                    color: freudTheme.colors.text.inverse,
+                    color: "#FFFFFF",
                     opacity: 0.9,
                   },
                 ]}
@@ -366,45 +381,46 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.full,
     marginBottom: spacing[1],
   },
+  // CRITICAL FIX: Use imported typography and spacing instead of undefined freudTheme
   appTitle: {
-    fontSize: freudTheme.typography.fontSize.heading2xl,
-    fontWeight: freudTheme.typography.fontWeight.bold,
-    fontFamily: freudTheme.typography.fontFamily.primary,
+    fontSize: typography.sizes.heading2xl?.fontSize || 30,
+    fontWeight: typography.weights.bold || "700",
+    fontFamily: typography.fontFamily.primary,
     textAlign: "center",
-    marginTop: freudTheme.spacing.lg,
-    marginBottom: freudTheme.spacing.sm,
+    marginTop: spacing[6],
+    marginBottom: spacing[2],
     letterSpacing: -0.5,
   },
   appSubtitle: {
-    fontSize: freudTheme.typography.fontSize.textMd,
-    fontWeight: freudTheme.typography.fontWeight.medium,
-    fontFamily: freudTheme.typography.fontFamily.primary,
+    fontSize: typography.sizes.textMd?.fontSize || 16,
+    fontWeight: typography.weights.medium || "500",
+    fontFamily: typography.fontFamily.primary,
     textAlign: "center",
     maxWidth: 280,
     opacity: 0.9,
   },
   quoteContainer: {
     alignItems: "center",
-    maxWidth: spacing[75],
+    maxWidth: 300,
     marginBottom: spacing[10],
   },
   quoteIcon: {
     marginBottom: spacing[4],
   },
   quoteText: {
-    fontSize: freudTheme.typography.fontSize.headingLg,
-    fontWeight: freudTheme.typography.fontWeight.medium,
-    fontFamily: freudTheme.typography.fontFamily.primary,
+    fontSize: typography.sizes.headingLg?.fontSize || 20,
+    fontWeight: typography.weights.medium || "500",
+    fontFamily: typography.fontFamily.primary,
     textAlign: "center",
-    lineHeight: freudTheme.typography.lineHeight.headingLg,
-    marginTop: freudTheme.spacing["2xl"],
-    marginBottom: freudTheme.spacing.lg,
-    paddingHorizontal: freudTheme.spacing["4xl"],
+    lineHeight: typography.sizes.headingLg?.lineHeight || 28,
+    marginTop: spacing[8],
+    marginBottom: spacing[6],
+    paddingHorizontal: spacing[12],
   },
   quoteAuthor: {
-    fontSize: freudTheme.typography.fontSize.textSm,
-    fontWeight: freudTheme.typography.fontWeight.semibold,
-    fontFamily: freudTheme.typography.fontFamily.primary,
+    fontSize: typography.sizes.textSm?.fontSize || 14,
+    fontWeight: typography.weights.semibold || "600",
+    fontFamily: typography.fontFamily.primary,
     letterSpacing: 1.2,
     textAlign: "center",
   },
@@ -450,13 +466,24 @@ const styles = StyleSheet.create({
   },
 });
 
-// Export variations
-export const QuoteSplashScreen = (props) => (
+// LOW-013 FIX: Add TypeScript interface for props
+interface SplashScreenProps {
+  showQuote?: boolean;
+  onComplete?: () => void;
+}
+
+// LOW-013 FIX: Add displayName for main component
+SplashScreen.displayName = "SplashScreen";
+
+// Export variations with proper TypeScript types
+export const QuoteSplashScreen: React.FC<Omit<SplashScreenProps, "showQuote">> = (props) => (
   <SplashScreen {...props} showQuote />
 );
+QuoteSplashScreen.displayName = "QuoteSplashScreen";
 
-export const LoadingSplashScreen = (props) => (
+export const LoadingSplashScreen: React.FC<Omit<SplashScreenProps, "showQuote">> = (props) => (
   <SplashScreen {...props} showQuote={false} />
 );
+LoadingSplashScreen.displayName = "LoadingSplashScreen";
 
 export default SplashScreen;

@@ -7,9 +7,23 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
+  ViewStyle,
 } from "react-native";
+// LOW-011 FIX: Import MaterialCommunityIcons for accessible icons
+import { MaterialCommunityIcons } from "../../../expo/vector-icons";
 
-const DarkModeToggle = ({ style, showLabel = true, size = "normal" }) => {
+// LOW-009 FIX: Add TypeScript interface for props
+interface DarkModeToggleProps {
+  style?: ViewStyle;
+  showLabel?: boolean;
+  size?: "small" | "normal" | "large";
+}
+
+const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
+  style,
+  showLabel = true,
+  size = "normal",
+}) => {
   const { theme, isDarkMode, toggleTheme } = useTheme();
   const animatedValue = useRef(new Animated.Value(isDarkMode ? 1 : 0)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -95,10 +109,15 @@ const DarkModeToggle = ({ style, showLabel = true, size = "normal" }) => {
         </Text>
       )}
 
+      {/* LOW-010 FIX: Add accessibility props for screen reader support */}
       <TouchableOpacity
         onPress={handlePress}
         activeOpacity={0.8}
         style={styles.touchable}
+        accessibilityRole="switch"
+        accessibilityLabel={`${isDarkMode ? "Dark" : "Light"} mode toggle`}
+        accessibilityHint="Double tap to switch between light and dark mode"
+        accessibilityState={{ checked: isDarkMode }}
       >
         <Animated.View
           style={[
@@ -121,37 +140,37 @@ const DarkModeToggle = ({ style, showLabel = true, size = "normal" }) => {
               },
             ]}
           >
-            {/* Icons inside the toggle circle */}
+            {/* LOW-011 FIX: Use MaterialCommunityIcons instead of emojis for accessibility */}
             <Animated.View
               style={[styles.iconContainer, { opacity: iconOpacity }]}
             >
-              <Text style={[styles.icon, { fontSize: currentSize.fontSize }]}>
-                {isDarkMode ? "🌙" : "☀️"}
-              </Text>
+              <MaterialCommunityIcons
+                name={isDarkMode ? "moon-waning-crescent" : "white-balance-sunny"}
+                size={currentSize.fontSize}
+                color={isDarkMode ? "#5B21B6" : "#F59E0B"}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no-hide-descendants"
+              />
             </Animated.View>
           </Animated.View>
 
-          {/* Background icons */}
+          {/* Background icons - LOW-011 FIX: Use MaterialCommunityIcons */}
           <View style={styles.backgroundIcons}>
             <View style={[styles.backgroundIcon, styles.leftIcon]}>
-              <Text
-                style={[
-                  styles.backgroundIconText,
-                  { fontSize: currentSize.fontSize - 2 },
-                ]}
-              >
-                ☀️
-              </Text>
+              <MaterialCommunityIcons
+                name="white-balance-sunny"
+                size={currentSize.fontSize - 2}
+                color="#FFFFFF"
+                accessibilityElementsHidden={true}
+              />
             </View>
             <View style={[styles.backgroundIcon, styles.rightIcon]}>
-              <Text
-                style={[
-                  styles.backgroundIconText,
-                  { fontSize: currentSize.fontSize - 2 },
-                ]}
-              >
-                🌙
-              </Text>
+              <MaterialCommunityIcons
+                name="moon-waning-crescent"
+                size={currentSize.fontSize - 2}
+                color="#FFFFFF"
+                accessibilityElementsHidden={true}
+              />
             </View>
           </View>
         </Animated.View>
@@ -159,6 +178,9 @@ const DarkModeToggle = ({ style, showLabel = true, size = "normal" }) => {
     </View>
   );
 };
+
+// LOW-009 FIX: Add displayName for debugging
+DarkModeToggle.displayName = "DarkModeToggle";
 
 const styles = StyleSheet.create({
   container: {

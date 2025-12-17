@@ -15,6 +15,8 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
+// LOW-015 FIX: Import MaterialCommunityIcons for accessible icons
+import { MaterialCommunityIcons } from "@shared/expo/vector-icons";
 import { errorHandler, ErrorReport } from "@shared/services/errorHandlingService";
 import { hapticService, HapticFeedbackType } from "@shared/services/hapticService";
 import { i18n } from "@shared/services/i18nService";
@@ -144,9 +146,15 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <View style={styles.container}>
           <View style={styles.content}>
-            <Text style={styles.emoji}>
-              {errorReport?.requiresSupport ? '🆘' : '😔'}
-            </Text>
+            {/* LOW-015 FIX: Use MaterialCommunityIcons instead of emojis for accessibility */}
+            <View style={styles.iconContainer}>
+              <MaterialCommunityIcons
+                name={errorReport?.requiresSupport ? "lifebuoy" : "emoticon-sad-outline"}
+                size={64}
+                color={errorReport?.requiresSupport ? "#DC2626" : "#6B7280"}
+                accessibilityElementsHidden={true}
+              />
+            </View>
             <Text style={styles.title}>
               {errorReport?.requiresSupport
                 ? i18n.t('therapeutic.youAreNotAlone')
@@ -245,9 +253,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     maxWidth: 400,
   },
-  emoji: {
-    fontSize: 64,
+  // LOW-015 FIX: Replaced emoji style with iconContainer
+  iconContainer: {
     marginBottom: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     fontSize: 24,

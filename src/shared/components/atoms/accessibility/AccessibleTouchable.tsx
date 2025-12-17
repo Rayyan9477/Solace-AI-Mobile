@@ -426,6 +426,14 @@ const styles = StyleSheet.create({
   },
 });
 
+// LOW-014 FIX: Add displayName for all components for debugging and React DevTools
+AccessibleTouchable.displayName = "AccessibleTouchable";
+MoodSelectorTouchable.displayName = "MoodSelectorTouchable";
+CrisisButtonTouchable.displayName = "CrisisButtonTouchable";
+AssessmentOptionTouchable.displayName = "AssessmentOptionTouchable";
+ChatMessageTouchable.displayName = "ChatMessageTouchable";
+FormFieldTouchable.displayName = "FormFieldTouchable";
+
 export default AccessibleTouchable;
 export {
   MoodSelectorTouchable,
