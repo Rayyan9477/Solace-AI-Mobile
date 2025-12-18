@@ -5,7 +5,8 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
-import React, { useState } from "react";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -15,9 +16,12 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 
 import { EMERGENCY_RESOURCES, SUPPORT_RESOURCES } from "../crisisConfig";
+import secureStorage from "../../../app/services/secureStorage";
+import { logger } from "@shared/utils/logger";
 
 interface Resource {
   id: string;
@@ -31,13 +35,46 @@ interface Resource {
   url?: string;
 }
 
+interface EmergencyContact {
+  id: string;
+  name: string;
+  phoneNumber: string;
+  relationship?: string;
+  email?: string;
+  createdAt: string;
+}
+
+const EMERGENCY_CONTACTS_STORAGE_KEY = "emergency_contacts";
+
 const CrisisSupportScreenComponent = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const [country] = useState("US");
+  const [personalContacts, setPersonalContacts] = useState<EmergencyContact[]>([]);
+  const [isLoadingContacts, setIsLoadingContacts] = useState(true);
+
+  const loadPersonalContacts = useCallback(async () => {
+    try {
+      setIsLoadingContacts(true);
+      const contactsData = await secureStorage.getSecureData(EMERGENCY_CONTACTS_STORAGE_KEY);
+      if (contactsData) {
+        const parsed = typeof contactsData === 'string' ? JSON.parse(contactsData) : contactsData;
+        setPersonalContacts(Array.isArray(parsed) ? parsed : []);
+      }
+    } catch (error) {
+      logger.error("[CrisisSupportScreen] Failed to load emergency contacts:", error);
+      setPersonalContacts([]);
+    } finally {
+      setIsLoadingContacts(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadPersonalContacts();
+  }, [loadPersonalContacts]);
 
   const emergencyResources =
-    EMERGENCY_RESOURCES[country] || EMERGENCY_RESOURCES.US;
+    EMERGENCY_RESOURCES[country as keyof typeof EMERGENCY_RESOURCES] || EMERGENCY_RESOURCES.US;
 
   const styles = StyleSheet.create({
     container: {
@@ -56,10 +93,11 @@ const CrisisSupportScreenComponent = () => {
       marginBottom: 16,
     },
     closeButton: {
-      width: 40,
-      height: 40,
+      width: 44,
+      height: 44,
       justifyContent: "center",
       alignItems: "center",
+      borderRadius: 22,
     },
     emergencyBadge: {
       backgroundColor: "rgba(255,255,255,0.2)",
@@ -70,19 +108,99 @@ const CrisisSupportScreenComponent = () => {
     emergencyBadgeText: {
       fontSize: 12,
       fontWeight: "700",
-      color: "#FFFFFF",
+      color: theme.colors.semantic?.onPrimary || "#FFFFFF",
     },
     headerTitle: {
       fontSize: 28,
       fontWeight: "800",
-      color: "#FFFFFF",
+      color: theme.colors.semantic?.onPrimary || "#FFFFFF",
       marginBottom: 8,
     },
     headerSubtitle: {
       fontSize: 16,
       fontWeight: "600",
-      color: "#FFFFFF",
+      color: theme.colors.semantic?.onPrimary || "#FFFFFF",
       opacity: 0.9,
+    },
+    personalContactsSection: {
+      backgroundColor: theme.colors.green["10"],
+      borderRadius: 16,
+      padding: 16,
+      marginBottom: 16,
+    },
+    personalContactsHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 12,
+    },
+    personalContactsTitle: {
+      fontSize: 16,
+      fontWeight: "700",
+      color: theme.colors.text.primary,
+    },
+    addContactButton: {
+      backgroundColor: theme.colors.green["60"],
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderRadius: 8,
+      minHeight: 44,
+      justifyContent: "center",
+    },
+    addContactButtonText: {
+      fontSize: 12,
+      fontWeight: "700",
+      color: theme.colors.semantic?.onPrimary || "#FFFFFF",
+    },
+    personalContactCard: {
+      backgroundColor: theme.colors.background.secondary,
+      borderRadius: 12,
+      padding: 16,
+      marginBottom: 8,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    contactInfo: {
+      flex: 1,
+    },
+    contactName: {
+      fontSize: 16,
+      fontWeight: "700",
+      color: theme.colors.text.primary,
+      marginBottom: 2,
+    },
+    contactRelationship: {
+      fontSize: 13,
+      color: theme.colors.text.secondary,
+      marginBottom: 4,
+    },
+    contactPhone: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: theme.colors.green["70"],
+    },
+    quickCallButton: {
+      backgroundColor: theme.colors.green["60"],
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      justifyContent: "center",
+      alignItems: "center",
+      marginLeft: 12,
+    },
+    quickCallButtonText: {
+      fontSize: 20,
+    },
+    emptyContactsText: {
+      fontSize: 14,
+      color: theme.colors.text.tertiary,
+      textAlign: "center",
+      paddingVertical: 16,
+    },
+    loadingContainer: {
+      paddingVertical: 20,
+      alignItems: "center",
     },
     content: {
       flex: 1,
@@ -177,7 +295,7 @@ const CrisisSupportScreenComponent = () => {
     callButtonText: {
       fontSize: 14,
       fontWeight: "700",
-      color: "#FFFFFF",
+      color: theme.colors.semantic?.onPrimary || "#FFFFFF",
     },
     textButton: {
       flex: 1,
@@ -185,11 +303,13 @@ const CrisisSupportScreenComponent = () => {
       paddingVertical: 12,
       borderRadius: 12,
       alignItems: "center",
+      minHeight: 44,
+      justifyContent: "center",
     },
     textButtonText: {
       fontSize: 14,
       fontWeight: "700",
-      color: "#FFFFFF",
+      color: theme.colors.semantic?.onPrimary || "#FFFFFF",
     },
     chatButton: {
       flex: 1,
@@ -197,11 +317,13 @@ const CrisisSupportScreenComponent = () => {
       paddingVertical: 12,
       borderRadius: 12,
       alignItems: "center",
+      minHeight: 44,
+      justifyContent: "center",
     },
     chatButtonText: {
       fontSize: 14,
       fontWeight: "700",
-      color: "#FFFFFF",
+      color: theme.colors.semantic?.onPrimary || "#FFFFFF",
     },
     supportCard: {
       backgroundColor: theme.colors.brown["10"],
@@ -302,10 +424,11 @@ const CrisisSupportScreenComponent = () => {
             style={styles.closeButton}
             onPress={() => navigation.goBack()}
             accessible
-            accessibilityLabel="Close"
+            accessibilityLabel="Close crisis support screen"
+            accessibilityHint="Returns to the previous screen"
             accessibilityRole="button"
           >
-            <Text style={{ fontSize: 24, color: "#FFFFFF" }}>×</Text>
+            <Text style={{ fontSize: 24, color: theme.colors.semantic?.onPrimary || "#FFFFFF" }}>×</Text>
           </TouchableOpacity>
           <View style={styles.emergencyBadge}>
             <Text style={styles.emergencyBadgeText}>🆘 CRISIS SUPPORT</Text>
@@ -329,6 +452,56 @@ const CrisisSupportScreenComponent = () => {
               here to support you, but emergency services can provide immediate
               medical assistance.
             </Text>
+          </View>
+
+          {/* Personal Emergency Contacts */}
+          <View style={styles.personalContactsSection}>
+            <View style={styles.personalContactsHeader}>
+              <Text style={styles.personalContactsTitle}>Your Emergency Contacts</Text>
+              <TouchableOpacity
+                style={styles.addContactButton}
+                onPress={() => navigation.navigate("AddEmergencyContact" as never)}
+                accessible
+                accessibilityLabel="Add emergency contact"
+                accessibilityHint="Navigate to add a new emergency contact"
+                accessibilityRole="button"
+              >
+                <Text style={styles.addContactButtonText}>+ Add Contact</Text>
+              </TouchableOpacity>
+            </View>
+
+            {isLoadingContacts ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="small" color={theme.colors.green["60"]} />
+              </View>
+            ) : personalContacts.length > 0 ? (
+              personalContacts.map((contact) => (
+                <View key={contact.id} style={styles.personalContactCard}>
+                  <View style={styles.contactInfo}>
+                    <Text style={styles.contactName}>{contact.name}</Text>
+                    {contact.relationship && (
+                      <Text style={styles.contactRelationship}>{contact.relationship}</Text>
+                    )}
+                    <Text style={styles.contactPhone}>{contact.phoneNumber}</Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.quickCallButton}
+                    onPress={() => handleCall(contact.phoneNumber, contact.name)}
+                    accessible
+                    accessibilityLabel={`Call ${contact.name} at ${contact.phoneNumber}`}
+                    accessibilityHint="Opens phone dialer to call this contact"
+                    accessibilityRole="button"
+                  >
+                    <Text style={styles.quickCallButtonText}>📞</Text>
+                  </TouchableOpacity>
+                </View>
+              ))
+            ) : (
+              <Text style={styles.emptyContactsText}>
+                No personal emergency contacts added yet.{"\n"}
+                Add contacts you trust to reach quickly in a crisis.
+              </Text>
+            )}
           </View>
         </View>
 
@@ -406,7 +579,15 @@ const CrisisSupportScreenComponent = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Additional Support</Text>
 
-          {SUPPORT_RESOURCES.map((resource) => (
+          {SUPPORT_RESOURCES.map((resource: {
+            id: string;
+            name: string;
+            number?: string;
+            description: string;
+            type: string;
+            hours?: string;
+            url?: string;
+          }) => (
             <TouchableOpacity
               key={resource.id}
               style={styles.supportCard}
@@ -417,6 +598,10 @@ const CrisisSupportScreenComponent = () => {
                   handleCall(resource.number, resource.name);
                 }
               }}
+              accessible
+              accessibilityLabel={`${resource.name}. ${resource.description}`}
+              accessibilityHint={resource.number ? `Tap to call ${resource.number}` : resource.url ? "Tap to open website" : undefined}
+              accessibilityRole="button"
             >
               <Text style={styles.supportName}>{resource.name}</Text>
               <Text style={styles.supportDescription}>

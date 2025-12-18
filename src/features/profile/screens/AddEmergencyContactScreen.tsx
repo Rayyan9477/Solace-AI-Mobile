@@ -1,13 +1,15 @@
 /**
  * Add Emergency Contact Screen - Add/Edit Emergency Contacts
  * For crisis support and safety features
+ *
+ * Uses secureStorage for encrypted storage of emergency contacts
+ * Storage key must match CrisisManager for proper integration
  */
 
 import { logger } from "@shared/utils/logger";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -19,8 +21,10 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+import secureStorage from "../../../app/services/secureStorage";
 
-const EMERGENCY_CONTACTS_KEY = "@solace_emergency_contacts";
+/** Storage key must match CrisisManager.ts for proper integration */
+const EMERGENCY_CONTACTS_STORAGE_KEY = "emergency_contacts";
 
 export const AddEmergencyContactScreen = () => {
   const { theme } = useTheme();
@@ -32,39 +36,121 @@ export const AddEmergencyContactScreen = () => {
   const [email, setEmail] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
+  /**
+   * Validates phone number format
+   * Accepts: +1234567890, (123) 456-7890, 123-456-7890, 1234567890
+   */
+  const validatePhoneNumber = useCallback((phone: string): boolean => {
+    const phoneRegex = /^[\+]?[(]?[0-9]{1,3}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,4}[-\s\.]?[0-9]{1,9}$/;
+    return phoneRegex.test(phone.replace(/\s/g, ''));
+  }, []);
+
+  /**
+   * Validates email format if provided
+   */
+  const validateEmail = useCallback((emailInput: string): boolean => {
+    if (!emailInput) return true; // Optional field
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(emailInput);
+  }, []);
+
   const handleSave = async () => {
-    if (!contactName || !phoneNumber) {
-      Alert.alert("Required Fields", "Please enter contact name and phone number.", [
-        { text: "OK" },
-      ]);
+    // Validate required fields
+    if (!contactName.trim()) {
+      Alert.alert(
+        "Required Field",
+        "Please enter a contact name.",
+        [{ text: "OK" }]
+      );
+      return;
+    }
+
+    if (!phoneNumber.trim()) {
+      Alert.alert(
+        "Required Field",
+        "Please enter a phone number.",
+        [{ text: "OK" }]
+      );
+      return;
+    }
+
+    // Validate phone number format
+    if (!validatePhoneNumber(phoneNumber)) {
+      Alert.alert(
+        "Invalid Phone Number",
+        "Please enter a valid phone number format.",
+        [{ text: "OK" }]
+      );
+      return;
+    }
+
+    // Validate email if provided
+    if (email && !validateEmail(email)) {
+      Alert.alert(
+        "Invalid Email",
+        "Please enter a valid email address or leave it empty.",
+        [{ text: "OK" }]
+      );
       return;
     }
 
     setIsSaving(true);
     try {
-      // Load existing contacts
-      const existingData = await AsyncStorage.getItem(EMERGENCY_CONTACTS_KEY);
-      const existingContacts = existingData ? JSON.parse(existingData) : [];
+      // Load existing contacts from secure storage
+      let existingContacts: Array<{
+        id: string;
+        name: string;
+        phoneNumber: string;
+        relationship?: string;
+        email?: string;
+        createdAt: string;
+      }> = [];
 
-      // Create new contact
+      const existingData = await secureStorage.getSecureData(EMERGENCY_CONTACTS_STORAGE_KEY);
+      if (existingData) {
+        const parsed = typeof existingData === 'string' ? JSON.parse(existingData) : existingData;
+        existingContacts = Array.isArray(parsed) ? parsed : [];
+      }
+
+      // Check for duplicate phone number
+      const isDuplicate = existingContacts.some(
+        (contact) => contact.phoneNumber.replace(/\D/g, '') === phoneNumber.replace(/\D/g, '')
+      );
+      if (isDuplicate) {
+        Alert.alert(
+          "Duplicate Contact",
+          "A contact with this phone number already exists.",
+          [{ text: "OK" }]
+        );
+        setIsSaving(false);
+        return;
+      }
+
+      // Create new contact with sanitized data
       const newContact = {
-        id: `contact_${Date.now()}`,
-        name: contactName,
-        phoneNumber,
-        relationship,
-        email,
+        id: `contact_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        name: contactName.trim(),
+        phoneNumber: phoneNumber.trim(),
+        relationship: relationship || undefined,
+        email: email.trim() || undefined,
         createdAt: new Date().toISOString(),
       };
 
-      // Save updated contacts list
+      // Save updated contacts list to secure storage
       const updatedContacts = [...existingContacts, newContact];
-      await AsyncStorage.setItem(EMERGENCY_CONTACTS_KEY, JSON.stringify(updatedContacts));
+      await secureStorage.storeSecureData(
+        EMERGENCY_CONTACTS_STORAGE_KEY,
+        JSON.stringify(updatedContacts)
+      );
 
-      logger.debug("Emergency contact saved:", newContact);
+      logger.info("[AddEmergencyContact] Emergency contact saved successfully:", {
+        contactId: newContact.id,
+        name: newContact.name,
+      });
 
       Alert.alert(
         "Contact Saved",
-        `${contactName} has been added as an emergency contact.`,
+        `${contactName} has been added as an emergency contact. They can be reached quickly from the Crisis Support screen.`,
         [
           {
             text: "OK",
@@ -73,8 +159,12 @@ export const AddEmergencyContactScreen = () => {
         ]
       );
     } catch (error) {
-      logger.error("Failed to save emergency contact:", error);
-      Alert.alert("Save Failed", "Unable to save contact. Please try again.");
+      logger.error("[AddEmergencyContact] Failed to save emergency contact:", error);
+      Alert.alert(
+        "Save Failed",
+        "Unable to save contact securely. Please check your device storage and try again.",
+        [{ text: "OK" }]
+      );
     } finally {
       setIsSaving(false);
     }
@@ -95,9 +185,9 @@ export const AddEmergencyContactScreen = () => {
       borderBottomColor: theme.colors.brown[30],
     },
     backButton: {
-      width: 40,
-      height: 40,
-      borderRadius: 20,
+      width: 44,
+      height: 44,
+      borderRadius: 22,
       backgroundColor: theme.colors.brown[20],
       justifyContent: "center",
       alignItems: "center",
