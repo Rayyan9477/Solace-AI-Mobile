@@ -12,19 +12,38 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Card, Surface, IconButton } from "react-native-paper";
 
-// Mock imports for now
-
 import { platform } from "../../../shared/utils/platform";
-// Mock FreudColors for now
+
+// UI/DESIGN FIX: Correct Freud Design System V1.2 colors
+// User messages use mindfulBrown (warm, grounding)
+// AI messages use serenityGreen (calming, therapeutic)
 const FreudColors = {
+  mindfulBrown: {
+    10: '#F7F4F2',
+    20: '#E5DDD8',
+    30: '#DDC2B8',
+    40: '#C0A091',
+    50: '#B07F6D',
+    60: '#926247',
+    70: '#704A33',
+    80: '#5D4037',
+    90: '#4A3229',
+    100: '#372315',
+  },
   serenityGreen: {
-    60: "#34C759",
+    40: '#B3C98D',
+    50: '#98B068',
+    60: '#7D944D',
+    70: '#627537',
   },
   optimisticGray: {
-    10: "#F7FAFC",
-    40: "#A0AEC0",
-    60: "#718096",
-    90: "#2D3748",
+    10: '#F5F5F5',
+    20: '#EEEEEE',
+    30: '#E0E0E0',
+    40: '#BDBDBD',
+    50: '#9E9E9E',
+    60: '#757575',
+    90: '#424242',
   },
 };
 
@@ -81,25 +100,30 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
     }
   };
 
-  // Get therapeutic colors based on user/assistant role
+  // UI/DESIGN FIX: Get therapeutic colors based on user/assistant role
+  // Using Freud Design System V1.2 color palette
+  // User: mindfulBrown (warm, grounding - fosters safety)
+  // AI: serenityGreen (calming, therapeutic - encourages openness)
   const getBubbleColors = () => {
     if (isUser) {
+      // User messages: mindfulBrown tones for grounding
       return {
-        backgroundColor: FreudColors.serenityGreen[60],
-        textColor: "#FFFFFF",
-        timestampColor: "rgba(255, 255, 255, 0.8)",
+        backgroundColor: FreudColors.mindfulBrown[60], // #926247 - warm brown
+        textColor: FreudColors.mindfulBrown[10], // #F7F4F2 - light cream for contrast
+        timestampColor: FreudColors.mindfulBrown[30], // #DDC2B8 - lighter for secondary info
       };
     } else {
+      // AI messages: serenityGreen tones for therapeutic calming effect
       return {
         backgroundColor: isDarkMode
-          ? FreudColors.optimisticGray[90]
-          : "#FFFFFF",
+          ? FreudColors.serenityGreen[70] // #627537 - darker green for dark mode
+          : FreudColors.serenityGreen[50], // #98B068 - calming green
         textColor: isDarkMode
-          ? FreudColors.optimisticGray[10]
-          : FreudColors.optimisticGray[90],
+          ? FreudColors.optimisticGray[10] // #F5F5F5 - light text for dark mode
+          : FreudColors.optimisticGray[90], // #424242 - dark text for light mode
         timestampColor: isDarkMode
-          ? FreudColors.optimisticGray[40]
-          : FreudColors.optimisticGray[60],
+          ? FreudColors.optimisticGray[40] // #BDBDBD
+          : FreudColors.optimisticGray[60], // #757575
       };
     }
   };
@@ -153,12 +177,10 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
     <AnimatedCard
       mode="contained"
       {...animationProps}
-      style={
-        [
-          styles.container,
-          isUser ? styles.userContainer : styles.botContainer,
-        ] as any
-      }
+      style={[
+        styles.container,
+        isUser ? styles.userContainer : styles.botContainer,
+      ]}
     >
       <Surface
         mode="flat"

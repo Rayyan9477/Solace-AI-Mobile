@@ -31,6 +31,34 @@ jest.mock("@react-navigation/native", () => {
   return { useNavigation, __mockedNav: navObj };
 });
 
+// TEST FIX: Mock @theme/ThemeProvider to provide proper theme context
+jest.mock("@theme/ThemeProvider", () => ({
+  useTheme: () => ({
+    theme: {
+      colors: {
+        therapeutic: {
+          calming: { "50": "#007AFF" },
+          nurturing: { "50": "#34C759" },
+          peaceful: { "50": "#5AC8FA" },
+        },
+        primary: "#007AFF",
+        error: "#FF3B30",
+        info: "#5AC8FA",
+        success: "#34C759",
+        text: {
+          primary: "#000000",
+          secondary: "#666666",
+        },
+        background: {
+          secondary: "#F5F5F5",
+        },
+      },
+    },
+    isReducedMotionEnabled: false,
+    isDarkMode: false,
+  }),
+}));
+
 const mockTheme = {
   colors: {
     nurturing: ["#4CAF50", "#81C784"],

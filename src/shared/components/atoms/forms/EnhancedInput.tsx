@@ -114,7 +114,17 @@ const EnhancedInput = forwardRef(
     // Animation values
     const focusAnim = useRef(new Animated.Value(value ? 1 : 0)).current;
     const errorAnim = useRef(new Animated.Value(0)).current;
-    const validationTimer = useRef(null);
+    const validationTimer = useRef<NodeJS.Timeout | null>(null);
+
+    // CRIT-006 FIX: Cleanup validation timer on unmount to prevent memory leaks
+    useEffect(() => {
+      return () => {
+        if (validationTimer.current) {
+          clearTimeout(validationTimer.current);
+          validationTimer.current = null;
+        }
+      };
+    }, []);
 
     // Create validator instance
     const validator = useRef(

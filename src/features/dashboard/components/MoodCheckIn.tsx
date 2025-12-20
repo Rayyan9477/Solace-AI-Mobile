@@ -1,7 +1,6 @@
 import { useTheme } from "@theme/ThemeProvider";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
-import PropTypes from "prop-types";
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -13,12 +12,50 @@ import {
   AccessibilityInfo,
 } from "react-native";
 
+// TYPE SAFETY FIX: Define proper interfaces
+interface MoodCheckInData {
+  timestamp: string;
+  emoji?: string;
+  label?: string;
+  crisisRelated?: boolean;
+}
+
+interface PerformanceTracker {
+  trackAnimation?: (name: string) => void;
+}
+
+interface PerformanceIssue {
+  type: string;
+  duration: number;
+}
+
+interface MoodOption {
+  id: string;
+  label: string;
+  emoji: string;
+  color: string;
+  accessibilityLabel: string;
+  crisisRelated?: boolean;
+}
+
+interface MoodCheckInProps {
+  currentMood?: string;
+  onCheckIn?: (moodId: string, data: MoodCheckInData) => void;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
+  testID?: string;
+  disabled?: boolean;
+  performanceTracker?: PerformanceTracker;
+  onPerformanceIssue?: (issue: PerformanceIssue) => void;
+  reducedMotion?: boolean;
+}
+
 /**
  * MoodCheckIn Component
  * Allows users to check in their current mood with therapeutic design
  * Supports accessibility, animations, and mental health features
  */
-const MoodCheckIn = ({
+const MoodCheckIn: React.FC<MoodCheckInProps> = ({
   currentMood,
   onCheckIn,
   accessibilityLabel = "Mood check-in component",
@@ -28,8 +65,10 @@ const MoodCheckIn = ({
   performanceTracker,
   onPerformanceIssue,
   reducedMotion,
-}: any) => {
-  const { theme, isReducedMotionEnabled }: any = (useTheme() as any) || {};
+}) => {
+  const themeContext = useTheme();
+  const theme = themeContext?.theme;
+  const isReducedMotionEnabled = themeContext?.isReducedMotionEnabled ?? false;
   const [selectedMood, setSelectedMood] = useState(currentMood);
   const pulseAnimation = useRef(new Animated.Value(1)).current;
   const renderStartRef = useRef<number | null>(null);
@@ -41,27 +80,40 @@ const MoodCheckIn = ({
     }
   }, []);
 
+  // TYPE SAFETY FIX: Helper function for safe color extraction
+  const getColor = (
+    colorValue: string | Record<string, string> | undefined,
+    key: string,
+    fallback: string
+  ): string => {
+    if (typeof colorValue === "string") return colorValue;
+    if (colorValue && typeof colorValue === "object" && key in colorValue) {
+      return colorValue[key];
+    }
+    return fallback;
+  };
+
   // Mood options with therapeutic colors and accessibility
-  const moodOptions = [
+  const moodOptions: MoodOption[] = [
     {
       id: "happy",
       label: "Happy",
       emoji: "😊",
-      color: theme.colors.mood?.happy || "#FFD700",
+      color: getColor(theme?.colors?.mood?.happy, "main", "#FFD700"),
       accessibilityLabel: "Feeling happy",
     },
     {
       id: "calm",
       label: "Calm",
       emoji: "😌",
-      color: theme.colors.therapeutic?.calm || "#87CEEB",
+      color: getColor(theme?.colors?.therapeutic?.calming, "50", "#87CEEB"),
       accessibilityLabel: "Feeling calm",
     },
     {
       id: "anxious",
       label: "Anxious",
       emoji: "😰",
-      color: theme.colors.warning?.main || "#FFA500",
+      color: getColor(theme?.colors?.warning, "main", "#FFA500"),
       accessibilityLabel: "Feeling anxious",
       crisisRelated: true,
     },
@@ -69,21 +121,21 @@ const MoodCheckIn = ({
       id: "sad",
       label: "Sad",
       emoji: "😢",
-      color: theme.colors.info?.main || "#5AC8FA",
+      color: getColor(theme?.colors?.info, "main", "#5AC8FA"),
       accessibilityLabel: "Feeling sad",
     },
     {
       id: "angry",
       label: "Angry",
       emoji: "😠",
-      color: theme.colors.error?.main || "#FF3B30",
+      color: getColor(theme?.colors?.error, "main", "#FF3B30"),
       accessibilityLabel: "Feeling angry",
     },
     {
       id: "excited",
       label: "Excited",
       emoji: "🤩",
-      color: theme.colors.secondary?.main || "#34C759",
+      color: getColor(theme?.colors?.success, "main", "#34C759"),
       accessibilityLabel: "Feeling excited",
     },
   ];
@@ -115,7 +167,8 @@ const MoodCheckIn = ({
     }
   }, [isReducedMotionEnabled, reducedMotion, disabled, pulseAnimation]);
 
-  const handleMoodSelect = async (mood: any) => {
+  // TYPE SAFETY FIX: Properly typed handler
+  const handleMoodSelect = async (mood: MoodOption): Promise<void> => {
     if (disabled) return;
 
     setSelectedMood(mood.id);
@@ -170,36 +223,35 @@ const MoodCheckIn = ({
     return current ? { text: current } : undefined;
   };
 
+  // TYPE SAFETY FIX: Safe animation scale value
+  const animatedScale = pulseAnimation.interpolate
+    ? pulseAnimation.interpolate({
+        inputRange: [1, 1.05],
+        outputRange: [1, 1.05],
+      })
+    : pulseAnimation;
+
   return (
     <Animated.View
       style={[
         styles.container,
         {
           // Use interpolate so tests can detect transform-based animations
-          transform: [
-            {
-              scale: (pulseAnimation as any).interpolate
-                ? (pulseAnimation as any).interpolate({
-                    inputRange: [1, 1.05],
-                    outputRange: [1, 1.05],
-                  })
-                : (pulseAnimation as any),
-            },
-          ],
+          transform: [{ scale: animatedScale }],
         },
       ]}
       testID={testID}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
-      {...({ accessibilityRole: "group" } as any)}
+      accessibilityRole="none"
       accessibilityState={{ disabled }}
       accessibilityValue={getAccessibilityValue()}
       accessible
     >
       <LinearGradient
         colors={[
-          (theme.colors.therapeutic?.calming?.[100] || "#E3F2FD") + "80",
-          (theme.colors.therapeutic?.peaceful?.[50] || "#F0F8FF") + "40",
+          (theme?.colors?.therapeutic?.calming?.["100"] ?? "#E3F2FD") + "80",
+          (theme?.colors?.therapeutic?.peaceful?.["50"] ?? "#F0F8FF") + "40",
         ]}
         style={styles.gradientBackground}
       >
@@ -220,7 +272,7 @@ const MoodCheckIn = ({
             <Text
               style={[
                 styles.title,
-                { color: theme.colors.text?.primary || "#000000" },
+                { color: theme?.colors?.text?.primary ?? "#000000" },
               ]}
             >
               How are you feeling?
@@ -231,7 +283,7 @@ const MoodCheckIn = ({
             <Text
               style={[
                 styles.currentMood,
-                { color: theme.colors.text?.secondary || "#666666" },
+                { color: theme?.colors?.text?.secondary ?? "#666666" },
               ]}
             >
               Current mood: {getCurrentMoodDisplay()}
@@ -248,7 +300,7 @@ const MoodCheckIn = ({
                     backgroundColor:
                       selectedMood === mood.id
                         ? mood.color + "30"
-                        : theme.colors.background?.surface || "#F5F5F5",
+                        : theme?.colors?.background?.secondary ?? "#F5F5F5",
                     borderColor: mood.color,
                     borderWidth: selectedMood === mood.id ? 2 : 1,
                     minHeight: 60, // Ensure minimum touch target
@@ -275,7 +327,7 @@ const MoodCheckIn = ({
                       color:
                         selectedMood === mood.id
                           ? mood.color
-                          : theme.colors.text?.primary || "#000000",
+                          : theme?.colors?.text?.primary ?? "#000000",
                     },
                   ]}
                 >
@@ -289,7 +341,7 @@ const MoodCheckIn = ({
             style={[
               styles.checkInButton,
               {
-                backgroundColor: theme.colors.primary?.main || "#007AFF",
+                backgroundColor: theme?.colors?.primary ?? "#007AFF",
                 minHeight: 44, // Ensure minimum touch target
                 minWidth: 44,
               },
@@ -297,15 +349,15 @@ const MoodCheckIn = ({
             onPress={() => {
               if (disabled) return;
               const chosenId = selectedMood || "happy";
-              const mood =
-                moodOptions.find((m) => m.id === chosenId) ||
-                ({ id: chosenId, emoji: "", label: chosenId } as any);
+              // TYPE SAFETY FIX: Use typed default mood
+              const defaultMood: MoodOption = { id: chosenId, emoji: "", label: chosenId, color: "", accessibilityLabel: "" };
+              const mood = moodOptions.find((m) => m.id === chosenId) ?? defaultMood;
               if (onCheckIn) {
                 onCheckIn(chosenId, {
                   timestamp: new Date().toISOString(),
                   emoji: mood.emoji,
                   label: mood.label,
-                  crisisRelated: (mood as any).crisisRelated || false,
+                  crisisRelated: mood.crisisRelated ?? false,
                 });
               }
               announceMood(chosenId);
@@ -322,7 +374,7 @@ const MoodCheckIn = ({
               style={[
                 styles.checkInButtonText,
                 {
-                  color: theme.colors.primary?.onPrimary || "#FFFFFF",
+                  color: "#FFFFFF",
                   opacity: disabled || !selectedMood ? 0.5 : 1,
                 },
               ]}
@@ -336,14 +388,7 @@ const MoodCheckIn = ({
   );
 };
 
-MoodCheckIn.propTypes = {
-  currentMood: PropTypes.string,
-  onCheckIn: PropTypes.func,
-  accessibilityLabel: PropTypes.string,
-  accessibilityHint: PropTypes.string,
-  testID: PropTypes.string,
-  disabled: PropTypes.bool,
-};
+// TYPE SAFETY FIX: Removed PropTypes in favor of TypeScript interfaces
 
 const styles = StyleSheet.create({
   container: {

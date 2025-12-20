@@ -36,6 +36,36 @@ jest.mock("expo-haptics", () => {
   return { __esModule: true, default: mod, Haptics: mod, ...mod };
 });
 
+// TEST FIX: Mock @theme/ThemeProvider to provide proper theme context
+jest.mock("@theme/ThemeProvider", () => ({
+  useTheme: () => ({
+    theme: {
+      colors: {
+        therapeutic: {
+          calming: { "50": "#87CEEB", "100": "#E3F2FD" },
+          peaceful: { "50": "#F0F8FF" },
+          nurturing: { "50": "#34C759" },
+        },
+        mood: { happy: "#FFD700" },
+        warning: "#FFA500",
+        info: "#5AC8FA",
+        error: "#FF3B30",
+        success: "#34C759",
+        primary: "#007AFF",
+        text: {
+          primary: "#000000",
+          secondary: "#666666",
+        },
+        background: {
+          secondary: "#F5F5F5",
+        },
+      },
+    },
+    isReducedMotionEnabled: false,
+    isDarkMode: false,
+  }),
+}));
+
 // Mock theme context
 const mockTheme = {
   colors: {

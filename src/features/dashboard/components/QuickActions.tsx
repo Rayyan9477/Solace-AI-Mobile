@@ -1,7 +1,6 @@
 import { useTheme } from "@theme/ThemeProvider";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
-import PropTypes from "prop-types";
 import React, { useEffect, useRef } from "react";
 import {
   View,
@@ -10,34 +9,82 @@ import {
   Animated,
   StyleSheet,
   Platform,
+  ViewProps,
 } from "react-native";
+
+// TYPE SAFETY FIX: Define proper interfaces for type safety
+interface QuickActionEvent {
+  type: string;
+  id: string;
+  timestamp: string;
+  context: Record<string, unknown>;
+}
+
+interface QuickActionsProps {
+  onActionPress?: (event: QuickActionEvent) => void;
+  accessibilityLabel?: string;
+  testID?: string;
+  userContext?: Record<string, unknown>;
+}
+
+interface ActionConfig {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  color: string;
+  testID: string;
+  accessibilityLabel: string;
+  accessibilityHint: string;
+  type: string;
+  priority?: boolean;
+}
+
+// TYPE SAFETY FIX: Helper to safely extract color from theme
+function getThemeColor(
+  primary: string | Record<string, string> | undefined,
+  fallbackKey: string,
+  fallback: string
+): string {
+  if (typeof primary === "string") return primary;
+  if (primary && typeof primary === "object" && fallbackKey in primary) {
+    return primary[fallbackKey];
+  }
+  return fallback;
+}
 
 /**
  * QuickActions Component
  * Displays quick mental health action cards with therapeutic styling
  * Supports accessibility, animations, and haptic feedback
  */
-const QuickActions = ({
+const QuickActions: React.FC<QuickActionsProps> = ({
   onActionPress,
   accessibilityLabel = "Quick mental health actions",
   testID = "quick-actions",
   userContext = {},
-}: any) => {
-  const { theme, isReducedMotionEnabled }: any = (useTheme() as any) || {};
+}) => {
+  const themeContext = useTheme();
+  const theme = themeContext?.theme;
+  const isReducedMotionEnabled = themeContext?.isReducedMotionEnabled ?? false;
   const animations = useRef<Animated.Value[]>([]);
 
+  // TYPE SAFETY FIX: Use typed helper for color extraction
+  const therapeuticColors = theme?.colors?.therapeutic;
+  const primaryColor = theme?.colors?.primary;
+  const errorColor = theme?.colors?.error;
+  const infoColor = theme?.colors?.info;
+  const successColor = theme?.colors?.success;
+
   // Mental health actions configuration
-  const actions = [
+  const actions: ActionConfig[] = [
     {
       id: "therapy",
       title: "Start Therapy",
       description: "Connect with a mental health professional",
       icon: "🧠",
-      color:
-        (theme?.colors?.therapeutic?.calm as any) ||
-        (theme?.colors?.primary?.main as any) ||
-        (theme?.colors?.primary as any) ||
-        "#007AFF",
+      color: getThemeColor(therapeuticColors?.calming, "50", "#007AFF") ||
+             getThemeColor(primaryColor, "main", "#007AFF"),
       testID: "action-card-therapy",
       accessibilityLabel: "Start therapy session",
       accessibilityHint: "Navigate to therapy booking screen",
@@ -48,11 +95,8 @@ const QuickActions = ({
       title: "Journal Entry",
       description: "Express your thoughts and feelings",
       icon: "📝",
-      color:
-        (theme?.colors?.therapeutic?.nurturing as any) ||
-        (theme?.colors?.secondary?.main as any) ||
-        (theme?.colors?.success as any) ||
-        "#34C759",
+      color: getThemeColor(therapeuticColors?.nurturing, "50", "#34C759") ||
+             getThemeColor(successColor, "main", "#34C759"),
       testID: "action-card-journal",
       accessibilityLabel: "Create journal entry",
       accessibilityHint: "Navigate to journaling screen",
@@ -63,11 +107,8 @@ const QuickActions = ({
       title: "Mindfulness",
       description: "Practice mindfulness and meditation",
       icon: "🧘",
-      color:
-        (theme?.colors?.therapeutic?.peaceful as any) ||
-        (theme?.colors?.info?.main as any) ||
-        (theme?.colors?.info as any) ||
-        "#5AC8FA",
+      color: getThemeColor(therapeuticColors?.peaceful, "50", "#5AC8FA") ||
+             getThemeColor(infoColor, "main", "#5AC8FA"),
       testID: "action-card-mindful",
       accessibilityLabel: "Start mindfulness exercise",
       accessibilityHint: "Navigate to mindfulness screen",
@@ -78,10 +119,7 @@ const QuickActions = ({
       title: "Crisis Support",
       description: "Immediate help and support available",
       icon: "🚨",
-      color:
-        (theme?.colors?.error?.main as any) ||
-        (theme?.colors?.error as any) ||
-        "#FF3B30",
+      color: getThemeColor(errorColor, "main", "#FF3B30"),
       testID: "action-card-crisis",
       accessibilityLabel: "Access crisis support",
       accessibilityHint: "Navigate to crisis intervention screen",
@@ -115,7 +153,8 @@ const QuickActions = ({
     Animated.stagger(animationDelay, sequence).start();
   }, [isReducedMotionEnabled]);
 
-  const handleActionPress = async (action: any) => {
+  // TYPE SAFETY FIX: Properly typed action handler
+  const handleActionPress = async (action: ActionConfig): Promise<void> => {
     // Provide haptic feedback
     if (Platform.OS !== "web") {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -127,27 +166,34 @@ const QuickActions = ({
         type: action.type,
         id: action.id,
         timestamp: new Date().toISOString(),
-        context: userContext,
+        context: userContext ?? {},
       });
     }
   };
 
-  const renderActionCard = (action: any, index: number) => {
+  // TYPE SAFETY FIX: Properly typed render function with safe animation access
+  const renderActionCard = (action: ActionConfig, index: number): React.ReactNode => {
+    const animValue = animations.current[index];
     const animatedStyle = {
-      opacity: isReducedMotionEnabled
-        ? 1
-        : (animations.current[index] as any) || 1,
+      opacity: isReducedMotionEnabled ? 1 : (animValue ?? 1),
       transform: [
         {
           translateY: isReducedMotionEnabled
             ? 0
-            : (animations.current[index] as any)?.interpolate({
+            : animValue?.interpolate?.({
                 inputRange: [0, 1],
                 outputRange: [20, 0],
-              }) || 0,
+              }) ?? 0,
         },
       ],
     };
+
+    // TYPE SAFETY FIX: Safe background color extraction
+    const backgroundColor = theme?.colors?.background?.secondary ??
+                           theme?.colors?.surface ??
+                           "#F5F5F5";
+    const textPrimary = theme?.colors?.text?.primary ?? "#000000";
+    const textSecondary = theme?.colors?.text?.secondary ?? "#666666";
 
     return (
       <Animated.View
@@ -158,10 +204,7 @@ const QuickActions = ({
           style={[
             styles.actionCard,
             {
-              backgroundColor:
-                (theme?.colors?.background as any)?.surface ||
-                (theme?.colors?.surface as any) ||
-                "#F5F5F5",
+              backgroundColor,
               borderColor: action.color,
               minHeight: 80, // Ensure minimum touch target
             },
@@ -181,19 +224,13 @@ const QuickActions = ({
               <Text style={styles.actionIcon}>{action.icon}</Text>
               <View style={styles.actionTextContainer}>
                 <Text
-                  style={[
-                    styles.actionTitle,
-                    { color: theme.colors.text?.primary || "#000000" },
-                  ]}
+                  style={[styles.actionTitle, { color: textPrimary }]}
                   accessible
                 >
                   {action.title}
                 </Text>
                 <Text
-                  style={[
-                    styles.actionDescription,
-                    { color: theme.colors.text?.secondary || "#666666" },
-                  ]}
+                  style={[styles.actionDescription, { color: textSecondary }]}
                   accessible
                 >
                   {action.description}
@@ -206,20 +243,18 @@ const QuickActions = ({
     );
   };
 
+  // TYPE SAFETY FIX: Safe text color extraction
+  const sectionTitleColor = theme?.colors?.text?.primary ?? "#000000";
+
   return (
     <View
       style={styles.container}
       testID={testID}
       accessibilityLabel={accessibilityLabel}
-      {...({ accessibilityRole: "group" } as any)}
+      accessibilityRole="none"
       accessible
     >
-      <Text
-        style={[
-          styles.sectionTitle,
-          { color: theme.colors.text?.primary || "#000000" },
-        ]}
-      >
+      <Text style={[styles.sectionTitle, { color: sectionTitleColor }]}>
         Quick Actions
       </Text>
       <View style={styles.actionsGrid}>
@@ -229,12 +264,7 @@ const QuickActions = ({
   );
 };
 
-QuickActions.propTypes = {
-  onActionPress: PropTypes.func,
-  accessibilityLabel: PropTypes.string,
-  testID: PropTypes.string,
-  userContext: PropTypes.object,
-};
+// TYPE SAFETY FIX: Removed PropTypes in favor of TypeScript interfaces
 
 const styles = StyleSheet.create({
   container: {
