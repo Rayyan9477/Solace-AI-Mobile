@@ -625,4 +625,7 @@ export const LoginScreen = (props: any) => (
   </ScreenErrorBoundary>
 );
 
+// LOW-NEW-001 FIX: Add displayName for debugging and React DevTools
+LoginScreen.displayName = "LoginScreen";
+
 export default LoginScreen;

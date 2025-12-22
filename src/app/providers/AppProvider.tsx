@@ -61,18 +61,22 @@ interface MentalHealthContextType {
 }
 
 interface PerformanceContextType {
-  memoryUsage: number;
+  memoryUsage: number; // MED-NEW-009 FIX: -1 indicates measurement not available
   frameRate: number;
   renderTime: number;
   isLowMemoryMode: boolean;
   isOptimizedMode: boolean;
   backgroundTasksActive: boolean;
+  // MED-NEW-009 FIX: Memory pressure level for diagnostics
+  memoryPressureLevel: 'normal' | 'moderate' | 'critical';
   enableLowMemoryMode: () => void;
   disableLowMemoryMode: () => void;
   enableOptimizedMode: () => void;
   disableOptimizedMode: () => void;
   measureRenderTime: (componentName: string, renderFn: () => any) => any;
   cleanupMemory: () => void;
+  // MED-NEW-009 FIX: Allow external sources to report memory pressure
+  reportMemoryPressure: (level: 'normal' | 'moderate' | 'critical') => void;
 }
 
 // Accessibility Context
@@ -107,18 +111,20 @@ const MentalHealthContext = createContext<MentalHealthContextType>({
 
 // Performance Context
 const PerformanceContext = createContext<PerformanceContextType>({
-  memoryUsage: 0,
+  memoryUsage: -1, // MED-NEW-009 FIX: Default to "not available"
   frameRate: 60,
   renderTime: 0,
   isLowMemoryMode: false,
   isOptimizedMode: false,
   backgroundTasksActive: false,
+  memoryPressureLevel: 'normal',
   enableLowMemoryMode: () => {},
   disableLowMemoryMode: () => {},
   enableOptimizedMode: () => {},
   disableOptimizedMode: () => {},
   measureRenderTime: () => null,
   cleanupMemory: () => {},
+  reportMemoryPressure: () => {},
 });
 
 // Hook exports
@@ -509,18 +515,26 @@ const MentalHealthProvider: React.FC<{ children: React.ReactNode }> = ({
 const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [memoryUsage, setMemoryUsage] = useState(0);
+  // MED-NEW-009 FIX: Use -1 to indicate "not available" instead of fake values
+  const [memoryUsage, setMemoryUsage] = useState(-1);
   const [frameRate, setFrameRate] = useState(60);
   const [renderTime, setRenderTime] = useState(0);
   const [isLowMemoryMode, setIsLowMemoryMode] = useState(false);
   const [isOptimizedMode, setIsOptimizedMode] = useState(false);
   const [backgroundTasksActive, setBackgroundTasksActive] = useState(false);
+  // MED-NEW-009 FIX: Track memory pressure events instead of fake percentages
+  const [memoryPressureLevel, setMemoryPressureLevel] = useState<'normal' | 'moderate' | 'critical'>('normal');
+  // MED-NEW-009 FIX: Track estimated memory based on observable metrics
+  const [renderCount, setRenderCount] = useState(0);
+  const [slowRenderCount, setSlowRenderCount] = useState(0);
 
   useEffect(() => {
-    // MED-009 FIX: Use actual performance API instead of random simulation
-    // Random values were triggering false low-memory warnings 20% of the time
+    // MED-NEW-009 FIX: Improved memory monitoring strategy
+    // - Web: Use actual performance.memory API when available
+    // - React Native: Use heuristics based on render performance and memory pressure signals
+    // - Never report fake percentages - use -1 for "unavailable"
     const checkMemoryUsage = () => {
-      let memoryPercent = 0;
+      let memoryPercent = -1; // -1 indicates measurement not available
 
       // Try to get actual memory info from performance API (web)
       if (typeof performance !== "undefined" && (performance as any).memory) {
@@ -529,21 +543,38 @@ const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({
           memoryPercent = (memoryInfo.usedJSHeapSize / memoryInfo.jsHeapSizeLimit) * 100;
         }
       }
-      // For React Native, use a conservative estimate based on app state
-      // Actual memory monitoring would require native modules
+      // MED-NEW-009 FIX: For React Native, estimate based on performance metrics
+      // This is more honest than hardcoded values
       else if (Platform.OS !== "web") {
-        // Default to moderate usage - actual monitoring needs native implementation
-        // This prevents false positives while still allowing manual triggers
-        memoryPercent = isLowMemoryMode ? 75 : 40;
+        // Calculate estimated memory pressure from observable metrics:
+        // - Slow render ratio indicates memory pressure
+        // - Known low memory mode from OS triggers
+        const slowRenderRatio = renderCount > 0 ? slowRenderCount / renderCount : 0;
+
+        if (memoryPressureLevel === 'critical') {
+          memoryPercent = 90; // OS reported critical memory
+        } else if (memoryPressureLevel === 'moderate') {
+          memoryPercent = 70; // OS reported moderate pressure
+        } else if (slowRenderRatio > 0.3) {
+          // More than 30% of renders are slow - likely memory pressure
+          memoryPercent = 65;
+        } else if (slowRenderRatio > 0.1) {
+          // Some slow renders - moderate estimate
+          memoryPercent = 45;
+        } else {
+          // No memory pressure indicators - report as unavailable
+          // rather than guessing a number
+          memoryPercent = -1;
+        }
       }
 
       setMemoryUsage(memoryPercent);
 
-      // Only trigger low memory mode if we have actual high usage data
-      if (memoryPercent > 80 && !isLowMemoryMode) {
+      // Only trigger low memory mode if we have actual high usage data (not -1)
+      if (memoryPercent >= 80 && !isLowMemoryMode) {
         logger.warn("⚠️ PerformanceProvider: High memory usage detected:", memoryPercent.toFixed(1) + "%");
         enableLowMemoryMode();
-      } else if (memoryPercent < 60 && isLowMemoryMode) {
+      } else if (memoryPercent > 0 && memoryPercent < 60 && isLowMemoryMode) {
         // MED-009 FIX: Auto-recover from low memory mode when usage drops
         disableLowMemoryMode();
       }
@@ -571,7 +602,7 @@ const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({
       clearInterval(memoryCheckInterval);
       subscription?.remove();
     };
-  }, [isLowMemoryMode]);
+  }, [isLowMemoryMode, memoryPressureLevel, renderCount, slowRenderCount]);
 
   const enableLowMemoryMode = useCallback(() => {
     setIsLowMemoryMode(true);
@@ -589,6 +620,7 @@ const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsOptimizedMode(false);
   }, []);
 
+  // MED-NEW-009 FIX: Track render performance for memory pressure estimation
   const measureRenderTime = useCallback(
     (componentName: string, renderFn: () => any) => {
       const startTime = Date.now();
@@ -596,10 +628,26 @@ const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({
       const endTime = Date.now();
       const duration = endTime - startTime;
       setRenderTime(duration);
+
+      // MED-NEW-009 FIX: Track slow renders for memory pressure estimation
+      setRenderCount(prev => prev + 1);
+      if (duration > 16) { // Slower than 60fps threshold
+        setSlowRenderCount(prev => prev + 1);
+      }
+
       return result;
     },
     [],
   );
+
+  // MED-NEW-009 FIX: Method to report memory pressure from external sources
+  const reportMemoryPressure = useCallback((level: 'normal' | 'moderate' | 'critical') => {
+    logger.debug(`Memory pressure level changed to: ${level}`);
+    setMemoryPressureLevel(level);
+    if (level === 'critical') {
+      enableLowMemoryMode();
+    }
+  }, []);
 
   const cleanupMemory = useCallback(() => {
     if (__DEV__ && global.gc) {
@@ -614,9 +662,13 @@ const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({
     isLowMemoryMode,
     isOptimizedMode,
     backgroundTasksActive,
+    // MED-NEW-009 FIX: Expose memory pressure level for better diagnostics
+    memoryPressureLevel,
     enableLowMemoryMode,
     disableLowMemoryMode,
     enableOptimizedMode,
+    // MED-NEW-009 FIX: Allow external components to report memory pressure
+    reportMemoryPressure,
     disableOptimizedMode,
     measureRenderTime,
     cleanupMemory,

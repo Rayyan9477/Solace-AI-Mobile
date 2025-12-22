@@ -4,7 +4,51 @@
  */
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Crypto from "expo-crypto";
 import { logger } from "@shared/utils/logger";
+
+// HIGH-NEW-009 FIX: Counter for additional entropy in ID generation
+let idCounter = 0;
+
+/**
+ * HIGH-NEW-009 FIX: Generate a collision-resistant unique ID
+ * Uses multiple sources of entropy:
+ * - Timestamp (milliseconds)
+ * - Counter (increments per-process)
+ * - Cryptographic random bytes (expo-crypto)
+ * - Fallback to enhanced Math.random if crypto unavailable
+ */
+async function generateUniqueId(prefix: string = ''): Promise<string> {
+  const timestamp = Date.now();
+  const counter = idCounter++;
+
+  // Reset counter if it gets too large (prevent overflow)
+  if (idCounter > 999999) {
+    idCounter = 0;
+  }
+
+  let randomPart: string;
+  try {
+    // Use crypto-secure random bytes
+    const randomBytes = await Crypto.getRandomBytesAsync(8);
+    randomPart = Array.from(randomBytes)
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+  } catch {
+    // Fallback: combine multiple Math.random calls for better entropy
+    randomPart = [
+      Math.random().toString(36).substring(2, 8),
+      Math.random().toString(36).substring(2, 8),
+    ].join('');
+  }
+
+  // Format: prefix_timestamp_counter_random
+  const id = prefix
+    ? `${prefix}_${timestamp}_${counter.toString(36)}_${randomPart}`
+    : `${timestamp}_${counter.toString(36)}_${randomPart}`;
+
+  return id;
+}
 
 // ==================== TYPES ====================
 
@@ -321,14 +365,18 @@ class DataPersistenceService {
 
   /**
    * Add item to sync queue for later processing
+   * HIGH-NEW-009 FIX: Uses collision-resistant ID generation
    */
   async addToSyncQueue(
     type: "create" | "update" | "delete",
     endpoint: string,
     data: SyncData
   ): Promise<void> {
+    // HIGH-NEW-009 FIX: Use cryptographically secure ID generation
+    const uniqueId = await generateUniqueId('sync');
+
     const item: SyncQueueItem = {
-      id: `sync_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: uniqueId,
       type,
       endpoint,
       data,

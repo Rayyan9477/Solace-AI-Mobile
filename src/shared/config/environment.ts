@@ -123,10 +123,44 @@ export const STORAGE_CONFIG = {
 
 /**
  * Analytics Configuration
+ *
+ * HIGH-NEW-016 FIX: Security note about EXPO_PUBLIC_ prefixed environment variables
+ *
+ * IMPORTANT: Environment variables with EXPO_PUBLIC_ prefix are bundled into the
+ * client-side JavaScript and are visible to end users. Only use this prefix for:
+ * - Write-only analytics keys (like Google Analytics measurement IDs)
+ * - Public API keys with restricted permissions
+ * - Configuration that is safe to be public
+ *
+ * NEVER use EXPO_PUBLIC_ prefix for:
+ * - Admin or secret API keys
+ * - Database credentials
+ * - Private API tokens with read/write access
+ *
+ * If you need a secret key client-side, use a server-side proxy pattern instead.
  */
 export const ANALYTICS_CONFIG = {
-  // Analytics service API key
-  apiKey: process.env.EXPO_PUBLIC_ANALYTICS_API_KEY || "",
+  // Analytics service API key (write-only, safe for client exposure)
+  // HIGH-NEW-016 FIX: Added validation to prevent accidental secret exposure
+  apiKey: (() => {
+    const key = process.env.EXPO_PUBLIC_ANALYTICS_API_KEY || "";
+
+    // Warn if key looks like a secret (contains common secret patterns)
+    if (key && (
+      key.toLowerCase().includes('secret') ||
+      key.toLowerCase().includes('private') ||
+      key.startsWith('sk_') || // Stripe secret key pattern
+      key.startsWith('rk_')    // Other secret key patterns
+    )) {
+      console.warn(
+        '[Security Warning] ANALYTICS_CONFIG.apiKey appears to be a secret key. ' +
+        'EXPO_PUBLIC_ prefixed variables are exposed to clients. ' +
+        'Use a write-only/public key or implement a server-side proxy.'
+      );
+    }
+
+    return key;
+  })(),
 
   // Enable analytics in development
   enableInDev: process.env.EXPO_PUBLIC_ANALYTICS_DEV === "true",

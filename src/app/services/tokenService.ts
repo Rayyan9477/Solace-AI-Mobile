@@ -11,10 +11,13 @@ import { STORAGE_CONFIG } from "../../shared/config/environment";
 // MED-010 FIX: Type for refresh token callback to avoid circular imports
 type RefreshTokenCallback = (refreshToken: string) => Promise<any>;
 
+// MED-NEW-010 FIX: Lazy-loaded API module reference for automatic circular dependency resolution
+let lazyApiModule: { refreshAccessToken?: RefreshTokenCallback } | null = null;
+
 class TokenService {
   private storage: typeof secureStorage;
   private refreshPromise: Promise<any> | null = null;
-  // MED-010 FIX: Callback registration pattern instead of dynamic import
+  // MED-010 FIX: Callback registration pattern (preferred for explicit control)
   private refreshTokenCallback: RefreshTokenCallback | null = null;
 
   constructor() {
@@ -23,11 +26,46 @@ class TokenService {
 
   /**
    * MED-010 FIX: Register the refresh token callback from the API service
-   * This avoids circular imports by late-binding the dependency
-   * Call this from api.ts during initialization
+   * This is the preferred method for explicit dependency injection
+   * MED-NEW-010 FIX: Now optional - system will use lazy import as fallback
    */
   registerRefreshCallback(callback: RefreshTokenCallback): void {
     this.refreshTokenCallback = callback;
+  }
+
+  /**
+   * MED-NEW-010 FIX: Get refresh function with automatic fallback to lazy import
+   * This eliminates the need for manual callback registration
+   */
+  private async getRefreshFunction(): Promise<RefreshTokenCallback | null> {
+    // Prefer explicitly registered callback
+    if (this.refreshTokenCallback) {
+      return this.refreshTokenCallback;
+    }
+
+    // MED-NEW-010 FIX: Lazy import as automatic fallback
+    // Dynamic import() is evaluated at runtime, avoiding circular dependency at load time
+    try {
+      if (!lazyApiModule) {
+        // Use dynamic import to load api module lazily
+        const apiModule = await import('./api');
+        // Extract the refresh function from the default export or named export
+        if (apiModule.default?.refreshAccessToken) {
+          lazyApiModule = { refreshAccessToken: apiModule.default.refreshAccessToken };
+        } else if (typeof apiModule.refreshAccessToken === 'function') {
+          lazyApiModule = { refreshAccessToken: apiModule.refreshAccessToken };
+        }
+      }
+
+      if (lazyApiModule?.refreshAccessToken) {
+        logger.debug('[TokenService] Using lazy-loaded API refresh function');
+        return lazyApiModule.refreshAccessToken;
+      }
+    } catch (importError) {
+      logger.warn('[TokenService] Failed to lazy-load API module:', importError);
+    }
+
+    return null;
   }
 
   /**
@@ -61,8 +99,12 @@ class TokenService {
       expiresAt = params.expiresAt;
     } else if (params.expires_in) {
       // API-provided expires_in (in seconds) - convert to timestamp
-      // Add 60-second buffer before expiration to allow for proactive refresh
-      expiresAt = Date.now() + (params.expires_in - 60) * 1000;
+      // HIGH-NEW-006 FIX: Use dynamic buffer based on token lifetime
+      // - 5% of token lifetime, minimum 10 seconds, maximum 60 seconds
+      // - This prevents aggressive buffering for short-lived tokens
+      const expiresInSeconds = params.expires_in;
+      const dynamicBuffer = Math.min(60, Math.max(10, Math.floor(expiresInSeconds * 0.05)));
+      expiresAt = Date.now() + (expiresInSeconds - dynamicBuffer) * 1000;
     } else {
       // Default: 55 minutes (typical OAuth2 tokens are 1 hour)
       // This avoids unnecessary refreshes while still being conservative
@@ -236,14 +278,15 @@ class TokenService {
           return null;
         }
 
-        // MED-010 FIX: Use registered callback instead of dynamic import
-        // This avoids circular dependencies between tokenService and api
-        if (!this.refreshTokenCallback) {
-          logger.error("Token refresh callback not registered. Call tokenService.registerRefreshCallback() from api.ts");
+        // MED-NEW-010 FIX: Use getRefreshFunction for automatic dependency resolution
+        // This tries registered callback first, then falls back to lazy import
+        const refreshFunction = await this.getRefreshFunction();
+        if (!refreshFunction) {
+          logger.error("[TokenService] No refresh function available. Either register callback or ensure api.ts exports refreshAccessToken");
           return null;
         }
 
-        const response = await this.refreshTokenCallback(refreshToken);
+        const response = await refreshFunction(refreshToken);
 
         // Extract tokens from response data (handle multiple response formats)
         const tokenData = (response as any)?.data || response;

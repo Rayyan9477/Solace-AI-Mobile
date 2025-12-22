@@ -609,7 +609,7 @@ const AssessmentScreenComponent = () => {
           <View style={styles.optionsContainer}>
             {question.options?.map((option, index) => (
               <TouchableOpacity
-                key={index}
+                key={`${question.id}-option-${option}-${index}`}
                 style={[
                   styles.optionButton,
                   (question.type === "multi-select"
@@ -653,7 +653,7 @@ const AssessmentScreenComponent = () => {
           <View style={styles.moodContainer}>
             {question.options?.map((option: any, index) => (
               <TouchableOpacity
-                key={index}
+                key={`${question.id}-mood-${option.label}-${index}`}
                 style={[
                   styles.moodOption,
                   answers[question.id] === option.label &&
@@ -691,7 +691,7 @@ const AssessmentScreenComponent = () => {
             {question.labels && (
               <View style={styles.sliderLabels}>
                 {question.labels.map((label, index) => (
-                  <Text key={index} style={styles.sliderLabel}>
+                  <Text key={`${question.id}-label-${label}-${index}`} style={styles.sliderLabel}>
                     {label}
                   </Text>
                 ))}
@@ -1040,5 +1040,8 @@ export const AssessmentScreen = () => (
     <AssessmentScreenComponent />
   </ScreenErrorBoundary>
 );
+
+// LOW-NEW-001 FIX: Add displayName for debugging and React DevTools
+AssessmentScreen.displayName = "AssessmentScreen";
 
 export default AssessmentScreen;

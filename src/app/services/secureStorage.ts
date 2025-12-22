@@ -24,6 +24,41 @@ interface EncryptedData {
   tag: string;
 }
 
+/**
+ * MED-NEW-011 FIX: Recursively sort object keys for consistent JSON serialization
+ * JSON.stringify doesn't guarantee key ordering, which could cause checksum mismatches
+ * if the same data is serialized with different key orders.
+ * This ensures deterministic serialization regardless of object property order.
+ */
+function sortObjectKeys(obj: unknown): unknown {
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(sortObjectKeys);
+  }
+
+  if (typeof obj === 'object' && obj !== null) {
+    const sortedObj: Record<string, unknown> = {};
+    const keys = Object.keys(obj).sort();
+    for (const key of keys) {
+      sortedObj[key] = sortObjectKeys((obj as Record<string, unknown>)[key]);
+    }
+    return sortedObj;
+  }
+
+  return obj;
+}
+
+/**
+ * MED-NEW-011 FIX: Create deterministic JSON string with sorted keys
+ * This ensures checksum consistency regardless of object property order
+ */
+function deterministicStringify(data: unknown): string {
+  return JSON.stringify(sortObjectKeys(data));
+}
+
 class SecureStorage {
   private deviceKeyCache: string | null = null;
   private encryptionKeyCache: string | null = null;
@@ -336,9 +371,10 @@ class SecureStorage {
       }
 
       // MED-011 FIX: Calculate checksum on JSON-serialized data for consistency
+      // MED-NEW-011 FIX: Use deterministicStringify for consistent key ordering
       // This ensures the checksum matches exactly what will be stored and retrieved
-      // Previously, differences in JSON serialization (key ordering, etc.) could cause mismatches
-      const serializedData = JSON.stringify(data);
+      // regardless of object property insertion order
+      const serializedData = deterministicStringify(data);
       const checksum = await this.calculateChecksumFromString(serializedData);
 
       const storageData: StorageData = {
@@ -427,7 +463,8 @@ class SecureStorage {
         ) {
           if (parsedData.version === "2.0" && parsedData.checksum) {
             // MED-011 FIX: Use same serialization approach for consistency
-            const serializedData = JSON.stringify(parsedData.data);
+            // MED-NEW-011 FIX: Use deterministicStringify for consistent key ordering
+            const serializedData = deterministicStringify(parsedData.data);
             const expectedChecksum = await this.calculateChecksumFromString(serializedData);
             if (parsedData.checksum !== expectedChecksum) {
               await this.removeSecureData(key);

@@ -187,7 +187,7 @@ const OnboardingScreen = ({ navigation }) => {
         <View style={styles.paginationContainer}>
           {onboardingSteps.map((_, index) => (
             <View
-              key={index}
+              key={`onboarding-step-${index}`}
               style={[
                 styles.paginationDot,
                 index === currentStep ? styles.activeDot : styles.inactiveDot,

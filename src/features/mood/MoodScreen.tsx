@@ -318,7 +318,7 @@ export const MoodScreen = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Recent Entries</Text>
           {recentEntries.map((entry, index) => (
-            <View key={index} style={styles.historyItem}>
+            <View key={`mood-entry-${entry.timestamp.getTime()}-${index}`} style={styles.historyItem}>
               <View style={styles.historyHeader}>
                 <Text style={styles.historyMood}>
                   {entry.mood} (Level {entry.intensity})

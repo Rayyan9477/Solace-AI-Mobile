@@ -1,13 +1,77 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { logger } from "@shared/utils/logger";
 
 import apiService from "../../services/api";
 import secureStorage from "../../services/secureStorage";
 import tokenService from "../../services/tokenService";
 
-export const secureLogin = createAsyncThunk(
+// Type safety fix: Define proper interfaces for auth operations
+interface User {
+  id: string;
+  email: string;
+  name?: string;
+  avatar?: string;
+  [key: string]: unknown; // Allow additional properties from API
+}
+
+interface LoginPayload {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+}
+
+interface LoginResult {
+  user: User;
+  token: string;
+}
+
+interface RestoreAuthResult {
+  isAuthenticated: boolean;
+  user?: User;
+  token?: string;
+}
+
+/**
+ * Type guard to extract error message from unknown error
+ */
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  if (typeof error === 'object' && error !== null && 'message' in error) {
+    return String((error as { message: unknown }).message);
+  }
+  if (typeof error === 'string') {
+    return error;
+  }
+  return 'An unknown error occurred';
+}
+
+/**
+ * Type guard to extract API error message
+ */
+function getApiErrorMessage(error: unknown, defaultMsg: string): string {
+  if (typeof error === 'object' && error !== null) {
+    const err = error as Record<string, unknown>;
+    if (err.response && typeof err.response === 'object') {
+      const response = err.response as Record<string, unknown>;
+      if (response.data && typeof response.data === 'object') {
+        const data = response.data as Record<string, unknown>;
+        if (typeof data.message === 'string') {
+          return data.message;
+        }
+      }
+    }
+    if (err.message && typeof err.message === 'string') {
+      return err.message;
+    }
+  }
+  return defaultMsg;
+}
+
+export const secureLogin = createAsyncThunk<LoginResult, LoginPayload, { rejectValue: string }>(
   "auth/secureLogin",
-  async (payload: any, { rejectWithValue }) => {
+  async (payload, { rejectWithValue }) => {
     try {
       const { email, password, rememberMe = false } = payload || {};
       if (!email || !password) {
@@ -25,21 +89,19 @@ export const secureLogin = createAsyncThunk(
       });
 
       return {
-        user: response.user,
+        user: response.user as User,
         token: response.access_token,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       logger.error("Login error:", error);
       return rejectWithValue(
-        error.response?.data?.message ||
-          error.message ||
-          "Login failed. Please try again.",
+        getApiErrorMessage(error, "Login failed. Please try again."),
       );
     }
   },
 );
 
-export const secureLogout = createAsyncThunk(
+export const secureLogout = createAsyncThunk<Record<string, never>, void, { rejectValue: string }>(
   "auth/secureLogout",
   async (_, { rejectWithValue }) => {
     try {
@@ -48,17 +110,17 @@ export const secureLogout = createAsyncThunk(
       await tokenService.invalidateSession();
 
       return {};
-    } catch (error) {
-      const message = (error as any)?.message || "Logout failed";
+    } catch (error: unknown) {
+      const message = getErrorMessage(error) || "Logout failed";
       return rejectWithValue(message);
     }
   },
 );
 
 // Async thunk to restore authentication state with timeout
-export const restoreAuthState = createAsyncThunk(
+export const restoreAuthState = createAsyncThunk<RestoreAuthResult, void, { rejectValue: string }>(
   "auth/restoreAuthState",
-  async (_, { rejectWithValue }) => {
+  async (_) => {
     try {
       logger.debug(
         "restoreAuthState: Starting authentication state restoration...",
@@ -99,12 +161,12 @@ export const restoreAuthState = createAsyncThunk(
         );
         return {
           isAuthenticated: true,
-          user,
+          user: user as User,
           token: tokens.accessToken,
         };
       };
 
-      return await Promise.race([authCheckPromise(), timeoutPromise]);
+      return await Promise.race([authCheckPromise(), timeoutPromise]) as RestoreAuthResult;
     } catch (error) {
       logger.error("restoreAuthState: Error during restoration:", error);
       try {
@@ -119,7 +181,7 @@ export const restoreAuthState = createAsyncThunk(
 
 interface AuthState {
   isAuthenticated: boolean;
-  user: any;
+  user: User | null;
   token: string | null;
   isLoading: boolean;
   error: string | null;
@@ -154,13 +216,17 @@ const authSlice = createSlice({
     completeOnboarding: (state) => {
       state.onboardingCompleted = true;
     },
-    updateUser: (state, action) => {
-      state.user = { ...(state.user || {}), ...action.payload } as any;
+    updateUser: (state, action: PayloadAction<Partial<User>>) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+      } else {
+        state.user = action.payload as User;
+      }
     },
     updateLastActivity: (state) => {
       state.lastActivity = Date.now();
     },
-    setSessionExpiry: (state, action) => {
+    setSessionExpiry: (state, action: PayloadAction<number | null>) => {
       state.sessionExpiry = action.payload;
     },
   },
@@ -174,18 +240,18 @@ const authSlice = createSlice({
       .addCase(secureLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = true;
-        state.user = (action.payload as any).user;
-        state.token = (action.payload as any).token;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
         state.error = null;
         state.lastActivity = Date.now();
-        state.sessionExpiry = (Date.now() + 3600 * 1000) as any; // 1 hour
+        state.sessionExpiry = Date.now() + 3600 * 1000; // 1 hour
       })
       .addCase(secureLogin.rejected, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = false;
         state.user = null;
         state.token = null;
-        state.error = (action.payload as any) ?? "Login failed";
+        state.error = action.payload ?? "Login failed";
       })
 
       // Secure logout cases
@@ -197,7 +263,7 @@ const authSlice = createSlice({
       })
       .addCase(secureLogout.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = (action.payload as any) ?? "Logout failed";
+        state.error = action.payload ?? "Logout failed";
         // Still clear auth state even if logout fails
         state.isAuthenticated = false;
         state.user = null;
@@ -215,14 +281,14 @@ const authSlice = createSlice({
         );
         logger.debug(
           "restoreAuthState.fulfilled: isAuthenticated =",
-          (action.payload as any).isAuthenticated,
+          action.payload.isAuthenticated,
         );
         state.isLoading = false;
         state.authChecked = true;
-        if ((action.payload as any).isAuthenticated) {
+        if (action.payload.isAuthenticated && action.payload.user) {
           state.isAuthenticated = true;
-          state.user = (action.payload as any).user;
-          state.token = (action.payload as any).token;
+          state.user = action.payload.user;
+          state.token = action.payload.token ?? null;
           state.lastActivity = Date.now();
         } else {
           state.isAuthenticated = false;

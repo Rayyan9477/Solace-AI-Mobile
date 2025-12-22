@@ -716,4 +716,7 @@ export const DashboardScreen = () => (
   </ScreenErrorBoundary>
 );
 
+// LOW-NEW-001 FIX: Add displayName for debugging and React DevTools
+DashboardScreen.displayName = "DashboardScreen";
+
 export default DashboardScreen;

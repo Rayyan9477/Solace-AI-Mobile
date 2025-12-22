@@ -884,6 +884,12 @@ const styles = StyleSheet.create({
   },
 });
 
+// LOW-NEW-001 FIX: Add displayName for debugging and React DevTools
+TherapySessionForm.displayName = "TherapySessionForm";
+MoodTrackingForm.displayName = "MoodTrackingForm";
+AssessmentQuestionForm.displayName = "AssessmentQuestionForm";
+CrisisSupportForm.displayName = "CrisisSupportForm";
+
 export default {
   TherapySessionForm,
   MoodTrackingForm,
