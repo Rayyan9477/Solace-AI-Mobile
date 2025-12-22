@@ -74,6 +74,93 @@ export interface AssessmentResult {
 }
 
 /**
+ * CRIT-NEW-004 FIX: Validation result interface for route params
+ */
+export interface ValidationResult {
+  valid: boolean;
+  error?: string;
+  sanitizedAnswers: AssessmentAnswers;
+}
+
+/**
+ * CRIT-NEW-004 FIX: Validate and sanitize assessment answers from route params
+ * Ensures data integrity and prevents app crashes from malformed data
+ * @param params - The route params object (may be undefined or malformed)
+ * @returns ValidationResult with sanitized answers and any validation errors
+ */
+export function validateAssessmentAnswers(params: unknown): ValidationResult {
+  // Check if params exist
+  if (!params || typeof params !== 'object') {
+    return {
+      valid: false,
+      error: 'Missing route parameters',
+      sanitizedAnswers: {},
+    };
+  }
+
+  const paramsObj = params as Record<string, unknown>;
+  const answers = paramsObj.answers;
+
+  // Check if answers exist
+  if (answers === undefined || answers === null) {
+    return {
+      valid: false,
+      error: 'Missing assessment answers in route parameters',
+      sanitizedAnswers: {},
+    };
+  }
+
+  // Check if answers is an object
+  if (typeof answers !== 'object' || Array.isArray(answers)) {
+    return {
+      valid: false,
+      error: 'Invalid assessment answers format - expected object',
+      sanitizedAnswers: {},
+    };
+  }
+
+  const answersObj = answers as Record<string | number, unknown>;
+  const sanitizedAnswers: AssessmentAnswers = {};
+
+  // Validate and sanitize each answer
+  for (const [key, value] of Object.entries(answersObj)) {
+    const questionId = Number(key);
+
+    // Skip non-numeric keys
+    if (isNaN(questionId)) {
+      continue;
+    }
+
+    // Validate answer type
+    if (
+      typeof value === 'string' ||
+      typeof value === 'number' ||
+      typeof value === 'boolean' ||
+      value === undefined ||
+      (Array.isArray(value) && value.every(v => typeof v === 'string'))
+    ) {
+      sanitizedAnswers[questionId] = value as AssessmentAnswer;
+    }
+    // Skip invalid answer types silently
+  }
+
+  // Check if we have at least some valid answers
+  const answerCount = Object.keys(sanitizedAnswers).length;
+  if (answerCount === 0) {
+    return {
+      valid: false,
+      error: 'No valid assessment answers found',
+      sanitizedAnswers: {},
+    };
+  }
+
+  return {
+    valid: true,
+    sanitizedAnswers,
+  };
+}
+
+/**
  * Calculate overall mental health score from assessment answers
  */
 export const calculateAssessmentScore = (answers: AssessmentAnswers): AssessmentResult => {

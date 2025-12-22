@@ -35,6 +35,37 @@ interface JournalDetailProps {
   isVoice: boolean;
 }
 
+/**
+ * CRIT-NEW-004 FIX: Validate journal entry structure from route params
+ * Returns null if entry is invalid, otherwise returns sanitized entry
+ */
+function validateJournalEntry(entry: unknown): JournalDetailProps | null {
+  if (!entry || typeof entry !== 'object') {
+    return null;
+  }
+
+  const e = entry as Record<string, unknown>;
+
+  // Validate required fields
+  if (typeof e.id !== 'string' || !e.id) {
+    return null;
+  }
+
+  // Return sanitized entry with defaults for optional fields
+  return {
+    id: e.id,
+    title: typeof e.title === 'string' ? e.title : 'Untitled Entry',
+    content: typeof e.content === 'string' ? e.content : '',
+    mood: typeof e.mood === 'string' ? e.mood : '😐',
+    date: typeof e.date === 'string' ? e.date : new Date().toLocaleDateString(),
+    time: typeof e.time === 'string' ? e.time : new Date().toLocaleTimeString(),
+    tags: Array.isArray(e.tags) ? e.tags.filter((t): t is string => typeof t === 'string') : [],
+    color: typeof e.color === 'string' ? e.color : '#8B7355',
+    audioUrl: typeof e.audioUrl === 'string' ? e.audioUrl : undefined,
+    isVoice: typeof e.isVoice === 'boolean' ? e.isVoice : false,
+  };
+}
+
 export const JournalDetailScreen = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
@@ -54,11 +85,16 @@ export const JournalDetailScreen = () => {
   useEffect(() => {
     const loadEntry = async () => {
       try {
-        // Try to get entry from route params first
+        // CRIT-NEW-004 FIX: Validate entry from route params before use
         if (route.params?.entry) {
-          setEntry(route.params.entry);
-          setLoading(false);
-          return;
+          const validatedEntry = validateJournalEntry(route.params.entry);
+          if (validatedEntry) {
+            setEntry(validatedEntry);
+            setLoading(false);
+            return;
+          }
+          // If validation fails, log and continue to load from storage
+          logger.warn('[JournalDetail] Invalid entry in route params, loading from storage');
         }
 
         // Load from AsyncStorage using the entry ID from route params

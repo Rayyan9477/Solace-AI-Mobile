@@ -113,7 +113,14 @@ class InterceptorManager {
   async runRequestInterceptors(config: RequestConfig): Promise<RequestConfig> {
     let modifiedConfig = config;
     for (const interceptor of this.requestInterceptors) {
-      modifiedConfig = await interceptor(modifiedConfig);
+      try {
+        modifiedConfig = await interceptor(modifiedConfig);
+      } catch (interceptorError) {
+        // HIGH-NEW-018 FIX: Log error but continue with last good config
+        logger.warn('[Interceptor] Request interceptor threw error, continuing', {
+          error: interceptorError instanceof Error ? interceptorError.message : String(interceptorError),
+        });
+      }
     }
     return modifiedConfig;
   }
@@ -121,7 +128,14 @@ class InterceptorManager {
   async runResponseInterceptors<T>(response: ApiResponse<T>): Promise<ApiResponse<T>> {
     let modifiedResponse = response;
     for (const interceptor of this.responseInterceptors) {
-      modifiedResponse = await interceptor(modifiedResponse);
+      try {
+        modifiedResponse = await interceptor(modifiedResponse);
+      } catch (interceptorError) {
+        // HIGH-NEW-018 FIX: Log error but continue with last good response
+        logger.warn('[Interceptor] Response interceptor threw error, continuing', {
+          error: interceptorError instanceof Error ? interceptorError.message : String(interceptorError),
+        });
+      }
     }
     return modifiedResponse;
   }
@@ -129,7 +143,14 @@ class InterceptorManager {
   async runErrorInterceptors(error: ApiError): Promise<ApiError> {
     let modifiedError = error;
     for (const interceptor of this.errorInterceptors) {
-      modifiedError = await interceptor(modifiedError);
+      try {
+        modifiedError = await interceptor(modifiedError);
+      } catch (interceptorError) {
+        // HIGH-NEW-018 FIX: Log error but continue with last good error object
+        logger.warn('[Interceptor] Error interceptor threw error, continuing', {
+          error: interceptorError instanceof Error ? interceptorError.message : String(interceptorError),
+        });
+      }
     }
     return modifiedError;
   }
@@ -212,7 +233,8 @@ function getExponentialBackoffDelay(
   const exponentialDelay = Math.min(baseDelay * Math.pow(2, retryCount), maxDelay);
 
   // Add jitter: ±20% randomness to prevent thundering herd
-  const jitter = exponentialDelay * 0.2 * (Math.random() - 0.5);
+  // HIGH-NEW-013 FIX: Jitter is now positive-only (0% to +20%) to never reduce delay
+  const jitter = exponentialDelay * 0.2 * Math.random();
 
   return Math.floor(exponentialDelay + jitter);
 }
@@ -351,10 +373,55 @@ const tokenRefreshAttempts = new Map();
 const MAX_REFRESH_ATTEMPTS = 2;
 const REFRESH_ATTEMPT_WINDOW = 60000;
 const MAX_RETRY_ATTEMPTS = 3;
+// CRIT-NEW-002 FIX: Maximum call depth to prevent infinite recursion
+// This is a safety mechanism to catch any edge cases in the retry/refresh flow
+const MAX_CALL_DEPTH = 10;
 
-// CRIT-001 FIX: Mutex for token refresh to prevent race conditions
-let isRefreshingToken = false;
-let refreshTokenPromise: Promise<any> | null = null;
+// CRIT-NEW-001 FIX: Atomic mutex implementation for thread-safe token refresh
+// This prevents race conditions where multiple concurrent requests all try to refresh
+// by using a proper mutex with a wait queue instead of simple boolean flags
+class AtomicMutex {
+  private locked = false;
+  private waitQueue: Array<() => void> = [];
+
+  /**
+   * Acquire the mutex. If locked, caller waits in queue.
+   * This is atomic - no race condition window between check and set.
+   */
+  async acquire(): Promise<void> {
+    if (!this.locked) {
+      this.locked = true;
+      return;
+    }
+
+    // Wait in queue for lock to be released
+    return new Promise<void>((resolve) => {
+      this.waitQueue.push(resolve);
+    });
+  }
+
+  /**
+   * Release the mutex. Passes lock to next waiter if any.
+   */
+  release(): void {
+    if (this.waitQueue.length > 0) {
+      // Pass lock to next waiter (lock stays true)
+      const next = this.waitQueue.shift();
+      next?.();
+    } else {
+      this.locked = false;
+    }
+  }
+
+  isLocked(): boolean {
+    return this.locked;
+  }
+}
+
+// CRIT-NEW-001 FIX: Single mutex instance for all token refresh operations
+const tokenRefreshMutex = new AtomicMutex();
+let activeRefreshPromise: Promise<any> | null = null;
+let activeRefreshToken: string | null = null;
 
 // HIGH-007 FIX: Track in-flight requests to prevent duplicate API calls
 const inFlightRequests = new Map<string, Promise<any>>();
@@ -390,36 +457,81 @@ function getRequestKey(url: string, options: any): string {
 /**
  * Thread-safe token refresh that ensures only one refresh happens at a time
  * Other concurrent requests wait for the same refresh to complete
+ * CRIT-NEW-001 FIX: Uses AtomicMutex for proper thread-safety with wait queue
  */
 async function safeRefreshToken(refreshToken: string): Promise<any> {
-  // If already refreshing, wait for the existing refresh to complete
-  if (isRefreshingToken && refreshTokenPromise) {
-    return refreshTokenPromise;
+  // CRIT-NEW-001 FIX: If there's already a refresh in progress for the same token,
+  // return the existing promise to avoid duplicate refresh requests
+  if (activeRefreshPromise && activeRefreshToken === refreshToken) {
+    logger.debug('[Token Refresh] Reusing existing refresh promise');
+    return activeRefreshPromise;
   }
 
-  isRefreshingToken = true;
-  refreshTokenPromise = (async () => {
-    try {
-      const newTokens = await refreshAccessToken(refreshToken);
-      return newTokens;
-    } finally {
-      isRefreshingToken = false;
-      refreshTokenPromise = null;
-    }
-  })();
+  // Acquire the mutex - this blocks if another refresh is already in progress
+  await tokenRefreshMutex.acquire();
 
-  return refreshTokenPromise;
+  try {
+    // Double-check after acquiring mutex (another request might have completed refresh)
+    // This handles the case where multiple requests queued up before mutex was acquired
+    if (activeRefreshPromise && activeRefreshToken === refreshToken) {
+      logger.debug('[Token Refresh] Another request completed refresh, reusing result');
+      tokenRefreshMutex.release();
+      return activeRefreshPromise;
+    }
+
+    // Set the active refresh state
+    activeRefreshToken = refreshToken;
+    logger.debug('[Token Refresh] Starting new token refresh');
+
+    // Create the refresh promise
+    activeRefreshPromise = (async () => {
+      try {
+        const result = await refreshAccessToken(refreshToken);
+        return result;
+      } catch (error) {
+        // Clear the promise on error so next attempt can try again
+        activeRefreshPromise = null;
+        activeRefreshToken = null;
+        throw error;
+      }
+    })();
+
+    const result = await activeRefreshPromise;
+    return result;
+  } finally {
+    // Clear active refresh state after completion
+    activeRefreshToken = null;
+    activeRefreshPromise = null;
+    // Release mutex to allow next waiter to proceed
+    tokenRefreshMutex.release();
+  }
 }
 
 /**
  * Enhanced authenticated fetch with retry logic, exponential backoff, and token refresh
  * HIGH-007 FIX: Added request deduplication to prevent duplicate concurrent calls
+ * CRIT-NEW-002 FIX: Added call depth tracking to prevent infinite recursion
  */
 async function authenticatedFetch(
   url: string,
   options: any = {},
   retryCount: number = 0,
+  callDepth: number = 0,
 ): Promise<any> {
+  // CRIT-NEW-002 FIX: Check call depth to prevent infinite recursion
+  if (callDepth >= MAX_CALL_DEPTH) {
+    logger.error('[API] Maximum call depth exceeded - possible infinite recursion', {
+      url,
+      callDepth,
+      retryCount,
+    });
+    throw new AuthAPIError(
+      'Request failed: maximum retry depth exceeded',
+      500,
+      url
+    );
+  }
+
   const method = options.method || "GET";
 
   // Check cache for GET requests
@@ -447,7 +559,7 @@ async function authenticatedFetch(
 
     // Execute request and resolve/reject the deferred promise
     try {
-      const result = await executeAuthenticatedRequest(url, options, retryCount);
+      const result = await executeAuthenticatedRequest(url, options, retryCount, callDepth);
       deferred.resolve(result);
       return result;
     } catch (error) {
@@ -459,17 +571,19 @@ async function authenticatedFetch(
   }
 
   // For non-GET or retry requests, execute directly without deduplication
-  return executeAuthenticatedRequest(url, options, retryCount);
+  return executeAuthenticatedRequest(url, options, retryCount, callDepth);
 }
 
 /**
  * HIGH-004 FIX: Extracted request execution logic for deduplication support
  * This function handles the actual HTTP request with token management and retry logic
+ * CRIT-NEW-002 FIX: Added callDepth parameter to prevent infinite recursion
  */
 async function executeAuthenticatedRequest(
   url: string,
   options: any,
-  retryCount: number
+  retryCount: number,
+  callDepth: number = 0
 ): Promise<any> {
   const method = options.method || "GET";
   const tokens = await tokenService.getTokens();
@@ -496,7 +610,7 @@ async function executeAuthenticatedRequest(
 
     // Handle other error responses with retry logic
     if (!response.ok) {
-      return handleErrorResponse(response, url, options, retryCount);
+      return handleErrorResponse(response, url, options, retryCount, callDepth);
     }
 
     // Parse successful response
@@ -518,7 +632,7 @@ async function executeAuthenticatedRequest(
         error: error.message,
       });
       await new Promise(resolve => setTimeout(resolve, delay));
-      return authenticatedFetch(url, options, retryCount + 1);
+      return authenticatedFetch(url, options, retryCount + 1, callDepth + 1);
     }
     throw error;
   }
@@ -642,7 +756,8 @@ async function handleErrorResponse(
   response: Response,
   url: string,
   options: any,
-  retryCount: number
+  retryCount: number,
+  callDepth: number = 0
 ): Promise<any> {
   const isRetryable = response.status >= 500 || response.status === 429;
 
@@ -654,7 +769,7 @@ async function handleErrorResponse(
       status: response.status,
     });
     await new Promise(resolve => setTimeout(resolve, delay));
-    return authenticatedFetch(url, options, retryCount + 1);
+    return authenticatedFetch(url, options, retryCount + 1, callDepth + 1);
   }
 
   const errorData = await response.json().catch(() => ({}));
@@ -662,10 +777,12 @@ async function handleErrorResponse(
 }
 
 // Legacy authenticatedFetch helper - kept for compatibility with existing code
+// CRIT-NEW-002 FIX: Added callDepth parameter to prevent infinite recursion
 async function legacyAuthenticatedFetchHelper(
   url: string,
   options: any = {},
   retryCount: number = 0,
+  callDepth: number = 0,
 ): Promise<any> {
   const method = options.method || "GET";
 
@@ -790,7 +907,7 @@ async function legacyAuthenticatedFetchHelper(
       });
 
       await new Promise(resolve => setTimeout(resolve, delay));
-      return authenticatedFetch(url, options, retryCount + 1);
+      return authenticatedFetch(url, options, retryCount + 1, callDepth + 1);
     }
 
     if (error.name === "AbortError") {

@@ -47,7 +47,21 @@ export class CrisisErrorBoundary extends Component<Props, State> {
     });
   }
 
-  handleEmergencyCall = () => {
+  // HIGH-NEW-001 FIX: Verify phone capability before attempting call
+  handleEmergencyCall = async () => {
+    const phoneUrl = "tel:988";
+    const canCall = await Linking.canOpenURL(phoneUrl);
+
+    if (!canCall) {
+      // Device cannot make phone calls (simulator, tablet, etc.)
+      Alert.alert(
+        "Phone Call Not Available",
+        "This device cannot make phone calls. Please use another device to dial 988 (Suicide & Crisis Lifeline) for crisis support.",
+        [{ text: "OK", style: "default" }]
+      );
+      return;
+    }
+
     Alert.alert(
       "Emergency Services",
       "Calling 988 - Suicide & Crisis Lifeline",
@@ -55,7 +69,10 @@ export class CrisisErrorBoundary extends Component<Props, State> {
         { text: "Cancel", style: "cancel" },
         {
           text: "Call Now",
-          onPress: () => Linking.openURL("tel:988"),
+          onPress: () => Linking.openURL(phoneUrl).catch((err) => {
+            logger.error("Failed to open phone dialer:", err);
+            Alert.alert("Error", "Please dial 988 manually for crisis support.");
+          }),
         },
       ],
     );
@@ -67,6 +84,26 @@ export class CrisisErrorBoundary extends Component<Props, State> {
         "Error",
         "Unable to open messaging app. Please text 741741 manually.",
       );
+    });
+  };
+
+  // HIGH-NEW-001 FIX: Verify phone capability before attempting 911 call
+  handleEmergency911 = async () => {
+    const phoneUrl = "tel:911";
+    const canCall = await Linking.canOpenURL(phoneUrl);
+
+    if (!canCall) {
+      Alert.alert(
+        "Phone Call Not Available",
+        "This device cannot make phone calls. Please use another device to dial 911 for emergency services.",
+        [{ text: "OK", style: "default" }]
+      );
+      return;
+    }
+
+    Linking.openURL(phoneUrl).catch((err) => {
+      logger.error("Failed to open 911 dialer:", err);
+      Alert.alert("Error", "Please dial 911 manually for emergency services.");
     });
   };
 
@@ -112,7 +149,7 @@ export class CrisisErrorBoundary extends Component<Props, State> {
 
               <TouchableOpacity
                 style={[styles.button, styles.secondaryButton]}
-                onPress={() => Linking.openURL("tel:911")}
+                onPress={this.handleEmergency911}
                 accessible
                 accessibilityRole="button"
                 accessibilityLabel="Call 911 for immediate emergency"

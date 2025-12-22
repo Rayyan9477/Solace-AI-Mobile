@@ -4,6 +4,7 @@ import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 
 import { STORAGE_CONFIG } from "../../shared/config/environment";
+import { logger } from "@shared/utils/logger";
 
 interface StorageData {
   data: any;
@@ -27,18 +28,84 @@ class SecureStorage {
   private deviceKeyCache: string | null = null;
   private encryptionKeyCache: string | null = null;
   private webEncryptionKey: CryptoKey | null = null;
+  // CRIT-NEW-003 FIX: Cache the Web Crypto availability check result
+  private webCryptoAvailable: boolean | null = null;
+
+  /**
+   * CRIT-NEW-003 FIX: Check if Web Crypto API is available and functional
+   * This performs a comprehensive check including:
+   * - window object existence (for SSR compatibility)
+   * - crypto object existence
+   * - crypto.subtle existence (not available in insecure contexts)
+   * - Actual key generation capability (some browsers may have subtle but fail operations)
+   */
+  async isWebCryptoAvailable(): Promise<boolean> {
+    // Return cached result if already checked
+    if (this.webCryptoAvailable !== null) {
+      return this.webCryptoAvailable;
+    }
+
+    try {
+      // Check basic object availability
+      if (typeof window === "undefined") {
+        logger.warn('[SecureStorage] Window not available (SSR context)');
+        this.webCryptoAvailable = false;
+        return false;
+      }
+
+      if (!window.crypto) {
+        logger.warn('[SecureStorage] window.crypto not available');
+        this.webCryptoAvailable = false;
+        return false;
+      }
+
+      if (!window.crypto.subtle) {
+        // This happens in insecure contexts (HTTP instead of HTTPS)
+        logger.warn('[SecureStorage] window.crypto.subtle not available - likely insecure context (HTTP)');
+        this.webCryptoAvailable = false;
+        return false;
+      }
+
+      // CRIT-NEW-003 FIX: Actually try to use the API to confirm it works
+      // Some browsers may have the API but throw on usage
+      const testKey = await window.crypto.subtle.generateKey(
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["encrypt", "decrypt"]
+      );
+
+      if (!testKey) {
+        logger.warn('[SecureStorage] Web Crypto key generation returned null');
+        this.webCryptoAvailable = false;
+        return false;
+      }
+
+      logger.info('[SecureStorage] Web Crypto API verified and functional');
+      this.webCryptoAvailable = true;
+      return true;
+    } catch (error) {
+      logger.error('[SecureStorage] Web Crypto API check failed', {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      this.webCryptoAvailable = false;
+      return false;
+    }
+  }
 
   /**
    * CRIT-004 FIX: Initialize Web Crypto encryption key
    * Uses AES-GCM for authenticated encryption on web platform
+   * CRIT-NEW-003 FIX: Now uses the availability check before attempting operations
    */
   private async getWebEncryptionKey(): Promise<CryptoKey> {
     if (this.webEncryptionKey) {
       return this.webEncryptionKey;
     }
 
-    if (typeof window === "undefined" || !window.crypto?.subtle) {
-      throw new Error("Web Crypto API not available");
+    // CRIT-NEW-003 FIX: Use comprehensive availability check
+    const isAvailable = await this.isWebCryptoAvailable();
+    if (!isAvailable) {
+      throw new Error("Web Crypto API not available - cannot securely store encrypted data");
     }
 
     // Try to get existing key from localStorage (base64 encoded)
@@ -224,10 +291,49 @@ class SecureStorage {
   ): Promise<void> {
     try {
       const {
-        encrypt = true,
+        encrypt: requestedEncrypt = true,
         dataType = "general",
         requireAuth = false,
       } = options;
+
+      // HIGH-NEW-019 FIX: HIPAA-compliant mandatory encryption for PHI data types
+      // These data types contain Protected Health Information and MUST be encrypted
+      const PHI_DATA_TYPES = [
+        'sensitive',
+        'auth_tokens',
+        'user_profile',
+        'health_data',
+        'assessment',
+        'journal',
+        'mood',
+        'therapy',
+        'medical',
+        'personal',
+        'phi',
+      ];
+
+      const isPHI = PHI_DATA_TYPES.some(type =>
+        dataType.toLowerCase().includes(type.toLowerCase())
+      );
+
+      // Force encryption for PHI data regardless of caller request
+      let encrypt = requestedEncrypt;
+      if (isPHI && !requestedEncrypt) {
+        logger.warn('[SecureStorage] HIPAA: Forcing encryption for PHI data type', { dataType });
+        encrypt = true;
+      }
+
+      // CRIT-NEW-003 FIX: Early verification of Web Crypto for encrypted web storage
+      // This prevents attempting to store PHI data without proper encryption
+      if (encrypt && Platform.OS === "web") {
+        const cryptoAvailable = await this.isWebCryptoAvailable();
+        if (!cryptoAvailable) {
+          throw new Error(
+            "Cannot store encrypted data: Web Crypto API is not available. " +
+            "This may be due to an insecure context (HTTP instead of HTTPS) or unsupported browser."
+          );
+        }
+      }
 
       // MED-011 FIX: Calculate checksum on JSON-serialized data for consistency
       // This ensures the checksum matches exactly what will be stored and retrieved
@@ -334,9 +440,13 @@ class SecureStorage {
 
         return parsedData;
       } catch (parseError) {
+        // CRIT-NEW-005 FIX: Log JSON parse errors instead of silent failure
+        logger.error('[SecureStorage] JSON parse error', { error: parseError instanceof Error ? parseError.message : String(parseError) });
         return null;
       }
     } catch (error) {
+      // CRIT-NEW-005 FIX: Log retrieval errors instead of silent failure
+      logger.error('[SecureStorage] Failed to retrieve secure data', { error: error instanceof Error ? error.message : String(error) });
       return null;
     }
   }

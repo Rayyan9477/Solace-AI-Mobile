@@ -72,7 +72,8 @@
       "Bash(timeout 20 npm test:*)",
       "Bash(node:*)",
       "Bash(touch:*)",
-      "Bash(xargs -I {} sh -c 'echo \"\"=== {} ===\"\" && head -50 {}')"
+      "Bash(xargs -I {} sh -c 'echo \"\"=== {} ===\"\" && head -50 {}')",
+      "Bash(perl:*)"
     ],
     "deny": [],
     "ask": []

@@ -21,6 +21,7 @@ import {
   calculateAssessmentScore,
   getCategoryLabel,
   getCategoryDescription,
+  validateAssessmentAnswers,
   type AssessmentAnswers
 } from "../services/scoringAlgorithm";
 
@@ -30,10 +31,41 @@ export const AssessmentResultsScreen = ({ route }: any) => {
   const { theme } = useTheme();
   const navigation = useNavigation();
 
-  // Get answers from route params (passed from AssessmentScreen)
-  const answers: AssessmentAnswers = route?.params?.answers || {};
+  // CRIT-NEW-004 FIX: Validate and sanitize route params before use
+  const validationResult = validateAssessmentAnswers(route?.params);
+  const answers: AssessmentAnswers = validationResult.sanitizedAnswers;
 
-  // Calculate real score based on assessment answers
+  // Show error state if validation failed
+  if (!validationResult.valid) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: theme.isDark ? "#2D1B0E" : "#1A1108" }}>
+        <StatusBar barStyle="light-content" />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+          <Text style={{ color: '#D97F52', fontSize: 18, fontWeight: '600', marginBottom: 12 }}>
+            Unable to Display Results
+          </Text>
+          <Text style={{ color: '#E8D4B8', fontSize: 14, textAlign: 'center', marginBottom: 24 }}>
+            {validationResult.error || 'Assessment data is missing or invalid.'}
+          </Text>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{
+              backgroundColor: '#8B7355',
+              paddingVertical: 12,
+              paddingHorizontal: 24,
+              borderRadius: 8,
+            }}
+          >
+            <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '500' }}>
+              Go Back
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // Calculate real score based on validated assessment answers
   const result = calculateAssessmentScore(answers);
   const score = result.overallScore;
 

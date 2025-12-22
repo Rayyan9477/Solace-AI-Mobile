@@ -402,7 +402,9 @@ const ExerciseDetailScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
-  const { exerciseId } = route.params || {};
+  // CRIT-NEW-004 FIX: Validate exerciseId from route params
+  const rawExerciseId = route.params?.exerciseId;
+  const exerciseId = typeof rawExerciseId === 'string' && rawExerciseId ? rawExerciseId : null;
   const { isWeb, getMaxContentWidth, getContainerPadding } = useResponsive();
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -411,8 +413,9 @@ const ExerciseDetailScreen = () => {
   const [isTimerActive, setIsTimerActive] = useState(false);
   const progressAnim = useState(new Animated.Value(0))[0];
 
+  // CRIT-NEW-004 FIX: Use validated exerciseId with fallback to default exercise
   const exercise =
-    THERAPY_EXERCISES[exerciseId] || THERAPY_EXERCISES["breathing-478"];
+    (exerciseId && THERAPY_EXERCISES[exerciseId]) || THERAPY_EXERCISES["breathing-478"];
   const currentStepData = exercise.steps[currentStep];
   const progress = ((currentStep + 1) / exercise.steps.length) * 100;
 

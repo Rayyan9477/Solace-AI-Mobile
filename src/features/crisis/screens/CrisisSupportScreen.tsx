@@ -364,7 +364,21 @@ const CrisisSupportScreenComponent = () => {
     },
   });
 
-  const handleCall = (number: string, name: string) => {
+  // HIGH-NEW-001 FIX: Verify phone capability before attempting call
+  const handleCall = async (number: string, name: string) => {
+    const phoneUrl = `tel:${number}`;
+    const canCall = await Linking.canOpenURL(phoneUrl);
+
+    if (!canCall) {
+      // Device cannot make phone calls (simulator, tablet, etc.)
+      Alert.alert(
+        "Phone Call Not Available",
+        `This device cannot make phone calls. Please use another device to dial ${number} to reach ${name}.`,
+        [{ text: "OK", style: "default" }]
+      );
+      return;
+    }
+
     Alert.alert(
       "Call Crisis Support",
       `Call ${name} at ${number}?`,
@@ -376,8 +390,8 @@ const CrisisSupportScreenComponent = () => {
         {
           text: "Call Now",
           onPress: () => {
-            Linking.openURL(`tel:${number}`).catch((err) => {
-              Alert.alert("Error", "Unable to make phone call");
+            Linking.openURL(phoneUrl).catch(() => {
+              Alert.alert("Error", `Unable to make phone call. Please dial ${number} manually.`);
             });
           },
           style: "default",

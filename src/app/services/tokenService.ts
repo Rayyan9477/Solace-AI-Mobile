@@ -98,7 +98,7 @@ class TokenService {
       }
 
       // Check if tokens are expired
-      if (tokenData.expiresAt && Date.now() > tokenData.expiresAt) {
+      if (typeof tokenData.expiresAt === 'number' && Date.now() > tokenData.expiresAt) {
         // Tokens are expired, clear them
         await this.clearTokens();
         return null;
