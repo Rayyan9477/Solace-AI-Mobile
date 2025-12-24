@@ -312,14 +312,15 @@ def extract_screens_from_image(image_path, output_folder, base_name):
     return len(final_screens)
 
 
-def process_all_images(base_dir):
+def process_all_images(base_dir, mode="Dark-mode"):
     """
-    Process all composite images in the Dark-mode folder.
+    Process all composite images in the specified mode folder.
     
     Args:
-        base_dir: Base directory containing the Dark-mode folder
+        base_dir: Base directory containing the ui-designs folder
+        mode: Either "Dark-mode" or "Light mode"
     """
-    dark_mode_dir = os.path.join(base_dir, "ui-designs", "Dark-mode")
+    mode_dir = os.path.join(base_dir, "ui-designs", mode)
     
     # List of image files to process
     image_files = [
@@ -347,13 +348,13 @@ def process_all_images(base_dir):
     successful_files = 0
     
     print("=" * 80)
-    print("Starting Screen Extraction Process")
+    print(f"Starting Screen Extraction Process for {mode}")
     print("=" * 80)
     print()
     
     for image_file, folder_name in image_files:
-        image_path = os.path.join(dark_mode_dir, image_file)
-        output_folder = os.path.join(dark_mode_dir, folder_name)
+        image_path = os.path.join(mode_dir, image_file)
+        output_folder = os.path.join(mode_dir, folder_name)
         
         if os.path.exists(image_path):
             try:
@@ -372,15 +373,26 @@ def process_all_images(base_dir):
             print()
     
     print("=" * 80)
-    print(f"Extraction Complete!")
+    print(f"Extraction Complete for {mode}!")
     print(f"  Processed: {successful_files}/{len(image_files)} files")
     print(f"  Total screens extracted: {total_screens}")
     print("=" * 80)
 
 
 if __name__ == "__main__":
+    import sys
+    
     # Get the base directory (parent of ui-designs)
     script_dir = os.path.dirname(os.path.abspath(__file__))
     base_dir = script_dir
     
-    process_all_images(base_dir)
+    # Check if mode is specified via command line argument
+    mode = sys.argv[1] if len(sys.argv) > 1 else "Dark-mode"
+    
+    # Validate mode
+    if mode not in ["Dark-mode", "Light mode"]:
+        print(f"Invalid mode: {mode}")
+        print("Valid modes: 'Dark-mode' or 'Light mode'")
+        sys.exit(1)
+    
+    process_all_images(base_dir, mode)
