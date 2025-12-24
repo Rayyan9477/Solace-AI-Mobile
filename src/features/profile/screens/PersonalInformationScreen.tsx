@@ -147,9 +147,10 @@ export const PersonalInformationScreen = () => {
         <View style={styles.avatarSection}>
           <Text style={styles.avatarLabel}>Select Avatar</Text>
           <View style={styles.avatarRow}>
+            {/* LOW-NEW-002 FIX: Use avatar emoji as stable key instead of index */}
             {avatars.map((avatar, index) => (
               <TouchableOpacity
-                key={index}
+                key={`avatar-${avatar}`}
                 style={[
                   styles.avatarButton,
                   index === 1 && styles.avatarButtonSelected,
@@ -230,5 +231,8 @@ export const PersonalInformationScreen = () => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+PersonalInformationScreen.displayName = 'PersonalInformationScreen';
 
 export default PersonalInformationScreen;

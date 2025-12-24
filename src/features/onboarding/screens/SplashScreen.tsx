@@ -382,4 +382,8 @@ export const SplashScreen = (props: any) => (
   </ScreenErrorBoundary>
 );
 
+// LOW-NEW-001 FIX: Add displayName for debugging
+SplashScreen.displayName = 'SplashScreen';
+SplashScreenComponent.displayName = 'SplashScreenComponent';
+
 export default SplashScreen;

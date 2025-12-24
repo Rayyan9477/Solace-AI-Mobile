@@ -477,9 +477,10 @@ const WelcomeScreenComponent = ({ navigation }) => {
             {/* Progress Dots */}
             {currentStep > 0 && (
               <View style={styles.progressDots}>
+                {/* LOW-NEW-002 FIX: Use descriptive key instead of index */}
                 {WELCOME_STEPS.slice(1).map((_, index) => (
                   <View
-                    key={index}
+                    key={`welcome-dot-${index}`}
                     style={[
                       styles.progressDot,
                       {
@@ -777,5 +778,9 @@ const WelcomeScreen = (props: any) => (
     <WelcomeScreenComponent {...props} />
   </ScreenErrorBoundary>
 );
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+WelcomeScreen.displayName = 'WelcomeScreen';
+WelcomeScreenComponent.displayName = 'WelcomeScreenComponent';
 
 export default WelcomeScreen;

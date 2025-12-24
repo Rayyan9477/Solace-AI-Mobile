@@ -6,6 +6,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@theme/ThemeProvider";
 import { useResponsive } from "@shared/hooks/useResponsive";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundaryWrapper";
 import React, { useState } from "react";
 import {
   View,
@@ -412,5 +413,9 @@ export const ProfileSettingsScreen = (props: any) => (
     <ProfileSettingsScreenComponent {...props} />
   </ScreenErrorBoundary>
 );
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+ProfileSettingsScreen.displayName = 'ProfileSettingsScreen';
+ProfileSettingsScreenComponent.displayName = 'ProfileSettingsScreenComponent';
 
 export default ProfileSettingsScreen;

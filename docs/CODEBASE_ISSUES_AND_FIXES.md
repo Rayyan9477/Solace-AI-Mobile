@@ -2,8 +2,8 @@
 
 **Generated:** December 17, 2025
 **Last Updated:** December 24, 2025
-**Total Issues Fixed:** 91 (+6 in Batch 16)
-**Remaining Issues:** ~50 (mostly type safety + LOW priority)
+**Total Issues Fixed:** 107 (+8 in Batch 18)
+**Remaining Issues:** ~34 (mostly type safety + LOW priority)
 **Platform:** React Native + Expo SDK 50/51
 
 ---
@@ -249,12 +249,40 @@ All 5 MEDIUM priority issues have been resolved.
 
 ---
 
+### Batch 17: LOW Priority Issues (3 files fixed) - December 24, 2025
+
+| ID | Severity | File | Issue | Fix Applied |
+|----|----------|------|-------|-------------|
+| LOW-NEW-001 | 🟢 | `SplashScreen.tsx` | Missing displayName | Added displayName for both components |
+| LOW-NEW-001 | 🟢 | `WelcomeScreen.tsx` | Missing displayName | Added displayName for both components |
+| LOW-NEW-002 | 🟢 | `WelcomeScreen.tsx` | Index key on progress dots | Fixed with `key={welcome-dot-${index}}` |
+| LOW-NEW-001 | 🟢 | `FreudScoreScreen.tsx` | Missing displayName | Added displayName for both components |
+| LOW-NEW-002 | 🟢 | `FreudScoreScreen.tsx` | Index key on barChartData | Fixed with `key={bar-${item.label}}` |
+| LOW-NEW-002 | 🟢 | `FreudScoreScreen.tsx` | Index key on moodHistory | Fixed with `key={mood-${idx}-${emoji}}` |
+| LOW-NEW-002 | 🟢 | `FreudScoreScreen.tsx` | Index key on scoreHistory | Fixed with `key={score-${item.date}}` |
+
+---
+
+### Batch 18: LOW Priority Issues (4 files fixed) - December 24, 2025
+
+| ID | Severity | File | Issue | Fix Applied |
+|----|----------|------|-------|-------------|
+| LOW-NEW-001 | 🟢 | `QuickActions.tsx` | Missing displayName | Added `QuickActions.displayName` (keys already using `action.id`) |
+| LOW-NEW-001 | 🟢 | `ProfileSettingsScreen.tsx` | Missing displayName + import | Added missing ScreenErrorBoundary import, displayNames for both components |
+| LOW-NEW-001 | 🟢 | `PersonalInformationScreen.tsx` | Missing displayName | Added `PersonalInformationScreen.displayName` |
+| LOW-NEW-002 | 🟢 | `PersonalInformationScreen.tsx` | Index key on avatars | Fixed with `key={avatar-${avatar}}` |
+| LOW-NEW-001 | 🟢 | `ProfileSetupScreen.tsx` | Missing displayName | Added `ProfileSetupScreen.displayName` |
+| LOW-NEW-002 | 🟢 | `ProfileSetupScreen.tsx` | Index key on AVATARS grid | Fixed with `key={avatar-${avatar}}` |
+| LOW-NEW-002 | 🟢 | `ProfileSetupScreen.tsx` | Index key on OTP boxes | Fixed with `key={otp-box-${index}}` |
+
+---
+
 ### LOW Priority Issues (Remaining)
 
 | ID | Count | Description |
 |----|-------|-------------|
-| LOW-NEW-001 | ~12 | Components missing displayName |
-| LOW-NEW-002 | ~38 | Index-based array keys (`key={index}`) |
+| LOW-NEW-001 | ~2 | Components missing displayName |
+| LOW-NEW-002 | ~26 | Index-based array keys (`key={index}`) |
 | LOW-NEW-003 | Many | Generic props type `any` on screen components |
 | LOW-NEW-004 | Various | Unused variables/imports |
 | LOW-NEW-005 | Multiple | Inline style objects created in render |

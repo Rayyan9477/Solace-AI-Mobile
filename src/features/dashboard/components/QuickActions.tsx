@@ -321,4 +321,7 @@ const styles = StyleSheet.create({
   },
 });
 
+// LOW-NEW-001 FIX: Add displayName for debugging
+QuickActions.displayName = 'QuickActions';
+
 export default QuickActions;

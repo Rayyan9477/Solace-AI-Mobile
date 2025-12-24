@@ -406,11 +406,12 @@ export const FreudScoreScreen = () => {
 
             {/* Bar Chart */}
             <View style={styles.chartContainer}>
-              {barChartData.map((item, index) => {
+              {/* LOW-NEW-002 FIX: Use label as stable key instead of index */}
+              {barChartData.map((item) => {
                 const value = item[selectedTab];
                 const barHeight = (value / 100) * 160;
                 return (
-                  <View key={index} style={styles.barColumn}>
+                  <View key={`bar-${item.label}`} style={styles.barColumn}>
                     <View
                       style={[
                         styles.bar,
@@ -430,8 +431,9 @@ export const FreudScoreScreen = () => {
             <View style={styles.moodHistoryRow}>
               <Text style={styles.moodHistoryLabel}>Mood History</Text>
               <View style={styles.moodEmojis}>
-                {moodHistory.map((emoji, index) => (
-                  <Text key={index} style={styles.moodEmoji}>
+                {/* LOW-NEW-002 FIX: Use emoji as stable key instead of index */}
+                {moodHistory.map((emoji, idx) => (
+                  <Text key={`mood-${idx}-${emoji}`} style={styles.moodEmoji}>
                     {emoji}
                   </Text>
                 ))}
@@ -456,7 +458,8 @@ export const FreudScoreScreen = () => {
             </TouchableOpacity>
           </View>
 
-          {scoreHistory.map((item, index) => {
+          {/* LOW-NEW-002 FIX: Use date as stable key instead of index */}
+          {scoreHistory.map((item) => {
             const scoreColor =
               item.score >= 75
                 ? theme.colors.green["60"]
@@ -465,7 +468,7 @@ export const FreudScoreScreen = () => {
                   : theme.colors.red["60"];
 
             return (
-              <View key={index} style={styles.historyCard}>
+              <View key={`score-${item.date}`} style={styles.historyCard}>
                 <View style={styles.historyDate}>
                   <Text style={styles.historyDateText}>{item.date}</Text>
                 </View>
@@ -502,5 +505,9 @@ export const FreudScoreScreenWithBoundary = () => (
     <FreudScoreScreen />
   </ScreenErrorBoundary>
 );
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+FreudScoreScreen.displayName = 'FreudScoreScreen';
+FreudScoreScreenWithBoundary.displayName = 'FreudScoreScreenWithBoundary';
 
 export default FreudScoreScreenWithBoundary;
