@@ -336,4 +336,7 @@ export const MoodScreen = () => {
   );
 };
 
+// LOW-NEW-001 FIX: Add displayName for debugging
+MoodScreen.displayName = 'MoodScreen';
+
 export default MoodScreen;

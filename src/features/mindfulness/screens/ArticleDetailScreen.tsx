@@ -258,8 +258,9 @@ export const ArticleDetailScreen = () => {
         {/* Article Info */}
         <View style={styles.articleInfo}>
           <View style={styles.tags}>
-            {article.tags.map((tag, index) => (
-              <View key={index} style={styles.tag}>
+            {/* LOW-NEW-002 FIX: Use tag as stable key instead of index */}
+            {article.tags.map((tag) => (
+              <View key={`tag-${tag}`} style={styles.tag}>
                 <Text style={styles.tagText}>{tag}</Text>
               </View>
             ))}
@@ -338,5 +339,8 @@ export const ArticleDetailScreen = () => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+ArticleDetailScreen.displayName = 'ArticleDetailScreen';
 
 export default ArticleDetailScreen;

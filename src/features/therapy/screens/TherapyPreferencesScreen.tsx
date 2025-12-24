@@ -422,9 +422,10 @@ const TherapyPreferencesScreen = () => {
             Crisis Resources
           </Text>
 
-          {preferences.crisisResources.map((resource: any, index: number) => (
+          {/* LOW-NEW-002 FIX: Use resource name as stable key instead of index */}
+          {preferences.crisisResources.map((resource: any) => (
             <View
-              key={index}
+              key={`resource-${resource.name}`}
               style={[
                 styles.resourceCard,
                 { borderColor: theme.colors.border?.light || "#E2E8F0" },
@@ -636,5 +637,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+TherapyPreferencesScreen.displayName = 'TherapyPreferencesScreen';
 
 export default TherapyPreferencesScreen;

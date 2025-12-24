@@ -469,9 +469,10 @@ export const JournalDetailScreen = () => {
         {entry.isVoice && (
           <View style={styles.audioSection}>
             <View style={styles.audioWaveform}>
+              {/* LOW-NEW-002 FIX: Use descriptive key instead of index */}
               {waveformHeights.map((height, index) => (
                 <View
-                  key={index}
+                  key={`waveform-bar-${index}`}
                   style={[
                     styles.waveBar,
                     {
@@ -524,8 +525,9 @@ export const JournalDetailScreen = () => {
         <View style={styles.tagsSection}>
           <Text style={styles.sectionLabel}>Tags</Text>
           <View style={styles.tagsContainer}>
-            {entry.tags.map((tag, index) => (
-              <View key={index} style={styles.tag}>
+            {/* LOW-NEW-002 FIX: Use tag + entry id as stable key instead of index */}
+            {entry.tags.map((tag) => (
+              <View key={`tag-${entry.id}-${tag}`} style={styles.tag}>
                 <Text style={styles.tagText}>{tag}</Text>
               </View>
             ))}
@@ -560,5 +562,9 @@ export const JournalDetailScreenWithBoundary = () => (
     <JournalDetailScreen />
   </ScreenErrorBoundary>
 );
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+JournalDetailScreen.displayName = 'JournalDetailScreen';
+JournalDetailScreenWithBoundary.displayName = 'JournalDetailScreenWithBoundary';
 
 export default JournalDetailScreenWithBoundary;

@@ -185,9 +185,10 @@ const TherapyHistoryScreen = () => {
 
       {item.tags && item.tags.length > 0 && (
         <View style={styles.tagsContainer}>
-          {item.tags.slice(0, 3).map((tag: string, index: number) => (
+          {/* LOW-NEW-002 FIX: Use item id + tag as stable key instead of index */}
+          {item.tags.slice(0, 3).map((tag: string) => (
             <View
-              key={index}
+              key={`tag-${item.id}-${tag}`}
               style={[
                 styles.tag,
                 { backgroundColor: theme.colors.brown?.[20] || "#F0EBE8" },
@@ -508,5 +509,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+TherapyHistoryScreen.displayName = 'TherapyHistoryScreen';
 
 export default TherapyHistoryScreen;

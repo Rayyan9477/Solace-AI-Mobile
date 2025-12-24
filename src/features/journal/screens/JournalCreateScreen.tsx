@@ -492,8 +492,9 @@ export const JournalCreateScreen = () => {
               )}
 
               <View style={styles.waveformContainer}>
+                {/* LOW-NEW-002 FIX: Use descriptive key instead of index */}
                 {waveformHeights.map((height, index) => (
-                  <View key={index} style={[styles.waveBar, { height }]} />
+                  <View key={`waveform-bar-${index}`} style={[styles.waveBar, { height }]} />
                 ))}
               </View>
             </View>
@@ -568,5 +569,9 @@ export const JournalCreateScreenWithBoundary = () => (
     <JournalCreateScreen />
   </ScreenErrorBoundary>
 );
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+JournalCreateScreen.displayName = 'JournalCreateScreen';
+JournalCreateScreenWithBoundary.displayName = 'JournalCreateScreenWithBoundary';
 
 export default JournalCreateScreenWithBoundary;

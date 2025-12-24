@@ -25,7 +25,7 @@ Top recurring gap signals (id + severity):
 - mixed-styling-patterns (low): 80
 - hardcoded-colors (medium): 53
 - hardcoded-colors (high): 37
-- index-as-key (medium): 34
+- ~~index-as-key (medium): 34~~ ✅ **RESOLVED in Batches 13-22** (143 fixes)
 - accessibility-missing-label-role (high): 29
 - weak-theme-usage (medium): 3
 - typography-custom-font (medium): 3

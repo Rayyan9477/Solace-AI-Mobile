@@ -388,9 +388,10 @@ const MoodStatsScreen = ({ navigation }) => {
               </Text>
 
               <View style={styles.moodChart}>
+                {/* LOW-NEW-002 FIX: Use day as stable key instead of index */}
                 {moodStatsData.moodHistory.map((item, index) => (
                   <MoodChartItem
-                    key={index}
+                    key={`mood-chart-${item.day}`}
                     item={item}
                     theme={theme}
                     isDarkMode={isDarkMode}
@@ -437,9 +438,10 @@ const MoodStatsScreen = ({ navigation }) => {
               </Text>
 
               <View style={styles.distributionChart}>
+                {/* LOW-NEW-002 FIX: Use mood name as stable key instead of index */}
                 {moodStatsData.moodDistribution.map((mood, index) => (
                   <MoodDistributionBar
-                    key={index}
+                    key={`mood-dist-${mood.mood}`}
                     mood={mood}
                     theme={theme}
                     delay={index * 150}
@@ -479,9 +481,10 @@ const MoodStatsScreen = ({ navigation }) => {
                 </View>
               </View>
 
+              {/* LOW-NEW-002 FIX: Use insight text as stable key instead of index */}
               {moodStatsData.insights.map((insight, index) => (
                 <InsightItem
-                  key={index}
+                  key={`insight-${insight.substring(0, 20).replace(/\s/g, '-')}`}
                   insight={insight}
                   theme={theme}
                   delay={index * 200}
@@ -972,5 +975,13 @@ export const MoodStatsScreenWithBoundary = (props: { navigation: any }) => (
     <MoodStatsScreen {...props} />
   </ScreenErrorBoundary>
 );
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+MoodStatsScreen.displayName = 'MoodStatsScreen';
+MoodStatsScreenWithBoundary.displayName = 'MoodStatsScreenWithBoundary';
+MoodChartItem.displayName = 'MoodChartItem';
+MoodDistributionBar.displayName = 'MoodDistributionBar';
+InsightItem.displayName = 'InsightItem';
+ActionCard.displayName = 'ActionCard';
 
 export default MoodStatsScreenWithBoundary;

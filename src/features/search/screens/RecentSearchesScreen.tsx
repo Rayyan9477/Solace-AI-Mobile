@@ -210,9 +210,10 @@ export const RecentSearchesScreen = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Popular Searches</Text>
           <View style={styles.popularSearchesContainer}>
-            {popularSearches.map((search, index) => (
+            {/* LOW-NEW-002 FIX: Use search term as stable key instead of index */}
+            {popularSearches.map((search) => (
               <TouchableOpacity
-                key={index}
+                key={`popular-${search}`}
                 style={styles.popularSearchTag}
                 onPress={() => navigation.navigate("Search", { query: search })}
               >
@@ -225,5 +226,8 @@ export const RecentSearchesScreen = () => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+RecentSearchesScreen.displayName = 'RecentSearchesScreen';
 
 export default RecentSearchesScreen;

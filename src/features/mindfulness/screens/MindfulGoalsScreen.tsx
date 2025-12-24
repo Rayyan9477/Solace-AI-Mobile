@@ -335,8 +335,9 @@ export const MindfulGoalsScreen = () => {
           <View style={styles.weeklyProgressCard}>
             <Text style={styles.weeklyProgressTitle}>This Week's Progress</Text>
             <View style={styles.weeklyChart}>
-              {weeklyProgress.map((day, index) => (
-                <View key={index} style={styles.dayColumn}>
+              {/* LOW-NEW-002 FIX: Use day name as stable key instead of index */}
+              {weeklyProgress.map((day) => (
+                <View key={`progress-${day.day}`} style={styles.dayColumn}>
                   <Text style={styles.dayMinutes}>
                     {day.minutes > 0 ? `${day.minutes}m` : ""}
                   </Text>
@@ -367,5 +368,8 @@ export const MindfulGoalsScreen = () => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+MindfulGoalsScreen.displayName = 'MindfulGoalsScreen';
 
 export default MindfulGoalsScreen;

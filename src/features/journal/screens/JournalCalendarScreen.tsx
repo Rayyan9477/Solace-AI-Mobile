@@ -392,8 +392,9 @@ export const JournalCalendarScreen = () => {
         <View style={styles.calendarCard}>
           {/* Week Days Header */}
           <View style={styles.weekDaysRow}>
-            {weekDays.map((day, index) => (
-              <View key={index} style={styles.weekDay}>
+            {/* LOW-NEW-002 FIX: Use day name as stable key instead of index */}
+            {weekDays.map((day) => (
+              <View key={`weekday-${day}`} style={styles.weekDay}>
                 <Text style={styles.weekDayText}>{day}</Text>
               </View>
             ))}
@@ -414,7 +415,7 @@ export const JournalCalendarScreen = () => {
               const isSelected = selectedDate === day;
 
               return (
-                <View key={index} style={styles.dayCell}>
+                <View key={`day-${day}`} style={styles.dayCell}>
                   <TouchableOpacity
                     style={[
                       styles.dayButton,
@@ -483,5 +484,8 @@ export const JournalCalendarScreen = () => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+JournalCalendarScreen.displayName = 'JournalCalendarScreen';
 
 export default JournalCalendarScreen;

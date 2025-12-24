@@ -341,11 +341,12 @@ const TherapyInsightsScreen = () => {
               Recent Progress Notes
             </Text>
 
+            {/* LOW-NEW-002 FIX: Use note timestamp as stable key instead of index */}
             {insights.progressNotes
               .slice(0, 5)
-              .map((note: any, index: number) => (
+              .map((note: any) => (
                 <View
-                  key={index}
+                  key={`note-${note.timestamp}`}
                   style={[
                     styles.noteCard,
                     { borderColor: theme.colors.border?.light || "#E2E8F0" },
@@ -559,5 +560,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+TherapyInsightsScreen.displayName = 'TherapyInsightsScreen';
 
 export default TherapyInsightsScreen;

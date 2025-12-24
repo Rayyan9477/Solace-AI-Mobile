@@ -359,8 +359,9 @@ export const CourseDetailScreen = () => {
         {/* Course Info */}
         <View style={styles.courseInfo}>
           <View style={styles.tags}>
-            {course.tags.map((tag, index) => (
-              <View key={index} style={styles.tag}>
+            {/* LOW-NEW-002 FIX: Use tag as stable key instead of index */}
+            {course.tags.map((tag) => (
+              <View key={`tag-${tag}`} style={styles.tag}>
                 <Text style={styles.tagText}>{tag}</Text>
               </View>
             ))}
@@ -451,5 +452,8 @@ export const CourseDetailScreen = () => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+CourseDetailScreen.displayName = 'CourseDetailScreen';
 
 export default CourseDetailScreen;

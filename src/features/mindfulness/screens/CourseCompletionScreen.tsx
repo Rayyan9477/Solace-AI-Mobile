@@ -146,8 +146,9 @@ export const CourseCompletionScreen = () => {
         <View style={styles.ratingSection}>
           <Text style={styles.ratingLabel}>Rate this course!</Text>
           <View style={styles.ratingRow}>
-            {ratingEmojis.map((emoji, index) => (
-              <TouchableOpacity key={index} style={styles.ratingButton}>
+            {/* LOW-NEW-002 FIX: Use emoji as stable key instead of index */}
+            {ratingEmojis.map((emoji) => (
+              <TouchableOpacity key={`rating-${emoji}`} style={styles.ratingButton}>
                 <Text style={styles.ratingEmoji}>{emoji}</Text>
               </TouchableOpacity>
             ))}
@@ -169,5 +170,8 @@ export const CourseCompletionScreen = () => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+CourseCompletionScreen.displayName = 'CourseCompletionScreen';
 
 export default CourseCompletionScreen;

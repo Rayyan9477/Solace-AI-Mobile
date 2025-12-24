@@ -369,9 +369,10 @@ export const JournalSearchScreen = () => {
             {/* Recent Searches */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Recent Searches</Text>
-              {recentSearches.map((search, index) => (
+              {/* LOW-NEW-002 FIX: Use search term as stable key instead of index */}
+              {recentSearches.map((search) => (
                 <TouchableOpacity
-                  key={index}
+                  key={`recent-${search}`}
                   style={styles.recentSearchItem}
                   onPress={() => setSearchQuery(search)}
                 >
@@ -385,9 +386,10 @@ export const JournalSearchScreen = () => {
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Popular Tags</Text>
               <View style={styles.tagsContainer}>
-                {popularTags.map((tag, index) => (
+                {/* LOW-NEW-002 FIX: Use tag as stable key instead of index */}
+                {popularTags.map((tag) => (
                   <TouchableOpacity
-                    key={index}
+                    key={`tag-${tag}`}
                     style={styles.tagButton}
                     onPress={() => setSearchQuery(tag)}
                   >
@@ -424,8 +426,9 @@ export const JournalSearchScreen = () => {
                     </View>
                     <Text style={styles.resultExcerpt}>{result.excerpt}</Text>
                     <View style={styles.resultTags}>
-                      {result.tags.map((tag, index) => (
-                        <View key={index} style={styles.resultTag}>
+                      {/* LOW-NEW-002 FIX: Use result id + tag as stable key */}
+                      {result.tags.map((tag) => (
+                        <View key={`tag-${result.id}-${tag}`} style={styles.resultTag}>
                           <Text style={styles.resultTagText}>#{tag}</Text>
                         </View>
                       ))}
@@ -448,5 +451,8 @@ export const JournalSearchScreen = () => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+JournalSearchScreen.displayName = 'JournalSearchScreen';
 
 export default JournalSearchScreen;

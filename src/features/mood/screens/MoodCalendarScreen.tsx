@@ -465,8 +465,9 @@ export const MoodCalendarScreen = () => {
         <View style={styles.calendarCard}>
           {/* Week Days Header */}
           <View style={styles.weekDaysRow}>
-            {weekDays.map((day, index) => (
-              <View key={index} style={styles.weekDay}>
+            {/* LOW-NEW-002 FIX: Use day name as stable key instead of index */}
+            {weekDays.map((day) => (
+              <View key={`weekday-${day}`} style={styles.weekDay}>
                 <Text style={styles.weekDayText}>{day}</Text>
               </View>
             ))}
@@ -502,7 +503,7 @@ export const MoodCalendarScreen = () => {
                 : theme.colors.gray["20"];
 
               return (
-                <View key={index} style={styles.dayCell}>
+                <View key={`day-${dayNumber}`} style={styles.dayCell}>
                   <TouchableOpacity
                     style={[
                       styles.dayButton,
@@ -593,5 +594,9 @@ export const MoodCalendarScreenWithBoundary = () => (
     <MoodCalendarScreen />
   </ScreenErrorBoundary>
 );
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+MoodCalendarScreen.displayName = 'MoodCalendarScreen';
+MoodCalendarScreenWithBoundary.displayName = 'MoodCalendarScreenWithBoundary';
 
 export default MoodCalendarScreenWithBoundary;
