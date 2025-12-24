@@ -27,7 +27,17 @@ import {
 
 const { width } = Dimensions.get("window");
 
-export const AssessmentResultsScreen = ({ route }: any) => {
+// LOW-NEW-003 FIX: Define proper props type instead of any
+interface AssessmentResultsScreenProps {
+  route?: {
+    params?: {
+      answers?: Record<string, unknown>;
+      [key: string]: unknown;
+    };
+  };
+}
+
+export const AssessmentResultsScreen: React.FC<AssessmentResultsScreenProps> = ({ route }) => {
   const { theme } = useTheme();
   const navigation = useNavigation();
 
@@ -380,8 +390,9 @@ export const AssessmentResultsScreen = ({ route }: any) => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Recommendations</Text>
 
-          {result.recommendations.map((recommendation, index) => (
-            <View key={index} style={styles.recommendation}>
+          {/* LOW-NEW-002 FIX: Use recommendation text as stable key instead of index */}
+          {result.recommendations.map((recommendation) => (
+            <View key={`rec-${recommendation.substring(0, 20).replace(/\s/g, '-')}`} style={styles.recommendation}>
               <Text style={styles.recommendationText}>
                 • {recommendation}
               </Text>
@@ -411,5 +422,8 @@ export const AssessmentResultsScreen = ({ route }: any) => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+AssessmentResultsScreen.displayName = 'AssessmentResultsScreen';
 
 export default AssessmentResultsScreen;

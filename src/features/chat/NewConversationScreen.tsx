@@ -417,8 +417,9 @@ export const NewConversationScreen = ({ navigation }: any) => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Conversation Icon</Text>
           <View style={styles.goalContainer}>
-            {["😀", "🤔", "😌", "😊"].map((emoji, index) => (
-              <TouchableOpacity key={index} style={styles.goalChip}>
+            {/* LOW-NEW-002 FIX: Use emoji as stable key instead of index */}
+            {["😀", "🤔", "😌", "😊"].map((emoji) => (
+              <TouchableOpacity key={`emoji-${emoji}`} style={styles.goalChip}>
                 <Text style={{ fontSize: 20 }}>{emoji}</Text>
               </TouchableOpacity>
             ))}
@@ -542,5 +543,8 @@ export const NewConversationScreen = ({ navigation }: any) => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+NewConversationScreen.displayName = 'NewConversationScreen';
 
 export default NewConversationScreen;

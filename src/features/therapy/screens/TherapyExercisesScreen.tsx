@@ -312,9 +312,10 @@ const TherapyExercisesScreen = () => {
               >
                 Benefits:
               </Text>
-              {exercise.benefits.map((benefit, index) => (
+              {/* LOW-NEW-002 FIX: Use benefit text as stable key instead of index */}
+              {exercise.benefits.map((benefit) => (
                 <Text
-                  key={index}
+                  key={`benefit-${exercise.id}-${benefit.substring(0, 20).replace(/\s/g, '-')}`}
                   style={[
                     styles.benefitText,
                     { color: theme.colors.text?.secondary || "#718096" },
@@ -469,5 +470,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+TherapyExercisesScreen.displayName = 'TherapyExercisesScreen';
 
 export default TherapyExercisesScreen;

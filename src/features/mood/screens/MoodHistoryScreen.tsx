@@ -576,8 +576,9 @@ const MoodHistoryScreenComponent = () => {
             <Text style={[styles.statsTitle, { marginTop: 16 }]}>
               Mood Distribution
             </Text>
-            {weeklyStats.moodDistribution.map((item, index) => (
-              <View key={index} style={styles.distributionItem}>
+            {/* LOW-NEW-002 FIX: Use mood as stable key instead of index */}
+            {weeklyStats.moodDistribution.map((item) => (
+              <View key={`mood-dist-${item.mood}`} style={styles.distributionItem}>
                 <Text style={styles.distributionMood}>{item.mood}</Text>
                 <View style={styles.distributionBar}>
                   <View
@@ -664,5 +665,9 @@ export const MoodHistoryScreen = () => (
     <MoodHistoryScreenComponent />
   </ScreenErrorBoundary>
 );
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+MoodHistoryScreen.displayName = 'MoodHistoryScreen';
+MoodHistoryScreenComponent.displayName = 'MoodHistoryScreenComponent';
 
 export default MoodHistoryScreen;

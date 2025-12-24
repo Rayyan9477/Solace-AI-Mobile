@@ -358,8 +358,9 @@ export const StressManagementScreen = () => {
           <Text style={styles.sectionTitle}>Stress Stats</Text>
           <View style={styles.statsSection}>
             <View style={styles.statsGrid}>
-              {STRESS_STATS.map((stat, index) => (
-                <View key={index} style={styles.statCard}>
+              {/* LOW-NEW-002 FIX: Use date as stable key instead of index */}
+              {STRESS_STATS.map((stat) => (
+                <View key={`stress-${stat.date}`} style={styles.statCard}>
                   <View
                     style={[
                       styles.statCircle,
@@ -394,5 +395,9 @@ export const StressManagementScreenWithBoundary = () => (
     <StressManagementScreen />
   </ScreenErrorBoundary>
 );
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+StressManagementScreen.displayName = 'StressManagementScreen';
+StressManagementScreenWithBoundary.displayName = 'StressManagementScreenWithBoundary';
 
 export default StressManagementScreenWithBoundary;

@@ -439,8 +439,9 @@ export const SleepQualityScreen = () => {
           </View>
 
           <View style={styles.historyList}>
-            {SLEEP_HISTORY.map((item, index) => (
-              <TouchableOpacity key={index} style={styles.historyItem}>
+            {/* LOW-NEW-002 FIX: Use date as stable key instead of index */}
+            {SLEEP_HISTORY.map((item) => (
+              <TouchableOpacity key={`sleep-${item.date}`} style={styles.historyItem}>
                 <View style={styles.historyLeft}>
                   <View
                     style={[
@@ -466,5 +467,8 @@ export const SleepQualityScreen = () => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+SleepQualityScreen.displayName = 'SleepQualityScreen';
 
 export default SleepQualityScreen;

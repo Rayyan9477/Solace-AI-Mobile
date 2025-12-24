@@ -867,8 +867,9 @@ const ExerciseDetailScreen = () => {
                 <Text style={styles.benefitsTitle}>
                   Benefits of This Exercise
                 </Text>
-                {exercise.benefits.map((benefit, index) => (
-                  <View key={index} style={styles.benefitItem}>
+                {/* LOW-NEW-002 FIX: Use benefit text as stable key instead of index */}
+                {exercise.benefits.map((benefit) => (
+                  <View key={`benefit-${benefit.substring(0, 25).replace(/\s/g, '-')}`} style={styles.benefitItem}>
                     <Text style={styles.benefitIcon}>✓</Text>
                     <Text style={styles.benefitText}>{benefit}</Text>
                   </View>
@@ -881,5 +882,8 @@ const ExerciseDetailScreen = () => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+ExerciseDetailScreen.displayName = 'ExerciseDetailScreen';
 
 export default ExerciseDetailScreen;

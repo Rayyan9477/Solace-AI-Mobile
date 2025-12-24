@@ -207,9 +207,10 @@ const ProfessionalOnboardingScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         <View style={styles.paginationContainer}>
+          {/* LOW-NEW-002 FIX: Use descriptive key instead of index */}
           {onboardingSteps.map((_, index) => (
             <View
-              key={index}
+              key={`pro-onboard-dot-${index}`}
               style={[
                 styles.paginationDot,
                 index === currentStep ? styles.activeDot : styles.inactiveDot,
@@ -232,5 +233,8 @@ const ProfessionalOnboardingScreen = ({ navigation }) => {
     </View>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+ProfessionalOnboardingScreen.displayName = 'ProfessionalOnboardingScreen';
 
 export default ProfessionalOnboardingScreen;

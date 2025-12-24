@@ -214,9 +214,10 @@ const JournalListScreenComponent = () => {
       </Text>
 
       <View style={styles.tags}>
-        {item.tags.map((tag, index) => (
+        {/* LOW-NEW-002 FIX: Use tag text as stable key instead of index */}
+        {item.tags.map((tag) => (
           <View
-            key={index}
+            key={`tag-${item.id}-${tag}`}
             style={[styles.tag, { backgroundColor: `${item.color}20` }]}
           >
             <Text style={[styles.tagText, { color: item.color }]}>{tag}</Text>
@@ -529,5 +530,9 @@ export const JournalListScreen = () => (
     <JournalListScreenComponent />
   </ScreenErrorBoundary>
 );
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+JournalListScreen.displayName = 'JournalListScreen';
+JournalListScreenComponent.displayName = 'JournalListScreenComponent';
 
 export default JournalListScreen;

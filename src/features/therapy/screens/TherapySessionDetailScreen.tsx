@@ -661,8 +661,9 @@ const TherapySessionDetailScreen = () => {
               <View style={styles.card}>
                 <Text style={styles.cardTitle}>Topics Discussed</Text>
                 <View style={styles.listSection}>
-                  {session.summary.topics.map((topic, index) => (
-                    <View key={index} style={styles.listItem}>
+                  {/* LOW-NEW-002 FIX: Use topic text as stable key instead of index */}
+                  {session.summary.topics.map((topic) => (
+                    <View key={`topic-${topic.substring(0, 25).replace(/\s/g, '-')}`} style={styles.listItem}>
                       <Text style={styles.bullet}>•</Text>
                       <Text style={styles.listText}>{topic}</Text>
                     </View>
@@ -673,9 +674,10 @@ const TherapySessionDetailScreen = () => {
               {/* Key Insights */}
               <View style={styles.card}>
                 <Text style={styles.cardTitle}>Key Insights & Learnings</Text>
-                {session.summary.insights.map((insight, index) => (
-                  <View key={index} style={styles.insightItem}>
-                    <Text style={styles.insightText}>💡 {insight}</Text>
+                {/* LOW-NEW-002 FIX: Use insight text as stable key instead of index */}
+                {session.summary.insights.map((insight) => (
+                  <View key={`insight-${insight.substring(0, 25).replace(/\s/g, '-')}`} style={styles.insightItem}>
+                    <Text style={styles.insightText}>{insight}</Text>
                   </View>
                 ))}
               </View>
@@ -740,5 +742,8 @@ const TherapySessionDetailScreen = () => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+TherapySessionDetailScreen.displayName = 'TherapySessionDetailScreen';
 
 export default TherapySessionDetailScreen;

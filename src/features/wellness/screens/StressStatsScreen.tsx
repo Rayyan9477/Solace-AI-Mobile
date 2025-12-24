@@ -475,10 +475,11 @@ export const StressStatsScreen = () => {
 
           <View style={styles.chartCard}>
             <View style={styles.bubbleChart}>
-              {stressLevels.map((level, index) => {
+              {/* LOW-NEW-002 FIX: Use level as stable key instead of index */}
+              {stressLevels.map((level) => {
                 const size = getBubbleSize(level.count);
                 return (
-                  <View key={index} style={styles.bubbleContainer}>
+                  <View key={`stress-level-${level.level}`} style={styles.bubbleContainer}>
                     <View
                       style={[
                         styles.bubble,
@@ -506,8 +507,9 @@ export const StressStatsScreen = () => {
             Stress Stats
           </Text>
           <View style={styles.impactGrid}>
-            {stressImpact.map((item, index) => (
-              <View key={index} style={styles.impactCard}>
+            {/* LOW-NEW-002 FIX: Use category as stable key instead of index */}
+            {stressImpact.map((item) => (
+              <View key={`impact-${item.category}`} style={styles.impactCard}>
                 <Text style={styles.impactIcon}>
                   {item.category === "Stressor" ? "😰" : "⚠️"}
                 </Text>
@@ -534,10 +536,11 @@ export const StressStatsScreen = () => {
             </TouchableOpacity>
           </View>
 
-          {topStressors.map((stressor, index) => {
+          {/* LOW-NEW-002 FIX: Use stressor name as stable key instead of index */}
+          {topStressors.map((stressor) => {
             const badgeColors = getStressorBadgeColor(stressor.impact);
             return (
-              <View key={index} style={styles.stressorCard}>
+              <View key={`stressor-${stressor.name}`} style={styles.stressorCard}>
                 <View style={styles.stressorName}>
                   <Text style={styles.stressorTitle}>{stressor.name}</Text>
                   <Text style={styles.stressorSubtitle}>
@@ -567,5 +570,8 @@ export const StressStatsScreen = () => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+StressStatsScreen.displayName = 'StressStatsScreen';
 
 export default StressStatsScreen;

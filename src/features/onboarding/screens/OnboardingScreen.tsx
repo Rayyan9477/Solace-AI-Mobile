@@ -211,4 +211,7 @@ const OnboardingScreen = ({ navigation }) => {
   );
 };
 
+// LOW-NEW-001 FIX: Add displayName for debugging
+OnboardingScreen.displayName = 'OnboardingScreen';
+
 export default OnboardingScreen;

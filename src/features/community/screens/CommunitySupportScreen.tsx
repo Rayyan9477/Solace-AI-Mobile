@@ -283,8 +283,9 @@ export const CommunitySupportScreen = () => {
 
       {/* Tags */}
       <View style={styles.postTags}>
-        {post.tags.map((tag, index) => (
-          <Text key={index} style={styles.tag}>
+        {/* LOW-NEW-002 FIX: Use post id + tag as stable key instead of index */}
+        {post.tags.map((tag) => (
+          <Text key={`tag-${post.id}-${tag}`} style={styles.tag}>
             #{tag}
           </Text>
         ))}
@@ -374,5 +375,8 @@ export const CommunitySupportScreen = () => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+CommunitySupportScreen.displayName = 'CommunitySupportScreen';
 
 export default CommunitySupportScreen;

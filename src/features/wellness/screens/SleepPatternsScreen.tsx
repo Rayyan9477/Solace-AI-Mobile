@@ -209,10 +209,11 @@ export const SleepPatternsScreen = () => {
         <View style={styles.chartCard}>
           <Text style={styles.chartTitle}>Weekly Sleep Pattern</Text>
           <View style={styles.chart}>
-            {weeklyData.map((item, index) => {
+            {/* LOW-NEW-002 FIX: Use day as stable key instead of index */}
+            {weeklyData.map((item) => {
               const barHeight = (item.hours / 10) * 160;
               return (
-                <View key={index} style={styles.barColumn}>
+                <View key={`sleep-${item.day}`} style={styles.barColumn}>
                   <View style={[styles.bar, { height: barHeight }]} />
                   <Text style={styles.dayLabel}>{item.day}</Text>
                 </View>
@@ -243,5 +244,8 @@ export const SleepPatternsScreen = () => {
     </SafeAreaView>
   );
 };
+
+// LOW-NEW-001 FIX: Add displayName for debugging
+SleepPatternsScreen.displayName = 'SleepPatternsScreen';
 
 export default SleepPatternsScreen;
