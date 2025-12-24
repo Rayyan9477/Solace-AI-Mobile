@@ -128,9 +128,24 @@ const BYPASS_TIMEOUT_ACTIONS = [
   'persist/PURGE',
 ];
 
+// HIGH-NEW-017 FIX: Proper type for middleware action
+interface TypedAction {
+  type: string;
+  payload?: unknown;
+}
+
+// HIGH-NEW-017 FIX: Minimal state type for middleware (avoids circular dependency with RootState)
+interface MiddlewareStateShape {
+  auth?: {
+    sessionExpiry?: number;
+    lastActivity?: number;
+    isAuthenticated?: boolean;
+  };
+}
+
 const sessionTimeoutMiddleware: Middleware =
   (store) => (next) => (action: unknown) => {
-    const actionType = (action as any)?.type || '';
+    const actionType = (action as TypedAction)?.type || '';
 
     // HIGH-005 FIX: Skip timeout checks for auth/persist actions and when already handling timeout
     if (
@@ -141,7 +156,8 @@ const sessionTimeoutMiddleware: Middleware =
     }
 
     // Check timeout BEFORE processing action
-    const state = store.getState() as any;
+    // HIGH-NEW-017 FIX: Use proper type instead of any
+    const state = store.getState() as MiddlewareStateShape;
     const { sessionExpiry, lastActivity, isAuthenticated } = state.auth || {};
 
     if (isAuthenticated) {
@@ -181,7 +197,8 @@ const sessionTimeoutMiddleware: Middleware =
 
     // Update last activity timestamp for relevant user actions (after action processed)
     // HIGH-005 FIX: Check isAuthenticated from fresh state after action
-    const newState = store.getState() as any;
+    // HIGH-NEW-017 FIX: Use proper type instead of any
+    const newState = store.getState() as MiddlewareStateShape;
     if (
       newState.auth?.isAuthenticated &&
       actionType &&
@@ -216,6 +233,9 @@ const persistConfig: PersistConfig<RootState> = {
   whitelist: ["auth", "user", "mood", "chat", "assessment"], // PHI data slices
   timeout: 10000,
   debug: __DEV__,
+  // HIGH-NEW-017 NOTE: `as any` is acceptable here - redux-persist Transform generics
+  // have known type compatibility issues with PersistConfig. The transform itself is
+  // type-safe internally. See: https://github.com/rt2zz/redux-persist/issues/1140
   transforms: [encryptionTransform as any], // AES-256 encryption for HIPAA compliance
   migrate: (state: any) => {
     if (state) {

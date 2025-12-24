@@ -92,6 +92,16 @@ interface FetchOptions extends Omit<RequestInit, 'cache'> {
   useCache?: boolean;
 }
 
+// HIGH-NEW-017 FIX: Extended Response type with metadata for type-safe interceptors
+interface ExtendedResponse extends Response {
+  metadata?: {
+    startTime?: number;
+    retryCount?: number;
+    [key: string]: unknown;
+  };
+  url: string;
+}
+
 // ==================== INTERCEPTORS ====================
 class InterceptorManager {
   private requestInterceptors: RequestInterceptor[] = [];
@@ -273,14 +283,14 @@ async function fetchWithTimeout(
     const response = await fetch(config.url, config.options);
     clearTimeout(timeoutId);
 
-    // Attach metadata for response interceptors
-    (response as any).metadata = config.metadata;
-    (response as any).url = config.url;
+    // HIGH-NEW-017 FIX: Use type assertion to ExtendedResponse for type-safe metadata attachment
+    const extendedResponse = response as ExtendedResponse;
+    extendedResponse.metadata = config.metadata;
 
     // Run response interceptors
-    await interceptors.runResponseInterceptors(response);
+    await interceptors.runResponseInterceptors(extendedResponse);
 
-    return response;
+    return extendedResponse;
   } catch (error: any) {
     clearTimeout(timeoutId);
 
@@ -374,7 +384,7 @@ async function retryWithNewToken(
 // These values control retry behavior and token refresh logic
 const tokenRefreshAttempts = new Map();
 const MAX_REFRESH_ATTEMPTS = 2;
-const REFRESH_ATTEMPT_WINDOW_MS = 60000; // 1 minute window for refresh attempts
+const REFRESH_ATTEMPT_WINDOW = 60000; // 1 minute window for refresh attempts
 const MAX_RETRY_ATTEMPTS = 3;
 // CRIT-NEW-002 FIX: Maximum call depth to prevent infinite recursion
 // This is a safety mechanism to catch any edge cases in the retry/refresh flow

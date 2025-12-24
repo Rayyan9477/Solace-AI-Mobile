@@ -202,6 +202,7 @@ class TokenService {
   /**
    * Check if access token is expired
    * HIGH-002 FIX: Enhanced validation for token expiration
+   * HIGH-NEW-002 FIX: Properly handle expiresAt === 0 as a valid (but expired) timestamp
    * @returns {Promise<boolean>} True if expired
    */
   async isTokenExpired(): Promise<boolean> {
@@ -217,18 +218,21 @@ class TokenService {
       return true;
     }
 
-    // No expiration set means we treat as expired for safety
-    if (!tokens.expiresAt || typeof tokens.expiresAt !== 'number') {
+    // HIGH-NEW-002 FIX: Check type first, then check if expiration is set
+    // expiresAt === 0 is a valid Unix timestamp (Jan 1, 1970) and should be treated as expired
+    if (typeof tokens.expiresAt !== 'number') {
+      // No expiration set (undefined/null) - treat as expired for safety
       return true;
     }
 
-    // Check if expiration is in the past
+    // Check if expiration is in the past (includes expiresAt === 0)
     return Date.now() > tokens.expiresAt;
   }
 
   /**
    * Validate token structure and expiration
    * HIGH-002 FIX: Comprehensive token validation
+   * HIGH-NEW-002 FIX: Properly distinguish between missing expiration and expired tokens
    * @returns {Promise<{valid: boolean, reason?: string}>} Validation result
    */
   async validateToken(): Promise<{valid: boolean; reason?: string}> {
@@ -243,10 +247,13 @@ class TokenService {
         return { valid: false, reason: 'invalid_access_token' };
       }
 
-      if (!tokens.expiresAt || typeof tokens.expiresAt !== 'number') {
+      // HIGH-NEW-002 FIX: Check type separately from value
+      // expiresAt === 0 is a valid number, just represents an expired timestamp
+      if (typeof tokens.expiresAt !== 'number') {
         return { valid: false, reason: 'missing_expiration' };
       }
 
+      // Now check if token is expired (includes expiresAt === 0)
       if (Date.now() > tokens.expiresAt) {
         return { valid: false, reason: 'expired' };
       }
