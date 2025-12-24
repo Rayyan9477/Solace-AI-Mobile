@@ -18,10 +18,10 @@ import { Provider } from "react-redux";
 
 import MoodCheckIn from "../../src/features/dashboard/components/MoodCheckIn";
 import QuickActions from "../../src/features/dashboard/components/QuickActions";
-import MainAppScreen from "../../src/screens/MainAppScreen";
+import MainAppScreen from "../../src/features/dashboard/screens/MainAppScreen";
 import EnhancedMoodTrackerScreen from "../../src/features/mood/screens/EnhancedMoodTrackerScreen";
 import { ThemeProvider } from "../../src/shared/theme/ThemeContext";
-import moodSlice from "../../src/store/slices/moodSlice";
+import moodSlice from "../../src/app/store/slices/moodSlice";
 import {
   TouchTargetHelpers,
   WCAG_CONSTANTS,

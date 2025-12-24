@@ -14,9 +14,9 @@ import { View, Text } from "react-native";
 import { ThemeProvider } from "../src/shared/theme/ThemeContext";
 
 // Mock store slices
-import authSlice from "../src/store/slices/authSlice";
-import chatSlice from "../src/store/slices/chatSlice";
-import moodSlice from "../src/store/slices/moodSlice";
+import authSlice from "../src/app/store/slices/authSlice";
+import chatSlice from "../src/app/store/slices/chatSlice";
+import moodSlice from "../src/app/store/slices/moodSlice";
 
 /**
  * Mental Health App Test Constants

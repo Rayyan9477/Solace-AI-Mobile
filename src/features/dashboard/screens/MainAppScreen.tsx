@@ -3,12 +3,11 @@ import { View, Text, AccessibilityInfo } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@app/store/store";
 
-import MoodCheckIn from "../features/dashboard/components/MoodCheckIn";
-import moodSliceShim from "../store/slices/moodSlice";
+import MoodCheckIn from "../components/MoodCheckIn";
+import { setCurrentMood } from "@app/store/slices/moodSlice";
 
 const MainAppScreen = () => {
   const dispatch = useDispatch();
-  const { setCurrentMood } = moodSliceShim || {};
   const moodState = useSelector((state: RootState) => state.mood);
   React.useEffect(() => {
     // Trigger screen reader state fetch for accessibility tests
@@ -37,5 +36,8 @@ const MainAppScreen = () => {
     </View>
   );
 };
+
+// Add displayName for debugging
+MainAppScreen.displayName = 'MainAppScreen';
 
 export default MainAppScreen;

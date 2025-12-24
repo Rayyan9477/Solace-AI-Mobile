@@ -16,10 +16,10 @@ import React from "react";
 import { Provider } from "react-redux";
 
 import MoodCheckIn from "../../src/features/dashboard/components/MoodCheckIn";
-import MainAppScreen from "../../src/screens/MainAppScreen";
-import EnhancedMoodTrackerScreen from "../../src/screens/mood/EnhancedMoodTrackerScreen";
+import MainAppScreen from "../../src/features/dashboard/screens/MainAppScreen";
+import EnhancedMoodTrackerScreen from "../../src/features/mood/screens/EnhancedMoodTrackerScreen";
 import { ThemeProvider } from "../../src/shared/theme/ThemeContext";
-import moodSlice from "../../src/store/slices/moodSlice";
+import moodSlice from "../../src/app/store/slices/moodSlice";
 
 // Mock dependencies
 jest.mock("expo-linear-gradient", () => ({

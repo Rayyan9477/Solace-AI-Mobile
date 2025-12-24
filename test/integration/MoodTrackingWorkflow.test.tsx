@@ -11,7 +11,7 @@ import { Provider } from "react-redux";
 
 import MoodCheckIn from "../../src/features/dashboard/components/MoodCheckIn";
 import { ThemeProvider } from "../../src/shared/theme/ThemeContext";
-import moodSlice from "../../src/store/slices/moodSlice";
+import moodSlice from "../../src/app/store/slices/moodSlice";
 
 jest.mock("expo-linear-gradient", () => ({
   LinearGradient: ({ children }: any) => children,
