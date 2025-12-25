@@ -73,7 +73,11 @@
       "Bash(node:*)",
       "Bash(touch:*)",
       "Bash(xargs -I {} sh -c 'echo \"\"=== {} ===\"\" && head -50 {}')",
-      "Bash(perl:*)"
+      "Bash(perl:*)",
+      "Bash(timeout 30 npx expo start:*)",
+      "Bash(timeout 45 npx expo start:*)",
+      "Bash(timeout 60 npx expo start:*)",
+      "Bash(timeout 60 npm test -- --passWithNoTests --testPathPattern=\"MoodCheckIn\")"
     ],
     "deny": [],
     "ask": []

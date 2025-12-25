@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@app/store";
 import { secureLogin } from "@app/store/slices/authSlice";
 import { MentalHealthIcon } from "@components/icons";
 import { FreudLogo } from "@components/icons/FreudIcons";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundary";
 import { useResponsive } from "@shared/hooks/useResponsive";
 import rateLimiter from "@shared/utils/rateLimiter";
 import { useTheme } from "@theme/ThemeProvider";
@@ -235,7 +236,7 @@ const LoginScreenComponent = ({ navigation }: any) => {
     },
   });
 
-  const backgroundColors = isDark
+  const backgroundColors: [string, string] = isDark
     ? [theme.colors.brown[60], theme.colors.brown[70]]
     : [theme.colors.brown[50], theme.colors.brown[60]];
 

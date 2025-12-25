@@ -5,6 +5,11 @@
 
 import "react-native-gesture-handler/jestSetup";
 
+// Mock useColorScheme hook for consistent test behavior
+jest.mock('react-native/Libraries/Utilities/useColorScheme', () => ({
+  default: jest.fn(() => 'light'),
+}));
+
 // Suppress specific React Native deprecation warnings that are not relevant to our codebase
 const originalWarn = console.warn;
 console.warn = (...args) => {

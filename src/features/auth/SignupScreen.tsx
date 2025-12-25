@@ -201,7 +201,7 @@ const SignupScreenComponent = ({ navigation }: SignupScreenProps) => {
     },
   });
 
-  const backgroundColors = isDark
+  const backgroundColors: [string, string] = isDark
     ? [theme.colors.brown[60], theme.colors.brown[70]]
     : [theme.colors.brown[50], theme.colors.brown[60]];
 

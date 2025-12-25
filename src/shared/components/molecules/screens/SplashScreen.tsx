@@ -112,17 +112,17 @@ const SplashScreen = ({ showQuote = false, onComplete = () => {} }) => {
 
   // CRITICAL FIX: Use imported colors instead of undefined freudtheme variable
   // Get theme-appropriate gradient colors following Freud design references
-  const getGradientColors = (): string[] => {
+  const getGradientColors = (): [string, string] => {
     if (showQuote) {
       return [
         colors.orange?.[50] || "#FFF7ED", // Empathy Orange from design reference
         colors.orange?.[40] || "#FFEDD5",
-      ];
+      ] as [string, string];
     }
     return [
       "#FFFFFF", // Clean white background like design reference
       colors.gray?.[10] || "#F9FAFB",
-    ];
+    ] as [string, string];
   };
 
   useEffect(() => {

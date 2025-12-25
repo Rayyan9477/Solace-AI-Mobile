@@ -667,12 +667,12 @@ export const ProfileSetupScreen = ({ navigation }: any) => {
 
       case "result":
         const score = 87;
-        const getScoreColor = (s: number) => {
+        const getScoreColor = (s: number): [string, string] => {
           if (s >= 80) return ["#A8D08D", "#6FA93F"];
           if (s >= 50) return ["#F4B084", "#E87722"];
           return ["#B4A7D6", "#7030A0"];
         };
-        const scoreColors = getScoreColor(score);
+        const scoreColors: [string, string] = getScoreColor(score);
 
         return (
           <View style={styles.resultContainer}>

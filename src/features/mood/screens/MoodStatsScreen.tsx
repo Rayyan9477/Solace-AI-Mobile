@@ -212,7 +212,7 @@ const MoodStatsScreen = ({ navigation }) => {
     ]).start();
   }, []);
 
-  const backgroundColors = isDarkMode
+  const backgroundColors: [string, string] = isDarkMode
     ? [
         theme.colors.dark.background.primary,
         theme.colors.dark.background.secondary,

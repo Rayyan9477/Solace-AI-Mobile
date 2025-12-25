@@ -33,7 +33,7 @@ interface Notification {
   time: string;
   isNew: boolean;
   icon: string;
-  color: string[];
+  color: [string, string];
   action?: {
     label: string;
     route: string;
@@ -93,7 +93,16 @@ const NOTIFICATIONS: Notification[] = [
   },
 ];
 
-const NOTIFICATION_CARDS = [
+const NOTIFICATION_CARDS: Array<{
+  id: string;
+  title: string;
+  subtitle: string;
+  action: string;
+  scoreValue?: string;
+  scoreLabel?: string;
+  illustration: string;
+  colors: [string, string];
+}> = [
   {
     id: "score",
     title: "Freud Score Increased",

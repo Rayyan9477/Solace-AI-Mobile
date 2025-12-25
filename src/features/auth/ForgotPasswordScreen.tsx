@@ -217,7 +217,7 @@ const ForgotPasswordScreenComponent = ({ navigation }: ForgotPasswordScreenProps
     },
   });
 
-  const backgroundColors = isDark
+  const backgroundColors: [string, string] = isDark
     ? [theme.colors.brown[90], theme.colors.brown[80]]
     : [theme.colors.brown[80], theme.colors.brown[70]];
 

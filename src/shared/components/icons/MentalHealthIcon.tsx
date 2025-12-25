@@ -4,8 +4,8 @@
  * Provides consistent icon usage across the app with mental health themes
  */
 
-import PropTypes from "prop-types";
 import React from "react";
+import { StyleProp, ViewStyle } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -77,15 +77,32 @@ const ICON_MAP = {
 };
 
 /**
+ * Icon name type - all valid icon names
+ */
+type IconName = keyof typeof ICON_MAP;
+
+/**
+ * MentalHealthIcon Props
+ */
+interface MentalHealthIconProps {
+  name: IconName | string;
+  size?: number;
+  color?: string;
+  variant?: 'filled' | 'outline';
+  style?: StyleProp<ViewStyle>;
+  [key: string]: any;
+}
+
+/**
  * MentalHealthIcon Component
  *
- * @param {string} name - Semantic icon name from ICON_MAP
- * @param {number} size - Icon size in pixels (default: 24)
- * @param {string} color - Icon color (default: '#000000')
- * @param {string} variant - Icon variant: 'filled', 'outline' (default: 'filled')
- * @param {object} style - Additional styles
+ * @param name - Semantic icon name from ICON_MAP
+ * @param size - Icon size in pixels (default: 24)
+ * @param color - Icon color (default: '#000000')
+ * @param variant - Icon variant: 'filled', 'outline' (default: 'filled')
+ * @param style - Additional styles
  */
-const MentalHealthIcon = ({
+const MentalHealthIcon: React.FC<MentalHealthIconProps> = ({
   name,
   size = 24,
   color = "#000000",
@@ -114,12 +131,8 @@ const MentalHealthIcon = ({
   );
 };
 
-MentalHealthIcon.propTypes = {
-  name: PropTypes.string.isRequired,
-  size: PropTypes.number,
-  color: PropTypes.string,
-  variant: PropTypes.oneOf(["filled", "outline"]),
-  style: PropTypes.object,
-};
+MentalHealthIcon.displayName = 'MentalHealthIcon';
 
 export default MentalHealthIcon;
+export { MentalHealthIcon, ICON_MAP };
+export type { MentalHealthIconProps, IconName };

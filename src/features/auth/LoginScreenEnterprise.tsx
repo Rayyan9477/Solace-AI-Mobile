@@ -245,7 +245,7 @@ export const LoginScreenEnterprise = ({ navigation }: any) => {
 
   const canLogin = email.trim() && password.trim() && !isLoading && !reduxLoading;
 
-  const backgroundColors = isDark
+  const backgroundColors: [string, string] = isDark
     ? [theme.colors.brown[60], theme.colors.brown[70]]
     : [theme.colors.brown[50], theme.colors.brown[60]];
 

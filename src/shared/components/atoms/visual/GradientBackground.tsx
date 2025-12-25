@@ -1,10 +1,22 @@
-import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
-import { StyleSheet } from "react-native";
+import { LinearGradient, LinearGradientPoint } from "expo-linear-gradient";
+import React, { ReactNode } from "react";
+import { StyleSheet, ViewStyle, StyleProp } from "react-native";
 
 import { useFixedTheme } from "./FixedThemeProvider";
 
-const GradientBackground = ({
+// Type for LinearGradient colors - must have at least 2 colors
+type GradientColors = readonly [string, string, ...string[]];
+
+interface GradientBackgroundProps {
+  children?: ReactNode;
+  colors?: GradientColors | null;
+  start?: LinearGradientPoint;
+  end?: LinearGradientPoint;
+  style?: StyleProp<ViewStyle>;
+  [key: string]: any;
+}
+
+const GradientBackground: React.FC<GradientBackgroundProps> = ({
   children,
   colors = null,
   start = { x: 0, y: 0 },
@@ -14,11 +26,11 @@ const GradientBackground = ({
 }) => {
   const { theme } = useFixedTheme();
 
-  const defaultColors = colors || [
+  const defaultColors: GradientColors = colors || [
     theme.colors.therapeutic?.empathy?.[600] || "#C96100",
     theme.colors.therapeutic?.zen?.[500] || "#EDA600",
     theme.colors.therapeutic?.kind?.[400] || "#9654F5",
-  ];
+  ] as GradientColors;
 
   return (
     <LinearGradient

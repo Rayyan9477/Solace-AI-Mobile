@@ -401,4 +401,31 @@ export function useErrorHandler() {
   return { resetError, captureError };
 }
 
+/**
+ * ScreenErrorBoundary - Specialized error boundary for screen-level components
+ * Provides screen-level error handling with navigation recovery options
+ */
+interface ScreenErrorBoundaryProps {
+  children: React.ReactNode;
+  screenName?: string;
+}
+
+export const ScreenErrorBoundary: React.FC<ScreenErrorBoundaryProps> = ({ children, screenName }) => (
+  <ErrorBoundary
+    level="screen"
+    enableRecovery
+    showDetails={__DEV__}
+    onError={(error, errorInfo) => {
+      logger.error(`Error in screen ${screenName || 'unknown'}:`, {
+        error: error.toString(),
+        componentStack: errorInfo.componentStack,
+      });
+    }}
+  >
+    {children}
+  </ErrorBoundary>
+);
+
+ScreenErrorBoundary.displayName = 'ScreenErrorBoundary';
+
 export default ErrorBoundary;

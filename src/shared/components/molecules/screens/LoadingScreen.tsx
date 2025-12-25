@@ -39,23 +39,23 @@ const LoadingScreen = ({
   const circleAnim2 = useRef(new Animated.Value(0)).current;
 
   // Get variant-specific styling
-  const getVariantStyles = () => {
+  const getVariantStyles = (): { gradientColors: [string, string] | [string, string, string]; showProgress: boolean; therapeutic?: boolean; crisis?: boolean; minimal?: boolean } => {
     const darkMode = theme.isDark;
 
     switch (variant) {
       case "therapeutic":
         return {
           gradientColors: darkMode
-            ? ["#2D3748", "#4A5568", "#718096"]
-            : ["#E5EAD7", "#F2F5EB", "#FFF6E2"],
+            ? ["#2D3748", "#4A5568", "#718096"] as [string, string, string]
+            : ["#E5EAD7", "#F2F5EB", "#FFF6E2"] as [string, string, string],
           showProgress: true,
           therapeutic: true,
         };
       case "crisis":
         return {
           gradientColors: darkMode
-            ? ["#742A2A", "#C53030", "#E53E3E"]
-            : ["#FED7D7", "#FEB2B2", "#FC8181"],
+            ? ["#742A2A", "#C53030", "#E53E3E"] as [string, string, string]
+            : ["#FED7D7", "#FEB2B2", "#FC8181"] as [string, string, string],
           showProgress: false,
           crisis: true,
         };
@@ -64,15 +64,15 @@ const LoadingScreen = ({
           gradientColors: [
             theme.colors.background || "#FFFFFF",
             theme.colors.background || "#FFFFFF",
-          ],
+          ] as [string, string],
           showProgress: false,
           minimal: true,
         };
       default:
         return {
           gradientColors: darkMode
-            ? ["#2D3748", "#4A5568", "#718096"]
-            : ["#F7FAFC", "#EDF2F7", "#E2E8F0"],
+            ? ["#2D3748", "#4A5568", "#718096"] as [string, string, string]
+            : ["#F7FAFC", "#EDF2F7", "#E2E8F0"] as [string, string, string],
           showProgress: true,
           therapeutic: false,
         };

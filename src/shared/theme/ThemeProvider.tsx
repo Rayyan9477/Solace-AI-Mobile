@@ -32,6 +32,7 @@ export * from "./customColors";
 interface ThemeContextType {
   theme: typeof lightTheme;
   isDark: boolean;
+  isDarkMode: boolean; // Alias for isDark for backward compatibility
   toggleTheme: () => void;
   setTheme: (darkMode: boolean) => void;
   customColors: CustomColors | null;
@@ -45,7 +46,8 @@ export const ThemeContext = createContext<ThemeContextType | undefined>(undefine
 // Theme Provider Component
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const systemColorScheme = useColorScheme();
-  const [isDark, setIsDark] = useState(systemColorScheme === "dark");
+  // Default to light theme if system color scheme is not available (e.g., in tests)
+  const [isDark, setIsDark] = useState(systemColorScheme === "dark" ? true : false);
   const [customColors, setCustomColorsState] = useState<CustomColors | null>(
     null,
   );
@@ -117,6 +119,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     () => ({
       theme,
       isDark,
+      isDarkMode: isDark, // Alias for backward compatibility
       toggleTheme,
       setTheme,
       customColors,

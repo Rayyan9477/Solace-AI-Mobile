@@ -211,6 +211,7 @@ export const lightTheme = {
     },
 
     border: {
+      primary: colors.semantic.outline,
       light: colors.semantic.outlineVariant,
       main: colors.semantic.outline,
       dark: colors.gray[40],
@@ -226,6 +227,21 @@ export const lightTheme = {
       mindful: colors.brown,
       zen: colors.yellow,
     },
+
+    // Mood colors for emotional states
+    mood: {
+      happy: colors.yellow[50],
+      calm: colors.green[50],
+      anxious: colors.orange[50],
+      sad: colors.blue[50],
+      angry: colors.red[50],
+      neutral: colors.gray[50],
+      excited: colors.purple[50],
+      tired: colors.gray[60],
+    },
+
+    // Interactive state colors
+    onDisabled: colors.semantic.onDisabled,
   },
   typography,
   spacing,
@@ -273,6 +289,7 @@ export const darkTheme = {
     },
 
     border: {
+      primary: colors.gray[70],
       light: colors.gray[80],
       main: colors.gray[70],
       dark: colors.gray[60],
@@ -288,6 +305,21 @@ export const darkTheme = {
       mindful: colors.brown,
       zen: colors.yellow,
     },
+
+    // Mood colors for emotional states (dark mode)
+    mood: {
+      happy: colors.yellow[40],
+      calm: colors.green[40],
+      anxious: colors.orange[40],
+      sad: colors.blue[40],
+      angry: colors.red[40],
+      neutral: colors.gray[40],
+      excited: colors.purple[40],
+      tired: colors.gray[50],
+    },
+
+    // Interactive state colors
+    onDisabled: colors.gray[60],
 
     // Semantic overrides
     semantic: {

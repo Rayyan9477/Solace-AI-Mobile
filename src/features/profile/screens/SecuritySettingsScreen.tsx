@@ -4,6 +4,7 @@
  */
 
 import { useNavigation } from "@react-navigation/native";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundary";
 import { useTheme } from "@theme/ThemeProvider";
 import React, { useState } from "react";
 import {

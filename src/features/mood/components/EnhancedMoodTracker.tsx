@@ -2,7 +2,7 @@ import { logger } from "@shared/utils/logger";
 
 /**
  * Enhanced Mood Tracker Component - Simplified version
- * Basic mood tracking interface without complex dependencies
+ * Basic mood tracking interface with professional SVG icons
  */
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -17,15 +17,23 @@ import {
   Platform,
 } from "react-native";
 import { Card, Button, Chip, TextInput, ProgressBar } from "react-native-paper";
+import {
+  VerySadIcon,
+  SadIcon,
+  NeutralIcon,
+  HappyIcon,
+  VeryHappyIcon,
+} from "@components/icons";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
+// Professional SVG mood icons
 const moodOptions = [
-  { id: 1, emoji: "😢", label: "Very Sad", color: "#FF6B6B" },
-  { id: 2, emoji: "😔", label: "Sad", color: "#FFA726" },
-  { id: 3, emoji: "😐", label: "Neutral", color: "#FFD54F" },
-  { id: 4, emoji: "😊", label: "Happy", color: "#66BB6A" },
-  { id: 5, emoji: "😄", label: "Very Happy", color: "#42A5F5" },
+  { id: 1, icon: VerySadIcon, label: "Very Sad", color: "#3B82F6" },
+  { id: 2, icon: SadIcon, label: "Sad", color: "#60A5FA" },
+  { id: 3, icon: NeutralIcon, label: "Neutral", color: "#928D88" },
+  { id: 4, icon: HappyIcon, label: "Happy", color: "#98B068" },
+  { id: 5, icon: VeryHappyIcon, label: "Very Happy", color: "#FFD700" },
 ];
 
 const EnhancedMoodTracker = ({ navigation }) => {
@@ -160,26 +168,31 @@ const EnhancedMoodTracker = ({ navigation }) => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>How are you feeling?</Text>
           <View style={styles.moodGrid}>
-            {moodOptions.map((mood) => (
-              <TouchableOpacity
-                key={mood.id}
-                style={[
-                  styles.moodCard,
-                  selectedMood?.id === mood.id && styles.selectedMoodCard,
-                ]}
-                onPress={() => handleMoodSelect(mood)}
-              >
-                <Text style={styles.moodEmoji}>{mood.emoji}</Text>
-                <Text
+            {moodOptions.map((mood) => {
+              const IconComponent = mood.icon;
+              return (
+                <TouchableOpacity
+                  key={mood.id}
                   style={[
-                    styles.moodLabel,
-                    selectedMood?.id === mood.id && styles.selectedMoodLabel,
+                    styles.moodCard,
+                    selectedMood?.id === mood.id && styles.selectedMoodCard,
                   ]}
+                  onPress={() => handleMoodSelect(mood)}
+                  accessibilityLabel={`Select ${mood.label} mood`}
+                  accessibilityRole="button"
                 >
-                  {mood.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <IconComponent size={48} color={mood.color} />
+                  <Text
+                    style={[
+                      styles.moodLabel,
+                      selectedMood?.id === mood.id && styles.selectedMoodLabel,
+                    ]}
+                  >
+                    {mood.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
 

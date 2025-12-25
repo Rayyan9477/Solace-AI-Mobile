@@ -248,11 +248,10 @@ const MainTabs = () => {
           component={MindfulHoursScreen}
           options={{
             tabBarLabel: isJest ? "Mindfulness Tab" : "Mindfulness",
-            // MED-004 FIX: Use lotus icons which have proper outline variant for focus state
-            // "meditation" icon doesn't have an outline variant
+            // Use meditation icon with filled/outline variants
             tabBarIcon: ({ color, size, focused }) => (
               <MaterialCommunityIcons
-                name={focused ? "lotus" : "lotus-outline"}
+                name={focused ? "meditation" : "yoga"}
                 size={size}
                 color={color}
               />

@@ -7,6 +7,7 @@ import { logger } from "@shared/utils/logger";
  */
 
 import { useNavigation } from "@react-navigation/native";
+import { ScreenErrorBoundary } from "@shared/components/ErrorBoundary";
 import { useTheme } from "@theme/ThemeProvider";
 import { FontAwesome } from "@expo/vector-icons";
 import { useGoogleAuth, useFacebookAuth, useAppleAuth, useMicrosoftAuth } from "@shared/hooks/useSocialAuth";

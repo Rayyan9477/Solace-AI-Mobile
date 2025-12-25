@@ -27,7 +27,7 @@ interface NotificationCard {
   message: string;
   actionText: string;
   illustration: string;
-  gradientColors: string[];
+  gradientColors: [string, string];
 }
 
 export const NotificationCardsScreen = () => {

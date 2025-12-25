@@ -23,7 +23,15 @@ const ThemedIcon = ({ name, size, color }) => (
 );
 
 // Welcome flow steps matching the exact design reference
-const WELCOME_STEPS = [
+const WELCOME_STEPS: Array<{
+  id: number;
+  title: string;
+  subtitle: string;
+  backgroundColors: [string, string];
+  illustration: string;
+  showGetStarted?: boolean;
+  stepLabel?: string;
+}> = [
   {
     id: 1,
     title: "Welcome to the ultimate\nfreud UI Kit!",

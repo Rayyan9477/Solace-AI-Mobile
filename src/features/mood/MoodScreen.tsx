@@ -18,6 +18,13 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { logMood } from "../../app/store/slices/moodSlice";
+import {
+  VerySadIcon,
+  SadIcon,
+  NeutralIcon,
+  HappyIcon,
+  VeryHappyIcon,
+} from "@components/icons";
 
 interface MoodEntry {
   mood: string;
@@ -26,12 +33,13 @@ interface MoodEntry {
   timestamp: Date;
 }
 
+// Professional SVG mood icons with accessible colors
 const MOODS = [
-  { emoji: "😭", label: "Very sad", color: "#E07A5F" },
-  { emoji: "😢", label: "Sad", color: "#E8A872" },
-  { emoji: "😐", label: "Okay", color: "#B8976B" },
-  { emoji: "🙂", label: "Good", color: "#98B068" },
-  { emoji: "😁", label: "Happy", color: "#8FBC8F" },
+  { icon: VerySadIcon, label: "Very sad", color: "#3B82F6", key: "very-sad" },
+  { icon: SadIcon, label: "Sad", color: "#60A5FA", key: "sad" },
+  { icon: NeutralIcon, label: "Okay", color: "#928D88", key: "neutral" },
+  { icon: HappyIcon, label: "Good", color: "#98B068", key: "good" },
+  { icon: VeryHappyIcon, label: "Happy", color: "#FFD700", key: "happy" },
 ];
 
 const INTENSITY_LEVELS = [1, 2, 3, 4, 5];
@@ -257,19 +265,24 @@ export const MoodScreen = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Select your mood</Text>
           <View style={styles.moodGrid}>
-            {MOODS.map((mood) => (
-              <TouchableOpacity
-                key={mood.label}
-                style={[
-                  styles.moodButton,
-                  selectedMood === mood.label && styles.selectedMoodButton,
-                ]}
-                onPress={() => setSelectedMood(mood.label)}
-              >
-                <Text style={styles.moodEmoji}>{mood.emoji}</Text>
-                <Text style={styles.moodLabel}>{mood.label}</Text>
-              </TouchableOpacity>
-            ))}
+            {MOODS.map((mood) => {
+              const IconComponent = mood.icon;
+              return (
+                <TouchableOpacity
+                  key={mood.key}
+                  style={[
+                    styles.moodButton,
+                    selectedMood === mood.label && styles.selectedMoodButton,
+                  ]}
+                  onPress={() => setSelectedMood(mood.label)}
+                  accessibilityLabel={`Select ${mood.label} mood`}
+                  accessibilityRole="button"
+                >
+                  <IconComponent size={40} color={mood.color} />
+                  <Text style={styles.moodLabel}>{mood.label}</Text>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
 
