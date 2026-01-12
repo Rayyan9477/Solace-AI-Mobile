@@ -18,10 +18,10 @@ This directory contains implementation-ready documentation for all UI screens in
 | Batch 3 | Sign In & Sign Up (1-4) + Profile Setup (1) | Complete | [batch-03-authentication-profile-start.md](./batch-03-authentication-profile-start.md) |
 | Batch 4 | Profile Setup (2-6) | Complete | [batch-04-profile-setup-continued.md](./batch-04-profile-setup-continued.md) |
 | Batch 5 | Profile Setup (7-11) | Complete | [batch-05-profile-setup-completion.md](./batch-05-profile-setup-completion.md) |
-| Batch 6 | Mental Health Assessment (1-5) | Pending | - |
-| Batch 7 | Mental Health Assessment (6-10) | Pending | - |
-| Batch 8 | Mental Health Assessment (11-14) | Pending | - |
-| Batch 9 | Home & Mental Health Score (1-5) | Pending | - |
+| Batch 6 | Mental Health Assessment (1-5) | Complete | [batch-06-mental-health-assessment-start.md](./batch-06-mental-health-assessment-start.md) |
+| Batch 7 | Mental Health Assessment (6-10) | Complete | [batch-07-mental-health-assessment-continued.md](./batch-07-mental-health-assessment-continued.md) |
+| Batch 8 | Mental Health Assessment (11-14) | Complete | [batch-08-mental-health-assessment-final.md](./batch-08-mental-health-assessment-final.md) |
+| Batch 9 | Home & Mental Health Score (1-5) | Complete | [batch-09-home-mental-health-score.md](./batch-09-home-mental-health-score.md) |
 | Batch 10 | Home & Mental Health Score (6-7) + AI Chatbot (1-3) | Pending | - |
 | ... | ... | ... | ... |
 
@@ -36,10 +36,10 @@ This directory contains implementation-ready documentation for all UI screens in
 
 ### Onboarding Flow
 - [x] Profile Setup & Completion (11 screens)
-- [ ] Mental Health Assessment (14 screens)
+- [x] Mental Health Assessment (14 screens)
 
 ### Main App Flow
-- [ ] Home & Mental Health Score (7 screens)
+- [ ] Home & Mental Health Score (7 screens) - 5/7 done
 - [ ] AI Therapy Chatbot (20 screens)
 - [ ] Mood Tracker (11 screens)
 - [ ] Mental Health Journal (9 screens)
@@ -165,6 +165,48 @@ Components identified across all batches that should be built as shared componen
 - [ ] UploadButton
 - [ ] SwipeIndicator
 - [ ] MaskedContact
+- [ ] AssessmentHeader
+- [ ] SelectableOptionCard (Assessment)
+- [ ] GenderCard
+- [ ] VerticalScrollPicker
+- [ ] HorizontalRulerSlider
+- [ ] SemicircularMoodSelector
+- [ ] MoodEmoji
+- [ ] SegmentedToggle
+- [ ] YesNoButtonGroup
+- [ ] DetailedOptionCard
+- [ ] VerticalSleepSlider
+- [ ] SleepLevelRow
+- [ ] SleepEmoji
+- [ ] GridOptionCard
+- [ ] AlphabetNavBar
+- [ ] MedicationRow
+- [ ] RemovableChip
+- [ ] SelectedChipsArea
+- [ ] SymptomTagInput
+- [ ] Tag
+- [ ] SuggestionChip
+- [ ] HorizontalNumberSelector
+- [ ] LargeNumberDisplay
+- [ ] ConcentricCircleVisualizer
+- [ ] PhraseDisplay
+- [ ] LargeTextInput
+- [ ] VoiceInputButton
+- [ ] CharacterCounter
+- [ ] HomeDashboard
+- [ ] UserGreeting
+- [ ] MetricCard
+- [ ] FreudScoreCard
+- [ ] CircularGauge
+- [ ] BottomNavigationBar
+- [ ] ScoreHistoryEntry
+- [ ] StackedBarChart
+- [ ] TimelineScrubber
+- [ ] WeeklyMoodRow
+- [ ] DualHandleSlider
+- [ ] SuggestionCard
+- [ ] CategoryIcon
+- [ ] SwipeActionButton
 
 ---
 
