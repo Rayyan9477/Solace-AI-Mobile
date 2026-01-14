@@ -9,6 +9,22 @@ This directory contains implementation-ready documentation for all UI screens in
 
 ---
 
+## CRITICAL ISSUES - READ FIRST
+
+**Several design mockups contain inappropriate content that MUST be fixed before implementation.**
+
+See **[CRITICAL-ISSUES.md](./CRITICAL-ISSUES.md)** for full details including:
+- Suicidal ideation in placeholder text (Screens 39, 49)
+- Drug references and profanity in chat titles (Screen 49)
+- Harmful messaging for crisis scores (Screen 25)
+- Fictional serial killer names as therapists (Screens 53-54, 59)
+- AI diagnosing medical conditions (Screen 59) - **LEGAL RISK**
+- Multiple typos and data issues
+
+**Do not implement affected screens until design issues are resolved.**
+
+---
+
 ## Audit Progress
 
 | Batch | Screens | Status | File |
@@ -22,7 +38,12 @@ This directory contains implementation-ready documentation for all UI screens in
 | Batch 7 | Mental Health Assessment (6-10) | Complete | [batch-07-mental-health-assessment-continued.md](./batch-07-mental-health-assessment-continued.md) |
 | Batch 8 | Mental Health Assessment (11-14) | Complete | [batch-08-mental-health-assessment-final.md](./batch-08-mental-health-assessment-final.md) |
 | Batch 9 | Home & Mental Health Score (1-5) | Complete | [batch-09-home-mental-health-score.md](./batch-09-home-mental-health-score.md) |
-| Batch 10 | Home & Mental Health Score (6-7) + AI Chatbot (1-3) | Pending | - |
+| Batch 10 | Home & Mental Health Score (6-7) + AI Chatbot (1-3) | Complete | [batch-10-home-completion-chatbot-start.md](./batch-10-home-completion-chatbot-start.md) |
+| Batch 11 | AI Chatbot (4-8) | Complete | [batch-11-ai-chatbot-conversations.md](./batch-11-ai-chatbot-conversations.md) |
+| Batch 12 | AI Chatbot (9-13) | Complete | [batch-12-ai-chatbot-rich-media.md](./batch-12-ai-chatbot-rich-media.md) |
+| Batch 13 | AI Chatbot (14-18) | Complete | [batch-13-ai-chatbot-voice-reports.md](./batch-13-ai-chatbot-voice-reports.md) |
+| Batch 14 | AI Chatbot (19-20) + Mood Tracker (1-3) | Complete | [batch-14-ai-chatbot-final-mood-tracker-start.md](./batch-14-ai-chatbot-final-mood-tracker-start.md) |
+| Batch 15 | Mood Tracker (4-8) | Complete | [batch-15-mood-tracker-continued.md](./batch-15-mood-tracker-continued.md) |
 | ... | ... | ... | ... |
 
 ---
@@ -39,9 +60,9 @@ This directory contains implementation-ready documentation for all UI screens in
 - [x] Mental Health Assessment (14 screens)
 
 ### Main App Flow
-- [ ] Home & Mental Health Score (7 screens) - 5/7 done
-- [ ] AI Therapy Chatbot (20 screens)
-- [ ] Mood Tracker (11 screens)
+- [x] Home & Mental Health Score (7 screens)
+- [x] AI Therapy Chatbot (20 screens) - COMPLETE
+- [ ] Mood Tracker (11 screens) - 8/11 done
 - [ ] Mental Health Journal (9 screens)
 - [ ] Sleep Quality (10 screens)
 - [ ] Stress Management (7 screens)
@@ -207,6 +228,109 @@ Components identified across all batches that should be built as shared componen
 - [ ] SuggestionCard
 - [ ] CategoryIcon
 - [ ] SwipeActionButton
+- [ ] ActivityCard
+- [ ] VideoCard
+- [ ] BenefitTag
+- [ ] MarkCompletedButton
+- [ ] SuccessModal
+- [ ] RobotMascot
+- [ ] SubscriptionBadge
+- [ ] UpsellCard
+- [ ] SegmentedControl
+- [ ] ChatListItem
+- [ ] MoodBadge
+- [ ] AvatarPattern
+- [ ] ConversationSetupForm
+- [ ] LLMCheckpointSelector
+- [ ] CommunicationStyleSelector
+- [ ] TherapyGoalSelector
+- [ ] IconSelector
+- [ ] PrivacyToggle
+- [ ] LimitationCard
+- [ ] LimitationCarousel
+- [ ] PageIndicator
+- [ ] ChatMessageBubble
+- [ ] AIMessageBubble
+- [ ] UserMessageBubble
+- [ ] EmotionBadge
+- [ ] TypingIndicator
+- [ ] ChatInputBar
+- [ ] AttachmentButton
+- [ ] MediaCard
+- [ ] InlineThumbnail
+- [ ] CrisisAlert
+- [ ] ProfessionalCard
+- [ ] EmergencyResourcesSection
+- [ ] CrisisHotline
+- [ ] SupportActionButton
+- [ ] BookRecommendationCard
+- [ ] BookProgressBar
+- [ ] BookIcon
+- [ ] SleepQualityChart
+- [ ] ActionButtonRow
+- [ ] DownloadButton
+- [ ] FreudScoreLineChart
+- [ ] ScoreIndicator
+- [ ] CelebrationAnimation
+- [ ] CameraPreview
+- [ ] FaceDetectionOverlay
+- [ ] BiometricIndicator
+- [ ] BloodPressureIndicator
+- [ ] InstructionBanner
+- [ ] CaptureButton
+- [ ] ModeToggle
+- [ ] AttachedImageCard
+- [ ] AnalyzeButton
+- [ ] EmotionUpdateBanner
+- [ ] RecommendationLink
+- [ ] StarburstBackground
+- [ ] ExpressionIllustration
+- [ ] LightningBoltIcon
+- [ ] ActionBar
+- [ ] ReadyLabel
+- [ ] TranscriptionDisplay
+- [ ] ConcentricCirclesAnimation
+- [ ] RecordingTimer
+- [ ] VoiceMessageCard
+- [ ] AudioWaveform
+- [ ] PlayButton
+- [ ] JournalPreviewCard
+- [ ] JournalEntryMini
+- [ ] SortDropdown
+- [ ] QuoteCard
+- [ ] QuotationMarks
+- [ ] QuoteText
+- [ ] QuoteAttribution
+- [ ] SocialButton
+- [ ] FileCard
+- [ ] FileIcon
+- [ ] FileSizeLabel
+- [ ] DateLabel
+- [ ] AIModelSelector
+- [ ] ModelChip
+- [ ] BetaBadge
+- [ ] CharacterCounter
+- [ ] TrashIllustration
+- [ ] DangerButton
+- [ ] MoodHeroSection
+- [ ] LargeMoodEmoji
+- [ ] MoodLabel
+- [ ] WeeklyMoodChart
+- [ ] MoodBar
+- [ ] MoodLineChart
+- [ ] TimeRangeSelector
+- [ ] MoodAnnotation
+- [ ] EmojiCalendarRow
+- [ ] FloatingActionButton
+- [ ] CurvedMoodSlider
+- [ ] SliderPoint
+- [ ] SegmentedControl
+- [ ] MoodHistoryCard
+- [ ] DateColumn
+- [ ] BiometricRow
+- [ ] BottomActionBar
+- [ ] SettingsButton
+- [ ] EditButton
 
 ---
 
