@@ -276,6 +276,117 @@ This document tracks critical issues identified during the UI audit that **must 
 
 ---
 
+### Issue #15: Journal Data Inconsistency (Screen 78)
+
+**Location**: `batch-16-mood-tracker-final-journal-start.md` - Screen 78
+**Source**: `ui-designs/Dark-mode/🔒 Mental Health Journal/Mental_Health_Journal_Screen_01.png`
+
+**Problem**: Statistics show conflicting journal entry counts:
+
+| Display | Value | Location |
+|---------|-------|----------|
+| "34 Journals" | 34 | Subheading text |
+| Skipped + Negative + Positive | 81 + 32 + 44 = 157 | Statistics cards |
+
+**Risk**:
+- Confuses users about their actual usage
+- Undermines trust in data accuracy
+- Makes it unclear what "Journals" vs individual entries means
+
+**Required Action**:
+- [ ] Clarify terminology: "Journals" vs "Entries" vs "Days"
+- [ ] Ensure all numbers are consistent and mathematically correct
+- [ ] Consider: 34 journals containing 157 total entries? If so, make this clear in UI
+
+---
+
+## SEVERITY: CRITICAL - Mental Health Safety (Continued)
+
+### Issue #16: Suicidal & Violent Placeholder Content in Journal Timeline (Screen 84)
+
+**Location**: `batch-17-journal-continued.md` - Screen 84
+**Source**: `ui-designs/Dark-mode/🔒 Mental Health Journal/Mental_Health_Journal_Screen_07.png`
+
+**Problem**: Journal entry placeholders contain extremely harmful content:
+
+| Entry Title | Content Preview | Issue Type |
+|-------------|-----------------|------------|
+| "I wanna end myself." | "MY BF just got killed in a car accident. Whoever fucking do this will get..." | **Suicidal ideation + Violence + Profanity** |
+
+**Risk**:
+- **CRITICAL** - Suicidal ideation in mental health app mockups is deeply inappropriate
+- Violent traumatic content combined with suicidal language
+- Profanity ("fucking") unprofessional in design assets
+- May be triggering for developers, QA, reviewers working on the project
+- Sets completely wrong tone for a feature meant to support mental wellness
+- Combined with Issue #1 and #2, shows pattern of harmful placeholder content
+
+**Required Action**:
+- [ ] **IMMEDIATELY** replace all harmful journal entry placeholders
+- [ ] Use neutral, supportive example content
+- [ ] Example replacements:
+  - "I wanna end myself" → "Reflecting on a difficult day"
+  - Violent content → "Processing some challenging news I received today"
+- [ ] Audit ALL journal-related mockups for similar issues
+- [ ] Establish content guidelines for placeholder text in mental health apps
+
+---
+
+### Issue #17: Typos in Journal Type Selector (Screen 80)
+
+**Location**: `batch-17-journal-continued.md` - Screen 80
+**Source**: `ui-designs/Dark-mode/🔒 Mental Health Journal/Mental_Health_Journal_Screen_03.png`
+
+**Problem**: Voice Journal description contains multiple typos:
+
+| Error | Correction |
+|-------|------------|
+| "Automaticly" | "Automatically" |
+| "ealth" | "health" |
+
+Full text: "Automaticly create ealth journal by Voice & Face detection with AI"
+Corrected: "Automatically create health journal by Voice & Face detection with AI"
+
+**Required Action**:
+- [ ] Fix typos in design file
+- [ ] Also fix capitalization inconsistency: "Voice Journal" vs "Text journal"
+
+---
+
+### Issue #18: Crisis Alert Uses Triggering Language (Screen 86)
+
+**Location**: `batch-18-journal-final-sleep-start.md` - Screen 86
+**Source**: `ui-designs/Dark-mode/🔒 Mental Health Journal/Mental_Health_Journal_Screen_09.png`
+
+**Problem**: The crisis support alert modal uses direct, potentially triggering language:
+
+| Element | Current Text | Issue |
+|---------|-------------|-------|
+| Alert Title | "Suicidal Mental Pattern Detected by AI!" | Too direct, uses word "suicidal" prominently |
+| Alert Body | "Our AI detected multiple account where you mentioned suicide on your journal." | Uses "suicide" again, grammatically incorrect ("account" should be "accounts" or "instances") |
+
+**Risk**:
+- **CRITICAL** - Alert language itself can be triggering for users in crisis
+- Using clinical terms like "suicidal" in large, bold text may worsen mental state
+- The feature is valuable but execution needs professional refinement
+- Does not follow crisis intervention best practices for gentle, supportive communication
+- Grammar errors undermine professionalism and trust
+
+**Required Action**:
+- [ ] **IMMEDIATELY** reword alert with gentle, supportive language
+- [ ] Remove direct use of "suicidal" and "suicide" from prominent display
+- [ ] Fix grammar: "multiple account" → "multiple instances" or "patterns"
+- [ ] Review all crisis-related language with licensed mental health professionals
+- [ ] Ensure compliance with crisis intervention best practices
+- [ ] Consider softer alternatives:
+  - Title: "We noticed you might be struggling" or "We're here to support you"
+  - Body: "We've noticed patterns in your recent entries that concern us. Support resources are available 24/7."
+- [ ] Legal and clinical review required before implementation
+
+**Note**: The crisis detection feature itself is valuable and appropriate for a mental health app. The issue is specifically with the language used in the alert, not the feature concept.
+
+---
+
 ## Resolution Tracking
 
 | Issue # | Status | Assigned To | Resolution Date |
@@ -294,6 +405,10 @@ This document tracks critical issues identified during the UI audit that **must 
 | 12 | OPEN | Design Team | - |
 | 13 | OPEN | Clinical Review | - |
 | 14 | OPEN | Design Team | - |
+| 15 | OPEN | Design Team | - |
+| 16 | OPEN | Design Team | - |
+| 17 | OPEN | Design Team | - |
+| 18 | OPEN | Clinical Review | - |
 
 ---
 

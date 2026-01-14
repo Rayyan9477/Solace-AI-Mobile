@@ -14,8 +14,10 @@ This directory contains implementation-ready documentation for all UI screens in
 **Several design mockups contain inappropriate content that MUST be fixed before implementation.**
 
 See **[CRITICAL-ISSUES.md](./CRITICAL-ISSUES.md)** for full details including:
-- Suicidal ideation in placeholder text (Screens 39, 49)
+- Suicidal ideation in placeholder text (Screens 39, 49, 84)
+- Crisis alert uses triggering language (Screen 86) - **CLINICAL REVIEW REQUIRED**
 - Drug references and profanity in chat titles (Screen 49)
+- Violent content and profanity in journal placeholders (Screen 84)
 - Harmful messaging for crisis scores (Screen 25)
 - Fictional serial killer names as therapists (Screens 53-54, 59)
 - AI diagnosing medical conditions (Screen 59) - **LEGAL RISK**
@@ -44,6 +46,9 @@ See **[CRITICAL-ISSUES.md](./CRITICAL-ISSUES.md)** for full details including:
 | Batch 13 | AI Chatbot (14-18) | Complete | [batch-13-ai-chatbot-voice-reports.md](./batch-13-ai-chatbot-voice-reports.md) |
 | Batch 14 | AI Chatbot (19-20) + Mood Tracker (1-3) | Complete | [batch-14-ai-chatbot-final-mood-tracker-start.md](./batch-14-ai-chatbot-final-mood-tracker-start.md) |
 | Batch 15 | Mood Tracker (4-8) | Complete | [batch-15-mood-tracker-continued.md](./batch-15-mood-tracker-continued.md) |
+| Batch 16 | Mood Tracker (9-11) + Journal (1-2) | Complete | [batch-16-mood-tracker-final-journal-start.md](./batch-16-mood-tracker-final-journal-start.md) |
+| Batch 17 | Journal (3-7) | Complete | [batch-17-journal-continued.md](./batch-17-journal-continued.md) |
+| Batch 18 | Journal (8-9) + Sleep Quality (1-3) | Complete | [batch-18-journal-final-sleep-start.md](./batch-18-journal-final-sleep-start.md) |
 | ... | ... | ... | ... |
 
 ---
@@ -62,9 +67,9 @@ See **[CRITICAL-ISSUES.md](./CRITICAL-ISSUES.md)** for full details including:
 ### Main App Flow
 - [x] Home & Mental Health Score (7 screens)
 - [x] AI Therapy Chatbot (20 screens) - COMPLETE
-- [ ] Mood Tracker (11 screens) - 8/11 done
-- [ ] Mental Health Journal (9 screens)
-- [ ] Sleep Quality (10 screens)
+- [x] Mood Tracker (11 screens) - COMPLETE
+- [x] Mental Health Journal (9 screens) - COMPLETE
+- [ ] Sleep Quality (10 screens) - 3/10 done
 - [ ] Stress Management (7 screens)
 - [ ] Mindful Hours (8 screens)
 - [ ] Mindful Resources (7 screens - Light mode only)
@@ -331,6 +336,68 @@ Components identified across all batches that should be built as shared componen
 - [ ] BottomActionBar
 - [ ] SettingsButton
 - [ ] EditButton
+- [ ] BottomSheet
+- [ ] MoodFilterGrid
+- [ ] DatePickerButton
+- [ ] ToggleSwitch
+- [ ] FilterResultsPreview
+- [ ] ApplyFilterButton
+- [ ] ClearFilterLink
+- [ ] StepListContainer
+- [ ] StepItem
+- [ ] StepCheckbox
+- [ ] ExternalLinkButton
+- [ ] FreudPointsBadge
+- [ ] StreakDisplay
+- [ ] ScoreBreakdown
+- [ ] JournalStatsRow
+- [ ] CalendarGrid
+- [ ] DayCell
+- [ ] ProgressLabel
+- [ ] SummaryText
+- [ ] ChartContainer
+- [ ] BarChartMulti
+- [ ] ChartBar
+- [ ] ChartLegend
+- [ ] LegendItem
+- [ ] WeekSelector
+- [ ] JournalTypeCard
+- [ ] VoicePromptDisplay
+- [ ] AudioWaveformVisualizer
+- [ ] TranscriptionDisplay
+- [ ] KeywordHighlight
+- [ ] RecordingControls
+- [ ] RichTextEditor
+- [ ] EditorToolbar
+- [ ] ColorPickerButton
+- [ ] StressSlider
+- [ ] EmotionSelectorRow
+- [ ] StressorChipList
+- [ ] WeekCalendarStrip
+- [ ] TimelineView
+- [ ] TimelineConnector
+- [ ] JournalEntryCard
+- [ ] MoodDotIndicator
+- [ ] MetadataRow
+- [ ] KeywordHighlighter
+- [ ] UndoRedoControls
+- [ ] JournalToolbar
+- [ ] CrisisAlertModal
+- [ ] CrisisIllustration
+- [ ] EmergencyActionButtons
+- [ ] SleepScoreHero
+- [ ] DecorativeBackground
+- [ ] SleepMetricCard
+- [ ] CircularProgressRing
+- [ ] GaugeChart
+- [ ] FanChartSegment
+- [ ] SleepTypeLegend
+- [ ] MonthCalendarGrid
+- [ ] CalendarDayCell
+- [ ] CalendarDateRange
+- [ ] SleepHistoryCard
+- [ ] QualityBadgePill
+- [ ] AISuggestionCard
 
 ---
 
