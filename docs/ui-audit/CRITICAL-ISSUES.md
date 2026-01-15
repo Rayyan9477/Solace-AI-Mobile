@@ -89,17 +89,21 @@ This document tracks critical issues identified during the UI audit that **must 
 
 ---
 
-### Issue #8: Fictional Serial Killer Names as Therapists (Screens 53-54)
+### Issue #8: Fictional Serial Killer Names as Therapists/Professionals (Multiple Screens)
 
-**Location**: `batch-11-ai-chatbot-conversations.md` - Screens 53, 54
-**Source**: `ui-designs/Dark-mode/AI Therapy Chatbot/AI_Therapy_Chatbot_Screen_07.png`, `AI_Therapy_Chatbot_Screen_08.png`
+**Locations**:
+- `batch-11-ai-chatbot-conversations.md` - Screens 53, 54 (Therapist referrals)
+- `batch-23-mindful-hours-final-resources-start.md` - Screens 112, 114 (Course instructor)
+- `batch-24-resources-final-community-start.md` - Screen 115 (Article author), Screen 116 (Course instructor)
 
-**Problem**: Professional therapist referral cards use names of famous fictional serial killers:
+**Sources**: Multiple design files across AI Therapy Chatbot, Mindful Resources
 
-| Name Used | Character Reference | Source |
-|-----------|-------------------|--------|
-| "Dr. Hannibal Lector" | Hannibal Lecter | "The Silence of the Lambs" |
-| "Prof. Johann Liebert" | Johan Liebert | Anime "Monster" |
+**Problem**: Names of famous fictional serial killers used as placeholder professional names throughout the app:
+
+| Name Used | Character Reference | Source | Locations Found |
+|-----------|-------------------|--------|-----------------|
+| "Dr. Hannibal Lector" | Hannibal Lecter | "The Silence of the Lambs" | Screens 53, 54, 112, 114, 116 |
+| "Johann Liebert" / "Prof. Johann Liebert" | Johan Liebert | Anime "Monster" | Screens 53, 54, 115 |
 
 **Risk**:
 - **CRITICAL** - Extremely inappropriate for a mental health application
@@ -107,11 +111,13 @@ This document tracks critical issues identified during the UI audit that **must 
 - Could be triggering for users familiar with these characters
 - Unprofessional and potentially damaging to app credibility
 - Legal concerns regarding use of copyrighted character names
+- Pattern suggests systemic design issue with placeholder content
 
 **Required Action**:
-- [ ] Replace all therapist names with generic professional placeholders
-- [ ] Example: "Dr. Sarah Mitchell, PhD", "Dr. James Thompson, LMHC"
-- [ ] Review all professional referral mockups for similar issues
+- [ ] Replace ALL instances of these names across the entire app
+- [ ] Use generic professional placeholders: "Dr. Sarah Mitchell, PhD", "Dr. James Thompson, LMHC"
+- [ ] Audit ALL mockups for fictional character names in professional contexts
+- [ ] Establish content guidelines for placeholder names in design files
 
 ---
 
@@ -387,6 +393,206 @@ Corrected: "Automatically create health journal by Voice & Face detection with A
 
 ---
 
+## SEVERITY: MEDIUM - Data & Content Issues
+
+### Issue #19: Invalid Date and Wrong Button Label (Screen 96)
+
+**Location**: `batch-20-sleep-final-stress-start.md` - Screen 96
+**Source**: `ui-designs/Dark-mode/🔒 Sleep Quality/Sleep_Quality_Screen_10.png`
+
+**Problem**: Filter Sleep bottom sheet contains invalid date and wrong label:
+
+| Element | Current Value | Issue |
+|---------|---------------|-------|
+| Date fields | "2025/18/16" | Invalid date - no month 18 exists |
+| Apply button | "Filter Mood (25)" | Wrong feature name - should be "Filter Sleep" |
+
+**Required Action**:
+- [ ] Fix date format to valid date (e.g., "2025/01/16" or "2025/06/16")
+- [ ] Change button label from "Filter Mood" to "Filter Sleep"
+
+---
+
+### Issue #20: Grammar Error and Truncated Labels (Screen 99)
+
+**Location**: `batch-20-sleep-final-stress-start.md` - Screen 99
+**Source**: `ui-designs/Dark-mode/🔒 Stress Management/Stress_Management_Screen_03.png`
+
+**Problem**: Grammar error in subtitle and truncated bubble labels:
+
+| Issue | Current | Correct |
+|-------|---------|---------|
+| Grammar | "will impacts" | "will impact" |
+| Truncation | "nship" | "Relationship" |
+| Truncation | "Fin" | "Finance" |
+
+**Full text**:
+- Current: "Our AI will decide how your stressor will impacts your life in general."
+- Correct: "Our AI will decide how your stressor will impact your life in general."
+
+**Required Action**:
+- [ ] Fix grammar: "impacts" → "impact"
+- [ ] Ensure all bubble labels are fully visible (may need layout adjustment)
+
+---
+
+### Issue #21: Typo "heatbeat" (Screen 95)
+
+**Location**: `batch-20-sleep-final-stress-start.md` - Screen 95
+**Source**: `ui-designs/Dark-mode/🔒 Sleep Quality/Sleep_Quality_Screen_09.png`
+
+**Problem**: Typo in Heartbeat Irregularity suggestion description:
+
+- Current: "We detected **heatbeat** deviation"
+- Correct: "We detected **heartbeat** deviation"
+
+**Required Action**:
+- [ ] Fix typo: "heatbeat" → "heartbeat"
+
+---
+
+### Issue #22: "Suicide" as Community Browse Category (Screen 120)
+
+**Location**: `batch-25-community-support-continued.md` - Screen 120
+**Source**: `ui-designs/Dark-mode/🔒 Community Support/Community_Support_Screen_02.png`
+
+**Problem**: "Suicide" appears as a browsable category filter in the community feed, alongside "Trending" and "Stress".
+
+**Risk**:
+- May need clinical review for appropriate presentation
+- Could be triggering for some users
+- Unclear if this is for support-seeking or content discovery
+- Different from crisis detection (Issue #18) - this is user-driven browsing
+
+**Required Action**:
+- [ ] Clinical review of category appropriateness
+- [ ] Consider renaming to "Crisis Support" or "Need Help"
+- [ ] Ensure proper content moderation in this category
+- [ ] Add warnings or support resources when browsing
+
+**Note**: Having a space for users to seek support around suicidal thoughts is valuable, but the presentation and moderation approach needs professional guidance.
+
+---
+
+### Issue #23: Real Person Names as Placeholders (Screen 124)
+
+**Location**: `batch-25-community-support-continued.md` - Screen 124
+**Source**: `ui-designs/Dark-mode/🔒 Community Support/Community_Support_Screen_06.png`
+
+**Problem**: Real celebrity names used as placeholder usernames in notification examples:
+
+| Name Used | Issue |
+|-----------|-------|
+| "Joe Biden" | Current US President |
+| "John Cena" | Celebrity/Wrestler |
+
+**Risk**:
+- Could imply endorsement or association
+- Unprofessional in design assets
+- Should use clearly fictional names
+
+**Required Action**:
+- [ ] Replace with generic usernames (e.g., "user_123", "Alex M", "Sam T")
+- [ ] Audit all mockups for real person name usage
+
+---
+
+### Issue #24: Anime Character Names as Users (Screens 120, 122)
+
+**Location**: `batch-25-community-support-continued.md` - Screens 120, 122
+**Source**: Community Support screens 02 and 04
+
+**Problem**: Anime character names used as placeholder usernames:
+
+| Name Used | Character Reference | Source |
+|-----------|-------------------|--------|
+| "Shinomiya Kaguya" | Kaguya Shinomiya | "Kaguya-sama: Love is War" |
+| "Makima D. Smith" | Makima | "Chainsaw Man" (antagonist) |
+
+**Risk**:
+- Copyright concerns with copyrighted character names
+- Makima is a villain/antagonist character - inappropriate association
+- Less severe than Issue #8 but still problematic pattern
+
+**Required Action**:
+- [ ] Replace with generic placeholder names
+- [ ] Establish guidelines for placeholder names in designs
+
+---
+
+### Issue #25: Redundant Grammar in Success Modal (Screen 123)
+
+**Location**: `batch-25-community-support-continued.md` - Screen 123
+**Source**: `ui-designs/Dark-mode/🔒 Community Support/Community_Support_Screen_05.png`
+
+**Problem**: Success message contains redundant phrasing:
+- Current: "You have successfully posted a post."
+- Issue: "posted a post" is grammatically awkward and redundant
+
+**Required Action**:
+- [ ] Change to: "Your post has been published!" or "Successfully shared!"
+
+---
+
+## SEVERITY: CRITICAL - Safety
+
+### Issue #26: Crisis Content Without Intervention (Screen 128)
+
+**Location**: `batch-26-community-final-search-start.md` - Screen 128
+**Source**: `ui-designs/Dark-mode/🔒 Community Support/Community_Support_Screen_10.png`
+
+**Problem**: User message "I don't think I can live like this anymore..." appears in chat without any visible crisis intervention or support resources being triggered.
+
+**Risk**:
+- **CRITICAL** - This is exactly the type of content that should trigger immediate crisis response
+- Design shows regular chat continuing as if nothing concerning was said
+- Contradicts Issue #18 where crisis detection was shown (but with poor wording)
+- The AI response shows generic supportive text but NO crisis resources
+- Could result in user harm if crisis content isn't handled appropriately
+
+**Required Action**:
+- [ ] **IMMEDIATELY** show crisis intervention for this message type
+- [ ] Display crisis support modal with emergency resources
+- [ ] Provide hotline numbers (988 Suicide & Crisis Lifeline)
+- [ ] Add text crisis options (Crisis Text Line: Text HOME to 741741)
+- [ ] This is legally and ethically essential for any mental health app
+- [ ] Review with clinical team before implementation
+
+**Note**: This is one of the most serious issues identified - a mental health app MUST have robust crisis detection and response. This screen shows a critical failure in that system.
+
+---
+
+### Issue #27: Non-existent AI Model Reference (Screen 128)
+
+**Location**: `batch-26-community-final-search-start.md` - Screen 128
+**Source**: `ui-designs/Dark-mode/🔒 Community Support/Community_Support_Screen_10.png`
+
+**Problem**: Chat header shows "GPT-6" which:
+1. Does not exist as of 2025
+2. Is OpenAI branding, not freud.ai
+3. Creates confusion about the AI powering the app
+4. May create false expectations about AI capabilities
+
+**Required Action**:
+- [ ] Remove GPT reference entirely
+- [ ] Use own branding: "Freud AI" or "Doctor Freud"
+- [ ] If showing model info, use generic terms or own nomenclature
+
+---
+
+### Issue #28: Future Date Placeholder (Screen 125)
+
+**Location**: `batch-26-community-final-search-start.md` - Screen 125
+**Source**: `ui-designs/Dark-mode/🔒 Community Support/Community_Support_Screen_07.png`
+
+**Problem**: Filter date shows "25 January, 2052" - a placeholder date 27 years in the future.
+
+**Required Action**:
+- [ ] Use realistic placeholder date
+- [ ] Example: "15 January, 2025" or dynamic "Today"
+
+---
+
 ## Resolution Tracking
 
 | Issue # | Status | Assigned To | Resolution Date |
@@ -409,6 +615,16 @@ Corrected: "Automatically create health journal by Voice & Face detection with A
 | 16 | OPEN | Design Team | - |
 | 17 | OPEN | Design Team | - |
 | 18 | OPEN | Clinical Review | - |
+| 19 | OPEN | Design Team | - |
+| 20 | OPEN | Design Team | - |
+| 21 | OPEN | Design Team | - |
+| 22 | OPEN | Clinical Review | - |
+| 23 | OPEN | Design Team | - |
+| 24 | OPEN | Design Team | - |
+| 25 | OPEN | Design Team | - |
+| 26 | OPEN | Clinical + Dev | - |
+| 27 | OPEN | Design Team | - |
+| 28 | OPEN | Design Team | - |
 
 ---
 
