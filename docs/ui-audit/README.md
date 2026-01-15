@@ -13,6 +13,10 @@ This directory contains implementation-ready documentation for all UI screens in
 
 **Several design mockups contain inappropriate content that MUST be fixed before implementation.**
 
+📋 **[REMEDIATION-GUIDE.md](./REMEDIATION-GUIDE.md)** - **START HERE** - Specific replacement text for all 42 issues
+
+📝 **[DESIGN-TEAM-ACTION-PLAN.md](./DESIGN-TEAM-ACTION-PLAN.md)** - Step-by-step workflow for design team
+
 See **[CRITICAL-ISSUES.md](./CRITICAL-ISSUES.md)** for full details including:
 - Suicidal ideation in placeholder text (Screens 39, 49, 84)
 - Crisis alert uses triggering language (Screen 86) - **CLINICAL REVIEW REQUIRED**
@@ -57,7 +61,12 @@ See **[CRITICAL-ISSUES.md](./CRITICAL-ISSUES.md)** for full details including:
 | Batch 24 | Mindful Resources (4-7) + Community Support (1) | Complete | [batch-24-resources-final-community-start.md](./batch-24-resources-final-community-start.md) |
 | Batch 25 | Community Support (2-6) | Complete | [batch-25-community-support-continued.md](./batch-25-community-support-continued.md) |
 | Batch 26 | Community Support (7-10) + Search (1) | Complete | [batch-26-community-final-search-start.md](./batch-26-community-final-search-start.md) |
-| ... | ... | ... | ... |
+| Batch 27 | Search (2-5) + Smart Notifications (1) | Complete | [batch-27-search-final-notifications-start.md](./batch-27-search-final-notifications-start.md) |
+| Batch 28 | Smart Notifications (2-6) | Complete | [batch-28-notifications-continued.md](./batch-28-notifications-continued.md) |
+| Batch 29 | Smart Notifications (7) + Profile Settings (1-4) | Complete | [batch-29-notifications-final-profile-start.md](./batch-29-notifications-final-profile-start.md) |
+| Batch 30 | Profile Settings (5-9) | Complete | [batch-30-profile-settings-continued.md](./batch-30-profile-settings-continued.md) |
+| Batch 31 | Profile Settings (10-13) + Error (1) | Complete | [batch-31-profile-final-error-start.md](./batch-31-profile-final-error-start.md) |
+| Batch 32 | Error & Utilities (2-5) - FINAL | Complete | [batch-32-error-utilities-final.md](./batch-32-error-utilities-final.md) |
 
 ---
 
@@ -82,12 +91,12 @@ See **[CRITICAL-ISSUES.md](./CRITICAL-ISSUES.md)** for full details including:
 - [x] Mindful Hours (8 screens) - COMPLETE
 - [x] Mindful Resources (7 screens - Light mode only) - COMPLETE
 - [x] Community Support (10 screens) - COMPLETE
-- [ ] Search Screen (5 screens) - 1/5 done
-- [ ] Smart Notifications (7 screens)
-- [ ] Profile Settings & Help Center (13 screens)
-- [ ] Error & Other Utilities (5 screens)
+- [x] Search Screen (5 screens) - COMPLETE
+- [x] Smart Notifications (7 screens) - COMPLETE
+- [x] Profile Settings & Help Center (13 screens) - COMPLETE
+- [x] Error & Other Utilities (5 screens) - COMPLETE
 
-**Total Screens**: ~153
+**Total Screens**: 158 ✅ ALL COMPLETE
 
 ---
 
@@ -619,6 +628,107 @@ Components identified across all batches that should be built as shared componen
 - [ ] ChatLimitBadge
 - [ ] GlobalSearchBar
 - [ ] FreudLogoSpinner
+- [ ] AutocompleteDropdown
+- [ ] SuggestionRow
+- [ ] SuggestionHighlight
+- [ ] EmptyStateContainer
+- [ ] EmptyStateIllustration
+- [ ] EmptyStateTitle
+- [ ] EmptyStateMessage
+- [ ] ResultsHeader
+- [ ] ResultCountLabel
+- [ ] SortDropdown
+- [ ] CategoryFilterChips
+- [ ] SearchResultRow
+- [ ] ResultCategoryIcon
+- [ ] ResultCategoryLabel
+- [ ] DragHandle
+- [ ] NotificationsHeader
+- [ ] UnreadCountBadge
+- [ ] NotificationBadge
+- [ ] NotificationCheckmark
+- [ ] AttachmentButton
+- [ ] MoodTransition
+- [ ] FullScreenNotification
+- [ ] ScoreChangeDisplay
+- [ ] SparkleDecorations
+- [ ] CurrentScoreBadge
+- [ ] ProgressFraction
+- [ ] EncouragementMessage
+- [ ] CountdownMessage
+- [ ] CurrentLevelDisplay
+- [ ] MoodTransitionRow
+- [ ] TransitionArrow
+- [ ] HighlightedEmoji
+- [ ] UrgentTitle
+- [ ] AIRecommendationMessage
+- [ ] StartSessionButton
+- [ ] SleepCelebrationIllustration
+- [ ] ProfileAvatar
+- [ ] HeaderBackground
+- [ ] MembershipBadge
+- [ ] StatsRow
+- [ ] StatItem
+- [ ] FreudScoreCard
+- [ ] MoodCard
+- [ ] MoodBarChart
+- [ ] SettingsItem
+- [ ] AvatarEditor
+- [ ] AvatarOption
+- [ ] EditBadge
+- [ ] OrDivider
+- [ ] DropdownSelect
+- [ ] RadioGroup
+- [ ] RadioButton
+- [ ] SliderInput
+- [ ] SliderLabel
+- [ ] SettingsToggle
+- [ ] DescriptionText
+- [ ] SecurityOptionCard
+- [ ] DeviceGrid
+- [ ] DeviceCard
+- [ ] DeviceIcon
+- [ ] BatteryLevel
+- [ ] StatusBadge
+- [ ] LanguageRow
+- [ ] LanguageIcon
+- [ ] BetaBadge
+- [ ] LogoDisplay
+- [ ] CompanyName
+- [ ] Tagline
+- [ ] ContactCard
+- [ ] CardIcon
+- [ ] InfoText
+- [ ] TabBar
+- [ ] FAQItem
+- [ ] FAQQuestion
+- [ ] FAQAnswer
+- [ ] ExpandIcon
+- [ ] AccordionList
+- [ ] SupportIllustration
+- [ ] ResponseTimeText
+- [ ] ChatContainer
+- [ ] SupportMessageBubble
+- [ ] SupportAvatar
+- [ ] VoucherIllustration
+- [ ] HeroTitle
+- [ ] HeroSubtitle
+- [ ] ContactRow
+- [ ] AvatarInitial
+- [ ] PhoneNumber
+- [ ] EmojiIndicator
+- [ ] CategoryChip
+- [ ] ChipsGrid
+- [ ] LostIllustration
+- [ ] ErrorTitle
+- [ ] ErrorSubtitle
+- [ ] StatusBadge
+- [ ] OfflineIllustration
+- [ ] ServerErrorIllustration
+- [ ] MaintenanceIllustration
+- [ ] CountdownBadge
+- [ ] ForbiddenIllustration
+- [ ] RefreshButton
 
 ---
 

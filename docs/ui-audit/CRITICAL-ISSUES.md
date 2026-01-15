@@ -497,26 +497,31 @@ Corrected: "Automatically create health journal by Voice & Face detection with A
 
 ---
 
-### Issue #24: Anime Character Names as Users (Screens 120, 122)
+### Issue #24: Anime Character Names as Users (Screens 120, 122, 134, 141)
 
-**Location**: `batch-25-community-support-continued.md` - Screens 120, 122
-**Source**: Community Support screens 02 and 04
+**Locations**:
+- `batch-25-community-support-continued.md` - Screens 120, 122
+- `batch-27-search-final-notifications-start.md` - Screen 134 (filename)
+- `batch-29-notifications-final-profile-start.md` - Screen 141 (Profile Dashboard)
+**Source**: Community Support screens 02 and 04, Smart Notifications Screen 01, Profile Settings Screen 01
 
-**Problem**: Anime character names used as placeholder usernames:
+**Problem**: Anime character names used as placeholder usernames throughout the app:
 
-| Name Used | Character Reference | Source |
-|-----------|-------------------|--------|
-| "Shinomiya Kaguya" | Kaguya Shinomiya | "Kaguya-sama: Love is War" |
-| "Makima D. Smith" | Makima | "Chainsaw Man" (antagonist) |
+| Name Used | Character Reference | Source | Locations |
+|-----------|-------------------|--------|-----------|
+| "Shinomiya Kaguya" | Kaguya Shinomiya | "Kaguya-sama: Love is War" | Screens 120, 122, 134, 141 |
+| "Makima D. Smith" | Makima | "Chainsaw Man" (antagonist) | Screen 122 |
 
 **Risk**:
 - Copyright concerns with copyrighted character names
 - Makima is a villain/antagonist character - inappropriate association
-- Less severe than Issue #8 but still problematic pattern
+- Character appears as the main profile user throughout Profile Settings section
+- Pattern is more widespread than initially identified
 
 **Required Action**:
 - [ ] Replace with generic placeholder names
 - [ ] Establish guidelines for placeholder names in designs
+- [ ] Pay special attention to Profile section which uses this as main user identity
 
 ---
 
@@ -580,16 +585,294 @@ Corrected: "Automatically create health journal by Voice & Face detection with A
 
 ---
 
-### Issue #28: Future Date Placeholder (Screen 125)
+### Issue #28: Future Date Placeholder (Screens 125, 133)
 
-**Location**: `batch-26-community-final-search-start.md` - Screen 125
-**Source**: `ui-designs/Dark-mode/🔒 Community Support/Community_Support_Screen_07.png`
+**Locations**:
+- `batch-26-community-final-search-start.md` - Screen 125
+- `batch-27-search-final-notifications-start.md` - Screen 133
 
-**Problem**: Filter date shows "25 January, 2052" - a placeholder date 27 years in the future.
+**Problem**: Filter date shows "25 January, 2052" - a placeholder date 27 years in the future. Appears in multiple filter bottom sheets.
 
 **Required Action**:
-- [ ] Use realistic placeholder date
+- [ ] Use realistic placeholder date across all filters
 - [ ] Example: "15 January, 2025" or dynamic "Today"
+- [ ] Audit all date fields for similar issues
+
+---
+
+### Issue #29: Missing Space in Error Message (Screen 131)
+
+**Location**: `batch-27-search-final-notifications-start.md` - Screen 131
+**Source**: `ui-designs/Dark-mode/🔒 Search Screen/Search_Screen_Screen_03.png`
+
+**Problem**: Missing space in error message text.
+
+- Current: "cannot be found.404 Error"
+- Should be: "cannot be found. 404 Error"
+
+**Additional Note**: "404 Error" may be too technical for general users.
+
+**Required Action**:
+- [ ] Add space between "found." and "404"
+- [ ] Consider rewording: "We couldn't find any results for your search"
+
+---
+
+### Issue #30: Anime Character Name in Filename (Screen 134)
+
+**Location**: `batch-27-search-final-notifications-start.md` - Screen 134
+**Source**: `ui-designs/Dark-mode/🔒 Smart Notifications/Smart_Notifications_Screen_01.png`
+
+**Problem**: Notification attachment shows "Shinomiya Data.pdf" - using anime character name.
+
+**Note**: Relates to Issue #24 where "Shinomiya Kaguya" was used as placeholder username.
+
+**Required Action**:
+- [ ] Use generic filename: "Monthly_Health_Report.pdf" or "[Username]_Data.pdf"
+- [ ] Audit all attachment/file names for character references
+
+---
+
+### Issue #31: Grammar Error in Journal Progress (Screen 136)
+
+**Location**: `batch-28-notifications-continued.md` - Screen 136
+**Source**: `ui-designs/Dark-mode/🔒 Smart Notifications/Smart_Notifications_Screen_03.png`
+
+**Problem**: Missing plural in notification text.
+
+- Current: "You still need to complete 9 daily journal this month."
+- Should be: "You still need to complete 9 daily journals this month."
+
+**Required Action**:
+- [ ] Fix plural: "journal" → "journals"
+
+---
+
+### Issue #32: Typo "Decresased" (Screen 138)
+
+**Location**: `batch-28-notifications-continued.md` - Screen 138
+**Source**: `ui-designs/Dark-mode/🔒 Smart Notifications/Smart_Notifications_Screen_05.png`
+
+**Problem**: Misspelled word in notification title.
+
+- Current: "Stress Decresased!"
+- Should be: "Stress Decreased!"
+
+**Required Action**:
+- [ ] Fix typo: "Decresased" → "Decreased"
+
+---
+
+### Issue #33: Multiple Typos in Meditation Reminder (Screen 139)
+
+**Location**: `batch-28-notifications-continued.md` - Screen 139
+**Source**: `ui-designs/Dark-mode/🔒 Smart Notifications/Smart_Notifications_Screen_06.png`
+
+**Problem**: Multiple spelling errors in notification content.
+
+| Error | Current | Correct |
+|-------|---------|---------|
+| Typo 1 | "Time for mediation session" | "Time for meditation session" |
+| Typo 2 | "Pelase do 25m session" | "Please do 25m session" |
+
+**Required Action**:
+- [ ] Fix "mediation" → "meditation"
+- [ ] Fix "Pelase" → "Please"
+- [ ] Proofread all notification text before implementation
+
+---
+
+### Issue #34: Minor Age Used as Placeholder (Screen 141)
+
+**Location**: `batch-29-notifications-final-profile-start.md` - Screen 141
+**Source**: `ui-designs/Dark-mode/🔒 Profile Settings & Help Center/Profile_Settings_&_Help_Center_Screen_01.png`
+
+**Problem**: The profile dashboard shows "Age: 17y" - using a minor's age as placeholder data.
+
+**Risk**:
+- Using a minor (age 17) as the example user is inappropriate
+- Combined with other personal data (weight, height, location) creates concerning pattern
+- May raise legal concerns about representation of minors
+- Sets wrong expectation for target demographic
+
+**Required Action**:
+- [ ] Change age to adult (18+) placeholder
+- [ ] Use age 25-35 range for realistic adult user example
+- [ ] Review all placeholder demographic data for appropriateness
+
+---
+
+### Issue #35: Weight Data Inconsistency (Screens 141, 143)
+
+**Location**: `batch-29-notifications-final-profile-start.md` - Screens 141, 143
+**Sources**: Profile Settings Screens 01 and 03
+
+**Problem**: Weight data is inconsistent between screens:
+
+| Screen | Location | Value Shown |
+|--------|----------|-------------|
+| 141 | Profile Dashboard stats | 48kg |
+| 143 | Personal Info weight slider | 90kg (slider at 87-100kg range) |
+
+**Risk**:
+- Confuses users about their data
+- Undermines trust in data accuracy
+- Placeholder data should be consistent across screens
+- Slider range (87-100kg) doesn't make sense for profile showing 48kg
+
+**Required Action**:
+- [ ] Ensure weight value is consistent across all screens
+- [ ] Weight slider should allow full realistic range (40-200kg)
+- [ ] Audit all user data for cross-screen consistency
+
+---
+
+### Issue #36: Grammar Error in Sound Setting Description (Screen 144)
+
+**Location**: `batch-29-notifications-final-profile-start.md` - Screen 144
+**Source**: `ui-designs/Dark-mode/🔒 Profile Settings & Help Center/Profile_Settings_&_Help_Center_Screen_04.png`
+
+**Problem**: Sound setting description has confusing wording:
+
+- Current: "When Sound Notifications are on, your phone will always check for sounds."
+- Issue: "check for sounds" doesn't make sense - phones don't "check for" sounds
+- Should describe what the toggle actually does
+
+**Required Action**:
+- [ ] Reword to: "When enabled, notifications will play sounds." or "Sound alerts will play for notifications."
+- [ ] Review all setting descriptions for clarity
+
+---
+
+### Issue #37: Typo in Biometric Unlock Description (Screen 145)
+
+**Location**: `batch-30-profile-settings-continued.md` - Screen 145
+**Source**: `ui-designs/Dark-mode/🔒 Profile Settings & Help Center/Profile_Settings_&_Help_Center_Screen_05.png`
+
+**Problem**: Duplicate word "by" in Biometric Unlock description:
+
+- Current: "The biometric unlock can be done by **by** visiting our site directly."
+- Should be: "The biometric unlock can be done by visiting our site directly."
+
+**Additional Issue**: The description text itself doesn't make sense - biometric unlock is a device-based feature, not something done "by visiting our site."
+
+**Required Action**:
+- [ ] Remove duplicate "by"
+- [ ] Rewrite description to accurately explain biometric unlock feature
+- [ ] Suggested: "Use fingerprint or facial recognition to securely unlock the app."
+
+---
+
+### Issue #38: Multiple Incorrect Language Codes (Screen 147)
+
+**Location**: `batch-30-profile-settings-continued.md` - Screen 147
+**Source**: `ui-designs/Dark-mode/🔒 Profile Settings & Help Center/Profile_Settings_&_Help_Center_Screen_07.png`
+
+**Problem**: Multiple language entries have incorrect ISO country/language codes:
+
+| Current | Issue | Correct |
+|---------|-------|---------|
+| "Italian (IL)" | IL is Israel's code | "Italian (IT)" |
+| "American (US)" | "American" is not a language | "English (US)" |
+| "Irish (IR)" | IR is Iran's code | "Irish (IE)" |
+| "European (EU)" | "European" is not a language | Remove or specify actual language |
+| "Japan (JP)" | Should use language name | "Japanese (JA)" or "日本語" |
+
+**Risk**:
+- Confuses users about language selection
+- Shows lack of attention to internationalization
+- Could offend users from affected countries
+
+**Required Action**:
+- [ ] Fix all language codes to use correct ISO standards
+- [ ] Use language names, not country names (English, not American)
+- [ ] Remove "European" entry or clarify intent
+- [ ] Review i18n implementation thoroughly
+
+---
+
+### Issue #39: Geographic Error - Detroit in Texas (Screen 148)
+
+**Location**: `batch-30-profile-settings-continued.md` - Screen 148
+**Source**: `ui-designs/Dark-mode/🔒 Profile Settings & Help Center/Profile_Settings_&_Help_Center_Screen_08.png`
+
+**Problem**: Office address shows "North Detroit, Texas" - Detroit is a city in Michigan, not Texas.
+
+**Additional Issues in Same Screen**:
+- Zip code 11578 belongs to Massapequa Park, NY - doesn't match Detroit or Texas
+- "Turing Tower, X Avenue" appears to be placeholder text
+- "221 Sherlock St" is a Sherlock Holmes reference
+
+**Required Action**:
+- [ ] Use consistent, realistic (or clearly fictional) address
+- [ ] If using real location, ensure city/state/zip all match
+- [ ] If placeholder, make it obviously fictional
+
+---
+
+### Issue #40: Phone Number Section Shows Address (Screen 148)
+
+**Location**: `batch-30-profile-settings-continued.md` - Screen 148
+**Source**: `ui-designs/Dark-mode/🔒 Profile Settings & Help Center/Profile_Settings_&_Help_Center_Screen_08.png`
+
+**Problem**: The "Our Phone Number" section displays an address instead of a phone number:
+
+**Current Content**:
+```
+Our Phone Number
+221 Sherlock St,
+Great Boolean Ave
+London, UK
+```
+
+**Expected Content**: Should show actual phone number(s) like:
+```
+Our Phone Number
++1 (800) 555-0199
++44 20 7946 0958
+```
+
+**Risk**:
+- Users cannot contact support via phone
+- Confusing UX - section title doesn't match content
+- Appears to be copy-paste error from address section
+
+**Required Action**:
+- [ ] Replace with actual phone number(s)
+- [ ] Include international format for global users
+- [ ] Add support hours if applicable
+
+---
+
+### Issue #41: Grammar Error in Feedback Question (Screen 153)
+
+**Location**: `batch-31-profile-final-error-start.md` - Screen 153
+**Source**: `ui-designs/Dark-mode/🔒 Profile Settings & Help Center/Profile_Settings_&_Help_Center_Screen_13.png`
+
+**Problem**: Grammar error in feedback question text:
+
+- Current: "Which of the area needs improvement?"
+- Should be: "Which area needs improvement?" or "Which of the areas need improvement?"
+
+**Required Action**:
+- [ ] Fix grammar error in design file
+- [ ] Choose correct singular or plural form
+
+---
+
+### Issue #42: Grammar Error in Server Error Message (Screen 156)
+
+**Location**: `batch-32-error-utilities-final.md` - Screen 156
+**Source**: `ui-designs/Dark-mode/🔒 Error & Other Utilities/Error_&_Other_Utilities_Screen_03.png`
+
+**Problem**: Grammatically incorrect error message:
+
+- Current: "Whoops! Our server seems to error :("
+- Should be: "Whoops! Our server encountered an error :(" or "Whoops! Our server seems to have an error :("
+
+**Required Action**:
+- [ ] Fix grammar: "seems to error" → "encountered an error"
+- [ ] Review all error messages for grammar
 
 ---
 
@@ -625,6 +908,20 @@ Corrected: "Automatically create health journal by Voice & Face detection with A
 | 26 | OPEN | Clinical + Dev | - |
 | 27 | OPEN | Design Team | - |
 | 28 | OPEN | Design Team | - |
+| 29 | OPEN | Design Team | - |
+| 30 | OPEN | Design Team | - |
+| 31 | OPEN | Design Team | - |
+| 32 | OPEN | Design Team | - |
+| 33 | OPEN | Design Team | - |
+| 34 | OPEN | Design Team | - |
+| 35 | OPEN | Design Team | - |
+| 36 | OPEN | Design Team | - |
+| 37 | OPEN | Design Team | - |
+| 38 | OPEN | Design Team | - |
+| 39 | OPEN | Design Team | - |
+| 40 | OPEN | Design Team | - |
+| 41 | OPEN | Design Team | - |
+| 42 | OPEN | Design Team | - |
 
 ---
 
