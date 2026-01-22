@@ -80,6 +80,9 @@
       "Bash(timeout 60 npm test -- --passWithNoTests --testPathPattern=\"MoodCheckIn\")"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "additionalDirectories": [
+      "C:\\Users\\rayyan.a\\AppData\\Roaming\\Claude"
+    ]
   }
 }
