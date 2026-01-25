@@ -55,8 +55,24 @@ export type {
 } from "./forms";
 
 // Feedback
-export { EmptyState } from "./feedback";
+export { EmptyState, Toast } from "./feedback";
 export type {
   EmptyStateProps,
   EmptyStateVariant,
+  ToastProps,
+  ToastVariant,
+  ToastPosition,
+  ToastAction,
 } from "./feedback";
+
+// Overlays
+export { Modal, BottomSheet, Tooltip } from "./overlays";
+export type {
+  ModalProps,
+  ModalSize,
+  ModalAction,
+  BottomSheetProps,
+  SnapPoint,
+  TooltipProps,
+  TooltipPlacement,
+} from "./overlays";
