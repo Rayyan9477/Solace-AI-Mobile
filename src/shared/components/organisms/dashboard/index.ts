@@ -1,7 +1,7 @@
 /**
  * Dashboard Organisms
  * @description Barrel exports for dashboard organism components
- * @task Sprint 2.8: Track Organisms
+ * @task Sprint 2.8-2.10: Track & Stats Organisms
  */
 
 // ScoreCard
@@ -22,3 +22,8 @@ export {
   getTrendColor,
   calculateGaugeProgress,
 } from "./ScoreCard.types";
+
+// StatCard
+export { StatCard } from "./StatCard";
+export type { StatCardProps } from "./StatCard.types";
+export { formatStatDate, calculateProgressPercentage } from "./StatCard.types";
