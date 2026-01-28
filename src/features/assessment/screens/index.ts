@@ -11,6 +11,8 @@ export { AssessmentIntroScreen } from "./AssessmentIntroScreen";
 export { AssessmentQuestionScreen } from "./AssessmentQuestionScreen";
 export { AssessmentGenderScreen } from "./AssessmentGenderScreen";
 export { AssessmentAgeScreen } from "./AssessmentAgeScreen";
+export { AssessmentOtherSymptomsScreen } from "./AssessmentOtherSymptomsScreen";
+export { AssessmentStressLevelScreen } from "./AssessmentStressLevelScreen";
 
 // Results Screen
 export { AssessmentResultsScreen } from "./AssessmentResultsScreen";
