@@ -14,5 +14,9 @@ export { AssessmentAgeScreen } from "./AssessmentAgeScreen";
 export { AssessmentOtherSymptomsScreen } from "./AssessmentOtherSymptomsScreen";
 export { AssessmentStressLevelScreen } from "./AssessmentStressLevelScreen";
 
+// Analysis Screens
+export { AssessmentSoundAnalysisScreen } from "./AssessmentSoundAnalysisScreen";
+export { AssessmentExpressionAnalysisScreen } from "./AssessmentExpressionAnalysisScreen";
+
 // Results Screen
 export { AssessmentResultsScreen } from "./AssessmentResultsScreen";
