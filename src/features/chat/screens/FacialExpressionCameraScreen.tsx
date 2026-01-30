@@ -1,0 +1,335 @@
+/**
+ * FacialExpressionCameraScreen Component
+ * @description Camera interface for capturing facial expressions with biometric overlay
+ * @task Task 3.7.6: Facial Expression Camera Screen (Screen 58)
+ */
+
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+
+type CameraFacing = "front" | "back";
+
+interface FacialExpressionCameraScreenProps {
+  cameraReady: boolean;
+  cameraFacing: CameraFacing;
+  faceDetected: boolean;
+  heartRate: number | null;
+  bloodPressureSys: number | null;
+  bloodPressureDia: number | null;
+  instructionText: string;
+  onBack: () => void;
+  onCapture: () => void;
+  onGallery: () => void;
+  onFlipCamera: () => void;
+  onAnalyticsMode: () => void;
+}
+
+export function FacialExpressionCameraScreen({
+  faceDetected,
+  heartRate,
+  bloodPressureSys,
+  instructionText,
+  onBack,
+  onCapture,
+  onGallery,
+  onFlipCamera,
+  onAnalyticsMode,
+}: FacialExpressionCameraScreenProps): React.ReactElement {
+  return (
+    <View testID="facial-expression-camera-screen" style={styles.container}>
+      {/* Back Button */}
+      <TouchableOpacity
+        testID="back-button"
+        style={styles.backButton}
+        onPress={onBack}
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
+      >
+        <Text style={styles.backButtonIcon}>←</Text>
+      </TouchableOpacity>
+
+      {/* Biometric Indicators */}
+      <View style={styles.biometricsRow}>
+        <View
+          testID="heart-rate-indicator"
+          style={[styles.biometricCard, styles.heartRateCard]}
+        >
+          <Text style={styles.biometricIcon}>💚</Text>
+          <Text style={styles.biometricValue}>{heartRate || "--"}</Text>
+          <Text style={styles.biometricUnit}>bpm</Text>
+        </View>
+        <View
+          testID="blood-pressure-indicator"
+          style={[styles.biometricCard, styles.bloodPressureCard]}
+        >
+          <Text style={styles.biometricIcon}>💜</Text>
+          <Text style={styles.biometricValue}>{bloodPressureSys || "--"}</Text>
+          <Text style={styles.biometricUnit}>sys</Text>
+        </View>
+      </View>
+
+      {/* Camera Preview Area */}
+      <View testID="camera-preview" style={styles.cameraPreview}>
+        {/* Face Detection Overlay */}
+        <View
+          testID="face-detection-overlay"
+          style={[
+            styles.faceOverlay,
+            { borderColor: faceDetected ? "#9AAD5C" : "#E8853A" },
+          ]}
+        >
+          <View style={styles.faceOverlayInner}>
+            <Text style={styles.faceOverlayText}>
+              {faceDetected ? "FACE DETECTED" : "POSITION FACE"}
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      {/* Instruction Banner */}
+      <View testID="instruction-banner" style={styles.instructionBanner}>
+        <Text style={styles.warningIcon}>⚠️</Text>
+        <Text style={styles.instructionText}>{instructionText}</Text>
+      </View>
+
+      {/* Camera Controls */}
+      <View style={styles.controlsContainer}>
+        <View style={styles.mainControls}>
+          <TouchableOpacity
+            testID="gallery-button"
+            style={styles.controlButton}
+            onPress={onGallery}
+            accessibilityRole="button"
+            accessibilityLabel="Open gallery"
+          >
+            <Text style={styles.controlIcon}>🖼</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            testID="capture-button"
+            style={styles.captureButton}
+            onPress={onCapture}
+            accessibilityRole="button"
+            accessibilityLabel="Capture photo"
+          >
+            <View style={styles.captureButtonInner} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            testID="flip-camera-button"
+            style={styles.controlButton}
+            onPress={onFlipCamera}
+            accessibilityRole="button"
+            accessibilityLabel="Flip camera"
+          >
+            <Text style={styles.controlIcon}>🔄</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.modeControls}>
+          <TouchableOpacity
+            testID="camera-mode-button"
+            style={[styles.modeButton, styles.modeButtonActive]}
+            accessibilityRole="button"
+            accessibilityLabel="Camera mode"
+          >
+            <Text style={styles.modeIcon}>📷</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            testID="analytics-mode-button"
+            style={styles.modeButton}
+            onPress={onAnalyticsMode}
+            accessibilityRole="button"
+            accessibilityLabel="Analytics mode"
+          >
+            <Text style={styles.modeIcon}>📊</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  backButton: {
+    alignItems: "center",
+    backgroundColor: "rgba(28, 20, 16, 0.6)",
+    borderRadius: 20,
+    height: 40,
+    justifyContent: "center",
+    left: 24,
+    minHeight: 44,
+    minWidth: 44,
+    position: "absolute",
+    top: 60,
+    width: 40,
+    zIndex: 10,
+  },
+  backButtonIcon: {
+    color: "#FFFFFF",
+    fontSize: 20,
+    fontWeight: "600",
+  },
+  biometricCard: {
+    alignItems: "center",
+    borderRadius: 12,
+    flexDirection: "row",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  biometricIcon: {
+    fontSize: 16,
+    marginRight: 6,
+  },
+  biometricUnit: {
+    color: "#FFFFFF",
+    fontSize: 12,
+    marginLeft: 4,
+    opacity: 0.7,
+  },
+  biometricValue: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  biometricsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    left: 0,
+    paddingHorizontal: 24,
+    position: "absolute",
+    right: 0,
+    top: 120,
+    zIndex: 10,
+  },
+  bloodPressureCard: {
+    backgroundColor: "rgba(154, 92, 173, 0.3)",
+  },
+  cameraPreview: {
+    alignItems: "center",
+    backgroundColor: "#2A1F19",
+    flex: 1,
+    justifyContent: "center",
+  },
+  captureButton: {
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 35,
+    height: 70,
+    justifyContent: "center",
+    minHeight: 44,
+    minWidth: 44,
+    width: 70,
+  },
+  captureButtonInner: {
+    backgroundColor: "#FFFFFF",
+    borderColor: "#1C1410",
+    borderRadius: 28,
+    borderWidth: 3,
+    height: 56,
+    width: 56,
+  },
+  container: {
+    backgroundColor: "#1C1410",
+    flex: 1,
+  },
+  controlButton: {
+    alignItems: "center",
+    backgroundColor: "#2A1F19",
+    borderRadius: 25,
+    height: 50,
+    justifyContent: "center",
+    minHeight: 44,
+    minWidth: 44,
+    width: 50,
+  },
+  controlIcon: {
+    fontSize: 20,
+  },
+  controlsContainer: {
+    backgroundColor: "#1C1410",
+    paddingBottom: 40,
+    paddingTop: 24,
+  },
+  faceOverlay: {
+    alignItems: "center",
+    borderRadius: 100,
+    borderStyle: "dashed",
+    borderWidth: 3,
+    height: 200,
+    justifyContent: "center",
+    width: 200,
+  },
+  faceOverlayInner: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  faceOverlayText: {
+    color: "#FFFFFF",
+    fontSize: 12,
+    fontWeight: "600",
+    letterSpacing: 1,
+    opacity: 0.7,
+  },
+  heartRateCard: {
+    backgroundColor: "rgba(154, 173, 92, 0.3)",
+  },
+  instructionBanner: {
+    alignItems: "center",
+    backgroundColor: "#C4A574",
+    borderRadius: 12,
+    flexDirection: "row",
+    marginHorizontal: 24,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    position: "absolute",
+    bottom: 200,
+    left: 0,
+    right: 0,
+  },
+  instructionText: {
+    color: "#1C1410",
+    flex: 1,
+    fontSize: 13,
+    marginLeft: 8,
+  },
+  mainControls: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 20,
+  },
+  modeButton: {
+    alignItems: "center",
+    backgroundColor: "#2A1F19",
+    borderRadius: 25,
+    height: 50,
+    justifyContent: "center",
+    marginHorizontal: 8,
+    width: 50,
+  },
+  modeButtonActive: {
+    backgroundColor: "#3D2E23",
+    borderColor: "#C4A574",
+    borderWidth: 2,
+  },
+  modeControls: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  modeIcon: {
+    fontSize: 20,
+  },
+  warningIcon: {
+    fontSize: 16,
+  },
+});
+
+export default FacialExpressionCameraScreen;
