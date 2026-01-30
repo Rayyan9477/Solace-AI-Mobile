@@ -58,7 +58,7 @@ export function SplashScreen({ onComplete, delay = 2000 }: SplashScreenProps): R
         ]}
       >
         {/* App Logo - 4 circles in clover arrangement */}
-        <View testID="app-logo" accessibilityLabel="freud.ai logo" style={styles.logoContainer}>
+        <View testID="app-logo" accessibilityLabel="Solace AI logo" style={styles.logoContainer}>
           <View style={styles.logoRow}>
             <View style={[styles.circle, styles.circleTop]} />
           </View>
@@ -72,7 +72,7 @@ export function SplashScreen({ onComplete, delay = 2000 }: SplashScreenProps): R
         </View>
 
         {/* Brand Text */}
-        <Text style={styles.brandText}>freud.ai</Text>
+        <Text style={styles.brandText}>Solace AI</Text>
       </Animated.View>
     </View>
   );

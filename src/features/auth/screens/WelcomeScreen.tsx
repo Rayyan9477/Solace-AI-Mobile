@@ -36,7 +36,7 @@ export function WelcomeScreen({
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Welcome to the ultimate</Text>
         <Text style={styles.titleBrand}>
-          <Text style={styles.brandUnderline}>freud</Text>
+          <Text style={styles.brandUnderline}>Solace</Text>
           <Text> UI Kit!</Text>
         </Text>
       </View>

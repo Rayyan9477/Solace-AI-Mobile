@@ -33,7 +33,7 @@ describe("SplashScreen", () => {
 
   it("displays the brand text", () => {
     const { getByText } = render(<SplashScreen onComplete={mockOnComplete} />);
-    expect(getByText("freud.ai")).toBeTruthy();
+    expect(getByText("Solace AI")).toBeTruthy();
   });
 
   it("has correct background color", () => {

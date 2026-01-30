@@ -77,7 +77,8 @@
       "Bash(timeout 30 npx expo start:*)",
       "Bash(timeout 45 npx expo start:*)",
       "Bash(timeout 60 npx expo start:*)",
-      "Bash(timeout 60 npm test -- --passWithNoTests --testPathPattern=\"MoodCheckIn\")"
+      "Bash(timeout 60 npm test -- --passWithNoTests --testPathPattern=\"MoodCheckIn\")",
+      "Bash(__NEW_LINE_bd3fda5b3b2c3e44__ echo \"\")"
     ],
     "deny": [],
     "ask": [],

@@ -38,7 +38,7 @@ describe("WelcomeScreen", () => {
 
   it("displays the brand name in title", () => {
     const { getByText } = render(<WelcomeScreen {...defaultProps} />);
-    expect(getByText(/freud/)).toBeTruthy();
+    expect(getByText(/Solace/)).toBeTruthy();
   });
 
   it("displays the subtitle", () => {

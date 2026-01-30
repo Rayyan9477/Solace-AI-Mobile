@@ -37,7 +37,7 @@ describe("SignInScreen", () => {
 
   it("displays the title", () => {
     const { getByText } = render(<SignInScreen {...defaultProps} />);
-    expect(getByText(/Sign In To freud\.ai/)).toBeTruthy();
+    expect(getByText(/Sign In To Solace AI/)).toBeTruthy();
   });
 
   it("displays email input field", () => {

@@ -65,7 +65,7 @@ export function SignInScreen({
       </View>
 
       {/* Title */}
-      <Text style={styles.title}>Sign In To freud.ai</Text>
+      <Text style={styles.title}>Sign In To Solace AI</Text>
 
       {/* Email Input */}
       <View style={styles.inputGroup}>
