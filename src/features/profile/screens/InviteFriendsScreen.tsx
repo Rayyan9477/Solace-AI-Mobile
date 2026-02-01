@@ -1,0 +1,212 @@
+/**
+ * InviteFriendsScreen Component
+ * @description Friend invitation with referral incentive and contacts list
+ * @task Task 3.17.13: Invite Friends Screen (Screen 152)
+ */
+
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
+
+interface ContactItem {
+  id: string;
+  name: string;
+  phone: string;
+  initial: string;
+}
+
+interface InviteFriendsScreenProps {
+  incentiveText: string;
+  subtitle: string;
+  contacts: ContactItem[];
+  onBack: () => void;
+  onAddFriends: () => void;
+  onInviteContact: (id: string) => void;
+}
+
+const colors = {
+  heroBg: "#6B7A3D",
+  background: "#1C1410",
+  white: "#FFFFFF",
+  textSecondary: "rgba(255,255,255,0.6)",
+  cardBg: "#2A1F18",
+  avatarBg: "#C4A574",
+  avatarText: "#1C1410",
+  addButtonBg: "transparent",
+  addButtonBorder: "#FFFFFF",
+  inviteBg: "#9AAD5C",
+} as const;
+
+export function InviteFriendsScreen({
+  incentiveText,
+  subtitle,
+  contacts,
+  onBack,
+  onAddFriends,
+  onInviteContact,
+}: InviteFriendsScreenProps): React.ReactElement {
+  return (
+    <View testID="invite-friends-screen" style={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {/* Hero Section */}
+        <View style={styles.hero}>
+          <TouchableOpacity
+            testID="back-button"
+            style={styles.backButton}
+            onPress={onBack}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+          >
+            <Text style={styles.backIcon}>{"\u2190"}</Text>
+          </TouchableOpacity>
+          <View style={styles.heroContent}>
+            <Text style={styles.incentiveText}>{incentiveText}</Text>
+            <Text style={styles.subtitle}>{subtitle}</Text>
+          </View>
+        </View>
+
+        {/* Contacts Section */}
+        <View style={styles.contactsSection}>
+          <TouchableOpacity
+            testID="add-friends-button"
+            style={styles.addButton}
+            onPress={onAddFriends}
+            accessibilityRole="button"
+            accessibilityLabel="Add Friends"
+          >
+            <Text style={styles.addButtonText}>Add Friends</Text>
+          </TouchableOpacity>
+
+          {contacts.map((contact) => (
+            <View
+              key={contact.id}
+              testID={`contact-${contact.id}`}
+              style={styles.contactRow}
+            >
+              <View style={styles.avatarCircle}>
+                <Text style={styles.avatarInitial}>{contact.initial}</Text>
+              </View>
+              <View style={styles.contactInfo}>
+                <Text style={styles.contactName}>{contact.name}</Text>
+                <Text style={styles.contactPhone}>{contact.phone}</Text>
+              </View>
+              <TouchableOpacity
+                testID={`invite-${contact.id}`}
+                style={styles.inviteButton}
+                onPress={() => onInviteContact(contact.id)}
+                accessibilityRole="button"
+                accessibilityLabel={`Invite ${contact.name}`}
+              >
+                <Text style={styles.inviteButtonText}>+</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  addButton: {
+    alignItems: "center",
+    borderColor: colors.addButtonBorder,
+    borderRadius: 24,
+    borderWidth: 1,
+    marginBottom: 16,
+    minHeight: 44,
+    paddingVertical: 12,
+  },
+  addButtonText: {
+    color: colors.white,
+    fontSize: 15,
+    fontWeight: "600",
+  },
+  avatarCircle: {
+    alignItems: "center",
+    backgroundColor: colors.avatarBg,
+    borderRadius: 22,
+    height: 44,
+    justifyContent: "center",
+    width: 44,
+  },
+  avatarInitial: {
+    color: colors.avatarText,
+    fontSize: 18,
+    fontWeight: "700",
+  },
+  backButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 44,
+    minWidth: 44,
+  },
+  backIcon: { color: colors.white, fontSize: 24 },
+  contactInfo: { flex: 1, marginLeft: 12 },
+  contactName: {
+    color: colors.white,
+    fontSize: 15,
+    fontWeight: "600",
+  },
+  contactPhone: {
+    color: colors.textSecondary,
+    fontSize: 13,
+    marginTop: 2,
+  },
+  contactRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    marginTop: 12,
+  },
+  contactsSection: {
+    paddingHorizontal: 24,
+    paddingTop: 24,
+  },
+  container: { backgroundColor: colors.background, flex: 1 },
+  hero: {
+    backgroundColor: colors.heroBg,
+    paddingBottom: 32,
+    paddingHorizontal: 20,
+    paddingTop: 16,
+  },
+  heroContent: {
+    alignItems: "center",
+    marginTop: 24,
+  },
+  incentiveText: {
+    color: colors.white,
+    fontSize: 26,
+    fontWeight: "800",
+    textAlign: "center",
+  },
+  inviteButton: {
+    alignItems: "center",
+    backgroundColor: colors.inviteBg,
+    borderRadius: 16,
+    height: 32,
+    justifyContent: "center",
+    width: 32,
+  },
+  inviteButtonText: {
+    color: colors.white,
+    fontSize: 18,
+    fontWeight: "700",
+  },
+  scrollContent: { paddingBottom: 48 },
+  subtitle: {
+    color: "rgba(255,255,255,0.8)",
+    fontSize: 14,
+    marginTop: 8,
+    textAlign: "center",
+  },
+});
+
+export default InviteFriendsScreen;
