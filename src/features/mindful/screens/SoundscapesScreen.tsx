@@ -46,8 +46,8 @@ const colors = {
 
 // Waveform bar heights (decorative placeholder)
 const WAVEFORM_BARS = [
-  0.3, 0.5, 0.4, 0.7, 0.6, 0.9, 1.0, 0.8, 0.95, 0.7, 0.5, 0.8, 0.6, 0.4,
-  0.9, 1.0, 0.85, 0.7, 0.5, 0.3, 0.6, 0.8, 0.4, 0.5, 0.3,
+  0.3, 0.5, 0.4, 0.7, 0.6, 0.9, 1.0, 0.8, 0.95, 0.7, 0.5, 0.8, 0.6, 0.4, 0.9,
+  1.0, 0.85, 0.7, 0.5, 0.3, 0.6, 0.8, 0.4, 0.5, 0.3,
 ];
 
 export function SoundscapesScreen({
@@ -126,10 +126,7 @@ export function SoundscapesScreen({
               accessibilityLabel={`Select ${soundscape.name} soundscape`}
             >
               <Text
-                style={[
-                  styles.chipText,
-                  isSelected && styles.chipTextSelected,
-                ]}
+                style={[styles.chipText, isSelected && styles.chipTextSelected]}
               >
                 {soundscape.name}
               </Text>
@@ -143,6 +140,7 @@ export function SoundscapesScreen({
         <View style={styles.searchContainer}>
           <Text style={styles.searchIcon}>{"\uD83D\uDD0D"}</Text>
           <TextInput
+            accessibilityLabel="Text input field"
             testID="search-input"
             style={styles.searchInput}
             placeholder="Search Soundscapes"

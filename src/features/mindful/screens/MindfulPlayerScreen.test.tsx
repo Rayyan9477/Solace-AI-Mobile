@@ -21,9 +21,7 @@ const defaultProps = {
 };
 
 function renderScreen(overrides = {}) {
-  return render(
-    <MindfulPlayerScreen {...defaultProps} {...overrides} />,
-  );
+  return render(<MindfulPlayerScreen {...defaultProps} {...overrides} />);
 }
 
 describe("MindfulPlayerScreen", () => {
@@ -40,9 +38,7 @@ describe("MindfulPlayerScreen", () => {
   it("renders as a full-screen flex container", () => {
     const { getByTestId } = renderScreen();
     const container = getByTestId("mindful-player-screen");
-    expect(container.props.style).toEqual(
-      expect.objectContaining({ flex: 1 }),
-    );
+    expect(container.props.style).toEqual(expect.objectContaining({ flex: 1 }));
   });
 
   it("has green background color", () => {
@@ -116,9 +112,7 @@ describe("MindfulPlayerScreen", () => {
 
   it("rewind button has accessibilityRole button", () => {
     const { getByTestId } = renderScreen();
-    expect(getByTestId("rewind-button").props.accessibilityRole).toBe(
-      "button",
-    );
+    expect(getByTestId("rewind-button").props.accessibilityRole).toBe("button");
   });
 
   it("rewind button has accessibilityLabel", () => {

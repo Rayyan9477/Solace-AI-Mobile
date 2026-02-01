@@ -27,9 +27,7 @@ const defaultProps = {
 };
 
 function renderScreen(overrides = {}) {
-  return render(
-    <SoundscapesScreen {...defaultProps} {...overrides} />,
-  );
+  return render(<SoundscapesScreen {...defaultProps} {...overrides} />);
 }
 
 describe("SoundscapesScreen", () => {
@@ -46,9 +44,7 @@ describe("SoundscapesScreen", () => {
   it("renders as a full-screen flex container", () => {
     const { getByTestId } = renderScreen();
     const container = getByTestId("soundscapes-screen");
-    expect(container.props.style).toEqual(
-      expect.objectContaining({ flex: 1 }),
-    );
+    expect(container.props.style).toEqual(expect.objectContaining({ flex: 1 }));
   });
 
   it("has dark background color", () => {
@@ -79,9 +75,7 @@ describe("SoundscapesScreen", () => {
 
   it("back button has accessibilityLabel", () => {
     const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button").props.accessibilityLabel).toBe(
-      "Go back",
-    );
+    expect(getByTestId("back-button").props.accessibilityLabel).toBe("Go back");
   });
 
   it("back button meets minimum touch target size", () => {
