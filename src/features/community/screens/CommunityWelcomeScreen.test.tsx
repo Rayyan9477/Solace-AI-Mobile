@@ -3,8 +3,9 @@
  * @task Task 3.14.1: Community Welcome Screen (Screen 119)
  */
 
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+import React from "react";
+
 import { CommunityWelcomeScreen } from "./CommunityWelcomeScreen";
 
 const defaultProps = {
@@ -54,17 +55,13 @@ describe("CommunityWelcomeScreen", () => {
 
   // --- Title ---
   it("displays the welcome title", () => {
-    const { getByText } = render(
-      <CommunityWelcomeScreen {...defaultProps} />,
-    );
+    const { getByText } = render(<CommunityWelcomeScreen {...defaultProps} />);
     expect(getByText("Welcome to Our Community!")).toBeTruthy();
   });
 
   // --- Description ---
   it("displays the description", () => {
-    const { getByText } = render(
-      <CommunityWelcomeScreen {...defaultProps} />,
-    );
+    const { getByText } = render(<CommunityWelcomeScreen {...defaultProps} />);
     expect(getByText(defaultProps.description)).toBeTruthy();
   });
 
@@ -77,9 +74,7 @@ describe("CommunityWelcomeScreen", () => {
   });
 
   it("displays 'Start Posting' text", () => {
-    const { getByText } = render(
-      <CommunityWelcomeScreen {...defaultProps} />,
-    );
+    const { getByText } = render(<CommunityWelcomeScreen {...defaultProps} />);
     expect(getByText(/Start Posting/)).toBeTruthy();
   });
 
@@ -95,9 +90,9 @@ describe("CommunityWelcomeScreen", () => {
     const { getByTestId } = render(
       <CommunityWelcomeScreen {...defaultProps} />,
     );
-    expect(
-      getByTestId("start-posting-button").props.accessibilityRole,
-    ).toBe("button");
+    expect(getByTestId("start-posting-button").props.accessibilityRole).toBe(
+      "button",
+    );
   });
 
   it("Start Posting button meets minimum touch target size", () => {

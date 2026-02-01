@@ -3,8 +3,9 @@
  * @task Task 3.14.3: New Post Category Selector Screen (Screen 121)
  */
 
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+import React from "react";
+
 import { NewPostCategorySelectorScreen } from "./NewPostCategorySelectorScreen";
 
 const defaultCategories = [
@@ -137,9 +138,9 @@ describe("NewPostCategorySelectorScreen", () => {
     const { getByTestId } = render(
       <NewPostCategorySelectorScreen {...defaultProps} />,
     );
-    expect(
-      getByTestId("category-card-self_care").props.accessibilityRole,
-    ).toBe("button");
+    expect(getByTestId("category-card-self_care").props.accessibilityRole).toBe(
+      "button",
+    );
   });
 
   it("category cards meet minimum touch target size", () => {

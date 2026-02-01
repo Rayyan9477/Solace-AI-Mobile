@@ -3,8 +3,9 @@
  * @task Task 3.14.4: New Post Composer Screen (Screen 122)
  */
 
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+import React from "react";
+
 import { NewPostComposerScreen } from "./NewPostComposerScreen";
 
 const defaultPostTypes = [
@@ -45,7 +46,10 @@ describe("NewPostComposerScreen", () => {
 
   it("renders as a full-screen flex container", () => {
     const { getByTestId } = render(<NewPostComposerScreen {...defaultProps} />);
-    const flat = Object.assign({}, ...[].concat(getByTestId("new-post-composer-screen").props.style));
+    const flat = Object.assign(
+      {},
+      ...[].concat(getByTestId("new-post-composer-screen").props.style),
+    );
     expect(flat.flex).toBe(1);
   });
 
@@ -68,7 +72,10 @@ describe("NewPostComposerScreen", () => {
 
   it("back button meets minimum touch target size", () => {
     const { getByTestId } = render(<NewPostComposerScreen {...defaultProps} />);
-    const flat = Object.assign({}, ...[].concat(getByTestId("back-button").props.style));
+    const flat = Object.assign(
+      {},
+      ...[].concat(getByTestId("back-button").props.style),
+    );
     expect(flat.minHeight).toBeGreaterThanOrEqual(44);
     expect(flat.minWidth).toBeGreaterThanOrEqual(44);
   });
@@ -182,7 +189,10 @@ describe("NewPostComposerScreen", () => {
 
   it("Post button meets minimum touch target size", () => {
     const { getByTestId } = render(<NewPostComposerScreen {...defaultProps} />);
-    const flat = Object.assign({}, ...[].concat(getByTestId("post-button").props.style));
+    const flat = Object.assign(
+      {},
+      ...[].concat(getByTestId("post-button").props.style),
+    );
     expect(flat.minHeight).toBeGreaterThanOrEqual(44);
   });
 

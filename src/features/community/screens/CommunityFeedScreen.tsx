@@ -235,9 +235,9 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   postAuthorInfo: {
+    alignItems: "center",
     flexDirection: "row",
     flex: 1,
-    alignItems: "center",
     gap: 8,
     marginLeft: 12,
   },

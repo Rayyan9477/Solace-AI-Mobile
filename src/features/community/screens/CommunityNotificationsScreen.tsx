@@ -85,10 +85,7 @@ export function CommunityNotificationsScreen({
           <TouchableOpacity
             key={tab.id}
             testID={`tab-${tab.id}`}
-            style={[
-              styles.tab,
-              selectedTab === tab.id && styles.tabSelected,
-            ]}
+            style={[styles.tab, selectedTab === tab.id && styles.tabSelected]}
             onPress={() => onTabSelect(tab.id)}
             accessibilityRole="button"
             accessibilityLabel={tab.label}
@@ -188,7 +185,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
   },
-  notificationSubtitle: { color: colors.textSecondary, fontSize: 13, marginTop: 2 },
+  notificationSubtitle: {
+    color: colors.textSecondary,
+    fontSize: 13,
+    marginTop: 2,
+  },
   notificationTitle: { color: colors.white, fontSize: 14, fontWeight: "600" },
   optionsIcon: { color: colors.textSecondary, fontSize: 20 },
   scrollContent: { paddingBottom: 48 },

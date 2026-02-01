@@ -7,7 +7,13 @@
  */
 
 import React from "react";
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 
 interface TabItem {
   id: string;
@@ -59,7 +65,10 @@ export function UserProfileScreen({
 }: UserProfileScreenProps): React.ReactElement {
   return (
     <View testID="user-profile-screen" style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
         {/* Header */}
         <TouchableOpacity
           testID="back-button"
@@ -78,12 +87,17 @@ export function UserProfileScreen({
           <View style={styles.actionRow}>
             <TouchableOpacity
               testID="follow-button"
-              style={[styles.followButton, isFollowing && styles.followingButton]}
+              style={[
+                styles.followButton,
+                isFollowing && styles.followingButton,
+              ]}
               onPress={onFollow}
               accessibilityRole="button"
               accessibilityLabel={isFollowing ? "Unfollow" : "Follow"}
             >
-              <Text style={[styles.followText, isFollowing && styles.followingText]}>
+              <Text
+                style={[styles.followText, isFollowing && styles.followingText]}
+              >
                 {isFollowing ? "Following" : "Follow"}
               </Text>
             </TouchableOpacity>
@@ -107,7 +121,9 @@ export function UserProfileScreen({
         </View>
 
         {/* Location */}
-        <Text style={styles.location}>{"\uD83D\uDCCD"} {location}</Text>
+        <Text style={styles.location}>
+          {"\uD83D\uDCCD"} {location}
+        </Text>
 
         {/* Bio */}
         <Text style={styles.bio}>{bio}</Text>
@@ -118,12 +134,20 @@ export function UserProfileScreen({
             <TouchableOpacity
               key={tab.id}
               testID={`tab-${tab.id}`}
-              style={[styles.tab, selectedTabId === tab.id && styles.tabSelected]}
+              style={[
+                styles.tab,
+                selectedTabId === tab.id && styles.tabSelected,
+              ]}
               onPress={() => onTabSelect(tab.id)}
               accessibilityRole="button"
               accessibilityLabel={tab.label}
             >
-              <Text style={[styles.tabText, selectedTabId === tab.id && styles.tabTextSelected]}>
+              <Text
+                style={[
+                  styles.tabText,
+                  selectedTabId === tab.id && styles.tabTextSelected,
+                ]}
+              >
                 {tab.label}
               </Text>
             </TouchableOpacity>

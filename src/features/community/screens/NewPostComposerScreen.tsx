@@ -221,9 +221,7 @@ export function NewPostComposerScreen({
             accessibilityRole="button"
             accessibilityLabel="Save as draft"
           >
-            <Text style={styles.draftButtonText}>
-              Save As Draft {"\u2713"}
-            </Text>
+            <Text style={styles.draftButtonText}>Save As Draft {"\u2713"}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             testID="post-button"
@@ -312,7 +310,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "700",
   },
-  privacyDescription: { color: colors.textSecondary, fontSize: 13, marginTop: 2 },
+  privacyDescription: {
+    color: colors.textSecondary,
+    fontSize: 13,
+    marginTop: 2,
+  },
   privacyInfo: { flex: 1 },
   privacyLabel: { color: colors.white, fontSize: 15, fontWeight: "600" },
   privacySection: {

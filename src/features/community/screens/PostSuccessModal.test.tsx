@@ -3,8 +3,9 @@
  * @task Task 3.14.5: Post Success Modal (Screen 123)
  */
 
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+import React from "react";
+
 import { PostSuccessModal } from "./PostSuccessModal";
 
 const defaultProps = {
@@ -54,12 +55,17 @@ describe("PostSuccessModal", () => {
 
   it("View Post button has accessibilityRole button", () => {
     const { getByTestId } = render(<PostSuccessModal {...defaultProps} />);
-    expect(getByTestId("view-post-button").props.accessibilityRole).toBe("button");
+    expect(getByTestId("view-post-button").props.accessibilityRole).toBe(
+      "button",
+    );
   });
 
   it("View Post button meets minimum touch target size", () => {
     const { getByTestId } = render(<PostSuccessModal {...defaultProps} />);
-    const flat = Object.assign({}, ...[].concat(getByTestId("view-post-button").props.style));
+    const flat = Object.assign(
+      {},
+      ...[].concat(getByTestId("view-post-button").props.style),
+    );
     expect(flat.minHeight).toBeGreaterThanOrEqual(44);
   });
 

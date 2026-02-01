@@ -3,8 +3,9 @@
  * @task Task 3.14.2: Community Feed Screen (Screen 120)
  */
 
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+import React from "react";
+
 import { CommunityFeedScreen } from "./CommunityFeedScreen";
 
 const defaultPosts = [
@@ -62,7 +63,10 @@ describe("CommunityFeedScreen", () => {
 
   it("renders as a full-screen flex container", () => {
     const { getByTestId } = render(<CommunityFeedScreen {...defaultProps} />);
-    const flat = Object.assign({}, ...[].concat(getByTestId("community-feed-screen").props.style));
+    const flat = Object.assign(
+      {},
+      ...[].concat(getByTestId("community-feed-screen").props.style),
+    );
     expect(flat.flex).toBe(1);
   });
 
@@ -85,7 +89,10 @@ describe("CommunityFeedScreen", () => {
 
   it("back button meets minimum touch target size", () => {
     const { getByTestId } = render(<CommunityFeedScreen {...defaultProps} />);
-    const flat = Object.assign({}, ...[].concat(getByTestId("back-button").props.style));
+    const flat = Object.assign(
+      {},
+      ...[].concat(getByTestId("back-button").props.style),
+    );
     expect(flat.minHeight).toBeGreaterThanOrEqual(44);
     expect(flat.minWidth).toBeGreaterThanOrEqual(44);
   });
@@ -188,7 +195,10 @@ describe("CommunityFeedScreen", () => {
 
   it("FAB meets minimum touch target size", () => {
     const { getByTestId } = render(<CommunityFeedScreen {...defaultProps} />);
-    const flat = Object.assign({}, ...[].concat(getByTestId("add-post-fab").props.style));
+    const flat = Object.assign(
+      {},
+      ...[].concat(getByTestId("add-post-fab").props.style),
+    );
     expect(flat.minHeight).toBeGreaterThanOrEqual(44);
     expect(flat.minWidth).toBeGreaterThanOrEqual(44);
   });

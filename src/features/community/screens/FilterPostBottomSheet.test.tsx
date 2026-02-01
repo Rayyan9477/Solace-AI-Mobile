@@ -3,8 +3,9 @@
  * @task Task 3.14.7: Filter Post Bottom Sheet (Screen 125)
  */
 
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+import React from "react";
+
 import { FilterPostBottomSheet } from "./FilterPostBottomSheet";
 
 const defaultPostTypes = [
@@ -113,12 +114,17 @@ describe("FilterPostBottomSheet", () => {
 
   it("apply button has accessibilityRole button", () => {
     const { getByTestId } = render(<FilterPostBottomSheet {...defaultProps} />);
-    expect(getByTestId("apply-filter-button").props.accessibilityRole).toBe("button");
+    expect(getByTestId("apply-filter-button").props.accessibilityRole).toBe(
+      "button",
+    );
   });
 
   it("apply button meets minimum touch target size", () => {
     const { getByTestId } = render(<FilterPostBottomSheet {...defaultProps} />);
-    const flat = Object.assign({}, ...[].concat(getByTestId("apply-filter-button").props.style));
+    const flat = Object.assign(
+      {},
+      ...[].concat(getByTestId("apply-filter-button").props.style),
+    );
     expect(flat.minHeight).toBeGreaterThanOrEqual(44);
   });
 

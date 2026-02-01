@@ -3,8 +3,9 @@
  * @task Task 3.14.8: User Profile Screen (Screen 126)
  */
 
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+import React from "react";
+
 import { UserProfileScreen } from "./UserProfileScreen";
 
 const defaultProps = {
@@ -37,7 +38,10 @@ describe("UserProfileScreen", () => {
 
   it("renders as a full-screen flex container", () => {
     const { getByTestId } = render(<UserProfileScreen {...defaultProps} />);
-    const flat = Object.assign({}, ...[].concat(getByTestId("user-profile-screen").props.style));
+    const flat = Object.assign(
+      {},
+      ...[].concat(getByTestId("user-profile-screen").props.style),
+    );
     expect(flat.flex).toBe(1);
   });
 
@@ -54,7 +58,10 @@ describe("UserProfileScreen", () => {
 
   it("back button meets minimum touch target size", () => {
     const { getByTestId } = render(<UserProfileScreen {...defaultProps} />);
-    const flat = Object.assign({}, ...[].concat(getByTestId("back-button").props.style));
+    const flat = Object.assign(
+      {},
+      ...[].concat(getByTestId("back-button").props.style),
+    );
     expect(flat.minHeight).toBeGreaterThanOrEqual(44);
     expect(flat.minWidth).toBeGreaterThanOrEqual(44);
   });
@@ -81,7 +88,9 @@ describe("UserProfileScreen", () => {
   });
 
   it("displays 'Following' when isFollowing is true", () => {
-    const { getByText } = render(<UserProfileScreen {...defaultProps} isFollowing={true} />);
+    const { getByText } = render(
+      <UserProfileScreen {...defaultProps} isFollowing />,
+    );
     expect(getByText("Following")).toBeTruthy();
   });
 
