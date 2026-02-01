@@ -67,9 +67,7 @@ describe("MindfulHoursDashboardScreen", () => {
   it("renders as a full-screen flex container", () => {
     const { getByTestId } = renderScreen();
     const container = getByTestId("mindful-hours-dashboard-screen");
-    expect(container.props.style).toEqual(
-      expect.objectContaining({ flex: 1 }),
-    );
+    expect(container.props.style).toEqual(expect.objectContaining({ flex: 1 }));
   });
 
   // Header
@@ -92,9 +90,7 @@ describe("MindfulHoursDashboardScreen", () => {
 
   it("back button has accessibilityLabel", () => {
     const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button").props.accessibilityLabel).toBe(
-      "Go back",
-    );
+    expect(getByTestId("back-button").props.accessibilityLabel).toBe("Go back");
   });
 
   it("back button meets minimum touch target size", () => {

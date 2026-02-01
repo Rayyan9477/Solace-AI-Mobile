@@ -19,9 +19,7 @@ const defaultProps = {
 };
 
 function renderScreen(overrides = {}) {
-  return render(
-    <DurationPickerScreen {...defaultProps} {...overrides} />,
-  );
+  return render(<DurationPickerScreen {...defaultProps} {...overrides} />);
 }
 
 describe("DurationPickerScreen", () => {
@@ -38,9 +36,7 @@ describe("DurationPickerScreen", () => {
   it("renders as a full-screen flex container", () => {
     const { getByTestId } = renderScreen();
     const container = getByTestId("duration-picker-screen");
-    expect(container.props.style).toEqual(
-      expect.objectContaining({ flex: 1 }),
-    );
+    expect(container.props.style).toEqual(expect.objectContaining({ flex: 1 }));
   });
 
   it("has dark background color", () => {
@@ -71,9 +67,7 @@ describe("DurationPickerScreen", () => {
 
   it("back button has accessibilityLabel", () => {
     const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button").props.accessibilityLabel).toBe(
-      "Go back",
-    );
+    expect(getByTestId("back-button").props.accessibilityLabel).toBe("Go back");
   });
 
   it("back button meets minimum touch target size", () => {

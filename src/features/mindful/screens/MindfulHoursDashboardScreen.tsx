@@ -145,7 +145,10 @@ export function MindfulHoursDashboardScreen({
                 <Text style={styles.soundBadgeText}>{session.soundscape}</Text>
               </View>
             </View>
-            <View testID={`progress-bar-${session.id}`} style={styles.progressBar}>
+            <View
+              testID={`progress-bar-${session.id}`}
+              style={styles.progressBar}
+            >
               <View
                 style={[
                   styles.progressFill,

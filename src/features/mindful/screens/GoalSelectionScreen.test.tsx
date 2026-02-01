@@ -11,7 +11,11 @@ import { GoalSelectionScreen } from "./GoalSelectionScreen";
 const defaultGoals = [
   { id: "focus", label: "I want to gain more focus", icon: "\u{1F3AF}" },
   { id: "sleep", label: "I want to sleep better", icon: "\u{1F319}" },
-  { id: "better_person", label: "I want to be a better person", icon: "\u2764\uFE0F" },
+  {
+    id: "better_person",
+    label: "I want to be a better person",
+    icon: "\u2764\uFE0F",
+  },
   { id: "trauma", label: "I want to conquer my trauma", icon: "\u{1F9D1}" },
   { id: "enjoyment", label: "I want to enjoy life more", icon: "\u{1F60A}" },
   { id: "other", label: "I want to be a better me", icon: "\u{1F9D8}" },
@@ -27,9 +31,7 @@ const defaultProps = {
 };
 
 function renderScreen(overrides = {}) {
-  return render(
-    <GoalSelectionScreen {...defaultProps} {...overrides} />,
-  );
+  return render(<GoalSelectionScreen {...defaultProps} {...overrides} />);
 }
 
 describe("GoalSelectionScreen", () => {
@@ -46,9 +48,7 @@ describe("GoalSelectionScreen", () => {
   it("renders as a full-screen flex container", () => {
     const { getByTestId } = renderScreen();
     const container = getByTestId("goal-selection-screen");
-    expect(container.props.style).toEqual(
-      expect.objectContaining({ flex: 1 }),
-    );
+    expect(container.props.style).toEqual(expect.objectContaining({ flex: 1 }));
   });
 
   it("has dark background color", () => {
@@ -79,9 +79,7 @@ describe("GoalSelectionScreen", () => {
 
   it("back button has accessibilityLabel", () => {
     const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button").props.accessibilityLabel).toBe(
-      "Go back",
-    );
+    expect(getByTestId("back-button").props.accessibilityLabel).toBe("Go back");
   });
 
   it("back button meets minimum touch target size", () => {
@@ -187,9 +185,9 @@ describe("GoalSelectionScreen", () => {
 
   it("goal cards have accessibilityLabel", () => {
     const { getByTestId } = renderScreen();
-    expect(
-      getByTestId("goal-card-focus").props.accessibilityLabel,
-    ).toBe("Select I want to gain more focus");
+    expect(getByTestId("goal-card-focus").props.accessibilityLabel).toBe(
+      "Select I want to gain more focus",
+    );
   });
 
   // Grid layout

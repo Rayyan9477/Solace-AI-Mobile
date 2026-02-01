@@ -10,7 +10,12 @@ import { MindfulHoursStatsScreen } from "./MindfulHoursStatsScreen";
 
 const defaultCategories = [
   { category: "Breathing", hours: "2.5h", percentage: "20%", color: "#9AAD5C" },
-  { category: "Mindfulness", hours: "1.7h", percentage: "17%", color: "#E8853A" },
+  {
+    category: "Mindfulness",
+    hours: "1.7h",
+    percentage: "17%",
+    color: "#E8853A",
+  },
   { category: "Relax", hours: "8h", percentage: "40%", color: "#C4A535" },
   { category: "Sleep", hours: "8h", percentage: "80%", color: "#E8853A" },
 ];
@@ -128,7 +133,9 @@ describe("MindfulHoursStatsScreen", () => {
 
   it("settings button has accessibilityRole button", () => {
     const { getByTestId } = renderScreen();
-    expect(getByTestId("settings-button").props.accessibilityRole).toBe("button");
+    expect(getByTestId("settings-button").props.accessibilityRole).toBe(
+      "button",
+    );
   });
 
   it("renders the download button", () => {

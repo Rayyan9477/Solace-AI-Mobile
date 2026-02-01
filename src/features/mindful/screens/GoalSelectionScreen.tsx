@@ -6,7 +6,13 @@
  */
 
 import React from "react";
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 
 interface GoalOption {
   id: string;
@@ -83,7 +89,9 @@ export function GoalSelectionScreen({
                 testID={`goal-card-${goal.id}`}
                 style={[
                   styles.goalCard,
-                  isSelected ? styles.goalCardSelected : styles.goalCardUnselected,
+                  isSelected
+                    ? styles.goalCardSelected
+                    : styles.goalCardUnselected,
                 ]}
                 onPress={() => onGoalSelect(goal.id)}
                 accessibilityRole="button"
@@ -92,10 +100,7 @@ export function GoalSelectionScreen({
                 {/* Radio Indicator */}
                 <View
                   testID={`radio-${goal.id}`}
-                  style={[
-                    styles.radio,
-                    isSelected && styles.radioSelected,
-                  ]}
+                  style={[styles.radio, isSelected && styles.radioSelected]}
                 >
                   {isSelected && <View style={styles.radioInner} />}
                 </View>
@@ -109,7 +114,9 @@ export function GoalSelectionScreen({
                 <Text
                   style={[
                     styles.goalLabel,
-                    isSelected ? styles.goalLabelSelected : styles.goalLabelUnselected,
+                    isSelected
+                      ? styles.goalLabelSelected
+                      : styles.goalLabelUnselected,
                   ]}
                 >
                   {goal.label}
