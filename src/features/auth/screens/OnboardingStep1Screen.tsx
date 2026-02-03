@@ -1,9 +1,10 @@
 /**
  * OnboardingStep1Screen
  * @description First step of onboarding carousel - AI Personalization
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
- * - Theme: Olive Green (#6B7B3A)
+ * - Theme: Olive Green (palette.onboarding.step1)
  * - Illustration: Person meditating
  * - Message: Personalize Your Mental Health State With AI
  */
@@ -13,6 +14,7 @@ import { OnboardingCarouselCard } from "../../../shared/components/templates/onb
 import type { OnboardingStepData } from "../../../shared/components/templates/onboarding";
 import type { AuthScreenProps } from "../../../shared/types/navigation";
 import { PlaceholderIllustration } from "../../../assets/illustrations/PlaceholderIllustration";
+import { palette } from "../../../shared/theme";
 
 /**
  * Step 1 configuration data
@@ -23,8 +25,8 @@ const STEP_DATA: OnboardingStepData = {
   stepLabel: "Step One",
   title: "Personalize Your Mental Health State With AI",
   highlightedWords: ["Health State"],
-  illustrationComponent: <PlaceholderIllustration stepNumber={1} color="#6B7B3A" />,
-  backgroundColor: "#6B7B3A",
+  illustrationComponent: <PlaceholderIllustration stepNumber={1} color={palette.onboarding.step1} />,
+  backgroundColor: palette.onboarding.step1,
   totalSteps: 5,
 };
 

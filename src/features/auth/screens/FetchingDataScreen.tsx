@@ -2,10 +2,12 @@
  * FetchingDataScreen Component
  * @description Data fetching screen with shake hint and decorative circles
  * @task Task 3.1.4: Fetching Data Screen
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
+import { colors, palette } from "../../../shared/theme";
 
 interface FetchingDataScreenProps {
   onComplete: () => void;
@@ -84,7 +86,7 @@ const CIRCLE_SIZE = 300;
 
 const styles = StyleSheet.create({
   circle: {
-    backgroundColor: "#8A9D52",
+    backgroundColor: palette.olive[600],
     borderRadius: CIRCLE_SIZE / 2,
     height: CIRCLE_SIZE,
     opacity: 0.6,
@@ -109,7 +111,7 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     flex: 1,
     justifyContent: "center",
     overflow: "hidden",
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   fetchingText: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     fontSize: 32,
     fontWeight: "700",
     marginBottom: 16,
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   hintText: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     fontSize: 16,
     fontWeight: "500",
   },

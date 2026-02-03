@@ -2,6 +2,7 @@
  * Onboarding Stack Navigator
  * @description Navigation stack for first-time user onboarding flow
  * @module Navigation
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Handles screens 15-39 in the user journey:
  * Profile Setup (11 screens) → Mental Health Assessment (14 screens)
@@ -13,6 +14,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { OnboardingStackParamList } from "../../shared/types/navigation";
+import { colors } from "../../shared/theme";
 
 // Profile Setup Screens
 import { ProfileSetupDetailsScreen } from "../../features/onboarding/screens/ProfileSetupDetailsScreen";
@@ -56,7 +58,7 @@ export function OnboardingStack(): React.ReactElement {
         animation: "slide_from_right", // Consistent forward navigation
         gestureEnabled: false, // Prevent skipping onboarding steps
         contentStyle: {
-          backgroundColor: "#1C1410", // Dark brown background (theme primary)
+          backgroundColor: colors.background.primary,
         },
       }}
     >

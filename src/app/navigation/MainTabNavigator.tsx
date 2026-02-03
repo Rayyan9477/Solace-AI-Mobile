@@ -2,6 +2,7 @@
  * Main Tab Navigator
  * @description Bottom tab navigation for main app features
  * @module Navigation
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Contains 5 main tabs:
  * - Dashboard (Home)
@@ -14,6 +15,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import type { MainTabParamList } from "../../shared/types/navigation";
+import { colors, palette } from "../../shared/theme";
 
 // Stack Navigators
 import { DashboardStack } from "./stacks/DashboardStack";
@@ -36,15 +38,15 @@ export function MainTabNavigator(): React.ReactElement {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: "#1C1410", // Dark brown background
-          borderTopColor: "#C4A574", // Tan/beige accent
+          backgroundColor: colors.background.primary,
+          borderTopColor: palette.tan[500],
           borderTopWidth: 1,
           height: 60,
           paddingBottom: 8,
           paddingTop: 8,
         },
-        tabBarActiveTintColor: "#C4A574", // Tan/beige for active
-        tabBarInactiveTintColor: "#6B6B6B", // Gray for inactive
+        tabBarActiveTintColor: palette.tan[500],
+        tabBarInactiveTintColor: colors.text.disabled,
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: "600",

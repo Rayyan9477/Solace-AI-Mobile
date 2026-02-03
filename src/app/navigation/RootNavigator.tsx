@@ -2,6 +2,7 @@
  * Root Navigator
  * @description Top-level navigator that orchestrates all app flows
  * @module Navigation
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Navigation Flow:
  * 1. AuthFlow - User not authenticated (Splash → Welcome → SignIn/SignUp)
@@ -16,6 +17,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../../shared/types/navigation";
+import { colors } from "../../shared/theme";
 
 // Flow Navigators
 import { AuthStack } from "./AuthStack";
@@ -67,7 +69,7 @@ export function RootNavigator({
         headerShown: false,
         animation: "fade",
         contentStyle: {
-          backgroundColor: "#1C1410", // Dark brown background
+          backgroundColor: colors.background.primary,
         },
       }}
     >

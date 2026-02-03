@@ -2,10 +2,12 @@
  * VerificationCodeSentScreen Component
  * @description Confirmation modal showing verification code was sent
  * @task Task 3.2.4: Verification Code Sent Screen (Screen 14)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { colors, palette } from "../../../shared/theme";
 
 interface VerificationCodeSentScreenProps {
   maskedDestination: string;
@@ -99,7 +101,7 @@ export function VerificationCodeSentScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: colors.border.default,
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -112,19 +114,19 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#8A8A8A",
+    color: colors.text.secondary,
     fontSize: 18,
     fontWeight: "600",
   },
   container: {
     alignItems: "center",
-    backgroundColor: "#1C1410",
+    backgroundColor: colors.background.primary,
     flex: 1,
     justifyContent: "center",
   },
   dismissButton: {
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.text.primary,
     borderRadius: 28,
     bottom: 40,
     height: 56,
@@ -133,13 +135,13 @@ const styles = StyleSheet.create({
     width: 56,
   },
   dismissIcon: {
-    color: "#1C1410",
+    color: colors.text.inverse,
     fontSize: 20,
     fontWeight: "600",
   },
   illustrationCircle: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 100,
     height: 200,
     justifyContent: "center",
@@ -164,7 +166,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   modalCard: {
-    backgroundColor: "#2A2220",
+    backgroundColor: colors.background.secondary,
     borderRadius: 24,
     marginHorizontal: 24,
     overflow: "hidden",
@@ -177,7 +179,7 @@ const styles = StyleSheet.create({
   },
   resendButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 12,
     flexDirection: "row",
     justifyContent: "center",
@@ -188,13 +190,13 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   resendButtonText: {
-    color: "#1C1410",
+    color: colors.text.inverse,
     fontSize: 16,
     fontWeight: "600",
   },
   sendPasswordButton: {
     alignItems: "center",
-    backgroundColor: "#4A4A4A",
+    backgroundColor: colors.interactive.disabled,
     borderRadius: 12,
     flexDirection: "row",
     justifyContent: "center",
@@ -206,19 +208,19 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   sendPasswordButtonText: {
-    color: "#8A8A8A",
+    color: colors.text.secondary,
     fontSize: 16,
     fontWeight: "600",
   },
   subtitle: {
-    color: "#94A3B8",
+    color: colors.text.secondary,
     fontSize: 14,
     lineHeight: 22,
     marginHorizontal: 24,
     textAlign: "center",
   },
   title: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     fontSize: 20,
     fontWeight: "700",
     textAlign: "center",

@@ -2,10 +2,12 @@
  * QuoteSplashScreen Component
  * @description Inspirational quote interstitial screen
  * @task Task 3.1.3: Quote Splash Screen
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
+import { colors, palette } from "../../../shared/theme";
 
 interface QuoteSplashScreenProps {
   quote: string;
@@ -74,14 +76,14 @@ export function QuoteSplashScreen({
 
 const styles = StyleSheet.create({
   authorText: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     fontSize: 14,
     fontWeight: "600",
     letterSpacing: 2,
     marginTop: 32,
   },
   circle: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.text.primary,
     borderRadius: 8,
     height: 16,
     width: 16,
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   container: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     flex: 1,
     paddingHorizontal: 24,
   },
@@ -119,7 +121,7 @@ const styles = StyleSheet.create({
     marginVertical: 1,
   },
   quoteText: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     fontSize: 32,
     fontStyle: "italic",
     fontWeight: "700",

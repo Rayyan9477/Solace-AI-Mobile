@@ -2,6 +2,7 @@
  * ForgotPasswordScreen Component
  * @description Password recovery method selection screen
  * @task Task 3.2.3: Forgot Password Screen
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useState } from "react";
@@ -12,6 +13,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { colors, palette } from "../../../shared/theme";
 
 type RecoveryMethod = "2fa" | "password" | "google";
 
@@ -103,7 +105,7 @@ export function ForgotPasswordScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: colors.border.default,
     borderRadius: 24,
     borderWidth: 1,
     height: 48,
@@ -112,11 +114,11 @@ const styles = StyleSheet.create({
     width: 48,
   },
   backIcon: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     fontSize: 20,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: colors.background.primary,
     flex: 1,
   },
   contentContainer: {
@@ -128,22 +130,22 @@ const styles = StyleSheet.create({
   },
   methodIconContainer: {
     alignItems: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: colors.background.tertiary,
     borderRadius: 16,
     height: 64,
     justifyContent: "center",
     width: 64,
   },
   methodLabel: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     fontSize: 16,
     fontWeight: "500",
     marginLeft: 16,
   },
   methodOption: {
     alignItems: "center",
-    backgroundColor: "#2D2420",
-    borderColor: "#3D2E23",
+    backgroundColor: colors.form.background,
+    borderColor: colors.form.border,
     borderRadius: 16,
     borderWidth: 1,
     flexDirection: "row",
@@ -153,7 +155,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   methodOptionSelected: {
-    borderColor: "#9AAD5C",
+    borderColor: colors.interactive.default,
     borderWidth: 2,
   },
   methodsContainer: {
@@ -161,7 +163,7 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     alignItems: "center",
-    backgroundColor: "#A07856",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -174,18 +176,18 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   sendButtonText: {
-    color: "#1C1410",
+    color: colors.text.inverse,
     fontSize: 16,
     fontWeight: "600",
   },
   subtitle: {
-    color: "#94A3B8",
+    color: colors.text.secondary,
     fontSize: 16,
     lineHeight: 24,
     marginTop: 8,
   },
   title: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     fontSize: 32,
     fontStyle: "italic",
     fontWeight: "700",

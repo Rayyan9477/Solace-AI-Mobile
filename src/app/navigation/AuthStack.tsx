@@ -2,6 +2,7 @@
  * Auth Stack Navigator
  * @description Navigation stack for unauthenticated user flow
  * @module Navigation
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Handles screens 1-14 in the user journey:
  * Splash → Loading → Quote → Fetching → Welcome → Onboarding (5 steps) → SignIn/SignUp
@@ -13,6 +14,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { AuthStackParamList } from "../../shared/types/navigation";
+import { colors } from "../../shared/theme";
 
 // Auth Screens Import
 import { SplashScreen } from "../../features/auth/screens/SplashScreen";
@@ -47,7 +49,7 @@ export function AuthStack(): React.ReactElement {
         animation: "fade", // Smooth fade transitions between screens
         gestureEnabled: false, // Disable swipe back during auth flow
         contentStyle: {
-          backgroundColor: "#1C1410", // Dark brown background (theme primary)
+          backgroundColor: colors.background.primary,
         },
       }}
     >
