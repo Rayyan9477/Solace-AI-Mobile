@@ -20,12 +20,12 @@ import { LoadingProgressScreen } from "../../features/auth/screens/LoadingProgre
 import { QuoteSplashScreen } from "../../features/auth/screens/QuoteSplashScreen";
 import { FetchingDataScreen } from "../../features/auth/screens/FetchingDataScreen";
 import { WelcomeScreen } from "../../features/auth/screens/WelcomeScreen";
-// Onboarding carousel screens (will be created in Phase 3B)
-// import { OnboardingStep1Screen } from "../../features/auth/screens/OnboardingStep1Screen";
-// import { OnboardingStep2Screen } from "../../features/auth/screens/OnboardingStep2Screen";
-// import { OnboardingStep3Screen } from "../../features/auth/screens/OnboardingStep3Screen";
-// import { OnboardingStep4Screen } from "../../features/auth/screens/OnboardingStep4Screen";
-// import { OnboardingStep5Screen } from "../../features/auth/screens/OnboardingStep5Screen";
+// Onboarding carousel screens (Phase 3B)
+import { OnboardingStep1Screen } from "../../features/auth/screens/OnboardingStep1Screen";
+import { OnboardingStep2Screen } from "../../features/auth/screens/OnboardingStep2Screen";
+import { OnboardingStep3Screen } from "../../features/auth/screens/OnboardingStep3Screen";
+import { OnboardingStep4Screen } from "../../features/auth/screens/OnboardingStep4Screen";
+import { OnboardingStep5Screen } from "../../features/auth/screens/OnboardingStep5Screen";
 import { SignInScreen } from "../../features/auth/screens/SignInScreen";
 import { SignUpScreen } from "../../features/auth/screens/SignUpScreen";
 import { ForgotPasswordScreen } from "../../features/auth/screens/ForgotPasswordScreen";
@@ -97,8 +97,7 @@ export function AuthStack(): React.ReactElement {
       />
 
       {/* Screens 6-10: Onboarding Carousel Steps */}
-      {/* TODO: Uncomment when carousel screens are created in Phase 3B */}
-      {/* <Stack.Screen
+      <Stack.Screen
         name="OnboardingStep1"
         component={OnboardingStep1Screen}
         options={{
@@ -136,7 +135,7 @@ export function AuthStack(): React.ReactElement {
         options={{
           animation: "slide_from_right",
         }}
-      /> */}
+      />
 
       {/* Screen 11: Sign In */}
       <Stack.Screen
