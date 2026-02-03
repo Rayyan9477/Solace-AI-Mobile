@@ -2,10 +2,12 @@
  * LoadingProgressScreen Component
  * @description Loading screen with progress percentage and decorative circles
  * @task Task 3.1.2: Loading Progress Screen
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { colors } from "../../../shared/theme";
 
 interface LoadingProgressScreenProps {
   progress: number;
@@ -46,7 +48,7 @@ const CIRCLE_SIZE = 400;
 
 const styles = StyleSheet.create({
   circle: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: colors.background.tertiary,
     borderRadius: CIRCLE_SIZE / 2,
     height: CIRCLE_SIZE,
     opacity: 0.5,
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: "center",
-    backgroundColor: "#1C1410",
+    backgroundColor: colors.background.primary,
     flex: 1,
     justifyContent: "center",
     overflow: "hidden",
@@ -85,7 +87,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   progressText: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     fontSize: 64,
     fontWeight: "700",
     zIndex: 10,

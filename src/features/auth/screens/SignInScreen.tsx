@@ -2,6 +2,7 @@
  * SignInScreen Component
  * @description User authentication screen with email/password and social login
  * @task Task 3.2.1: Sign In Screen
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useState } from "react";
@@ -13,6 +14,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { colors, palette } from "../../../shared/theme";
 
 interface SignInCredentials {
   email: string;
@@ -76,7 +78,7 @@ export function SignInScreen({
             testID="email-input"
             style={styles.input}
             placeholder="Enter your email..."
-            placeholderTextColor="#64748B"
+            placeholderTextColor={colors.form.placeholder}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
@@ -96,7 +98,7 @@ export function SignInScreen({
             testID="password-input"
             style={styles.input}
             placeholder="Enter your password..."
-            placeholderTextColor="#64748B"
+            placeholderTextColor={colors.form.placeholder}
             value={password}
             onChangeText={setPassword}
             secureTextEntry={!showPassword}
@@ -180,13 +182,13 @@ export function SignInScreen({
 
 const styles = StyleSheet.create({
   arrowIcon: {
-    color: "#1C1410",
+    color: colors.text.inverse,
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   circle: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     borderRadius: 12,
     height: 24,
     width: 24,
@@ -205,7 +207,7 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: colors.background.primary,
     flex: 1,
   },
   contentContainer: {
@@ -218,34 +220,34 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   footerText: {
-    color: "#94A3B8",
+    color: colors.text.secondary,
     fontSize: 14,
   },
   header: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: colors.interactive.default,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
     height: 160,
     justifyContent: "center",
   },
   input: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     flex: 1,
     fontSize: 16,
     paddingVertical: 12,
   },
   inputContainer: {
     alignItems: "center",
-    backgroundColor: "#2D2420",
-    borderColor: "#3D2E23",
+    backgroundColor: colors.form.background,
+    borderColor: colors.form.border,
     borderRadius: 12,
     borderWidth: 1,
     flexDirection: "row",
     paddingHorizontal: 16,
   },
   inputContainerFocused: {
-    borderColor: "#E8853A",
+    borderColor: colors.form.borderFocus,
   },
   inputGroup: {
     marginTop: 20,
@@ -256,13 +258,13 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   inputLabel: {
-    color: "#FFFFFF",
+    color: colors.form.label,
     fontSize: 14,
     fontWeight: "500",
     marginBottom: 8,
   },
   linkText: {
-    color: "#E8853A",
+    color: colors.interactive.default,
     fontWeight: "600",
   },
   logoContainer: {
@@ -274,7 +276,7 @@ const styles = StyleSheet.create({
   },
   signInButton: {
     alignItems: "center",
-    backgroundColor: "#A07856",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -284,13 +286,13 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   signInButtonText: {
-    color: "#1C1410",
+    color: colors.text.inverse,
     fontSize: 16,
     fontWeight: "600",
   },
   socialButton: {
     alignItems: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: colors.background.tertiary,
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
@@ -303,12 +305,12 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   socialIcon: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     fontSize: 20,
     fontWeight: "700",
   },
   title: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     fontSize: 28,
     fontStyle: "italic",
     fontWeight: "700",

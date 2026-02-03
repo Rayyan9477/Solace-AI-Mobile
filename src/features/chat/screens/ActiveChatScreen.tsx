@@ -2,9 +2,10 @@
  * ActiveChatScreen Component
  * @description Main AI chat conversation interface with messages and emotion detection
  * @task Task 3.6.6: Active Chat Screen (Screen 52)
+ * @phase Phase 3D: Integrated CrisisModal for AI-detected crisis content
  */
 
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -13,6 +14,7 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
+import { CrisisModal } from "../../../shared/components/organisms/crisis";
 
 type MessageType = "user" | "ai" | "emotion" | "date";
 type Sentiment = "positive" | "negative" | "neutral";
@@ -53,6 +55,7 @@ interface ActiveChatScreenProps {
   messages: ChatMessage[];
   isAITyping: boolean;
   inputText: string;
+  crisisDetected?: boolean; // AI-detected crisis keywords in conversation
   onBack: () => void;
   onSearch: () => void;
   onSendMessage: (message: string) => void;
@@ -72,16 +75,23 @@ export function ActiveChatScreen({
   messages,
   isAITyping,
   inputText,
+  crisisDetected = false,
   onBack,
   onSearch,
   onSendMessage,
   onAttachment,
   onInputChange,
 }: ActiveChatScreenProps): React.ReactElement {
+  const [showCrisisModal, setShowCrisisModal] = useState(false);
+
   const handleSend = () => {
     if (inputText.trim()) {
       onSendMessage(inputText.trim());
     }
+  };
+
+  const handleAccessCrisisSupport = (): void => {
+    setShowCrisisModal(true);
   };
 
   const renderMessage = ({ item }: { item: ChatMessage }) => {
@@ -179,6 +189,30 @@ export function ActiveChatScreen({
         </TouchableOpacity>
       </View>
 
+      {/* Crisis Alert Banner - Shows when AI detects crisis content */}
+      {crisisDetected && (
+        <View testID="crisis-alert-banner" style={styles.crisisAlertBanner}>
+          <View style={styles.crisisAlertContent}>
+            <Text style={styles.crisisAlertIcon}>❤️‍🩹</Text>
+            <View style={styles.crisisAlertText}>
+              <Text style={styles.crisisAlertTitle}>Support Available</Text>
+              <Text style={styles.crisisAlertDescription}>
+                We noticed you might need immediate support
+              </Text>
+            </View>
+          </View>
+          <TouchableOpacity
+            testID="crisis-support-banner-button"
+            style={styles.crisisAlertButton}
+            onPress={handleAccessCrisisSupport}
+            accessibilityRole="button"
+            accessibilityLabel="Access crisis support resources"
+          >
+            <Text style={styles.crisisAlertButtonText}>Get Help Now</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       {/* Message List */}
       <FlatList
         testID="message-list"
@@ -238,6 +272,14 @@ export function ActiveChatScreen({
           <Text style={styles.sendIcon}>→</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Crisis Modal */}
+      <CrisisModal
+        visible={showCrisisModal}
+        onDismiss={() => setShowCrisisModal(false)}
+        triggerSource="chat"
+        requireAcknowledge={true}
+      />
     </View>
   );
 }
@@ -301,6 +343,51 @@ const styles = StyleSheet.create({
     backgroundColor: "#1C1410",
     flex: 1,
     paddingTop: 60,
+  },
+  crisisAlertBanner: {
+    backgroundColor: "rgba(239, 68, 68, 0.1)",
+    borderColor: "rgba(239, 68, 68, 0.3)",
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 12,
+    marginHorizontal: 24,
+    padding: 16,
+  },
+  crisisAlertButton: {
+    alignItems: "center",
+    backgroundColor: "#EF4444",
+    borderRadius: 8,
+    justifyContent: "center",
+    marginTop: 12,
+    minHeight: 44,
+    paddingVertical: 10,
+  },
+  crisisAlertButtonText: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "600",
+  },
+  crisisAlertContent: {
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  crisisAlertDescription: {
+    color: "#FCA5A5",
+    fontSize: 13,
+    lineHeight: 18,
+    marginTop: 2,
+  },
+  crisisAlertIcon: {
+    fontSize: 24,
+    marginRight: 12,
+  },
+  crisisAlertText: {
+    flex: 1,
+  },
+  crisisAlertTitle: {
+    color: "#FCA5A5",
+    fontSize: 15,
+    fontWeight: "600",
   },
   dateDivider: {
     alignItems: "center",

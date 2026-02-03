@@ -2,6 +2,7 @@
  * TextJournalComposerScreen Component
  * @screen Screen 83: Text Journal Composer
  * @audit batch-17-journal-continued.md
+ * @phase Phase 3D: Integrated CrisisModal for crisis keyword detection
  *
  * Visual ref: Mental_Health_Journal_Screen_06.png
  * - "Add New Journal" title, Text/Voice tabs
@@ -10,7 +11,7 @@
  * - "Create Journal +" CTA
  */
 
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -18,6 +19,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { CrisisModal } from "../../../shared/components/organisms/crisis";
 
 const colors = {
   screenBg: "#1C1410",
@@ -61,6 +63,7 @@ interface TextJournalComposerScreenProps {
   stressLevel: number;
   emotions: Emotion[];
   stressors: Stressor[];
+  crisisDetected?: boolean; // Crisis keywords detected in journal content
   onBack: () => void;
   onTitleChange: (text: string) => void;
   onContentChange: (text: string) => void;
@@ -80,6 +83,7 @@ export function TextJournalComposerScreen({
   stressLevel,
   emotions,
   stressors,
+  crisisDetected = false,
   onBack,
   onEmotionSelect,
   onStressorSelect,
@@ -88,6 +92,12 @@ export function TextJournalComposerScreen({
   onUndo,
   onRedo,
 }: TextJournalComposerScreenProps): React.ReactElement {
+  const [showCrisisModal, setShowCrisisModal] = useState(false);
+
+  const handleAccessCrisisSupport = (): void => {
+    setShowCrisisModal(true);
+  };
+
   return (
     <View testID="text-journal-composer-screen" style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -136,6 +146,30 @@ export function TextJournalComposerScreen({
             </Text>
           </TouchableOpacity>
         </View>
+
+        {/* Crisis Alert Banner - Shows when crisis keywords detected */}
+        {crisisDetected && (
+          <View testID="crisis-alert-banner" style={styles.crisisAlertBanner}>
+            <View style={styles.crisisAlertContent}>
+              <Text style={styles.crisisAlertIcon}>❤️‍🩹</Text>
+              <View style={styles.crisisAlertText}>
+                <Text style={styles.crisisAlertTitle}>Support Available</Text>
+                <Text style={styles.crisisAlertDescription}>
+                  We noticed you might need immediate support
+                </Text>
+              </View>
+            </View>
+            <TouchableOpacity
+              testID="crisis-support-banner-button"
+              style={styles.crisisAlertButton}
+              onPress={handleAccessCrisisSupport}
+              accessibilityRole="button"
+              accessibilityLabel="Access crisis support resources"
+            >
+              <Text style={styles.crisisAlertButtonText}>Get Help Now</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {/* Journal Title */}
         <Text style={styles.fieldLabel}>Journal Title</Text>
@@ -256,6 +290,14 @@ export function TextJournalComposerScreen({
           <Text style={styles.ctaText}>Create Journal  +</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      {/* Crisis Modal */}
+      <CrisisModal
+        visible={showCrisisModal}
+        onDismiss={() => setShowCrisisModal(false)}
+        triggerSource="journal"
+        requireAcknowledge={true}
+      />
     </View>
   );
 }
@@ -278,6 +320,50 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 60,
+  },
+  crisisAlertBanner: {
+    backgroundColor: "rgba(239, 68, 68, 0.1)",
+    borderColor: "rgba(239, 68, 68, 0.3)",
+    borderRadius: 12,
+    borderWidth: 1,
+    marginTop: 16,
+    padding: 16,
+  },
+  crisisAlertButton: {
+    alignItems: "center",
+    backgroundColor: "#EF4444",
+    borderRadius: 8,
+    justifyContent: "center",
+    marginTop: 12,
+    minHeight: 44,
+    paddingVertical: 10,
+  },
+  crisisAlertButtonText: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "600",
+  },
+  crisisAlertContent: {
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  crisisAlertDescription: {
+    color: "#FCA5A5",
+    fontSize: 13,
+    lineHeight: 18,
+    marginTop: 2,
+  },
+  crisisAlertIcon: {
+    fontSize: 24,
+    marginRight: 12,
+  },
+  crisisAlertText: {
+    flex: 1,
+  },
+  crisisAlertTitle: {
+    color: "#FCA5A5",
+    fontSize: 15,
+    fontWeight: "600",
   },
   ctaButton: {
     alignItems: "center",

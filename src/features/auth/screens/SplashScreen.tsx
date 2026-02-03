@@ -2,10 +2,12 @@
  * SplashScreen Component
  * @description App launch splash screen with logo and brand
  * @task Task 3.1.1: Splash Screen
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
+import { colors, palette } from "../../../shared/theme";
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -80,35 +82,35 @@ export function SplashScreen({ onComplete, delay = 2000 }: SplashScreenProps): R
 
 const styles = StyleSheet.create({
   brandText: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     fontSize: 32,
     fontWeight: "400",
     letterSpacing: 1,
     marginTop: 16,
   },
   circle: {
-    backgroundColor: "#A07856",
+    backgroundColor: palette.tan[500],
     borderRadius: 20,
     height: 40,
     width: 40,
   },
   circleBottom: {
-    backgroundColor: "#8B6F47",
+    backgroundColor: palette.brown[600],
   },
   circleLeft: {
-    backgroundColor: "#8B6F47",
+    backgroundColor: palette.brown[600],
     marginRight: 4,
   },
   circleRight: {
-    backgroundColor: "#A07856",
+    backgroundColor: palette.tan[500],
     marginLeft: 4,
   },
   circleTop: {
-    backgroundColor: "#C19A6B",
+    backgroundColor: palette.tan[400],
   },
   container: {
     alignItems: "center",
-    backgroundColor: "#1C1410",
+    backgroundColor: colors.background.primary,
     flex: 1,
     justifyContent: "center",
   },

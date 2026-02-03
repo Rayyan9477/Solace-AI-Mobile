@@ -2,9 +2,10 @@
  * CrisisDetectionScreen Component
  * @description Crisis detection interface with professional referrals and hotline information
  * @task Task 3.7.2: Crisis Detection Screen (Screen 54)
+ * @phase Phase 3D: Integrated CrisisModal for comprehensive crisis support
  */
 
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -13,6 +14,7 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
+import { CrisisModal } from "../../../shared/components/organisms/crisis";
 
 type MessageType = "user" | "ai" | "crisis";
 type Severity = "low" | "medium" | "high";
@@ -67,7 +69,6 @@ interface CrisisDetectionScreenProps {
   onAttachment: () => void;
   onInputChange: (text: string) => void;
   onContactProfessional: (professionalId: string) => void;
-  onCallHotline: () => void;
 }
 
 export function CrisisDetectionScreen({
@@ -83,12 +84,17 @@ export function CrisisDetectionScreen({
   onAttachment,
   onInputChange,
   onContactProfessional,
-  onCallHotline,
 }: CrisisDetectionScreenProps): React.ReactElement {
+  const [showCrisisModal, setShowCrisisModal] = useState(false);
+
   const handleSend = () => {
     if (inputText.trim()) {
       onSendMessage(inputText.trim());
     }
+  };
+
+  const handleAccessCrisisSupport = (): void => {
+    setShowCrisisModal(true);
   };
 
   const renderProfessionalCard = (professional: Professional) => (
@@ -235,11 +241,11 @@ export function CrisisDetectionScreen({
           <TouchableOpacity
             testID="call-hotline-button"
             style={styles.callButton}
-            onPress={onCallHotline}
+            onPress={handleAccessCrisisSupport}
             accessibilityRole="button"
-            accessibilityLabel="Call 988 Suicide and Crisis Lifeline"
+            accessibilityLabel="Access crisis support resources"
           >
-            <Text style={styles.callButtonText}>Call Now</Text>
+            <Text style={styles.callButtonText}>Get Help</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -303,6 +309,14 @@ export function CrisisDetectionScreen({
           <Text style={styles.sendIcon}>→</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Crisis Modal */}
+      <CrisisModal
+        visible={showCrisisModal}
+        onDismiss={() => setShowCrisisModal(false)}
+        triggerSource="chat"
+        requireAcknowledge={true}
+      />
     </View>
   );
 }

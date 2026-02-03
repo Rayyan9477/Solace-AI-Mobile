@@ -43,3 +43,11 @@ export type {
 // Z-Index Scale (Task 1.1.4)
 export { zIndex } from "./zIndex";
 export type { ZIndexLevel } from "./zIndex";
+
+// Color Tokens (Task 3C.1)
+export { colors, palette, colorUtils } from "./colors";
+export type { ColorPalette, SemanticColors, ColorToken } from "./colors";
+
+// Theme Hook (Task 3C.2)
+export { useTheme, theme } from "./useTheme";
+export type { Theme } from "./useTheme";

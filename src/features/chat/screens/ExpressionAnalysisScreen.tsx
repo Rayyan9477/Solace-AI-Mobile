@@ -2,9 +2,10 @@
  * ExpressionAnalysisScreen Component
  * @description Facial expression analysis results interface showing detected emotions and insights
  * @task Task 3.7.7: Expression Analysis Screen (Screen 59)
+ * @phase Phase 3D: Integrated CrisisModal for low mood scores
  */
 
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -14,6 +15,7 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
+import { CrisisModal } from "../../../shared/components/organisms/crisis";
 
 interface EmotionData {
   emotion: string;
@@ -52,6 +54,15 @@ export function ExpressionAnalysisScreen({
   onContinue,
   onSaveAnalysis,
 }: ExpressionAnalysisScreenProps): React.ReactElement {
+  const [showCrisisModal, setShowCrisisModal] = useState(false);
+
+  // Crisis detection: Mood score < 30 indicates severe emotional distress
+  const isCriticalMoodScore = overallMoodScore < 30;
+
+  const handleAccessCrisisSupport = (): void => {
+    setShowCrisisModal(true);
+  };
+
   const getInsightIcon = (iconType: string): string => {
     switch (iconType) {
       case "peaceful":
@@ -238,6 +249,19 @@ export function ExpressionAnalysisScreen({
           <Text style={styles.retakeButtonText}>Retake</Text>
         </TouchableOpacity>
 
+        {/* Crisis Support Button - Shows when mood score is critical (< 30) */}
+        {isCriticalMoodScore && (
+          <TouchableOpacity
+            testID="crisis-support-button"
+            style={styles.crisisButton}
+            onPress={handleAccessCrisisSupport}
+            accessibilityRole="button"
+            accessibilityLabel="Access crisis support resources"
+          >
+            <Text style={styles.crisisButtonText}>Crisis Support</Text>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity
           testID="continue-button"
           style={styles.continueButton}
@@ -248,6 +272,14 @@ export function ExpressionAnalysisScreen({
           <Text style={styles.continueButtonText}>Continue</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Crisis Modal */}
+      <CrisisModal
+        visible={showCrisisModal}
+        onDismiss={() => setShowCrisisModal(false)}
+        triggerSource="assessment"
+        requireAcknowledge={true}
+      />
     </View>
   );
 }
@@ -292,6 +324,21 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   continueButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  crisisButton: {
+    alignItems: "center",
+    backgroundColor: "#EF4444",
+    borderRadius: 12,
+    justifyContent: "center",
+    marginLeft: 12,
+    minHeight: 44,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+  },
+  crisisButtonText: {
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",

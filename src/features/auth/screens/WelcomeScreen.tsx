@@ -2,10 +2,12 @@
  * WelcomeScreen Component
  * @description Welcome screen entry point with Get Started and Sign In options
  * @task Task 3.1.5: Welcome Screen
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { colors, palette } from "../../../shared/theme";
 
 interface WelcomeScreenProps {
   onGetStarted: () => void;
@@ -84,7 +86,7 @@ export function WelcomeScreen({
 
 const styles = StyleSheet.create({
   arrowIcon: {
-    color: "#1C1410",
+    color: colors.text.inverse,
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
@@ -93,35 +95,35 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
   circle: {
-    backgroundColor: "#A07856",
+    backgroundColor: palette.tan[500],
     borderRadius: 10,
     height: 20,
     width: 20,
   },
   circleBottom: {
-    backgroundColor: "#8B6F47",
+    backgroundColor: palette.brown[600],
   },
   circleLeft: {
-    backgroundColor: "#8B6F47",
+    backgroundColor: palette.brown[600],
     marginRight: 2,
   },
   circleRight: {
-    backgroundColor: "#A07856",
+    backgroundColor: palette.tan[500],
     marginLeft: 2,
   },
   circleTop: {
-    backgroundColor: "#C19A6B",
+    backgroundColor: palette.tan[400],
   },
   container: {
     alignItems: "center",
-    backgroundColor: "#1C1410",
+    backgroundColor: colors.background.primary,
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 60,
   },
   getStartedButton: {
     alignItems: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -131,13 +133,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   getStartedText: {
-    color: "#1C1410",
+    color: colors.text.inverse,
     fontSize: 16,
     fontWeight: "600",
   },
   illustrationCircle: {
     alignItems: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: colors.background.tertiary,
     borderRadius: 120,
     height: 240,
     justifyContent: "center",
@@ -167,28 +169,28 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   signInLink: {
-    color: "#E8853A",
+    color: palette.onboarding.step2,
     fontWeight: "600",
   },
   signInText: {
-    color: "#94A3B8",
+    color: colors.text.secondary,
     fontSize: 14,
   },
   subtitle: {
-    color: "#94A3B8",
+    color: colors.text.secondary,
     fontSize: 16,
     lineHeight: 24,
     marginTop: 12,
     textAlign: "center",
   },
   title: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     fontSize: 28,
     fontWeight: "700",
     textAlign: "center",
   },
   titleBrand: {
-    color: "#FFFFFF",
+    color: colors.text.primary,
     fontSize: 28,
     fontWeight: "700",
     textAlign: "center",
