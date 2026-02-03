@@ -80,7 +80,8 @@
       "Bash(timeout 60 npm test -- --passWithNoTests --testPathPattern=\"MoodCheckIn\")",
       "Bash(__NEW_LINE_bd3fda5b3b2c3e44__ echo \"\")",
       "Bash(for feature in assessment auth chat dashboard journal mood onboarding sleep)",
-      "Bash(npx jest:*)"
+      "Bash(npx jest:*)",
+      "Bash(xargs:*)"
     ],
     "deny": [],
     "ask": [],
