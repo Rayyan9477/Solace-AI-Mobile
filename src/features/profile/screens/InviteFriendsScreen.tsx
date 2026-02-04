@@ -2,6 +2,7 @@
  * InviteFriendsScreen Component
  * @description Friend invitation with referral incentive and contacts list
  * @task Task 3.17.13: Invite Friends Screen (Screen 152)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -12,6 +13,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface ContactItem {
   id: string;
@@ -30,16 +32,16 @@ interface InviteFriendsScreenProps {
 }
 
 const colors = {
-  heroBg: "#6B7A3D",
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
+  heroBg: palette.olive[700],
+  background: palette.brown[900],
+  white: palette.white,
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
   cardBg: "#2A1F18",
-  avatarBg: "#C4A574",
-  avatarText: "#1C1410",
+  avatarBg: palette.tan[500],
+  avatarText: palette.brown[900],
   addButtonBg: "transparent",
-  addButtonBorder: "#FFFFFF",
-  inviteBg: "#9AAD5C",
+  addButtonBorder: palette.white,
+  inviteBg: palette.olive[500],
 } as const;
 
 export function InviteFriendsScreen({
@@ -202,7 +204,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: { paddingBottom: 48 },
   subtitle: {
-    color: "rgba(255,255,255,0.8)",
+    color: `${palette.white}${palette.alpha[80]}`,
     fontSize: 14,
     marginTop: 8,
     textAlign: "center",

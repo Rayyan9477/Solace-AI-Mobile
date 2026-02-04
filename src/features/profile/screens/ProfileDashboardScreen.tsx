@@ -2,6 +2,7 @@
  * ProfileDashboardScreen Component
  * @description Profile overview with avatar, stats, Solace Score card, and mood card
  * @task Task 3.17.2: Profile Dashboard Screen (Screen 141)
+ * @phase Phase 3C: Refactored to use theme tokens
  * @audit-fix "Shinomiya Kaguya" → appropriate placeholder name
  * @audit-fix Age 17y → adult age (24y)
  * @audit-fix "Freud Score" → "Solace Score"
@@ -15,6 +16,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface ProfileDashboardScreenProps {
   username: string;
@@ -32,16 +34,16 @@ interface ProfileDashboardScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
+  background: palette.brown[900],
+  white: palette.white,
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
   cardBg: "#2A1F18",
-  headerBg: "#3D2E23",
-  badgeBg: "#9AAD5C",
-  badgeText: "#1C1410",
-  scoreColor: "#C4A574",
-  moodBarBg: "rgba(255,255,255,0.2)",
-  moodBarActive: "#9AAD5C",
+  headerBg: palette.brown[700],
+  badgeBg: palette.olive[500],
+  badgeText: palette.brown[900],
+  scoreColor: palette.tan[500],
+  moodBarBg: `${palette.white}${palette.alpha[20]}`,
+  moodBarActive: palette.olive[500],
 } as const;
 
 export function ProfileDashboardScreen({
@@ -146,7 +148,7 @@ export function ProfileDashboardScreen({
 
 const styles = StyleSheet.create({
   avatar: {
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     borderColor: colors.white,
     borderRadius: 48,
     borderWidth: 3,

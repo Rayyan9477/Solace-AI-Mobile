@@ -2,6 +2,7 @@
  * DropdownSelect Component
  * @description Customizable dropdown with single/multi select and search support
  * @task Task 2.6.3: DropdownSelect Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Single and multiple selection modes
@@ -33,36 +34,37 @@ import {
   filterOptions,
   getSelectionLabel,
 } from "./DropdownSelect.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Background colors
-  background: "#1E293B",
-  surface: "#334155",
-  surfaceHover: "#475569",
+  background: palette.gray[900],
+  surface: palette.gray[700],
+  surfaceHover: palette.gray[600],
 
   // Text colors
-  text: "#F1F5F9",
-  textSecondary: "#94A3B8",
-  textDisabled: "#64748B",
-  placeholder: "#64748B",
-  error: "#EF4444",
+  text: palette.gray[100],
+  textSecondary: palette.gray[400],
+  textDisabled: palette.gray[500],
+  placeholder: palette.gray[500],
+  error: palette.red[500],
 
   // Selection colors
-  selected: "#9AAD5C", // Olive green from designs
-  selectedLight: "rgba(154, 173, 92, 0.2)",
-  selectedText: "#1C1917",
+  selected: palette.olive[500],
+  selectedLight: `${palette.olive[500]}${palette.alpha[20]}`,
+  selectedText: palette.gray[900],
 
   // Border colors
-  border: "#475569",
-  borderFocused: "#9AAD5C",
-  borderError: "#EF4444",
+  border: palette.gray[600],
+  borderFocused: palette.olive[500],
+  borderError: palette.red[500],
 
   // Icon colors
-  icon: "#94A3B8",
-  chevron: "#94A3B8",
+  icon: palette.gray[400],
+  chevron: palette.gray[400],
 };
 
 /**

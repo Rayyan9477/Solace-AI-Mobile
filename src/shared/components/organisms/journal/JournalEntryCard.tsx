@@ -2,6 +2,7 @@
  * JournalEntryCard Component
  * @description Timeline journal entry card with mood, preview, and metadata
  * @task Task 2.9.1: JournalEntryCard Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Timeline with timestamp label
@@ -23,6 +24,7 @@ import {
 import type { JournalEntryCardProps } from "./JournalEntryCard.types";
 import { formatEntryTime } from "./JournalEntryCard.types";
 import { MOOD_CONFIGS } from "../mood/MoodSelector.types";
+import { palette } from "../../../theme";
 
 /**
  * JournalEntryCard Component
@@ -161,7 +163,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   metadataText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
   },
   moodBadge: {
@@ -172,18 +174,18 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   moodLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
   },
   preview: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 20,
     marginTop: 8,
   },
   timeLabel: {
-    color: "#64748B",
+    color: palette.gray[500],
     fontSize: 12,
     fontWeight: "500",
     width: 50,
@@ -193,7 +195,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   title: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },

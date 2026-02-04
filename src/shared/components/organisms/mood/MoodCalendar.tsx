@@ -2,6 +2,7 @@
  * MoodCalendar Component
  * @description Calendar grid showing mood indicators for each day
  * @task Task 2.8.2: MoodCalendar Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Weekly grid view
@@ -31,6 +32,7 @@ import {
   DAY_ABBREVIATIONS_MON,
   getStatusColor,
 } from "./MoodCalendar.types";
+import { palette } from "../../../theme";
 
 /**
  * Get month name from date
@@ -258,7 +260,7 @@ export function MoodCalendar({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#334155",
+    backgroundColor: palette.gray[700],
     borderRadius: 16,
     padding: 16,
   },
@@ -273,15 +275,15 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   dayCellSelected: {
-    borderColor: "#FFFFFF",
+    borderColor: palette.white,
     borderWidth: 2,
   },
   dayCellToday: {
-    borderColor: "#F5C563",
+    borderColor: palette.yellow[400],
     borderWidth: 2,
   },
   dayHeaderText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     flex: 1,
     fontSize: 12,
     fontWeight: "500",
@@ -313,11 +315,11 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   legendText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
   },
   skeletonCell: {
-    backgroundColor: "#475569",
+    backgroundColor: palette.gray[600],
   },
   skeletonContainer: {
     gap: 8,

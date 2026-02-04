@@ -2,6 +2,7 @@
  * Header Component
  * @description Navigation header molecule with back button, title, and actions
  * @task Task 2.3.1: Header Component (Sprint 2.3 - Molecules Navigation)
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Back button with customizable action
@@ -28,35 +29,36 @@ import type {
   HeaderSize,
   HeaderAction,
 } from "./Header.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Backgrounds
-  default: "#1E293B",
+  default: palette.gray[900],
   transparent: "transparent",
-  gradient: "#1C1410",
+  gradient: palette.brown[900],
 
   // Text
-  title: "#F1F5F9",
-  subtitle: "#94A3B8",
+  title: palette.gray[100],
+  subtitle: palette.gray[400],
 
   // Interactive
-  backButton: "#334155",
-  backButtonPressed: "#475569",
-  actionButton: "#334155",
-  actionButtonPressed: "#475569",
+  backButton: palette.gray[700],
+  backButtonPressed: palette.gray[600],
+  actionButton: palette.gray[700],
+  actionButtonPressed: palette.gray[600],
 
   // Badge
-  badge: "#EF4444",
-  badgeText: "#FFFFFF",
+  badge: palette.red[500],
+  badgeText: palette.white,
 
   // Border
-  border: "#334155",
+  border: palette.gray[700],
 
   // Back arrow
-  arrow: "#F1F5F9",
+  arrow: palette.gray[100],
 };
 
 /**

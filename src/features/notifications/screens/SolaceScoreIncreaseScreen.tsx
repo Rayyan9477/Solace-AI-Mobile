@@ -3,10 +3,12 @@
  * @description Full-screen notification celebrating Solace Score increase
  * @task Task 3.16.2: Solace Score Increase Screen (Screen 135)
  * @audit-fix "Freud Score Increased" → "Solace Score Increased"
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface SolaceScoreIncreaseScreenProps {
   scoreChange: number;
@@ -18,13 +20,13 @@ interface SolaceScoreIncreaseScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
-  illustrationBg: "#9AAD5C",
-  scoreBadgeBg: "#2A1F18",
-  ctaButtonBg: "#C4A574",
-  ctaButtonText: "#1C1410",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  textSecondary: palette.text.secondary,
+  illustrationBg: palette.accent.green,
+  scoreBadgeBg: palette.background.secondary,
+  ctaButtonBg: palette.primary.gold,
+  ctaButtonText: palette.background.primary,
 } as const;
 
 export function SolaceScoreIncreaseScreen({

@@ -3,6 +3,7 @@
  * @description Personal profile editor with avatar, form fields,
  *   account type radio, and weight slider
  * @task Task 3.17.4: Personal Information Screen (Screen 143)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -13,6 +14,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 type AccountType = "psychiatrist" | "patient" | "professional";
 
@@ -42,17 +44,17 @@ const ACCOUNT_TYPES: { value: AccountType; label: string }[] = [
 ];
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
+  background: palette.brown[900],
+  white: palette.white,
   cardBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
   pillBg: "#2A1F18",
-  pillSelected: "#9AAD5C",
-  ctaButtonBg: "#C4A574",
-  ctaButtonText: "#1C1410",
-  sliderTrack: "#3D2E23",
-  sliderFill: "#C4A574",
-  chevron: "rgba(255,255,255,0.3)",
+  pillSelected: palette.olive[500],
+  ctaButtonBg: palette.tan[500],
+  ctaButtonText: palette.brown[900],
+  sliderTrack: palette.brown[700],
+  sliderFill: palette.tan[500],
+  chevron: `${palette.white}${palette.alpha[30]}`,
 } as const;
 
 export function PersonalInformationScreen({
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   avatar: {
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     borderRadius: 48,
     height: 96,
     width: 96,

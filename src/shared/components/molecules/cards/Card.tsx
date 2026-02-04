@@ -2,6 +2,7 @@
  * Card Component
  * @description Versatile container component with multiple variants
  * @task Task 2.4.1: Card Component (Sprint 2.4 - Molecules Content)
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Multiple visual variants (elevated, filled, outlined)
@@ -25,25 +26,26 @@ import type {
   CardVariant,
   CardSize,
 } from "./Card.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Background
-  backgroundElevated: "#2A2220",
-  backgroundFilled: "#1E293B",
+  backgroundElevated: palette.brown[900],
+  backgroundFilled: palette.gray[900],
   backgroundOutlined: "transparent",
 
   // Border
-  borderOutlined: "#475569",
-  borderSelected: "#818CF8",
+  borderOutlined: palette.gray[600],
+  borderSelected: palette.indigo[400],
 
   // Shadow
-  shadowColor: "#000000",
+  shadowColor: palette.black,
 
   // States
-  pressedOverlay: "rgba(255, 255, 255, 0.05)",
+  pressedOverlay: `${palette.white}${palette.alpha[5]}`,
 };
 
 /**
@@ -233,11 +235,11 @@ export function Card({
 const styles = StyleSheet.create({
   header: {
     borderBottomWidth: 1,
-    borderBottomColor: "rgba(255, 255, 255, 0.1)",
+    borderBottomColor: `${palette.white}${palette.alpha[10]}`,
   },
   footer: {
     borderTopWidth: 1,
-    borderTopColor: "rgba(255, 255, 255, 0.1)",
+    borderTopColor: `${palette.white}${palette.alpha[10]}`,
   },
   pressed: {
     backgroundColor: colors.pressedOverlay,

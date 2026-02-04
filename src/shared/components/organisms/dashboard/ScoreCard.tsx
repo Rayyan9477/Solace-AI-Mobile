@@ -2,6 +2,7 @@
  * ScoreCard Component
  * @description Circular gauge score card with trend indicator
  * @task Task 2.8.4: ScoreCard Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Circular progress gauge
@@ -29,6 +30,7 @@ import {
   getTrendColor,
   calculateGaugeProgress,
 } from "./ScoreCard.types";
+import { palette } from "../../../theme";
 
 /**
  * Circular Gauge Component
@@ -272,11 +274,11 @@ export function ScoreCard({
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: "#334155",
+    backgroundColor: palette.gray[700],
     borderRadius: 16,
   },
   gaugeBackground: {
-    borderColor: "rgba(148, 163, 184, 0.2)",
+    borderColor: `${palette.gray[400]}${palette.alpha[20]}`,
     position: "absolute",
   },
   gaugeContainer: {
@@ -302,7 +304,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   scoreValue: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontWeight: "700",
   },
   skeletonContainer: {
@@ -310,11 +312,11 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   skeletonGauge: {
-    backgroundColor: "#475569",
+    backgroundColor: palette.gray[600],
     borderRadius: 100,
   },
   skeletonText: {
-    backgroundColor: "#475569",
+    backgroundColor: palette.gray[600],
     borderRadius: 4,
     height: 16,
     width: 100,
@@ -324,7 +326,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   title: {
-    color: "#94A3B8",
+    color: palette.gray[400],
   },
   trend: {
     fontSize: 14,

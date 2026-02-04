@@ -3,6 +3,7 @@
  * @description Full course detail view with curriculum, instructor info,
  *   download option, lesson list, and premium paywall
  * @task Task 3.13.5: Course Detail Screen (Screen 116)
+ * @phase Phase 3C: Refactored to use theme tokens
  * @audit-fix Replaced "Dr. Hannibal Lector" with "Dr. Sarah Mitchell"
  */
 
@@ -14,6 +15,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface LessonItem {
   id: string;
@@ -42,15 +44,15 @@ interface CourseDetailScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
+  background: palette.brown[900],
+  white: palette.white,
   cardBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
-  badgeBg: "#9AAD5C",
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
+  badgeBg: palette.olive[500],
   followBg: "#2A1F18",
   downloadBg: "#2A1F18",
-  paywallBg: "#9AAD5C",
-  proButtonBg: "#9AAD5C",
+  paywallBg: palette.olive[500],
+  proButtonBg: palette.olive[500],
 } as const;
 
 export function CourseDetailScreen({
@@ -278,7 +280,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   instructorAvatar: {
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     borderRadius: 20,
     height: 40,
     width: 40,
@@ -307,7 +309,7 @@ const styles = StyleSheet.create({
   lessonMeta: { flexDirection: "row", marginTop: 4 },
   lessonPlayIcon: {
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     borderRadius: 20,
     height: 40,
     justifyContent: "center",
@@ -339,7 +341,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   premiumBadge: {
-    backgroundColor: "rgba(255,255,255,0.15)",
+    backgroundColor: `${palette.white}${palette.alpha[15]}`,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 6,
@@ -354,7 +356,7 @@ const styles = StyleSheet.create({
   statText: { color: colors.textSecondary, fontSize: 13, marginRight: 16 },
   statsRow: { flexDirection: "row", marginTop: 8, paddingHorizontal: 24 },
   thumbnail: {
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     borderRadius: 12,
     height: 160,
     width: "100%",

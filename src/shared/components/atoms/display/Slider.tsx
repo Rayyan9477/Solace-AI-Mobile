@@ -2,6 +2,7 @@
  * Slider Component
  * @description Accessible slider for value selection
  * @task Task 2.2.1: Slider Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Min/max range
@@ -15,17 +16,18 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import RNSlider from "@react-native-community/slider";
 import type { SliderProps } from "./Slider.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
-  track: "#475569",
-  trackActive: "#818CF8",
-  thumb: "#FFFFFF",
-  label: "#94A3B8",
-  value: "#E2E8F0",
-  disabled: "#334155",
+  track: palette.gray[600],
+  trackActive: palette.indigo[400],
+  thumb: palette.white,
+  label: palette.gray[400],
+  value: palette.gray[200],
+  disabled: palette.gray[700],
 };
 
 /**

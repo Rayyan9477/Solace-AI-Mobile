@@ -2,10 +2,12 @@
  * SleepCalendarHistoryScreen Component
  * @description Sleep calendar with month navigation, day selection, legend, AI suggestions card, and sleep history list
  * @task Task 3.10.3: Sleep Calendar History Screen (Screen 89)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface CalendarDay {
   date: number;
@@ -44,24 +46,10 @@ interface SleepCalendarHistoryScreenProps {
   onAddSleep: () => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  cardBg: "#2A1F19",
-  border: "#3D2E23",
-  white: "#FFFFFF",
-  gray: "#94A3B8",
-  tan: "#C4A574",
-  green: "#9AAD5C",
-  orange: "#E8853A",
-  fabGreen: "#9AAD5C",
-  insomniacPurple: "#7B68B5",
-  coreGray: "#6B6B6B",
-} as const;
-
 const legendItems = [
-  { key: "schedule", label: "Schedule", color: colors.green },
-  { key: "automatic", label: "Automatic", color: colors.orange },
-  { key: "rem-sleep", label: "REM Sleep", color: colors.insomniacPurple },
+  { key: "schedule", label: "Schedule", color: palette.olive[500] },
+  { key: "automatic", label: "Automatic", color: palette.onboarding.step2 },
+  { key: "rem-sleep", label: "REM Sleep", color: palette.onboarding.step5 },
 ] as const;
 
 export function SleepCalendarHistoryScreen({
@@ -280,7 +268,7 @@ export function SleepCalendarHistoryScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "rgba(255,255,255,0.3)",
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -290,7 +278,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 20,
   },
   bottomSpacer: {
@@ -301,7 +289,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: palette.brown[900],
     flex: 1,
   },
   dayCell: {
@@ -319,17 +307,17 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   dayCellSelected: {
-    backgroundColor: colors.green,
+    backgroundColor: palette.olive[500],
   },
   dayText: {
     fontSize: 14,
     fontWeight: "600",
   },
   dayTextDefault: {
-    color: colors.white,
+    color: palette.white,
   },
   dayTextSelected: {
-    color: colors.white,
+    color: palette.white,
   },
   daysContainer: {
     flexDirection: "row",
@@ -337,7 +325,7 @@ const styles = StyleSheet.create({
   },
   fab: {
     alignItems: "center",
-    backgroundColor: colors.fabGreen,
+    backgroundColor: palette.olive[500],
     borderRadius: 28,
     bottom: 32,
     elevation: 4,
@@ -347,14 +335,14 @@ const styles = StyleSheet.create({
     minWidth: 44,
     position: "absolute",
     right: 24,
-    shadowColor: "#000",
+    shadowColor: palette.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     width: 56,
   },
   fabIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 28,
     fontWeight: "600",
   },
@@ -367,7 +355,7 @@ const styles = StyleSheet.create({
     minWidth: 48,
   },
   historyDateText: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 14,
     fontWeight: "700",
   },
@@ -375,19 +363,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   historyDurationText: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 14,
     fontWeight: "500",
   },
   historyHeartRateText: {
-    color: colors.gray,
+    color: palette.gray[400],
     fontSize: 12,
     marginLeft: 12,
   },
   historyItem: {
     alignItems: "center",
-    backgroundColor: colors.cardBg,
-    borderColor: colors.border,
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 12,
     borderWidth: 1,
     flexDirection: "row",
@@ -401,7 +389,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   historySuggestionsText: {
-    color: colors.gray,
+    color: palette.gray[400],
     fontSize: 12,
   },
   legendContainer: {
@@ -421,16 +409,16 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   legendLabel: {
-    color: colors.gray,
+    color: palette.gray[400],
     fontSize: 12,
   },
   monthLabel: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
   monthNavArrow: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -454,7 +442,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   qualityBadgeText: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 11,
     fontWeight: "700",
   },
@@ -468,23 +456,23 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   sectionHeaderText: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
   seeAllText: {
-    color: colors.tan,
+    color: palette.tan[500],
     fontSize: 14,
     fontWeight: "600",
   },
   suggestionsArrow: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
   suggestionsCard: {
-    backgroundColor: colors.cardBg,
-    borderColor: colors.border,
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 16,
     borderWidth: 1,
     marginTop: 12,
@@ -497,7 +485,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   suggestionsCountText: {
-    color: colors.green,
+    color: palette.olive[500],
     fontSize: 24,
     fontWeight: "800",
   },
@@ -506,7 +494,7 @@ const styles = StyleSheet.create({
     alignItems: "baseline",
   },
   suggestionsTitleText: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
     marginLeft: 8,
@@ -521,7 +509,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   weekDayText: {
-    color: colors.gray,
+    color: palette.gray[400],
     fontSize: 12,
     fontWeight: "600",
   },

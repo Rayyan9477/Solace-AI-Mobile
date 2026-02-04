@@ -3,6 +3,7 @@
  * @description Full article reading view with content preview, author info,
  *   stats, and premium paywall
  * @task Task 3.13.4: Article Detail Screen (Screen 115)
+ * @phase Phase 3C: Refactored to use theme tokens
  * @audit-fix Replaced "Johann Liebert" with "Dr. Sarah Mitchell"
  */
 
@@ -14,6 +15,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface ArticleDetailScreenProps {
   title: string;
@@ -30,14 +32,14 @@ interface ArticleDetailScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
+  background: palette.brown[900],
+  white: palette.white,
   cardBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
-  badgeBg: "#9AAD5C",
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
+  badgeBg: palette.olive[500],
   followBg: "#2A1F18",
-  paywallBg: "#9AAD5C",
-  proButtonBg: "#9AAD5C",
+  paywallBg: palette.olive[500],
+  proButtonBg: palette.olive[500],
 } as const;
 
 export function ArticleDetailScreen({
@@ -140,7 +142,7 @@ export function ArticleDetailScreen({
 
 const styles = StyleSheet.create({
   articleImage: {
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     borderRadius: 12,
     height: 160,
     marginTop: 16,
@@ -155,7 +157,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   authorAvatar: {
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     borderRadius: 20,
     height: 40,
     width: 40,
@@ -244,7 +246,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   premiumBadge: {
-    backgroundColor: "rgba(255,255,255,0.15)",
+    backgroundColor: `${palette.white}${palette.alpha[15]}`,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 6,

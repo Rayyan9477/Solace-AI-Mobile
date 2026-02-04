@@ -3,10 +3,12 @@
  * @description Full-screen notification celebrating stress level decrease
  * @task Task 3.16.5: Stress Decreased Screen (Screen 138)
  * @audit-fix "Decresased" → "Decreased" (Issue #32)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface EmojiItem {
   id: string;
@@ -23,12 +25,12 @@ interface StressDecreasedScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
-  illustrationBg: "#7B68B5",
-  ctaButtonBg: "#C4A574",
-  ctaButtonText: "#1C1410",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  textSecondary: palette.text.secondary,
+  illustrationBg: palette.accent.purple,
+  ctaButtonBg: palette.primary.gold,
+  ctaButtonText: palette.background.primary,
 } as const;
 
 export function StressDecreasedScreen({

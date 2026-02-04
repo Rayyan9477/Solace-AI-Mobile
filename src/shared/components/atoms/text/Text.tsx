@@ -2,6 +2,7 @@
  * Enhanced Text Component
  * @description Typography component with semantic variants and accessibility
  * @task Task 1.2.1: Create Enhanced Text Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Provides consistent typography across the application with:
  * - 12 semantic variants (h1-h6, body1-2, caption, overline, button, link)
@@ -20,6 +21,7 @@ import type {
   TextWeight,
   VariantStyle,
 } from "./Text.types";
+import { palette } from "../../../theme";
 
 /**
  * Variant typography specifications
@@ -51,20 +53,19 @@ const weightMap: Record<TextWeight, TextStyle["fontWeight"]> = {
 };
 
 /**
- * Semantic color tokens for dark mode first
- * These will be replaced with theme tokens from Restyle
+ * Semantic color tokens from theme
  */
 const colorTokens: Record<TextColor, string> = {
-  primary: "#818CF8", // Indigo-400 - primary brand color
-  secondary: "#A5B4FC", // Indigo-300 - secondary text
-  tertiary: "#94A3B8", // Slate-400 - tertiary/muted text
-  success: "#4ADE80", // Green-400 - success messages
-  warning: "#FBBF24", // Amber-400 - warnings
-  error: "#F87171", // Red-400 - errors
-  info: "#60A5FA", // Blue-400 - informational
-  onPrimary: "#FFFFFF", // White - text on primary backgrounds
-  onSurface: "#F1F5F9", // Slate-100 - text on surface (default)
-  onBackground: "#E2E8F0", // Slate-200 - text on background
+  primary: palette.indigo[400],
+  secondary: palette.indigo[300],
+  tertiary: palette.gray[400],
+  success: palette.green[400],
+  warning: palette.amber[400],
+  error: palette.red[400],
+  info: palette.blue[400],
+  onPrimary: palette.white,
+  onSurface: palette.gray[100],
+  onBackground: palette.gray[200],
 };
 
 /**

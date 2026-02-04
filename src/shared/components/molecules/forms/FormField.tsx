@@ -2,6 +2,7 @@
  * FormField Component
  * @description Form field wrapper with label, helper text, and error handling
  * @task Task 2.4.3: FormField Component (Sprint 2.4 - Molecules Content)
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Label with optional required indicator
@@ -26,24 +27,25 @@ import type {
   FormFieldProps,
   FormFieldStatus,
 } from "./FormField.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Label
-  label: "#F1F5F9",
-  labelDisabled: "#64748B",
-  required: "#EF4444",
+  label: palette.gray[100],
+  labelDisabled: palette.gray[500],
+  required: palette.red[500],
 
   // Helper/Error text
-  helper: "#94A3B8",
-  error: "#EF4444",
-  success: "#22C55E",
-  warning: "#F59E0B",
+  helper: palette.gray[400],
+  error: palette.red[500],
+  success: palette.green[500],
+  warning: palette.amber[500],
 
   // Counter
-  counter: "#64748B",
+  counter: palette.gray[500],
 };
 
 /**

@@ -2,10 +2,12 @@
  * SleepQualityGaugeScreen Component
  * @description Fan/gauge chart showing sleep quality distribution with legend and improvement stats
  * @task Task 3.10.2: Sleep Quality Gauge Screen (Screen 88)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface SleepDistribution {
   normal: number;
@@ -25,24 +27,12 @@ interface SleepQualityGaugeScreenProps {
   onChartCenter: () => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  gray: "#94A3B8",
-  brown: "#3D2E23",
-  normalGreen: "#9AAD5C",
-  coreGray: "#6B6B6B",
-  remGold: "#C4A535",
-  irregularOrange: "#E8853A",
-  insomniacPurple: "#7B68B5",
-} as const;
-
 const legendItems = [
-  { key: "normal", label: "Normal", color: colors.normalGreen },
-  { key: "core", label: "Core", color: colors.coreGray },
-  { key: "rem", label: "REM", color: colors.remGold },
-  { key: "irregular", label: "Irregular", color: colors.irregularOrange },
-  { key: "insomniac", label: "Insomniac", color: colors.insomniacPurple },
+  { key: "normal", label: "Normal", color: palette.olive[500] },
+  { key: "core", label: "Core", color: palette.onboarding.step3 },
+  { key: "rem", label: "REM", color: palette.onboarding.step4 },
+  { key: "irregular", label: "Irregular", color: palette.onboarding.step2 },
+  { key: "insomniac", label: "Insomniac", color: palette.onboarding.step5 },
 ] as const;
 
 export function SleepQualityGaugeScreen({
@@ -105,11 +95,11 @@ export function SleepQualityGaugeScreen({
       <View testID="gauge-chart" style={styles.gaugeChart}>
         <View testID="gauge-segments" style={styles.gaugeSegments}>
           {/* Fan segments represented as colored blocks */}
-          <View style={[styles.gaugeSegment, { backgroundColor: colors.irregularOrange, flex: distribution.irregular }]} />
-          <View style={[styles.gaugeSegment, { backgroundColor: colors.normalGreen, flex: distribution.normal }]} />
-          <View style={[styles.gaugeSegment, { backgroundColor: colors.remGold, flex: distribution.rem }]} />
-          <View style={[styles.gaugeSegment, { backgroundColor: colors.insomniacPurple, flex: distribution.insomniac }]} />
-          <View style={[styles.gaugeSegment, { backgroundColor: colors.coreGray, flex: distribution.core }]} />
+          <View style={[styles.gaugeSegment, { backgroundColor: palette.onboarding.step2, flex: distribution.irregular }]} />
+          <View style={[styles.gaugeSegment, { backgroundColor: palette.olive[500], flex: distribution.normal }]} />
+          <View style={[styles.gaugeSegment, { backgroundColor: palette.onboarding.step4, flex: distribution.rem }]} />
+          <View style={[styles.gaugeSegment, { backgroundColor: palette.onboarding.step5, flex: distribution.insomniac }]} />
+          <View style={[styles.gaugeSegment, { backgroundColor: palette.onboarding.step3, flex: distribution.core }]} />
         </View>
 
         {/* Center Button */}
@@ -152,7 +142,7 @@ export function SleepQualityGaugeScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "rgba(255,255,255,0.3)",
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -162,7 +152,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 20,
   },
   bottomNav: {
@@ -173,7 +163,7 @@ const styles = StyleSheet.create({
   },
   bottomNavButton: {
     alignItems: "center",
-    backgroundColor: colors.brown,
+    backgroundColor: palette.brown[700],
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
@@ -186,13 +176,13 @@ const styles = StyleSheet.create({
   },
   chartCenterButton: {
     alignItems: "center",
-    backgroundColor: colors.white,
+    backgroundColor: palette.white,
     borderRadius: 28,
     elevation: 4,
     height: 56,
     justifyContent: "center",
     marginTop: -28,
-    shadowColor: "#000",
+    shadowColor: palette.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -203,7 +193,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: palette.brown[900],
     flex: 1,
   },
   gaugeChart: {
@@ -229,7 +219,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   improvementText: {
-    color: colors.gray,
+    color: palette.gray[400],
     fontSize: 14,
     marginTop: 8,
     paddingHorizontal: 24,
@@ -251,14 +241,14 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   legendLabel: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 14,
   },
   legendRow: {
     flexDirection: "row",
   },
   title: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 28,
     fontWeight: "800",
     marginTop: 16,

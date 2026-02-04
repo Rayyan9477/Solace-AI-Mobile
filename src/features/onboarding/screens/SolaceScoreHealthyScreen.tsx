@@ -2,10 +2,12 @@
  * SolaceScoreHealthyScreen Component
  * @description Displays Solace score for healthy category (70+)
  * @task Task 3.3.9: Solace Score Healthy Screen (Screen 23)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface SolaceScoreHealthyScreenProps {
   score: number;
@@ -78,13 +80,13 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: "center",
-    backgroundColor: "#4A9E8C",
+    backgroundColor: palette.green[450],
     flex: 1,
     paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 56,
@@ -93,7 +95,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   continueButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
@@ -108,12 +110,12 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   pageTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   primaryMessage: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     marginBottom: 8,
@@ -121,7 +123,7 @@ const styles = StyleSheet.create({
   },
   scheduleButton: {
     alignItems: "center",
-    borderColor: "rgba(255, 255, 255, 0.5)",
+    borderColor: `${palette.white}${palette.alpha[50]}`,
     borderRadius: 28,
     borderWidth: 1,
     justifyContent: "center",
@@ -132,14 +134,14 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   scheduleButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   scoreCircle: {
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    borderColor: "rgba(255, 255, 255, 0.3)",
+    backgroundColor: `${palette.white}${palette.alpha[20]}`,
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 80,
     borderWidth: 4,
     height: 160,
@@ -151,12 +153,12 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   scoreText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 64,
     fontWeight: "700",
   },
   secondaryMessage: {
-    color: "rgba(255, 255, 255, 0.8)",
+    color: `${palette.white}${palette.alpha[80]}`,
     fontSize: 16,
     textAlign: "center",
   },

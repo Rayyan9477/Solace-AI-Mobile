@@ -2,6 +2,7 @@
  * TypingIndicator Component
  * @description Animated typing indicator for chat interfaces
  * @task Task 2.7.2: TypingIndicator Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Animated bouncing dots
@@ -24,20 +25,22 @@ import {
 
 import type { TypingIndicatorProps } from "./TypingIndicator.types";
 import { sizeSpecs, getTypingText } from "./TypingIndicator.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Background colors
-  background: "#334155", // Dark slate
-  dot: "#9AAD5C", // Olive green
+  background: palette.gray[700],
+  dot: palette.olive[500],
 
   // Text colors
-  text: "#94A3B8", // Secondary text
+  text: palette.gray[400],
 
   // Avatar
-  avatarBg: "#9AAD5C",
+  avatarBg: palette.olive[500],
+  avatarText: palette.brown[900],
 };
 
 /**
@@ -278,7 +281,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   avatarText: {
-    color: "#1C1917",
+    color: colors.avatarText,
   },
   bubbleContainer: {
     alignItems: "center",

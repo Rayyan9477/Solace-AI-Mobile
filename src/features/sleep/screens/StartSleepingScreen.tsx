@@ -2,24 +2,17 @@
  * StartSleepingScreen Component
  * @description Sleep initiation screen with concentric circles, play button, and schedule option
  * @task Task 3.10.4: Start Sleeping Screen (Screen 90)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface StartSleepingScreenProps {
   onStartSleep: () => void;
   onScheduleSleep: () => void;
 }
-
-const colors = {
-  background: "#1C1410",
-  concentricLight: "#8B6914",
-  concentricMid: "#5C4A2A",
-  concentricOuter: "#3D2E23",
-  white: "#FFFFFF",
-  borderColor: "rgba(255,255,255,0.3)",
-} as const;
 
 export function StartSleepingScreen({
   onStartSleep,
@@ -90,7 +83,7 @@ const styles = StyleSheet.create({
   },
   concentricInner: {
     alignItems: "center",
-    backgroundColor: colors.concentricLight,
+    backgroundColor: palette.tan[600],
     borderRadius: 80,
     height: 160,
     justifyContent: "center",
@@ -98,7 +91,7 @@ const styles = StyleSheet.create({
   },
   concentricMid: {
     alignItems: "center",
-    backgroundColor: colors.concentricMid,
+    backgroundColor: palette.brown[600],
     borderRadius: 120,
     height: 240,
     justifyContent: "center",
@@ -106,14 +99,14 @@ const styles = StyleSheet.create({
   },
   concentricOuter: {
     alignItems: "center",
-    backgroundColor: colors.concentricOuter,
+    backgroundColor: palette.brown[700],
     borderRadius: 160,
     height: 320,
     justifyContent: "center",
     width: 320,
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: palette.brown[900],
     flex: 1,
   },
   footer: {
@@ -123,21 +116,21 @@ const styles = StyleSheet.create({
   },
   playButton: {
     alignItems: "center",
-    backgroundColor: colors.concentricLight,
+    backgroundColor: palette.tan[600],
     borderRadius: 44,
     elevation: 4,
     height: 88,
     justifyContent: "center",
     minHeight: 44,
     minWidth: 44,
-    shadowColor: "#000",
+    shadowColor: palette.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     width: 88,
   },
   playIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 32,
     marginLeft: 4,
   },
@@ -147,7 +140,7 @@ const styles = StyleSheet.create({
   },
   scheduleSleepButton: {
     alignItems: "center",
-    borderColor: colors.borderColor,
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 28,
     borderWidth: 1,
     flexDirection: "row",
@@ -158,12 +151,12 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   scheduleText: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   startSleepingLabel: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 28,
     fontWeight: "800",
     marginTop: 32,

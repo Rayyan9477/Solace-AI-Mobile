@@ -2,6 +2,7 @@
  * Toggle Component
  * @description Accessible toggle switch component
  * @task Task 2.1.4: Toggle Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Boolean on/off state
@@ -13,17 +14,18 @@
 import React from "react";
 import { View, Text, Switch, StyleSheet } from "react-native";
 import type { ToggleProps } from "./Toggle.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
-  trackOn: "#818CF8", // Primary/indigo
-  trackOff: "#475569", // Gray
-  thumbOn: "#FFFFFF",
-  thumbOff: "#94A3B8",
-  label: "#E2E8F0",
-  labelDisabled: "#64748B",
+  trackOn: palette.indigo[400],
+  trackOff: palette.gray[600],
+  thumbOn: palette.white,
+  thumbOff: palette.gray[400],
+  label: palette.gray[200],
+  labelDisabled: palette.gray[500],
 };
 
 /**

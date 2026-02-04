@@ -3,6 +3,7 @@
  * @description Notification preferences with toggle groups for chatbot,
  *   sound, vibration, and misc notifications
  * @task Task 3.17.5: Notification Settings Screen (Screen 144)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -13,6 +14,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface ToggleItem {
   id: string;
@@ -43,13 +45,13 @@ interface NotificationSettingsScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
+  background: palette.brown[900],
+  white: palette.white,
   cardBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
-  toggleOn: "#9AAD5C",
-  toggleOff: "#3D2E23",
-  chevron: "rgba(255,255,255,0.3)",
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
+  toggleOn: palette.olive[500],
+  toggleOff: palette.brown[700],
+  chevron: `${palette.white}${palette.alpha[30]}`,
 } as const;
 
 export function NotificationSettingsScreen({

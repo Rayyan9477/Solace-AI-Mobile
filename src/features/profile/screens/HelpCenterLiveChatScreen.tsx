@@ -2,10 +2,12 @@
  * HelpCenterLiveChatScreen Component
  * @description Live chat entry point with welcome message and action button
  * @task Task 3.17.11: Help Center Live Chat Screen (Screen 150)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface HelpCenterLiveChatScreenProps {
   activeTab: "faq" | "live-chat";
@@ -15,15 +17,15 @@ interface HelpCenterLiveChatScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
+  background: palette.brown[900],
+  white: palette.white,
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
   tabBg: "#2A1F18",
-  tabSelected: "#C4A574",
-  tabSelectedText: "#1C1410",
-  illustrationBg: "#7B68B5",
-  ctaButtonBg: "#C4A574",
-  ctaButtonText: "#1C1410",
+  tabSelected: palette.tan[500],
+  tabSelectedText: palette.brown[900],
+  illustrationBg: palette.onboarding.step5,
+  ctaButtonBg: palette.tan[500],
+  ctaButtonText: palette.brown[900],
 } as const;
 
 export function HelpCenterLiveChatScreen({

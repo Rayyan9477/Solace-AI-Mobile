@@ -2,6 +2,7 @@
  * Checkbox Component
  * @description Accessible checkbox component with indeterminate state
  * @task Task 2.1.5: Checkbox Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Checked/unchecked/indeterminate states
@@ -14,17 +15,18 @@
 import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import type { CheckboxProps } from "./Checkbox.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
-  checked: "#818CF8", // Primary/indigo
-  unchecked: "#475569", // Gray border
-  checkmark: "#FFFFFF",
-  label: "#E2E8F0",
-  labelDisabled: "#64748B",
-  disabled: "#334155",
+  checked: palette.indigo[400],
+  unchecked: palette.gray[600],
+  checkmark: palette.white,
+  label: palette.gray[200],
+  labelDisabled: palette.gray[500],
+  disabled: palette.gray[700],
 };
 
 /**

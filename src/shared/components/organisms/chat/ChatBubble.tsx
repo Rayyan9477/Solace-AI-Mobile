@@ -2,6 +2,7 @@
  * ChatBubble Component
  * @description Chat message bubble with user/AI variants
  * @task Task 2.7.1: ChatBubble Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - User and AI message variants
@@ -31,39 +32,40 @@ import type {
   MessageStatus,
 } from "./ChatBubble.types";
 import { formatTimestamp, getEmotionColor } from "./ChatBubble.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Background colors
-  background: "#1C1410",
-  userBubble: "#C4A574", // Tan/brown for user
-  aiBubble: "#334155", // Dark slate for AI
+  background: palette.brown[900],
+  userBubble: palette.tan[500],
+  aiBubble: palette.gray[700],
 
   // Text colors
-  userText: "#1C1917", // Dark text on light bubble
-  aiText: "#F1F5F9", // Light text on dark bubble
-  textSecondary: "#94A3B8",
-  textMuted: "#64748B",
+  userText: palette.brown[900],
+  aiText: palette.gray[100],
+  textSecondary: palette.gray[400],
+  textMuted: palette.gray[500],
 
   // Avatar
-  avatarBg: "#9AAD5C", // Olive green
+  avatarBg: palette.olive[500],
 
   // Status colors
-  statusSending: "#94A3B8",
-  statusSent: "#9AAD5C",
-  statusError: "#EF4444",
+  statusSending: palette.gray[400],
+  statusSent: palette.olive[500],
+  statusError: palette.red[500],
 
   // Emotion colors
-  emotionPositive: "#9AAD5C",
-  emotionNegative: "#E8853A",
-  emotionNeutral: "#94A3B8",
-  emotionCrisis: "#EF4444",
+  emotionPositive: palette.olive[500],
+  emotionNegative: palette.orange[500],
+  emotionNeutral: palette.gray[400],
+  emotionCrisis: palette.red[500],
 
   // Reaction
-  reactionBg: "#475569",
-  reactionSelected: "#9AAD5C",
+  reactionBg: palette.gray[600],
+  reactionSelected: palette.olive[500],
 };
 
 /**

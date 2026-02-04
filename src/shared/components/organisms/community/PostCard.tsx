@@ -2,12 +2,14 @@
  * PostCard Component
  * @description Community post card with author, content, and engagement
  * @task Task 2.9.4: PostCard Component
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import type { PostCardProps } from "./PostCard.types";
 import { formatTimestamp, formatCount } from "./PostCard.types";
+import { palette } from "../../../theme";
 
 export function PostCard({
   id,
@@ -75,19 +77,19 @@ export function PostCard({
 const styles = StyleSheet.create({
   authorInfo: { flex: 1, marginLeft: 12 },
   authorRow: { flexDirection: "row", marginBottom: 12 },
-  avatar: { backgroundColor: "#475569", borderRadius: 20, height: 40, width: 40 },
-  badge: { backgroundColor: "#475569", borderRadius: 8, color: "#FFFFFF", fontSize: 10, paddingHorizontal: 6, paddingVertical: 2 },
-  container: { backgroundColor: "#334155", borderRadius: 12, padding: 16 },
-  content: { color: "#FFFFFF", fontSize: 14, lineHeight: 20 },
+  avatar: { backgroundColor: palette.gray[600], borderRadius: 20, height: 40, width: 40 },
+  badge: { backgroundColor: palette.gray[600], borderRadius: 8, color: palette.white, fontSize: 10, paddingHorizontal: 6, paddingVertical: 2 },
+  container: { backgroundColor: palette.gray[700], borderRadius: 12, padding: 16 },
+  content: { color: palette.white, fontSize: 14, lineHeight: 20 },
   engagementRow: { flexDirection: "row", gap: 16, marginTop: 12 },
-  image: { backgroundColor: "#475569", borderRadius: 8, height: 200, marginTop: 12, width: "100%" },
-  liked: { color: "#E8853A" },
+  image: { backgroundColor: palette.gray[600], borderRadius: 8, height: 200, marginTop: 12, width: "100%" },
+  liked: { color: palette.orange[500] },
   metaRow: { flexDirection: "row", gap: 8, marginTop: 2 },
-  metricText: { color: "#94A3B8", fontSize: 12 },
-  timestamp: { color: "#64748B", fontSize: 12 },
-  username: { color: "#FFFFFF", fontSize: 14, fontWeight: "600" },
+  metricText: { color: palette.gray[400], fontSize: 12 },
+  timestamp: { color: palette.gray[500], fontSize: 12 },
+  username: { color: palette.white, fontSize: 14, fontWeight: "600" },
   usernameRow: { flexDirection: "row", gap: 4 },
-  verified: { color: "#9AAD5C", fontSize: 14 },
+  verified: { color: palette.olive[500], fontSize: 14 },
 });
 
 export default PostCard;

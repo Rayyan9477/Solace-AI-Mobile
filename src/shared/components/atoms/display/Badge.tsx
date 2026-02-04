@@ -2,6 +2,7 @@
  * Badge Component
  * @description Small status indicator for notifications, counts, or labels
  * @task Task 2.2.2: Badge Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Multiple variants (default, success, warning, error, info)
@@ -13,20 +14,21 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import type { BadgeProps, BadgeVariant, BadgeSize } from "./Badge.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Variant backgrounds
-  default: "#475569",
-  success: "#22C55E",
-  warning: "#F59E0B",
-  error: "#EF4444",
-  info: "#818CF8",
+  default: palette.gray[600],
+  success: palette.green[500],
+  warning: palette.amber[500],
+  error: palette.red[500],
+  info: palette.indigo[400],
   // Text colors
-  textDefault: "#E2E8F0",
-  textDark: "#1E293B",
+  textDefault: palette.gray[200],
+  textDark: palette.gray[900],
 };
 
 /**

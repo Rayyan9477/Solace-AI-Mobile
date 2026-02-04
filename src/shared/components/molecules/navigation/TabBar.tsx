@@ -2,6 +2,7 @@
  * TabBar Component
  * @description Segmented control / tab bar for switching between views
  * @task Task 2.3.3: TabBar Component (Sprint 2.3 - Molecules Navigation)
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Multiple visual variants (pill, underline, filled)
@@ -27,35 +28,36 @@ import type {
   TabBarVariant,
   TabBarSize,
 } from "./TabBar.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Container
-  containerPill: "#334155",
-  containerFilled: "#1E293B",
+  containerPill: palette.gray[700],
+  containerFilled: palette.gray[900],
   containerUnderline: "transparent",
 
   // Active tab
-  activePill: "#FFFFFF",
-  activeFilled: "#818CF8",
-  activeUnderline: "#818CF8",
+  activePill: palette.white,
+  activeFilled: palette.indigo[400],
+  activeUnderline: palette.indigo[400],
 
   // Text
-  textActive: "#1E293B",
-  textActiveFilled: "#FFFFFF",
-  textActiveUnderline: "#818CF8",
-  textInactive: "#94A3B8",
-  textDisabled: "#475569",
+  textActive: palette.gray[900],
+  textActiveFilled: palette.white,
+  textActiveUnderline: palette.indigo[400],
+  textInactive: palette.gray[400],
+  textDisabled: palette.gray[600],
 
   // Badge
-  badge: "#EF4444",
-  badgeText: "#FFFFFF",
+  badge: palette.red[500],
+  badgeText: palette.white,
 
   // Underline
-  underlineBorder: "#334155",
-  underlineActive: "#818CF8",
+  underlineBorder: palette.gray[700],
+  underlineActive: palette.indigo[400],
 };
 
 /**

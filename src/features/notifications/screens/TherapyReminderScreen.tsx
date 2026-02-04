@@ -3,10 +3,12 @@
  * @description Full-screen reminder for upcoming therapy session
  * @task Task 3.16.4: Therapy Reminder Screen (Screen 137)
  * @audit-fix "Dr. Freud AI" → "Dr. Solace AI"
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface TherapyReminderScreenProps {
   sessionTime: string;
@@ -18,12 +20,12 @@ interface TherapyReminderScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
-  illustrationBg: "#E8853A",
-  ctaButtonBg: "#C4A574",
-  ctaButtonText: "#1C1410",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  textSecondary: palette.text.secondary,
+  illustrationBg: palette.accent.orange,
+  ctaButtonBg: palette.primary.gold,
+  ctaButtonText: palette.background.primary,
 } as const;
 
 export function TherapyReminderScreen({

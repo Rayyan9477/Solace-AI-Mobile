@@ -2,11 +2,13 @@
  * FAQAccordion Component
  * @description Expandable/collapsible FAQ accordion item
  * @task Task 2.10.2: FAQAccordion Component
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import type { FAQAccordionProps } from "./FAQAccordion.types";
+import { palette } from "../../../theme";
 
 export function FAQAccordion({
   id,
@@ -50,7 +52,7 @@ export function FAQAccordion({
 
 const styles = StyleSheet.create({
   answer: {
-    color: "#E2E8F0",
+    color: palette.gray[200],
     fontSize: 14,
     lineHeight: 20,
   },
@@ -58,16 +60,16 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   chevron: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
   },
   container: {
-    backgroundColor: "#475569",
+    backgroundColor: palette.gray[600],
     borderRadius: 12,
     padding: 16,
   },
   question: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 15,
     fontWeight: "600",

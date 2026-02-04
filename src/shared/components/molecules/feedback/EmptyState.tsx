@@ -2,6 +2,7 @@
  * EmptyState Component
  * @description Displays placeholder content for empty or no-result states
  * @task Task 2.4.4: EmptyState Component (Sprint 2.4 - Molecules Content)
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Icon or illustration display
@@ -24,23 +25,24 @@ import type {
   EmptyStateProps,
   EmptyStateVariant,
 } from "./EmptyState.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Text
-  title: "#F1F5F9",
-  description: "#94A3B8",
+  title: palette.gray[100],
+  description: palette.gray[400],
 
   // Buttons
-  primaryButton: "#818CF8",
-  primaryButtonText: "#FFFFFF",
+  primaryButton: palette.indigo[400],
+  primaryButtonText: palette.white,
   secondaryButton: "transparent",
-  secondaryButtonText: "#818CF8",
+  secondaryButtonText: palette.indigo[400],
 
   // Card
-  cardBackground: "#2A2220",
+  cardBackground: palette.brown[900],
 };
 
 /**

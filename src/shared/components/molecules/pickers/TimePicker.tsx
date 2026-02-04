@@ -2,6 +2,7 @@
  * TimePicker Component
  * @description Time picker with hour/minute wheels and AM/PM selector
  * @task Task 2.6.2: TimePicker Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - 12-hour and 24-hour formats
@@ -28,35 +29,36 @@ import type {
   MinuteInterval,
 } from "./TimePicker.types";
 import { to12Hour } from "./TimePicker.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Background colors
-  background: "#1E293B",
-  surface: "#334155",
-  surfaceLight: "#475569",
+  background: palette.gray[900],
+  surface: palette.gray[700],
+  surfaceLight: palette.gray[600],
 
   // Text colors
-  text: "#F1F5F9",
-  textSecondary: "#94A3B8",
-  textDisabled: "#64748B",
-  error: "#EF4444",
+  text: palette.gray[100],
+  textSecondary: palette.gray[400],
+  textDisabled: palette.gray[500],
+  error: palette.red[500],
 
   // Selection colors
-  selected: "#9AAD5C", // Olive green from designs
-  selectedText: "#1C1917",
+  selected: palette.olive[500],
+  selectedText: palette.gray[900],
 
   // Border colors
-  border: "#475569",
-  borderError: "#EF4444",
+  border: palette.gray[600],
+  borderError: palette.red[500],
 
   // Button colors
-  buttonPrimary: "#C4A574",
-  buttonPrimaryText: "#1C1917",
+  buttonPrimary: palette.tan[500],
+  buttonPrimaryText: palette.gray[900],
   buttonSecondary: "transparent",
-  buttonSecondaryText: "#C4A574",
+  buttonSecondaryText: palette.tan[500],
 };
 
 /**

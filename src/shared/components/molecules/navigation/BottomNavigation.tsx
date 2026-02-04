@@ -2,6 +2,7 @@
  * BottomNavigation Component
  * @description Bottom tab navigation bar for main app navigation
  * @task Task 2.3.2: BottomNavigation Component (Sprint 2.3 - Molecules Navigation)
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - 2-5 tab support
@@ -24,28 +25,29 @@ import type {
   BottomNavigationProps,
   NavTab,
 } from "./BottomNavigation.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Background
-  background: "#1E293B",
+  background: palette.gray[900],
 
   // Text
-  labelActive: "#818CF8",
-  labelInactive: "#64748B",
-  labelDisabled: "#334155",
+  labelActive: palette.indigo[400],
+  labelInactive: palette.gray[500],
+  labelDisabled: palette.gray[700],
 
   // Badge
-  badge: "#EF4444",
-  badgeText: "#FFFFFF",
+  badge: palette.red[500],
+  badgeText: palette.white,
 
   // Border
-  border: "#334155",
+  border: palette.gray[700],
 
   // Pressed
-  pressed: "rgba(129, 140, 248, 0.1)",
+  pressed: `${palette.indigo[400]}${palette.alpha[10]}`,
 };
 
 /**

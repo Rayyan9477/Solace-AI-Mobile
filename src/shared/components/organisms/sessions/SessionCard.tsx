@@ -2,6 +2,7 @@
  * SessionCard Component
  * @description Mindful session card with playback controls and progress
  * @task Task 2.9.2: SessionCard Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Play button with icon
@@ -23,6 +24,7 @@ import {
   formatSessionTime,
   calculateProgress,
 } from "./SessionCard.types";
+import { palette } from "../../../theme";
 
 /**
  * SessionCard Component
@@ -139,12 +141,12 @@ export function SessionCard({
 
 const styles = StyleSheet.create({
   badgeText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: "#334155",
+    backgroundColor: palette.gray[700],
     borderRadius: 12,
     flexDirection: "row",
     padding: 16,
@@ -160,19 +162,19 @@ const styles = StyleSheet.create({
   },
   playButton: {
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
     width: 48,
   },
   playIcon: {
-    color: "#1E293B",
+    color: palette.gray[800],
     fontSize: 16,
     marginLeft: 2,
   },
   progressBar: {
-    backgroundColor: "#475569",
+    backgroundColor: palette.gray[600],
     borderRadius: 4,
     height: 6,
     overflow: "hidden",
@@ -182,7 +184,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   progressFill: {
-    backgroundColor: "#8B7355",
+    backgroundColor: palette.tan[600],
     height: "100%",
   },
   soundscapeBadge: {
@@ -196,11 +198,11 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   timeText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
   },
   title: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
     flex: 1,

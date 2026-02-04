@@ -2,10 +2,12 @@
  * SleepDashboardScreen Component
  * @description Main sleep tracking dashboard with score hero, quality status, and overview metrics
  * @task Task 3.10.1: Sleep Dashboard Screen (Screen 87)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 type SleepQuality = "Excellent" | "Good" | "Fair" | "Poor" | "Insomniac";
 
@@ -21,20 +23,6 @@ interface SleepDashboardScreenProps {
   onAddSleep: () => void;
   onMetricPress: (type: "rem" | "core") => void;
 }
-
-const colors = {
-  background: "#1C1410",
-  heroPurple: "#7B68B5",
-  cardBackground: "#2A1F19",
-  cardBorder: "#3D2E23",
-  white: "#FFFFFF",
-  tan: "#C4A574",
-  green: "#9AAD5C",
-  orange: "#E8853A",
-  brown: "#8B6914",
-  fabBrown: "#3D2E23",
-  ringTrack: "rgba(255,255,255,0.15)",
-} as const;
 
 export function SleepDashboardScreen({
   sleepScore,
@@ -52,7 +40,7 @@ export function SleepDashboardScreen({
     <View testID="sleep-dashboard-screen" style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Hero Section */}
-        <View testID="sleep-hero-section" style={[styles.heroSection, { backgroundColor: colors.heroPurple }]}>
+        <View testID="sleep-hero-section" style={[styles.heroSection, { backgroundColor: palette.onboarding.step5 }]}>
           {/* Decorative Clouds */}
           <View testID="decorative-clouds" style={styles.decorativeClouds}>
             <View style={[styles.cloud, styles.cloudOne]} />
@@ -131,7 +119,7 @@ export function SleepDashboardScreen({
                       styles.progressRingFill,
                       styles.remRingSize,
                       {
-                        borderColor: colors.green,
+                        borderColor: palette.olive[500],
                         borderTopColor: "transparent",
                         transform: [{ rotate: `${remProgress * 360}deg` }],
                       },
@@ -161,7 +149,7 @@ export function SleepDashboardScreen({
                       styles.progressRingFill,
                       styles.coreRingSize,
                       {
-                        borderColor: colors.orange,
+                        borderColor: palette.onboarding.step2,
                         borderTopColor: "transparent",
                         transform: [{ rotate: `${coreProgress * 360}deg` }],
                       },
@@ -181,7 +169,7 @@ export function SleepDashboardScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "rgba(255,255,255,0.3)",
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -191,11 +179,11 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 20,
   },
   cloud: {
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     borderRadius: 50,
     position: "absolute",
   },
@@ -225,7 +213,7 @@ const styles = StyleSheet.create({
     width: 120,
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: palette.brown[900],
     flex: 1,
   },
   coreRingSize: {
@@ -242,14 +230,14 @@ const styles = StyleSheet.create({
   },
   fab: {
     alignItems: "center",
-    backgroundColor: colors.fabBrown,
+    backgroundColor: palette.brown[700],
     borderRadius: 28,
     elevation: 4,
     height: 56,
     justifyContent: "center",
     minHeight: 44,
     minWidth: 44,
-    shadowColor: "#000",
+    shadowColor: palette.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -261,7 +249,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   fabIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 28,
     fontWeight: "600",
   },
@@ -276,7 +264,7 @@ const styles = StyleSheet.create({
     width: 44,
   },
   headerTitle: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -287,8 +275,8 @@ const styles = StyleSheet.create({
     paddingBottom: 48,
   },
   metricCard: {
-    backgroundColor: colors.cardBackground,
-    borderColor: colors.cardBorder,
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 16,
     borderWidth: 1,
     flex: 1,
@@ -305,12 +293,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   metricLabel: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 16,
     fontWeight: "700",
   },
   metricValue: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 20,
     fontWeight: "700",
     position: "absolute",
@@ -333,11 +321,11 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   progressRingTrack: {
-    borderColor: colors.ringTrack,
+    borderColor: `${palette.white}${palette.alpha[15]}`,
     borderWidth: 6,
   },
   qualityLabel: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 18,
     fontWeight: "500",
     marginTop: 8,
@@ -353,7 +341,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   scoreValue: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 72,
     fontWeight: "800",
   },
@@ -364,12 +352,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   sectionHeaderText: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
   seeAllText: {
-    color: colors.tan,
+    color: palette.tan[500],
     fontSize: 14,
     fontWeight: "600",
   },

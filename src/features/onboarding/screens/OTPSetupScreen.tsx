@@ -2,6 +2,7 @@
  * OTPSetupScreen Component
  * @description Phone number entry screen for OTP verification
  * @task Task 3.3.4: OTP Setup Screen (Screen 18)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useState } from "react";
@@ -12,6 +13,7 @@ import {
   TextInput,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface OTPSetupScreenProps {
   onBack: () => void;
@@ -114,7 +116,7 @@ export function OTPSetupScreen({
           value={phoneNumber}
           onChangeText={handlePhoneChange}
           placeholder={`(${countryCode}) XXX-XXX-XXXX`}
-          placeholderTextColor="#8A8A8A"
+          placeholderTextColor={palette.gray[450]}
           keyboardType="phone-pad"
           accessibilityLabel="Phone number input"
         />
@@ -149,7 +151,7 @@ export function OTPSetupScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -159,20 +161,20 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   checkEmoji: {
     bottom: 10,
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "bold",
     position: "absolute",
     right: 15,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 60,
@@ -191,7 +193,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   countryChevron: {
-    color: "#8A8A8A",
+    color: palette.gray[450],
     fontSize: 10,
     marginLeft: 4,
   },
@@ -204,7 +206,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   divider: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     height: 30,
     marginHorizontal: 8,
     width: 1,
@@ -215,14 +217,14 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 16,
   },
   illustration: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 100,
     height: 200,
     justifyContent: "center",
@@ -234,15 +236,15 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   phoneInput: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 16,
     paddingHorizontal: 8,
   },
   phoneInputContainer: {
     alignItems: "center",
-    backgroundColor: "#2A2220",
-    borderColor: "#9AAD5C",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.olive[500],
     borderRadius: 12,
     borderWidth: 2,
     flexDirection: "row",
@@ -252,7 +254,7 @@ const styles = StyleSheet.create({
   },
   sendOTPButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -261,13 +263,13 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   sendOTPButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   sendOTPButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
@@ -280,14 +282,14 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   subtitle: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 22,
     marginTop: 12,
     textAlign: "center",
   },
   title: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontStyle: "italic",
     fontWeight: "700",

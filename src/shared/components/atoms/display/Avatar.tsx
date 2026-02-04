@@ -2,6 +2,7 @@
  * Avatar Component
  * @description User avatar with image, initials fallback, and status indicator
  * @task Task 2.2.3: Avatar Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Image with initials fallback
@@ -13,19 +14,20 @@
 import React, { useState } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import type { AvatarProps, AvatarSize, AvatarStatus } from "./Avatar.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
-  background: "#334155",
-  initials: "#E2E8F0",
-  border: "#1E293B",
+  background: palette.gray[700],
+  initials: palette.gray[200],
+  border: palette.gray[900],
   // Status colors
-  online: "#22C55E",
-  offline: "#64748B",
-  away: "#F59E0B",
-  busy: "#EF4444",
+  online: palette.green[500],
+  offline: palette.gray[500],
+  away: palette.amber[500],
+  busy: palette.red[500],
 };
 
 /**

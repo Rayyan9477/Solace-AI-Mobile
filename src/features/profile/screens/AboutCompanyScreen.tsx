@@ -2,6 +2,7 @@
  * AboutCompanyScreen Component
  * @description Company information with office address, email, and phone contact cards
  * @task Task 3.17.9: About Company Screen (Screen 148)
+ * @phase Phase 3C: Refactored to use theme tokens
  * @audit-fix "Freud AI Health" → "Solace AI Health"
  * @audit-fix "freudhealth.ai" → "solacehealth.ai"
  * @audit-fix "North Detroit, Texas" → corrected geography
@@ -16,6 +17,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface AboutCompanyScreenProps {
   companyName: string;
@@ -30,12 +32,12 @@ interface AboutCompanyScreenProps {
 }
 
 const colors = {
-  heroBg: "#6B7A3D",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.7)",
+  heroBg: palette.olive[700],
+  white: palette.white,
+  textSecondary: `${palette.white}${palette.alpha[70]}`,
   cardBg: "#4A5A2A",
-  iconBg: "rgba(255,255,255,0.2)",
-  chevron: "rgba(255,255,255,0.4)",
+  iconBg: `${palette.white}${palette.alpha[20]}`,
+  chevron: `${palette.white}${palette.alpha[40]}`,
 } as const;
 
 export function AboutCompanyScreen({

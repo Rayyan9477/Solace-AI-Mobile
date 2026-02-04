@@ -2,10 +2,12 @@
  * SleepQualityIncreaseScreen Component
  * @description Full-screen notification celebrating sleep quality improvement
  * @task Task 3.17.1: Sleep Quality Increase Screen (Screen 140)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface SleepQualityIncreaseScreenProps {
   duration: string;
@@ -16,12 +18,12 @@ interface SleepQualityIncreaseScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
-  illustrationBg: "#7B68B5",
-  ctaButtonBg: "#C4A574",
-  ctaButtonText: "#1C1410",
+  background: palette.brown[900],
+  white: palette.white,
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
+  illustrationBg: palette.onboarding.step5,
+  ctaButtonBg: palette.tan[500],
+  ctaButtonText: palette.brown[900],
 } as const;
 
 export function SleepQualityIncreaseScreen({

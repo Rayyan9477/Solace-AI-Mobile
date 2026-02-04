@@ -2,6 +2,7 @@
  * ProgressBar Component
  * @description Linear progress indicator with determinate and indeterminate modes
  * @task Task 2.2.5: ProgressBar Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Determinate progress (0-100)
@@ -15,17 +16,18 @@
 import React, { useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Animated, Easing } from "react-native";
 import type { ProgressBarProps, ProgressBarVariant, ProgressBarSize } from "./ProgressBar.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
-  track: "#334155",
-  default: "#818CF8",
-  success: "#22C55E",
-  warning: "#F59E0B",
-  error: "#EF4444",
-  label: "#94A3B8",
+  track: palette.gray[700],
+  default: palette.indigo[400],
+  success: palette.green[500],
+  warning: palette.amber[500],
+  error: palette.red[500],
+  label: palette.gray[400],
 };
 
 /**

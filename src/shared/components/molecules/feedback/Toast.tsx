@@ -2,6 +2,7 @@
  * Toast Component
  * @description Temporary notification message with auto-dismiss and actions
  * @task Task 2.5.3: Toast Component (Sprint 2.5 - Molecules Overlay)
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Multiple variants (info, success, warning, error)
@@ -21,37 +22,38 @@ import {
   type ViewStyle,
 } from "react-native";
 import type { ToastProps, ToastVariant } from "./Toast.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens per variant (dark mode first)
+ * Color tokens per variant from theme
  */
 const variantColors: Record<
   ToastVariant,
   { background: string; border: string; text: string; icon: string }
 > = {
   info: {
-    background: "#1E3A5F",
-    border: "#3B82F6",
-    text: "#BFDBFE",
-    icon: "#60A5FA",
+    background: palette.blue[900],
+    border: palette.blue[500],
+    text: palette.blue[200],
+    icon: palette.blue[400],
   },
   success: {
-    background: "#14532D",
-    border: "#22C55E",
-    text: "#BBF7D0",
-    icon: "#4ADE80",
+    background: palette.green[900],
+    border: palette.green[500],
+    text: palette.green[200],
+    icon: palette.green[400],
   },
   warning: {
-    background: "#78350F",
-    border: "#F59E0B",
-    text: "#FDE68A",
-    icon: "#FBBF24",
+    background: palette.amber[900],
+    border: palette.amber[500],
+    text: palette.amber[200],
+    icon: palette.amber[400],
   },
   error: {
-    background: "#7F1D1D",
-    border: "#EF4444",
-    text: "#FECACA",
-    icon: "#F87171",
+    background: palette.red[900],
+    border: palette.red[500],
+    text: palette.red[200],
+    icon: palette.red[400],
   },
 };
 
@@ -245,7 +247,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     minHeight: 48,
     elevation: 6,
-    shadowColor: "#000",
+    shadowColor: palette.black,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,

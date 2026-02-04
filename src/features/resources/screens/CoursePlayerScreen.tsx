@@ -3,10 +3,12 @@
  * @description Audio/video player for course lessons with circular progress ring,
  *   playback controls, timer display, and next lesson card
  * @task Task 3.13.6: Course Player Screen (Screen 117)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface CoursePlayerScreenProps {
   lessonTitle: string;
@@ -22,15 +24,15 @@ interface CoursePlayerScreenProps {
 }
 
 const colors = {
-  background: "#9AAD5C",
-  white: "#FFFFFF",
-  ringTrack: "rgba(255,255,255,0.2)",
-  ringFill: "#FFFFFF",
-  playPauseBg: "#FFFFFF",
-  playPauseIcon: "#9AAD5C",
-  cardBg: "rgba(255,255,255,0.15)",
-  textSecondary: "rgba(255,255,255,0.7)",
-  nextLabel: "rgba(255,255,255,0.6)",
+  background: palette.olive[500],
+  white: palette.white,
+  ringTrack: `${palette.white}${palette.alpha[20]}`,
+  ringFill: palette.white,
+  playPauseBg: palette.white,
+  playPauseIcon: palette.olive[500],
+  cardBg: `${palette.white}${palette.alpha[15]}`,
+  textSecondary: `${palette.white}${palette.alpha[70]}`,
+  nextLabel: `${palette.white}${palette.alpha[60]}`,
 } as const;
 
 export function CoursePlayerScreen({
@@ -202,7 +204,7 @@ const styles = StyleSheet.create({
   },
   nextPlayIcon: {
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: `${palette.white}${palette.alpha[20]}`,
     borderRadius: 20,
     height: 40,
     justifyContent: "center",

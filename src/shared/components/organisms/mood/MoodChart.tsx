@@ -2,6 +2,7 @@
  * MoodChart Component
  * @description Bar/line chart for mood visualization
  * @task Task 2.8.3: MoodChart Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Weekly mood bar chart with emoji indicators
@@ -31,6 +32,7 @@ import {
   getMoodChartEmoji,
   calculateBarHeight,
 } from "./MoodChart.types";
+import { palette } from "../../../theme";
 
 /**
  * Get full day name from label
@@ -371,7 +373,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   barLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 8,
   },
@@ -388,7 +390,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   container: {
-    backgroundColor: "#334155",
+    backgroundColor: palette.gray[700],
     borderRadius: 16,
     padding: 16,
   },
@@ -398,11 +400,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   emptyStateText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
   },
   gridLine: {
-    backgroundColor: "rgba(148, 163, 184, 0.2)",
+    backgroundColor: `${palette.gray[400]}${palette.alpha[20]}`,
     height: 1,
     width: "100%",
   },
@@ -421,15 +423,15 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   periodOptionSelected: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
   },
   periodOptionText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     fontWeight: "500",
   },
   periodOptionTextSelected: {
-    color: "#1C1410",
+    color: palette.brown[900],
   },
   periodSelector: {
     marginBottom: 8,
@@ -438,7 +440,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   skeletonBar: {
-    backgroundColor: "#475569",
+    backgroundColor: palette.gray[600],
     borderRadius: 8,
     width: 28,
   },
@@ -455,7 +457,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   skeletonLabel: {
-    backgroundColor: "#475569",
+    backgroundColor: palette.gray[600],
     borderRadius: 4,
     height: 12,
     marginTop: 8,

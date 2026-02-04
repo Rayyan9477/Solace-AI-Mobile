@@ -2,10 +2,12 @@
  * VerificationSetupScreen Component
  * @description Verification setup with biometric and notification options
  * @task Task 3.3.7: Verification Setup Screen (Screen 21)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface VerificationPreferences {
   biometricEnabled: boolean;
@@ -137,7 +139,7 @@ export function VerificationSetupScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -158,7 +160,7 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 4,
     borderWidth: 2,
     height: 24,
@@ -167,16 +169,16 @@ const styles = StyleSheet.create({
     width: 24,
   },
   checkboxChecked: {
-    backgroundColor: "#9AAD5C",
-    borderColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
+    borderColor: palette.olive[500],
   },
   checkboxCheckmark: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "700",
   },
   checkboxLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "500",
   },
@@ -188,13 +190,13 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   checkmarkIcon: {
-    color: "#9AAD5C",
+    color: palette.olive[500],
     fontSize: 24,
     fontWeight: "700",
   },
   checkmarkOverlay: {
     alignItems: "center",
-    backgroundColor: "rgba(154, 173, 92, 0.2)",
+    backgroundColor: `${palette.olive[500]}${palette.alpha[20]}`,
     borderRadius: 20,
     height: 40,
     justifyContent: "center",
@@ -204,14 +206,14 @@ const styles = StyleSheet.create({
     width: 40,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -220,13 +222,13 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   continueButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   continueButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
@@ -241,14 +243,14 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 16,
   },
   idCard: {
-    backgroundColor: "#2A1F19",
-    borderColor: "#3D2E23",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 12,
     borderWidth: 1,
     height: 140,
@@ -256,14 +258,14 @@ const styles = StyleSheet.create({
     width: 200,
   },
   idCardHeader: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 4,
     height: 8,
     marginBottom: 12,
     width: "60%",
   },
   idCardLine: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 2,
     height: 6,
     marginBottom: 6,
@@ -277,7 +279,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   idCardPhoto: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 8,
     height: 50,
     position: "absolute",

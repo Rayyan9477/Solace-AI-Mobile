@@ -2,6 +2,7 @@
  * ListItem Component
  * @description Versatile list item component for various list contexts
  * @task Task 2.4.2: ListItem Component (Sprint 2.4 - Molecules Content)
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Multiple variants (default, compact, expanded)
@@ -27,24 +28,25 @@ import type {
   ListItemProps,
   ListItemVariant,
 } from "./ListItem.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Background
   background: "transparent",
-  backgroundSelected: "rgba(129, 140, 248, 0.1)",
-  backgroundPressed: "rgba(255, 255, 255, 0.05)",
+  backgroundSelected: `${palette.indigo[400]}${palette.alpha[10]}`,
+  backgroundPressed: `${palette.white}${palette.alpha[5]}`,
 
   // Text
-  title: "#F1F5F9",
-  subtitle: "#94A3B8",
-  description: "#64748B",
-  titleDisabled: "#475569",
+  title: palette.gray[100],
+  subtitle: palette.gray[400],
+  description: palette.gray[500],
+  titleDisabled: palette.gray[600],
 
   // Divider
-  divider: "rgba(255, 255, 255, 0.1)",
+  divider: `${palette.white}${palette.alpha[10]}`,
 };
 
 /**

@@ -2,12 +2,14 @@
  * NotificationCard Component
  * @description Notification card with icon, title, description, and metadata
  * @task Task 2.10.1: NotificationCard Component
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import type { NotificationCardProps } from "./NotificationCard.types";
 import { formatNotificationTime } from "./NotificationCard.types";
+import { palette } from "../../../theme";
 
 export function NotificationCard({
   id,
@@ -70,15 +72,15 @@ export function NotificationCard({
 
 const styles = StyleSheet.create({
   badge: {
-    backgroundColor: "#475569",
+    backgroundColor: palette.gray[600],
     borderRadius: 8,
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 10,
     paddingHorizontal: 6,
     paddingVertical: 2,
   },
   container: {
-    backgroundColor: "#334155",
+    backgroundColor: palette.gray[700],
     borderRadius: 12,
     flexDirection: "row",
     padding: 12,
@@ -88,7 +90,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   description: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 13,
     lineHeight: 18,
     marginTop: 2,
@@ -101,12 +103,12 @@ const styles = StyleSheet.create({
     width: 48,
   },
   timestamp: {
-    color: "#64748B",
+    color: palette.gray[500],
     fontSize: 11,
     marginTop: 4,
   },
   title: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 14,
     fontWeight: "600",
@@ -117,7 +119,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   unreadIndicator: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 4,
     height: 8,
     width: 8,

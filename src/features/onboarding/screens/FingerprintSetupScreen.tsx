@@ -2,10 +2,12 @@
  * FingerprintSetupScreen Component
  * @description Biometric fingerprint setup screen
  * @task Task 3.3.6: Fingerprint Setup Screen (Screen 20)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface FingerprintSetupScreenProps {
   onBack: () => void;
@@ -100,7 +102,7 @@ export function FingerprintSetupScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -110,7 +112,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -120,7 +122,7 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 60,
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -140,13 +142,13 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   continueButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   continueButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
@@ -163,7 +165,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   cornerBracket: {
-    borderColor: "#FFFFFF",
+    borderColor: palette.white,
     height: 30,
     position: "absolute",
     width: 30,
@@ -201,13 +203,13 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 16,
   },
   patternCircle: {
-    borderColor: "#FFFFFF",
+    borderColor: palette.white,
     borderRadius: 100,
     borderWidth: 2,
     position: "absolute",
@@ -225,7 +227,7 @@ const styles = StyleSheet.create({
     width: 100,
   },
   scanLine: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     height: 3,
     left: 20,
     position: "absolute",
@@ -244,14 +246,14 @@ const styles = StyleSheet.create({
     width: 200,
   },
   subtitle: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 22,
     marginTop: 12,
     textAlign: "center",
   },
   title: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontStyle: "italic",
     fontWeight: "700",

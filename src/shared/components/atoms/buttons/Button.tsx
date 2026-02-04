@@ -2,6 +2,7 @@
  * Button Component
  * @description Accessible button with multiple variants and sizes
  * @task Task 2.1.1: Button Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - 6 visual variants (primary, secondary, outline, ghost, crisis, link)
@@ -29,7 +30,7 @@ import type {
   SizeSpec,
   VariantColors,
 } from "./Button.types";
-import { shadows } from "../../../theme";
+import { shadows, palette } from "../../../theme";
 
 /**
  * Size specifications
@@ -42,55 +43,56 @@ const sizeSpecs: Record<ButtonSize, SizeSpec> = {
 
 /**
  * Variant color configurations (dark mode first)
+ * Uses theme tokens for consistency
  */
 const variantColors: Record<ButtonVariant, VariantColors> = {
   primary: {
-    background: "#78716C", // brown-70 equivalent
-    text: "#FFFFFF",
+    background: palette.stone[500],
+    text: palette.white,
     border: "transparent",
-    pressedBackground: "#57534E",
-    disabledBackground: "#44403C",
-    disabledText: "#A8A29E",
+    pressedBackground: palette.stone[600],
+    disabledBackground: palette.stone[600],
+    disabledText: palette.stone[400],
   },
   secondary: {
-    background: "#E7E5E4", // gray-20 equivalent
-    text: "#1C1917", // gray-90
+    background: palette.stone[200],
+    text: palette.stone[900],
     border: "transparent",
-    pressedBackground: "#D6D3D1",
-    disabledBackground: "#F5F5F4",
-    disabledText: "#A8A29E",
+    pressedBackground: palette.stone[300],
+    disabledBackground: palette.stone[100],
+    disabledText: palette.stone[400],
   },
   outline: {
     background: "transparent",
-    text: "#78716C", // brown-70
-    border: "#78716C",
-    pressedBackground: "rgba(120, 113, 108, 0.1)",
+    text: palette.stone[500],
+    border: palette.stone[500],
+    pressedBackground: `${palette.stone[500]}${palette.alpha[10]}`,
     disabledBackground: "transparent",
-    disabledText: "#A8A29E",
+    disabledText: palette.stone[400],
   },
   ghost: {
     background: "transparent",
-    text: "#78716C", // brown-70
+    text: palette.stone[500],
     border: "transparent",
-    pressedBackground: "rgba(120, 113, 108, 0.1)",
+    pressedBackground: `${palette.stone[500]}${palette.alpha[10]}`,
     disabledBackground: "transparent",
-    disabledText: "#A8A29E",
+    disabledText: palette.stone[400],
   },
   crisis: {
-    background: "#EF4444", // red-50
-    text: "#FFFFFF",
-    border: "#DC2626", // red-60
-    pressedBackground: "#DC2626",
-    disabledBackground: "#FCA5A5",
-    disabledText: "#FECACA",
+    background: palette.red[500],
+    text: palette.white,
+    border: palette.red[600],
+    pressedBackground: palette.red[600],
+    disabledBackground: palette.red[300],
+    disabledText: palette.red[200],
   },
   link: {
     background: "transparent",
-    text: "#3B82F6", // blue-60
+    text: palette.blue[500],
     border: "transparent",
     pressedBackground: "transparent",
     disabledBackground: "transparent",
-    disabledText: "#93C5FD",
+    disabledText: palette.blue[300],
   },
 };
 
@@ -162,7 +164,7 @@ export function Button({
     // Crisis variant gets shadow
     if (variant === "crisis" && !isDisabled) {
       Object.assign(baseStyle, shadows.md, {
-        shadowColor: "#EF4444",
+        shadowColor: palette.red[500],
       });
     }
 

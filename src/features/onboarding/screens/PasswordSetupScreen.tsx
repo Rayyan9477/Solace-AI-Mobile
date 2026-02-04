@@ -2,6 +2,7 @@
  * PasswordSetupScreen Component
  * @description Password setup with strength indicator and requirements
  * @task Task 3.3.3: Password Setup Screen (Screen 17)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useState, useMemo } from "react";
@@ -12,6 +13,7 @@ import {
   TextInput,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface PasswordSetupScreenProps {
   onBack: () => void;
@@ -100,13 +102,13 @@ export function PasswordSetupScreen({
   const getStrengthColor = () => {
     switch (strengthResult.strength) {
       case "weak":
-        return "#E8853A";
+        return palette.onboarding.step2;
       case "medium":
-        return "#FFD93D";
+        return palette.amber[450];
       case "strong":
-        return "#9AAD5C";
+        return palette.olive[500];
       default:
-        return "#E8853A";
+        return palette.onboarding.step2;
     }
   };
 
@@ -139,7 +141,7 @@ export function PasswordSetupScreen({
             onChangeText={setPassword}
             secureTextEntry={!showPassword}
             placeholder="Enter password"
-            placeholderTextColor="#8A8A8A"
+            placeholderTextColor={palette.gray[450]}
             accessibilityLabel="Password input"
           />
           <TouchableOpacity
@@ -219,7 +221,7 @@ export function PasswordSetupScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -229,7 +231,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -239,14 +241,14 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -255,13 +257,13 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   continueButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   continueButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
@@ -271,7 +273,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 16,
@@ -281,8 +283,8 @@ const styles = StyleSheet.create({
   },
   passwordContainer: {
     alignItems: "center",
-    backgroundColor: "#2A2220",
-    borderColor: "#3D2E23",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 16,
     borderWidth: 2,
     flexDirection: "row",
@@ -290,17 +292,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   passwordContainerFocused: {
-    borderColor: "#E8853A",
+    borderColor: palette.onboarding.step2,
   },
   passwordInput: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 24,
     letterSpacing: 4,
   },
   requirementChip: {
     alignItems: "center",
-    borderColor: "#E8853A",
+    borderColor: palette.onboarding.step2,
     borderRadius: 20,
     borderWidth: 1,
     flexDirection: "row",
@@ -309,19 +311,19 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   requirementChipMet: {
-    borderColor: "#9AAD5C",
+    borderColor: palette.olive[500],
   },
   requirementIcon: {
     fontSize: 14,
     marginRight: 6,
   },
   requirementText: {
-    color: "#E8853A",
+    color: palette.onboarding.step2,
     fontSize: 12,
     fontWeight: "500",
   },
   requirementTextMet: {
-    color: "#9AAD5C",
+    color: palette.olive[500],
   },
   requirementsSection: {
     flexDirection: "row",
@@ -329,7 +331,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   strengthBar: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 4,
     height: 8,
     marginBottom: 8,
@@ -341,7 +343,7 @@ const styles = StyleSheet.create({
     height: 8,
   },
   strengthLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "500",
     marginBottom: 8,
@@ -355,7 +357,7 @@ const styles = StyleSheet.create({
   },
   toggleButton: {
     alignItems: "center",
-    backgroundColor: "#8B6F47",
+    backgroundColor: palette.tan[600],
     borderRadius: 20,
     height: 40,
     justifyContent: "center",

@@ -2,6 +2,7 @@
  * VoiceWaveform Component
  * @description Animated audio waveform visualization
  * @task Task 2.7.4: VoiceWaveform Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Animated bar visualization
@@ -23,16 +24,17 @@ import {
   resampleWaveform,
   formatWaveformDuration,
 } from "./VoiceWaveform.types";
+import { palette } from "../../../theme";
 
 /**
- * Default color tokens (dark mode first)
+ * Default color tokens from theme
  */
 const defaultColors = {
-  primary: "#9AAD5C", // Olive green
-  secondary: "#475569", // Slate
-  played: "#9AAD5C",
-  unplayed: "#475569",
-  text: "#94A3B8",
+  primary: palette.olive[500],
+  secondary: palette.gray[600],
+  played: palette.olive[500],
+  unplayed: palette.gray[600],
+  text: palette.gray[400],
 };
 
 /**

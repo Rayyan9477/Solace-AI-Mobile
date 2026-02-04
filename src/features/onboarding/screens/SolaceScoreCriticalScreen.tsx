@@ -2,6 +2,7 @@
  * SolaceScoreCriticalScreen Component
  * @description Displays Solace score for critical category (<30) with crisis resources
  * @task Task 3.3.11: Solace Score Critical Screen (Screen 25)
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * SAFETY-CRITICAL: Integrated with CrisisModal for immediate crisis support
  */
@@ -9,6 +10,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { CrisisModal } from "../../../shared/components/organisms/crisis";
+import { palette } from "../../../shared/theme";
 
 interface SolaceScoreCriticalScreenProps {
   score: number;
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
   },
   callHotlineButton: {
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -117,19 +119,19 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   callHotlineButtonText: {
-    color: "#7B68B5",
+    color: palette.onboarding.step5,
     fontSize: 16,
     fontWeight: "700",
   },
   container: {
     alignItems: "center",
-    backgroundColor: "#7B68B5",
+    backgroundColor: palette.onboarding.step5,
     flex: 1,
     paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
-    borderColor: "rgba(255, 255, 255, 0.5)",
+    borderColor: `${palette.white}${palette.alpha[50]}`,
     borderRadius: 28,
     borderWidth: 1,
     justifyContent: "center",
@@ -139,7 +141,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   continueButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -154,7 +156,7 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   pageTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -163,7 +165,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   primaryMessage: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     marginBottom: 8,
@@ -171,8 +173,8 @@ const styles = StyleSheet.create({
   },
   scoreCircle: {
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    borderColor: "rgba(255, 255, 255, 0.3)",
+    backgroundColor: `${palette.white}${palette.alpha[20]}`,
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 80,
     borderWidth: 4,
     height: 160,
@@ -184,12 +186,12 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   scoreText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 64,
     fontWeight: "700",
   },
   secondaryMessage: {
-    color: "rgba(255, 255, 255, 0.8)",
+    color: `${palette.white}${palette.alpha[80]}`,
     fontSize: 16,
     textAlign: "center",
   },

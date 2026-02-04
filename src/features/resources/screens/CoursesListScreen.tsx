@@ -3,6 +3,7 @@
  * @description Full courses listing with orange curved header, filter chips,
  *   featured course with play button, and course rows
  * @task Task 3.13.3: Courses List Screen (Screen 114)
+ * @phase Phase 3C: Refactored to use theme tokens
  * @audit-fix Replaced "Dr. Hannibal Lector" with "Dr. Sarah Mitchell"
  * @audit-fix Replaced "Clayton Biggsby" with "Clayton Hughes"
  */
@@ -15,6 +16,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface FilterOption {
   id: string;
@@ -45,16 +47,16 @@ interface CoursesListScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  headerBg: "#E8853A",
+  background: palette.brown[900],
+  white: palette.white,
+  headerBg: palette.onboarding.step2,
   cardBg: "#2A1F18",
   chipBg: "#2A1F18",
-  chipSelected: "#E8853A",
-  textSecondary: "rgba(255,255,255,0.6)",
-  seeAll: "#C4A574",
-  playBg: "rgba(255,255,255,0.9)",
-  playIcon: "#1C1410",
+  chipSelected: palette.onboarding.step2,
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
+  seeAll: palette.tan[500],
+  playBg: `${palette.white}${palette.alpha[90]}`,
+  playIcon: palette.brown[900],
 } as const;
 
 export function CoursesListScreen({
@@ -226,7 +228,7 @@ const styles = StyleSheet.create({
   },
   courseAvatar: {
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
@@ -292,7 +294,7 @@ const styles = StyleSheet.create({
   },
   featuredImage: {
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     height: 160,
     justifyContent: "center",
     width: "100%",

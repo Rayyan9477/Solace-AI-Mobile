@@ -5,6 +5,7 @@
  * @audit-fix "Dr Freud AI" → "Dr Solace AI"
  * @audit-fix "Shinomiya Data.pdf" → "Monthly_Health_Report.pdf"
  * @audit-fix "Dr Freud Recommendations" → "Dr Solace Recommendations"
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -15,6 +16,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface NotificationItem {
   id: string;
@@ -43,11 +45,11 @@ interface NotificationsDashboardScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
-  badgeBg: "#E8853A",
-  cardBg: "#2A1F18",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  textSecondary: palette.text.secondary,
+  badgeBg: palette.accent.orange,
+  cardBg: palette.background.secondary,
 } as const;
 
 export function NotificationsDashboardScreen({
@@ -160,7 +162,7 @@ export function NotificationsDashboardScreen({
 
 const styles = StyleSheet.create({
   attachment: {
-    color: "#3498DB",
+    color: palette.semantic.info,
     fontSize: 12,
     marginTop: 4,
   },
@@ -186,7 +188,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   badgeText: { color: colors.textSecondary, fontSize: 11, fontWeight: "600" },
-  checkmark: { color: "#9AAD5C", fontSize: 18 },
+  checkmark: { color: palette.accent.green, fontSize: 18 },
   container: { backgroundColor: colors.background, flex: 1 },
   header: {
     alignItems: "center",

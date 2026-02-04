@@ -2,6 +2,7 @@
  * DatePicker Component
  * @description Calendar-based date picker with single, range, and multiple selection modes
  * @task Task 2.6.1: DatePicker Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Single date selection
@@ -30,36 +31,37 @@ import type {
   QuickSelectOption,
 } from "./DatePicker.types";
 import { defaultQuickSelectOptions } from "./DatePicker.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Background colors
-  background: "#1E293B",
-  surface: "#334155",
-  surfaceLight: "#475569",
+  background: palette.gray[900],
+  surface: palette.gray[700],
+  surfaceLight: palette.gray[600],
 
   // Text colors
-  text: "#F1F5F9",
-  textSecondary: "#94A3B8",
-  textDisabled: "#64748B",
+  text: palette.gray[100],
+  textSecondary: palette.gray[400],
+  textDisabled: palette.gray[500],
 
   // Selection colors
-  selected: "#9AAD5C", // Olive green from designs
-  selectedText: "#1C1917",
-  today: "#C4A574", // Tan/beige from designs
-  todayText: "#1C1917",
-  inRange: "rgba(154, 173, 92, 0.3)",
+  selected: palette.olive[500],
+  selectedText: palette.gray[900],
+  today: palette.tan[500],
+  todayText: palette.gray[900],
+  inRange: `${palette.olive[500]}${palette.alpha[30]}`,
 
   // Border colors
-  border: "#475569",
+  border: palette.gray[600],
 
   // Button colors
-  buttonPrimary: "#C4A574",
-  buttonPrimaryText: "#1C1917",
+  buttonPrimary: palette.tan[500],
+  buttonPrimaryText: palette.gray[900],
   buttonSecondary: "transparent",
-  buttonSecondaryText: "#C4A574",
+  buttonSecondaryText: palette.tan[500],
 };
 
 /**

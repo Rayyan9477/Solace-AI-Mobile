@@ -2,6 +2,7 @@
  * HelpCenterScreen Component
  * @description FAQ accordion with search and Live Chat tab navigation
  * @task Task 3.17.10: Help Center Screen (Screen 149)
+ * @phase Phase 3C: Refactored to use theme tokens
  * @audit-fix "freud.ai" → "Solace" in FAQ questions
  */
 
@@ -14,6 +15,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface FAQItem {
   id: string;
@@ -33,15 +35,15 @@ interface HelpCenterScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
+  background: palette.brown[900],
+  white: palette.white,
   cardBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
   tabBg: "#2A1F18",
-  tabSelected: "#C4A574",
-  tabSelectedText: "#1C1410",
+  tabSelected: palette.tan[500],
+  tabSelectedText: palette.brown[900],
   searchBg: "#2A1F18",
-  chevron: "rgba(255,255,255,0.3)",
+  chevron: `${palette.white}${palette.alpha[30]}`,
 } as const;
 
 export function HelpCenterScreen({

@@ -2,6 +2,7 @@
  * SearchBar Component
  * @description Search input with icon, clear button, and custom actions
  * @task Task 2.3.4: SearchBar Component (Sprint 2.3 - Molecules Navigation)
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Multiple visual variants (default, filled, outlined)
@@ -29,34 +30,35 @@ import type {
   SearchBarVariant,
   SearchBarSize,
 } from "./SearchBar.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Container
-  backgroundDefault: "#334155",
-  backgroundFilled: "#1E293B",
+  backgroundDefault: palette.gray[700],
+  backgroundFilled: palette.gray[900],
   backgroundOutlined: "transparent",
-  backgroundDisabled: "#1E293B",
+  backgroundDisabled: palette.gray[900],
 
   // Border
-  borderOutlined: "#475569",
-  borderFocused: "#818CF8",
+  borderOutlined: palette.gray[600],
+  borderFocused: palette.indigo[400],
 
   // Text
-  text: "#F1F5F9",
-  placeholder: "#64748B",
-  textDisabled: "#475569",
+  text: palette.gray[100],
+  placeholder: palette.gray[500],
+  textDisabled: palette.gray[600],
 
   // Icon
-  icon: "#94A3B8",
-  iconFocused: "#818CF8",
-  iconDisabled: "#475569",
+  icon: palette.gray[400],
+  iconFocused: palette.indigo[400],
+  iconDisabled: palette.gray[600],
 
   // Clear button
-  clearButton: "#64748B",
-  clearButtonPressed: "#94A3B8",
+  clearButton: palette.gray[500],
+  clearButtonPressed: palette.gray[400],
 };
 
 /**

@@ -2,6 +2,7 @@
  * TextInput Component
  * @description Accessible text input with label, error, and icon support
  * @task Task 2.1.3: TextInput Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Label and helper text
@@ -23,28 +24,29 @@ import {
   type TextStyle,
 } from "react-native";
 import type { TextInputProps, InputState } from "./TextInput.types";
+import { colors, palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Input-specific color tokens from theme
  */
-const colors = {
+const inputColors = {
   // Text colors
-  label: "#E2E8F0",
-  placeholder: "#64748B",
-  text: "#F1F5F9",
-  helperText: "#94A3B8",
-  error: "#EF4444",
-  disabled: "#64748B",
+  label: palette.gray[200],
+  placeholder: palette.gray[500],
+  text: palette.gray[100],
+  helperText: palette.gray[400],
+  error: palette.red[500],
+  disabled: palette.gray[500],
 
   // Border colors
-  borderDefault: "#475569",
-  borderFocused: "#818CF8",
-  borderError: "#EF4444",
-  borderDisabled: "#334155",
+  borderDefault: palette.gray[600],
+  borderFocused: palette.indigo[400],
+  borderError: palette.red[500],
+  borderDisabled: palette.gray[700],
 
   // Background
-  background: "#1E293B",
-  backgroundDisabled: "#0F172A",
+  background: palette.gray[800],
+  backgroundDisabled: palette.gray[900],
 };
 
 /**
@@ -113,13 +115,13 @@ export function TextInput({
   const borderColor = useMemo(() => {
     switch (state) {
       case "error":
-        return colors.borderError;
+        return inputColors.borderError;
       case "focused":
-        return colors.borderFocused;
+        return inputColors.borderFocused;
       case "disabled":
-        return colors.borderDisabled;
+        return inputColors.borderDisabled;
       default:
-        return colors.borderDefault;
+        return inputColors.borderDefault;
     }
   }, [state]);
 
@@ -130,7 +132,7 @@ export function TextInput({
     borderWidth: 1,
     borderColor,
     borderRadius: 8,
-    backgroundColor: disabled ? colors.backgroundDisabled : colors.background,
+    backgroundColor: disabled ? inputColors.backgroundDisabled : inputColors.background,
     minHeight: multiline ? 100 : 48,
     paddingHorizontal: 12,
   }), [borderColor, disabled, multiline]);
@@ -140,7 +142,7 @@ export function TextInput({
     const style: TextStyle = {
       flex: 1,
       fontSize: 16,
-      color: disabled ? colors.disabled : colors.text,
+      color: disabled ? inputColors.disabled : inputColors.text,
       paddingVertical: 12,
     };
 
@@ -187,7 +189,7 @@ export function TextInput({
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor={colors.placeholder}
+          placeholderTextColor={inputColors.placeholder}
           secureTextEntry={secureTextEntry}
           multiline={multiline}
           inputMode={inputMode}
@@ -226,7 +228,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: colors.label,
+    color: inputColors.label,
     marginBottom: 6,
   },
   iconLeft: {
@@ -237,12 +239,12 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 12,
-    color: colors.error,
+    color: inputColors.error,
     marginTop: 4,
   },
   helperText: {
     fontSize: 12,
-    color: colors.helperText,
+    color: inputColors.helperText,
     marginTop: 4,
   },
 });

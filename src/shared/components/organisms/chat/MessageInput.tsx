@@ -2,6 +2,7 @@
  * MessageInput Component
  * @description Chat message input with text, voice, and attachment support
  * @task Task 2.7.3: MessageInput Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Text input with multiline support
@@ -30,33 +31,34 @@ import type {
   InputAttachment,
 } from "./MessageInput.types";
 import { formatDuration, canSendMessage } from "./MessageInput.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Background colors
-  background: "#1C1410",
-  inputBg: "#334155",
-  buttonBg: "#9AAD5C", // Olive green
+  background: palette.brown[900],
+  inputBg: palette.gray[700],
+  buttonBg: palette.olive[500],
 
   // Text colors
-  text: "#F1F5F9",
-  textSecondary: "#94A3B8",
-  placeholder: "#64748B",
+  text: palette.gray[100],
+  textSecondary: palette.gray[400],
+  placeholder: palette.gray[500],
 
   // Icon colors
-  iconDefault: "#94A3B8",
-  iconActive: "#9AAD5C",
+  iconDefault: palette.gray[400],
+  iconActive: palette.olive[500],
 
   // Attachment
-  attachmentBg: "#475569",
+  attachmentBg: palette.gray[600],
 
   // Recording
-  recordingIndicator: "#EF4444",
+  recordingIndicator: palette.red[500],
 
   // Border
-  border: "#475569",
+  border: palette.gray[600],
 };
 
 /**

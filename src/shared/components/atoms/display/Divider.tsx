@@ -2,6 +2,7 @@
  * Divider Component
  * @description Visual separator for content sections
  * @task Task 2.2.6: Divider Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Horizontal and vertical orientation
@@ -13,13 +14,14 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import type { DividerProps, DividerOrientation, DividerVariant } from "./Divider.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
-  line: "#334155",
-  label: "#94A3B8",
+  line: palette.gray[700],
+  label: palette.gray[400],
 };
 
 /**

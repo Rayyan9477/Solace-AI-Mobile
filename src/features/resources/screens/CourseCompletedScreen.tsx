@@ -3,11 +3,13 @@
  * @description Post-completion rating screen with tree illustration,
  *   emoji-based satisfaction scale, and rate session button
  * @task Task 3.13.7: Course Completed Screen (Screen 118)
+ * @phase Phase 3C: Refactored to use theme tokens
  * @audit-fix Replaced "freudScoreEarned" with "solaceScoreEarned" in data model
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface RatingOption {
   id: string;
@@ -26,11 +28,11 @@ interface CourseCompletedScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
-  rateButtonBg: "#C4A574",
-  selectionIndicator: "#C4A574",
+  background: palette.brown[900],
+  white: palette.white,
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
+  rateButtonBg: palette.tan[500],
+  selectionIndicator: palette.tan[500],
 } as const;
 
 export function CourseCompletedScreen({
@@ -153,7 +155,7 @@ const styles = StyleSheet.create({
   },
   illustration: {
     alignSelf: "center",
-    backgroundColor: "rgba(255,255,255,0.05)",
+    backgroundColor: `${palette.white}${palette.alpha[5]}`,
     borderRadius: 16,
     height: 200,
     marginTop: 24,

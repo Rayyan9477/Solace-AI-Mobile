@@ -3,6 +3,7 @@
  * @description Comprehensive settings menu with sections for general,
  *   security, danger zone, and logout
  * @task Task 3.17.3: Account Settings Screen (Screen 142)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -13,6 +14,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface SettingsItemData {
   id: string;
@@ -36,14 +38,14 @@ interface AccountSettingsScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
+  background: palette.brown[900],
+  white: palette.white,
   cardBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
-  destructive: "#E8853A",
-  toggleOn: "#9AAD5C",
-  toggleOff: "#3D2E23",
-  chevron: "rgba(255,255,255,0.3)",
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
+  destructive: palette.onboarding.step2,
+  toggleOn: palette.olive[500],
+  toggleOff: palette.brown[700],
+  chevron: `${palette.white}${palette.alpha[30]}`,
 } as const;
 
 export function AccountSettingsScreen({

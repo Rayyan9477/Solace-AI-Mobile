@@ -3,6 +3,7 @@
  * @description Main resources dashboard with featured resource, article carousel,
  *   course list, and bottom FAB
  * @task Task 3.13.1: Resources Home Screen (Screen 112)
+ * @phase Phase 3C: Refactored to use theme tokens
  * @audit-fix Replaced "Freud App" with "Solace App" per branding guidelines
  * @audit-fix Replaced "Dr. Hannibal Lector" with "Dr. Sarah Mitchell"
  */
@@ -15,6 +16,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface ArticleItem {
   id: string;
@@ -52,14 +54,14 @@ interface ResourcesHomeScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
+  background: palette.brown[900],
+  white: palette.white,
   cardBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
-  categoryBadge: "#9AAD5C",
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
+  categoryBadge: palette.olive[500],
   fabBg: "#5C4A2A",
-  seeAll: "#C4A574",
-  metricText: "rgba(255,255,255,0.5)",
+  seeAll: palette.tan[500],
+  metricText: `${palette.white}${palette.alpha[50]}`,
   ratingYellow: "#E8C94A",
 } as const;
 
@@ -276,7 +278,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   articleImage: {
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     borderRadius: 12,
     height: 100,
     width: "100%",
@@ -316,7 +318,7 @@ const styles = StyleSheet.create({
   },
   courseAvatar: {
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
@@ -390,7 +392,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   featuredImage: {
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     height: 140,
     width: "100%",
   },

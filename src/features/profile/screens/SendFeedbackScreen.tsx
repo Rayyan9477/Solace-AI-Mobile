@@ -2,6 +2,7 @@
  * SendFeedbackScreen Component
  * @description Feedback form with multi-select category chips
  * @task Task 3.17.14: Send Feedback Screen (Screen 153)
+ * @phase Phase 3C: Refactored to use theme tokens
  * @audit-fix "Which of the area" → "Which area" (Issue #41)
  */
 
@@ -13,6 +14,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface CategoryChip {
   id: string;
@@ -28,14 +30,14 @@ interface SendFeedbackScreenProps {
 }
 
 const colors = {
-  heroBg: "#6B7A3D",
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
+  heroBg: palette.olive[700],
+  background: palette.brown[900],
+  white: palette.white,
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
   chipBg: "#2A1F18",
-  chipSelected: "#9AAD5C",
-  ctaButtonBg: "#C4A574",
-  ctaButtonText: "#1C1410",
+  chipSelected: palette.olive[500],
+  ctaButtonBg: palette.tan[500],
+  ctaButtonText: palette.brown[900],
 } as const;
 
 export function SendFeedbackScreen({

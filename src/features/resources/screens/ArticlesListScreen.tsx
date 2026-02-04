@@ -3,6 +3,7 @@
  * @description Full articles listing with curved header, search bar, category pills,
  *   and full-width article cards
  * @task Task 3.13.2: Articles List Screen (Screen 113)
+ * @phase Phase 3C: Refactored to use theme tokens
  * @audit-fix Replaced "Freud App" with "Solace App" in sample titles
  */
 
@@ -15,6 +16,7 @@ import {
   TextInput,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface CategoryOption {
   id: string;
@@ -43,16 +45,16 @@ interface ArticlesListScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  headerBg: "#9AAD5C",
+  background: palette.brown[900],
+  white: palette.white,
+  headerBg: palette.olive[500],
   cardBg: "#2A1F18",
   searchBg: "#2A1F18",
   pillBg: "#2A1F18",
-  pillSelected: "#9AAD5C",
-  textSecondary: "rgba(255,255,255,0.6)",
-  seeAll: "#9AAD5C",
-  categoryBadgeBg: "#9AAD5C",
+  pillSelected: palette.olive[500],
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
+  seeAll: palette.olive[500],
+  categoryBadgeBg: palette.olive[500],
 } as const;
 
 export function ArticlesListScreen({
@@ -219,7 +221,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   articleImage: {
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     borderRadius: 12,
     height: 80,
     width: 80,

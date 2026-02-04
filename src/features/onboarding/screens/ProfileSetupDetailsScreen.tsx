@@ -2,6 +2,7 @@
  * ProfileSetupDetailsScreen Component
  * @description Profile details form during profile setup
  * @task Task 3.3.2: Profile Setup Details Screen (Screen 16)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useState } from "react";
@@ -13,6 +14,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface ProfileSetupDetailsScreenProps {
   onBack: () => void;
@@ -101,7 +103,7 @@ export function ProfileSetupDetailsScreen({
                 value={fullName}
                 onChangeText={setFullName}
                 placeholder="Enter your full name"
-                placeholderTextColor="#8A8A8A"
+                placeholderTextColor={palette.gray[450]}
                 accessibilityLabel="Full name input"
               />
             </View>
@@ -118,7 +120,7 @@ export function ProfileSetupDetailsScreen({
                 value={email}
                 onChangeText={setEmail}
                 placeholder="Enter your email"
-                placeholderTextColor="#8A8A8A"
+                placeholderTextColor={palette.gray[450]}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 accessibilityLabel="Email address input"
@@ -137,7 +139,7 @@ export function ProfileSetupDetailsScreen({
                 value={password}
                 onChangeText={setPassword}
                 placeholder="Enter your password"
-                placeholderTextColor="#8A8A8A"
+                placeholderTextColor={palette.gray[450]}
                 secureTextEntry={!showPassword}
                 accessibilityLabel="Password input"
               />
@@ -257,7 +259,7 @@ export function ProfileSetupDetailsScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#FFFFFF",
+    borderColor: palette.white,
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -267,17 +269,17 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -288,18 +290,18 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   continueButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   continueButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
   curvedHeader: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
     height: 140,
@@ -310,14 +312,14 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     alignItems: "center",
-    backgroundColor: "#2A2220",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flexDirection: "row",
     height: 56,
     paddingHorizontal: 16,
   },
   dropdownChevron: {
-    color: "#8A8A8A",
+    color: palette.gray[450],
     fontSize: 12,
   },
   dropdownIcon: {
@@ -325,13 +327,13 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   dropdownText: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 16,
   },
   editPhotoButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 16,
     bottom: 0,
     height: 32,
@@ -355,14 +357,14 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 16,
   },
   inputContainer: {
     alignItems: "center",
-    backgroundColor: "#2A2220",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flexDirection: "row",
     height: 56,
@@ -373,7 +375,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   label: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "500",
     letterSpacing: 0.5,
@@ -392,30 +394,30 @@ const styles = StyleSheet.create({
     marginTop: -50,
   },
   pill: {
-    backgroundColor: "#2A2220",
+    backgroundColor: palette.brown[800],
     borderRadius: 20,
     marginRight: 8,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
   pillSelected: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
   },
   pillSelector: {
     flexDirection: "row",
   },
   pillText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "500",
   },
   pillTextSelected: {
-    color: "#1C1410",
+    color: palette.brown[900],
   },
   profilePhoto: {
     alignItems: "center",
-    backgroundColor: "#2A2220",
-    borderColor: "#8B6F47",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.tan[600],
     borderRadius: 50,
     borderWidth: 4,
     height: 100,
@@ -434,32 +436,32 @@ const styles = StyleSheet.create({
     height: 40,
   },
   sliderFill: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 4,
     height: 8,
     left: 0,
     position: "absolute",
   },
   sliderLabel: {
-    color: "#8A8A8A",
+    color: palette.gray[450],
     fontSize: 12,
     width: 40,
   },
   sliderThumb: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     borderRadius: 12,
     elevation: 2,
     height: 24,
     marginLeft: -12,
     position: "absolute",
-    shadowColor: "#000",
+    shadowColor: palette.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     width: 24,
   },
   sliderTrack: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 4,
     flex: 1,
     height: 8,
@@ -467,14 +469,14 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   sliderValue: {
-    color: "#9AAD5C",
+    color: palette.olive[500],
     fontSize: 14,
     fontWeight: "600",
     marginLeft: 8,
     width: 50,
   },
   squiggle1: {
-    backgroundColor: "#8B9D4C",
+    backgroundColor: palette.olive[550],
     borderRadius: 20,
     height: 40,
     opacity: 0.3,
@@ -485,7 +487,7 @@ const styles = StyleSheet.create({
     width: 60,
   },
   squiggle2: {
-    backgroundColor: "#A0B55C",
+    backgroundColor: palette.olive[450],
     borderRadius: 15,
     height: 30,
     opacity: 0.3,
@@ -496,7 +498,7 @@ const styles = StyleSheet.create({
     width: 45,
   },
   textInput: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 16,
   },

@@ -2,6 +2,7 @@
  * RadioButton Component
  * @description Accessible radio button for single selection
  * @task Task 2.1.6: RadioButton Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Selected/unselected states
@@ -14,17 +15,18 @@
 import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import type { RadioButtonProps } from "./RadioButton.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
-  selected: "#818CF8", // Primary/indigo
-  unselected: "#475569", // Gray border
-  inner: "#FFFFFF",
-  label: "#E2E8F0",
-  labelDisabled: "#64748B",
-  disabled: "#334155",
+  selected: palette.indigo[400],
+  unselected: palette.gray[600],
+  inner: palette.white,
+  label: palette.gray[200],
+  labelDisabled: palette.gray[500],
+  disabled: palette.gray[700],
 };
 
 /**

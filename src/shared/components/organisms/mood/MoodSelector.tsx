@@ -2,6 +2,7 @@
  * MoodSelector Component
  * @description 5-scale mood picker with animated transitions
  * @task Task 2.8.1: MoodSelector Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - 5-mood scale (Depressed to Overjoyed)
@@ -29,6 +30,7 @@ import {
   getMoodEmoji,
   getMoodBackgroundColor,
 } from "./MoodSelector.types";
+import { palette } from "../../../theme";
 
 /**
  * Slider Point Component
@@ -177,7 +179,7 @@ export function MoodSelector({
         {loading ? (
           <ActivityIndicator
             testID={`${testID}-confirm-loading`}
-            color="#1C1410"
+            color={palette.brown[900]}
             size="small"
           />
         ) : (
@@ -194,7 +196,7 @@ export function MoodSelector({
 const styles = StyleSheet.create({
   confirmButton: {
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     borderRadius: 12,
     flexDirection: "row",
     gap: 8,
@@ -208,12 +210,12 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   confirmButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
   },
   confirmButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
@@ -235,7 +237,7 @@ const styles = StyleSheet.create({
     width: 120,
   },
   moodLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "600",
     marginTop: 16,
@@ -247,26 +249,26 @@ const styles = StyleSheet.create({
   },
   sliderPoint: {
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
+    backgroundColor: `${palette.white}${palette.alpha[40]}`,
     borderRadius: 12,
     height: 24,
     justifyContent: "center",
     width: 24,
   },
   sliderPointInner: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     borderRadius: 6,
     height: 12,
     width: 12,
   },
   sliderPointSelected: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     height: 28,
     width: 28,
   },
   sliderTrack: {
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backgroundColor: `${palette.white}${palette.alpha[20]}`,
     borderRadius: 14,
     flexDirection: "row",
     height: 4,
@@ -275,7 +277,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   title: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 28,
     fontWeight: "700",
     textAlign: "center",

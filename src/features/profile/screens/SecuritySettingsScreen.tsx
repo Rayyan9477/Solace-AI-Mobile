@@ -3,6 +3,7 @@
  * @description Security authentication settings with 2FA, authenticator,
  *   Face ID, and biometric toggles
  * @task Task 3.17.6: Security Settings Screen (Screen 145)
+ * @phase Phase 3C: Refactored to use theme tokens
  * @audit-fix "by by visiting" → "by visiting" (Issue #37)
  */
 
@@ -14,6 +15,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface SecurityOption {
   id: string;
@@ -30,14 +32,14 @@ interface SecuritySettingsScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
+  background: palette.brown[900],
+  white: palette.white,
   cardBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
-  toggleOn: "#9AAD5C",
-  toggleOff: "#3D2E23",
-  ctaButtonBg: "#C4A574",
-  ctaButtonText: "#1C1410",
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
+  toggleOn: palette.olive[500],
+  toggleOff: palette.brown[700],
+  ctaButtonBg: palette.tan[500],
+  ctaButtonText: palette.brown[900],
 } as const;
 
 export function SecuritySettingsScreen({

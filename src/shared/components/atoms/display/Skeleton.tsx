@@ -2,6 +2,7 @@
  * Skeleton Component
  * @description Animated placeholder for loading states
  * @task Task 2.2.7: Skeleton Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Multiple shapes (text, circle, rect)
@@ -13,13 +14,14 @@
 import React, { useEffect, useRef } from "react";
 import { View, StyleSheet, Animated, Easing, DimensionValue } from "react-native";
 import type { SkeletonProps, SkeletonShape } from "./Skeleton.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
-  base: "#334155",
-  highlight: "#475569",
+  base: palette.gray[700],
+  highlight: palette.gray[600],
 };
 
 /**

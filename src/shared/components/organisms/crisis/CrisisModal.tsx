@@ -1,6 +1,7 @@
 /**
  * CrisisModal Component
  * @description SAFETY-CRITICAL modal providing immediate crisis support resources
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * IMPORTANT SAFETY REQUIREMENTS:
  * - Highest z-index (1000) - never covered by other UI
@@ -24,6 +25,7 @@ import {
   Alert,
 } from "react-native";
 import type { CrisisModalProps, CrisisResource } from "./CrisisModal.types";
+import { palette } from "../../../theme";
 
 /**
  * Crisis support resources
@@ -297,7 +299,7 @@ export function CrisisModal({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.85)",
+    backgroundColor: `${palette.black}${palette.alpha[85]}`,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
@@ -307,11 +309,11 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 500,
     maxHeight: "90%",
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     borderRadius: 16,
     overflow: "hidden",
     elevation: 24,
-    shadowColor: "#000",
+    shadowColor: palette.black,
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.6,
     shadowRadius: 16,
@@ -330,7 +332,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "rgba(239, 68, 68, 0.15)",
+    backgroundColor: `${palette.red[500]}${palette.alpha[15]}`,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 16,
@@ -341,33 +343,33 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: palette.white,
     textAlign: "center",
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: "#94A3B8",
+    color: palette.gray[400],
     textAlign: "center",
   },
   messageContainer: {
     marginBottom: 24,
     padding: 16,
-    backgroundColor: "rgba(196, 165, 116, 0.1)",
+    backgroundColor: `${palette.tan[500]}${palette.alpha[10]}`,
     borderRadius: 12,
     borderLeftWidth: 4,
-    borderLeftColor: "#C4A574",
+    borderLeftColor: palette.tan[500],
   },
   message: {
     fontSize: 15,
     lineHeight: 22,
-    color: "#E2E8F0",
+    color: palette.gray[200],
     marginBottom: 12,
   },
   messageEmphasis: {
     fontSize: 15,
     lineHeight: 22,
-    color: "#C4A574",
+    color: palette.tan[500],
     fontWeight: "600",
   },
   resourcesContainer: {
@@ -375,14 +377,14 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   resourceCard: {
-    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    backgroundColor: `${palette.white}${palette.alpha[5]}`,
     borderRadius: 12,
     padding: 16,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.1)",
+    borderColor: `${palette.white}${palette.alpha[10]}`,
   },
   resourceCardPressed: {
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    backgroundColor: `${palette.white}${palette.alpha[8]}`,
     transform: [{ scale: 0.98 }],
   },
   resourceContent: {
@@ -391,12 +393,12 @@ const styles = StyleSheet.create({
   resourceName: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: palette.white,
     marginBottom: 4,
   },
   resourceDescription: {
     fontSize: 14,
-    color: "#94A3B8",
+    color: palette.gray[400],
     lineHeight: 20,
     marginBottom: 8,
   },
@@ -404,16 +406,16 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     paddingHorizontal: 8,
     paddingVertical: 4,
-    backgroundColor: "rgba(34, 197, 94, 0.15)",
+    backgroundColor: `${palette.green[500]}${palette.alpha[15]}`,
     borderRadius: 4,
   },
   availabilityText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#22C55E",
+    color: palette.green[500],
   },
   resourceButton: {
-    backgroundColor: "#EF4444",
+    backgroundColor: palette.red[500],
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
@@ -422,39 +424,39 @@ const styles = StyleSheet.create({
   resourceButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#FFFFFF",
+    color: palette.white,
   },
   emergencyContainer: {
     marginBottom: 24,
     padding: 16,
-    backgroundColor: "rgba(239, 68, 68, 0.1)",
+    backgroundColor: `${palette.red[500]}${palette.alpha[10]}`,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "rgba(239, 68, 68, 0.3)",
+    borderColor: `${palette.red[500]}${palette.alpha[30]}`,
   },
   emergencyText: {
     fontSize: 14,
     lineHeight: 20,
-    color: "#FCA5A5",
+    color: palette.red[300],
     textAlign: "center",
   },
   emergencyNumber: {
     fontWeight: "700",
-    color: "#EF4444",
+    color: palette.red[500],
   },
   acknowledgeButton: {
-    backgroundColor: "rgba(196, 165, 116, 0.2)",
+    backgroundColor: `${palette.tan[500]}${palette.alpha[20]}`,
     paddingVertical: 14,
     paddingHorizontal: 24,
     borderRadius: 8,
     alignItems: "center",
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "rgba(196, 165, 116, 0.3)",
+    borderColor: `${palette.tan[500]}${palette.alpha[30]}`,
   },
   acknowledgeButtonActive: {
-    backgroundColor: "rgba(34, 197, 94, 0.2)",
-    borderColor: "rgba(34, 197, 94, 0.4)",
+    backgroundColor: `${palette.green[500]}${palette.alpha[20]}`,
+    borderColor: `${palette.green[500]}${palette.alpha[40]}`,
   },
   acknowledgeButtonPressed: {
     transform: [{ scale: 0.98 }],
@@ -462,25 +464,25 @@ const styles = StyleSheet.create({
   acknowledgeButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#C4A574",
+    color: palette.tan[500],
   },
   closeButton: {
     paddingVertical: 14,
     paddingHorizontal: 24,
     borderRadius: 8,
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    backgroundColor: `${palette.white}${palette.alpha[5]}`,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.1)",
+    borderColor: `${palette.white}${palette.alpha[10]}`,
   },
   closeButtonPressed: {
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    backgroundColor: `${palette.white}${palette.alpha[8]}`,
     transform: [{ scale: 0.98 }],
   },
   closeButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#94A3B8",
+    color: palette.gray[400],
   },
 });
 

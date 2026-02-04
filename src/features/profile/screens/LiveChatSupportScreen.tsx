@@ -2,6 +2,7 @@
  * LiveChatSupportScreen Component
  * @description Active live chat conversation with support specialist
  * @task Task 3.17.12: Live Chat Support Screen (Screen 151)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -13,6 +14,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface ChatMessage {
   id: string;
@@ -29,15 +31,15 @@ interface LiveChatSupportScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
-  userBubble: "#C4A574",
-  userBubbleText: "#1C1410",
+  background: palette.brown[900],
+  white: palette.white,
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
+  userBubble: palette.tan[500],
+  userBubbleText: palette.brown[900],
   agentBubble: "#2A1F18",
   inputBg: "#2A1F18",
-  sendBg: "#C4A574",
-  sendIcon: "#1C1410",
+  sendBg: palette.tan[500],
+  sendIcon: palette.brown[900],
 } as const;
 
 export function LiveChatSupportScreen({

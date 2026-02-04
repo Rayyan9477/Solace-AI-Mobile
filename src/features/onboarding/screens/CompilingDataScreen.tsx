@@ -2,10 +2,12 @@
  * CompilingDataScreen Component
  * @description Loading screen while compiling user data
  * @task Task 3.3.8: Compiling Data Screen (Screen 22)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Animated, Easing } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface CompilingDataScreenProps {
   onComplete?: () => void;
@@ -90,7 +92,7 @@ export function CompilingDataScreen({
 
 const styles = StyleSheet.create({
   characterArm: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 4,
     height: 30,
     left: -10,
@@ -103,21 +105,21 @@ const styles = StyleSheet.create({
     right: -10,
   },
   characterBody: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 8,
     height: 40,
     position: "relative",
     width: 50,
   },
   characterHead: {
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 25,
     height: 50,
     marginBottom: 4,
     width: 50,
   },
   characterLegs: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 20,
     height: 20,
     marginTop: 4,
@@ -125,7 +127,7 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: "center",
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: 24,
@@ -137,9 +139,9 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   loadingIndicator: {
-    borderColor: "rgba(196, 165, 116, 0.3)",
+    borderColor: `${palette.tan[500]}${palette.alpha[30]}`,
     borderRadius: 20,
-    borderTopColor: "#C4A574",
+    borderTopColor: palette.tan[500],
     borderWidth: 3,
     height: 40,
     marginTop: 24,
@@ -157,13 +159,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   statusText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
     textAlign: "center",
   },
   waveLayer1: {
-    backgroundColor: "rgba(154, 173, 92, 0.1)",
+    backgroundColor: `${palette.olive[500]}${palette.alpha[10]}`,
     borderRadius: 100,
     height: 60,
     position: "absolute",
@@ -171,7 +173,7 @@ const styles = StyleSheet.create({
     width: 180,
   },
   waveLayer2: {
-    backgroundColor: "rgba(154, 173, 92, 0.15)",
+    backgroundColor: `${palette.olive[500]}${palette.alpha[15]}`,
     borderRadius: 80,
     height: 50,
     position: "absolute",
@@ -179,7 +181,7 @@ const styles = StyleSheet.create({
     width: 150,
   },
   waveLayer3: {
-    backgroundColor: "rgba(154, 173, 92, 0.2)",
+    backgroundColor: `${palette.olive[500]}${palette.alpha[20]}`,
     borderRadius: 60,
     height: 40,
     position: "absolute",

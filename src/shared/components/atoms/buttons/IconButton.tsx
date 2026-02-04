@@ -2,6 +2,7 @@
  * IconButton Component
  * @description Accessible icon-only button with multiple variants
  * @task Task 2.1.2: IconButton Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - 4 visual variants (filled, tinted, outlined, ghost)
@@ -18,6 +19,7 @@ import type {
   IconButtonVariant,
   IconButtonSize,
 } from "./IconButton.types";
+import { palette } from "../../../theme";
 
 /**
  * Size specifications
@@ -29,7 +31,7 @@ const sizeSpecs: Record<IconButtonSize, number> = {
 };
 
 /**
- * Variant color configurations (dark mode first)
+ * Variant color configurations from theme
  */
 const variantColors: Record<
   IconButtonVariant,
@@ -41,28 +43,28 @@ const variantColors: Record<
   }
 > = {
   filled: {
-    background: "#78716C",
-    iconColor: "#FFFFFF",
+    background: palette.stone[500],
+    iconColor: palette.white,
     border: "transparent",
-    pressedBackground: "#57534E",
+    pressedBackground: palette.stone[600],
   },
   tinted: {
-    background: "rgba(120, 113, 108, 0.2)",
-    iconColor: "#78716C",
+    background: `${palette.stone[500]}${palette.alpha[20]}`,
+    iconColor: palette.stone[500],
     border: "transparent",
-    pressedBackground: "rgba(120, 113, 108, 0.3)",
+    pressedBackground: `${palette.stone[500]}${palette.alpha[30]}`,
   },
   outlined: {
     background: "transparent",
-    iconColor: "#78716C",
-    border: "#78716C",
-    pressedBackground: "rgba(120, 113, 108, 0.1)",
+    iconColor: palette.stone[500],
+    border: palette.stone[500],
+    pressedBackground: `${palette.stone[500]}${palette.alpha[10]}`,
   },
   ghost: {
     background: "transparent",
-    iconColor: "#78716C",
+    iconColor: palette.stone[500],
     border: "transparent",
-    pressedBackground: "rgba(120, 113, 108, 0.1)",
+    pressedBackground: `${palette.stone[500]}${palette.alpha[10]}`,
   },
 };
 
@@ -120,7 +122,7 @@ export function IconButton({
       justifyContent: "center",
       borderRadius: circular ? sizeValue / 2 : 8,
       backgroundColor: disabled
-        ? "rgba(120, 113, 108, 0.3)"
+        ? `${palette.stone[500]}${palette.alpha[30]}`
         : colors.background,
       borderWidth: colors.border !== "transparent" ? 1 : 0,
       borderColor: colors.border,

@@ -2,6 +2,7 @@
  * OTPEntryScreen Component
  * @description 4-digit OTP code entry screen
  * @task Task 3.3.5: OTP Entry Screen (Screen 19)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useState, useRef } from "react";
@@ -12,6 +13,7 @@ import {
   TextInput,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface OTPEntryScreenProps {
   onBack: () => void;
@@ -146,7 +148,7 @@ export function OTPEntryScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -156,12 +158,12 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 60,
@@ -173,7 +175,7 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -183,19 +185,19 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   continueButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   continueButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
   digitBox: {
     alignItems: "center",
-    backgroundColor: "#2A2220",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     height: 64,
     justifyContent: "center",
@@ -203,13 +205,13 @@ const styles = StyleSheet.create({
     width: 64,
   },
   digitBoxFilled: {
-    backgroundColor: "#2A2220",
+    backgroundColor: palette.brown[800],
   },
   digitBoxFocused: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
   },
   digitInput: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 32,
     fontWeight: "700",
     height: "100%",
@@ -219,7 +221,7 @@ const styles = StyleSheet.create({
   errorChip: {
     alignItems: "center",
     alignSelf: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 20,
     flexDirection: "row",
     marginTop: 24,
@@ -231,7 +233,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   errorText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "500",
   },
@@ -240,7 +242,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 16,
@@ -255,22 +257,22 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   resendLinkText: {
-    color: "#E8853A",
+    color: palette.onboarding.step2,
     fontWeight: "600",
   },
   resendText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
   },
   subtitle: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 22,
     marginTop: 12,
     textAlign: "center",
   },
   title: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontStyle: "italic",
     fontWeight: "700",

@@ -1,7 +1,15 @@
+/**
+ * ArticleCard Component
+ * @description Article card with image, category badge, and engagement metrics
+ * @task Task 2.9.3: ArticleCard Component
+ * @phase Phase 3C: Refactored to use theme tokens
+ */
+
 import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import type { ArticleCardProps } from "./ArticleCard.types";
 import { formatCount } from "./ArticleCard.types";
+import { palette } from "../../../theme";
 
 export function ArticleCard({
   id,
@@ -41,12 +49,12 @@ export function ArticleCard({
 
 const styles = StyleSheet.create({
   categoryBadge: { alignSelf: "flex-start", borderRadius: 12, marginTop: 8, paddingHorizontal: 10, paddingVertical: 4 },
-  categoryText: { color: "#FFFFFF", fontSize: 12, fontWeight: "600" },
-  container: { backgroundColor: "#334155", borderRadius: 12, overflow: "hidden", padding: 12 },
-  image: { backgroundColor: "#475569", borderRadius: 8, height: 120, width: "100%" },
+  categoryText: { color: palette.white, fontSize: 12, fontWeight: "600" },
+  container: { backgroundColor: palette.gray[700], borderRadius: 12, overflow: "hidden", padding: 12 },
+  image: { backgroundColor: palette.gray[600], borderRadius: 8, height: 120, width: "100%" },
   metrics: { flexDirection: "row", gap: 12, marginTop: 8 },
-  metricText: { color: "#94A3B8", fontSize: 12 },
-  title: { color: "#FFFFFF", fontSize: 16, fontWeight: "600", lineHeight: 22, marginTop: 8 },
+  metricText: { color: palette.gray[400], fontSize: 12 },
+  title: { color: palette.white, fontSize: 16, fontWeight: "600", lineHeight: 22, marginTop: 8 },
 });
 
 export default ArticleCard;

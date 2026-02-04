@@ -2,6 +2,7 @@
  * Chip Component
  * @description Selectable/dismissible tag for filters, selections, or categories
  * @task Task 2.2.4: Chip Component
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Filled and outlined variants
@@ -16,26 +17,27 @@
 import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import type { ChipProps, ChipVariant, ChipSize } from "./Chip.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Filled variant
-  filledBg: "#334155",
-  filledBgSelected: "#818CF8",
-  filledText: "#E2E8F0",
-  filledTextSelected: "#FFFFFF",
+  filledBg: palette.gray[700],
+  filledBgSelected: palette.indigo[400],
+  filledText: palette.gray[200],
+  filledTextSelected: palette.white,
   // Outlined variant
-  outlinedBorder: "#475569",
-  outlinedBorderSelected: "#818CF8",
-  outlinedText: "#E2E8F0",
-  outlinedTextSelected: "#818CF8",
+  outlinedBorder: palette.gray[600],
+  outlinedBorderSelected: palette.indigo[400],
+  outlinedText: palette.gray[200],
+  outlinedTextSelected: palette.indigo[400],
   // Disabled
-  disabled: "#1E293B",
-  disabledText: "#64748B",
+  disabled: palette.gray[800],
+  disabledText: palette.gray[500],
   // Dismiss button
-  dismiss: "#94A3B8",
+  dismiss: palette.gray[400],
 };
 
 /**
