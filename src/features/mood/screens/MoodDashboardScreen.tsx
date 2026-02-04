@@ -2,10 +2,12 @@
  * MoodDashboardScreen Component
  * @description Main mood tracking dashboard with current mood hero and weekly chart
  * @task Task 3.8.1: Mood Dashboard Screen (Screen 67)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface MoodData {
   emoji: string;
@@ -162,7 +164,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "rgba(255,255,255,0.3)",
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -172,7 +174,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
@@ -181,7 +183,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   barDayLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 6,
   },
@@ -197,7 +199,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   barTrack: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 4,
     height: 100,
     overflow: "hidden",
@@ -205,7 +207,7 @@ const styles = StyleSheet.create({
     width: 24,
   },
   chartContainer: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     flexDirection: "row",
     marginHorizontal: 24,
@@ -213,7 +215,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   circle: {
-    borderColor: "rgba(255,255,255,0.15)",
+    borderColor: `${palette.white}${palette.alpha[15]}`,
     borderRadius: 100,
     borderWidth: 1,
     position: "absolute",
@@ -237,7 +239,7 @@ const styles = StyleSheet.create({
     width: 150,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
   },
   content: {
@@ -253,7 +255,7 @@ const styles = StyleSheet.create({
   },
   fab: {
     alignItems: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 28,
     bottom: 32,
     elevation: 4,
@@ -263,21 +265,21 @@ const styles = StyleSheet.create({
     minWidth: 44,
     position: "absolute",
     right: 24,
-    shadowColor: "#000",
+    shadowColor: palette.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     width: 56,
   },
   fabIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 28,
     fontWeight: "600",
   },
   filterButton: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
-    borderColor: "#3D2E23",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     flexDirection: "row",
@@ -290,7 +292,7 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   filterText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
   },
   header: {
@@ -301,7 +303,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -319,19 +321,19 @@ const styles = StyleSheet.create({
     fontSize: 64,
   },
   moodLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 22,
     fontWeight: "700",
     marginTop: 8,
   },
   sectionHeader: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
   statisticsButton: {
     alignItems: "center",
-    borderColor: "rgba(255,255,255,0.3)",
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 20,
     borderWidth: 1,
     height: 40,

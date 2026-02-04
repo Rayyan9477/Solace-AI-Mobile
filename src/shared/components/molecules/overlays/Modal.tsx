@@ -2,6 +2,7 @@
  * Modal Component
  * @description Reusable modal overlay with title, content, and actions
  * @task Task 2.5.1: Modal Component (Sprint 2.5 - Molecules Overlay)
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Title header with optional close button
@@ -23,32 +24,33 @@ import {
   type TextStyle,
 } from "react-native";
 import type { ModalProps, ModalSize } from "./Modal.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Backdrop
-  backdrop: "rgba(0, 0, 0, 0.6)",
+  backdrop: `${palette.black}${palette.alpha[60]}`,
 
   // Modal
-  background: "#2A2220",
-  border: "#3D3533",
+  background: palette.brown[900],
+  border: palette.brown[800],
 
   // Text
-  title: "#F1F5F9",
-  content: "#CBD5E1",
+  title: palette.gray[100],
+  content: palette.gray[300],
 
   // Buttons
-  primaryButton: "#818CF8",
-  primaryButtonText: "#FFFFFF",
+  primaryButton: palette.indigo[400],
+  primaryButtonText: palette.white,
   secondaryButton: "transparent",
-  secondaryButtonText: "#818CF8",
-  disabledButton: "#4A4544",
-  disabledButtonText: "#6B7280",
+  secondaryButtonText: palette.indigo[400],
+  disabledButton: palette.brown[800],
+  disabledButtonText: palette.gray[500],
 
   // Close button
-  closeButton: "#94A3B8",
+  closeButton: palette.gray[400],
 };
 
 /**

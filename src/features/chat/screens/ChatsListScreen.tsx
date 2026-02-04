@@ -2,6 +2,7 @@
  * ChatsListScreen Component
  * @description List of AI chat conversations with Recent and Trash sections
  * @task Task 3.6.3: Chats List Screen (Screen 49)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -12,6 +13,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 type TabType = "recent" | "trash";
 
@@ -187,7 +189,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "rgba(255, 255, 255, 0.3)",
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -197,13 +199,13 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   chatAvatar: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
@@ -215,7 +217,7 @@ const styles = StyleSheet.create({
   },
   chatItem: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flexDirection: "row",
     marginBottom: 12,
@@ -227,20 +229,20 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   chatStats: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 4,
   },
   chatTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
   },
   chatTitleTrash: {
-    color: "#94A3B8",
+    color: palette.gray[400],
   },
   chevron: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 16,
     marginLeft: 8,
   },
@@ -248,13 +250,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentArea: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 24,
   },
   headerSection: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     paddingBottom: 24,
     paddingHorizontal: 24,
     paddingTop: 60,
@@ -265,12 +267,12 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   moodBadgeText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 11,
     fontWeight: "600",
   },
   screenTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 28,
     fontWeight: "700",
     marginTop: 16,
@@ -285,12 +287,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   sectionTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   seeAllText: {
-    color: "#C4A574",
+    color: palette.tan[500],
     fontSize: 14,
     fontWeight: "500",
   },
@@ -300,19 +302,19 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   segmentTabActive: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
   },
   segmentTabText: {
-    color: "rgba(255, 255, 255, 0.7)",
+    color: `${palette.white}${palette.alpha[70]}`,
     fontSize: 14,
     fontWeight: "600",
     textAlign: "center",
   },
   segmentTabTextActive: {
-    color: "#E8853A",
+    color: palette.onboarding.step2,
   },
   segmentedControl: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backgroundColor: `${palette.white}${palette.alpha[20]}`,
     borderRadius: 20,
     flexDirection: "row",
     marginTop: 20,

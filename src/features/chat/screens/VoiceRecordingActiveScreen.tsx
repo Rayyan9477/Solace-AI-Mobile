@@ -2,10 +2,12 @@
  * VoiceRecordingActiveScreen Component
  * @description Active voice recording interface with waveform visualization
  * @task Task 3.7.9: Voice Recording Active Screen (Screen 61)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface VoiceRecordingActiveScreenProps {
   isRecording: boolean;
@@ -162,7 +164,7 @@ export function VoiceRecordingActiveScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -172,13 +174,13 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
   cancelButton: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 28,
     height: 56,
     justifyContent: "center",
@@ -187,12 +189,12 @@ const styles = StyleSheet.create({
     width: 56,
   },
   cancelIcon: {
-    color: "#E8853A",
+    color: palette.onboarding.step2,
     fontSize: 20,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
@@ -220,12 +222,12 @@ const styles = StyleSheet.create({
     width: 40,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
   instructionText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 40,
@@ -233,12 +235,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   maxDurationText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
   },
   pauseButton: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 32,
     height: 64,
     justifyContent: "center",
@@ -256,24 +258,24 @@ const styles = StyleSheet.create({
   },
   pausedIndicator: {
     alignItems: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 20,
     flexDirection: "row",
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
   pausedText: {
-    color: "#C4A574",
+    color: palette.tan[500],
     fontSize: 14,
     fontWeight: "600",
   },
   progressBar: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 2,
     height: "100%",
   },
   progressBarContainer: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 2,
     height: 4,
     marginTop: 16,
@@ -281,7 +283,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   recordingDot: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 6,
     height: 12,
     marginRight: 8,
@@ -296,13 +298,13 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   recordingText: {
-    color: "#E8853A",
+    color: palette.onboarding.step2,
     fontSize: 14,
     fontWeight: "600",
   },
   stopButton: {
     alignItems: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 35,
     height: 70,
     justifyContent: "center",
@@ -311,7 +313,7 @@ const styles = StyleSheet.create({
     width: 70,
   },
   stopButtonInner: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     borderRadius: 4,
     height: 24,
     width: 24,
@@ -322,17 +324,17 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   timerDivider: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 18,
     marginHorizontal: 4,
   },
   timerText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 48,
     fontWeight: "700",
   },
   waveformBar: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 2,
     marginHorizontal: 2,
     width: 4,

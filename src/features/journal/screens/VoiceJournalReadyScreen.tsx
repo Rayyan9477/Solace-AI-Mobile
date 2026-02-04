@@ -2,27 +2,14 @@
  * VoiceJournalReadyScreen Component
  * @screen Screen 81: Voice Journal Ready
  * @audit batch-17-journal-continued.md
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Visual ref: Mental_Health_Journal_Screen_04.png
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-
-const colors = {
-  screenBg: "#1C1410",
-  white: "#FFFFFF",
-  promptText: "#FFFFFF",
-  waveformBar: "#3D2E23",
-  waveformBarAlt: "#4A3728",
-  micBg: "#FFFFFF",
-  micIcon: "#1C1410",
-  cancelBg: "#3D2E23",
-  confirmBg: "#3D2E23",
-  statusText: "#FFFFFF",
-  bottomBar: "#2A1F19",
-  backBtnBorder: "rgba(255,255,255,0.3)",
-} as const;
+import { palette } from "../../../shared/theme";
 
 interface VoiceJournalReadyScreenProps {
   onBack: () => void;
@@ -123,7 +110,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: colors.backBtnBorder,
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 22,
     borderWidth: 1,
     height: 44,
@@ -134,12 +121,12 @@ const styles = StyleSheet.create({
     width: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 22,
   },
   bottomSection: {
     alignItems: "center",
-    backgroundColor: colors.bottomBar,
+    backgroundColor: palette.brown[800],
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     paddingBottom: 40,
@@ -147,7 +134,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     alignItems: "center",
-    backgroundColor: colors.cancelBg,
+    backgroundColor: palette.brown[700],
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
@@ -156,13 +143,13 @@ const styles = StyleSheet.create({
     width: 48,
   },
   cancelIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   confirmButton: {
     alignItems: "center",
-    backgroundColor: colors.confirmBg,
+    backgroundColor: palette.brown[700],
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
@@ -171,23 +158,23 @@ const styles = StyleSheet.create({
     width: 48,
   },
   confirmIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: colors.screenBg,
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   micButton: {
     alignItems: "center",
-    backgroundColor: colors.micBg,
+    backgroundColor: palette.white,
     borderRadius: 40,
     elevation: 4,
     height: 80,
     justifyContent: "center",
-    shadowColor: "#000",
+    shadowColor: palette.black,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
@@ -203,18 +190,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
   },
   promptText: {
-    color: colors.promptText,
+    color: palette.white,
     fontSize: 28,
     fontWeight: "700",
     textAlign: "center",
   },
   statusLabel: {
-    color: colors.statusText,
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   waveformBar: {
-    backgroundColor: colors.waveformBar,
+    backgroundColor: palette.brown[700],
     borderRadius: 3,
     marginHorizontal: 2,
     width: 6,

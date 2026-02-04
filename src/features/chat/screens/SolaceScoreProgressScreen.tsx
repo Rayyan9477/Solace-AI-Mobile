@@ -2,6 +2,7 @@
  * SolaceScoreProgressScreen Component
  * @description Chat interface showing mental health score (Solace Score) progression
  * @task Task 3.7.5: Solace Score Progress Screen (Screen 57)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -13,6 +14,7 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 type TimeRange = "1week" | "1month" | "3months" | "6months" | "1year";
 
@@ -253,7 +255,7 @@ export function SolaceScoreProgressScreen({
           value={inputText}
           onChangeText={onInputChange}
           placeholder="Type to start chatting..."
-          placeholderTextColor="#94A3B8"
+          placeholderTextColor={palette.gray[400]}
           accessibilityLabel="Message input"
           multiline
         />
@@ -274,7 +276,7 @@ export function SolaceScoreProgressScreen({
 const styles = StyleSheet.create({
   aiAvatar: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 20,
     height: 40,
     justifyContent: "center",
@@ -290,7 +292,7 @@ const styles = StyleSheet.create({
     maxWidth: "85%",
   },
   aiMessageContent: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
   },
   attachmentButton: {
     alignItems: "center",
@@ -306,7 +308,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -316,7 +318,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -326,7 +328,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   chartContainer: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 12,
     marginTop: 12,
     padding: 12,
@@ -341,7 +343,7 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   chartLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     flex: 1,
     fontSize: 10,
     textAlign: "center",
@@ -352,14 +354,14 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   chartLine: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 8,
     flex: 1,
     overflow: "hidden",
     position: "relative",
   },
   chartTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
   },
@@ -369,7 +371,7 @@ const styles = StyleSheet.create({
   },
   chatInputArea: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 28,
     flexDirection: "row",
     marginBottom: 32,
@@ -378,13 +380,13 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   currentScoreContainer: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 20,
     justifyContent: "center",
     paddingHorizontal: 12,
@@ -394,12 +396,12 @@ const styles = StyleSheet.create({
     top: 8,
   },
   currentScoreValue: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "700",
   },
   dataPoint: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 4,
     height: 8,
     position: "absolute",
@@ -407,7 +409,7 @@ const styles = StyleSheet.create({
     width: 8,
   },
   dropdownIcon: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 10,
     marginLeft: 4,
   },
@@ -422,12 +424,12 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   headerSubtitle: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 2,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -443,13 +445,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   messageContent: {
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 16,
     maxWidth: "70%",
     padding: 12,
   },
   messageInput: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 14,
     maxHeight: 100,
@@ -462,7 +464,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   messageText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     lineHeight: 20,
   },
@@ -477,7 +479,7 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 22,
     height: 44,
     justifyContent: "center",
@@ -486,30 +488,30 @@ const styles = StyleSheet.create({
     width: 44,
   },
   sendIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
   timeRangeSelector: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 8,
     flexDirection: "row",
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
   timeRangeText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 11,
   },
   typingBubble: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     flexDirection: "row",
     padding: 12,
   },
   typingDot: {
-    backgroundColor: "#94A3B8",
+    backgroundColor: palette.gray[400],
     borderRadius: 3,
     height: 6,
     marginLeft: 4,
@@ -527,12 +529,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   typingText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
   },
   userAvatar: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 20,
     height: 40,
     justifyContent: "center",

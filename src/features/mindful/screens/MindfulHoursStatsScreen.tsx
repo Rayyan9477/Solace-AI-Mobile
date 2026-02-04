@@ -3,6 +3,7 @@
  * @description Analytics view with donut chart, total hours, category breakdown,
  *   settings/download buttons, and FAB
  * @task Task 3.12.2: Mindful Hours Stats Screen (Screen 105)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -13,6 +14,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface CategoryStat {
   category: string;
@@ -32,13 +34,13 @@ interface MindfulHoursStatsScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  cardBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
-  chartTrack: "#2A1F18",
-  fabBg: "#5C4A2A",
-  buttonBorder: "rgba(255,255,255,0.2)",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  cardBg: palette.background.secondary,
+  textSecondary: palette.text.secondary,
+  chartTrack: palette.background.secondary,
+  fabBg: palette.background.quaternary,
+  buttonBorder: palette.opacity.white20,
 } as const;
 
 export function MindfulHoursStatsScreen({

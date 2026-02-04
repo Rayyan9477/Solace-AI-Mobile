@@ -2,10 +2,12 @@
  * NewPostCategorySelectorScreen Component
  * @description 3x3 category grid for selecting post category before composing
  * @task Task 3.14.3: New Post Category Selector Screen (Screen 121)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface CategoryItem {
   id: string;
@@ -22,14 +24,14 @@ interface NewPostCategorySelectorScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  cardBg: "#2A1F18",
-  cardSelected: "#9AAD5C",
-  textSecondary: "rgba(255,255,255,0.6)",
-  badgeBg: "#3D2E23",
-  ctaButtonBg: "#C4A574",
-  ctaButtonText: "#1C1410",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  cardBg: palette.background.secondary,
+  cardSelected: palette.accent.green,
+  textSecondary: palette.text.secondary,
+  badgeBg: palette.background.tertiary,
+  ctaButtonBg: palette.primary.gold,
+  ctaButtonText: palette.background.primary,
 } as const;
 
 export function NewPostCategorySelectorScreen({

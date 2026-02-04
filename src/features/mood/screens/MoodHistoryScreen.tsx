@@ -2,6 +2,7 @@
  * MoodHistoryScreen Component
  * @description Chronological mood history list with biometric data and segmented tabs
  * @task Task 3.8.4: Mood History Screen (Screen 74)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -12,6 +13,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface MoodEntry {
   id: string;
@@ -194,27 +196,27 @@ const styles = StyleSheet.create({
   },
   addButtonLarge: {
     alignItems: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 28,
     elevation: 4,
     height: 56,
     justifyContent: "center",
     minHeight: 44,
     minWidth: 44,
-    shadowColor: "#000",
+    shadowColor: palette.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     width: 56,
   },
   addIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 28,
     fontWeight: "600",
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -224,7 +226,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
@@ -238,13 +240,13 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   biometricValue: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 13,
   },
   bottomActionBar: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
-    borderTopColor: "#3D2E23",
+    backgroundColor: palette.brown[800],
+    borderTopColor: palette.brown[700],
     borderTopWidth: 1,
     flexDirection: "row",
     justifyContent: "space-around",
@@ -252,7 +254,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
@@ -261,7 +263,7 @@ const styles = StyleSheet.create({
   },
   entryCard: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flexDirection: "row",
     marginBottom: 8,
@@ -269,7 +271,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   entryDate: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 13,
     fontWeight: "600",
   },
@@ -282,7 +284,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   entryMood: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 15,
     fontWeight: "600",
   },
@@ -310,7 +312,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -320,25 +322,25 @@ const styles = StyleSheet.create({
   },
   segmentTab: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 20,
     flex: 1,
     minHeight: 44,
     paddingVertical: 10,
   },
   segmentTabActive: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
   },
   segmentText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     fontWeight: "600",
   },
   segmentTextActive: {
-    color: "#FFFFFF",
+    color: palette.white,
   },
   segmentedControl: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 24,
     flexDirection: "row",
     marginHorizontal: 24,

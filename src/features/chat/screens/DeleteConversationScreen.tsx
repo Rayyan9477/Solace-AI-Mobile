@@ -2,10 +2,12 @@
  * DeleteConversationScreen Component
  * @description Confirmation screen for deleting a conversation
  * @task Task 3.7.14: Delete Conversation Screen (Screen 66)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface DeleteConversationScreenProps {
   conversationTitle: string;
@@ -114,7 +116,7 @@ export function DeleteConversationScreen({
 
 const styles = StyleSheet.create({
   actionContainer: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flexDirection: "row",
     paddingBottom: 32,
     paddingHorizontal: 24,
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -132,14 +134,14 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
   cancelButton: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
-    borderColor: "#3D2E23",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 12,
     borderWidth: 1,
     flex: 1,
@@ -149,12 +151,12 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   cancelButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
@@ -166,7 +168,7 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     alignItems: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 12,
     flex: 1,
     justifyContent: "center",
@@ -174,18 +176,18 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   deleteButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   deletionBullet: {
-    color: "#E8853A",
+    color: palette.onboarding.step2,
     fontSize: 16,
     marginRight: 8,
   },
   deletionInfoContainer: {
-    backgroundColor: "#2A1F19",
-    borderColor: "#3D2E23",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 12,
     borderWidth: 1,
     marginTop: 24,
@@ -193,7 +195,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   deletionInfoTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
     marginBottom: 12,
@@ -204,14 +206,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   deletionText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     flex: 1,
     fontSize: 14,
     lineHeight: 20,
   },
   detailsCard: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flexDirection: "row",
     marginTop: 24,
@@ -223,7 +225,7 @@ const styles = StyleSheet.create({
   },
   detailsIcon: {
     alignItems: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 12,
     height: 48,
     justifyContent: "center",
@@ -234,12 +236,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   detailsSubtitle: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 13,
     marginTop: 2,
   },
   detailsTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -254,7 +256,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   title: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     marginTop: 16,
@@ -272,7 +274,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   warningMessage: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 15,
     lineHeight: 22,
     marginTop: 16,

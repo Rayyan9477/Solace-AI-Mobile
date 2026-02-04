@@ -2,6 +2,7 @@
  * CustomAIInstructionsScreen Component
  * @description Screen for customizing AI interaction preferences
  * @task Task 3.7.13: Custom AI Instructions Screen (Screen 65)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -13,6 +14,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface CommunicationStyle {
   id: string;
@@ -92,7 +94,7 @@ export function CustomAIInstructionsScreen({
               value={customInstructions}
               onChangeText={onInstructionsChange}
               placeholder="e.g., Focus on my anxiety management, use simple language, remind me to breathe..."
-              placeholderTextColor="#64748B"
+              placeholderTextColor={palette.gray[500]}
               multiline
               maxLength={MAX_INSTRUCTIONS_LENGTH}
               textAlignVertical="top"
@@ -186,7 +188,7 @@ export function CustomAIInstructionsScreen({
 
 const styles = StyleSheet.create({
   actionContainer: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flexDirection: "row",
     paddingBottom: 32,
     paddingHorizontal: 24,
@@ -194,7 +196,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -204,7 +206,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
@@ -213,22 +215,22 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   characterCountText: {
-    color: "#64748B",
+    color: palette.gray[500],
     fontSize: 12,
   },
   checkmark: {
-    color: "#9AAD5C",
+    color: palette.olive[500],
     fontSize: 14,
     fontWeight: "700",
     marginLeft: 8,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   description: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 22,
     marginBottom: 24,
@@ -244,7 +246,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -253,21 +255,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   inputContainer: {
-    backgroundColor: "#2A1F19",
-    borderColor: "#3D2E23",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 12,
     borderWidth: 1,
     marginTop: 12,
   },
   instructionsInput: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 15,
     minHeight: 120,
     padding: 16,
   },
   resetButton: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     justifyContent: "center",
     marginRight: 12,
@@ -276,13 +278,13 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   resetText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     fontWeight: "500",
   },
   saveButton: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 12,
     flex: 1,
     justifyContent: "center",
@@ -293,7 +295,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   saveButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
   },
@@ -308,27 +310,27 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   sectionSubtitle: {
-    color: "#64748B",
+    color: palette.gray[500],
     fontSize: 13,
     marginTop: 4,
   },
   sectionTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   styleLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     fontWeight: "500",
   },
   styleLabelSelected: {
-    color: "#FFFFFF",
+    color: palette.white,
   },
   styleOption: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
-    borderColor: "#3D2E23",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 12,
     borderWidth: 1,
     flexDirection: "row",
@@ -340,8 +342,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   styleOptionSelected: {
-    backgroundColor: "#3D2E23",
-    borderColor: "#9AAD5C",
+    backgroundColor: palette.brown[700],
+    borderColor: palette.olive[500],
   },
   stylesGrid: {
     flexDirection: "row",
@@ -349,23 +351,23 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   tipsContainer: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     padding: 16,
   },
   tipsText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 13,
     lineHeight: 22,
   },
   tipsTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
     marginBottom: 8,
   },
   unsavedDot: {
-    color: "#E8853A",
+    color: palette.onboarding.step2,
     fontSize: 10,
   },
   unsavedIndicator: {

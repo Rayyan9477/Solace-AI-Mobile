@@ -2,10 +2,12 @@
  * NoInternetScreen Component
  * @description Friendly offline state for no internet connectivity
  * @task Task 3.18.2: NoInternet Screen (Screen 155)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface NoInternetScreenProps {
   onBack: () => void;
@@ -14,13 +16,13 @@ interface NoInternetScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
-  illustrationBg: "#7B68B5",
-  refreshBg: "#2A1F18",
-  ctaButtonBg: "#C4A574",
-  ctaButtonText: "#1C1410",
+  background: palette.brown[900],
+  white: palette.white,
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
+  illustrationBg: palette.onboarding.step5,
+  refreshBg: palette.brown[800],
+  ctaButtonBg: palette.tan[500],
+  ctaButtonText: palette.brown[900],
 } as const;
 
 export function NoInternetScreen({

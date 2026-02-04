@@ -4,6 +4,7 @@
  *   post cards with engagement metrics, and FAB for new posts
  * @task Task 3.14.2: Community Feed Screen (Screen 120)
  * @audit-fix Replaced anime character names with appropriate placeholders
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -14,6 +15,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface FilterItem {
   id: string;
@@ -48,15 +50,15 @@ interface CommunityFeedScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  cardBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
-  pillBg: "#2A1F18",
-  pillSelected: "#E8853A",
-  badgeBg: "#3D2E23",
-  fabBg: "#5C4A2A",
-  engagementText: "rgba(255,255,255,0.5)",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  cardBg: palette.background.secondary,
+  textSecondary: palette.text.secondary,
+  pillBg: palette.background.secondary,
+  pillSelected: palette.accent.orange,
+  badgeBg: palette.background.tertiary,
+  fabBg: palette.background.quaternary,
+  engagementText: palette.text.tertiary,
 } as const;
 
 export function CommunityFeedScreen({
@@ -178,7 +180,7 @@ export function CommunityFeedScreen({
 
 const styles = StyleSheet.create({
   avatar: {
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: palette.opacity.white10,
     borderRadius: 22,
     height: 44,
     width: 44,
@@ -244,7 +246,7 @@ const styles = StyleSheet.create({
   postAuthorName: { color: colors.white, fontSize: 14, fontWeight: "600" },
   postAuthorRow: { alignItems: "center", flexDirection: "row" },
   postAvatar: {
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: palette.opacity.white10,
     borderRadius: 18,
     height: 36,
     width: 36,

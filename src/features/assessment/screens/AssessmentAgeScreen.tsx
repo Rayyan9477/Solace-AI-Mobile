@@ -2,10 +2,12 @@
  * AssessmentAgeScreen Component
  * @description Age selection assessment screen with vertical picker
  * @task Task 3.4.4: Assessment Age Screen (Screen 28)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface AssessmentAgeScreenProps {
   currentStep: number;
@@ -174,7 +176,7 @@ export function AssessmentAgeScreen({
 
 const styles = StyleSheet.create({
   adjacentAge: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 24,
     fontWeight: "600",
     textAlign: "center",
@@ -186,7 +188,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -196,7 +198,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -205,13 +207,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -221,13 +223,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   continueButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   continueButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
@@ -250,7 +252,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -265,7 +267,7 @@ const styles = StyleSheet.create({
     width: 44,
   },
   pickerButtonIcon: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 24,
   },
   pickerContainer: {
@@ -275,7 +277,7 @@ const styles = StyleSheet.create({
   },
   progressCircle: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 30,
     height: 60,
     justifyContent: "center",
@@ -286,14 +288,14 @@ const styles = StyleSheet.create({
   },
   progressInner: {
     alignItems: "center",
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
     width: 48,
   },
   progressText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
   },
@@ -302,14 +304,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   questionText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     lineHeight: 32,
   },
   selectedAgePill: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 40,
     justifyContent: "center",
     marginVertical: 16,
@@ -317,12 +319,12 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   selectedAgeText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 64,
     fontWeight: "700",
   },
   stepCounter: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 2,
   },

@@ -2,10 +2,12 @@
  * AssessmentGenderScreen Component
  * @description Gender selection assessment screen with illustrated cards
  * @task Task 3.4.3: Assessment Gender Screen (Screen 27)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 type Gender = "male" | "female";
 
@@ -154,7 +156,7 @@ export function AssessmentGenderScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -164,7 +166,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -177,13 +179,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -193,18 +195,18 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   continueButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   continueButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
   genderCard: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 24,
     height: 140,
     marginBottom: 16,
@@ -213,20 +215,20 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   genderCardFemale: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
   },
   genderCardSelected: {
-    borderColor: "#FFFFFF",
+    borderColor: palette.white,
     borderWidth: 3,
   },
   genderLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   genderSymbol: {
     bottom: 16,
-    color: "rgba(255, 255, 255, 0.3)",
+    color: `${palette.white}${palette.alpha[30]}`,
     fontSize: 32,
     left: 16,
     position: "absolute",
@@ -246,7 +248,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -258,7 +260,7 @@ const styles = StyleSheet.create({
     transform: [{ translateY: -30 }],
   },
   personBeard: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
     height: 10,
@@ -266,17 +268,17 @@ const styles = StyleSheet.create({
     width: 20,
   },
   personBody: {
-    backgroundColor: "#4A9E8C",
+    backgroundColor: palette.green[450],
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     height: 30,
     width: 40,
   },
   personBodyFemale: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
   },
   personHair: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 20,
     height: 40,
     position: "absolute",
@@ -284,7 +286,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   personHead: {
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 20,
     height: 35,
     marginBottom: 4,
@@ -295,7 +297,7 @@ const styles = StyleSheet.create({
   },
   progressCircle: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 30,
     height: 60,
     justifyContent: "center",
@@ -306,14 +308,14 @@ const styles = StyleSheet.create({
   },
   progressInner: {
     alignItems: "center",
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
     width: 48,
   },
   progressText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
   },
@@ -322,7 +324,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   questionText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     lineHeight: 32,
@@ -330,7 +332,7 @@ const styles = StyleSheet.create({
   skipButton: {
     alignItems: "center",
     alignSelf: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 24,
     flexDirection: "row",
     marginBottom: 24,
@@ -338,17 +340,17 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   skipButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     marginLeft: 8,
   },
   skipButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "500",
   },
   stepCounter: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 2,
   },

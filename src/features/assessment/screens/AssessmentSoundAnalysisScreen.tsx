@@ -2,10 +2,12 @@
  * AssessmentSoundAnalysisScreen Component
  * @description Voice analysis assessment screen with concentric circle visualizer
  * @task Task 3.4.8: Assessment Sound Analysis Screen (Screen 38)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface AssessmentSoundAnalysisScreenProps {
   currentStep: number;
@@ -202,7 +204,7 @@ export function AssessmentSoundAnalysisScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -212,7 +214,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -226,13 +228,13 @@ const styles = StyleSheet.create({
     width: 60,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -242,13 +244,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   continueButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   continueButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
@@ -267,29 +269,29 @@ const styles = StyleSheet.create({
     width: 80,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   highlightedBox: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 4,
     marginRight: 6,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
   highlightedText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   innerCircle: {
-    backgroundColor: "#8A9F4C",
+    backgroundColor: palette.olive[550],
     height: 100,
     width: 100,
   },
   middleCircle: {
-    backgroundColor: "#6B8040",
+    backgroundColor: palette.olive[700],
     height: 140,
     width: 140,
   },
@@ -311,7 +313,7 @@ const styles = StyleSheet.create({
   },
   progressCircle: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 30,
     height: 60,
     justifyContent: "center",
@@ -322,21 +324,21 @@ const styles = StyleSheet.create({
   },
   progressInner: {
     alignItems: "center",
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
     width: 48,
   },
   progressText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
   },
   recordButton: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
-    borderColor: "#E8853A",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.onboarding.step2,
     borderRadius: 40,
     borderWidth: 3,
     height: 80,
@@ -346,11 +348,11 @@ const styles = StyleSheet.create({
     width: 80,
   },
   recordButtonActive: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderColor: "#FF6B6B",
   },
   recordButtonInner: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 16,
     height: 32,
     width: 32,
@@ -362,7 +364,7 @@ const styles = StyleSheet.create({
     width: 24,
   },
   recordHint: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     marginTop: 12,
   },
@@ -388,11 +390,11 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   remainingText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 16,
   },
   screenTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     marginBottom: 12,
@@ -405,17 +407,17 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   skipText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     textDecorationLine: "underline",
   },
   stepCounter: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 2,
   },
   subtitle: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 20,
     paddingHorizontal: 16,

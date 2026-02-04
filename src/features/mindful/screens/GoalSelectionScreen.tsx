@@ -3,6 +3,7 @@
  * @description First step of new exercise wizard with 2-column goal card grid,
  *   radio selection, step indicator, and continue button
  * @task Task 3.12.3: Goal Selection Screen (Screen 106)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -13,6 +14,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface GoalOption {
   id: string;
@@ -30,15 +32,15 @@ interface GoalSelectionScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  cardBg: "#2A1F18",
-  selectedGreen: "#9AAD5C",
-  continueBg: "#C4A574",
-  textSecondary: "rgba(255,255,255,0.6)",
-  stepIndicator: "#9AAD5C",
-  radioBorder: "rgba(255,255,255,0.4)",
-  dotInactive: "rgba(255,255,255,0.3)",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  cardBg: palette.background.secondary,
+  selectedGreen: palette.accent.green,
+  continueBg: palette.primary.gold,
+  textSecondary: palette.text.secondary,
+  stepIndicator: palette.accent.green,
+  radioBorder: palette.opacity.white40,
+  dotInactive: palette.opacity.white30,
 } as const;
 
 export function GoalSelectionScreen({

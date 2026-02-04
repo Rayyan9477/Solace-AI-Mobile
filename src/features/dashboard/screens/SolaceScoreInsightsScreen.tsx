@@ -2,6 +2,7 @@
  * SolaceScoreInsightsScreen Component
  * @description Analytics view for Solace score trends and insights
  * @task Task 3.5.3: Solace Score Insights Screen (Screen 42)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -12,6 +13,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 type PeriodType = "Weekly" | "Monthly" | "Yearly";
 type MoodType = "happy" | "sad" | "neutral" | "angry" | "meh";
@@ -267,7 +269,7 @@ const styles = StyleSheet.create({
   aiSuggestionsButton: {
     alignItems: "center",
     alignSelf: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -279,14 +281,14 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   aiSuggestionsText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
     marginLeft: 8,
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -296,7 +298,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -336,14 +338,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   chartSection: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     marginBottom: 24,
     marginHorizontal: 24,
     padding: 16,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
@@ -362,7 +364,7 @@ const styles = StyleSheet.create({
     width: 44,
   },
   dateLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
   },
   dateRangeLabels: {
@@ -371,12 +373,12 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   dayLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 4,
   },
   dropdownArrow: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 10,
     marginLeft: 4,
   },
@@ -389,7 +391,7 @@ const styles = StyleSheet.create({
   },
   helpButton: {
     alignItems: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 16,
     height: 32,
     justifyContent: "center",
@@ -398,7 +400,7 @@ const styles = StyleSheet.create({
     width: 32,
   },
   helpButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -417,7 +419,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   legendText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
   },
   moodDay: {
@@ -436,7 +438,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
   },
   moodHistoryTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -449,47 +451,47 @@ const styles = StyleSheet.create({
     width: 44,
   },
   optionsIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
   periodDropdown: {
     alignItems: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 12,
     flexDirection: "row",
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
   periodText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
   },
   screenTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 28,
     fontWeight: "700",
     marginBottom: 4,
   },
   scrubberThumb: {
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 8,
     height: 16,
     width: 80,
   },
   scrubberTrack: {
     alignItems: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 4,
     height: 8,
     justifyContent: "center",
   },
   subtitle: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
   },
   swipeIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "700",
   },

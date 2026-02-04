@@ -2,6 +2,7 @@
  * JournalEntryEditorScreen Component
  * @screen Screen 85: Journal Entry Editor
  * @audit batch-18-journal-final-sleep-start.md
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Visual ref: Mental_Health_Journal_Screen_08.png
  * - "Edit Journal" header with back button
@@ -20,20 +21,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-
-const colors = {
-  screenBg: "#1C1410",
-  white: "#FFFFFF",
-  subtitle: "#94A3B8",
-  cardBg: "#2A1F19",
-  undoBg: "#9AAD5C",
-  redoBg: "#3D2E23",
-  highlightBg: "#9AAD5C",
-  homeBg: "#E8853A",
-  toolbarBg: "#2A1F19",
-  backBtnBorder: "rgba(255,255,255,0.3)",
-  promptText: "#94A3B8",
-} as const;
+import { palette } from "../../../shared/theme";
 
 interface JournalEntryEditorScreenProps {
   title: string;
@@ -113,7 +101,7 @@ export function JournalEntryEditorScreen({
         <View style={styles.editActions}>
           <TouchableOpacity
             testID="undo-button"
-            style={[styles.actionButton, { backgroundColor: colors.undoBg }]}
+            style={[styles.actionButton, { backgroundColor: palette.olive[500] }]}
             onPress={onUndo}
             accessibilityRole="button"
             accessibilityLabel="Undo"
@@ -122,7 +110,7 @@ export function JournalEntryEditorScreen({
           </TouchableOpacity>
           <TouchableOpacity
             testID="redo-button"
-            style={[styles.actionButton, { backgroundColor: colors.redoBg }]}
+            style={[styles.actionButton, { backgroundColor: palette.brown[700] }]}
             onPress={onRedo}
             accessibilityRole="button"
             accessibilityLabel="Redo"
@@ -139,7 +127,7 @@ export function JournalEntryEditorScreen({
       <View testID="bottom-toolbar" style={styles.toolbar}>
         <TouchableOpacity
           testID="toolbar-home"
-          style={[styles.toolbarButton, { backgroundColor: colors.homeBg }]}
+          style={[styles.toolbarButton, { backgroundColor: palette.onboarding.step2 }]}
           onPress={onHome}
           accessibilityRole="button"
           accessibilityLabel="Go to home"
@@ -189,12 +177,12 @@ const styles = StyleSheet.create({
     width: 56,
   },
   actionIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 24,
   },
   backButton: {
     alignItems: "center",
-    borderColor: colors.backBtnBorder,
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 22,
     borderWidth: 1,
     height: 44,
@@ -203,9 +191,9 @@ const styles = StyleSheet.create({
     minWidth: 44,
     width: 44,
   },
-  backIcon: { color: colors.white, fontSize: 22 },
+  backIcon: { color: palette.white, fontSize: 22 },
   container: {
-    backgroundColor: colors.screenBg,
+    backgroundColor: palette.brown[900],
     flex: 1,
   },
   contentContainer: {
@@ -213,7 +201,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   contentText: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 18,
     lineHeight: 28,
   },
@@ -224,7 +212,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   entryTitle: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 32,
     fontWeight: "700",
     lineHeight: 40,
@@ -240,18 +228,18 @@ const styles = StyleSheet.create({
   },
   headerSpacer: { width: 44 },
   headerTitle: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   highlight: {
-    backgroundColor: colors.highlightBg,
+    backgroundColor: palette.olive[500],
     borderRadius: 4,
-    color: colors.white,
+    color: palette.white,
     fontWeight: "600",
   },
   promptText: {
-    color: colors.promptText,
+    color: palette.gray[400],
     fontSize: 14,
     marginTop: 24,
     paddingHorizontal: 24,
@@ -261,7 +249,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   toolbar: {
-    backgroundColor: colors.toolbarBg,
+    backgroundColor: palette.brown[800],
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     flexDirection: "row",
@@ -280,7 +268,7 @@ const styles = StyleSheet.create({
     width: 48,
   },
   toolbarIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 20,
   },
 });

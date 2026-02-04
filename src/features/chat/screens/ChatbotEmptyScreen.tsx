@@ -2,6 +2,7 @@
  * ChatbotEmptyScreen Component
  * @description Empty state screen for AI chatbot when user has no conversations
  * @task Task 3.6.1: Chatbot Empty Screen (Screen 47)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -11,6 +12,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface ChatbotEmptyScreenProps {
   isCreating?: boolean;
@@ -86,7 +88,7 @@ export function ChatbotEmptyScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -96,12 +98,12 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
@@ -124,13 +126,13 @@ const styles = StyleSheet.create({
     top: 0,
   },
   emptyDescription: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 20,
     textAlign: "center",
   },
   emptyTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     marginBottom: 12,
@@ -165,7 +167,7 @@ const styles = StyleSheet.create({
   },
   mascotInner: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 80,
     height: 160,
     justifyContent: "center",
@@ -175,7 +177,7 @@ const styles = StyleSheet.create({
   },
   newConversationButton: {
     alignItems: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -185,18 +187,18 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   newConversationIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "600",
     marginLeft: 8,
   },
   newConversationText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   screenTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     marginTop: 16,

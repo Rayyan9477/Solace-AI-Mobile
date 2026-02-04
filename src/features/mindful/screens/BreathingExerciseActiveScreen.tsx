@@ -3,10 +3,12 @@
  * @description Active breathing exercise state with dynamic background color,
  *   concentric circles animation, phase instruction, progress bar, and playback controls
  * @task Task 3.12.7: Breathing Exercise Active Screen (Screen 110)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface BreathingExerciseActiveScreenProps {
   soundName: string;
@@ -22,14 +24,14 @@ interface BreathingExerciseActiveScreenProps {
 }
 
 const colors = {
-  white: "#FFFFFF",
-  circleRing1: "rgba(255,255,255,0.08)",
-  circleRing2: "rgba(255,255,255,0.12)",
-  circleRing3: "rgba(255,255,255,0.18)",
-  progressTrack: "rgba(255,255,255,0.3)",
-  progressFill: "#FFFFFF",
-  playPauseBg: "#FFFFFF",
-  badgeBorder: "rgba(255,255,255,0.4)",
+  white: palette.text.primary,
+  circleRing1: palette.opacity.white08,
+  circleRing2: palette.opacity.white12,
+  circleRing3: palette.opacity.white18,
+  progressTrack: palette.opacity.white30,
+  progressFill: palette.text.primary,
+  playPauseBg: palette.text.primary,
+  badgeBorder: palette.opacity.white40,
 } as const;
 
 export function BreathingExerciseActiveScreen({

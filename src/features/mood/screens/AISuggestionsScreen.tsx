@@ -2,6 +2,7 @@
  * AISuggestionsScreen Component
  * @description Step-by-step AI mood improvement suggestions with expandable cards
  * @task Task 3.8.6: AI Suggestions Screen (Screen 76)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -12,6 +13,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface Activity {
   id: string;
@@ -201,8 +203,8 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   activityChip: {
-    backgroundColor: "#2A1F19",
-    borderColor: "#3D2E23",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     flexDirection: "row",
@@ -213,20 +215,20 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   activityChipSelected: {
-    backgroundColor: "#9AAD5C",
-    borderColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
+    borderColor: palette.olive[500],
   },
   activityLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
   },
   activityLabelSelected: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontWeight: "600",
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -236,23 +238,23 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
   checkmark: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "700",
     marginRight: 6,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   expandIcon: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
   },
   header: {
@@ -266,13 +268,13 @@ const styles = StyleSheet.create({
     width: 40,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
   resolvedButton: {
     alignItems: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 12,
     marginBottom: 40,
     marginHorizontal: 24,
@@ -281,50 +283,50 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   resolvedButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "700",
   },
   segmentTab: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 20,
     flex: 1,
     minHeight: 44,
     paddingVertical: 10,
   },
   segmentTabActive: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
   },
   segmentText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     fontWeight: "600",
   },
   segmentTextActive: {
-    color: "#FFFFFF",
+    color: palette.white,
   },
   segmentedControl: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 24,
     flexDirection: "row",
     marginHorizontal: 24,
     padding: 4,
   },
   stepBadge: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 12,
     marginRight: 12,
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
   stepBadgeText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "700",
   },
   stepCard: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     marginBottom: 12,
     marginHorizontal: 24,
@@ -335,7 +337,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   stepDescription: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 22,
   },
@@ -346,7 +348,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   stepTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 16,
     fontWeight: "600",

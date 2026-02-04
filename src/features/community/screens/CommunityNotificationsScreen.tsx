@@ -4,6 +4,7 @@
  *   notification types, and navigation to relevant content
  * @task Task 3.14.6: Community Notifications Screen (Screen 124)
  * @audit-fix Replaced "Joe Biden"/"John Cena" with appropriate placeholder names
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -14,6 +15,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface TabItem {
   id: string;
@@ -45,13 +47,13 @@ interface CommunityNotificationsScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  cardBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
-  tabBg: "#2A1F18",
-  tabSelected: "#C4A574",
-  tabSelectedText: "#1C1410",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  cardBg: palette.background.secondary,
+  textSecondary: palette.text.secondary,
+  tabBg: palette.background.secondary,
+  tabSelected: palette.primary.gold,
+  tabSelectedText: palette.background.primary,
 } as const;
 
 export function CommunityNotificationsScreen({

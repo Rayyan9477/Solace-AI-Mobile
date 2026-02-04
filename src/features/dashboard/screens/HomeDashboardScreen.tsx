@@ -2,6 +2,7 @@
  * HomeDashboardScreen Component
  * @description Main home dashboard screen with mental health metrics
  * @task Task 3.5.1: Home Dashboard Screen (Screen 40)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -13,6 +14,7 @@ import {
   ScrollView,
   Image,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 type MoodType = "happy" | "sad" | "neutral" | "angry" | "anxious";
 type SolaceStatus = "Mentally Stable" | "Needs Attention" | "Critical";
@@ -316,14 +318,14 @@ const styles = StyleSheet.create({
     width: 160,
   },
   articleThumbnail: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     height: 100,
     marginBottom: 8,
     width: 160,
   },
   articleTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "500",
   },
@@ -339,20 +341,20 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   avatarInitial: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   avatarPlaceholder: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 20,
     height: 40,
     justifyContent: "center",
     width: 40,
   },
   badgeText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 10,
     fontWeight: "600",
   },
@@ -360,30 +362,30 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   chatbotSection: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     marginHorizontal: 24,
     marginVertical: 16,
     padding: 20,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   conversationCount: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 36,
     fontWeight: "700",
     marginTop: 8,
   },
   conversationLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     marginBottom: 16,
   },
   dateLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginBottom: 8,
   },
@@ -392,7 +394,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   greetingText: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 20,
     fontWeight: "600",
@@ -401,7 +403,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   metricCard: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flex: 1,
     marginHorizontal: 4,
@@ -409,12 +411,12 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   metricLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginBottom: 8,
   },
   metricValue: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -429,7 +431,7 @@ const styles = StyleSheet.create({
   },
   notificationBadge: {
     alignItems: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 8,
     height: 16,
     justifyContent: "center",
@@ -444,18 +446,18 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   recommendationButton: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 8,
     padding: 12,
   },
   recommendationText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     textAlign: "center",
   },
   scoreGauge: {
     alignItems: "center",
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     borderRadius: 40,
     height: 80,
     justifyContent: "center",
@@ -463,7 +465,7 @@ const styles = StyleSheet.create({
   },
   scoreGaugeContainer: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 50,
     height: 100,
     justifyContent: "center",
@@ -471,23 +473,23 @@ const styles = StyleSheet.create({
     width: 100,
   },
   scoreLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "500",
   },
   scoreStatus: {
-    color: "#9AAD5C",
+    color: palette.olive[500],
     fontSize: 12,
     marginTop: 4,
   },
   scoreValue: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 28,
     fontWeight: "700",
   },
   searchBar: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flexDirection: "row",
     marginHorizontal: 24,
@@ -501,11 +503,11 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   searchPlaceholder: {
-    color: "#64748B",
+    color: palette.gray[500],
     fontSize: 14,
   },
   secondaryCard: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flex: 1,
     marginHorizontal: 4,
@@ -521,25 +523,25 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   sectionTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 4,
   },
   sleepBar: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 4,
     height: 8,
     marginTop: 8,
     overflow: "hidden",
   },
   sleepBarFill: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     height: "100%",
   },
   solaceScoreCard: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     marginTop: 12,
     padding: 20,

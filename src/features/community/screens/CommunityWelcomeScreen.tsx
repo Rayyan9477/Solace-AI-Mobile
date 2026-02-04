@@ -4,10 +4,12 @@
  *   illustration, value proposition, CTA, and legal links
  * @task Task 3.14.1: Community Welcome Screen (Screen 119)
  * @audit-fix Replaced "freud.ai" branding with "Solace" branding
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface CommunityWelcomeScreenProps {
   title: string;
@@ -18,13 +20,13 @@ interface CommunityWelcomeScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
-  ctaButtonBg: "#C4A574",
-  ctaButtonText: "#1C1410",
-  logoBg: "#E8853A",
-  linkText: "rgba(255,255,255,0.5)",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  textSecondary: palette.text.secondary,
+  ctaButtonBg: palette.primary.gold,
+  ctaButtonText: palette.background.primary,
+  logoBg: palette.accent.orange,
+  linkText: palette.text.tertiary,
 } as const;
 
 export function CommunityWelcomeScreen({

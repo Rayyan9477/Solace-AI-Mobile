@@ -2,6 +2,7 @@
  * Tooltip Component
  * @description Contextual help tooltip with arrow pointing to trigger
  * @task Task 2.5.4: Tooltip Component (Sprint 2.5 - Molecules Overlay)
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Arrow indicator pointing to trigger
@@ -20,13 +21,14 @@ import {
   type ViewStyle,
 } from "react-native";
 import type { TooltipProps, TooltipPlacement } from "./Tooltip.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
-  background: "#374151",
-  text: "#F9FAFB",
+  background: palette.gray[700],
+  text: palette.gray[50],
   overlay: "transparent",
 };
 
@@ -237,7 +239,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 6,
     elevation: 4,
-    shadowColor: "#000",
+    shadowColor: palette.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,

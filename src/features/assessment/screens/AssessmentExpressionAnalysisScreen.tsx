@@ -2,6 +2,7 @@
  * AssessmentExpressionAnalysisScreen Component
  * @description Expression analysis assessment screen with free text input
  * @task Task 3.4.9: Assessment Expression Analysis Screen (Screen 39)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useState } from "react";
@@ -12,6 +13,7 @@ import {
   TextInput,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface AssessmentExpressionAnalysisScreenProps {
   currentStep: number;
@@ -110,7 +112,7 @@ export function AssessmentExpressionAnalysisScreen({
           value={text}
           onChangeText={handleTextChange}
           placeholder="Express your feelings, thoughts, or anything on your mind..."
-          placeholderTextColor="#64748B"
+          placeholderTextColor={palette.gray[500]}
           multiline={true}
           textAlignVertical="top"
           maxLength={MAX_CHARACTERS}
@@ -157,7 +159,7 @@ export function AssessmentExpressionAnalysisScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -167,7 +169,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -176,13 +178,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -192,13 +194,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   continueButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   continueButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
@@ -207,7 +209,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   counterText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
   },
   header: {
@@ -225,13 +227,13 @@ const styles = StyleSheet.create({
     width: 80,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   progressCircle: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 30,
     height: 60,
     justifyContent: "center",
@@ -242,45 +244,45 @@ const styles = StyleSheet.create({
   },
   progressInner: {
     alignItems: "center",
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
     width: 48,
   },
   progressText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
   },
   screenTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     marginBottom: 12,
     textAlign: "center",
   },
   stepCounter: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 2,
   },
   subtitle: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 20,
     paddingHorizontal: 16,
     textAlign: "center",
   },
   textInput: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 16,
     lineHeight: 24,
     minHeight: 150,
   },
   textInputArea: {
-    borderColor: "#9AAD5C",
+    borderColor: palette.olive[500],
     borderRadius: 16,
     borderWidth: 1,
     flex: 1,
@@ -302,7 +304,7 @@ const styles = StyleSheet.create({
   voiceInputButton: {
     alignItems: "center",
     alignSelf: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 24,
     flexDirection: "row",
     marginBottom: 24,
@@ -311,7 +313,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   voiceInputText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "500",
   },

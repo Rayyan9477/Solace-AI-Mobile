@@ -2,10 +2,12 @@
  * AssessmentIntroScreen Component
  * @description Intro/welcome screen before starting mental health assessment
  * @task Task 3.4.1: Assessment Intro Screen (Screen 36)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface AssessmentIntroScreenProps {
   onStart: () => void;
@@ -90,7 +92,7 @@ export function AssessmentIntroScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -100,12 +102,12 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   brainHalf: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderBottomLeftRadius: 20,
     borderTopLeftRadius: 20,
     height: 50,
@@ -128,7 +130,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
@@ -138,7 +140,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   description: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 16,
     lineHeight: 24,
     marginTop: 16,
@@ -162,7 +164,7 @@ const styles = StyleSheet.create({
   },
   illustrationCircle: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 75,
     height: 150,
     justifyContent: "center",
@@ -171,7 +173,7 @@ const styles = StyleSheet.create({
   },
   infoCard: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flexDirection: "row",
     marginHorizontal: 8,
@@ -188,19 +190,19 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   infoText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "500",
   },
   privacyNotice: {
-    color: "#64748B",
+    color: palette.gray[500],
     fontSize: 12,
     marginTop: 24,
     textAlign: "center",
   },
   startButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -210,18 +212,18 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   startButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   startButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
   title: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 28,
     fontWeight: "700",
     textAlign: "center",

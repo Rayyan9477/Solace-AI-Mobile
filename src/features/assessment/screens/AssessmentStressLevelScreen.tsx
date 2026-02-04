@@ -2,10 +2,12 @@
  * AssessmentStressLevelScreen Component
  * @description Stress level assessment screen with 1-5 scale selector
  * @task Task 3.4.6: Assessment Stress Level Screen (Screen 37)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 type StressLevel = 1 | 2 | 3 | 4 | 5;
 
@@ -151,7 +153,7 @@ export function AssessmentStressLevelScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -161,7 +163,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -170,13 +172,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -186,13 +188,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   continueButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   continueButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
@@ -202,7 +204,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   descriptionText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 16,
     textAlign: "center",
   },
@@ -221,12 +223,12 @@ const styles = StyleSheet.create({
     width: 80,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   largeNumber: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 120,
     fontWeight: "700",
   },
@@ -245,19 +247,19 @@ const styles = StyleSheet.create({
     width: 48,
   },
   levelButtonSelected: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
   },
   levelButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   levelButtonTextSelected: {
-    color: "#FFFFFF",
+    color: palette.white,
   },
   progressCircle: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 30,
     height: 60,
     justifyContent: "center",
@@ -268,14 +270,14 @@ const styles = StyleSheet.create({
   },
   progressInner: {
     alignItems: "center",
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
     width: 48,
   },
   progressText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
   },
@@ -284,7 +286,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   questionText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     lineHeight: 32,
@@ -295,7 +297,7 @@ const styles = StyleSheet.create({
   },
   selectorRow: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "space-around",
@@ -303,7 +305,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   stepCounter: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 2,
   },

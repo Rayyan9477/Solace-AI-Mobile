@@ -1,9 +1,10 @@
 /**
  * OnboardingStep2Screen
  * @description Second step of onboarding carousel - Mood Tracking
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
- * - Theme: Orange/Amber (#E8853A)
+ * - Theme: Orange/Amber (palette.onboarding.step2)
  * - Illustration: Person with emotion faces
  * - Message: Intelligent Mood Tracking & Emotion Insights
  */
@@ -13,6 +14,7 @@ import { OnboardingCarouselCard } from "../../../shared/components/templates/onb
 import type { OnboardingStepData } from "../../../shared/components/templates/onboarding";
 import type { AuthScreenProps } from "../../../shared/types/navigation";
 import { PlaceholderIllustration } from "../../../assets/illustrations/PlaceholderIllustration";
+import { palette } from "../../../shared/theme";
 
 /**
  * Step 2 configuration data
@@ -23,8 +25,8 @@ const STEP_DATA: OnboardingStepData = {
   stepLabel: "Step Two",
   title: "Intelligent Mood Tracking & Emotion Insights",
   highlightedWords: ["Intelligent"],
-  illustrationComponent: <PlaceholderIllustration stepNumber={2} color="#E8853A" />,
-  backgroundColor: "#E8853A",
+  illustrationComponent: <PlaceholderIllustration stepNumber={2} color={palette.onboarding.step2} />,
+  backgroundColor: palette.onboarding.step2,
   totalSteps: 5,
 };
 

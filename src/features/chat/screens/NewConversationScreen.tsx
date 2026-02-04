@@ -2,6 +2,7 @@
  * NewConversationScreen Component
  * @description Form for creating a new AI conversation with customization options
  * @task Task 3.6.4: New Conversation Screen (Screen 50)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -14,6 +15,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 type CommunicationStyle = "casual" | "formal" | "fun";
 
@@ -134,7 +136,7 @@ export function NewConversationScreen({
             value={topicName}
             onChangeText={onTopicChange}
             placeholder="Enter conversation topic"
-            placeholderTextColor="#94A3B8"
+            placeholderTextColor={palette.gray[400]}
             accessibilityLabel="Topic name input"
           />
         </View>
@@ -200,7 +202,7 @@ export function NewConversationScreen({
             value={preferredName}
             onChangeText={onNameChange}
             placeholder="How should AI address you?"
-            placeholderTextColor="#94A3B8"
+            placeholderTextColor={palette.gray[400]}
             accessibilityLabel="Preferred name input"
           />
         </View>
@@ -289,8 +291,8 @@ export function NewConversationScreen({
               testID="privacy-toggle"
               value={isPublic}
               onValueChange={onPrivacyChange}
-              trackColor={{ false: "#3D2E23", true: "#9AAD5C" }}
-              thumbColor={isPublic ? "#FFFFFF" : "#94A3B8"}
+              trackColor={{ false: palette.brown[700], true: palette.olive[500] }}
+              thumbColor={isPublic ? palette.white : palette.gray[400]}
               accessibilityLabel="Make chat public toggle"
             />
           </View>
@@ -323,7 +325,7 @@ export function NewConversationScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -333,12 +335,12 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   chip: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     marginBottom: 8,
     marginRight: 8,
@@ -351,23 +353,23 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   chipSelected: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
   },
   chipText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
   },
   chipTextSelected: {
     fontWeight: "600",
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   createButton: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -381,13 +383,13 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   createButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
   dropdown: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -395,11 +397,11 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   dropdownIcon: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
   },
   dropdownText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
   },
   footer: {
@@ -412,12 +414,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   formHint: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 4,
   },
   formLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
     marginBottom: 8,
@@ -434,7 +436,7 @@ const styles = StyleSheet.create({
   },
   iconOption: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 28,
     height: 56,
     justifyContent: "center",
@@ -442,7 +444,7 @@ const styles = StyleSheet.create({
     width: 56,
   },
   iconOptionSelected: {
-    borderColor: "#C4A574",
+    borderColor: palette.tan[500],
     borderWidth: 2,
   },
   iconRow: {
@@ -450,21 +452,21 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   screenTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     marginTop: 16,
   },
   styleChip: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     flex: 1,
     marginRight: 8,
     paddingVertical: 12,
   },
   styleChipSelected: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
   },
   styleIcon: {
     fontSize: 20,
@@ -475,22 +477,22 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   styleText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
   },
   styleTextSelected: {
     fontWeight: "600",
   },
   textInput: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
   toggleLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
   },
   toggleRow: {

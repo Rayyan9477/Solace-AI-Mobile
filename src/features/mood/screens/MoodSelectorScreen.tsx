@@ -2,10 +2,12 @@
  * MoodSelectorScreen Component
  * @description Interactive mood selector with curved slider and full-screen color backgrounds
  * @task Task 3.8.3: Mood Selector Screen (Screens 69-73)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface MoodOption {
   index: number;
@@ -111,7 +113,7 @@ export function MoodSelectorScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "rgba(255,255,255,0.3)",
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -121,7 +123,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
@@ -130,7 +132,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   checkmarkIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
     marginRight: 8,
@@ -158,19 +160,19 @@ const styles = StyleSheet.create({
     fontSize: 80,
   },
   moodLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     textAlign: "center",
   },
   promptText: {
-    color: "rgba(255,255,255,0.8)",
+    color: `${palette.white}${palette.alpha[80]}`,
     fontSize: 18,
     textAlign: "center",
   },
   setMoodButton: {
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.2)",
+    backgroundColor: `${palette.black}${palette.alpha[20]}`,
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -179,7 +181,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   setMoodText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -188,13 +190,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
   },
   sliderDot: {
-    backgroundColor: "rgba(255,255,255,0.5)",
+    backgroundColor: `${palette.white}${palette.alpha[50]}`,
     borderRadius: 6,
     height: 12,
     width: 12,
   },
   sliderDotActive: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     borderRadius: 10,
     height: 20,
     width: 20,

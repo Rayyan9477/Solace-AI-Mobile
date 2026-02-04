@@ -2,6 +2,7 @@
  * ConversationsDashboardScreen Component
  * @description Dashboard showing conversation stats, subscription tier, and upgrade options
  * @task Task 3.6.2: Conversations Dashboard Screen (Screen 48)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -12,6 +13,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 type SubscriptionTier = "Basic" | "Pro";
 type SupportLevel = "Slow" | "Fast" | "24/7";
@@ -177,7 +179,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -187,12 +189,12 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   benefitCheck: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
     marginRight: 8,
@@ -203,20 +205,20 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   benefitText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   filterButton: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     marginRight: 16,
   },
   goProButton: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     borderRadius: 16,
     marginTop: 16,
     paddingHorizontal: 16,
@@ -233,16 +235,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   newButton: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     marginRight: 16,
   },
   newButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 28,
     fontWeight: "600",
   },
   screenTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 20,
     fontWeight: "700",
@@ -253,7 +255,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   settingsButton: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
   },
   statIcon: {
     fontSize: 24,
@@ -264,12 +266,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   statLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     textAlign: "center",
   },
   statValue: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
     marginBottom: 4,
@@ -285,13 +287,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   subscriptionBadge: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
   subscriptionText: {
-    color: "#C4A574",
+    color: palette.tan[500],
     fontSize: 12,
     fontWeight: "600",
   },
@@ -299,11 +301,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   totalCountLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
   },
   totalCountNumber: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 64,
     fontWeight: "700",
   },
@@ -324,7 +326,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   upsellTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
     marginBottom: 8,

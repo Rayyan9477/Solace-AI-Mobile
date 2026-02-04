@@ -3,10 +3,12 @@
  * @description Second step of new exercise wizard with large duration display,
  *   sound preview button, and continue button
  * @task Task 3.12.4: Duration Picker Screen (Screen 107)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface DurationPickerScreenProps {
   duration: string;
@@ -19,13 +21,13 @@ interface DurationPickerScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  durationBg: "#9AAD5C",
-  continueBg: "#C4A574",
-  soundPillBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
-  stepIndicator: "#9AAD5C",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  durationBg: palette.accent.green,
+  continueBg: palette.primary.gold,
+  soundPillBg: palette.background.secondary,
+  textSecondary: palette.text.secondary,
+  stepIndicator: palette.accent.green,
 } as const;
 
 export function DurationPickerScreen({

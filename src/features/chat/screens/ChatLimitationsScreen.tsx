@@ -2,6 +2,7 @@
  * ChatLimitationsScreen Component
  * @description Onboarding carousel showing AI chatbot limitations before starting conversation
  * @task Task 3.6.5: Chat Limitations Screen (Screen 51)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useState } from "react";
@@ -12,6 +13,7 @@ import {
   TextInput,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface LimitationPage {
   id: string;
@@ -156,7 +158,7 @@ export function ChatLimitationsScreen({
           value={inputText}
           onChangeText={handleTextChange}
           placeholder="Type to start chatting..."
-          placeholderTextColor="#94A3B8"
+          placeholderTextColor={palette.gray[400]}
           accessibilityLabel="Message input"
         />
         <TouchableOpacity
@@ -185,7 +187,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -195,25 +197,25 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   categoryBadge: {
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 12,
     marginBottom: 16,
     paddingHorizontal: 16,
     paddingVertical: 6,
   },
   categoryText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 12,
     fontWeight: "600",
   },
   chatInputArea: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 28,
     flexDirection: "row",
     marginBottom: 32,
@@ -222,7 +224,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
@@ -250,14 +252,14 @@ const styles = StyleSheet.create({
     width: 200,
   },
   dot: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 4,
     height: 8,
     marginHorizontal: 4,
     width: 8,
   },
   dotActive: {
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     width: 24,
   },
   header: {
@@ -270,18 +272,18 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   headerSubtitle: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 2,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
   illustrationCircle: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 80,
     height: 160,
     justifyContent: "center",
@@ -294,20 +296,20 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   messageInput: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 14,
     paddingVertical: 12,
   },
   pageDescription: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 20,
     marginBottom: 24,
     textAlign: "center",
   },
   pageTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     marginBottom: 12,
@@ -332,7 +334,7 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 22,
     height: 44,
     justifyContent: "center",
@@ -341,7 +343,7 @@ const styles = StyleSheet.create({
     width: 44,
   },
   sendIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
@@ -349,7 +351,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   swipeHintText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     textAlign: "center",
   },

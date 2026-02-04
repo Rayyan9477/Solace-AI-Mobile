@@ -3,6 +3,7 @@
  * @description Main journal dashboard with hero stats, weekly calendar grid, and legend
  * @screen Screen 78: Health Journal Dashboard
  * @audit batch-16-mood-tracker-final-journal-start.md
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Visual reference: Mental_Health_Journal_Screen_01.png
  * - Brown/tan gradient hero with large journal count
@@ -20,26 +21,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-
-/* ---------- colour tokens (dark-mode first, per design) ---------- */
-const colors = {
-  screenBg: "#1C1410",
-  heroBg: "#8B6914",
-  heroDecorative: "rgba(139, 105, 20, 0.4)",
-  heroDecorativeAlt: "rgba(196, 165, 116, 0.3)",
-  white: "#FFFFFF",
-  sectionTitle: "#FFFFFF",
-  seeAll: "#C4A574",
-  fabBg: "#3D2E23",
-  backBtnBorder: "rgba(255,255,255,0.3)",
-  dotPositive: "#9AAD5C",
-  dotNegative: "#E8853A",
-  dotSkipped: "#3D2E23",
-  legendText: "#FFFFFF",
-  subtitleText: "rgba(255,255,255,0.85)",
-  calendarCellBg: "#2A1F19",
-  dayLabel: "#94A3B8",
-} as const;
+import { palette } from "../../../shared/theme";
 
 /* ---------- types ---------- */
 type JournalStatus = "positive" | "negative" | "skipped";
@@ -61,9 +43,9 @@ interface JournalDashboardScreenProps {
 
 /* ---------- helpers ---------- */
 const statusDotColor: Record<JournalStatus, string> = {
-  positive: colors.dotPositive,
-  negative: colors.dotNegative,
-  skipped: colors.dotSkipped,
+  positive: palette.olive[500],
+  negative: palette.onboarding.step2,
+  skipped: palette.brown[700],
 };
 
 /* ---------- component ---------- */
@@ -198,7 +180,7 @@ export function JournalDashboardScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: colors.backBtnBorder,
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 22,
     borderWidth: 1,
     height: 44,
@@ -208,7 +190,7 @@ const styles = StyleSheet.create({
     width: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 22,
   },
   calendarColumn: {
@@ -218,7 +200,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   calendarDayLabel: {
-    color: colors.dayLabel,
+    color: palette.gray[400],
     fontSize: 13,
     fontWeight: "500",
     marginBottom: 8,
@@ -229,7 +211,7 @@ const styles = StyleSheet.create({
     width: 28,
   },
   calendarGrid: {
-    backgroundColor: colors.calendarCellBg,
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     flexDirection: "row",
     marginTop: 16,
@@ -237,28 +219,28 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   circleOne: {
-    backgroundColor: colors.heroDecorative,
+    backgroundColor: `${palette.tan[600]}${palette.alpha[40]}`,
     height: 180,
     left: -30,
     top: 20,
     width: 180,
   },
   circleThree: {
-    backgroundColor: colors.heroDecorativeAlt,
+    backgroundColor: `${palette.tan[500]}${palette.alpha[30]}`,
     height: 120,
     left: "30%",
     top: 80,
     width: 120,
   },
   circleTwo: {
-    backgroundColor: colors.heroDecorativeAlt,
+    backgroundColor: `${palette.tan[500]}${palette.alpha[30]}`,
     height: 140,
     right: -20,
     top: -10,
     width: 140,
   },
   container: {
-    backgroundColor: colors.screenBg,
+    backgroundColor: palette.brown[900],
     flex: 1,
   },
   decorativeCircle: {
@@ -276,7 +258,7 @@ const styles = StyleSheet.create({
   fab: {
     alignItems: "center",
     alignSelf: "center",
-    backgroundColor: colors.fabBg,
+    backgroundColor: palette.brown[700],
     borderRadius: 28,
     elevation: 4,
     height: 56,
@@ -284,14 +266,14 @@ const styles = StyleSheet.create({
     marginTop: 24,
     minHeight: 44,
     minWidth: 44,
-    shadowColor: "#000",
+    shadowColor: palette.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     width: 56,
   },
   fabIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 28,
     fontWeight: "400",
   },
@@ -306,26 +288,26 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   heroSection: {
-    backgroundColor: colors.heroBg,
+    backgroundColor: palette.tan[600],
     borderBottomLeftRadius: 28,
     borderBottomRightRadius: 28,
     overflow: "hidden",
     paddingBottom: 32,
   },
   heroTitle: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   journalCount: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 72,
     fontWeight: "700",
     marginTop: 24,
     textAlign: "center",
   },
   journalSubtitle: {
-    color: colors.subtitleText,
+    color: `${palette.white}${palette.alpha[90]}`,
     fontSize: 18,
     marginTop: 4,
     textAlign: "center",
@@ -348,11 +330,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
   },
   legendLabel: {
-    color: colors.legendText,
+    color: palette.white,
     fontSize: 13,
   },
   seeAllText: {
-    color: colors.seeAll,
+    color: palette.tan[500],
     fontSize: 14,
     fontWeight: "600",
   },
@@ -370,7 +352,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   statsSectionTitle: {
-    color: colors.sectionTitle,
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },

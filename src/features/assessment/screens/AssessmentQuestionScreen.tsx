@@ -2,10 +2,12 @@
  * AssessmentQuestionScreen Component
  * @description Reusable assessment question screen with single-select options
  * @task Task 3.4.2: Assessment Question Screen (Screens 26-35)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface QuestionOption {
   id: string;
@@ -164,7 +166,7 @@ export function AssessmentQuestionScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -174,7 +176,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -186,13 +188,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -202,21 +204,21 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   continueButtonDisabled: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
   },
   continueButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   continueButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
   continueButtonTextDisabled: {
-    color: "#64748B",
+    color: palette.gray[500],
   },
   header: {
     alignItems: "center",
@@ -233,14 +235,14 @@ const styles = StyleSheet.create({
     width: 80,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   optionCard: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
-    borderColor: "#3D2E23",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 16,
     borderWidth: 1,
     flexDirection: "row",
@@ -250,21 +252,21 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   optionCardSelected: {
-    backgroundColor: "#9AAD5C",
-    borderColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
+    borderColor: palette.olive[500],
   },
   optionIcon: {
     fontSize: 24,
     marginRight: 12,
   },
   optionLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 16,
     fontWeight: "500",
   },
   optionLabelSelected: {
-    color: "#1C1410",
+    color: palette.brown[900],
   },
   optionsContainer: {
     flex: 1,
@@ -272,7 +274,7 @@ const styles = StyleSheet.create({
   },
   progressCircle: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 30,
     height: 60,
     justifyContent: "center",
@@ -283,7 +285,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   progressFill: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 30,
     height: 60,
     position: "absolute",
@@ -293,14 +295,14 @@ const styles = StyleSheet.create({
   },
   progressInner: {
     alignItems: "center",
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
     width: 48,
   },
   progressText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
   },
@@ -309,24 +311,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   questionText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     lineHeight: 32,
   },
   radioButton: {
-    borderColor: "#64748B",
+    borderColor: palette.gray[500],
     borderRadius: 12,
     borderWidth: 2,
     height: 24,
     width: 24,
   },
   radioButtonSelected: {
-    backgroundColor: "#FFFFFF",
-    borderColor: "#FFFFFF",
+    backgroundColor: palette.white,
+    borderColor: palette.white,
   },
   stepCounter: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 2,
   },

@@ -3,6 +3,7 @@
  * @description Main mindful hours dashboard with total hours display, FAB button,
  *   session history list with progress bars and soundscape badges
  * @task Task 3.12.1: Mindful Hours Dashboard Screen (Screen 104)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -13,6 +14,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface MindfulSession {
   id: string;
@@ -34,15 +36,15 @@ interface MindfulHoursDashboardScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  heroBg: "#3D3530",
-  white: "#FFFFFF",
-  cardBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
-  fabBg: "#5C4A2A",
-  progressBg: "#3D2E23",
-  progressFill: "#9AAD5C",
-  playBg: "#5C4A2A",
+  background: palette.background.primary,
+  heroBg: palette.background.hero,
+  white: palette.text.primary,
+  cardBg: palette.background.secondary,
+  textSecondary: palette.text.secondary,
+  fabBg: palette.background.quaternary,
+  progressBg: palette.background.tertiary,
+  progressFill: palette.accent.green,
+  playBg: palette.background.quaternary,
 } as const;
 
 export function MindfulHoursDashboardScreen({
@@ -183,7 +185,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   decoShape1: {
-    backgroundColor: "rgba(255,255,255,0.06)",
+    backgroundColor: palette.opacity.white06,
     borderRadius: 20,
     height: 80,
     left: "5%",
@@ -193,7 +195,7 @@ const styles = StyleSheet.create({
     width: 60,
   },
   decoShape2: {
-    backgroundColor: "rgba(255,255,255,0.04)",
+    backgroundColor: palette.opacity.white04,
     borderRadius: 40,
     height: 80,
     position: "absolute",
@@ -202,7 +204,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   decoShape3: {
-    backgroundColor: "rgba(255,255,255,0.05)",
+    backgroundColor: palette.opacity.white05,
     borderRadius: 10,
     height: 40,
     left: "40%",

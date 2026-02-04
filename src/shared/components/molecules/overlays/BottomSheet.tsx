@@ -2,6 +2,7 @@
  * BottomSheet Component
  * @description Reusable bottom sheet overlay with drag handle and content
  * @task Task 2.5.2: BottomSheet Component (Sprint 2.5 - Molecules Overlay)
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
  * - Drag handle indicator
@@ -21,23 +22,24 @@ import {
   type ViewStyle,
 } from "react-native";
 import type { BottomSheetProps } from "./BottomSheet.types";
+import { palette } from "../../../theme";
 
 /**
- * Color tokens (dark mode first)
+ * Color tokens from theme
  */
 const colors = {
   // Backdrop
-  backdrop: "rgba(0, 0, 0, 0.6)",
+  backdrop: `${palette.black}${palette.alpha[60]}`,
 
   // Sheet
-  background: "#2A2220",
-  border: "#3D3533",
+  background: palette.brown[900],
+  border: palette.brown[800],
 
   // Drag handle
-  dragHandle: "#6B7280",
+  dragHandle: palette.gray[500],
 
   // Text
-  title: "#F1F5F9",
+  title: palette.gray[100],
 };
 
 /**

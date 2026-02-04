@@ -4,6 +4,7 @@
  *   bio, and content tabs
  * @task Task 3.14.8: User Profile Screen (Screen 126)
  * @audit-fix Replaced "Shinomiya Kaguya" with appropriate placeholder name
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -14,6 +15,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface TabItem {
   id: string;
@@ -37,15 +39,15 @@ interface UserProfileScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
-  followBg: "#C4A574",
-  followText: "#1C1410",
-  messageBg: "#2A1F18",
-  tabBg: "#2A1F18",
-  tabSelected: "#C4A574",
-  tabSelectedText: "#1C1410",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  textSecondary: palette.text.secondary,
+  followBg: palette.primary.gold,
+  followText: palette.background.primary,
+  messageBg: palette.background.secondary,
+  tabBg: palette.background.secondary,
+  tabSelected: palette.primary.gold,
+  tabSelectedText: palette.background.primary,
 } as const;
 
 export function UserProfileScreen({
@@ -161,7 +163,7 @@ export function UserProfileScreen({
 const styles = StyleSheet.create({
   actionRow: { flexDirection: "row", gap: 12, marginTop: 16 },
   avatar: {
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: palette.opacity.white10,
     borderRadius: 48,
     height: 96,
     width: 96,

@@ -2,6 +2,7 @@
  * FacialExpressionCameraScreen Component
  * @description Camera interface for capturing facial expressions with biometric overlay
  * @task Task 3.7.6: Facial Expression Camera Screen (Screen 58)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -11,6 +12,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 type CameraFacing = "front" | "back";
 
@@ -80,7 +82,7 @@ export function FacialExpressionCameraScreen({
           testID="face-detection-overlay"
           style={[
             styles.faceOverlay,
-            { borderColor: faceDetected ? "#9AAD5C" : "#E8853A" },
+            { borderColor: faceDetected ? palette.olive[500] : palette.onboarding.step2 },
           ]}
         >
           <View style={styles.faceOverlayInner}>
@@ -172,7 +174,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
@@ -188,13 +190,13 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   biometricUnit: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     marginLeft: 4,
     opacity: 0.7,
   },
   biometricValue: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -213,13 +215,13 @@ const styles = StyleSheet.create({
   },
   cameraPreview: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     flex: 1,
     justifyContent: "center",
   },
   captureButton: {
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     borderRadius: 35,
     height: 70,
     justifyContent: "center",
@@ -228,20 +230,20 @@ const styles = StyleSheet.create({
     width: 70,
   },
   captureButtonInner: {
-    backgroundColor: "#FFFFFF",
-    borderColor: "#1C1410",
+    backgroundColor: palette.white,
+    borderColor: palette.brown[900],
     borderRadius: 28,
     borderWidth: 3,
     height: 56,
     width: 56,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
   },
   controlButton: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 25,
     height: 50,
     justifyContent: "center",
@@ -253,7 +255,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   controlsContainer: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     paddingBottom: 40,
     paddingTop: 24,
   },
@@ -271,7 +273,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   faceOverlayText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
     letterSpacing: 1,
@@ -282,7 +284,7 @@ const styles = StyleSheet.create({
   },
   instructionBanner: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 12,
     flexDirection: "row",
     marginHorizontal: 24,
@@ -294,7 +296,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   instructionText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     flex: 1,
     fontSize: 13,
     marginLeft: 8,
@@ -307,7 +309,7 @@ const styles = StyleSheet.create({
   },
   modeButton: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 25,
     height: 50,
     justifyContent: "center",
@@ -315,8 +317,8 @@ const styles = StyleSheet.create({
     width: 50,
   },
   modeButtonActive: {
-    backgroundColor: "#3D2E23",
-    borderColor: "#C4A574",
+    backgroundColor: palette.brown[700],
+    borderColor: palette.tan[500],
     borderWidth: 2,
   },
   modeControls: {

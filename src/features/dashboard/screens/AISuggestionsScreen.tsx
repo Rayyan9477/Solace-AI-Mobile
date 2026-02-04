@@ -2,6 +2,7 @@
  * AISuggestionsScreen Component
  * @description AI-generated mental health suggestions screen
  * @task Task 3.5.5: AI Suggestions Screen (Screen 44)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -12,6 +13,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 type CategoryType = "mindfulness" | "physical" | "social" | "professional";
 type SortType = "newest" | "oldest" | "duration" | "category";
@@ -207,7 +209,7 @@ export function AISuggestionsScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -217,7 +219,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -226,12 +228,12 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   cardSubtitle: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 4,
   },
   cardTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -252,24 +254,24 @@ const styles = StyleSheet.create({
     width: 24,
   },
   chevronIcon: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 18,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   countBadge: {
     alignItems: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 12,
     height: 24,
     justifyContent: "center",
     paddingHorizontal: 8,
   },
   countBadgeText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
   },
@@ -285,7 +287,7 @@ const styles = StyleSheet.create({
     width: 44,
   },
   dropdownArrow: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 10,
     marginLeft: 4,
   },
@@ -297,7 +299,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   filterLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -313,26 +315,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   screenTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 28,
     fontWeight: "700",
     marginBottom: 12,
   },
   sortDropdown: {
     alignItems: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 12,
     flexDirection: "row",
     paddingHorizontal: 12,
     paddingVertical: 8,
   },
   sortText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
   },
   statBadge: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     flexDirection: "row",
     marginRight: 12,
@@ -344,7 +346,7 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   statText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
   },
   statsRow: {
@@ -352,7 +354,7 @@ const styles = StyleSheet.create({
   },
   suggestionCard: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     flexDirection: "row",
     marginBottom: 12,

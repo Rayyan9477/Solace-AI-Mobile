@@ -3,6 +3,7 @@
  * @description Journal statistics with tall rounded bar chart (positive/negative/skipped)
  * @screen Screen 79: Journal Stats Bar Chart
  * @audit batch-16-mood-tracker-final-journal-start.md
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Visual reference: Mental_Health_Journal_Screen_02.png
  * - Dark bg, bold "Journal Stats" title, period subtitle
@@ -18,22 +19,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-
-/* ---------- colour tokens ---------- */
-const colors = {
-  screenBg: "#1C1410",
-  white: "#FFFFFF",
-  subtitle: "#94A3B8",
-  backBtnBorder: "rgba(255,255,255,0.3)",
-  chatBg: "#3D2E23",
-  barSkipped: "#3D2E23",
-  barNegative: "#E8853A",
-  barPositive: "#9AAD5C",
-  barTextWhite: "#FFFFFF",
-  emojiCircleSkipped: "#3D2E23",
-  emojiCircleNegative: "#E8853A",
-  emojiCirclePositive: "#9AAD5C",
-} as const;
+import { palette } from "../../../shared/theme";
 
 /* ---------- types ---------- */
 interface StatCategory {
@@ -55,9 +41,9 @@ interface JournalStatsScreenProps {
 
 /* ---------- bar config ---------- */
 const barConfig = [
-  { key: "skipped" as const, label: "Skipped", color: colors.barSkipped, maxRatio: 0.45 },
-  { key: "negative" as const, label: "Negative", color: colors.barNegative, maxRatio: 0.65 },
-  { key: "positive" as const, label: "Positive", color: colors.barPositive, maxRatio: 0.85 },
+  { key: "skipped" as const, label: "Skipped", color: palette.brown[700], maxRatio: 0.45 },
+  { key: "negative" as const, label: "Negative", color: palette.onboarding.step2, maxRatio: 0.65 },
+  { key: "positive" as const, label: "Positive", color: palette.olive[500], maxRatio: 0.85 },
 ];
 
 /* ---------- component ---------- */
@@ -149,7 +135,7 @@ export function JournalStatsScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: colors.backBtnBorder,
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 22,
     borderWidth: 1,
     height: 44,
@@ -159,7 +145,7 @@ const styles = StyleSheet.create({
     width: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 22,
   },
   bar: {
@@ -170,12 +156,12 @@ const styles = StyleSheet.create({
     width: 80,
   },
   barCount: {
-    color: colors.barTextWhite,
+    color: palette.white,
     fontSize: 36,
     fontWeight: "700",
   },
   barLabel: {
-    color: colors.barTextWhite,
+    color: palette.white,
     fontSize: 14,
     fontWeight: "500",
     marginTop: 4,
@@ -195,7 +181,7 @@ const styles = StyleSheet.create({
   },
   chatButton: {
     alignItems: "center",
-    backgroundColor: colors.chatBg,
+    backgroundColor: palette.brown[700],
     borderRadius: 22,
     height: 44,
     justifyContent: "center",
@@ -207,7 +193,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   container: {
-    backgroundColor: colors.screenBg,
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
@@ -226,12 +212,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   subtitle: {
-    color: colors.subtitle,
+    color: palette.gray[400],
     fontSize: 14,
     marginTop: 4,
   },
   title: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 28,
     fontWeight: "700",
   },

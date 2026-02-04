@@ -2,6 +2,7 @@
  * VoiceMessageSentScreen Component
  * @description Confirmation screen after voice message has been recorded and sent
  * @task Task 3.7.10: Voice Message Sent Screen (Screen 62)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -12,6 +13,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface VoiceMessageSentScreenProps {
   recordingDuration: number;
@@ -125,7 +127,7 @@ export function VoiceMessageSentScreen({
         {/* Analysis Status */}
         {isAnalyzing && !analysisComplete ? (
           <View testID="analyzing-indicator" style={styles.analyzingContainer}>
-            <ActivityIndicator size="small" color="#9AAD5C" />
+            <ActivityIndicator size="small" color={palette.olive[500]} />
             <Text style={styles.analyzingText}>
               Analyzing your voice pattern...
             </Text>
@@ -177,13 +179,13 @@ export function VoiceMessageSentScreen({
 
 const styles = StyleSheet.create({
   actionContainer: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     paddingBottom: 32,
     paddingHorizontal: 24,
     paddingTop: 16,
   },
   analysisCard: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     flexDirection: "row",
     padding: 20,
@@ -193,7 +195,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   analysisTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 12,
@@ -204,13 +206,13 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   analyzingText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     marginLeft: 12,
   },
   audioCard: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     flexDirection: "row",
     padding: 16,
@@ -222,7 +224,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -232,12 +234,12 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
   confidenceLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginBottom: 4,
   },
@@ -246,12 +248,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   confidenceValue: {
-    color: "#9AAD5C",
+    color: palette.olive[500],
     fontSize: 24,
     fontWeight: "700",
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
@@ -263,19 +265,19 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 56,
     paddingVertical: 16,
   },
   continueButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   durationText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginLeft: 8,
     minWidth: 35,
@@ -291,7 +293,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   moodLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginBottom: 4,
   },
@@ -299,13 +301,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   moodValue: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
   },
   playPauseButton: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
@@ -318,7 +320,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   progressBar: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 2,
     flex: 1,
     height: 4,
@@ -330,7 +332,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   progressFill: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 2,
     height: "100%",
   },
@@ -341,18 +343,18 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   recordAnotherText: {
-    color: "#C4A574",
+    color: palette.tan[500],
     fontSize: 14,
     fontWeight: "500",
   },
   successIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 40,
     fontWeight: "700",
   },
   successIconCircle: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 50,
     height: 100,
     justifyContent: "center",
@@ -364,13 +366,13 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   successSubtitle: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 15,
     lineHeight: 22,
     textAlign: "center",
   },
   successTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     marginBottom: 12,

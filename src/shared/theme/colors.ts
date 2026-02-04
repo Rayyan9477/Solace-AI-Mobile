@@ -33,12 +33,92 @@ export const palette = {
     400: "#A8A29E",
   },
   tan: {
+    600: "#8B6F47", // Darker tan/brown variant
     500: "#C4A574", // Primary accent tan/beige
     400: "#D4B894",
     300: "#E0CAA4",
   },
+  olive: {
+    700: "#6B7B3A", // Matches onboarding.step1
+    600: "#8A9D52",
+    550: "#8B9D4C", // Darker olive variant for decorative elements
+    500: "#9AAD5C", // Most used decorative color (29 instances in organisms)
+    450: "#A0B55C", // Lighter olive variant for decorative elements
+    400: "#AAB978",
+    300: "#C4D19B",
+  },
+  gold: {
+    500: "#C4A535", // Matches onboarding.step4
+    400: "#F5C563",
+  },
+  stone: {
+    100: "#F5F5F4",
+    200: "#E7E5E4",
+    300: "#D6D3D1",
+    400: "#A8A29E",
+    500: "#78716C",
+    600: "#44403C",
+    700: "#3D3533",
+    800: "#292524",
+    900: "#1C1917",
+  },
 
-  // Semantic colors
+  // Semantic color scales (full scales for component variants)
+  red: {
+    900: "#7F1D1D",
+    800: "#991B1B",
+    700: "#B91C1C",
+    600: "#DC2626",
+    500: "#EF4444", // Primary error color
+    400: "#F87171",
+    300: "#FCA5A5",
+    200: "#FECACA",
+    100: "#FEE2E2",
+  },
+  green: {
+    900: "#14532D",
+    800: "#166534",
+    700: "#15803D",
+    600: "#16A34A",
+    500: "#22C55E", // Primary success color
+    450: "#4A9E8C", // Teal variant for healthy score screen
+    400: "#4ADE80",
+    300: "#86EFAC",
+    200: "#BBF7D0",
+    100: "#DCFCE7",
+  },
+  amber: {
+    900: "#78350F",
+    800: "#92400E",
+    700: "#B45309",
+    600: "#D97706",
+    500: "#F59E0B", // Primary warning color
+    450: "#FFD93D", // Bright yellow for medium password strength
+    400: "#FBBF24",
+    300: "#FCD34D",
+    200: "#FDE68A",
+    100: "#FEF3C7",
+  },
+  blue: {
+    900: "#1E3A5F",
+    800: "#1E40AF",
+    700: "#1D4ED8",
+    600: "#2563EB",
+    500: "#3B82F6",
+    400: "#60A5FA",
+    300: "#93C5FD",
+    200: "#BFDBFE",
+    100: "#DBEAFE",
+  },
+  indigo: {
+    500: "#6366F1",
+    400: "#818CF8", // Primary info color
+    300: "#A5B4FC",
+    200: "#C7D2FE",
+    100: "#E0E7FF",
+  },
+
+  // Legacy semantic colors (for backward compatibility)
   success: "#22C55E",
   warning: "#F59E0B",
   error: "#EF4444",
@@ -61,6 +141,7 @@ export const palette = {
     200: "#E2E8F0",
     300: "#CBD5E1",
     400: "#94A3B8",
+    450: "#8A8A8A", // Placeholder/label gray
     500: "#64748B",
     600: "#475569",
     700: "#334155",
@@ -110,9 +191,12 @@ export const colors = {
     tertiary: palette.gray[500],      // Tertiary/disabled text
     inverse: palette.brown[900],      // Text on light backgrounds
     accent: palette.tan[500],         // Highlighted/accent text
-    error: palette.error,             // Error messages
-    success: palette.success,         // Success messages
-    warning: palette.warning,         // Warning messages
+    disabled: palette.gray[600],      // Disabled text
+    muted: palette.stone[400],        // Muted text
+    error: palette.red[500],          // Error messages
+    success: palette.green[500],      // Success messages
+    warning: palette.amber[500],      // Warning messages
+    info: palette.indigo[400],        // Info messages
   },
 
   /**
@@ -124,7 +208,7 @@ export const colors = {
     medium: `${palette.white}${palette.alpha[20]}`,      // Emphasized borders
     heavy: `${palette.white}${palette.alpha[30]}`,       // Strong borders
     accent: palette.tan[500],                             // Accent borders
-    error: palette.error,                                 // Error borders
+    error: palette.red[500],                              // Error borders
   },
 
   /**
@@ -143,24 +227,24 @@ export const colors = {
    */
   status: {
     success: {
-      background: `${palette.success}${palette.alpha[15]}`,
-      border: `${palette.success}${palette.alpha[30]}`,
-      text: palette.success,
+      background: `${palette.green[500]}${palette.alpha[15]}`,
+      border: `${palette.green[500]}${palette.alpha[30]}`,
+      text: palette.green[500],
     },
     warning: {
-      background: `${palette.warning}${palette.alpha[15]}`,
-      border: `${palette.warning}${palette.alpha[30]}`,
-      text: palette.warning,
+      background: `${palette.amber[500]}${palette.alpha[15]}`,
+      border: `${palette.amber[500]}${palette.alpha[30]}`,
+      text: palette.amber[500],
     },
     error: {
-      background: `${palette.error}${palette.alpha[15]}`,
-      border: `${palette.error}${palette.alpha[30]}`,
-      text: palette.error,
+      background: `${palette.red[500]}${palette.alpha[15]}`,
+      border: `${palette.red[500]}${palette.alpha[30]}`,
+      text: palette.red[500],
     },
     info: {
-      background: `${palette.info}${palette.alpha[15]}`,
-      border: `${palette.info}${palette.alpha[30]}`,
-      text: palette.info,
+      background: `${palette.indigo[400]}${palette.alpha[15]}`,
+      border: `${palette.indigo[400]}${palette.alpha[30]}`,
+      text: palette.indigo[400],
     },
   },
 
@@ -172,7 +256,7 @@ export const colors = {
     backgroundFocus: `${palette.white}${palette.alpha[10]}`,
     border: `${palette.white}${palette.alpha[20]}`,
     borderFocus: palette.tan[500],
-    borderError: palette.error,
+    borderError: palette.red[500],
     placeholder: palette.gray[500],
     label: palette.gray[400],
   },
@@ -186,20 +270,20 @@ export const colors = {
       text: palette.gray[200],
     },
     success: {
-      background: `${palette.success}${palette.alpha[20]}`,
-      text: palette.success,
+      background: `${palette.green[500]}${palette.alpha[20]}`,
+      text: palette.green[500],
     },
     warning: {
-      background: `${palette.warning}${palette.alpha[20]}`,
-      text: palette.warning,
+      background: `${palette.amber[500]}${palette.alpha[20]}`,
+      text: palette.amber[500],
     },
     error: {
-      background: `${palette.error}${palette.alpha[20]}`,
-      text: palette.error,
+      background: `${palette.red[500]}${palette.alpha[20]}`,
+      text: palette.red[500],
     },
     info: {
-      background: `${palette.info}${palette.alpha[20]}`,
-      text: palette.info,
+      background: `${palette.indigo[400]}${palette.alpha[20]}`,
+      text: palette.indigo[400],
     },
   },
 
@@ -209,19 +293,19 @@ export const colors = {
   progress: {
     track: palette.gray[700],
     fill: palette.tan[500],
-    success: palette.success,
-    warning: palette.warning,
-    error: palette.error,
+    success: palette.green[500],
+    warning: palette.amber[500],
+    error: palette.red[500],
   },
 
   /**
    * Crisis/safety colors
    */
   crisis: {
-    primary: palette.error,
-    background: `${palette.error}${palette.alpha[10]}`,
-    border: `${palette.error}${palette.alpha[30]}`,
-    text: "#FCA5A5", // Lighter red for text on dark
+    primary: palette.red[500],
+    background: `${palette.red[500]}${palette.alpha[10]}`,
+    border: `${palette.red[500]}${palette.alpha[30]}`,
+    text: palette.red[300], // Lighter red for text on dark
   },
 
   /**
@@ -234,10 +318,10 @@ export const colors = {
    */
   chart: {
     primary: palette.tan[500],
-    secondary: palette.info,
-    tertiary: palette.success,
-    quaternary: palette.warning,
-    quinary: palette.error,
+    secondary: palette.indigo[400],
+    tertiary: palette.green[500],
+    quaternary: palette.amber[500],
+    quinary: palette.red[500],
     grid: `${palette.white}${palette.alpha[10]}`,
   },
 

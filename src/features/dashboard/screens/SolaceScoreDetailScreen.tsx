@@ -2,6 +2,7 @@
  * SolaceScoreDetailScreen Component
  * @description Detailed view of Solace mental health score with history
  * @task Task 3.5.2: Solace Score Detail Screen (Screen 41)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -12,6 +13,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 type ScoreStatus = "Normal" | "Elevated" | "Critical";
 
@@ -184,7 +186,7 @@ export function SolaceScoreDetailScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "rgba(255, 255, 255, 0.3)",
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -194,7 +196,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -221,19 +223,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   historyDate: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
     marginBottom: 4,
   },
   historyEntry: {
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     borderRadius: 12,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -247,17 +249,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   historyMood: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "500",
     marginBottom: 4,
   },
   historyRecommendation: {
-    color: "rgba(255, 255, 255, 0.7)",
+    color: `${palette.white}${palette.alpha[70]}`,
     fontSize: 12,
   },
   historySection: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     flex: 1,
@@ -272,13 +274,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   historySectionTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   scoreDisplay: {
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backgroundColor: `${palette.white}${palette.alpha[20]}`,
     borderRadius: 80,
     height: 160,
     justifyContent: "center",
@@ -293,12 +295,12 @@ const styles = StyleSheet.create({
     width: 40,
   },
   scoreIndicatorText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
   },
   scoreNumber: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 64,
     fontWeight: "700",
   },
@@ -307,7 +309,7 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
   },
   seeAllText: {
-    color: "#C4A574",
+    color: palette.tan[500],
     fontSize: 14,
     fontWeight: "500",
   },
@@ -318,12 +320,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   statusBadgeText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
   },
   statusLabel: {
-    color: "rgba(255, 255, 255, 0.8)",
+    color: `${palette.white}${palette.alpha[80]}`,
     fontSize: 16,
   },
 });

@@ -2,6 +2,7 @@
  * MonthlyHealthReportScreen Component
  * @description Monthly mental health report summary screen
  * @task Task 3.7.12: Monthly Health Report Screen (Screen 64)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -12,6 +13,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface MoodTrendData {
   week: string;
@@ -228,7 +230,7 @@ export function MonthlyHealthReportScreen({
 
 const styles = StyleSheet.create({
   actionContainer: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flexDirection: "row",
     paddingBottom: 32,
     paddingHorizontal: 24,
@@ -236,7 +238,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -246,7 +248,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
@@ -258,7 +260,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   chartBar: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 4,
     width: 40,
   },
@@ -269,24 +271,24 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   chartContainer: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     marginBottom: 16,
     padding: 16,
   },
   chartLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 10,
     marginTop: 8,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   downloadButton: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flexDirection: "row",
     justifyContent: "center",
@@ -300,7 +302,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   downloadText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "500",
   },
@@ -312,12 +314,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
   insightCard: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flexDirection: "row",
     marginBottom: 12,
@@ -327,7 +329,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   insightDescription: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 13,
     lineHeight: 20,
     marginTop: 4,
@@ -337,7 +339,7 @@ const styles = StyleSheet.create({
   },
   insightIconContainer: {
     alignItems: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 10,
     height: 40,
     justifyContent: "center",
@@ -345,7 +347,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   insightTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 15,
     fontWeight: "600",
   },
@@ -354,7 +356,7 @@ const styles = StyleSheet.create({
   },
   metricCard: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     padding: 16,
     width: "48%",
@@ -364,12 +366,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   metricLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 4,
   },
   metricValue: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
   },
@@ -381,19 +383,19 @@ const styles = StyleSheet.create({
     rowGap: 12,
   },
   monthTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 28,
     fontWeight: "700",
     marginBottom: 4,
   },
   negativeChange: {
-    color: "#E8853A",
+    color: palette.onboarding.step2,
   },
   positiveChange: {
-    color: "#9AAD5C",
+    color: palette.olive[500],
   },
   reportSubtitle: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     marginBottom: 24,
   },
@@ -401,7 +403,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   scoreChangeLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 2,
   },
@@ -411,27 +413,27 @@ const styles = StyleSheet.create({
   },
   scoreCircle: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 50,
     height: 100,
     justifyContent: "center",
     width: 100,
   },
   scoreLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     opacity: 0.8,
   },
   scoreSection: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     flexDirection: "row",
     marginBottom: 16,
     padding: 20,
   },
   scoreValue: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 36,
     fontWeight: "700",
   },
@@ -443,7 +445,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sectionTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 12,
@@ -459,7 +461,7 @@ const styles = StyleSheet.create({
   },
   viewDetailsButton: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 12,
     flex: 1,
     justifyContent: "center",
@@ -467,7 +469,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   viewDetailsText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
   },

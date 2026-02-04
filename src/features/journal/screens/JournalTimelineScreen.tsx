@@ -2,6 +2,7 @@
  * JournalTimelineScreen Component
  * @screen Screen 84: Journal Timeline List
  * @audit batch-17-journal-continued.md
+ * @phase Phase 3C: Refactored to use theme tokens
  * @fixes CRITICAL: All harmful placeholder content replaced (Issue #84-1, #84-2, #84-3)
  * @fixes Typo: "Im" → "I'm" (Issue #84-6)
  *
@@ -20,19 +21,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-
-const colors = {
-  screenBg: "#1C1410",
-  white: "#FFFFFF",
-  subtitle: "#94A3B8",
-  cardBg: "#2A1F19",
-  cardBorder: "#3D2E23",
-  selectedDayBg: "#E8853A",
-  backBtnBorder: "rgba(255,255,255,0.3)",
-  timelineLine: "#3D2E23",
-  metaText: "#94A3B8",
-  sortText: "#C4A574",
-} as const;
+import { palette } from "../../../shared/theme";
 
 interface CalendarDay {
   dayLabel: string;
@@ -98,7 +87,7 @@ export function JournalTimelineScreen({
               style={[
                 styles.calendarDay,
                 day.selected && {
-                  backgroundColor: colors.selectedDayBg,
+                  backgroundColor: palette.onboarding.step2,
                 },
               ]}
               onPress={() => onDaySelect(index)}
@@ -221,7 +210,7 @@ export function JournalTimelineScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: colors.backBtnBorder,
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 22,
     borderWidth: 1,
     height: 44,
@@ -230,14 +219,14 @@ const styles = StyleSheet.create({
     minWidth: 44,
     width: 44,
   },
-  backIcon: { color: colors.white, fontSize: 22 },
+  backIcon: { color: palette.white, fontSize: 22 },
   calendarDate: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 16,
     fontWeight: "700",
     marginTop: 4,
   },
-  calendarDateSelected: { color: colors.white },
+  calendarDateSelected: { color: palette.white },
   calendarDay: {
     alignItems: "center",
     borderRadius: 16,
@@ -246,11 +235,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   calendarDayLabel: {
-    color: colors.subtitle,
+    color: palette.gray[400],
     fontSize: 12,
     fontWeight: "500",
   },
-  calendarDayLabelSelected: { color: colors.white },
+  calendarDayLabelSelected: { color: palette.white },
   calendarMoodDot: {
     borderRadius: 4,
     height: 8,
@@ -258,7 +247,7 @@ const styles = StyleSheet.create({
     width: 8,
   },
   calendarStrip: {
-    backgroundColor: colors.cardBg,
+    backgroundColor: palette.brown[800],
     borderRadius: 20,
     flexDirection: "row",
     marginTop: 16,
@@ -266,7 +255,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   container: {
-    backgroundColor: colors.screenBg,
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 60,
@@ -276,7 +265,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   entryPreview: {
-    color: colors.subtitle,
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 20,
     marginTop: 4,
@@ -287,17 +276,17 @@ const styles = StyleSheet.create({
     minHeight: 44,
   },
   entryTitle: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 16,
     fontWeight: "700",
     marginTop: 4,
   },
   metaText: {
-    color: colors.metaText,
+    color: palette.gray[400],
     fontSize: 12,
   },
   metaSeparator: {
-    color: colors.metaText,
+    color: palette.gray[400],
     fontSize: 12,
     marginHorizontal: 6,
   },
@@ -319,12 +308,12 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   moodBadgeText: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
   },
   screenTitle: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 28,
     fontWeight: "700",
     marginTop: 20,
@@ -340,7 +329,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   sortText: {
-    color: colors.sortText,
+    color: palette.tan[500],
     fontSize: 14,
     fontWeight: "600",
   },
@@ -348,7 +337,7 @@ const styles = StyleSheet.create({
     width: 44,
   },
   timeLabel: {
-    color: colors.subtitle,
+    color: palette.gray[400],
     fontSize: 13,
     fontWeight: "500",
   },
@@ -358,12 +347,12 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   timelineLabel: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
   timelineLine: {
-    backgroundColor: colors.timelineLine,
+    backgroundColor: palette.brown[700],
     bottom: 0,
     left: 56,
     position: "absolute",

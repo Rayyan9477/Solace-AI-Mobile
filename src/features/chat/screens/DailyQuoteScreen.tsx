@@ -2,10 +2,12 @@
  * DailyQuoteScreen Component
  * @description Daily inspirational quote screen for mental wellness
  * @task Task 3.7.11: Daily Quote Screen (Screen 63)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface DailyQuoteScreenProps {
   quote: string;
@@ -142,7 +144,7 @@ export function DailyQuoteScreen({
 const styles = StyleSheet.create({
   actionButton: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flex: 1,
     marginHorizontal: 6,
@@ -150,8 +152,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   actionButtonActive: {
-    backgroundColor: "#3D2E23",
-    borderColor: "#9AAD5C",
+    backgroundColor: palette.brown[700],
+    borderColor: palette.olive[500],
     borderWidth: 1,
   },
   actionIcon: {
@@ -164,12 +166,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   actionText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     fontWeight: "500",
   },
   authorText: {
-    color: "#C4A574",
+    color: palette.tan[500],
     fontSize: 16,
     fontStyle: "italic",
     fontWeight: "500",
@@ -178,7 +180,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -188,31 +190,31 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
   brandingText: {
-    color: "#64748B",
+    color: palette.gray[500],
     fontSize: 12,
     marginTop: 32,
     textAlign: "center",
   },
   categoryBadge: {
     alignSelf: "flex-start",
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 12,
     marginBottom: 16,
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
   categoryText: {
-    color: "#C4A574",
+    color: palette.tan[500],
     fontSize: 12,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
@@ -223,14 +225,14 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 56,
     paddingVertical: 16,
   },
   continueButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -250,12 +252,12 @@ const styles = StyleSheet.create({
     width: 40,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
   quoteCard: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 20,
     marginHorizontal: 24,
     marginTop: 16,
@@ -264,7 +266,7 @@ const styles = StyleSheet.create({
     maxWidth: 350,
   },
   quoteIcon: {
-    color: "#9AAD5C",
+    color: palette.olive[500],
     fontSize: 60,
     fontWeight: "700",
     lineHeight: 60,
@@ -274,7 +276,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   quoteText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontStyle: "italic",
     fontWeight: "500",
@@ -286,7 +288,7 @@ const styles = StyleSheet.create({
   },
   savedIndicator: {
     alignItems: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 8,
     flexDirection: "row",
     justifyContent: "center",
@@ -295,7 +297,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   savedText: {
-    color: "#9AAD5C",
+    color: palette.olive[500],
     fontSize: 12,
     fontWeight: "500",
   },

@@ -2,6 +2,7 @@
  * MindfulnessActivitiesScreen Component
  * @description Mindfulness activities detail screen with resources
  * @task Task 3.5.6: Mindfulness Activities Screen (Screen 45)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -13,6 +14,7 @@ import {
   ScrollView,
   Image,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface Activity {
   id: string;
@@ -231,7 +233,7 @@ const styles = StyleSheet.create({
   },
   activityIconContainer: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 28,
     height: 56,
     justifyContent: "center",
@@ -239,18 +241,18 @@ const styles = StyleSheet.create({
     width: 56,
   },
   activityLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     textAlign: "center",
   },
   articleDescription: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 20,
     marginBottom: 16,
   },
   articleTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 8,
@@ -258,7 +260,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "rgba(255, 255, 255, 0.3)",
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -268,19 +270,19 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   benefitCheckmark: {
-    color: "#9AAD5C",
+    color: palette.olive[500],
     fontSize: 14,
     fontWeight: "600",
     marginRight: 6,
   },
   benefitTag: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     flexDirection: "row",
     marginRight: 8,
@@ -292,11 +294,11 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   benefitText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
   },
   contentSection: {
@@ -304,7 +306,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   durationBadge: {
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: `${palette.black}${palette.alpha[70]}`,
     borderRadius: 8,
     bottom: 12,
     paddingHorizontal: 8,
@@ -313,12 +315,12 @@ const styles = StyleSheet.create({
     right: 12,
   },
   durationText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
   },
   footer: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     paddingBottom: 32,
     paddingHorizontal: 24,
     paddingTop: 16,
@@ -331,7 +333,7 @@ const styles = StyleSheet.create({
   },
   markCompletedButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -340,19 +342,19 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   markCompletedIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   markCompletedText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
   playButton: {
     alignItems: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
@@ -364,11 +366,11 @@ const styles = StyleSheet.create({
     width: 48,
   },
   playIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
   },
   screenTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 28,
     fontWeight: "700",
     marginTop: 16,
@@ -384,12 +386,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   sectionTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   seeAllText: {
-    color: "#C4A574",
+    color: palette.tan[500],
     fontSize: 14,
     fontWeight: "500",
   },
@@ -400,7 +402,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   videoThumbnail: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     height: "100%",
     width: "100%",
   },

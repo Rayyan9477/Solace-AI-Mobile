@@ -2,6 +2,7 @@
  * CrisisSupportAlertScreen Component
  * @screen Screen 86: Crisis Support Alert
  * @audit batch-18-journal-final-sleep-start.md
+ * @phase Phase 3C: Refactored to use theme tokens
  * @fixes CRITICAL #86-1: Uses safe, empathetic language — "Crisis Pattern Detected"
  *        instead of the original harmful "Suicidal Mental Pattern Detected by AI!"
  * @fixes #86-2: "multiple account" → "multiple instances" (grammar fix)
@@ -26,21 +27,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-
-const colors = {
-  backdrop: "rgba(0, 0, 0, 0.7)",
-  modalBg: "#1C1410",
-  white: "#FFFFFF",
-  subtitle: "#94A3B8",
-  illustrationBg: "#F5EDE3",
-  primaryBtnBg: "#4A3A7A",
-  secondaryBtnBg: "#6B5B9A",
-  dismissBg: "#3D2E23",
-  closeBg: "rgba(255,255,255,0.15)",
-  titleText: "#FFFFFF",
-  bodyText: "#94A3B8",
-  plantGreen: "#6B8E5A",
-} as const;
+import { palette } from "../../../shared/theme";
 
 interface CrisisSupportAlertScreenProps {
   visible: boolean;
@@ -142,7 +129,7 @@ export function CrisisSupportAlertScreen({
 
 const styles = StyleSheet.create({
   backdrop: {
-    backgroundColor: colors.backdrop,
+    backgroundColor: `${palette.black}${palette.alpha[70]}`,
     bottom: 0,
     left: 0,
     position: "absolute",
@@ -150,7 +137,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   body: {
-    color: colors.bodyText,
+    color: palette.gray[400],
     fontSize: 15,
     lineHeight: 22,
     marginTop: 12,
@@ -167,7 +154,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignItems: "center",
-    backgroundColor: colors.closeBg,
+    backgroundColor: `${palette.white}${palette.alpha[15]}`,
     borderRadius: 22,
     height: 44,
     justifyContent: "center",
@@ -176,7 +163,7 @@ const styles = StyleSheet.create({
     width: 44,
   },
   closeIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -187,7 +174,7 @@ const styles = StyleSheet.create({
   },
   dismissButton: {
     alignItems: "center",
-    backgroundColor: colors.dismissBg,
+    backgroundColor: palette.brown[700],
     borderRadius: 22,
     height: 44,
     justifyContent: "center",
@@ -196,7 +183,7 @@ const styles = StyleSheet.create({
     width: 44,
   },
   dismissDot: {
-    backgroundColor: colors.white,
+    backgroundColor: palette.white,
     borderRadius: 5,
     height: 10,
     opacity: 0.5,
@@ -204,7 +191,7 @@ const styles = StyleSheet.create({
   },
   illustration: {
     alignItems: "center",
-    backgroundColor: colors.illustrationBg,
+    backgroundColor: palette.stone[100],
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     height: 200,
@@ -215,7 +202,7 @@ const styles = StyleSheet.create({
   },
   modalCard: {
     alignItems: "center",
-    backgroundColor: colors.modalBg,
+    backgroundColor: palette.brown[900],
     borderRadius: 24,
     marginHorizontal: 24,
     overflow: "hidden",
@@ -234,7 +221,7 @@ const styles = StyleSheet.create({
     fontSize: 48,
   },
   plantLeft: {
-    backgroundColor: colors.plantGreen,
+    backgroundColor: palette.olive[700],
     borderRadius: 20,
     height: 60,
     left: 10,
@@ -245,7 +232,7 @@ const styles = StyleSheet.create({
     width: 30,
   },
   plantRight: {
-    backgroundColor: colors.plantGreen,
+    backgroundColor: palette.olive[700],
     borderRadius: 20,
     height: 60,
     opacity: 0.6,
@@ -257,7 +244,7 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     alignItems: "center",
-    backgroundColor: colors.primaryBtnBg,
+    backgroundColor: palette.onboarding.step5,
     borderRadius: 16,
     flexDirection: "row",
     justifyContent: "center",
@@ -273,13 +260,13 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   primaryButtonText: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 15,
     fontWeight: "700",
   },
   secondaryButton: {
     alignItems: "center",
-    backgroundColor: colors.secondaryBtnBg,
+    backgroundColor: palette.onboarding.step5,
     borderRadius: 16,
     flexDirection: "row",
     justifyContent: "center",
@@ -295,12 +282,12 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   secondaryButtonText: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 15,
     fontWeight: "700",
   },
   title: {
-    color: colors.titleText,
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     marginTop: 20,

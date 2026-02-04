@@ -2,10 +2,12 @@
  * NotAllowed403Screen Component
  * @description Permission denied (403) error screen with contact admin option
  * @task Task 3.18.5: NotAllowed403 Screen (Screen 158)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface NotAllowed403ScreenProps {
   onBack: () => void;
@@ -14,13 +16,13 @@ interface NotAllowed403ScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
-  illustrationBg: "#E8853A",
-  contactBg: "#2A1F18",
-  ctaButtonBg: "#C4A574",
-  ctaButtonText: "#1C1410",
+  background: palette.brown[900],
+  white: palette.white,
+  textSecondary: `${palette.white}${palette.alpha[60]}`,
+  illustrationBg: palette.onboarding.step2,
+  contactBg: palette.brown[800],
+  ctaButtonBg: palette.tan[500],
+  ctaButtonText: palette.brown[900],
 } as const;
 
 export function NotAllowed403Screen({

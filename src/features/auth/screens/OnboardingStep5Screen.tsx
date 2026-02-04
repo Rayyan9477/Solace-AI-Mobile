@@ -1,9 +1,10 @@
 /**
  * OnboardingStep5Screen
  * @description Fifth and final step of onboarding carousel - Community Support
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
- * - Theme: Purple/Lavender (#7B68B5)
+ * - Theme: Purple/Lavender (palette.onboarding.step5)
  * - Illustration: Multiple hands holding heart
  * - Message: Loving & Supportive Community
  */
@@ -13,6 +14,7 @@ import { OnboardingCarouselCard } from "../../../shared/components/templates/onb
 import type { OnboardingStepData } from "../../../shared/components/templates/onboarding";
 import type { AuthScreenProps } from "../../../shared/types/navigation";
 import { PlaceholderIllustration } from "../../../assets/illustrations/PlaceholderIllustration";
+import { palette } from "../../../shared/theme";
 
 /**
  * Step 5 configuration data
@@ -23,8 +25,8 @@ const STEP_DATA: OnboardingStepData = {
   stepLabel: "Step Five",
   title: "Loving & Supportive Community",
   highlightedWords: ["Community"],
-  illustrationComponent: <PlaceholderIllustration stepNumber={5} color="#7B68B5" />,
-  backgroundColor: "#7B68B5",
+  illustrationComponent: <PlaceholderIllustration stepNumber={5} color={palette.onboarding.step5} />,
+  backgroundColor: palette.onboarding.step5,
   totalSteps: 5,
 };
 

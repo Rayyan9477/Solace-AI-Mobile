@@ -4,6 +4,7 @@
  *   media toolbar, privacy toggle, and publish/draft actions
  * @task Task 3.14.4: New Post Composer Screen (Screen 122)
  * @audit-fix Replaced anime character names with appropriate placeholders
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -15,6 +16,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface PostTypeItem {
   id: string;
@@ -43,19 +45,19 @@ interface NewPostComposerScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  cardBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
-  badgeBg: "#3D2E23",
-  pillBg: "#2A1F18",
-  pillSelected: "#9AAD5C",
-  toggleOff: "#3D2E23",
-  toggleOn: "#9AAD5C",
-  draftButtonBg: "#2A1F18",
-  postButtonBg: "#C4A574",
-  postButtonText: "#1C1410",
-  toolbarIcon: "rgba(255,255,255,0.5)",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  cardBg: palette.background.secondary,
+  textSecondary: palette.text.secondary,
+  badgeBg: palette.background.tertiary,
+  pillBg: palette.background.secondary,
+  pillSelected: palette.accent.green,
+  toggleOff: palette.background.tertiary,
+  toggleOn: palette.accent.green,
+  draftButtonBg: palette.background.secondary,
+  postButtonBg: palette.primary.gold,
+  postButtonText: palette.background.primary,
+  toolbarIcon: palette.text.tertiary,
 } as const;
 
 export function NewPostComposerScreen({
@@ -246,7 +248,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   avatar: {
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: palette.opacity.white10,
     borderRadius: 22,
     height: 44,
     width: 44,

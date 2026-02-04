@@ -1,9 +1,10 @@
 /**
  * OnboardingStep4Screen
  * @description Fourth step of onboarding carousel - Mindful Resources
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
- * - Theme: Golden/Mustard (#C4A535)
+ * - Theme: Golden/Mustard (palette.onboarding.step4)
  * - Illustration: Person spreading arms joyfully
  * - Message: Mindful Resources That Makes You Happy
  */
@@ -13,6 +14,7 @@ import { OnboardingCarouselCard } from "../../../shared/components/templates/onb
 import type { OnboardingStepData } from "../../../shared/components/templates/onboarding";
 import type { AuthScreenProps } from "../../../shared/types/navigation";
 import { PlaceholderIllustration } from "../../../assets/illustrations/PlaceholderIllustration";
+import { palette } from "../../../shared/theme";
 
 /**
  * Step 4 configuration data
@@ -23,8 +25,8 @@ const STEP_DATA: OnboardingStepData = {
   stepLabel: "Step Four",
   title: "Mindful Resources That Makes You Happy",
   highlightedWords: ["Resources"],
-  illustrationComponent: <PlaceholderIllustration stepNumber={4} color="#C4A535" />,
-  backgroundColor: "#C4A535",
+  illustrationComponent: <PlaceholderIllustration stepNumber={4} color={palette.onboarding.step4} />,
+  backgroundColor: palette.onboarding.step4,
   totalSteps: 5,
 };
 

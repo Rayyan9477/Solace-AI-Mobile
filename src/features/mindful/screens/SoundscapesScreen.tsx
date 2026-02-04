@@ -3,6 +3,7 @@
  * @description Third step of new exercise wizard with audio waveform visualization,
  *   horizontal soundscape chips, search input, and continue button
  * @task Task 3.12.5: Soundscapes Screen (Screen 108)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -14,6 +15,7 @@ import {
   TextInput,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface SoundscapeOption {
   id: string;
@@ -32,16 +34,16 @@ interface SoundscapesScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  chipBg: "#2A1F18",
-  chipSelected: "#E8853A",
-  continueBg: "#C4A574",
-  searchBg: "#2A1F18",
-  textSecondary: "rgba(255,255,255,0.6)",
-  stepIndicator: "#9AAD5C",
-  waveformBar: "rgba(255,255,255,0.3)",
-  waveformBarActive: "#C4A574",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  chipBg: palette.background.secondary,
+  chipSelected: palette.accent.orange,
+  continueBg: palette.primary.gold,
+  searchBg: palette.background.secondary,
+  textSecondary: palette.text.secondary,
+  stepIndicator: palette.accent.green,
+  waveformBar: palette.opacity.white30,
+  waveformBarActive: palette.primary.gold,
 } as const;
 
 // Waveform bar heights (decorative placeholder)

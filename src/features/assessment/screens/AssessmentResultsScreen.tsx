@@ -2,10 +2,12 @@
  * AssessmentResultsScreen Component
  * @description Assessment results display with score, breakdown, and recommendations
  * @task Task 3.4.5: Assessment Results Screen (Screen 39)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { palette } from "../../../shared/theme";
 
 type Category = "healthy" | "unstable" | "critical";
 
@@ -26,17 +28,17 @@ interface AssessmentResultsScreenProps {
 
 const CATEGORY_CONFIG = {
   healthy: {
-    color: "#9AAD5C",
+    color: palette.olive[500],
     label: "Healthy",
     emoji: "✨",
   },
   unstable: {
-    color: "#E8853A",
+    color: palette.onboarding.step2,
     label: "Unstable",
     emoji: "⚠️",
   },
   critical: {
-    color: "#E85353",
+    color: palette.red[500],
     label: "Critical",
     emoji: "🚨",
   },
@@ -147,7 +149,7 @@ export function AssessmentResultsScreen({
 
 const styles = StyleSheet.create({
   breakdownBar: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 4,
     flex: 1,
     height: 8,
@@ -160,7 +162,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   breakdownLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     width: 100,
   },
@@ -174,7 +176,7 @@ const styles = StyleSheet.create({
     width: 30,
   },
   breakdownSection: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     marginBottom: 24,
     marginHorizontal: 24,
@@ -198,18 +200,18 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   categoryText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flex: 1,
     flexDirection: "row",
@@ -220,13 +222,13 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   continueButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   continueButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
@@ -236,7 +238,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   recommendationBullet: {
-    color: "#9AAD5C",
+    color: palette.olive[500],
     fontSize: 16,
     marginRight: 8,
   },
@@ -245,13 +247,13 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   recommendationText: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 14,
     lineHeight: 20,
   },
   recommendationsSection: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     marginBottom: 24,
     marginHorizontal: 24,
@@ -259,7 +261,7 @@ const styles = StyleSheet.create({
   },
   scoreCircle: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 80,
     borderWidth: 4,
     height: 160,
@@ -267,7 +269,7 @@ const styles = StyleSheet.create({
     width: 160,
   },
   scoreLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 4,
     textAlign: "center",
@@ -277,24 +279,24 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   scoreValue: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 56,
     fontWeight: "700",
   },
   sectionTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 16,
   },
   title: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 28,
     fontWeight: "700",
   },
   viewDetailsButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 28,
     borderWidth: 1,
     flex: 1,
@@ -304,7 +306,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   viewDetailsButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },

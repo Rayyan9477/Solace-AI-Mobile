@@ -2,6 +2,7 @@
  * NewJournalTypeSelectorScreen Component
  * @screen Screen 80: New Journal Type Selector
  * @audit batch-17-journal-continued.md
+ * @phase Phase 3C: Refactored to use theme tokens
  * @fixes "Automaticly" → "Automatically", "ealth" → "health"
  *
  * Visual ref: Mental_Health_Journal_Screen_03.png
@@ -18,21 +19,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-
-const colors = {
-  screenBg: "#1C1410",
-  white: "#FFFFFF",
-  subtitle: "#94A3B8",
-  cardBg: "#2A1F19",
-  cardBorder: "#3D2E23",
-  cardBorderSelected: "#C4A574",
-  voiceIconBg: "#9AAD5C",
-  textIconBg: "#E8853A",
-  chevron: "#94A3B8",
-  ctaBg: "#8B6914",
-  ctaText: "#FFFFFF",
-  backBtnBorder: "rgba(255,255,255,0.3)",
-} as const;
+import { palette } from "../../../shared/theme";
 
 interface NewJournalTypeSelectorScreenProps {
   selectedType: "voice" | "text" | null;
@@ -76,7 +63,7 @@ export function NewJournalTypeSelectorScreen({
         accessibilityRole="button"
         accessibilityLabel="Select voice journal"
       >
-        <View style={[styles.iconCircle, { backgroundColor: colors.voiceIconBg }]}>
+        <View style={[styles.iconCircle, { backgroundColor: palette.olive[500] }]}>
           <Text style={styles.iconEmoji}>🎙</Text>
         </View>
         <View style={styles.cardContent}>
@@ -101,7 +88,7 @@ export function NewJournalTypeSelectorScreen({
         accessibilityRole="button"
         accessibilityLabel="Select text journal"
       >
-        <View style={[styles.iconCircle, { backgroundColor: colors.textIconBg }]}>
+        <View style={[styles.iconCircle, { backgroundColor: palette.onboarding.step2 }]}>
           <Text style={styles.iconEmoji}>📝</Text>
         </View>
         <View style={styles.cardContent}>
@@ -135,7 +122,7 @@ export function NewJournalTypeSelectorScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: colors.backBtnBorder,
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 22,
     borderWidth: 1,
     height: 44,
@@ -145,13 +132,13 @@ const styles = StyleSheet.create({
     width: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 22,
   },
   card: {
     alignItems: "center",
-    backgroundColor: colors.cardBg,
-    borderColor: colors.cardBorder,
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 16,
     borderWidth: 1,
     flexDirection: "row",
@@ -164,40 +151,40 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   cardDescription: {
-    color: colors.subtitle,
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 20,
     marginTop: 4,
   },
   cardSelected: {
-    borderColor: colors.cardBorderSelected,
+    borderColor: palette.tan[500],
   },
   cardTitle: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   chevron: {
-    color: colors.chevron,
+    color: palette.gray[400],
     fontSize: 24,
     marginLeft: 8,
   },
   container: {
-    backgroundColor: colors.screenBg,
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 60,
   },
   ctaButton: {
     alignItems: "center",
-    backgroundColor: colors.ctaBg,
+    backgroundColor: palette.tan[600],
     borderRadius: 16,
     marginBottom: 40,
     minHeight: 44,
     paddingVertical: 16,
   },
   ctaText: {
-    color: colors.ctaText,
+    color: palette.white,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -215,7 +202,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 28,
     fontWeight: "700",
     marginBottom: 16,

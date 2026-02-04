@@ -2,10 +2,12 @@
  * MoodStatsScreen Component
  * @description Detailed mood statistics with line graph, time range filtering, and emoji calendar
  * @task Task 3.8.2: Mood Stats Screen (Screen 68)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface ChartDataPoint {
   date: string;
@@ -172,7 +174,7 @@ export function MoodStatsScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -182,7 +184,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
@@ -192,14 +194,14 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   chartContainer: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     marginHorizontal: 24,
     marginTop: 16,
     padding: 20,
   },
   chartGradient: {
-    backgroundColor: "rgba(232, 133, 58, 0.1)",
+    backgroundColor: `${palette.onboarding.step2}${palette.alpha[10]}`,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
     bottom: 0,
@@ -209,7 +211,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
@@ -221,15 +223,15 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   dataPointDot: {
-    backgroundColor: "#E8853A",
-    borderColor: "#FFFFFF",
+    backgroundColor: palette.onboarding.step2,
+    borderColor: palette.white,
     borderRadius: 6,
     borderWidth: 2,
     height: 12,
     width: 12,
   },
   emojiCalendarRow: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -244,13 +246,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   emojiDayLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 11,
     marginTop: 4,
   },
   fab: {
     alignItems: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 28,
     bottom: 32,
     elevation: 4,
@@ -260,14 +262,14 @@ const styles = StyleSheet.create({
     minWidth: 44,
     position: "absolute",
     right: 24,
-    shadowColor: "#000",
+    shadowColor: palette.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     width: 56,
   },
   fabIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 28,
     fontWeight: "600",
   },
@@ -279,7 +281,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -290,17 +292,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   sortIcon: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     marginRight: 4,
   },
   sortLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
   },
   timeRangeChip: {
-    backgroundColor: "#2A1F19",
-    borderColor: "#3D2E23",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     marginRight: 8,
@@ -309,8 +311,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   timeRangeChipActive: {
-    backgroundColor: "#E8853A",
-    borderColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
+    borderColor: palette.onboarding.step2,
   },
   timeRangeContainer: {
     maxHeight: 60,
@@ -319,11 +321,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   timeRangeText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
   },
   timeRangeTextActive: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontWeight: "600",
   },
   trendContainer: {
@@ -331,7 +333,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   trendText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 20,
   },

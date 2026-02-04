@@ -3,10 +3,12 @@
  * @description Breathing exercise player with concentric circles, instruction text,
  *   progress bar, and playback controls on full green background
  * @task Task 3.12.6: Mindful Player Screen (Screen 109)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface MindfulPlayerScreenProps {
   soundName: string;
@@ -21,17 +23,17 @@ interface MindfulPlayerScreenProps {
 }
 
 const colors = {
-  background: "#9AAD5C",
-  white: "#FFFFFF",
-  circleRing1: "rgba(255,255,255,0.08)",
-  circleRing2: "rgba(255,255,255,0.12)",
-  circleRing3: "rgba(255,255,255,0.18)",
-  progressTrack: "rgba(255,255,255,0.3)",
-  progressFill: "#FFFFFF",
-  controlIcon: "#FFFFFF",
-  playPauseBg: "#FFFFFF",
-  playPauseIcon: "#9AAD5C",
-  badgeBorder: "rgba(255,255,255,0.4)",
+  background: palette.accent.green,
+  white: palette.text.primary,
+  circleRing1: palette.opacity.white08,
+  circleRing2: palette.opacity.white12,
+  circleRing3: palette.opacity.white18,
+  progressTrack: palette.opacity.white30,
+  progressFill: palette.text.primary,
+  controlIcon: palette.text.primary,
+  playPauseBg: palette.text.primary,
+  playPauseIcon: palette.accent.green,
+  badgeBorder: palette.opacity.white40,
 } as const;
 
 export function MindfulPlayerScreen({

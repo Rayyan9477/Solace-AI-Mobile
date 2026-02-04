@@ -1,9 +1,10 @@
 /**
  * OnboardingStep3Screen
  * @description Third step of onboarding carousel - AI Journaling
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Features:
- * - Theme: Gray/Muted (#6B6B6B)
+ * - Theme: Gray/Muted (palette.onboarding.step3)
  * - Illustration: Person writing in journal
  * - Message: AI Mental Journaling & AI Therapy Chatbot
  */
@@ -13,6 +14,7 @@ import { OnboardingCarouselCard } from "../../../shared/components/templates/onb
 import type { OnboardingStepData } from "../../../shared/components/templates/onboarding";
 import type { AuthScreenProps } from "../../../shared/types/navigation";
 import { PlaceholderIllustration } from "../../../assets/illustrations/PlaceholderIllustration";
+import { palette } from "../../../shared/theme";
 
 /**
  * Step 3 configuration data
@@ -23,8 +25,8 @@ const STEP_DATA: OnboardingStepData = {
   stepLabel: "Step Three",
   title: "AI Mental Journaling & AI Therapy Chatbot",
   highlightedWords: ["Mental"],
-  illustrationComponent: <PlaceholderIllustration stepNumber={3} color="#6B6B6B" />,
-  backgroundColor: "#6B6B6B",
+  illustrationComponent: <PlaceholderIllustration stepNumber={3} color={palette.onboarding.step3} />,
+  backgroundColor: palette.onboarding.step3,
   totalSteps: 5,
 };
 

@@ -4,6 +4,7 @@
  * @task Task 3.14.10: Community Chatbot Screen (Screen 128)
  * @audit-fix Replaced "Doctor Freud.AI" with "Doctor Solace.AI"
  * @audit-fix Replaced "GPT-6" with "Solace AI"
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -15,6 +16,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface ChatMessage {
   id: string;
@@ -36,16 +38,16 @@ interface CommunityChatbotScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
-  userBubble: "#C4A574",
-  userBubbleText: "#1C1410",
-  aiBubble: "#2A1F18",
-  aiBubbleText: "#FFFFFF",
-  inputBg: "#2A1F18",
-  sendBg: "#C4A574",
-  sendIcon: "#1C1410",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  textSecondary: palette.text.secondary,
+  userBubble: palette.primary.gold,
+  userBubbleText: palette.background.primary,
+  aiBubble: palette.background.secondary,
+  aiBubbleText: palette.text.primary,
+  inputBg: palette.background.secondary,
+  sendBg: palette.primary.gold,
+  sendIcon: palette.background.primary,
 } as const;
 
 export function CommunityChatbotScreen({

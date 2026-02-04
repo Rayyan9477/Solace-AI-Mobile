@@ -5,10 +5,12 @@
  * @audit-fix "mediation" → "meditation" (Issue #33)
  * @audit-fix "Pelase" → "Please" (Issue #33)
  * @audit-fix "Dr Freud AI" → "Dr Solace AI"
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface MeditationReminderScreenProps {
   recommendedDuration: number;
@@ -17,12 +19,12 @@ interface MeditationReminderScreenProps {
 }
 
 const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  textSecondary: "rgba(255,255,255,0.6)",
-  illustrationBg: "#3D2E23",
-  ctaButtonBg: "#C4A574",
-  ctaButtonText: "#1C1410",
+  background: palette.background.primary,
+  white: palette.text.primary,
+  textSecondary: palette.text.secondary,
+  illustrationBg: palette.background.tertiary,
+  ctaButtonBg: palette.primary.gold,
+  ctaButtonText: palette.background.primary,
 } as const;
 
 export function MeditationReminderScreen({

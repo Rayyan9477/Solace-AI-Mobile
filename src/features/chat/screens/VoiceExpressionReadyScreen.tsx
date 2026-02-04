@@ -2,6 +2,7 @@
  * VoiceExpressionReadyScreen Component
  * @description Voice expression ready/landing screen before recording begins
  * @task Task 3.7.8: Voice Expression Ready Screen (Screen 60)
+ * @phase Phase 3C: Refactored to use theme tokens
  */
 
 import React from "react";
@@ -12,6 +13,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface Tip {
   id: string;
@@ -171,14 +173,14 @@ export function VoiceExpressionReadyScreen({
 
 const styles = StyleSheet.create({
   actionContainer: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     paddingBottom: 32,
     paddingHorizontal: 24,
     paddingTop: 16,
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -188,18 +190,18 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   disabledButton: {
     alignItems: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -212,20 +214,20 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   disabledButtonText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 16,
     fontWeight: "600",
   },
   grantPermissionButton: {
     alignItems: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 12,
     justifyContent: "center",
     minHeight: 44,
     paddingVertical: 14,
   },
   grantPermissionText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 15,
     fontWeight: "600",
   },
@@ -240,13 +242,13 @@ const styles = StyleSheet.create({
     width: 40,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
   microphoneCircle: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 50,
     height: 100,
     justifyContent: "center",
@@ -263,7 +265,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
   },
   microphonePulse: {
-    borderColor: "#9AAD5C",
+    borderColor: palette.olive[500],
     borderRadius: 70,
     borderWidth: 2,
     height: 140,
@@ -272,7 +274,7 @@ const styles = StyleSheet.create({
     width: 140,
   },
   permissionBanner: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 12,
     flexDirection: "row",
     marginBottom: 16,
@@ -282,7 +284,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   permissionDescription: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 13,
     lineHeight: 18,
     marginTop: 4,
@@ -295,7 +297,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   permissionTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 15,
     fontWeight: "600",
   },
@@ -313,13 +315,13 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   skipButtonText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     fontWeight: "500",
   },
   startButton: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -331,19 +333,19 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   startButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   subtitle: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 32,
     textAlign: "center",
   },
   tipCard: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flexDirection: "row",
     marginBottom: 12,
@@ -353,7 +355,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tipDescription: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 13,
     lineHeight: 18,
     marginTop: 4,
@@ -363,7 +365,7 @@ const styles = StyleSheet.create({
   },
   tipIconContainer: {
     alignItems: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 10,
     height: 40,
     justifyContent: "center",
@@ -371,7 +373,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   tipTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
   },
@@ -379,13 +381,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   tipsTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 16,
   },
   title: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     marginBottom: 12,

@@ -2,6 +2,7 @@
  * VoiceJournalRecordingScreen Component
  * @screen Screen 82: Voice Journal Recording (Active)
  * @audit batch-17-journal-continued.md
+ * @phase Phase 3C: Refactored to use theme tokens
  *
  * Visual ref: Mental_Health_Journal_Screen_05.png
  * - Real-time transcription display with keyword bolding
@@ -11,22 +12,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
-
-const colors = {
-  screenBg: "#1C1410",
-  white: "#FFFFFF",
-  boldText: "#FFFFFF",
-  normalText: "rgba(255,255,255,0.8)",
-  waveformOrange: "#E8853A",
-  waveformBrown: "#8B6914",
-  waveformDark: "#3D2E23",
-  micBg: "#FFFFFF",
-  cancelBg: "#E8853A",
-  confirmBg: "#9AAD5C",
-  timerText: "#FFFFFF",
-  bottomBar: "#2A1F19",
-  backBtnBorder: "rgba(255,255,255,0.3)",
-} as const;
+import { palette } from "../../../shared/theme";
 
 interface VoiceJournalRecordingScreenProps {
   transcribedText: string;
@@ -70,7 +56,7 @@ export function VoiceJournalRecordingScreen({
       {/* Waveform */}
       <View testID="waveform-display" style={styles.waveformContainer}>
         {Array.from({ length: 28 }).map((_, i) => {
-          const waveColors = [colors.waveformOrange, colors.waveformBrown, colors.waveformDark];
+          const waveColors = [palette.onboarding.step2, palette.tan[600], palette.brown[700]];
           return (
             <View
               key={i}
@@ -136,13 +122,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   actionIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
   backButton: {
     alignItems: "center",
-    borderColor: colors.backBtnBorder,
+    borderColor: `${palette.white}${palette.alpha[30]}`,
     borderRadius: 22,
     borderWidth: 1,
     height: 44,
@@ -153,12 +139,12 @@ const styles = StyleSheet.create({
     width: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 22,
   },
   bottomSection: {
     alignItems: "center",
-    backgroundColor: colors.bottomBar,
+    backgroundColor: palette.brown[800],
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     paddingBottom: 40,
@@ -166,7 +152,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     alignItems: "center",
-    backgroundColor: colors.cancelBg,
+    backgroundColor: palette.onboarding.step2,
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
@@ -176,7 +162,7 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     alignItems: "center",
-    backgroundColor: colors.confirmBg,
+    backgroundColor: palette.olive[500],
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
@@ -185,18 +171,18 @@ const styles = StyleSheet.create({
     width: 48,
   },
   container: {
-    backgroundColor: colors.screenBg,
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   micButton: {
     alignItems: "center",
-    backgroundColor: colors.micBg,
+    backgroundColor: palette.white,
     borderRadius: 40,
     elevation: 4,
     height: 80,
     justifyContent: "center",
-    shadowColor: "#000",
+    shadowColor: palette.black,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
@@ -206,7 +192,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
   },
   timerText: {
-    color: colors.timerText,
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -219,7 +205,7 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
   },
   transcriptionText: {
-    color: colors.white,
+    color: palette.white,
     fontSize: 24,
     fontWeight: "500",
     lineHeight: 36,
