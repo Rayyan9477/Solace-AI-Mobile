@@ -1,0 +1,400 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@expo/cli": {
+      "name": "@expo/cli",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "cacache",
+        "tar"
+      ],
+      "effects": [
+        "expo"
+      ],
+      "range": "<=0.0.0-canary-20231123-1b19f96-4 || 0.0.1-canary-20231125-d600e44 - 0.23.0-canary-20250122-166c2cb || 1.0.0-canary-20240927-ab8a962 - 1.0.0-canary-20250305-0af9ad2",
+      "nodes": [
+        "node_modules/@expo/cli"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "54.0.33",
+        "isSemVerMajor": true
+      }
+    },
+    "@playwright/test": {
+      "name": "@playwright/test",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "playwright"
+      ],
+      "effects": [],
+      "range": "0.9.7 - 0.1112.0-alpha2 || 1.38.0-alpha-1692262648000 - 1.55.1-beta-1758616458000",
+      "nodes": [
+        "node_modules/@playwright/test"
+      ],
+      "fixAvailable": true
+    },
+    "cacache": {
+      "name": "cacache",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "tar"
+      ],
+      "effects": [
+        "@expo/cli"
+      ],
+      "range": "14.0.0 - 18.0.4",
+      "nodes": [
+        "node_modules/cacache"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "54.0.33",
+        "isSemVerMajor": true
+      }
+    },
+    "expo": {
+      "name": "expo",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@expo/cli"
+      ],
+      "effects": [],
+      "range": "45.0.0-beta.1 - 53.0.0-preview.12",
+      "nodes": [
+        "node_modules/expo"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "54.0.33",
+        "isSemVerMajor": true
+      }
+    },
+    "glob": {
+      "name": "glob",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1109842,
+          "name": "glob",
+          "dependency": "glob",
+          "title": "glob CLI: Command injection via -c/--cmd executes matches with shell:true",
+          "url": "https://github.com/advisories/GHSA-5j98-mcp5-4vw2",
+          "severity": "high",
+          "cwe": [
+            "CWE-78"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H"
+          },
+          "range": ">=10.2.0 <10.5.0"
+        }
+      ],
+      "effects": [],
+      "range": "10.2.0 - 10.4.5",
+      "nodes": [
+        "node_modules/@expo/cli/node_modules/glob",
+        "node_modules/@expo/config-plugins/node_modules/glob",
+        "node_modules/@expo/config/node_modules/glob",
+        "node_modules/@expo/devcert/node_modules/glob",
+        "node_modules/@expo/metro-config/node_modules/glob",
+        "node_modules/cacache/node_modules/glob",
+        "node_modules/expo-auth-session/node_modules/glob",
+        "node_modules/expo-linking/node_modules/glob",
+        "node_modules/sucrase/node_modules/glob"
+      ],
+      "fixAvailable": true
+    },
+    "js-yaml": {
+      "name": "js-yaml",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1112714,
+          "name": "js-yaml",
+          "dependency": "js-yaml",
+          "title": "js-yaml has prototype pollution in merge (<<)",
+          "url": "https://github.com/advisories/GHSA-mh29-5h37-fv8m",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": "<3.14.2"
+        },
+        {
+          "source": 1112715,
+          "name": "js-yaml",
+          "dependency": "js-yaml",
+          "title": "js-yaml has prototype pollution in merge (<<)",
+          "url": "https://github.com/advisories/GHSA-mh29-5h37-fv8m",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": ">=4.0.0 <4.1.1"
+        }
+      ],
+      "effects": [],
+      "range": "<3.14.2 || >=4.0.0 <4.1.1",
+      "nodes": [
+        "node_modules/@eslint/eslintrc/node_modules/js-yaml",
+        "node_modules/@expo/xcpretty/node_modules/js-yaml",
+        "node_modules/eslint/node_modules/js-yaml",
+        "node_modules/js-yaml"
+      ],
+      "fixAvailable": true
+    },
+    "lodash": {
+      "name": "lodash",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1112455,
+          "name": "lodash",
+          "dependency": "lodash",
+          "title": "Lodash has Prototype Pollution Vulnerability in `_.unset` and `_.omit` functions",
+          "url": "https://github.com/advisories/GHSA-xxjr-mmjv-4gpg",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 6.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:L"
+          },
+          "range": ">=4.0.0 <=4.17.22"
+        }
+      ],
+      "effects": [],
+      "range": "4.0.0 - 4.17.21",
+      "nodes": [
+        "node_modules/lodash"
+      ],
+      "fixAvailable": true
+    },
+    "node-forge": {
+      "name": "node-forge",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1110996,
+          "name": "node-forge",
+          "dependency": "node-forge",
+          "title": "node-forge has ASN.1 Unbounded Recursion",
+          "url": "https://github.com/advisories/GHSA-554w-wpv2-vw27",
+          "severity": "high",
+          "cwe": [
+            "CWE-674"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<1.3.2"
+        },
+        {
+          "source": 1110998,
+          "name": "node-forge",
+          "dependency": "node-forge",
+          "title": "node-forge has an Interpretation Conflict vulnerability via its ASN.1 Validator Desynchronization",
+          "url": "https://github.com/advisories/GHSA-5gfm-wpxj-wjgq",
+          "severity": "high",
+          "cwe": [
+            "CWE-436"
+          ],
+          "cvss": {
+            "score": 8.6,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:H/A:N"
+          },
+          "range": "<1.3.2"
+        },
+        {
+          "source": 1111068,
+          "name": "node-forge",
+          "dependency": "node-forge",
+          "title": "node-forge is vulnerable to ASN.1 OID Integer Truncation",
+          "url": "https://github.com/advisories/GHSA-65ch-62r8-g69g",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-190"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<1.3.2"
+        }
+      ],
+      "effects": [],
+      "range": "<=1.3.1",
+      "nodes": [
+        "node_modules/node-forge"
+      ],
+      "fixAvailable": true
+    },
+    "playwright": {
+      "name": "playwright",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1109208,
+          "name": "playwright",
+          "dependency": "playwright",
+          "title": "Playwright downloads and installs browsers without verifying the authenticity of the SSL certificate",
+          "url": "https://github.com/advisories/GHSA-7mvr-c777-76hp",
+          "severity": "high",
+          "cwe": [
+            "CWE-347"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<1.55.1"
+        }
+      ],
+      "effects": [
+        "@playwright/test"
+      ],
+      "range": "<1.55.1",
+      "nodes": [
+        "node_modules/playwright"
+      ],
+      "fixAvailable": true
+    },
+    "tar": {
+      "name": "tar",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1112255,
+          "name": "tar",
+          "dependency": "tar",
+          "title": "node-tar is Vulnerable to Arbitrary File Overwrite and Symlink Poisoning via Insufficient Path Sanitization",
+          "url": "https://github.com/advisories/GHSA-8qq5-rm4j-mr97",
+          "severity": "high",
+          "cwe": [
+            "CWE-22"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<=7.5.2"
+        },
+        {
+          "source": 1112329,
+          "name": "tar",
+          "dependency": "tar",
+          "title": "Race Condition in node-tar Path Reservations via Unicode Ligature Collisions on macOS APFS",
+          "url": "https://github.com/advisories/GHSA-r6q2-hw4h-h46w",
+          "severity": "high",
+          "cwe": [
+            "CWE-176"
+          ],
+          "cvss": {
+            "score": 8.8,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:H/A:L"
+          },
+          "range": "<=7.5.3"
+        },
+        {
+          "source": 1112659,
+          "name": "tar",
+          "dependency": "tar",
+          "title": "node-tar Vulnerable to Arbitrary File Creation/Overwrite via Hardlink Path Traversal",
+          "url": "https://github.com/advisories/GHSA-34x7-hfp2-rc4v",
+          "severity": "high",
+          "cwe": [
+            "CWE-22",
+            "CWE-59"
+          ],
+          "cvss": {
+            "score": 8.2,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:L/A:N"
+          },
+          "range": "<7.5.7"
+        }
+      ],
+      "effects": [
+        "@expo/cli",
+        "cacache"
+      ],
+      "range": "<=7.5.6",
+      "nodes": [
+        "node_modules/tar"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "54.0.33",
+        "isSemVerMajor": true
+      }
+    },
+    "undici": {
+      "name": "undici",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1112496,
+          "name": "undici",
+          "dependency": "undici",
+          "title": "Undici has an unbounded decompression chain in HTTP responses on Node.js Fetch API via Content-Encoding leads to resource exhaustion",
+          "url": "https://github.com/advisories/GHSA-g9mf-h72j-4rw9",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-770"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<6.23.0"
+        }
+      ],
+      "effects": [],
+      "range": "<6.23.0",
+      "nodes": [
+        "node_modules/undici"
+      ],
+      "fixAvailable": true
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 3,
+      "high": 8,
+      "critical": 0,
+      "total": 11
+    },
+    "dependencies": {
+      "prod": 1139,
+      "dev": 559,
+      "optional": 25,
+      "peer": 102,
+      "peerOptional": 0,
+      "total": 1768
+    }
+  }
+}

@@ -10,9 +10,10 @@ import type { JournalStackParamList } from "../../../shared/types/navigation";
 
 // Journal Screens
 import { JournalDashboardScreen } from "../../../features/journal/screens/JournalDashboardScreen";
-import { JournalEntryDetailScreen } from "../../../features/journal/screens/JournalEntryDetailScreen";
-import { JournalCalendarScreen } from "../../../features/journal/screens/JournalCalendarScreen";
-import { JournalInsightsScreen } from "../../../features/journal/screens/JournalInsightsScreen";
+// TODO: Create missing screens or map to existing alternatives
+// import { JournalEntryDetailScreen } from "../../../features/journal/screens/JournalEntryDetailScreen";
+// import { JournalCalendarScreen } from "../../../features/journal/screens/JournalCalendarScreen";
+// import { JournalInsightsScreen } from "../../../features/journal/screens/JournalInsightsScreen";
 import { TextJournalComposerScreen } from "../../../features/journal/screens/TextJournalComposerScreen";
 import { VoiceJournalRecordingScreen } from "../../../features/journal/screens/VoiceJournalRecordingScreen";
 
@@ -39,9 +40,10 @@ export function JournalStack(): React.ReactElement {
         component={VoiceJournalRecordingScreen}
         options={{ presentation: "modal" }}
       />
-      <Stack.Screen name="JournalEntryDetail" component={JournalEntryDetailScreen} />
-      <Stack.Screen name="JournalCalendar" component={JournalCalendarScreen} />
-      <Stack.Screen name="JournalInsights" component={JournalInsightsScreen} />
+      {/* TODO: Uncomment when screens are created */}
+      {/* <Stack.Screen name="JournalEntryDetail" component={JournalEntryDetailScreen} /> */}
+      {/* <Stack.Screen name="JournalCalendar" component={JournalCalendarScreen} /> */}
+      {/* <Stack.Screen name="JournalInsights" component={JournalInsightsScreen} /> */}
       <Stack.Screen name="TextJournalComposer" component={TextJournalComposerScreen} />
     </Stack.Navigator>
   );

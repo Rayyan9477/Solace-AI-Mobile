@@ -12,19 +12,49 @@
  * - Profile (Settings)
  */
 
-import React from "react";
+import React, { Suspense } from "react";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Icon from "react-native-vector-icons/Ionicons";
 import type { MainTabParamList } from "../../shared/types/navigation";
 import { colors, palette } from "../../shared/theme";
 
-// Stack Navigators
-import { DashboardStack } from "./stacks/DashboardStack";
-import { MoodStack } from "./stacks/MoodStack";
-import { ChatStack } from "./stacks/ChatStack";
-import { JournalStack } from "./stacks/JournalStack";
-import { ProfileStack } from "./stacks/ProfileStack";
+// Lazy Load Stack Navigators for Performance
+const DashboardStack = React.lazy(() =>
+  import("./stacks/DashboardStack").then((module) => ({
+    default: module.DashboardStack,
+  })),
+);
+const MoodStack = React.lazy(() =>
+  import("./stacks/MoodStack").then((module) => ({ default: module.MoodStack })),
+);
+const ChatStack = React.lazy(() =>
+  import("./stacks/ChatStack").then((module) => ({ default: module.ChatStack })),
+);
+const JournalStack = React.lazy(() =>
+  import("./stacks/JournalStack").then((module) => ({
+    default: module.JournalStack,
+  })),
+);
+const ProfileStack = React.lazy(() =>
+  import("./stacks/ProfileStack").then((module) => ({
+    default: module.ProfileStack,
+  })),
+);
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
+
+/**
+ * Loading Fallback Component
+ * @description Displays while lazy-loaded stacks are loading
+ */
+function StackLoadingFallback(): React.ReactElement {
+  return (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color={palette.tan[500]} />
+    </View>
+  );
+}
 
 /**
  * MainTabNavigator Component
@@ -53,76 +83,105 @@ export function MainTabNavigator(): React.ReactElement {
         },
       }}
     >
-      {/* Dashboard Tab */}
+      {/* Dashboard Tab - Lazy Loaded */}
       <Tab.Screen
         name="DashboardTab"
-        component={DashboardStack}
         options={{
           tabBarLabel: "Home",
-          tabBarIcon: ({ color, size }) => {
-            // TODO: Replace with proper icon component
-            return null;
-          },
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="home" size={size} color={color} />
+          ),
           tabBarAccessibilityLabel: "Home dashboard",
         }}
-      />
+      >
+        {() => (
+          <Suspense fallback={<StackLoadingFallback />}>
+            <DashboardStack />
+          </Suspense>
+        )}
+      </Tab.Screen>
 
-      {/* Mood Tab */}
+      {/* Mood Tab - Lazy Loaded */}
       <Tab.Screen
         name="MoodTab"
-        component={MoodStack}
         options={{
           tabBarLabel: "Mood",
-          tabBarIcon: ({ color, size }) => {
-            // TODO: Replace with proper icon component
-            return null;
-          },
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="heart" size={size} color={color} />
+          ),
           tabBarAccessibilityLabel: "Mood tracking",
         }}
-      />
+      >
+        {() => (
+          <Suspense fallback={<StackLoadingFallback />}>
+            <MoodStack />
+          </Suspense>
+        )}
+      </Tab.Screen>
 
-      {/* Chat Tab */}
+      {/* Chat Tab - Lazy Loaded */}
       <Tab.Screen
         name="ChatTab"
-        component={ChatStack}
         options={{
           tabBarLabel: "Chat",
-          tabBarIcon: ({ color, size }) => {
-            // TODO: Replace with proper icon component
-            return null;
-          },
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="chatbubbles" size={size} color={color} />
+          ),
           tabBarAccessibilityLabel: "AI therapy chat",
           tabBarBadge: undefined, // TODO: Add unread message count
         }}
-      />
+      >
+        {() => (
+          <Suspense fallback={<StackLoadingFallback />}>
+            <ChatStack />
+          </Suspense>
+        )}
+      </Tab.Screen>
 
-      {/* Journal Tab */}
+      {/* Journal Tab - Lazy Loaded */}
       <Tab.Screen
         name="JournalTab"
-        component={JournalStack}
         options={{
           tabBarLabel: "Journal",
-          tabBarIcon: ({ color, size }) => {
-            // TODO: Replace with proper icon component
-            return null;
-          },
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="book" size={size} color={color} />
+          ),
           tabBarAccessibilityLabel: "Mental health journal",
         }}
-      />
+      >
+        {() => (
+          <Suspense fallback={<StackLoadingFallback />}>
+            <JournalStack />
+          </Suspense>
+        )}
+      </Tab.Screen>
 
-      {/* Profile Tab */}
+      {/* Profile Tab - Lazy Loaded */}
       <Tab.Screen
         name="ProfileTab"
-        component={ProfileStack}
         options={{
           tabBarLabel: "Profile",
-          tabBarIcon: ({ color, size }) => {
-            // TODO: Replace with proper icon component
-            return null;
-          },
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="person" size={size} color={color} />
+          ),
           tabBarAccessibilityLabel: "User profile and settings",
         }}
-      />
+      >
+        {() => (
+          <Suspense fallback={<StackLoadingFallback />}>
+            <ProfileStack />
+          </Suspense>
+        )}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.background.primary,
+  },
+});

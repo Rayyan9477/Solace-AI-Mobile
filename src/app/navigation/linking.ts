@@ -307,6 +307,98 @@ export const linking: LinkingOptions<RootStackParamList> = {
 };
 
 /**
+ * Screen to path mapping based on linking configuration
+ * Maps screen names to their deep link paths
+ */
+const screenPaths: Record<string, string> = {
+  // Auth screens
+  Splash: "auth",
+  LoadingProgress: "auth/loading",
+  QuoteSplash: "auth/quote",
+  FetchingData: "auth/fetching",
+  WelcomeIntro: "auth/welcome",
+  OnboardingStep1: "auth/onboarding/step-1",
+  OnboardingStep2: "auth/onboarding/step-2",
+  OnboardingStep3: "auth/onboarding/step-3",
+  OnboardingStep4: "auth/onboarding/step-4",
+  OnboardingStep5: "auth/onboarding/step-5",
+  SignIn: "auth/signin",
+  SignUp: "auth/signup",
+  ForgotPassword: "auth/forgot-password",
+  VerificationSent: "auth/verification-sent",
+
+  // Dashboard screens
+  HomeDashboard: "home",
+  SolaceScoreDetail: "home/score",
+  SolaceScoreInsights: "home/score/insights",
+  AISuggestions: "home/suggestions",
+  MindfulnessActivities: "home/mindfulness",
+  ScoreHistory: "home/score/history",
+  SolaceScoreIncrease: "home/score/increase",
+
+  // Mood screens
+  MoodDashboard: "mood",
+  MoodSelector: "mood/log",
+  MoodHistory: "mood/history",
+  MoodCalendar: "mood/calendar",
+  MoodAnalytics: "mood/analytics",
+  MoodAISuggestions: "mood/suggestions",
+
+  // Chat screens
+  ChatsList: "chat",
+  ActiveChat: "chat/:conversationId",
+  NewConversation: "chat/new",
+  ChatbotLimitations: "chat/limitations",
+  VoiceInput: "chat/voice/:conversationId",
+  ExpressionAnalysis: "chat/expression/:conversationId",
+  ExpressionAnalysisResults: "chat/expression/results",
+  BookRecommendations: "chat/books",
+  SleepQualityChart: "chat/sleep-chart",
+  FreudScoreChart: "chat/score-chart",
+  CrisisSupportAlert: "chat/crisis",
+
+  // Journal screens
+  JournalList: "journal",
+  CreateJournalEntry: "journal/new",
+  EditJournalEntry: "journal/edit/:entryId",
+  VoiceJournalRecording: "journal/voice",
+  JournalEntryDetail: "journal/:entryId",
+  JournalCalendar: "journal/calendar",
+  JournalInsights: "journal/insights",
+  TextJournalComposer: "journal/compose",
+  DeleteJournalConfirmation: "journal/delete/:entryId",
+
+  // Profile screens
+  ProfileDashboard: "profile",
+  AccountSettings: "profile/account",
+  PersonalInformation: "profile/personal-info",
+  ProfileNotificationSettings: "profile/notifications",
+  SecuritySettings: "profile/security",
+  LinkedDevices: "profile/devices",
+  Languages: "profile/languages",
+  HelpCenter: "profile/help",
+  HelpCenterLiveChat: "profile/help/chat",
+  SendFeedback: "profile/feedback",
+  InviteFriends: "profile/invite",
+  AboutCompany: "profile/about",
+  LiveChatSupport: "profile/support",
+
+  // Community screens
+  CommunityWelcome: "community",
+  CommunityFeed: "community/feed",
+  PostDetail: "community/post/:postId",
+  CreatePost: "community/new",
+  UserProfile: "community/user/:userId",
+
+  // Resources screens
+  ResourcesHome: "resources",
+  ArticlesList: "resources/articles",
+  ArticleDetail: "resources/article/:articleId",
+  CoursesList: "resources/courses",
+  CourseDetail: "resources/course/:courseId",
+};
+
+/**
  * Generate deep link URL for a screen
  * @param screen - Screen name
  * @param params - URL parameters
@@ -321,9 +413,24 @@ export const linking: LinkingOptions<RootStackParamList> = {
 export function generateDeepLink(screen: string, params?: Record<string, string>): string {
   const baseUrl = "solace://";
 
-  // TODO: Implement path generation based on linking config
-  // For now, return base URL + screen
-  return `${baseUrl}${screen.toLowerCase()}`;
+  // Get the path template for this screen
+  const pathTemplate = screenPaths[screen];
+
+  if (!pathTemplate) {
+    // Screen not found in mapping, return base URL
+    console.warn(`Screen "${screen}" not found in deep link mapping`);
+    return `${baseUrl}${screen.toLowerCase()}`;
+  }
+
+  // Replace parameter placeholders with actual values
+  let path = pathTemplate;
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      path = path.replace(`:${key}`, value);
+    });
+  }
+
+  return `${baseUrl}${path}`;
 }
 
 /**
