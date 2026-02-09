@@ -20,28 +20,29 @@ import {
   StyleSheet,
 } from "react-native";
 import { CrisisModal } from "../../../shared/components/organisms/crisis";
+import { palette, colors as themeColors } from "../../../shared/theme";
 
-const colors = {
-  screenBg: "#1C1410",
-  white: "#FFFFFF",
-  subtitle: "#94A3B8",
-  cardBg: "#2A1F19",
-  cardBorder: "#3D2E23",
-  tabActiveBg: "#3D2E23",
+const localColors = {
+  screenBg: palette.brown[900],
+  white: palette.white,
+  subtitle: palette.gray[400],
+  cardBg: palette.brown[800],
+  cardBorder: palette.brown[700],
+  tabActiveBg: palette.brown[700],
   tabInactiveBg: "transparent",
-  tabActiveText: "#FFFFFF",
-  tabInactiveText: "#94A3B8",
-  sliderTrack: "#3D2E23",
-  sliderFill: "#9AAD5C",
-  emotionSelectedBorder: "#9AAD5C",
-  stressorSelectedBg: "#9AAD5C",
+  tabActiveText: palette.white,
+  tabInactiveText: palette.gray[400],
+  sliderTrack: palette.brown[700],
+  sliderFill: palette.olive[500],
+  emotionSelectedBorder: palette.olive[500],
+  stressorSelectedBg: palette.olive[500],
   stressorDefaultBg: "transparent",
-  stressorBorder: "#3D2E23",
-  ctaBg: "#8B6914",
-  undoBg: "#3D2E23",
-  redoBg: "#3D2E23",
-  highlightBg: "#E8853A",
-  backBtnBorder: "rgba(255,255,255,0.3)",
+  stressorBorder: palette.brown[700],
+  ctaBg: palette.tan[600],
+  undoBg: palette.brown[700],
+  redoBg: palette.brown[700],
+  highlightBg: palette.accent.orange,
+  backBtnBorder: palette.opacity.white30,
 } as const;
 
 interface Emotion {
@@ -196,7 +197,7 @@ export function TextJournalComposerScreen({
             </TouchableOpacity>
             <TouchableOpacity
               testID="redo-button"
-              style={[styles.editButton, { backgroundColor: colors.redoBg }]}
+              style={[styles.editButton, { backgroundColor: localColors.redoBg }]}
               onPress={onRedo}
               accessibilityRole="button"
               accessibilityLabel="Redo"
@@ -305,7 +306,7 @@ export function TextJournalComposerScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: colors.backBtnBorder,
+    borderColor: localColors.backBtnBorder,
     borderRadius: 22,
     borderWidth: 1,
     height: 44,
@@ -314,16 +315,16 @@ const styles = StyleSheet.create({
     minWidth: 44,
     width: 44,
   },
-  backIcon: { color: colors.white, fontSize: 22 },
+  backIcon: { color: localColors.white, fontSize: 22 },
   container: {
-    backgroundColor: colors.screenBg,
+    backgroundColor: localColors.screenBg,
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 60,
   },
   crisisAlertBanner: {
-    backgroundColor: "rgba(239, 68, 68, 0.1)",
-    borderColor: "rgba(239, 68, 68, 0.3)",
+    backgroundColor: themeColors.crisis.background,
+    borderColor: themeColors.crisis.border,
     borderRadius: 12,
     borderWidth: 1,
     marginTop: 16,
@@ -331,7 +332,7 @@ const styles = StyleSheet.create({
   },
   crisisAlertButton: {
     alignItems: "center",
-    backgroundColor: "#EF4444",
+    backgroundColor: palette.red[500],
     borderRadius: 8,
     justifyContent: "center",
     marginTop: 12,
@@ -339,7 +340,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   crisisAlertButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 15,
     fontWeight: "600",
   },
@@ -348,7 +349,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   crisisAlertDescription: {
-    color: "#FCA5A5",
+    color: palette.red[300],
     fontSize: 13,
     lineHeight: 18,
     marginTop: 2,
@@ -361,24 +362,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   crisisAlertTitle: {
-    color: "#FCA5A5",
+    color: palette.red[300],
     fontSize: 15,
     fontWeight: "600",
   },
   ctaButton: {
     alignItems: "center",
-    backgroundColor: colors.ctaBg,
+    backgroundColor: localColors.ctaBg,
     borderRadius: 16,
     marginBottom: 40,
     marginTop: 24,
     minHeight: 44,
     paddingVertical: 16,
   },
-  ctaText: { color: colors.white, fontSize: 16, fontWeight: "700" },
+  ctaText: { color: localColors.white, fontSize: 16, fontWeight: "700" },
   editActions: { flexDirection: "row", gap: 12, marginTop: 12 },
   editButton: {
     alignItems: "center",
-    backgroundColor: colors.undoBg,
+    backgroundColor: localColors.undoBg,
     borderRadius: 20,
     height: 40,
     justifyContent: "center",
@@ -386,7 +387,7 @@ const styles = StyleSheet.create({
     minWidth: 44,
     width: 40,
   },
-  editIcon: { color: colors.white, fontSize: 18 },
+  editIcon: { color: localColors.white, fontSize: 18 },
   emotionCircle: {
     alignItems: "center",
     borderColor: "transparent",
@@ -402,35 +403,35 @@ const styles = StyleSheet.create({
     gap: 8,
     marginTop: 8,
   },
-  emotionSelected: { borderColor: colors.emotionSelectedBorder },
+  emotionSelected: { borderColor: localColors.emotionSelectedBorder },
   entryBox: {
-    backgroundColor: colors.cardBg,
-    borderColor: colors.cardBorder,
+    backgroundColor: localColors.cardBg,
+    borderColor: localColors.cardBorder,
     borderRadius: 12,
     borderWidth: 1,
     marginTop: 8,
     padding: 16,
   },
   entryContent: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     lineHeight: 24,
   },
   fieldLabel: {
-    color: colors.subtitle,
+    color: localColors.subtitle,
     fontSize: 13,
     fontWeight: "500",
     marginTop: 20,
   },
   radioInner: {
-    backgroundColor: colors.white,
+    backgroundColor: localColors.white,
     borderRadius: 4,
     height: 8,
     width: 8,
   },
   radioOuter: {
     alignItems: "center",
-    borderColor: colors.stressorBorder,
+    borderColor: localColors.stressorBorder,
     borderRadius: 10,
     borderWidth: 2,
     height: 20,
@@ -438,22 +439,22 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     width: 20,
   },
-  radioOuterSelected: { borderColor: colors.white },
-  scaleLabel: { color: colors.subtitle, fontSize: 12 },
+  radioOuterSelected: { borderColor: localColors.white },
+  scaleLabel: { color: localColors.subtitle, fontSize: 12 },
   scaleLabels: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 4,
   },
   screenTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 26,
     fontWeight: "700",
     marginTop: 20,
   },
   sliderContainer: { marginTop: 12 },
   sliderFill: {
-    backgroundColor: colors.sliderFill,
+    backgroundColor: localColors.sliderFill,
     borderRadius: 3,
     height: 6,
     left: 0,
@@ -461,14 +462,14 @@ const styles = StyleSheet.create({
     top: 0,
   },
   sliderTrack: {
-    backgroundColor: colors.sliderTrack,
+    backgroundColor: localColors.sliderTrack,
     borderRadius: 3,
     height: 6,
     position: "relative",
   },
   stressorChip: {
     alignItems: "center",
-    borderColor: colors.stressorBorder,
+    borderColor: localColors.stressorBorder,
     borderRadius: 20,
     borderWidth: 1,
     flexDirection: "row",
@@ -478,38 +479,38 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   stressorChipSelected: {
-    backgroundColor: colors.stressorSelectedBg,
-    borderColor: colors.stressorSelectedBg,
+    backgroundColor: localColors.stressorSelectedBg,
+    borderColor: localColors.stressorSelectedBg,
   },
   stressorRow: {
     flexDirection: "row",
     flexWrap: "wrap",
     marginTop: 8,
   },
-  stressorText: { color: colors.subtitle, fontSize: 14 },
-  stressorTextSelected: { color: colors.white, fontWeight: "600" },
+  stressorText: { color: localColors.subtitle, fontSize: 14 },
+  stressorTextSelected: { color: localColors.white, fontWeight: "600" },
   tab: {
     alignItems: "center",
-    backgroundColor: colors.tabInactiveBg,
+    backgroundColor: localColors.tabInactiveBg,
     borderRadius: 20,
     flex: 1,
     paddingVertical: 10,
   },
-  tabActive: { backgroundColor: colors.tabActiveBg },
+  tabActive: { backgroundColor: localColors.tabActiveBg },
   tabSelector: {
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 24,
     flexDirection: "row",
     marginTop: 16,
     padding: 4,
   },
-  tabText: { color: colors.tabInactiveText, fontSize: 14, fontWeight: "600" },
-  tabTextActive: { color: colors.tabActiveText },
+  tabText: { color: localColors.tabInactiveText, fontSize: 14, fontWeight: "600" },
+  tabTextActive: { color: localColors.tabActiveText },
   titleIcon: { fontSize: 18, marginRight: 8 },
   titleInput: {
     alignItems: "center",
-    backgroundColor: colors.cardBg,
-    borderColor: colors.cardBorder,
+    backgroundColor: localColors.cardBg,
+    borderColor: localColors.cardBorder,
     borderRadius: 12,
     borderWidth: 1,
     flexDirection: "row",
@@ -518,7 +519,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  titleValue: { color: colors.white, flex: 1, fontSize: 16 },
+  titleValue: { color: localColors.white, flex: 1, fontSize: 16 },
 });
 
 export default TextJournalComposerScreen;

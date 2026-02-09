@@ -162,7 +162,7 @@ export function SolaceScoreInsightsScreen({
               </View>
               <View testID="legend-negative" style={styles.legendItem}>
                 <View
-                  style={[styles.legendDot, { backgroundColor: "#E8853A" }]}
+                  style={[styles.legendDot, { backgroundColor: palette.accent.orange }]}
                 />
                 <Text style={styles.legendText}>Negative</Text>
               </View>
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   barNegative: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.accent.orange,
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
     width: "100%",

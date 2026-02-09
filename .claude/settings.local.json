@@ -81,7 +81,9 @@
       "Bash(__NEW_LINE_bd3fda5b3b2c3e44__ echo \"\")",
       "Bash(for feature in assessment auth chat dashboard journal mood onboarding sleep)",
       "Bash(npx jest:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(python3:*)"
     ],
     "deny": [],
     "ask": [],

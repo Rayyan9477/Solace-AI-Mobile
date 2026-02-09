@@ -17,17 +17,17 @@ interface ExerciseCompletedModalProps {
   onClose: () => void;
 }
 
-const colors = {
+const localColors = {
   overlay: "rgba(28,20,16,0.85)",
-  cardBg: "#1C1410",
-  white: "#FFFFFF",
-  dark: "#1C1410",
-  buttonBg: "#C4A574",
+  cardBg: palette.brown[900],
+  white: palette.white,
+  dark: palette.brown[900],
+  buttonBg: palette.tan[500],
   badgeBg: "rgba(255,255,255,0.1)",
-  illustrationBg: "#2A1F18",
+  illustrationBg: palette.brown[800],
   closeBg: "rgba(255,255,255,0.15)",
-  scoreColor: "#9AAD5C",
-  stressColor: "#E8853A",
+  scoreColor: palette.olive[500],
+  stressColor: palette.accent.orange,
 } as const;
 
 export function ExerciseCompletedModal({
@@ -98,14 +98,14 @@ export function ExerciseCompletedModal({
 const styles = StyleSheet.create({
   badge: {
     alignItems: "center",
-    backgroundColor: colors.badgeBg,
+    backgroundColor: localColors.badgeBg,
     borderRadius: 16,
     flexDirection: "row",
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
   badgeText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 12,
     fontWeight: "600",
     marginLeft: 4,
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignItems: "center",
-    backgroundColor: colors.closeBg,
+    backgroundColor: localColors.closeBg,
     borderRadius: 20,
     height: 40,
     justifyContent: "center",
@@ -128,20 +128,20 @@ const styles = StyleSheet.create({
     width: 40,
   },
   closeIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "600",
   },
   container: {
     alignItems: "center",
-    backgroundColor: colors.overlay,
+    backgroundColor: localColors.overlay,
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: 24,
   },
   gotItButton: {
     alignItems: "center",
-    backgroundColor: colors.buttonBg,
+    backgroundColor: localColors.buttonBg,
     borderRadius: 28,
     justifyContent: "center",
     marginTop: 20,
@@ -150,13 +150,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   gotItText: {
-    color: colors.dark,
+    color: localColors.dark,
     fontSize: 16,
     fontWeight: "700",
   },
   illustration: {
     alignItems: "center",
-    backgroundColor: colors.illustrationBg,
+    backgroundColor: localColors.illustrationBg,
     borderRadius: 16,
     height: 180,
     justifyContent: "center",
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     fontSize: 64,
   },
   message: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 15,
     lineHeight: 22,
     marginTop: 12,
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   },
   modalCard: {
     alignItems: "center",
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 24,
     padding: 24,
     width: "100%",
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   title: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 22,
     fontWeight: "800",
     marginTop: 16,

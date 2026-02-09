@@ -513,6 +513,12 @@ jest.mock("./src/shared/theme", () => ({
       warning: "#F59E0B",
       error: "#EF4444",
     },
+    crisis: {
+      primary: "#EF4444",
+      background: "rgba(239, 68, 68, 0.1)",
+      border: "rgba(239, 68, 68, 0.3)",
+      text: "#FCA5A5",
+    },
   },
   shadows: {
     none: { shadowColor: "transparent", shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0, shadowRadius: 0, elevation: 0 },

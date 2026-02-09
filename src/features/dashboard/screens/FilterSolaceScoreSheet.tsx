@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface FilterSolaceScoreSheetProps {
   isVisible: boolean;
@@ -175,7 +176,7 @@ export function FilterSolaceScoreSheet({
 const styles = StyleSheet.create({
   applyButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -186,7 +187,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   applyButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
     marginRight: 8,
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingBottom: 32,
@@ -204,7 +205,7 @@ const styles = StyleSheet.create({
   },
   datePicker: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     flexDirection: "row",
     paddingHorizontal: 16,
@@ -214,12 +215,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   dateText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
   },
   dragHandle: {
     alignSelf: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 2,
     height: 4,
     marginBottom: 16,
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
   },
   helpButton: {
     alignItems: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 16,
     height: 32,
     justifyContent: "center",
@@ -246,12 +247,12 @@ const styles = StyleSheet.create({
     width: 32,
   },
   helpButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   label: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     marginBottom: 8,
   },
@@ -260,7 +261,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   sliderActiveTrack: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     height: 8,
     left: 0,
     position: "absolute",
@@ -271,7 +272,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   sliderLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
   },
   sliderLabels: {
@@ -280,7 +281,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   sliderThumbLeft: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     borderRadius: 8,
     height: 16,
     left: 0,
@@ -289,7 +290,7 @@ const styles = StyleSheet.create({
     width: 16,
   },
   sliderThumbRight: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     borderRadius: 8,
     height: 16,
     position: "absolute",
@@ -298,13 +299,13 @@ const styles = StyleSheet.create({
     width: 16,
   },
   sliderTrack: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 4,
     height: 8,
     position: "relative",
   },
   title: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
@@ -316,10 +317,10 @@ const styles = StyleSheet.create({
     width: 52,
   },
   toggleOff: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
   },
   toggleOn: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
   },
   toggleRow: {
     alignItems: "center",
@@ -327,7 +328,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   toggleThumb: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     borderRadius: 14,
     height: 28,
     width: 28,

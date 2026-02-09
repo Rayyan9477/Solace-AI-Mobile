@@ -6,6 +6,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface DeletePostModalProps {
   onCancel: () => void;
@@ -13,14 +14,14 @@ interface DeletePostModalProps {
   onClose: () => void;
 }
 
-const colors = {
+const localColors = {
   overlay: "rgba(0,0,0,0.7)",
-  modalBg: "#2A1F18",
-  white: "#FFFFFF",
+  modalBg: palette.brown[800],
+  white: palette.white,
   textSecondary: "rgba(255,255,255,0.6)",
-  cancelBg: "#3D2E23",
-  confirmBg: "#E8853A",
-  confirmText: "#FFFFFF",
+  cancelBg: palette.brown[700],
+  confirmBg: palette.accent.orange,
+  confirmText: palette.white,
 } as const;
 
 export function DeletePostModal({
@@ -75,7 +76,7 @@ export function DeletePostModal({
 const styles = StyleSheet.create({
   cancelButton: {
     alignItems: "center",
-    backgroundColor: colors.cancelBg,
+    backgroundColor: localColors.cancelBg,
     borderRadius: 24,
     justifyContent: "center",
     marginTop: 16,
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     width: "100%",
   },
-  cancelText: { color: colors.white, fontSize: 15, fontWeight: "600" },
+  cancelText: { color: localColors.white, fontSize: 15, fontWeight: "600" },
   closeButton: {
     alignItems: "center",
     justifyContent: "center",
@@ -91,10 +92,10 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  closeIcon: { color: colors.white, fontSize: 24 },
+  closeIcon: { color: localColors.white, fontSize: 24 },
   confirmButton: {
     alignItems: "center",
-    backgroundColor: colors.confirmBg,
+    backgroundColor: localColors.confirmBg,
     borderRadius: 24,
     justifyContent: "center",
     marginTop: 8,
@@ -102,9 +103,9 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     width: "100%",
   },
-  confirmText: { color: colors.confirmText, fontSize: 15, fontWeight: "700" },
+  confirmText: { color: localColors.confirmText, fontSize: 15, fontWeight: "700" },
   confirmationText: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 15,
     marginTop: 8,
     textAlign: "center",
@@ -117,19 +118,19 @@ const styles = StyleSheet.create({
   },
   modal: {
     alignItems: "center",
-    backgroundColor: colors.modalBg,
+    backgroundColor: localColors.modalBg,
     borderRadius: 24,
     marginHorizontal: 32,
     padding: 32,
   },
   overlay: {
     alignItems: "center",
-    backgroundColor: colors.overlay,
+    backgroundColor: localColors.overlay,
     flex: 1,
     justifyContent: "center",
   },
   title: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 22,
     fontWeight: "800",
     marginTop: 20,

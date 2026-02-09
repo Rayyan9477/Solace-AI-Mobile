@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface PostTypeOption {
   id: string;
@@ -28,17 +29,17 @@ interface FilterPostBottomSheetProps {
   onClose: () => void;
 }
 
-const colors = {
-  background: "#2A1F18",
-  white: "#FFFFFF",
+const localColors = {
+  background: palette.brown[800],
+  white: palette.white,
   textSecondary: "rgba(255,255,255,0.6)",
-  pillBg: "#3D2E23",
-  pillSelected: "#E8853A",
-  dateFieldBg: "#3D2E23",
-  sliderTrack: "#3D2E23",
-  sliderFill: "#9AAD5C",
-  applyButtonBg: "#C4A574",
-  applyButtonText: "#1C1410",
+  pillBg: palette.brown[700],
+  pillSelected: palette.accent.orange,
+  dateFieldBg: palette.brown[700],
+  sliderTrack: palette.brown[700],
+  sliderFill: palette.olive[500],
+  applyButtonBg: palette.tan[500],
+  applyButtonText: palette.brown[900],
 } as const;
 
 export function FilterPostBottomSheet({
@@ -123,7 +124,7 @@ export function FilterPostBottomSheet({
 const styles = StyleSheet.create({
   applyButton: {
     alignItems: "center",
-    backgroundColor: colors.applyButtonBg,
+    backgroundColor: localColors.applyButtonBg,
     borderRadius: 24,
     justifyContent: "center",
     marginTop: 24,
@@ -131,45 +132,45 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   applyButtonText: {
-    color: colors.applyButtonText,
+    color: localColors.applyButtonText,
     fontSize: 16,
     fontWeight: "700",
   },
-  chevron: { color: colors.textSecondary, fontSize: 12 },
+  chevron: { color: localColors.textSecondary, fontSize: 12 },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: 24,
   },
   dateField: {
     alignItems: "center",
-    backgroundColor: colors.dateFieldBg,
+    backgroundColor: localColors.dateFieldBg,
     borderRadius: 12,
     flexDirection: "row",
     marginTop: 8,
     padding: 14,
   },
   dateIcon: { fontSize: 16, marginRight: 8 },
-  dateText: { color: colors.white, flex: 1, fontSize: 14 },
+  dateText: { color: localColors.white, flex: 1, fontSize: 14 },
   pill: {
-    backgroundColor: colors.pillBg,
+    backgroundColor: localColors.pillBg,
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
-  pillSelected: { backgroundColor: colors.pillSelected },
-  pillText: { color: colors.white, fontSize: 13, fontWeight: "600" },
+  pillSelected: { backgroundColor: localColors.pillSelected },
+  pillText: { color: localColors.white, fontSize: 13, fontWeight: "600" },
   pillsRow: { flexDirection: "row", gap: 8, marginTop: 8 },
   sectionLabel: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 14,
     fontWeight: "700",
     marginTop: 20,
   },
   sliderContainer: { marginTop: 12 },
   sliderFill: {
-    backgroundColor: colors.sliderFill,
+    backgroundColor: localColors.sliderFill,
     borderRadius: 3,
     height: 6,
     left: "30%",
@@ -177,19 +178,19 @@ const styles = StyleSheet.create({
     right: "50%",
     top: 0,
   },
-  sliderLabel: { color: colors.textSecondary, fontSize: 12 },
+  sliderLabel: { color: localColors.textSecondary, fontSize: 12 },
   sliderLabels: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 8,
   },
   sliderTrack: {
-    backgroundColor: colors.sliderTrack,
+    backgroundColor: localColors.sliderTrack,
     borderRadius: 3,
     height: 6,
     width: "100%",
   },
-  title: { color: colors.white, fontSize: 18, fontWeight: "800" },
+  title: { color: localColors.white, fontSize: 18, fontWeight: "800" },
 });
 
 export default FilterPostBottomSheet;

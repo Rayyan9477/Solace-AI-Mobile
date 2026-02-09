@@ -15,6 +15,7 @@ import {
   FlatList,
 } from "react-native";
 import { CrisisModal } from "../../../shared/components/organisms/crisis";
+import { palette, colors } from "../../../shared/theme";
 
 type MessageType = "user" | "ai" | "emotion" | "date";
 type Sentiment = "positive" | "negative" | "neutral";
@@ -64,9 +65,9 @@ interface ActiveChatScreenProps {
 }
 
 const SENTIMENT_COLORS: Record<Sentiment, string> = {
-  positive: "#9AAD5C",
-  negative: "#E8853A",
-  neutral: "#94A3B8",
+  positive: palette.olive[500],
+  negative: palette.accent.orange,
+  neutral: palette.gray[400],
 };
 
 export function ActiveChatScreen({
@@ -258,7 +259,7 @@ export function ActiveChatScreen({
           value={inputText}
           onChangeText={onInputChange}
           placeholder="Type to start chatting..."
-          placeholderTextColor="#94A3B8"
+          placeholderTextColor={palette.gray[400]}
           accessibilityLabel="Message input"
           multiline
         />
@@ -287,7 +288,7 @@ export function ActiveChatScreen({
 const styles = StyleSheet.create({
   aiAvatar: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 20,
     height: 40,
     justifyContent: "center",
@@ -299,7 +300,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   aiMessageContent: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
   },
   attachmentButton: {
     alignItems: "center",
@@ -315,7 +316,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -325,13 +326,13 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   chatInputArea: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 28,
     flexDirection: "row",
     marginBottom: 32,
@@ -340,13 +341,13 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   crisisAlertBanner: {
-    backgroundColor: "rgba(239, 68, 68, 0.1)",
-    borderColor: "rgba(239, 68, 68, 0.3)",
+    backgroundColor: colors.crisis.background,
+    borderColor: colors.crisis.border,
     borderRadius: 12,
     borderWidth: 1,
     marginBottom: 12,
@@ -355,7 +356,7 @@ const styles = StyleSheet.create({
   },
   crisisAlertButton: {
     alignItems: "center",
-    backgroundColor: "#EF4444",
+    backgroundColor: palette.red[500],
     borderRadius: 8,
     justifyContent: "center",
     marginTop: 12,
@@ -363,7 +364,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   crisisAlertButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 15,
     fontWeight: "600",
   },
@@ -372,7 +373,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   crisisAlertDescription: {
-    color: "#FCA5A5",
+    color: palette.red[300],
     fontSize: 13,
     lineHeight: 18,
     marginTop: 2,
@@ -385,7 +386,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   crisisAlertTitle: {
-    color: "#FCA5A5",
+    color: palette.red[300],
     fontSize: 15,
     fontWeight: "600",
   },
@@ -396,12 +397,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   dateLine: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     flex: 1,
     height: 1,
   },
   dateText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginHorizontal: 12,
   },
@@ -413,7 +414,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   emotionText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 12,
     fontWeight: "600",
   },
@@ -428,12 +429,12 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   headerSubtitle: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 2,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -444,13 +445,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   messageContent: {
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 16,
     maxWidth: "70%",
     padding: 12,
   },
   messageInput: {
-    color: "#FFFFFF",
+    color: palette.white,
     flex: 1,
     fontSize: 14,
     maxHeight: 100,
@@ -463,7 +464,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   messageText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     lineHeight: 20,
   },
@@ -478,7 +479,7 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 22,
     height: 44,
     justifyContent: "center",
@@ -487,18 +488,18 @@ const styles = StyleSheet.create({
     width: 44,
   },
   sendIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
   typingBubble: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     flexDirection: "row",
     padding: 12,
   },
   typingDot: {
-    backgroundColor: "#94A3B8",
+    backgroundColor: palette.gray[400],
     borderRadius: 3,
     height: 6,
     marginLeft: 4,
@@ -516,12 +517,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   typingText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
   },
   userAvatar: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 20,
     height: 40,
     justifyContent: "center",

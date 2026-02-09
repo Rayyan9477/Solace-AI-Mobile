@@ -16,6 +16,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { CrisisModal } from "../../../shared/components/organisms/crisis";
+import { palette } from "../../../shared/theme";
 
 interface EmotionData {
   emotion: string;
@@ -106,7 +107,7 @@ export function ExpressionAnalysisScreen({
               resizeMode="cover"
             />
             <View style={styles.loadingOverlay}>
-              <ActivityIndicator size="large" color="#9AAD5C" />
+              <ActivityIndicator size="large" color={palette.olive[500]} />
             </View>
           </View>
           <Text style={styles.loadingText}>Analyzing your expression...</Text>
@@ -286,7 +287,7 @@ export function ExpressionAnalysisScreen({
 
 const styles = StyleSheet.create({
   actionContainer: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flexDirection: "row",
     paddingBottom: 32,
     paddingHorizontal: 24,
@@ -294,7 +295,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -304,18 +305,18 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 12,
     flex: 1,
     justifyContent: "center",
@@ -324,13 +325,13 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   continueButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   crisisButton: {
     alignItems: "center",
-    backgroundColor: "#EF4444",
+    backgroundColor: palette.red[500],
     borderRadius: 12,
     justifyContent: "center",
     marginLeft: 12,
@@ -339,7 +340,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   crisisButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -348,14 +349,14 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   emotionBarContainer: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 4,
     flex: 1,
     height: 8,
     marginHorizontal: 12,
   },
   emotionConfidence: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
     minWidth: 45,
@@ -378,11 +379,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   emotionName: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
   },
   emotionSection: {
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     marginBottom: 16,
     padding: 16,
@@ -398,7 +399,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   headerTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -415,7 +416,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   insightCard: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 12,
     flexDirection: "row",
     marginBottom: 12,
@@ -425,14 +426,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   insightDescription: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 13,
     lineHeight: 20,
     marginTop: 4,
   },
   insightIcon: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     height: 44,
     justifyContent: "center",
@@ -443,7 +444,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   insightTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 15,
     fontWeight: "600",
   },
@@ -467,19 +468,19 @@ const styles = StyleSheet.create({
     top: 0,
   },
   loadingSubtext: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     marginTop: 8,
   },
   loadingText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
     marginTop: 24,
   },
   moodScoreCircle: {
     alignItems: "center",
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
     borderRadius: 40,
     height: 80,
     justifyContent: "center",
@@ -487,14 +488,14 @@ const styles = StyleSheet.create({
   },
   moodScoreContainer: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     flexDirection: "row",
     marginBottom: 16,
     padding: 16,
   },
   moodScoreDescription: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 13,
     lineHeight: 18,
     marginTop: 4,
@@ -504,24 +505,24 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   moodScoreLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 10,
     opacity: 0.8,
   },
   moodScoreTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
   moodScoreValue: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 28,
     fontWeight: "700",
   },
   retakeButton: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
-    borderColor: "#3D2E23",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 12,
     borderWidth: 1,
     justifyContent: "center",
@@ -530,7 +531,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   retakeButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -551,7 +552,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sectionTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 16,

@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface PostSuccessModalProps {
   message: string;
@@ -14,13 +15,13 @@ interface PostSuccessModalProps {
   onClose: () => void;
 }
 
-const colors = {
+const localColors = {
   overlay: "rgba(0,0,0,0.7)",
-  modalBg: "#2A1F18",
-  white: "#FFFFFF",
+  modalBg: palette.brown[800],
+  white: palette.white,
   textSecondary: "rgba(255,255,255,0.6)",
-  ctaButtonBg: "#C4A574",
-  ctaButtonText: "#1C1410",
+  ctaButtonBg: palette.tan[500],
+  ctaButtonText: palette.brown[900],
 } as const;
 
 export function PostSuccessModal({
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  closeIcon: { color: colors.white, fontSize: 24 },
+  closeIcon: { color: localColors.white, fontSize: 24 },
   illustration: {
     alignSelf: "center",
     borderRadius: 16,
@@ -73,26 +74,26 @@ const styles = StyleSheet.create({
     width: 160,
   },
   message: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 15,
     lineHeight: 24,
     marginTop: 8,
     textAlign: "center",
   },
   modal: {
-    backgroundColor: colors.modalBg,
+    backgroundColor: localColors.modalBg,
     borderRadius: 24,
     marginHorizontal: 32,
     padding: 32,
   },
   overlay: {
     alignItems: "center",
-    backgroundColor: colors.overlay,
+    backgroundColor: localColors.overlay,
     flex: 1,
     justifyContent: "center",
   },
   title: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
     fontWeight: "800",
     marginTop: 24,
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
   },
   viewPostButton: {
     alignItems: "center",
-    backgroundColor: colors.ctaButtonBg,
+    backgroundColor: localColors.ctaButtonBg,
     borderRadius: 24,
     justifyContent: "center",
     marginTop: 24,
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   viewPostText: {
-    color: colors.ctaButtonText,
+    color: localColors.ctaButtonText,
     fontSize: 16,
     fontWeight: "700",
   },
