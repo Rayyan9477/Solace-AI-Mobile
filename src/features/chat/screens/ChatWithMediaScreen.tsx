@@ -233,7 +233,7 @@ export function ChatWithMediaScreen({
           value={inputText}
           onChangeText={onInputChange}
           placeholder="Type to start chatting..."
-          placeholderTextColor="palette.gray[400]"
+          placeholderTextColor={palette.gray[400]}
           accessibilityLabel="Message input"
           multiline
         />
@@ -254,7 +254,7 @@ export function ChatWithMediaScreen({
 const styles = StyleSheet.create({
   aiAvatar: {
     alignItems: "center",
-    backgroundColor: "palette.olive[500]",
+    backgroundColor: palette.olive[500],
     borderRadius: 20,
     height: 40,
     justifyContent: "center",
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
   },
   aiMessageContent: {
-    backgroundColor: "palette.brown[800]",
+    backgroundColor: palette.brown[800],
   },
   attachmentButton: {
     alignItems: "center",
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "palette.brown[700]",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -296,13 +296,13 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "palette.white",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   chatInputArea: {
     alignItems: "center",
-    backgroundColor: "palette.brown[800]",
+    backgroundColor: palette.brown[800],
     borderRadius: 28,
     flexDirection: "row",
     marginBottom: 32,
@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   container: {
-    backgroundColor: "palette.brown[900]",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
@@ -326,12 +326,12 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   headerSubtitle: {
-    color: "palette.gray[400]",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 2,
   },
   headerTitle: {
-    color: "palette.white",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -342,13 +342,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   messageContent: {
-    backgroundColor: "palette.tan[500]",
+    backgroundColor: palette.tan[500],
     borderRadius: 16,
     maxWidth: "70%",
     padding: 12,
   },
   messageInput: {
-    color: "palette.white",
+    color: palette.white,
     flex: 1,
     fontSize: 14,
     maxHeight: 100,
@@ -361,13 +361,13 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   messageText: {
-    color: "palette.white",
+    color: palette.white,
     fontSize: 14,
     lineHeight: 20,
   },
   playButton: {
     alignItems: "center",
-    backgroundColor: "`${palette.white}${palette.alpha[90]}`",
+    backgroundColor: `${palette.white}${palette.alpha[90]}`,
     borderRadius: 25,
     height: 50,
     justifyContent: "center",
@@ -377,19 +377,19 @@ const styles = StyleSheet.create({
     width: 50,
   },
   playIcon: {
-    color: "palette.brown[900]",
+    color: palette.brown[900],
     fontSize: 18,
     marginLeft: 4,
   },
   progressBar: {
-    backgroundColor: "palette.brown[700]",
+    backgroundColor: palette.brown[700],
     borderRadius: 2,
     flex: 1,
     height: 4,
     marginRight: 8,
   },
   progressFill: {
-    backgroundColor: "palette.tan[500]",
+    backgroundColor: palette.tan[500],
     borderRadius: 2,
     height: "100%",
     width: "0%",
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     alignItems: "center",
-    backgroundColor: "palette.olive[500]",
+    backgroundColor: palette.olive[500],
     borderRadius: 22,
     height: 44,
     justifyContent: "center",
@@ -414,7 +414,7 @@ const styles = StyleSheet.create({
     width: 44,
   },
   sendIcon: {
-    color: "palette.white",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "600",
   },
@@ -424,13 +424,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   typingBubble: {
-    backgroundColor: "palette.brown[800]",
+    backgroundColor: palette.brown[800],
     borderRadius: 16,
     flexDirection: "row",
     padding: 12,
   },
   typingDot: {
-    backgroundColor: "palette.gray[400]",
+    backgroundColor: palette.gray[400],
     borderRadius: 3,
     height: 6,
     marginLeft: 4,
@@ -448,12 +448,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   typingText: {
-    color: "palette.gray[400]",
+    color: palette.gray[400],
     fontSize: 14,
   },
   userAvatar: {
     alignItems: "center",
-    backgroundColor: "palette.tan[500]",
+    backgroundColor: palette.tan[500],
     borderRadius: 20,
     height: 40,
     justifyContent: "center",
@@ -465,13 +465,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   videoCard: {
-    backgroundColor: "palette.brown[800]",
+    backgroundColor: palette.brown[800],
     borderRadius: 12,
     marginTop: 8,
     overflow: "hidden",
   },
   videoDuration: {
-    color: "palette.gray[400]",
+    color: palette.gray[400],
     fontSize: 12,
   },
   videoInfo: {
@@ -483,20 +483,20 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   videoThumbnail: {
-    backgroundColor: "palette.brown[700]",
+    backgroundColor: palette.brown[700],
     borderRadius: 8,
     height: "100%",
     width: "100%",
   },
   videoThumbnailContainer: {
     alignItems: "center",
-    backgroundColor: "palette.brown[700]",
+    backgroundColor: palette.brown[700],
     height: 120,
     justifyContent: "center",
     position: "relative",
   },
   videoTitle: {
-    color: "palette.white",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
   },

@@ -231,10 +231,10 @@ describe("CrisisDetectionScreen", () => {
     expect(getByTestId("call-hotline-button")).toBeTruthy();
   });
 
-  it("calls onCallHotline when hotline button is pressed", () => {
-    const { getByTestId } = render(<CrisisDetectionScreen {...defaultProps} />);
+  it("opens crisis modal when hotline button is pressed", () => {
+    const { getByTestId, getByText } = render(<CrisisDetectionScreen {...defaultProps} />);
     fireEvent.press(getByTestId("call-hotline-button"));
-    expect(mockOnCallHotline).toHaveBeenCalledTimes(1);
+    expect(getByText("You're Not Alone")).toBeTruthy();
   });
 
   it("displays chat input area", () => {
@@ -333,7 +333,7 @@ describe("CrisisDetectionScreen", () => {
     const { getByTestId } = render(<CrisisDetectionScreen {...defaultProps} />);
     const button = getByTestId("call-hotline-button");
     expect(button.props.accessibilityRole).toBe("button");
-    expect(button.props.accessibilityLabel).toBe("Call 988 Suicide and Crisis Lifeline");
+    expect(button.props.accessibilityLabel).toBe("Access crisis support resources");
   });
 
   it("does not use Freud in any visible text", () => {

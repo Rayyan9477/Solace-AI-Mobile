@@ -1,12 +1,160 @@
 /**
  * Jest Setup for Solace AI Mobile Testing
- * Minimal setup for testing - will be extended as components are built
+ * Compatible with Expo SDK 54, React Native 0.81, Reanimated v4
  */
+
+// Mock react-native-worklets (required by Reanimated v4)
+jest.mock("react-native-worklets", () => ({
+  createWorklet: jest.fn(),
+  runOnJS: jest.fn((fn) => fn),
+  runOnUI: jest.fn((fn) => fn),
+  useWorklet: jest.fn(),
+  makeShareable: jest.fn((value) => value),
+}));
+
+// Mock react-native-reanimated (v4 - complete standalone mock)
+jest.mock("react-native-reanimated", () => {
+  const React = require("react");
+  const View = require("react-native").View;
+
+  return {
+    __esModule: true,
+    default: {
+      createAnimatedComponent: (component) => component,
+      addWhitelistedNativeProps: jest.fn(),
+      addWhitelistedUIProps: jest.fn(),
+      call: jest.fn(),
+      Value: jest.fn(),
+      event: jest.fn(),
+      Clock: jest.fn(),
+      SpringUtils: { makeDefaultConfig: jest.fn() },
+    },
+    useSharedValue: jest.fn((init) => ({ value: init })),
+    useAnimatedStyle: jest.fn((fn) => (typeof fn === "function" ? fn() : {})),
+    useDerivedValue: jest.fn((fn) => ({ value: typeof fn === "function" ? fn() : fn })),
+    useAnimatedProps: jest.fn((fn) => (typeof fn === "function" ? fn() : {})),
+    useAnimatedRef: jest.fn(() => ({ current: null })),
+    useAnimatedScrollHandler: jest.fn(() => jest.fn()),
+    useAnimatedGestureHandler: jest.fn(() => jest.fn()),
+    withTiming: jest.fn((toValue) => toValue),
+    withSpring: jest.fn((toValue) => toValue),
+    withDelay: jest.fn((_, animation) => animation),
+    withSequence: jest.fn((...animations) => animations[animations.length - 1]),
+    withRepeat: jest.fn((animation) => animation),
+    withDecay: jest.fn((config) => 0),
+    cancelAnimation: jest.fn(),
+    interpolate: jest.fn((value) => value),
+    Extrapolation: { CLAMP: "clamp", EXTEND: "extend", IDENTITY: "identity" },
+    Easing: {
+      linear: jest.fn((x) => x),
+      ease: jest.fn((x) => x),
+      quad: jest.fn((x) => x),
+      cubic: jest.fn((x) => x),
+      poly: jest.fn(() => jest.fn((x) => x)),
+      sin: jest.fn((x) => x),
+      circle: jest.fn((x) => x),
+      exp: jest.fn((x) => x),
+      elastic: jest.fn(() => jest.fn((x) => x)),
+      back: jest.fn(() => jest.fn((x) => x)),
+      bounce: jest.fn((x) => x),
+      bezier: jest.fn(() => jest.fn((x) => x)),
+      bezierFn: jest.fn(() => jest.fn((x) => x)),
+      steps: jest.fn(() => jest.fn((x) => x)),
+      in: jest.fn((easing) => easing),
+      out: jest.fn((easing) => easing),
+      inOut: jest.fn((easing) => easing),
+    },
+    FadeIn: { duration: jest.fn().mockReturnThis(), delay: jest.fn().mockReturnThis(), build: jest.fn() },
+    FadeOut: { duration: jest.fn().mockReturnThis(), delay: jest.fn().mockReturnThis(), build: jest.fn() },
+    FadeInDown: { duration: jest.fn().mockReturnThis(), delay: jest.fn().mockReturnThis(), build: jest.fn() },
+    FadeInUp: { duration: jest.fn().mockReturnThis(), delay: jest.fn().mockReturnThis(), build: jest.fn() },
+    SlideInRight: { duration: jest.fn().mockReturnThis(), build: jest.fn() },
+    SlideOutLeft: { duration: jest.fn().mockReturnThis(), build: jest.fn() },
+    SlideInLeft: { duration: jest.fn().mockReturnThis(), build: jest.fn() },
+    SlideOutRight: { duration: jest.fn().mockReturnThis(), build: jest.fn() },
+    Layout: { duration: jest.fn().mockReturnThis(), build: jest.fn() },
+    LinearTransition: { duration: jest.fn().mockReturnThis(), build: jest.fn() },
+    runOnJS: jest.fn((fn) => fn),
+    runOnUI: jest.fn((fn) => fn),
+    createAnimatedComponent: jest.fn((component) => component),
+    useReducedMotion: jest.fn(() => false),
+    measure: jest.fn(() => ({ x: 0, y: 0, width: 0, height: 0, pageX: 0, pageY: 0 })),
+    scrollTo: jest.fn(),
+    setGestureState: jest.fn(),
+    enableLayoutAnimations: jest.fn(),
+    makeMutable: jest.fn((init) => ({ value: init })),
+    makeShareableShadowNodeWrapper: jest.fn(),
+  };
+});
+
+// Mock NativeAnimatedHelper for RN 0.81+ (prevents "Native animated module is not available")
+jest.mock("react-native/src/private/animated/NativeAnimatedHelper", () => ({
+  API: {
+    enableQueue: jest.fn(),
+    disableQueue: jest.fn(),
+    createAnimatedNode: jest.fn(),
+    updateAnimatedNodeConfig: jest.fn(),
+    getValue: jest.fn(),
+    startListeningToAnimatedNodeValue: jest.fn(),
+    stopListeningToAnimatedNodeValue: jest.fn(),
+    connectAnimatedNodes: jest.fn(),
+    disconnectAnimatedNodes: jest.fn(),
+    startAnimatingNode: jest.fn(),
+    stopAnimation: jest.fn(),
+    setAnimatedNodeValue: jest.fn(),
+    setAnimatedNodeOffset: jest.fn(),
+    flattenAnimatedNodeOffset: jest.fn(),
+    extractAnimatedNodeOffset: jest.fn(),
+    connectAnimatedNodeToView: jest.fn(),
+    disconnectAnimatedNodeFromView: jest.fn(),
+    restoreDefaultValues: jest.fn(),
+    dropAnimatedNode: jest.fn(),
+    addAnimatedEventToView: jest.fn(),
+    removeAnimatedEventFromView: jest.fn(),
+    flushQueue: jest.fn(),
+  },
+  addListener: jest.fn(),
+  removeListeners: jest.fn(),
+  shouldUseNativeDriver: jest.fn(() => false),
+  generateNewNodeTag: jest.fn(() => 1),
+  generateNewAnimationId: jest.fn(() => 1),
+  assertNativeAnimatedModule: jest.fn(),
+  transformDataType: jest.fn((value) => value),
+  default: {
+    addListener: jest.fn(),
+    removeListeners: jest.fn(),
+  },
+}));
 
 // Mock useColorScheme hook for consistent test behavior
 jest.mock("react-native/Libraries/Utilities/useColorScheme", () => ({
   default: jest.fn(() => "dark"),
 }));
+
+// Mock Linking module (fixes CrisisModal tests + URL-opening tests)
+// react-native accesses Linking via .default, so we need both the module
+// exports and a .default property pointing to the same object
+jest.mock("react-native/Libraries/Linking/Linking", () => {
+  const linking = {
+    openURL: jest.fn(() => Promise.resolve()),
+    canOpenURL: jest.fn(() => Promise.resolve(true)),
+    addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+    removeEventListener: jest.fn(),
+    getInitialURL: jest.fn(() => Promise.resolve(null)),
+  };
+  return { __esModule: true, default: linking, ...linking };
+});
+
+// Mock Keyboard module (fixes bottom-tabs navigation tests)
+// react-native accesses Keyboard via .default
+jest.mock("react-native/Libraries/Components/Keyboard/Keyboard", () => {
+  const keyboard = {
+    addListener: jest.fn(() => ({ remove: jest.fn() })),
+    removeListener: jest.fn(),
+    dismiss: jest.fn(),
+  };
+  return { __esModule: true, default: keyboard, ...keyboard };
+});
 
 // Keep a stable reference to the real Date constructor
 const __RealDate = Date;
@@ -71,15 +219,7 @@ jest.mock("react-native/Libraries/TurboModule/TurboModuleRegistry", () => ({
   get: jest.fn(() => null),
 }));
 
-// Mock NativeDeviceInfo
-jest.mock("react-native/src/private/specs/modules/NativeDeviceInfo", () => ({
-  getConstants: jest.fn(() => ({
-    Dimensions: {
-      window: { width: 375, height: 667, scale: 2, fontScale: 1 },
-      screen: { width: 375, height: 667, scale: 2, fontScale: 1 },
-    },
-  })),
-}));
+// NativeDeviceInfo is handled by TurboModuleRegistry mock above (RN 0.81+ compatible)
 
 // Mock NativeSettingsManager
 jest.mock("react-native/Libraries/Settings/NativeSettingsManager", () => ({
@@ -193,6 +333,7 @@ jest.mock("./src/shared/theme", () => ({
       secondary: "#2A1F1A",
       tertiary: "#3D2E23",
       quaternary: "#4A3A2F",
+      hero: "#2A1F1A",
     },
     text: {
       primary: "#FFFFFF",
@@ -206,10 +347,20 @@ jest.mock("./src/shared/theme", () => ({
     },
     accent: {
       orange: "#E8853A",
+      green: "#9AAD5C",
+      purple: "#7B68B5",
     },
     opacity: {
+      white04: "rgba(255, 255, 255, 0.04)",
+      white05: "rgba(255, 255, 255, 0.05)",
+      white06: "rgba(255, 255, 255, 0.06)",
+      white08: "rgba(255, 255, 255, 0.08)",
       white10: "rgba(255, 255, 255, 0.1)",
+      white12: "rgba(255, 255, 255, 0.12)",
+      white18: "rgba(255, 255, 255, 0.18)",
       white20: "rgba(255, 255, 255, 0.2)",
+      white30: "rgba(255, 255, 255, 0.3)",
+      white40: "rgba(255, 255, 255, 0.4)",
       black50: "rgba(0, 0, 0, 0.5)",
     },
     indigo: {
@@ -257,6 +408,12 @@ jest.mock("./src/shared/theme", () => ({
       step3: "#6B6B6B",
       step4: "#C4A535",
       step5: "#7B68B5",
+    },
+    semantic: {
+      info: "#818CF8",
+      success: "#22C55E",
+      warning: "#F59E0B",
+      error: "#EF4444",
     },
   },
   colors: {
@@ -357,8 +514,53 @@ jest.mock("./src/shared/theme", () => ({
       error: "#EF4444",
     },
   },
-  shadows: {},
+  shadows: {
+    none: { shadowColor: "transparent", shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0, shadowRadius: 0, elevation: 0 },
+    sm: { shadowColor: "#000000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 2, elevation: 2 },
+    md: { shadowColor: "#000000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.12, shadowRadius: 4, elevation: 4 },
+    lg: { shadowColor: "#000000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.16, shadowRadius: 8, elevation: 8 },
+    xl: { shadowColor: "#000000", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.2, shadowRadius: 16, elevation: 16 },
+  },
+  applyShadow: jest.fn((level = "md") => {
+    const shadows = {
+      none: { shadowColor: "transparent", shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0, shadowRadius: 0, elevation: 0 },
+      sm: { shadowColor: "#000000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 2, elevation: 2 },
+      md: { shadowColor: "#000000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.12, shadowRadius: 4, elevation: 4 },
+      lg: { shadowColor: "#000000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.16, shadowRadius: 8, elevation: 8 },
+      xl: { shadowColor: "#000000", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.2, shadowRadius: 16, elevation: 16 },
+    };
+    return shadows[level] || shadows.md;
+  }),
   gradients: {},
   animations: {},
   zIndex: {},
+  spacing: {
+    xxs: 2,
+    xs: 4,
+    sm: 8,
+    md: 12,
+    lg: 16,
+    xl: 20,
+    xxl: 24,
+    xxxl: 32,
+    xxxxl: 40,
+    section: 48,
+  },
+}));
+
+// Mock lazy-loaded navigation stack modules (prevents dynamic import() issues in tests)
+jest.mock("./src/app/navigation/stacks/DashboardStack", () => ({
+  DashboardStack: () => null,
+}));
+jest.mock("./src/app/navigation/stacks/MoodStack", () => ({
+  MoodStack: () => null,
+}));
+jest.mock("./src/app/navigation/stacks/ChatStack", () => ({
+  ChatStack: () => null,
+}));
+jest.mock("./src/app/navigation/stacks/JournalStack", () => ({
+  JournalStack: () => null,
+}));
+jest.mock("./src/app/navigation/stacks/ProfileStack", () => ({
+  ProfileStack: () => null,
 }));

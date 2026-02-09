@@ -112,9 +112,9 @@ describe("OnboardingStep1Screen", () => {
     });
 
     it("should have accessible progress bar", () => {
-      const { getByA11yRole } = renderWithNavigation();
+      const { getByLabelText } = renderWithNavigation();
 
-      const progressBar = getByA11yRole("progressbar");
+      const progressBar = getByLabelText("Step 1 of 5");
       expect(progressBar.props.accessibilityValue).toEqual({
         min: 1,
         max: 5,

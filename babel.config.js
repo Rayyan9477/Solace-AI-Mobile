@@ -9,10 +9,6 @@ module.exports = function (api) {
   return {
     presets: ['babel-preset-expo'],
     plugins: [
-      // Enable optional chaining and nullish coalescing
-      '@babel/plugin-proposal-optional-chaining',
-      '@babel/plugin-proposal-nullish-coalescing-operator',
-
       // React Native Reanimated plugin (must be last)
       'react-native-reanimated/plugin',
 

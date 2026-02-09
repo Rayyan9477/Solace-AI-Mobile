@@ -9,6 +9,7 @@ import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import RootNavigatorContainer from "./src/app/navigation/RootNavigator";
 import { linking } from "./src/app/navigation/linking";
+import { palette } from "./src/shared/theme";
 
 /**
  * App Component
@@ -18,7 +19,7 @@ import { linking } from "./src/app/navigation/linking";
 export default function App(): React.ReactElement {
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#1C1410" />
+      <StatusBar barStyle="light-content" backgroundColor={palette.brown[900]} />
       <NavigationContainer linking={linking}>
         <RootNavigatorContainer />
       </NavigationContainer>
@@ -29,6 +30,6 @@ export default function App(): React.ReactElement {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1C1410", // Dark brown background (theme primary)
+    backgroundColor: palette.brown[900],
   },
 });

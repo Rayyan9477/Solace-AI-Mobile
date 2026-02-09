@@ -146,7 +146,7 @@ export function JournalDashboardScreen({
               <View
                 style={[
                   styles.legendDot,
-                  { backgroundColor: colors.dotSkipped },
+                  { backgroundColor: palette.brown[700] },
                 ]}
               />
               <Text style={styles.legendLabel}>Skipped</Text>
@@ -155,7 +155,7 @@ export function JournalDashboardScreen({
               <View
                 style={[
                   styles.legendDot,
-                  { backgroundColor: colors.dotPositive },
+                  { backgroundColor: palette.olive[500] },
                 ]}
               />
               <Text style={styles.legendLabel}>Positive</Text>
@@ -164,7 +164,7 @@ export function JournalDashboardScreen({
               <View
                 style={[
                   styles.legendDot,
-                  { backgroundColor: colors.dotNegative },
+                  { backgroundColor: palette.onboarding.step2 },
                 ]}
               />
               <Text style={styles.legendLabel}>Negative</Text>
