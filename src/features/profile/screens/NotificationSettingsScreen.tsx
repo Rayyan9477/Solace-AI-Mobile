@@ -44,10 +44,10 @@ interface NotificationSettingsScreenProps {
   onItemPress: (id: string) => void;
 }
 
-const colors = {
+const localColors = {
   background: palette.brown[900],
   white: palette.white,
-  cardBg: "#2A1F18",
+  cardBg: palette.brown[800],
   textSecondary: `${palette.white}${palette.alpha[60]}`,
   toggleOn: palette.olive[500],
   toggleOff: palette.brown[700],
@@ -128,8 +128,9 @@ export function NotificationSettingsScreen({
                 soundEnabled ? styles.toggleOn : styles.toggleOff,
               ]}
               onPress={() => onToggle("sound", !soundEnabled)}
-              accessibilityRole="button"
-              accessibilityLabel="Toggle Sound"
+              accessibilityRole="switch"
+              accessibilityLabel="Sound"
+              accessibilityState={{ checked: soundEnabled }}
             >
               <View
                 style={[
@@ -155,8 +156,9 @@ export function NotificationSettingsScreen({
                 vibrationEnabled ? styles.toggleOn : styles.toggleOff,
               ]}
               onPress={() => onToggle("vibration", !vibrationEnabled)}
-              accessibilityRole="button"
-              accessibilityLabel="Toggle Vibration"
+              accessibilityRole="switch"
+              accessibilityLabel="Vibration"
+              accessibilityState={{ checked: vibrationEnabled }}
             >
               <View
                 style={[
@@ -226,8 +228,9 @@ export function NotificationSettingsScreen({
                 resourcesEnabled ? styles.toggleOn : styles.toggleOff,
               ]}
               onPress={() => onToggle("resources", !resourcesEnabled)}
-              accessibilityRole="button"
-              accessibilityLabel="Toggle Resources"
+              accessibilityRole="switch"
+              accessibilityLabel="Resources"
+              accessibilityState={{ checked: resourcesEnabled }}
             >
               <View
                 style={[
@@ -250,11 +253,11 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
-  chevron: { color: colors.chevron, fontSize: 24 },
-  container: { backgroundColor: colors.background, flex: 1 },
+  backIcon: { color: localColors.white, fontSize: 24 },
+  chevron: { color: localColors.chevron, fontSize: 24 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   description: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     lineHeight: 20,
     marginTop: 4,
@@ -271,13 +274,13 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 12,
   },
   itemValue: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 14,
   },
   scrollContent: { paddingBottom: 48 },
@@ -286,7 +289,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   sectionTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -298,13 +301,13 @@ const styles = StyleSheet.create({
     width: 52,
   },
   toggleLabel: {
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 15,
     fontWeight: "500",
   },
-  toggleOff: { backgroundColor: colors.toggleOff },
-  toggleOn: { backgroundColor: colors.toggleOn },
+  toggleOff: { backgroundColor: localColors.toggleOff },
+  toggleOn: { backgroundColor: localColors.toggleOn },
   toggleRow: {
     alignItems: "center",
     flexDirection: "row",
@@ -312,7 +315,7 @@ const styles = StyleSheet.create({
     minHeight: 44,
   },
   toggleThumb: {
-    backgroundColor: colors.white,
+    backgroundColor: localColors.white,
     borderRadius: 14,
     height: 28,
     width: 28,

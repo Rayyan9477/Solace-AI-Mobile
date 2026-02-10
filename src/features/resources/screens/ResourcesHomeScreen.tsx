@@ -53,10 +53,10 @@ interface ResourcesHomeScreenProps {
   onAddPress: () => void;
 }
 
-const colors = {
+const localColors = {
   background: palette.brown[900],
   white: palette.white,
-  cardBg: "#2A1F18",
+  cardBg: palette.brown[800],
   textSecondary: `${palette.white}${palette.alpha[60]}`,
   categoryBadge: palette.olive[500],
   fabBg: "#5C4A2A",
@@ -256,19 +256,19 @@ export function ResourcesHomeScreen({
 const styles = StyleSheet.create({
   articleBadge: {
     alignSelf: "flex-start",
-    backgroundColor: colors.categoryBadge,
+    backgroundColor: localColors.categoryBadge,
     borderRadius: 8,
     marginTop: 8,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
   articleBadgeText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 10,
     fontWeight: "600",
   },
   articleCard: {
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 16,
     marginRight: 12,
     padding: 12,
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   articleTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 13,
     fontWeight: "600",
     lineHeight: 18,
@@ -297,23 +297,23 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
   },
   categoryBadge: {
     alignSelf: "flex-start",
-    backgroundColor: colors.categoryBadge,
+    backgroundColor: localColors.categoryBadge,
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
   categoryBadgeText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 11,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     flex: 1,
   },
   courseAvatar: {
@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
     width: 48,
   },
   courseAvatarIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
   },
   courseInfo: {
@@ -333,12 +333,12 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   courseInstructor: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 12,
     marginTop: 2,
   },
   courseMetric: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 11,
     marginRight: 12,
   },
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
   },
   courseRow: {
     alignItems: "center",
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 16,
     flexDirection: "row",
     marginBottom: 8,
@@ -356,13 +356,13 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   courseTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 15,
     fontWeight: "600",
   },
   fabButton: {
     alignItems: "center",
-    backgroundColor: colors.fabBg,
+    backgroundColor: localColors.fabBg,
     borderRadius: 28,
     height: 56,
     justifyContent: "center",
@@ -378,12 +378,12 @@ const styles = StyleSheet.create({
     right: 0,
   },
   fabIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 28,
     fontWeight: "300",
   },
   featuredCard: {
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 16,
     marginHorizontal: 24,
     overflow: "hidden",
@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   featuredTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "700",
     lineHeight: 22,
@@ -408,7 +408,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   metricText: {
-    color: colors.metricText,
+    color: localColors.metricText,
     fontSize: 11,
     marginRight: 8,
   },
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   optionsIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
   },
   scrollContent: {
@@ -434,21 +434,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   sectionLabel: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "700",
   },
   seeAllText: {
-    color: colors.seeAll,
+    color: localColors.seeAll,
     fontSize: 13,
     fontWeight: "600",
   },
   statDot: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     marginHorizontal: 8,
   },
   statText: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
   },
   statsRow: {
@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   title: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 28,
     fontWeight: "800",
     marginTop: 16,

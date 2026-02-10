@@ -46,12 +46,12 @@ interface CoursesListScreenProps {
   onCoursePress: (id: string) => void;
 }
 
-const colors = {
+const localColors = {
   background: palette.brown[900],
   white: palette.white,
   headerBg: palette.onboarding.step2,
-  cardBg: "#2A1F18",
-  chipBg: "#2A1F18",
+  cardBg: palette.brown[800],
+  chipBg: palette.brown[800],
   chipSelected: palette.onboarding.step2,
   textSecondary: `${palette.white}${palette.alpha[60]}`,
   seeAll: palette.tan[500],
@@ -206,16 +206,16 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
   },
   chipText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 13,
     fontWeight: "600",
   },
   chipTextSelected: {
-    color: colors.white,
+    color: localColors.white,
   },
   chipsRow: {
     gap: 8,
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     flex: 1,
   },
   courseAvatar: {
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     width: 48,
   },
   courseAvatarIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
   },
   courseInfo: {
@@ -243,12 +243,12 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   courseInstructor: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 12,
     marginTop: 2,
   },
   courseMetric: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 11,
     marginRight: 12,
   },
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
   },
   courseRow: {
     alignItems: "center",
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 16,
     flexDirection: "row",
     marginBottom: 8,
@@ -266,12 +266,12 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   courseTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 15,
     fontWeight: "600",
   },
   curvedHeader: {
-    backgroundColor: colors.headerBg,
+    backgroundColor: localColors.headerBg,
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
     paddingBottom: 24,
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   featuredCard: {
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 16,
     marginHorizontal: 24,
     overflow: "hidden",
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   featuredDuration: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 12,
     marginTop: 4,
   },
@@ -300,12 +300,12 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   featuredInstructor: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     marginTop: 4,
   },
   featuredTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -315,20 +315,20 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   filterChipSelected: {
-    backgroundColor: colors.chipSelected,
+    backgroundColor: localColors.chipSelected,
   },
   filterChipUnselected: {
-    backgroundColor: colors.chipBg,
+    backgroundColor: localColors.chipBg,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 28,
     fontWeight: "800",
     marginTop: 8,
   },
   playButton: {
     alignItems: "center",
-    backgroundColor: colors.playBg,
+    backgroundColor: localColors.playBg,
     borderRadius: 28,
     height: 56,
     justifyContent: "center",
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     width: 56,
   },
   playIcon: {
-    color: colors.playIcon,
+    color: localColors.playIcon,
     fontSize: 20,
     marginLeft: 4,
   },
@@ -352,12 +352,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   sectionLabel: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "700",
   },
   seeAllText: {
-    color: colors.seeAll,
+    color: localColors.seeAll,
     fontSize: 13,
     fontWeight: "600",
   },

@@ -164,6 +164,49 @@ export const palette = {
     80: "CC",  // 80%
     90: "E6",  // 90%
   },
+
+  // Semantic shorthand for palette-level access (used by feature screens)
+  background: {
+    primary: "#1C1410",
+    secondary: "#2A1F1A",
+    tertiary: "#3D2D24",
+    quaternary: "#4A3A2F",
+    hero: "#2A1F1A",
+  },
+  text: {
+    primary: "#FFFFFF",
+    secondary: "#94A3B8",
+    tertiary: "#64748B",
+    disabled: "#475569",
+    inverse: "#1C1410",
+  },
+  primary: {
+    gold: "#C4A574",
+  },
+  accent: {
+    orange: "#E8853A",
+    green: "#9AAD5C",
+    purple: "#7B68B5",
+  },
+  opacity: {
+    white04: "rgba(255, 255, 255, 0.04)",
+    white05: "rgba(255, 255, 255, 0.05)",
+    white06: "rgba(255, 255, 255, 0.06)",
+    white08: "rgba(255, 255, 255, 0.08)",
+    white10: "rgba(255, 255, 255, 0.1)",
+    white12: "rgba(255, 255, 255, 0.12)",
+    white18: "rgba(255, 255, 255, 0.18)",
+    white20: "rgba(255, 255, 255, 0.2)",
+    white30: "rgba(255, 255, 255, 0.3)",
+    white40: "rgba(255, 255, 255, 0.4)",
+    black50: "rgba(0, 0, 0, 0.5)",
+  },
+  semantic: {
+    info: "#818CF8",
+    success: "#22C55E",
+    warning: "#F59E0B",
+    error: "#EF4444",
+  },
 } as const;
 
 /**

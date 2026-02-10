@@ -29,12 +29,12 @@ interface SendFeedbackScreenProps {
   onSubmit: () => void;
 }
 
-const colors = {
+const localColors = {
   heroBg: palette.olive[700],
   background: palette.brown[900],
   white: palette.white,
   textSecondary: `${palette.white}${palette.alpha[60]}`,
-  chipBg: "#2A1F18",
+  chipBg: palette.brown[800],
   chipSelected: palette.olive[500],
   ctaButtonBg: palette.tan[500],
   ctaButtonText: palette.brown[900],
@@ -125,27 +125,27 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
+  backIcon: { color: localColors.white, fontSize: 24 },
   chip: {
-    backgroundColor: colors.chipBg,
+    backgroundColor: localColors.chipBg,
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
-  chipSelected: { backgroundColor: colors.chipSelected },
+  chipSelected: { backgroundColor: localColors.chipSelected },
   chipText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 13,
     fontWeight: "600",
   },
-  chipTextSelected: { color: colors.white },
+  chipTextSelected: { color: localColors.white },
   chipsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 8,
     marginTop: 16,
   },
-  container: { backgroundColor: colors.background, flex: 1 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   contentSection: {
     marginTop: 24,
     paddingHorizontal: 24,
@@ -161,13 +161,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 12,
   },
   hero: {
-    backgroundColor: colors.heroBg,
+    backgroundColor: localColors.heroBg,
     paddingBottom: 32,
     paddingTop: 16,
   },
@@ -177,14 +177,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   questionText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
   },
   scrollContent: { paddingBottom: 48 },
   submitButton: {
     alignItems: "center",
-    backgroundColor: colors.ctaButtonBg,
+    backgroundColor: localColors.ctaButtonBg,
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 44,
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   submitButtonText: {
-    color: colors.ctaButtonText,
+    color: localColors.ctaButtonText,
     fontSize: 16,
     fontWeight: "700",
   },

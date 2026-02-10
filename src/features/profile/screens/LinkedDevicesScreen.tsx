@@ -29,10 +29,10 @@ interface LinkedDevicesScreenProps {
   onSave: () => void;
 }
 
-const colors = {
+const localColors = {
   background: palette.brown[900],
   white: palette.white,
-  cardBg: "#2A1F18",
+  cardBg: palette.brown[800],
   textSecondary: `${palette.white}${palette.alpha[60]}`,
   connected: palette.olive[500],
   inactive: palette.onboarding.step2,
@@ -88,8 +88,8 @@ export function LinkedDevicesScreen({
                   {
                     color:
                       device.status === "connected"
-                        ? colors.connected
-                        : colors.inactive,
+                        ? localColors.connected
+                        : localColors.inactive,
                   },
                 ]}
               >
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   actionButtonText: {
-    color: colors.ctaButtonBg,
+    color: localColors.ctaButtonBg,
     fontSize: 13,
     fontWeight: "600",
   },
@@ -162,20 +162,20 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
+  backIcon: { color: localColors.white, fontSize: 24 },
   batteryText: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     marginTop: 4,
   },
   connectButton: {
-    borderColor: colors.connectBorder,
+    borderColor: localColors.connectBorder,
     borderWidth: 1,
   },
-  container: { backgroundColor: colors.background, flex: 1 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   deviceCard: {
     alignItems: "center",
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 16,
     padding: 16,
     width: "48%",
@@ -188,16 +188,16 @@ const styles = StyleSheet.create({
   },
   deviceIconText: { fontSize: 24 },
   deviceName: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 14,
     fontWeight: "600",
     marginTop: 8,
     textAlign: "center",
   },
   disconnectButton: {
-    backgroundColor: colors.disconnectBg,
+    backgroundColor: localColors.disconnectBg,
   },
-  disconnectText: { color: colors.white },
+  disconnectText: { color: localColors.white },
   footer: {
     marginTop: 32,
     paddingHorizontal: 24,
@@ -216,14 +216,14 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 12,
   },
   saveButton: {
     alignItems: "center",
-    backgroundColor: colors.ctaButtonBg,
+    backgroundColor: localColors.ctaButtonBg,
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 44,
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   saveButtonText: {
-    color: colors.ctaButtonText,
+    color: localColors.ctaButtonText,
     fontSize: 16,
     fontWeight: "700",
   },

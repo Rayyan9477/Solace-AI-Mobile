@@ -141,7 +141,7 @@ describe("CoursesListScreen", () => {
     const { getByTestId } = renderScreen();
     const chip = getByTestId("filter-chip-meditation");
     const flatStyle = Object.assign({}, ...[].concat(chip.props.style));
-    expect(flatStyle.backgroundColor).toBe("#2A1F18");
+    expect(flatStyle.backgroundColor).toBe("#2A1F1A");
   });
 
   it("calls onFilterSelect when chip is pressed", () => {

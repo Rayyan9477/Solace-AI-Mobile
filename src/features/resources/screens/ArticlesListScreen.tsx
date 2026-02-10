@@ -44,13 +44,13 @@ interface ArticlesListScreenProps {
   onArticleOptions: () => void;
 }
 
-const colors = {
+const localColors = {
   background: palette.brown[900],
   white: palette.white,
   headerBg: palette.olive[500],
-  cardBg: "#2A1F18",
-  searchBg: "#2A1F18",
-  pillBg: "#2A1F18",
+  cardBg: palette.brown[800],
+  searchBg: palette.brown[800],
+  pillBg: palette.brown[800],
   pillSelected: palette.olive[500],
   textSecondary: `${palette.white}${palette.alpha[60]}`,
   seeAll: palette.olive[500],
@@ -97,7 +97,7 @@ export function ArticlesListScreen({
             testID="search-input"
             style={styles.searchInput}
             placeholder={searchPlaceholder}
-            placeholderTextColor={colors.textSecondary}
+            placeholderTextColor={localColors.textSecondary}
             value={searchQuery}
             onChangeText={onSearchChange}
           />
@@ -190,25 +190,25 @@ export function ArticlesListScreen({
 
 const styles = StyleSheet.create({
   arrowIndicator: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
     marginLeft: 8,
   },
   articleBadge: {
     alignSelf: "flex-start",
-    backgroundColor: colors.categoryBadgeBg,
+    backgroundColor: localColors.categoryBadgeBg,
     borderRadius: 6,
     paddingHorizontal: 8,
     paddingVertical: 3,
   },
   articleBadgeText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 10,
     fontWeight: "600",
   },
   articleCard: {
     alignItems: "center",
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 16,
     flexDirection: "row",
     marginBottom: 12,
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   articleTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 14,
     fontWeight: "600",
     lineHeight: 20,
@@ -240,25 +240,25 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
   },
   categoryPill: {
     alignItems: "center",
-    backgroundColor: colors.pillBg,
+    backgroundColor: localColors.pillBg,
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
   categoryPillSelected: {
-    backgroundColor: colors.pillSelected,
+    backgroundColor: localColors.pillSelected,
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     flex: 1,
   },
   curvedHeader: {
-    backgroundColor: colors.headerBg,
+    backgroundColor: localColors.headerBg,
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
     paddingBottom: 24,
@@ -266,13 +266,13 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 28,
     fontWeight: "800",
     marginTop: 8,
   },
   optionsIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
   },
   pillIcon: {
@@ -280,12 +280,12 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   pillLabel: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 11,
     fontWeight: "600",
   },
   pillLabelSelected: {
-    color: colors.white,
+    color: localColors.white,
   },
   pillsRow: {
     gap: 8,
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     alignItems: "center",
-    backgroundColor: colors.searchBg,
+    backgroundColor: localColors.searchBg,
     borderRadius: 24,
     flexDirection: "row",
     marginHorizontal: 24,
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   searchInput: {
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 14,
     padding: 0,
@@ -323,12 +323,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   sectionLabel: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "700",
   },
   seeAllText: {
-    color: colors.seeAll,
+    color: localColors.seeAll,
     fontSize: 13,
     fontWeight: "600",
   },

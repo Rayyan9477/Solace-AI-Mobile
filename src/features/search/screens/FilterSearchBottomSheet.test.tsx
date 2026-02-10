@@ -182,7 +182,7 @@ describe("FilterSearchBottomSheet", () => {
       {},
       ...[].concat(getByTestId("filter-search-bottom-sheet").props.style),
     );
-    expect(style.backgroundColor).toBe("#2A1F18");
+    expect(style.backgroundColor).toBe("#2A1F1A");
   });
 
   // ── Branding ───────────────────────────────────────────

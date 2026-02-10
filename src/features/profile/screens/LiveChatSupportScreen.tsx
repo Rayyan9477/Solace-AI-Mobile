@@ -30,14 +30,14 @@ interface LiveChatSupportScreenProps {
   onSend: () => void;
 }
 
-const colors = {
+const localColors = {
   background: palette.brown[900],
   white: palette.white,
   textSecondary: `${palette.white}${palette.alpha[60]}`,
   userBubble: palette.tan[500],
   userBubbleText: palette.brown[900],
-  agentBubble: "#2A1F18",
-  inputBg: "#2A1F18",
+  agentBubble: palette.brown[800],
+  inputBg: palette.brown[800],
   sendBg: palette.tan[500],
   sendIcon: palette.brown[900],
 } as const;
@@ -99,7 +99,7 @@ export function LiveChatSupportScreen({
           value={inputText}
           onChangeText={onInputChange}
           placeholder="Chat with our specialist..."
-          placeholderTextColor={colors.textSecondary}
+          placeholderTextColor={localColors.textSecondary}
           accessibilityLabel="Chat message"
         />
         <TouchableOpacity
@@ -119,7 +119,7 @@ export function LiveChatSupportScreen({
 const styles = StyleSheet.create({
   agentBubble: {
     alignSelf: "flex-start",
-    backgroundColor: colors.agentBubble,
+    backgroundColor: localColors.agentBubble,
   },
   backButton: {
     alignItems: "center",
@@ -127,8 +127,8 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
-  container: { backgroundColor: colors.background, flex: 1 },
+  backIcon: { color: localColors.white, fontSize: 24 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   header: {
     alignItems: "center",
     flexDirection: "row",
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 12,
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     padding: 14,
   },
   messageText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 15,
     lineHeight: 22,
   },
@@ -167,21 +167,21 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     alignItems: "center",
-    backgroundColor: colors.sendBg,
+    backgroundColor: localColors.sendBg,
     borderRadius: 22,
     justifyContent: "center",
     minHeight: 44,
     minWidth: 44,
   },
   sendIcon: {
-    color: colors.sendIcon,
+    color: localColors.sendIcon,
     fontSize: 20,
     fontWeight: "700",
   },
   textInput: {
-    backgroundColor: colors.inputBg,
+    backgroundColor: localColors.inputBg,
     borderRadius: 22,
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 15,
     minHeight: 44,
@@ -190,9 +190,9 @@ const styles = StyleSheet.create({
   },
   userBubble: {
     alignSelf: "flex-end",
-    backgroundColor: colors.userBubble,
+    backgroundColor: localColors.userBubble,
   },
-  userText: { color: colors.userBubbleText },
+  userText: { color: localColors.userBubbleText },
 });
 
 export default LiveChatSupportScreen;

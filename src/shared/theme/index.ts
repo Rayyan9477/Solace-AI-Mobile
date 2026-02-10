@@ -48,6 +48,10 @@ export type { ZIndexLevel } from "./zIndex";
 export { colors, palette, colorUtils } from "./colors";
 export type { ColorPalette, SemanticColors, ColorToken } from "./colors";
 
+// Spacing Tokens
+export { spacing } from "./spacing";
+export type { SpacingKey } from "./spacing";
+
 // Theme Hook (Task 3C.2)
 export { useTheme, theme } from "./useTheme";
 export type { Theme } from "./useTheme";

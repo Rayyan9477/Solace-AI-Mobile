@@ -33,11 +33,11 @@ interface ProfileDashboardScreenProps {
   onMoodPress: () => void;
 }
 
-const colors = {
+const localColors = {
   background: palette.brown[900],
   white: palette.white,
   textSecondary: `${palette.white}${palette.alpha[60]}`,
-  cardBg: "#2A1F18",
+  cardBg: palette.brown[800],
   headerBg: palette.brown[700],
   badgeBg: palette.olive[500],
   badgeText: palette.brown[900],
@@ -149,7 +149,7 @@ export function ProfileDashboardScreen({
 const styles = StyleSheet.create({
   avatar: {
     backgroundColor: `${palette.white}${palette.alpha[10]}`,
-    borderColor: colors.white,
+    borderColor: localColors.white,
     borderRadius: 48,
     borderWidth: 3,
     height: 96,
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   cardTitle: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     fontWeight: "600",
   },
@@ -170,9 +170,9 @@ const styles = StyleSheet.create({
     marginTop: 24,
     paddingHorizontal: 24,
   },
-  container: { backgroundColor: colors.background, flex: 1 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   headerBg: {
-    backgroundColor: colors.headerBg,
+    backgroundColor: localColors.headerBg,
     height: 140,
     left: 0,
     position: "absolute",
@@ -180,19 +180,19 @@ const styles = StyleSheet.create({
     top: 0,
   },
   membershipBadge: {
-    backgroundColor: colors.badgeBg,
+    backgroundColor: localColors.badgeBg,
     borderRadius: 12,
     marginTop: 8,
     paddingHorizontal: 16,
     paddingVertical: 4,
   },
   membershipText: {
-    color: colors.badgeText,
+    color: localColors.badgeText,
     fontSize: 12,
     fontWeight: "600",
   },
   moodBar: {
-    backgroundColor: colors.moodBarActive,
+    backgroundColor: localColors.moodBarActive,
     borderRadius: 3,
     flex: 1,
   },
@@ -203,13 +203,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   moodCard: {
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 16,
     flex: 1,
     padding: 16,
   },
   moodLabel: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 18,
     fontWeight: "700",
     marginTop: 8,
@@ -219,19 +219,19 @@ const styles = StyleSheet.create({
     marginTop: 80,
   },
   scoreCard: {
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 16,
     flex: 1,
     padding: 16,
   },
   scoreStatusText: {
-    color: colors.moodBarActive,
+    color: localColors.moodBarActive,
     fontSize: 13,
     fontWeight: "600",
     marginTop: 4,
   },
   scoreValue: {
-    color: colors.scoreColor,
+    color: localColors.scoreColor,
     fontSize: 36,
     fontWeight: "800",
     marginTop: 8,
@@ -249,12 +249,12 @@ const styles = StyleSheet.create({
   settingsIcon: { fontSize: 20 },
   statItem: { alignItems: "center" },
   statLabel: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 12,
     fontWeight: "600",
   },
   statValue: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "700",
     marginTop: 4,
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   username: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 22,
     fontWeight: "800",
     marginTop: 12,

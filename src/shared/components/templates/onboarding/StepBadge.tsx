@@ -6,6 +6,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import type { StepBadgeProps } from "./OnboardingCarouselCard.types";
+import { palette } from "../../../theme";
 
 /**
  * Generate step label from step number
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#FFFFFF",
+    color: palette.white,
     textAlign: "center",
   },
 });

@@ -31,13 +31,13 @@ interface ArticleDetailScreenProps {
   onGoPro: () => void;
 }
 
-const colors = {
+const localColors = {
   background: palette.brown[900],
   white: palette.white,
-  cardBg: "#2A1F18",
+  cardBg: palette.brown[800],
   textSecondary: `${palette.white}${palette.alpha[60]}`,
   badgeBg: palette.olive[500],
-  followBg: "#2A1F18",
+  followBg: palette.brown[800],
   paywallBg: palette.olive[500],
   proButtonBg: palette.olive[500],
 } as const;
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   articleTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 26,
     fontWeight: "800",
     lineHeight: 34,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   authorName: {
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 14,
     fontWeight: "600",
@@ -181,45 +181,45 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
+  backIcon: { color: localColors.white, fontSize: 24 },
   badge: {
-    backgroundColor: colors.badgeBg,
+    backgroundColor: localColors.badgeBg,
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
-  badgeText: { color: colors.white, fontSize: 12, fontWeight: "600" },
+  badgeText: { color: localColors.white, fontSize: 12, fontWeight: "600" },
   badgesRow: {
     flexDirection: "row",
     gap: 8,
     marginTop: 16,
     paddingHorizontal: 24,
   },
-  container: { backgroundColor: colors.background, flex: 1 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   contentSection: { marginTop: 24, paddingHorizontal: 24 },
   contentText: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 15,
     lineHeight: 24,
     marginTop: 8,
   },
   followButton: {
-    backgroundColor: colors.followBg,
+    backgroundColor: localColors.followBg,
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  followText: { color: colors.white, fontSize: 13, fontWeight: "600" },
+  followText: { color: localColors.white, fontSize: 13, fontWeight: "600" },
   goProButton: {
     alignItems: "center",
-    backgroundColor: colors.proButtonBg,
+    backgroundColor: localColors.proButtonBg,
     borderRadius: 24,
     justifyContent: "center",
     minHeight: 44,
     paddingHorizontal: 32,
     paddingVertical: 14,
   },
-  goProText: { color: colors.white, fontSize: 16, fontWeight: "700" },
+  goProText: { color: localColors.white, fontSize: 16, fontWeight: "700" },
   header: {
     alignItems: "center",
     flexDirection: "row",
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "600",
     marginLeft: 8,
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     paddingVertical: 32,
   },
   paywallTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 22,
     fontWeight: "800",
     marginTop: 12,
@@ -252,14 +252,14 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   premiumBadgeText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 11,
     fontWeight: "700",
     letterSpacing: 1,
   },
   scrollContent: { paddingBottom: 48 },
-  sectionHeader: { color: colors.white, fontSize: 18, fontWeight: "700" },
-  statText: { color: colors.textSecondary, fontSize: 13, marginRight: 16 },
+  sectionHeader: { color: localColors.white, fontSize: 18, fontWeight: "700" },
+  statText: { color: localColors.textSecondary, fontSize: 13, marginRight: 16 },
   statsRow: { flexDirection: "row", marginTop: 8, paddingHorizontal: 24 },
 });
 

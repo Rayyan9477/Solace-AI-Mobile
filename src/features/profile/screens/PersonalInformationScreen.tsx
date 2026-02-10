@@ -43,12 +43,12 @@ const ACCOUNT_TYPES: { value: AccountType; label: string }[] = [
   { value: "professional", label: "Professional" },
 ];
 
-const colors = {
+const localColors = {
   background: palette.brown[900],
   white: palette.white,
-  cardBg: "#2A1F18",
+  cardBg: palette.brown[800],
   textSecondary: `${palette.white}${palette.alpha[60]}`,
-  pillBg: "#2A1F18",
+  pillBg: palette.brown[800],
   pillSelected: palette.olive[500],
   ctaButtonBg: palette.tan[500],
   ctaButtonText: palette.brown[900],
@@ -218,14 +218,14 @@ export function PersonalInformationScreen({
 
 const styles = StyleSheet.create({
   accountTypePill: {
-    backgroundColor: colors.pillBg,
+    backgroundColor: localColors.pillBg,
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
-  accountTypePillSelected: { backgroundColor: colors.pillSelected },
+  accountTypePillSelected: { backgroundColor: localColors.pillSelected },
   accountTypePillText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 13,
     fontWeight: "600",
   },
@@ -252,11 +252,11 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
-  chevron: { color: colors.chevron, fontSize: 24 },
-  container: { backgroundColor: colors.background, flex: 1 },
+  backIcon: { color: localColors.white, fontSize: 24 },
+  chevron: { color: localColors.chevron, fontSize: 24 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   editBadge: {
-    backgroundColor: colors.ctaButtonBg,
+    backgroundColor: localColors.ctaButtonBg,
     borderRadius: 14,
     bottom: 0,
     height: 28,
@@ -266,12 +266,12 @@ const styles = StyleSheet.create({
   },
   editBadgeIcon: { fontSize: 14, textAlign: "center" },
   fieldLabel: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 12,
     fontWeight: "600",
   },
   fieldValue: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 15,
     fontWeight: "500",
   },
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   formField: {
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 12,
     marginTop: 8,
     minHeight: 44,
@@ -303,14 +303,14 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 12,
   },
   saveButton: {
     alignItems: "center",
-    backgroundColor: colors.ctaButtonBg,
+    backgroundColor: localColors.ctaButtonBg,
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 44,
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   saveButtonText: {
-    color: colors.ctaButtonText,
+    color: localColors.ctaButtonText,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -328,17 +328,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   sectionLabel: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "700",
   },
   sliderFill: {
-    backgroundColor: colors.sliderFill,
+    backgroundColor: localColors.sliderFill,
     borderRadius: 4,
     height: "100%",
   },
   sliderLabel: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 12,
   },
   sliderLabels: {
@@ -347,13 +347,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   sliderTrack: {
-    backgroundColor: colors.sliderTrack,
+    backgroundColor: localColors.sliderTrack,
     borderRadius: 4,
     height: 8,
     marginTop: 16,
   },
   weightDisplay: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
     fontWeight: "700",
     marginTop: 8,
