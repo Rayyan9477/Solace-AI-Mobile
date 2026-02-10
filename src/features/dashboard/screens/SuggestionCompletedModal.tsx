@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface SuggestionCompletedModalProps {
   isVisible: boolean;
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -129,12 +130,12 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 18,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
   },
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
   },
   dismissButton: {
     alignItems: "center",
-    backgroundColor: "#C4A574",
+    backgroundColor: palette.tan[500],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -156,13 +157,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   dismissButtonIcon: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   dismissButtonText: {
-    color: "#1C1410",
+    color: palette.brown[900],
     fontSize: 16,
     fontWeight: "600",
   },
@@ -176,8 +177,8 @@ const styles = StyleSheet.create({
   },
   illustrationCard: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
-    borderColor: "#C4A574",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.tan[500],
     borderRadius: 24,
     borderWidth: 2,
     height: 200,
@@ -195,18 +196,18 @@ const styles = StyleSheet.create({
     top: -10,
   },
   scoreIncrease: {
-    color: "#9AAD5C",
+    color: palette.olive[500],
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 8,
   },
   scoreUpdate: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     textAlign: "center",
   },
   successTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 24,
     fontWeight: "700",
     marginBottom: 12,
@@ -225,19 +226,19 @@ const styles = StyleSheet.create({
     width: 32,
   },
   swipeDismissIcon: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 16,
     fontWeight: "600",
   },
   swipeIcon: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "600",
     marginRight: 8,
   },
   swipeIndicator: {
     alignItems: "center",
-    backgroundColor: "#2A1F19",
+    backgroundColor: palette.brown[800],
     borderRadius: 24,
     flexDirection: "row",
     marginBottom: 32,
@@ -247,7 +248,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   swipeText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
   },
 });

@@ -6,6 +6,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface MoodSuggestionResolvedModalProps {
   visible: boolean;
@@ -106,7 +107,7 @@ export function MoodSuggestionResolvedModal({
 
 const styles = StyleSheet.create({
   arrow: {
-    color: "#C4A574",
+    color: palette.tan[500],
     fontSize: 24,
   },
   arrowContainer: {
@@ -127,11 +128,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   calendarDayText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 11,
   },
   calendarStrip: {
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 12,
     borderWidth: 1,
     flexDirection: "row",
@@ -156,20 +157,20 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   closeIcon: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 18,
     fontWeight: "600",
   },
   confirmButton: {
     alignItems: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.accent.orange,
     borderRadius: 12,
     marginTop: 20,
     minHeight: 44,
     paddingVertical: 14,
   },
   confirmButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   congratsText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     lineHeight: 22,
     textAlign: "center",
@@ -229,15 +230,15 @@ const styles = StyleSheet.create({
     width: 64,
   },
   scoreReward: {
-    color: "#9AAD5C",
+    color: palette.olive[500],
     fontSize: 16,
     fontWeight: "700",
     marginTop: 8,
     textAlign: "center",
   },
   successCard: {
-    backgroundColor: "#1C1410",
-    borderColor: "#3D2E23",
+    backgroundColor: palette.brown[900],
+    borderColor: palette.brown[700],
     borderRadius: 24,
     borderWidth: 1,
     marginHorizontal: 32,
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
     width: "85%",
   },
   title: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 22,
     fontWeight: "700",
     textAlign: "center",

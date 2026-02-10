@@ -148,7 +148,7 @@ describe("SoundscapesScreen", () => {
     const { getByTestId } = renderScreen();
     const chip = getByTestId("soundscape-chip-birds");
     const flatStyle = Object.assign({}, ...[].concat(chip.props.style));
-    expect(flatStyle.backgroundColor).toBe("#2A1F18");
+    expect(flatStyle.backgroundColor).toBe("#2A1F1A");
   });
 
   it("calls onSoundscapeSelect when chip is pressed", () => {

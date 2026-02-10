@@ -4,7 +4,7 @@
 
 **Architecture:** Feature-based module structure with shared atomic components (atoms/molecules/organisms). UI-only implementation using placeholder data - no backend logic. Dark mode first, accessibility-first design.
 
-**Tech Stack:** React Native 0.76.9, Expo SDK 52, TypeScript 5.3, React Navigation 6, Redux Toolkit, React Native Reanimated 3.16, Jest + React Testing Library
+**Tech Stack:** React Native 0.81.5, Expo SDK 54, TypeScript 5.3, React 19.1, React Navigation 6, React Native Reanimated 4.x, Jest + React Testing Library
 
 ---
 
@@ -32,12 +32,9 @@
 **IMPORTANT**: Before starting implementation, review the comprehensive toolkit:
 
 📄 **[TOOLS-AND-RESOURCES.md](./TOOLS-AND-RESOURCES.md)** - Full guide with:
-- **MCP Servers**: Expo, React Native Dev, React Native Upgrader, Context7, Exa
-- **Component Libraries**: GlueStack UI, React Native Paper, Shopify Restyle, NativeWind
-- **Chart Libraries**: react-native-gifted-charts (CRITICAL for mood/sleep tracking)
-- **Forms**: React Hook Form + Zod (type-safe validation)
-- **State Management**: Zustand for UI state
-- **Animation**: Moti (simplified Reanimated DSL)
+- **MCP Servers**: Context7, Exa
+- **Styling**: Custom theme system (palette, colors, spacing tokens in `src/shared/theme`)
+- **Animation**: React Native Reanimated v4
 - **Testing**: React Native Owl, eslint-plugin-react-native-a11y
 - **VS Code Extensions**: 10 essential extensions for React Native
 - **Build Tools**: EAS, Metro, Bundle Visualizer, Storybook
@@ -45,20 +42,20 @@
 
 ### ✅ Packages Installed (HIGH PRIORITY)
 
-The following packages have been installed and are ready to use:
+The following packages are installed and actively used:
 ```bash
-# Core component library + forms + charts ✓ INSTALLED
-@gluestack-ui/themed @gluestack-ui/config @gluestack-style/react
-react-hook-form zod @hookform/resolvers
-react-native-gifted-charts
-zustand @shopify/restyle
+# Core libraries ✓ INSTALLED
+react-native-reanimated (v4)
+react-native-worklets
+react-native-svg
+@react-navigation/native @react-navigation/bottom-tabs @react-navigation/native-stack
+expo-linear-gradient expo-haptics expo-camera
 
 # Dev tools ✓ INSTALLED
-eslint-plugin-react-native-a11y
-eslint-plugin-react-native
+jest-expo @testing-library/react-native
 ```
 
-**Remember to use these tools throughout implementation!**
+**Remember to use theme tokens from `src/shared/theme` throughout implementation!**
 
 ### Required MCP Servers
 
@@ -126,7 +123,7 @@ ComponentName/
 ```
 
 ### Rule 5: Theme Integration
-- Always use theme values from `useTheme()` hook
+- Always use theme tokens from `src/shared/theme` (palette, colors, spacing)
 - Never hardcode colors, spacing, or typography values
 - Use semantic color names (background, surface, text)
 
@@ -330,14 +327,14 @@ ComponentName/
    - Dark mode implementation
    - Component variants and props structure
 
-3. **Use React Hook Form + Zod** for all form components:
+3. **Use local state** for form components:
    - Button: Include in form submit handlers
-   - TextInput: Integrate with `Controller` from react-hook-form
-   - Checkbox, RadioButton, Toggle: Use with form validation
+   - TextInput: Use `useState` for form values
+   - Checkbox, RadioButton, Toggle: Use local state for form validation
 
-4. **Use Shopify Restyle** for styling:
-   - Import theme values instead of hardcoding colors/spacing
-   - Use type-safe theme hooks
+4. **Use custom theme tokens** for styling:
+   - Import palette/colors/spacing from `src/shared/theme`
+   - Never hardcode colors or spacing values
 
 5. **Use eslint-plugin-react-native-a11y**:
    - Ensure all components pass accessibility checks
@@ -1043,7 +1040,7 @@ Phase 6 (Safety-Critical) → Launch
 ---
 
 *Document Version: 3.0*
-*Last Updated: 2026-01-16*
+*Last Updated: 2026-02-10*
 *Total Screens: 158*
 *Total Components: 44*
 *Methodology: TDD with bite-sized tasks*

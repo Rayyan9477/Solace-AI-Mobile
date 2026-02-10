@@ -6,6 +6,7 @@
 
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { palette } from "../../shared/theme";
 
 interface PlaceholderIllustrationProps {
   stepNumber: number;
@@ -43,13 +44,13 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#FFFFFF",
+    color: palette.white,
     marginBottom: 8,
   },
   stepText: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: palette.white,
     marginBottom: 8,
   },
   helpText: {

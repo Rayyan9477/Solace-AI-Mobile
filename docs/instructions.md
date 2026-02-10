@@ -5,8 +5,8 @@ You operate with production-level rigor, strict adherence to specifications, and
 
 ## PROJECT CONTEXT
 
-* **Platform**: React Native 0.76.9
-* **Framework**: Expo SDK 52
+* **Platform**: React Native 0.81.5
+* **Framework**: Expo SDK 54
 * **Language**: TypeScript 5.3
 * **Scale**:
 
@@ -62,14 +62,13 @@ You **must complete all reading before writing any code**.
 
 ## APPROVED & REQUIRED TOOLING (NO SUBSTITUTIONS)
 
-| Concern       | Tool                         | Requirement               |
-| ------------- | ---------------------------- | ------------------------- |
-| UI Components | `@gluestack-ui/themed`       | Accessibility, dark mode  |
-| Forms         | `react-hook-form` + `zod`    | Mandatory for all forms   |
-| Charts        | `react-native-gifted-charts` | Mood, sleep, stress       |
-| UI State      | `zustand`                    | Modals, tabs, drafts only |
-| Styling       | `@shopify/restyle`           | Tokens only, no literals  |
-| Animations    | `moti`                       | Declarative animations    |
+| Concern       | Tool                                        | Requirement               |
+| ------------- | ------------------------------------------- | ------------------------- |
+| UI Components | React Native `StyleSheet` + custom theme    | Accessibility, dark mode  |
+| Charts        | `react-native-svg`                          | Mood, sleep, stress       |
+| UI State      | `useState` / `useReducer`                   | Modals, tabs, drafts only |
+| Styling       | Custom theme tokens (`src/shared/theme`)    | Tokens only, no literals  |
+| Animations    | `react-native-reanimated` v4                | Worklet-based animations  |
 
 ❌ No inline styles
 ❌ No hardcoded spacing, colors, font sizes
@@ -166,7 +165,7 @@ Before writing code:
    * `accessibilityLabel` on all interactive elements
    * Correct `accessibilityRole`
    * Screen-reader friendly
-6. Theme tokens only (Restyle)
+6. Theme tokens only (custom theme system)
 7. Screenshot-exact rendering
 
 ---

@@ -32,10 +32,10 @@ interface LanguagesScreenProps {
   onSave: () => void;
 }
 
-const colors = {
+const localColors = {
   background: palette.brown[900],
   white: palette.white,
-  cardBg: "#2A1F18",
+  cardBg: palette.brown[800],
   textSecondary: `${palette.white}${palette.alpha[60]}`,
   selectedBg: palette.olive[500],
   selectedText: palette.brown[900],
@@ -106,8 +106,9 @@ export function LanguagesScreen({
                 bilingualEnabled ? styles.toggleOn : styles.toggleOff,
               ]}
               onPress={onBilingualToggle}
-              accessibilityRole="button"
-              accessibilityLabel="Toggle Bilingual"
+              accessibilityRole="switch"
+              accessibilityLabel="Bilingual"
+              accessibilityState={{ checked: bilingualEnabled }}
             >
               <View
                 style={[
@@ -184,16 +185,16 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
+  backIcon: { color: localColors.white, fontSize: 24 },
   betaBadge: {
-    backgroundColor: colors.betaBg,
+    backgroundColor: localColors.betaBg,
     borderRadius: 8,
     marginLeft: 8,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
   betaBadgeText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 10,
     fontWeight: "700",
   },
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   bilingualLabel: {
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 15,
     fontWeight: "500",
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 12,
   },
-  container: { backgroundColor: colors.background, flex: 1 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   footer: {
     marginTop: 32,
     paddingHorizontal: 24,
@@ -224,27 +225,27 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 12,
   },
   languageCode: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     marginRight: 12,
   },
-  languageCodeSelected: { color: colors.selectedText },
+  languageCodeSelected: { color: localColors.selectedText },
   languageName: {
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 15,
     fontWeight: "500",
   },
-  languageNameSelected: { color: colors.selectedText },
+  languageNameSelected: { color: localColors.selectedText },
   languageRow: {
     alignItems: "center",
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 12,
     flexDirection: "row",
     marginTop: 8,
@@ -252,21 +253,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
-  languageRowSelected: { backgroundColor: colors.selectedBg },
+  languageRowSelected: { backgroundColor: localColors.selectedBg },
   radio: {
-    backgroundColor: colors.radioUnselected,
+    backgroundColor: localColors.radioUnselected,
     borderRadius: 10,
     height: 20,
     width: 20,
   },
   radioSelected: {
-    backgroundColor: colors.selectedText,
-    borderColor: colors.white,
+    backgroundColor: localColors.selectedText,
+    borderColor: localColors.white,
     borderWidth: 2,
   },
   saveButton: {
     alignItems: "center",
-    backgroundColor: colors.ctaButtonBg,
+    backgroundColor: localColors.ctaButtonBg,
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 44,
@@ -274,7 +275,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   saveButtonText: {
-    color: colors.ctaButtonText,
+    color: localColors.ctaButtonText,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -284,23 +285,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   sectionTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "700",
   },
   selectedCode: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 15,
     marginLeft: 4,
   },
   selectedName: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 18,
     fontWeight: "700",
   },
   selectedRow: {
     alignItems: "center",
-    backgroundColor: colors.selectedBg,
+    backgroundColor: localColors.selectedBg,
     borderRadius: 12,
     flexDirection: "row",
     marginTop: 12,
@@ -314,10 +315,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
     width: 52,
   },
-  toggleOff: { backgroundColor: colors.toggleOff },
-  toggleOn: { backgroundColor: colors.toggleOn },
+  toggleOff: { backgroundColor: localColors.toggleOff },
+  toggleOn: { backgroundColor: localColors.toggleOn },
   toggleThumb: {
-    backgroundColor: colors.white,
+    backgroundColor: localColors.white,
     borderRadius: 14,
     height: 28,
     width: 28,

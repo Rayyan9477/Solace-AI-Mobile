@@ -6,6 +6,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface MoodType {
   id: string;
@@ -147,7 +148,8 @@ export function FilterMoodBottomSheet({
           style={styles.toggleRow}
           onPress={onImprovementToggle}
           accessibilityRole="switch"
-          accessibilityLabel="Toggle show improvement"
+          accessibilityLabel="Show improvement"
+          accessibilityState={{ checked: showImprovement }}
         >
           <Text style={styles.toggleLabel}>Show Improvement</Text>
           <View
@@ -185,14 +187,14 @@ export function FilterMoodBottomSheet({
 const styles = StyleSheet.create({
   applyButton: {
     alignItems: "center",
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.accent.orange,
     borderRadius: 12,
     marginTop: 24,
     minHeight: 44,
     paddingVertical: 14,
   },
   applyButtonText: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -201,8 +203,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   chip: {
-    backgroundColor: "#2A1F19",
-    borderColor: "#3D2E23",
+    backgroundColor: palette.brown[800],
+    borderColor: palette.brown[700],
     borderRadius: 20,
     borderWidth: 1,
     marginBottom: 8,
@@ -217,15 +219,15 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   chipSelected: {
-    backgroundColor: "#E8853A",
-    borderColor: "#E8853A",
+    backgroundColor: palette.accent.orange,
+    borderColor: palette.accent.orange,
   },
   chipText: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
   },
   chipTextSelected: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontWeight: "600",
   },
   chipsContainer: {
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
   },
   datePickerRow: {
     alignItems: "center",
-    borderBottomColor: "#3D2E23",
+    borderBottomColor: palette.brown[700],
     borderBottomWidth: 1,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -242,12 +244,12 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   dateValue: {
-    color: "#C4A574",
+    color: palette.tan[500],
     fontSize: 14,
   },
   dragHandle: {
     alignSelf: "center",
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 3,
     height: 4,
     marginBottom: 16,
@@ -255,7 +257,7 @@ const styles = StyleSheet.create({
   },
   helpButton: {
     alignItems: "center",
-    borderColor: "#3D2E23",
+    borderColor: palette.brown[700],
     borderRadius: 12,
     borderWidth: 1,
     height: 24,
@@ -265,7 +267,7 @@ const styles = StyleSheet.create({
     width: 24,
   },
   helpIcon: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 14,
     fontWeight: "700",
   },
@@ -277,22 +279,22 @@ const styles = StyleSheet.create({
     top: 0,
   },
   scaleLabel: {
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
   },
   scaleMiddle: {
     alignSelf: "center",
-    color: "#94A3B8",
+    color: palette.gray[400],
     fontSize: 12,
     marginTop: 4,
   },
   sectionLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
   },
   sheetContent: {
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingBottom: 40,
@@ -305,12 +307,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   sheetTitle: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 20,
     fontWeight: "700",
   },
   sliderFill: {
-    backgroundColor: "#E8853A",
+    backgroundColor: palette.accent.orange,
     borderRadius: 3,
     height: 6,
     left: 0,
@@ -318,7 +320,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   sliderThumb: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     borderRadius: 8,
     height: 16,
     position: "absolute",
@@ -326,7 +328,7 @@ const styles = StyleSheet.create({
     width: 16,
   },
   sliderTrack: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 3,
     flex: 1,
     height: 6,
@@ -342,7 +344,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   toggleKnob: {
-    backgroundColor: "#94A3B8",
+    backgroundColor: palette.gray[400],
     borderRadius: 10,
     height: 20,
     left: 2,
@@ -351,17 +353,17 @@ const styles = StyleSheet.create({
     width: 20,
   },
   toggleKnobOn: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.white,
     left: 22,
   },
   toggleLabel: {
-    color: "#FFFFFF",
+    color: palette.white,
     fontSize: 14,
     fontWeight: "600",
   },
   toggleRow: {
     alignItems: "center",
-    borderTopColor: "#3D2E23",
+    borderTopColor: palette.brown[700],
     borderTopWidth: 1,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -370,14 +372,14 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   toggleSwitch: {
-    backgroundColor: "#3D2E23",
+    backgroundColor: palette.brown[700],
     borderRadius: 12,
     height: 24,
     position: "relative",
     width: 44,
   },
   toggleSwitchOn: {
-    backgroundColor: "#9AAD5C",
+    backgroundColor: palette.olive[500],
   },
 });
 

@@ -34,15 +34,15 @@ interface HelpCenterScreenProps {
   onFaqToggle: (id: string) => void;
 }
 
-const colors = {
+const localColors = {
   background: palette.brown[900],
   white: palette.white,
-  cardBg: "#2A1F18",
+  cardBg: palette.brown[800],
   textSecondary: `${palette.white}${palette.alpha[60]}`,
-  tabBg: "#2A1F18",
+  tabBg: palette.brown[800],
   tabSelected: palette.tan[500],
   tabSelectedText: palette.brown[900],
-  searchBg: "#2A1F18",
+  searchBg: palette.brown[800],
   chevron: `${palette.white}${palette.alpha[30]}`,
 } as const;
 
@@ -115,7 +115,7 @@ export function HelpCenterScreen({
           value={searchQuery}
           onChangeText={onSearchChange}
           placeholder="Where can I find..."
-          placeholderTextColor={colors.textSecondary}
+          placeholderTextColor={localColors.textSecondary}
           accessibilityLabel="Search FAQs"
         />
       </View>
@@ -157,29 +157,29 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
-  container: { backgroundColor: colors.background, flex: 1 },
+  backIcon: { color: localColors.white, fontSize: 24 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   faqAnswer: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 14,
     lineHeight: 22,
     marginTop: 8,
   },
-  faqChevron: { color: colors.chevron, fontSize: 18 },
+  faqChevron: { color: localColors.chevron, fontSize: 18 },
   faqHeader: {
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
   },
   faqItem: {
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 12,
     marginHorizontal: 24,
     marginTop: 8,
     padding: 16,
   },
   faqQuestion: {
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 15,
     fontWeight: "600",
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 12,
@@ -203,9 +203,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   searchInput: {
-    backgroundColor: colors.searchBg,
+    backgroundColor: localColors.searchBg,
     borderRadius: 12,
-    color: colors.white,
+    color: localColors.white,
     fontSize: 15,
     minHeight: 44,
     paddingHorizontal: 16,
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   },
   tab: {
     alignItems: "center",
-    backgroundColor: colors.tabBg,
+    backgroundColor: localColors.tabBg,
     borderRadius: 20,
     flex: 1,
     paddingVertical: 10,
@@ -224,9 +224,9 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingHorizontal: 24,
   },
-  tabSelected: { backgroundColor: colors.tabSelected },
-  tabText: { color: colors.white, fontSize: 14, fontWeight: "600" },
-  tabTextSelected: { color: colors.tabSelectedText },
+  tabSelected: { backgroundColor: localColors.tabSelected },
+  tabText: { color: localColors.white, fontSize: 14, fontWeight: "600" },
+  tabTextSelected: { color: localColors.tabSelectedText },
 });
 
 export default HelpCenterScreen;

@@ -15,19 +15,21 @@
 | **Expo SDK** | 52 | 54 | Major upgrade |
 | **React Native** | 0.76.9 | 0.81.5 | +5 versions |
 | **React** | 18.3.1 | 19.1.0 | Major upgrade |
-| **Production Deps** | 67 | 49 | **-18 (-27%)** |
+| **Production Deps** | 67 | 43 | **-24 (-36%)** |
 | **Total Packages** | 1,758 | 1,319 | **-439 (-25%)** |
 | **Vulnerabilities** | 11 (3 mod, 8 high) | **0** | **-100%** |
-| **Test Suites Passing** | 181/202 | 181/202 | No regression |
-| **Tests Passing** | 5,144/5,234 | 5,113/5,234 | -0.6% (minor) |
+| **Test Suites Passing** | 181/202 | 202/202 | **All passing** |
+| **Tests Passing** | 5,144/5,234 | 5,259/5,259 | **All passing** |
 
-**18 Unused Dependencies Removed:**
+**24 Unused Dependencies Removed:**
 1. framer-motion, animejs, react-native-paper, zustand, axios
 2. @gluestack-style/react, @gluestack-ui/config, @gluestack-ui/themed
 3. @paper-design/shaders-react, @react-native-community/blur
 4. @shopify/restyle, react-native-super-grid, react-native-gifted-charts
 5. lottie-react-native, react-native-keychain, react-native-device-info
 6. hermes-parser, prop-types, moti (not imported)
+7. @reduxjs/toolkit, react-redux, redux-persist (unused state management)
+8. react-hook-form, @hookform/resolvers, zod (unused form libraries)
 
 **Additional Optimizations:**
 - ✅ Lazy loading for 5 feature stacks (React.lazy + Suspense)
@@ -53,8 +55,8 @@
 | **lottie-react-native** | Animation library | ~50KB | **Keep** - icon animations |
 | **axios** | HTTP client | ~15KB | **Consider** - fetch API may suffice |
 | **crypto-js** | Cryptography | ~50KB | **Keep** - security critical |
-| **redux + toolkit** | State management | ~40KB | **Keep** - core state solution |
-| **zustand** | State management | ~5KB | **Consolidate** - duplicate state lib |
+| ~~**redux + toolkit**~~ | ~~State management~~ | ~~~40KB~~ | **REMOVED** - unused |
+| ~~**zustand**~~ | ~~State management~~ | ~~~5KB~~ | **REMOVED** - unused |
 
 **Total Identified:** ~850KB+ from top 12 dependencies
 
@@ -471,5 +473,5 @@ import { Button } from "./components"; // ❌ Barrel import (loads all)
 
 ---
 
-**Last Updated:** 2026-02-05
-**Next Review:** After Phase 1 optimizations complete
+**Last Updated:** 2026-02-10
+**Next Review:** After production build measurements

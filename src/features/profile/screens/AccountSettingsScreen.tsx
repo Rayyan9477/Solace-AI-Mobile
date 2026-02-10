@@ -37,10 +37,10 @@ interface AccountSettingsScreenProps {
   onToggle: (id: string, value: boolean) => void;
 }
 
-const colors = {
+const localColors = {
   background: palette.brown[900],
   white: palette.white,
-  cardBg: "#2A1F18",
+  cardBg: palette.brown[800],
   textSecondary: `${palette.white}${palette.alpha[60]}`,
   destructive: palette.onboarding.step2,
   toggleOn: palette.olive[500],
@@ -154,9 +154,9 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
-  chevron: { color: colors.chevron, fontSize: 24 },
-  container: { backgroundColor: colors.background, flex: 1 },
+  backIcon: { color: localColors.white, fontSize: 24 },
+  chevron: { color: localColors.chevron, fontSize: 24 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   header: {
     alignItems: "center",
     flexDirection: "row",
@@ -164,40 +164,40 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 12,
   },
   itemLabel: {
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 15,
     fontWeight: "500",
   },
-  itemLabelDestructive: { color: colors.destructive },
+  itemLabelDestructive: { color: localColors.destructive },
   itemRight: {
     alignItems: "center",
     flexDirection: "row",
     gap: 8,
   },
   itemValue: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 14,
   },
   scrollContent: { paddingBottom: 48 },
   section: { marginTop: 24, paddingHorizontal: 24 },
   sectionTitle: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     fontWeight: "600",
     marginBottom: 8,
     textTransform: "uppercase",
   },
-  sectionTitleDestructive: { color: colors.destructive },
+  sectionTitleDestructive: { color: localColors.destructive },
   settingsItem: {
     alignItems: "center",
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 12,
     flexDirection: "row",
     marginTop: 4,
@@ -212,10 +212,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
     width: 52,
   },
-  toggleOff: { backgroundColor: colors.toggleOff },
-  toggleOn: { backgroundColor: colors.toggleOn },
+  toggleOff: { backgroundColor: localColors.toggleOff },
+  toggleOn: { backgroundColor: localColors.toggleOn },
   toggleThumb: {
-    backgroundColor: colors.white,
+    backgroundColor: localColors.white,
     borderRadius: 14,
     height: 28,
     width: 28,

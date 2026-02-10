@@ -31,7 +31,7 @@ interface AboutCompanyScreenProps {
   onPhonePress: () => void;
 }
 
-const colors = {
+const localColors = {
   heroBg: palette.olive[700],
   white: palette.white,
   textSecondary: `${palette.white}${palette.alpha[70]}`,
@@ -156,11 +156,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
+  backIcon: { color: localColors.white, fontSize: 24 },
   cardContent: { flex: 1, marginLeft: 16 },
   cardIcon: {
     alignItems: "center",
-    backgroundColor: colors.iconBg,
+    backgroundColor: localColors.iconBg,
     borderRadius: 20,
     height: 40,
     justifyContent: "center",
@@ -168,33 +168,33 @@ const styles = StyleSheet.create({
   },
   cardIconText: { fontSize: 18 },
   cardText: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 14,
     lineHeight: 22,
   },
   cardTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 15,
     fontWeight: "700",
     marginBottom: 4,
   },
-  chevron: { color: colors.chevron, fontSize: 24 },
+  chevron: { color: localColors.chevron, fontSize: 24 },
   companyName: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 22,
     fontWeight: "800",
     marginTop: 16,
   },
   contactCard: {
     alignItems: "center",
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 16,
     flexDirection: "row",
     marginHorizontal: 24,
     marginTop: 12,
     padding: 16,
   },
-  container: { backgroundColor: colors.heroBg, flex: 1 },
+  container: { backgroundColor: localColors.heroBg, flex: 1 },
   logo: {
     alignItems: "center",
     height: 64,
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   logoText: { fontSize: 40 },
   scrollContent: { paddingBottom: 48 },
   tagline: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 14,
     marginTop: 4,
   },

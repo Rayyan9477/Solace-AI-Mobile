@@ -166,7 +166,7 @@ describe("GoalSelectionScreen", () => {
     const { getByTestId } = renderScreen();
     const card = getByTestId("goal-card-focus");
     const flatStyle = Object.assign({}, ...[].concat(card.props.style));
-    expect(flatStyle.backgroundColor).toBe("#2A1F18");
+    expect(flatStyle.backgroundColor).toBe("#2A1F1A");
   });
 
   it("calls onGoalSelect when a goal card is pressed", () => {

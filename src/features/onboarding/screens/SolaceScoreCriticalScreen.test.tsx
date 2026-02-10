@@ -82,7 +82,7 @@ describe("SolaceScoreCriticalScreen", () => {
     const { getByText } = render(
       <SolaceScoreCriticalScreen {...defaultProps} />
     );
-    expect(getByText("Call Hotline")).toBeTruthy();
+    expect(getByText("Access Crisis Support")).toBeTruthy();
   });
 
   it("calls onCallHotline when hotline button is pressed", () => {

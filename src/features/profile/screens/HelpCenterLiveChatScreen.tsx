@@ -16,11 +16,11 @@ interface HelpCenterLiveChatScreenProps {
   onStartLiveChat: () => void;
 }
 
-const colors = {
+const localColors = {
   background: palette.brown[900],
   white: palette.white,
   textSecondary: `${palette.white}${palette.alpha[60]}`,
-  tabBg: "#2A1F18",
+  tabBg: palette.brown[800],
   tabSelected: palette.tan[500],
   tabSelectedText: palette.brown[900],
   illustrationBg: palette.onboarding.step5,
@@ -118,8 +118,8 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
-  container: { backgroundColor: colors.background, flex: 1 },
+  backIcon: { color: localColors.white, fontSize: 24 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   contentSection: {
     alignItems: "center",
     flex: 1,
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   ctaButton: {
     alignItems: "center",
-    backgroundColor: colors.ctaButtonBg,
+    backgroundColor: localColors.ctaButtonBg,
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 44,
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   ctaButtonText: {
-    color: colors.ctaButtonText,
+    color: localColors.ctaButtonText,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -152,26 +152,26 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 12,
   },
   illustration: {
-    backgroundColor: colors.illustrationBg,
+    backgroundColor: localColors.illustrationBg,
     borderRadius: 80,
     height: 160,
     width: 160,
   },
   responseTime: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 15,
     marginTop: 12,
     textAlign: "center",
   },
   tab: {
     alignItems: "center",
-    backgroundColor: colors.tabBg,
+    backgroundColor: localColors.tabBg,
     borderRadius: 20,
     flex: 1,
     paddingVertical: 10,
@@ -182,11 +182,11 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingHorizontal: 24,
   },
-  tabSelected: { backgroundColor: colors.tabSelected },
-  tabText: { color: colors.white, fontSize: 14, fontWeight: "600" },
-  tabTextSelected: { color: colors.tabSelectedText },
+  tabSelected: { backgroundColor: localColors.tabSelected },
+  tabText: { color: localColors.white, fontSize: 14, fontWeight: "600" },
+  tabTextSelected: { color: localColors.tabSelectedText },
   welcomeTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 22,
     fontWeight: "800",
     marginTop: 24,

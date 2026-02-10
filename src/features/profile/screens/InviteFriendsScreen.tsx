@@ -31,12 +31,12 @@ interface InviteFriendsScreenProps {
   onInviteContact: (id: string) => void;
 }
 
-const colors = {
+const localColors = {
   heroBg: palette.olive[700],
   background: palette.brown[900],
   white: palette.white,
   textSecondary: `${palette.white}${palette.alpha[60]}`,
-  cardBg: "#2A1F18",
+  cardBg: palette.brown[800],
   avatarBg: palette.tan[500],
   avatarText: palette.brown[900],
   addButtonBg: "transparent",
@@ -120,7 +120,7 @@ export function InviteFriendsScreen({
 const styles = StyleSheet.create({
   addButton: {
     alignItems: "center",
-    borderColor: colors.addButtonBorder,
+    borderColor: localColors.addButtonBorder,
     borderRadius: 24,
     borderWidth: 1,
     marginBottom: 16,
@@ -128,20 +128,20 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   addButtonText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 15,
     fontWeight: "600",
   },
   avatarCircle: {
     alignItems: "center",
-    backgroundColor: colors.avatarBg,
+    backgroundColor: localColors.avatarBg,
     borderRadius: 22,
     height: 44,
     justifyContent: "center",
     width: 44,
   },
   avatarInitial: {
-    color: colors.avatarText,
+    color: localColors.avatarText,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -151,15 +151,15 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
+  backIcon: { color: localColors.white, fontSize: 24 },
   contactInfo: { flex: 1, marginLeft: 12 },
   contactName: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 15,
     fontWeight: "600",
   },
   contactPhone: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     marginTop: 2,
   },
@@ -172,9 +172,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 24,
   },
-  container: { backgroundColor: colors.background, flex: 1 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   hero: {
-    backgroundColor: colors.heroBg,
+    backgroundColor: localColors.heroBg,
     paddingBottom: 32,
     paddingHorizontal: 20,
     paddingTop: 16,
@@ -184,21 +184,21 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   incentiveText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 26,
     fontWeight: "800",
     textAlign: "center",
   },
   inviteButton: {
     alignItems: "center",
-    backgroundColor: colors.inviteBg,
+    backgroundColor: localColors.inviteBg,
     borderRadius: 16,
     height: 32,
     justifyContent: "center",
     width: 32,
   },
   inviteButtonText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 18,
     fontWeight: "700",
   },

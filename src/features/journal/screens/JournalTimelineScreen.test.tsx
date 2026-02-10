@@ -19,10 +19,10 @@ const sampleCalendar = [
   { dayLabel: "Mon", date: 25, selected: false, moodColor: "#9AAD5C" },
   { dayLabel: "Tue", date: 26, selected: true, moodColor: "#E8853A" },
   { dayLabel: "Wed", date: 27, selected: false, moodColor: "#9AAD5C" },
-  { dayLabel: "Thu", date: 28, selected: false, moodColor: "#3D2E23" },
+  { dayLabel: "Thu", date: 28, selected: false, moodColor: "#3D2D24" },
   { dayLabel: "Fri", date: 29, selected: false, moodColor: "#E8853A" },
   { dayLabel: "Sat", date: 30, selected: false, moodColor: "#9AAD5C" },
-  { dayLabel: "Sun", date: 3, selected: false, moodColor: "#3D2E23" },
+  { dayLabel: "Sun", date: 3, selected: false, moodColor: "#3D2D24" },
 ];
 
 const sampleEntries = [
