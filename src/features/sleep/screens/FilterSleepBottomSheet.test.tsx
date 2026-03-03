@@ -291,7 +291,7 @@ describe("FilterSleepBottomSheet", () => {
       ? Object.assign({}, ...track.props.style)
       : track.props.style;
     expect(flatStyle).toEqual(
-      expect.objectContaining({ backgroundColor: "#3D2E23" })
+      expect.objectContaining({ backgroundColor: "#3D2D24" })
     );
   });
 

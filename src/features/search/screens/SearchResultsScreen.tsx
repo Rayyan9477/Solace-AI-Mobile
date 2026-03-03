@@ -13,6 +13,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface CategoryChip {
   id: string;
@@ -42,14 +43,14 @@ interface SearchResultsScreenProps {
   onResultPress: (result: SearchResultItem) => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
+const localColors = {
+  background: palette.brown[900],
+  white: palette.white,
   textSecondary: "rgba(255,255,255,0.6)",
-  searchBarBg: "#2A1F18",
-  chipBg: "#2A1F18",
-  chipSelected: "#E8853A",
-  rowBg: "#2A1F18",
+  searchBarBg: palette.brown[800],
+  chipBg: palette.brown[800],
+  chipSelected: palette.accent.orange,
+  rowBg: palette.brown[800],
 } as const;
 
 export function SearchResultsScreen({
@@ -91,7 +92,7 @@ export function SearchResultsScreen({
           value={query}
           onChangeText={onQueryChange}
           placeholder="Search Solace..."
-          placeholderTextColor={colors.textSecondary}
+          placeholderTextColor={localColors.textSecondary}
           accessibilityLabel="Search"
         />
         <TouchableOpacity
@@ -193,23 +194,23 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
-  chevron: { color: colors.textSecondary, fontSize: 24 },
+  backIcon: { color: localColors.white, fontSize: 24 },
+  chevron: { color: localColors.textSecondary, fontSize: 24 },
   chip: {
-    backgroundColor: colors.chipBg,
+    backgroundColor: localColors.chipBg,
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
-  chipSelected: { backgroundColor: colors.chipSelected },
-  chipText: { color: colors.white, fontSize: 13, fontWeight: "600" },
+  chipSelected: { backgroundColor: localColors.chipSelected },
+  chipText: { color: localColors.white, fontSize: 13, fontWeight: "600" },
   chipsRow: {
     flexDirection: "row",
     gap: 8,
     paddingHorizontal: 20,
     paddingVertical: 12,
   },
-  container: { backgroundColor: colors.background, flex: 1 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   filterButton: {
     alignItems: "center",
     justifyContent: "center",
@@ -224,13 +225,13 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 12,
   },
-  resultCategory: { color: colors.textSecondary, fontSize: 12, marginTop: 2 },
-  resultCount: { color: colors.textSecondary, fontSize: 13 },
+  resultCategory: { color: localColors.textSecondary, fontSize: 12, marginTop: 2 },
+  resultCount: { color: localColors.textSecondary, fontSize: 13 },
   resultIcon: {
     borderRadius: 12,
     height: 24,
@@ -246,7 +247,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   resultTextContainer: { flex: 1, marginLeft: 12 },
-  resultTitle: { color: colors.white, fontSize: 15, fontWeight: "600" },
+  resultTitle: { color: localColors.white, fontSize: 15, fontWeight: "600" },
   resultsHeader: {
     alignItems: "center",
     flexDirection: "row",
@@ -257,7 +258,7 @@ const styles = StyleSheet.create({
   scrollContent: { paddingBottom: 48 },
   searchBar: {
     alignItems: "center",
-    backgroundColor: colors.searchBarBg,
+    backgroundColor: localColors.searchBarBg,
     borderRadius: 12,
     flexDirection: "row",
     marginHorizontal: 20,
@@ -266,7 +267,7 @@ const styles = StyleSheet.create({
   },
   searchIcon: { fontSize: 16, marginRight: 8 },
   searchInput: {
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 15,
     paddingVertical: 12,
@@ -275,7 +276,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-  sortLabel: { color: colors.white, fontSize: 13, fontWeight: "600" },
+  sortLabel: { color: localColors.white, fontSize: 13, fontWeight: "600" },
 });
 
 export default SearchResultsScreen;

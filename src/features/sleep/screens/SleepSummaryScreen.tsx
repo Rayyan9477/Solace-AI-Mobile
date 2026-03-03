@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface SleepStage {
   type: "rem" | "core" | "post";
@@ -22,11 +23,11 @@ interface SleepSummaryScreenProps {
   onGotIt: () => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  gotItBg: "#C4A574",
-  ringTrackBg: "#2A1F18",
+const localColors = {
+  background: palette.brown[900],
+  white: palette.white,
+  gotItBg: palette.tan[500],
+  ringTrackBg: palette.brown[800],
   textSecondary: "rgba(255,255,255,0.6)",
 } as const;
 
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     flex: 1,
   },
   footer: {
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
   },
   gotItButton: {
     alignItems: "center",
-    backgroundColor: colors.gotItBg,
+    backgroundColor: localColors.gotItBg,
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 44,
@@ -161,7 +162,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   gotItText: {
-    color: colors.background,
+    color: localColors.background,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   ringTrack: {
-    backgroundColor: colors.ringTrackBg,
+    backgroundColor: localColors.ringTrackBg,
     position: "absolute",
   },
   stageBreakdown: {
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   stageDuration: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -203,17 +204,17 @@ const styles = StyleSheet.create({
     width: 40,
   },
   stageIconText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 14,
     fontWeight: "700",
   },
   stageLabel: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     fontWeight: "500",
   },
   title: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 18,
     fontWeight: "600",
     textAlign: "center",
@@ -223,7 +224,7 @@ const styles = StyleSheet.create({
     paddingTop: 48,
   },
   totalHours: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 56,
     fontWeight: "800",
     marginTop: 8,

@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface SearchLoadingScreenProps {
   query: string;
@@ -21,11 +22,11 @@ interface SearchLoadingScreenProps {
   onQueryChange: (text: string) => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
+const localColors = {
+  background: palette.brown[900],
+  white: palette.white,
   textSecondary: "rgba(255,255,255,0.6)",
-  searchBarBg: "#2A1F18",
+  searchBarBg: palette.brown[800],
   iconColor: "rgba(255,255,255,0.5)",
 } as const;
 
@@ -60,7 +61,7 @@ export function SearchLoadingScreen({
           value={query}
           onChangeText={onQueryChange}
           placeholder="Search Solace..."
-          placeholderTextColor={colors.textSecondary}
+          placeholderTextColor={localColors.textSecondary}
           accessibilityLabel="Search"
         />
         <TouchableOpacity
@@ -95,10 +96,10 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
-  container: { backgroundColor: colors.background, flex: 1 },
+  backIcon: { color: localColors.white, fontSize: 24 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   dot: {
-    backgroundColor: colors.white,
+    backgroundColor: localColors.white,
     borderRadius: 5,
     height: 10,
     width: 10,
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 12,
@@ -128,13 +129,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   loadingText: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 15,
     marginTop: 16,
   },
   searchBar: {
     alignItems: "center",
-    backgroundColor: colors.searchBarBg,
+    backgroundColor: localColors.searchBarBg,
     borderRadius: 12,
     flexDirection: "row",
     marginHorizontal: 20,
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
   },
   searchIcon: { fontSize: 16, marginRight: 8 },
   searchInput: {
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 15,
     paddingVertical: 12,

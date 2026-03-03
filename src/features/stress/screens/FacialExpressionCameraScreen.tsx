@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface FacialExpressionCameraScreenProps {
   heartRate: number;
@@ -16,13 +17,13 @@ interface FacialExpressionCameraScreenProps {
   onCapture: () => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  heartGreen: "#4A9E8C",
+const localColors = {
+  background: palette.brown[900],
+  white: palette.white,
+  heartGreen: palette.green[450],
   bpBlue: "#5B7BB5",
   bannerGold: "#C4A535",
-  bannerText: "#1C1410",
+  bannerText: palette.brown[900],
   frameWhite: "rgba(255,255,255,0.8)",
   gridWhite: "rgba(255,255,255,0.3)",
   controlBg: "rgba(255,255,255,0.15)",
@@ -108,11 +109,11 @@ export function FacialExpressionCameraScreen({
 
 const styles = StyleSheet.create({
   badgeIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 14,
   },
   badgeText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 14,
     fontWeight: "700",
     marginHorizontal: 4,
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   bannerText: {
-    color: colors.bannerText,
+    color: localColors.bannerText,
     fontSize: 13,
     fontWeight: "600",
   },
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
   },
   bpBadge: {
     alignItems: "center",
-    backgroundColor: colors.bpBlue,
+    backgroundColor: localColors.bpBlue,
     borderRadius: 20,
     flexDirection: "row",
     paddingHorizontal: 12,
@@ -148,13 +149,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
   },
   cameraPreview: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     flex: 1,
     justifyContent: "space-between",
   },
   captureButton: {
     alignItems: "center",
-    borderColor: colors.controlBorder,
+    borderColor: localColors.controlBorder,
     borderRadius: 35,
     borderWidth: 3,
     height: 70,
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
     width: 70,
   },
   captureInner: {
-    backgroundColor: colors.white,
+    backgroundColor: localColors.white,
     borderRadius: 26,
     height: 52,
     width: 52,
@@ -173,14 +174,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   controlPlaceholder: {
-    borderColor: colors.controlBorder,
+    borderColor: localColors.controlBorder,
     borderRadius: 24,
     borderWidth: 1,
     height: 48,
     width: 48,
   },
   faceFrame: {
-    borderColor: colors.frameWhite,
+    borderColor: localColors.frameWhite,
     borderRadius: 120,
     borderWidth: 3,
     height: 240,
@@ -192,14 +193,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   gridLineHorizontal: {
-    backgroundColor: colors.gridWhite,
+    backgroundColor: localColors.gridWhite,
     height: 1,
     left: 0,
     position: "absolute",
     right: 0,
   },
   gridLineVertical: {
-    backgroundColor: colors.gridWhite,
+    backgroundColor: localColors.gridWhite,
     bottom: 0,
     position: "absolute",
     top: 0,
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
   },
   heartBadge: {
     alignItems: "center",
-    backgroundColor: colors.heartGreen,
+    backgroundColor: localColors.heartGreen,
     borderRadius: 20,
     flexDirection: "row",
     paddingHorizontal: 12,
@@ -220,7 +221,7 @@ const styles = StyleSheet.create({
   instructionBanner: {
     alignItems: "center",
     alignSelf: "center",
-    backgroundColor: colors.bannerGold,
+    backgroundColor: localColors.bannerGold,
     borderRadius: 20,
     flexDirection: "row",
     marginBottom: 16,
@@ -229,7 +230,7 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     alignItems: "center",
-    borderColor: colors.controlBorder,
+    borderColor: localColors.controlBorder,
     borderRadius: 24,
     borderWidth: 1,
     height: 48,

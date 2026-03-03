@@ -52,7 +52,7 @@ describe("WakeUpScreen", () => {
     const { getByTestId } = render(<WakeUpScreen {...defaultProps} />);
     const badge = getByTestId("morning-badge");
     expect(badge.props.style).toEqual(
-      expect.objectContaining({ backgroundColor: "#3D2E23" })
+      expect.objectContaining({ backgroundColor: "#3D2D24" })
     );
   });
 
@@ -103,7 +103,7 @@ describe("WakeUpScreen", () => {
     const { getByTestId } = render(<WakeUpScreen {...defaultProps} />);
     const badge = getByTestId("duration-badge");
     expect(badge.props.style).toEqual(
-      expect.objectContaining({ backgroundColor: "#3D2E23" })
+      expect.objectContaining({ backgroundColor: "#3D2D24" })
     );
   });
 

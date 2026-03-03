@@ -131,7 +131,7 @@ describe("RecordExpressionPrepScreen", () => {
     const { getByTestId } = renderScreen();
     const card = getByTestId("requirement-card-lighting");
     const flatStyle = Object.assign({}, ...[].concat(card.props.style));
-    expect(flatStyle.backgroundColor).toBe("#2A1F18");
+    expect(flatStyle.backgroundColor).toBe("#2A1F1A");
   });
 
   it("requirement labels are white", () => {

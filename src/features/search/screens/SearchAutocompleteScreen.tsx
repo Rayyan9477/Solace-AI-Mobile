@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface SuggestionItem {
   id: string;
@@ -28,13 +29,13 @@ interface SearchAutocompleteScreenProps {
   onSuggestionPress: (suggestion: SuggestionItem) => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
+const localColors = {
+  background: palette.brown[900],
+  white: palette.white,
   textSecondary: "rgba(255,255,255,0.6)",
-  searchBarBg: "#2A1F18",
-  dropdownBg: "#2A1F18",
-  highlightBg: "#3D2E23",
+  searchBarBg: palette.brown[800],
+  dropdownBg: palette.brown[800],
+  highlightBg: palette.brown[700],
 } as const;
 
 export function SearchAutocompleteScreen({
@@ -71,7 +72,7 @@ export function SearchAutocompleteScreen({
           value={query}
           onChangeText={onQueryChange}
           placeholder="Search Solace..."
-          placeholderTextColor={colors.textSecondary}
+          placeholderTextColor={localColors.textSecondary}
           accessibilityLabel="Search"
         />
         <TouchableOpacity
@@ -114,8 +115,8 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
-  container: { backgroundColor: colors.background, flex: 1 },
+  backIcon: { color: localColors.white, fontSize: 24 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   dropdown: {
     marginHorizontal: 20,
     marginTop: 4,
@@ -134,14 +135,14 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 12,
   },
   searchBar: {
     alignItems: "center",
-    backgroundColor: colors.searchBarBg,
+    backgroundColor: localColors.searchBarBg,
     borderRadius: 12,
     flexDirection: "row",
     marginHorizontal: 20,
@@ -150,14 +151,14 @@ const styles = StyleSheet.create({
   },
   searchIcon: { fontSize: 16, marginRight: 8 },
   searchInput: {
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 15,
     paddingVertical: 12,
   },
-  suggestionHighlighted: { backgroundColor: colors.highlightBg },
+  suggestionHighlighted: { backgroundColor: localColors.highlightBg },
   suggestionItem: {
-    backgroundColor: colors.dropdownBg,
+    backgroundColor: localColors.dropdownBg,
     borderBottomColor: "rgba(255,255,255,0.05)",
     borderBottomWidth: 1,
     justifyContent: "center",
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  suggestionText: { color: colors.white, fontSize: 15 },
+  suggestionText: { color: localColors.white, fontSize: 15 },
 });
 
 export default SearchAutocompleteScreen;

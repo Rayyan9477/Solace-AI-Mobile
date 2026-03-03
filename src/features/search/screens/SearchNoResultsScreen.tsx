@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface SearchNoResultsScreenProps {
   query: string;
@@ -21,11 +22,11 @@ interface SearchNoResultsScreenProps {
   onQueryChange: (text: string) => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
+const localColors = {
+  background: palette.brown[900],
+  white: palette.white,
   textSecondary: "rgba(255,255,255,0.6)",
-  searchBarBg: "#2A1F18",
+  searchBarBg: palette.brown[800],
   illustrationBg: "rgba(255,255,255,0.05)",
 } as const;
 
@@ -60,7 +61,7 @@ export function SearchNoResultsScreen({
           value={query}
           onChangeText={onQueryChange}
           placeholder="Search Solace..."
-          placeholderTextColor={colors.textSecondary}
+          placeholderTextColor={localColors.textSecondary}
           accessibilityLabel="Search"
         />
         <TouchableOpacity
@@ -96,10 +97,10 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
-  container: { backgroundColor: colors.background, flex: 1 },
+  backIcon: { color: localColors.white, fontSize: 24 },
+  container: { backgroundColor: localColors.background, flex: 1 },
   emptyMessage: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 14,
     lineHeight: 22,
     marginTop: 12,
@@ -113,7 +114,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   emptyTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 22,
     fontWeight: "800",
     marginTop: 24,
@@ -133,20 +134,20 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 12,
   },
   illustration: {
-    backgroundColor: colors.illustrationBg,
+    backgroundColor: localColors.illustrationBg,
     borderRadius: 80,
     height: 160,
     width: 160,
   },
   searchBar: {
     alignItems: "center",
-    backgroundColor: colors.searchBarBg,
+    backgroundColor: localColors.searchBarBg,
     borderRadius: 12,
     flexDirection: "row",
     marginHorizontal: 20,
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
   },
   searchIcon: { fontSize: 16, marginRight: 8 },
   searchInput: {
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 15,
     paddingVertical: 12,

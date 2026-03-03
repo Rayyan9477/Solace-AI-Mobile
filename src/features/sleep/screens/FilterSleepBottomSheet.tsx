@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface SleepType {
   id: string;
@@ -31,21 +32,21 @@ interface FilterSleepBottomSheetProps {
   onHelpPress: () => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  cardBg: "#2A1F18",
-  white: "#FFFFFF",
+const localColors = {
+  background: palette.brown[900],
+  cardBg: palette.brown[800],
+  white: palette.white,
   textSecondary: "rgba(255,255,255,0.6)",
-  selectedType: "#E8853A",
-  unselectedType: "#3D2E23",
-  toggleOff: "#3D2E23",
-  toggleOn: "#9AAD5C",
+  selectedType: palette.accent.orange,
+  unselectedType: palette.brown[700],
+  toggleOff: palette.brown[700],
+  toggleOn: palette.olive[500],
   applyButtonBg: "#5C4A2A",
-  handleBg: "rgba(255,255,255,0.3)",
-  sliderTrack: "#3D2E23",
-  sliderFill: "#9AAD5C",
+  handleBg: palette.opacity.white30,
+  sliderTrack: palette.brown[700],
+  sliderFill: palette.olive[500],
   dateBorder: "rgba(255,255,255,0.15)",
-  helpBorder: "rgba(255,255,255,0.3)",
+  helpBorder: palette.opacity.white30,
 } as const;
 
 export function FilterSleepBottomSheet({
@@ -145,8 +146,8 @@ export function FilterSleepBottomSheet({
                   styles.typeButton,
                   {
                     backgroundColor: isSelected
-                      ? colors.selectedType
-                      : colors.unselectedType,
+                      ? localColors.selectedType
+                      : localColors.unselectedType,
                   },
                 ]}
                 onPress={() => onTypeToggle(type.id)}
@@ -167,8 +168,9 @@ export function FilterSleepBottomSheet({
           testID="ai-suggestion-toggle"
           style={styles.toggleTouchable}
           onPress={onAISuggestionToggle}
-          accessibilityRole="button"
-          accessibilityLabel="Toggle include AI suggestion"
+          accessibilityRole="switch"
+          accessibilityLabel="Include AI suggestion"
+          accessibilityState={{ checked: includeAISuggestion }}
         >
           <View
             testID="ai-suggestion-track"
@@ -176,8 +178,8 @@ export function FilterSleepBottomSheet({
               styles.toggleTrack,
               {
                 backgroundColor: includeAISuggestion
-                  ? colors.toggleOn
-                  : colors.toggleOff,
+                  ? localColors.toggleOn
+                  : localColors.toggleOff,
               },
             ]}
           >
@@ -212,7 +214,7 @@ export function FilterSleepBottomSheet({
 const styles = StyleSheet.create({
   applyButton: {
     alignItems: "center",
-    backgroundColor: colors.applyButtonBg,
+    backgroundColor: localColors.applyButtonBg,
     borderRadius: 28,
     justifyContent: "center",
     marginHorizontal: 24,
@@ -221,12 +223,12 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   applyButtonText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "700",
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingBottom: 48,
@@ -239,14 +241,14 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   dateLabel: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     fontWeight: "600",
     marginBottom: 8,
   },
   datePicker: {
     alignItems: "center",
-    borderColor: colors.dateBorder,
+    borderColor: localColors.dateBorder,
     borderRadius: 24,
     borderWidth: 1,
     flexDirection: "row",
@@ -261,18 +263,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   dateText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 13,
     fontWeight: "500",
   },
   dragHandle: {
-    backgroundColor: colors.handleBg,
+    backgroundColor: localColors.handleBg,
     borderRadius: 3,
     height: 4,
     width: 40,
   },
   durationLabel: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     fontWeight: "600",
   },
@@ -287,7 +289,7 @@ const styles = StyleSheet.create({
   },
   helpButton: {
     alignItems: "center",
-    borderColor: colors.helpBorder,
+    borderColor: localColors.helpBorder,
     borderRadius: 14,
     borderWidth: 1,
     height: 28,
@@ -295,7 +297,7 @@ const styles = StyleSheet.create({
     width: 28,
   },
   helpIcon: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 14,
     fontWeight: "600",
   },
@@ -304,7 +306,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   sectionLabel: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 15,
     fontWeight: "700",
     marginBottom: 12,
@@ -313,7 +315,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   sliderFill: {
-    backgroundColor: colors.sliderFill,
+    backgroundColor: localColors.sliderFill,
     borderRadius: 3,
     height: 6,
     left: "10%",
@@ -322,8 +324,8 @@ const styles = StyleSheet.create({
     width: "30%",
   },
   sliderThumb: {
-    backgroundColor: colors.sliderFill,
-    borderColor: colors.white,
+    backgroundColor: localColors.sliderFill,
+    borderColor: localColors.white,
     borderRadius: 10,
     borderWidth: 2,
     height: 20,
@@ -338,13 +340,13 @@ const styles = StyleSheet.create({
     left: "5%",
   },
   sliderTrack: {
-    backgroundColor: colors.sliderTrack,
+    backgroundColor: localColors.sliderTrack,
     borderRadius: 3,
     height: 6,
     position: "relative",
   },
   title: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 22,
     fontWeight: "800",
   },
@@ -356,7 +358,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   toggleLabel: {
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 15,
     fontWeight: "600",
@@ -369,7 +371,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   toggleThumb: {
-    backgroundColor: colors.white,
+    backgroundColor: localColors.white,
     borderRadius: 11,
     height: 22,
     position: "absolute",
