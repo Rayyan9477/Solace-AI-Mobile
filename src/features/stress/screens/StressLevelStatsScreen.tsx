@@ -8,6 +8,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface StressBubble {
   level: string;
@@ -24,20 +25,20 @@ interface StressLevelStatsScreenProps {
   onBubblePress: (level: string) => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
+const localColors = {
+  background: palette.brown[900],
+  white: palette.white,
   textSecondary: "rgba(255,255,255,0.6)",
-  periodBg: "#2A1F18",
+  periodBg: palette.brown[800],
 } as const;
 
 // Legend items with colors
 const LEGEND_ITEMS = [
-  { label: "Calm", color: "#9AAD5C" },
+  { label: "Calm", color: palette.olive[500] },
   { label: "Normal", color: "#6B6B6B" },
   { label: "Elevated", color: "#C4A535" },
-  { label: "Stressed", color: "#E8853A" },
-  { label: "Extreme", color: "#7B68B5" },
+  { label: "Stressed", color: palette.accent.orange },
+  { label: "Extreme", color: palette.accent.purple },
 ];
 
 // Bubble layout positions (percentage-based)
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
   },
   bubble: {
@@ -196,12 +197,12 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   bubbleValue: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
     fontWeight: "800",
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     flex: 1,
   },
   header: {
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   legendLabel: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 13,
     fontWeight: "500",
   },
@@ -239,7 +240,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   periodArrow: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 12,
     marginLeft: 4,
   },
@@ -254,14 +255,14 @@ const styles = StyleSheet.create({
   },
   periodSelector: {
     alignItems: "center",
-    backgroundColor: colors.periodBg,
+    backgroundColor: localColors.periodBg,
     borderRadius: 20,
     flexDirection: "row",
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
   periodText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 14,
     fontWeight: "600",
   },
@@ -275,7 +276,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   title: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 28,
     fontWeight: "800",
     marginTop: 8,

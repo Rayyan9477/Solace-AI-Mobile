@@ -13,6 +13,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface NewSleepScheduleScreenProps {
   sleepTime: string;
@@ -31,18 +32,18 @@ interface NewSleepScheduleScreenProps {
   onSetSchedule: () => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  cardBg: "#2A1F18",
-  selectedGreen: "#9AAD5C",
-  toggleOff: "#3D2E23",
-  submitOrange: "#E8853A",
-  white: "#FFFFFF",
+const localColors = {
+  background: palette.brown[900],
+  cardBg: palette.brown[800],
+  selectedGreen: palette.olive[500],
+  toggleOff: palette.brown[700],
+  submitOrange: palette.accent.orange,
+  white: palette.white,
   textSecondary: "rgba(255,255,255,0.6)",
   borderColor: "rgba(255,255,255,0.1)",
-  sliderTrack: "#3D2E23",
-  sliderFill: "#9AAD5C",
-  chipUnselected: "#2A1F18",
+  sliderTrack: palette.brown[700],
+  sliderFill: palette.olive[500],
+  chipUnselected: palette.brown[800],
 } as const;
 
 const DAYS: { short: string; full: string }[] = [
@@ -158,8 +159,8 @@ export function NewSleepScheduleScreen({
                     styles.dayChip,
                     {
                       backgroundColor: isSelected
-                        ? colors.selectedGreen
-                        : colors.chipUnselected,
+                        ? localColors.selectedGreen
+                        : localColors.chipUnselected,
                     },
                   ]}
                   onPress={() => onDayToggle(day.short)}
@@ -188,8 +189,9 @@ export function NewSleepScheduleScreen({
               testID="auto-display-stats-toggle"
               style={styles.toggleTouchable}
               onPress={onAutoDisplayStatsToggle}
-              accessibilityRole="button"
-              accessibilityLabel="Toggle auto display sleep stats"
+              accessibilityRole="switch"
+              accessibilityLabel="Auto display sleep stats"
+              accessibilityState={{ checked: autoDisplayStats }}
             >
               <View
                 testID="auto-display-stats-track"
@@ -197,8 +199,8 @@ export function NewSleepScheduleScreen({
                   styles.toggleTrack,
                   {
                     backgroundColor: autoDisplayStats
-                      ? colors.selectedGreen
-                      : colors.toggleOff,
+                      ? localColors.selectedGreen
+                      : localColors.toggleOff,
                   },
                 ]}
               >
@@ -220,8 +222,9 @@ export function NewSleepScheduleScreen({
               testID="auto-set-alarm-toggle"
               style={styles.toggleTouchable}
               onPress={onAutoSetAlarmToggle}
-              accessibilityRole="button"
-              accessibilityLabel="Toggle auto set alarm"
+              accessibilityRole="switch"
+              accessibilityLabel="Auto set alarm"
+              accessibilityState={{ checked: autoSetAlarm }}
             >
               <View
                 testID="auto-set-alarm-track"
@@ -229,8 +232,8 @@ export function NewSleepScheduleScreen({
                   styles.toggleTrack,
                   {
                     backgroundColor: autoSetAlarm
-                      ? colors.selectedGreen
-                      : colors.toggleOff,
+                      ? localColors.selectedGreen
+                      : localColors.toggleOff,
                   },
                 ]}
               >
@@ -270,11 +273,11 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     flex: 1,
   },
   dayChip: {
@@ -287,12 +290,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   dayChipText: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     fontWeight: "600",
   },
   dayChipTextSelected: {
-    color: colors.white,
+    color: localColors.white,
   },
   daysRow: {
     flexDirection: "row",
@@ -331,7 +334,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   sectionLabel: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -342,7 +345,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   sliderFill: {
-    backgroundColor: colors.sliderFill,
+    backgroundColor: localColors.sliderFill,
     borderRadius: 3,
     height: 6,
     left: 0,
@@ -350,12 +353,12 @@ const styles = StyleSheet.create({
     top: 0,
   },
   sliderMinMax: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 14,
     fontWeight: "600",
   },
   sliderThumb: {
-    backgroundColor: colors.white,
+    backgroundColor: localColors.white,
     borderRadius: 10,
     height: 20,
     marginLeft: -10,
@@ -364,16 +367,16 @@ const styles = StyleSheet.create({
     width: 20,
   },
   sliderTrack: {
-    backgroundColor: colors.sliderTrack,
+    backgroundColor: localColors.sliderTrack,
     borderRadius: 3,
     flex: 1,
     height: 6,
     position: "relative",
   },
   snoozeValueText: {
-    backgroundColor: colors.selectedGreen,
+    backgroundColor: localColors.selectedGreen,
     borderRadius: 12,
-    color: colors.white,
+    color: localColors.white,
     fontSize: 14,
     fontWeight: "700",
     overflow: "hidden",
@@ -383,7 +386,7 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     alignItems: "center",
-    backgroundColor: colors.submitOrange,
+    backgroundColor: localColors.submitOrange,
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 44,
@@ -391,14 +394,14 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   submitButtonText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "700",
   },
   timeCard: {
     alignItems: "center",
-    backgroundColor: colors.cardBg,
-    borderColor: colors.borderColor,
+    backgroundColor: localColors.cardBg,
+    borderColor: localColors.borderColor,
     borderRadius: 16,
     borderWidth: 1,
     flex: 1,
@@ -410,13 +413,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   timeCardLabel: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     fontWeight: "500",
     marginBottom: 4,
   },
   timeCardValue: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
   },
@@ -427,14 +430,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   title: {
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 20,
     fontWeight: "700",
     textAlign: "center",
   },
   toggleLabel: {
-    color: colors.white,
+    color: localColors.white,
     flex: 1,
     fontSize: 15,
     fontWeight: "600",
@@ -446,7 +449,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   toggleThumb: {
-    backgroundColor: colors.white,
+    backgroundColor: localColors.white,
     borderRadius: 11,
     height: 22,
     position: "absolute",

@@ -142,7 +142,7 @@ describe("StressLevelInputScreen", () => {
     const { getByTestId } = renderScreen({ selectedLevel: 3 });
     const point = getByTestId("gauge-point-1");
     const flatStyle = Object.assign({}, ...[].concat(point.props.style));
-    expect(flatStyle.backgroundColor).toBe("#3D2E23");
+    expect(flatStyle.backgroundColor).toBe("#3D2D24");
   });
 
   it("selected gauge point is larger than unselected", () => {
@@ -269,7 +269,7 @@ describe("StressLevelInputScreen", () => {
     const style4 = Object.assign({}, ...[].concat(point4.props.style));
     const style3 = Object.assign({}, ...[].concat(point3.props.style));
     expect(style4.backgroundColor).toBe("#E8853A");
-    expect(style3.backgroundColor).toBe("#3D2E23");
+    expect(style3.backgroundColor).toBe("#3D2D24");
   });
 
   // Branding

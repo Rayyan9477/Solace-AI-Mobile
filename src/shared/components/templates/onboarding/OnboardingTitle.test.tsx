@@ -35,7 +35,7 @@ describe("OnboardingTitle", () => {
     });
 
     it("should handle multiple highlighted words", () => {
-      const { getByText } = render(
+      const { getAllByText } = render(
         <OnboardingTitle
           text="AI Mental Journaling & AI Therapy Chatbot"
           highlightedWords={["Mental", "AI"]}
@@ -43,8 +43,8 @@ describe("OnboardingTitle", () => {
         />
       );
 
-      expect(getByText(/Mental/)).toBeTruthy();
-      expect(getByText(/AI/)).toBeTruthy();
+      expect(getAllByText(/Mental/).length).toBeGreaterThanOrEqual(1);
+      expect(getAllByText(/AI/).length).toBeGreaterThanOrEqual(1);
     });
 
     it("should handle no highlighted words", () => {
@@ -59,7 +59,7 @@ describe("OnboardingTitle", () => {
     });
 
     it("should use default highlight color when not provided", () => {
-      const { container } = render(
+      const { root } = render(
         <OnboardingTitle
           text="Test Highlight"
           highlightedWords={["Highlight"]}
@@ -67,19 +67,21 @@ describe("OnboardingTitle", () => {
       );
 
       // Component should render successfully with default color
-      expect(container).toBeTruthy();
+      expect(root).toBeTruthy();
     });
   });
 
   describe("Accessibility", () => {
     it("should have header role", () => {
-      const { getByA11yRole } = render(
+      const { getByLabelText } = render(
         <OnboardingTitle
           text="Test Title"
           highlightedWords={[]}
         />
       );
-      expect(getByA11yRole("header")).toBeTruthy();
+      const header = getByLabelText("Test Title");
+      expect(header).toBeTruthy();
+      expect(header.props.accessibilityRole).toBe("header");
     });
 
     it("should have proper accessibility label with full text", () => {
@@ -109,13 +111,13 @@ describe("OnboardingTitle", () => {
 
   describe("Edge Cases", () => {
     it("should handle empty text", () => {
-      const { container } = render(
+      const { root } = render(
         <OnboardingTitle
           text=""
           highlightedWords={[]}
         />
       );
-      expect(container).toBeTruthy();
+      expect(root).toBeTruthy();
     });
 
     it("should handle highlight words not in text", () => {

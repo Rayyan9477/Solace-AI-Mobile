@@ -13,6 +13,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface Suggestion {
   id: string;
@@ -31,28 +32,28 @@ interface SleepInsightsScreenProps {
   onSeeAllPress: () => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  cardBg: "#2A1F18",
-  white: "#FFFFFF",
+const localColors = {
+  background: palette.brown[900],
+  cardBg: palette.brown[800],
+  white: palette.white,
   textSecondary: "rgba(255,255,255,0.6)",
   tabBorder: "rgba(255,255,255,0.3)",
-  selectedTabBorder: "#FFFFFF",
-  coreGreen: "#9AAD5C",
-  remOrange: "#E8853A",
+  selectedTabBorder: palette.white,
+  coreGreen: palette.olive[500],
+  remOrange: palette.accent.orange,
   postREM: "#C4A535",
-  seeAllColor: "#4A9E8C",
+  seeAllColor: palette.green[450],
   chevronColor: "rgba(255,255,255,0.3)",
-  chartBarBg: "#3D2E23",
+  chartBarBg: palette.brown[700],
 } as const;
 
 const TIME_RANGES = ["1 Day", "1 Week", "1 Month", "1 Year", "All Time"];
 const TIME_LABELS = ["11:00", "12:00", "13:00", "14:00", "15:00"];
 
 const LEGEND_ITEMS = [
-  { label: "Core", color: colors.coreGreen },
-  { label: "REM", color: colors.remOrange },
-  { label: "Post-REM", color: colors.postREM },
+  { label: "Core", color: localColors.coreGreen },
+  { label: "REM", color: localColors.remOrange },
+  { label: "Post-REM", color: localColors.postREM },
 ];
 
 export function SleepInsightsScreen({
@@ -126,14 +127,14 @@ export function SleepInsightsScreen({
             <View
               style={[
                 styles.chartBar,
-                { backgroundColor: colors.coreGreen, width: "60%" },
+                { backgroundColor: localColors.coreGreen, width: "60%" },
               ]}
             />
             <View
               style={[
                 styles.chartBar,
                 {
-                  backgroundColor: colors.remOrange,
+                  backgroundColor: localColors.remOrange,
                   width: "30%",
                   marginLeft: "60%",
                 },
@@ -143,7 +144,7 @@ export function SleepInsightsScreen({
               style={[
                 styles.chartBar,
                 {
-                  backgroundColor: colors.postREM,
+                  backgroundColor: localColors.postREM,
                   width: "20%",
                   marginLeft: "70%",
                 },
@@ -232,7 +233,7 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
   },
   chartBar: {
@@ -247,19 +248,19 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   chartCard: {
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 16,
     marginHorizontal: 24,
     marginTop: 20,
     padding: 16,
   },
   chevron: {
-    color: colors.chevronColor,
+    color: localColors.chevronColor,
     fontSize: 24,
     fontWeight: "300",
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     flex: 1,
   },
   header: {
@@ -268,13 +269,13 @@ const styles = StyleSheet.create({
   },
   irregularityMarker: {
     alignSelf: "flex-end",
-    backgroundColor: colors.chartBarBg,
+    backgroundColor: localColors.chartBarBg,
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
   irregularityText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 11,
     fontWeight: "600",
   },
@@ -295,7 +296,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   legendText: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 12,
     fontWeight: "500",
   },
@@ -306,7 +307,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   seeAllText: {
-    color: colors.seeAllColor,
+    color: localColors.seeAllColor,
     fontSize: 14,
     fontWeight: "600",
   },
@@ -321,7 +322,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   suggestionDescription: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     marginTop: 2,
   },
@@ -336,7 +337,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   suggestionTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 15,
     fontWeight: "700",
   },
@@ -348,7 +349,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   suggestionsTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 18,
     fontWeight: "700",
   },
@@ -358,7 +359,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   timeLabel: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 11,
   },
   timeRangeSelector: {
@@ -375,19 +376,19 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   timeRangeTabSelected: {
-    borderColor: colors.selectedTabBorder,
+    borderColor: localColors.selectedTabBorder,
     borderWidth: 1,
   },
   timeRangeText: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     fontWeight: "500",
   },
   timeRangeTextSelected: {
-    color: colors.white,
+    color: localColors.white,
   },
   title: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 28,
     fontWeight: "800",
     paddingHorizontal: 24,

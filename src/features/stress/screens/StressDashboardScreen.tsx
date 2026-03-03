@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface StressDashboardScreenProps {
   stressScore: number;
@@ -20,17 +21,17 @@ interface StressDashboardScreenProps {
   onImpactCardPress: () => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  heroOrange: "#E8853A",
-  white: "#FFFFFF",
-  cardBg: "#2A1F18",
+const localColors = {
+  background: palette.brown[900],
+  heroOrange: palette.accent.orange,
+  white: palette.white,
+  cardBg: palette.brown[800],
   textSecondary: "rgba(255,255,255,0.6)",
   settingsBg: "#5C4A2A",
-  seeAllColor: "#4A9E8C",
-  chartBarGreen: "#9AAD5C",
+  seeAllColor: palette.green[450],
+  chartBarGreen: palette.olive[500],
   chartBarOlive: "#7B8A3E",
-  chartLineBlue: "#7B68B5",
+  chartLineBlue: palette.accent.purple,
 } as const;
 
 export function StressDashboardScreen({
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
   },
   bar: {
@@ -179,10 +180,10 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   barGreen: {
-    backgroundColor: colors.chartBarGreen,
+    backgroundColor: localColors.chartBarGreen,
   },
   barOlive: {
-    backgroundColor: colors.chartBarOlive,
+    backgroundColor: localColors.chartBarOlive,
   },
   barRow: {
     flexDirection: "row",
@@ -197,12 +198,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   cardTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 14,
     fontWeight: "700",
   },
   cardValue: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "600",
     marginTop: 4,
@@ -258,18 +259,18 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerLabel: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "600",
     marginLeft: 8,
   },
   heroSection: {
-    backgroundColor: colors.heroOrange,
+    backgroundColor: localColors.heroOrange,
     overflow: "hidden",
     paddingBottom: 40,
   },
   lineChartPlaceholder: {
-    backgroundColor: colors.chartLineBlue,
+    backgroundColor: localColors.chartLineBlue,
     borderRadius: 4,
     height: 40,
     opacity: 0.3,
@@ -283,24 +284,24 @@ const styles = StyleSheet.create({
     paddingTop: 24,
   },
   scoreLabel: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 22,
     fontWeight: "600",
     marginTop: 8,
   },
   scoreNumber: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 80,
     fontWeight: "800",
   },
   seeAllText: {
-    color: colors.seeAllColor,
+    color: localColors.seeAllColor,
     fontSize: 14,
     fontWeight: "600",
   },
   settingsButton: {
     alignItems: "center",
-    backgroundColor: colors.settingsBg,
+    backgroundColor: localColors.settingsBg,
     borderRadius: 28,
     height: 56,
     justifyContent: "center",
@@ -315,7 +316,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   statCard: {
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 16,
     flex: 1,
     padding: 16,
@@ -326,13 +327,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   statsSection: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 20,
   },
   statsTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 18,
     fontWeight: "700",
   },

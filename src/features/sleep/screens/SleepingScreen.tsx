@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface SleepingScreenProps {
   alarmTime: string;
@@ -17,15 +18,15 @@ interface SleepingScreenProps {
   onSwipeToWake: () => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  badgeBg: "#2A1F18",
+const localColors = {
+  background: palette.brown[900],
+  badgeBg: palette.brown[800],
   badgeBorder: "rgba(255,255,255,0.1)",
-  white: "#FFFFFF",
+  white: palette.white,
   textSecondary: "rgba(255,255,255,0.6)",
   swipeBarBg: "rgba(255,255,255,0.12)",
-  illustrationBg: "#2A1F18",
-  durationBg: "#3D2E23",
+  illustrationBg: palette.brown[800],
+  durationBg: palette.brown[700],
 } as const;
 
 function formatDuration(hours: number, minutes: number): string {
@@ -97,25 +98,25 @@ export function SleepingScreen({
 
 const styles = StyleSheet.create({
   alarmBadge: {
-    backgroundColor: colors.badgeBg,
-    borderColor: colors.badgeBorder,
+    backgroundColor: localColors.badgeBg,
+    borderColor: localColors.badgeBorder,
     borderRadius: 20,
     borderWidth: 1,
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
   alarmBadgeText: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 12,
     fontWeight: "700",
     letterSpacing: 1,
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     flex: 1,
   },
   currentTime: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 64,
     fontWeight: "800",
     marginTop: 8,
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
   durationBadge: {
     alignItems: "center",
     alignSelf: "center",
-    backgroundColor: colors.durationBg,
+    backgroundColor: localColors.durationBg,
     borderRadius: 20,
     flexDirection: "row",
     gap: 8,
@@ -136,12 +137,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   durationLabel: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 13,
     fontWeight: "500",
   },
   durationValue: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 13,
     fontWeight: "700",
   },
@@ -150,19 +151,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   gestureIcon: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 16,
     marginRight: 8,
   },
   greeting: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 18,
     fontWeight: "600",
     marginTop: 16,
     textAlign: "center",
   },
   illustration: {
-    backgroundColor: colors.illustrationBg,
+    backgroundColor: localColors.illustrationBg,
     borderRadius: 16,
     height: 200,
     width: "100%",
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
   },
   swipeBar: {
     alignItems: "center",
-    backgroundColor: colors.swipeBarBg,
+    backgroundColor: localColors.swipeBarBg,
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -185,7 +186,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   swipeText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "600",
   },

@@ -38,8 +38,8 @@ describe("StepBadge", () => {
 
   describe("Accessibility", () => {
     it("should have text role", () => {
-      const { getByA11yRole } = render(<StepBadge stepNumber={1} />);
-      expect(getByA11yRole("text")).toBeTruthy();
+      const { getByRole } = render(<StepBadge stepNumber={1} />);
+      expect(getByRole("text")).toBeTruthy();
     });
 
     it("should have proper accessibility label", () => {

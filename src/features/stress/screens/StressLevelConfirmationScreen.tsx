@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface StressLevelConfirmationScreenProps {
   stressLevel: number;
@@ -15,14 +16,14 @@ interface StressLevelConfirmationScreenProps {
   onClose: () => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  gotItBg: "#C4A574",
-  illustrationBg: "#2A1F18",
+const localColors = {
+  background: palette.brown[900],
+  white: palette.white,
+  gotItBg: palette.tan[500],
+  illustrationBg: palette.brown[800],
   textSecondary: "rgba(255,255,255,0.6)",
   closeBg: "rgba(255,255,255,0.12)",
-  waveOrange: "#E8853A",
+  waveOrange: palette.accent.orange,
 } as const;
 
 export function StressLevelConfirmationScreen({
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
   },
   buttonContainer: {
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignItems: "center",
-    backgroundColor: colors.closeBg,
+    backgroundColor: localColors.closeBg,
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
@@ -124,17 +125,17 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   closeIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 18,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     flex: 1,
   },
   gotItButton: {
     alignItems: "center",
-    backgroundColor: colors.gotItBg,
+    backgroundColor: localColors.gotItBg,
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 44,
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   gotItText: {
-    color: colors.background,
+    color: localColors.background,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -153,13 +154,13 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerLabel: {
-    color: colors.waveOrange,
+    color: localColors.waveOrange,
     fontSize: 16,
     fontWeight: "600",
     marginLeft: 8,
   },
   illustration: {
-    backgroundColor: colors.illustrationBg,
+    backgroundColor: localColors.illustrationBg,
     borderRadius: 16,
     height: 180,
     width: "100%",
@@ -169,21 +170,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   successMessage: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 15,
     lineHeight: 22,
     marginTop: 12,
     paddingHorizontal: 24,
   },
   successTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
     fontWeight: "800",
     marginTop: 24,
     paddingHorizontal: 24,
   },
   waveDecoration: {
-    backgroundColor: colors.waveOrange,
+    backgroundColor: localColors.waveOrange,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     bottom: 0,

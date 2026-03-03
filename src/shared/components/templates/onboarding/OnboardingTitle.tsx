@@ -6,6 +6,7 @@
 import React from "react";
 import { Text, StyleSheet } from "react-native";
 import type { OnboardingTitleProps } from "./OnboardingCarouselCard.types";
+import { palette } from "../../../theme";
 
 /**
  * Split text into parts and identify which parts should be highlighted
@@ -50,7 +51,7 @@ function parseTextWithHighlights(
 export function OnboardingTitle({
   text,
   highlightedWords,
-  highlightColor = "#C4A574",
+  highlightColor = palette.tan[500],
   testID,
   style,
 }: OnboardingTitleProps): React.ReactElement {
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     lineHeight: 36,
-    color: "#FFFFFF",
+    color: palette.white,
   },
 });
 

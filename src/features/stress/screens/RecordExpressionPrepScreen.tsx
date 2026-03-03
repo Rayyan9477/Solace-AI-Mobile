@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface Requirement {
   id: string;
@@ -21,14 +22,14 @@ interface RecordExpressionPrepScreenProps {
   onContinue: () => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  cardBg: "#2A1F18",
-  skipOrange: "#E8853A",
-  continueGreen: "#9AAD5C",
+const localColors = {
+  background: palette.brown[900],
+  white: palette.white,
+  cardBg: palette.brown[800],
+  skipOrange: palette.accent.orange,
+  continueGreen: palette.olive[500],
   textSecondary: "rgba(255,255,255,0.6)",
-  iconColor: "#E8853A",
+  iconColor: palette.accent.orange,
 } as const;
 
 export function RecordExpressionPrepScreen({
@@ -125,16 +126,16 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     flex: 1,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: colors.continueGreen,
+    backgroundColor: localColors.continueGreen,
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 44,
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   continueText: {
-    color: colors.background,
+    color: localColors.background,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
   },
   requirementCard: {
     alignItems: "center",
-    backgroundColor: colors.cardBg,
+    backgroundColor: localColors.cardBg,
     borderRadius: 16,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   requirementLabel: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
   },
   skipButton: {
     alignItems: "center",
-    backgroundColor: colors.skipOrange,
+    backgroundColor: localColors.skipOrange,
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 44,
@@ -188,19 +189,19 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   skipText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 16,
     fontWeight: "700",
   },
   subtitle: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 15,
     lineHeight: 22,
     marginTop: 8,
     paddingHorizontal: 24,
   },
   title: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 28,
     fontWeight: "800",
     marginTop: 16,

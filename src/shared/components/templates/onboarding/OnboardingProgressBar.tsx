@@ -6,6 +6,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import type { OnboardingProgressBarProps } from "./OnboardingCarouselCard.types";
+import { palette } from "../../../theme";
 
 /**
  * OnboardingProgressBar Component
@@ -28,7 +29,7 @@ import type { OnboardingProgressBarProps } from "./OnboardingCarouselCard.types"
 export function OnboardingProgressBar({
   currentStep,
   totalSteps,
-  activeColor = "#C4A574",
+  activeColor = palette.tan[500],
   inactiveColor = "#4A4A4A",
   testID,
   style,

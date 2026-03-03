@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface StressLevelInputScreenProps {
   selectedLevel: number;
@@ -16,12 +17,12 @@ interface StressLevelInputScreenProps {
   onContinue: () => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  selectedOrange: "#E8853A",
-  unselectedBrown: "#3D2E23",
-  continueBg: "#C4A574",
+const localColors = {
+  background: palette.brown[900],
+  white: palette.white,
+  selectedOrange: palette.accent.orange,
+  unselectedBrown: palette.brown[700],
+  continueBg: palette.tan[500],
   arcInactive: "rgba(255,255,255,0.15)",
   textSecondary: "rgba(255,255,255,0.6)",
 } as const;
@@ -90,8 +91,8 @@ export function StressLevelInputScreen({
                       width: seg.width,
                       transform: [{ rotate: seg.rotate }],
                       backgroundColor: isActive
-                        ? colors.selectedOrange
-                        : colors.arcInactive,
+                        ? localColors.selectedOrange
+                        : localColors.arcInactive,
                     },
                   ]}
                 />
@@ -182,16 +183,16 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     flex: 1,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: colors.continueBg,
+    backgroundColor: localColors.continueBg,
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 44,
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   continueText: {
-    color: colors.background,
+    color: localColors.background,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -214,12 +215,12 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   gaugePointSelected: {
-    backgroundColor: colors.selectedOrange,
+    backgroundColor: localColors.selectedOrange,
     height: 48,
     width: 48,
   },
   gaugePointUnselected: {
-    backgroundColor: colors.unselectedBrown,
+    backgroundColor: localColors.unselectedBrown,
     height: 20,
     width: 20,
   },
@@ -237,26 +238,26 @@ const styles = StyleSheet.create({
     right: "10%",
   },
   levelLabel: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 22,
     fontWeight: "600",
     textAlign: "center",
   },
   levelNumber: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 80,
     fontWeight: "800",
     textAlign: "center",
   },
   questionTitle: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 28,
     fontWeight: "800",
     marginTop: 16,
     paddingHorizontal: 24,
   },
   selectionIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 20,
     fontWeight: "700",
   },
