@@ -15,6 +15,7 @@
  * @see https://reactnavigation.org/docs/deep-linking/
  */
 
+import * as Linking from "expo-linking";
 import type { LinkingOptions } from "@react-navigation/native";
 import type { RootStackParamList } from "../../shared/types/navigation";
 
@@ -281,28 +282,13 @@ export const linking: LinkingOptions<RootStackParamList> = {
     },
   },
 
-  /**
-   * Handle deep link when app is not running
-   * Called when app is opened from a deep link
-   */
   async getInitialURL(): Promise<string | null> {
-    // Check for deep link URL that opened the app
-    // This will be implemented by React Navigation automatically
-    return null;
+    return await Linking.getInitialURL();
   },
 
-  /**
-   * Subscribe to deep link events
-   * Called when app is already running and receives a deep link
-   */
   subscribe(listener: (url: string) => void): () => void {
-    // This will be implemented by React Navigation automatically
-    // For custom URL handling, implement here
-
-    // Return unsubscribe function
-    return () => {
-      // Cleanup
-    };
+    const subscription = Linking.addEventListener("url", ({ url }) => listener(url));
+    return () => subscription.remove();
   },
 };
 

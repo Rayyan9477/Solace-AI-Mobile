@@ -18,6 +18,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../../shared/types/navigation";
 import { colors } from "../../shared/theme";
+import { useAuth } from "../AuthContext";
 
 // Flow Navigators
 import { AuthStack } from "./AuthStack";
@@ -133,13 +134,10 @@ export function RootNavigator({
 }
 
 /**
- * Default export with mock auth state
- * TODO: Connect to actual auth state management (Redux/Context)
+ * Default export connected to AuthContext
  */
 export default function RootNavigatorContainer(): React.ReactElement {
-  // TODO: Replace with actual auth state from Redux/Context
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-  const [hasCompletedOnboarding, setHasCompletedOnboarding] = React.useState(false);
+  const { isAuthenticated, hasCompletedOnboarding } = useAuth();
 
   return (
     <RootNavigator

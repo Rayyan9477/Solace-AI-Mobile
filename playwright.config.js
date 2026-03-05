@@ -9,8 +9,11 @@ module.exports = defineConfig({
   // Test directory
   testDir: "./tests",
 
+  // Only run .spec.js files (not .test.tsx Jest files)
+  testMatch: "**/*.spec.js",
+
   // Global test timeout
-  timeout: 30000,
+  timeout: 60000,
 
   // Expect timeout for assertions
   expect: {

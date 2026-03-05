@@ -554,6 +554,50 @@ jest.mock("./src/shared/theme", () => ({
   },
 }));
 
+// Mock AuthContext (provides auth state to components)
+jest.mock("./src/app/AuthContext", () => ({
+  useAuth: jest.fn(() => ({
+    isAuthenticated: false,
+    hasCompletedOnboarding: false,
+    isLoading: false,
+    signIn: jest.fn(),
+    signOut: jest.fn(),
+    completeOnboarding: jest.fn(),
+  })),
+  AuthProvider: ({ children }) => children,
+}));
+
+// Mock ThemeProvider from useTheme (wraps app with theme context)
+jest.mock("./src/shared/theme/useTheme", () => {
+  const actual = jest.requireActual("./src/shared/theme/useTheme");
+  return {
+    ...actual,
+    ThemeProvider: ({ children }) => children,
+  };
+});
+
+// Mock @react-navigation/native (provides navigation to components using useNavigation)
+jest.mock("@react-navigation/native", () => ({
+  ...jest.requireActual("@react-navigation/native"),
+  useNavigation: jest.fn(() => ({
+    navigate: jest.fn(),
+    goBack: jest.fn(),
+    dispatch: jest.fn(),
+    reset: jest.fn(),
+    setOptions: jest.fn(),
+  })),
+  useRoute: jest.fn(() => ({
+    params: {},
+  })),
+}));
+
+// Mock expo-linking (deep link handling)
+jest.mock("expo-linking", () => ({
+  getInitialURL: jest.fn(() => Promise.resolve(null)),
+  addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+  createURL: jest.fn((path) => `solace://${path}`),
+}));
+
 // Mock lazy-loaded navigation stack modules (prevents dynamic import() issues in tests)
 jest.mock("./src/app/navigation/stacks/DashboardStack", () => ({
   DashboardStack: () => null,

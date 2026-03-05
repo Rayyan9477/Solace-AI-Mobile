@@ -14,7 +14,9 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { colors, palette } from "../../../shared/theme";
+import { useAuth } from "../../../app/AuthContext";
 
 interface SignInCredentials {
   email: string;
@@ -24,10 +26,10 @@ interface SignInCredentials {
 type SocialProvider = "facebook" | "google" | "instagram";
 
 interface SignInScreenProps {
-  onSignIn: (credentials: SignInCredentials) => void;
-  onSignUp: () => void;
-  onForgotPassword: () => void;
-  onSocialLogin: (provider: SocialProvider) => void;
+  onSignIn?: (credentials: SignInCredentials) => void;
+  onSignUp?: () => void;
+  onForgotPassword?: () => void;
+  onSocialLogin?: (provider: SocialProvider) => void;
 }
 
 export function SignInScreen({
@@ -35,13 +37,43 @@ export function SignInScreen({
   onSignUp,
   onForgotPassword,
   onSocialLogin,
-}: SignInScreenProps): React.ReactElement {
+}: SignInScreenProps = {}): React.ReactElement {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const auth = useAuth();
+  const navigation = useNavigation<any>();
 
   const handleSignIn = () => {
-    onSignIn({ email, password });
+    if (onSignIn) {
+      onSignIn({ email, password });
+    } else {
+      auth.signIn();
+    }
+  };
+
+  const handleSignUp = () => {
+    if (onSignUp) {
+      onSignUp();
+    } else {
+      navigation.navigate("SignUp");
+    }
+  };
+
+  const handleForgotPassword = () => {
+    if (onForgotPassword) {
+      onForgotPassword();
+    } else {
+      navigation.navigate("ForgotPassword");
+    }
+  };
+
+  const handleSocialLogin = (provider: SocialProvider) => {
+    if (onSocialLogin) {
+      onSocialLogin(provider);
+    } else {
+      auth.signIn();
+    }
   };
 
   return (
@@ -133,7 +165,7 @@ export function SignInScreen({
         <TouchableOpacity
           testID="facebook-login"
           style={styles.socialButton}
-          onPress={() => onSocialLogin("facebook")}
+          onPress={() => handleSocialLogin("facebook")}
           accessibilityLabel="Sign in with Facebook"
         >
           <Text style={styles.socialIcon}>f</Text>
@@ -141,7 +173,7 @@ export function SignInScreen({
         <TouchableOpacity
           testID="google-login"
           style={styles.socialButton}
-          onPress={() => onSocialLogin("google")}
+          onPress={() => handleSocialLogin("google")}
           accessibilityLabel="Sign in with Google"
         >
           <Text style={styles.socialIcon}>G</Text>
@@ -149,7 +181,7 @@ export function SignInScreen({
         <TouchableOpacity
           testID="instagram-login"
           style={styles.socialButton}
-          onPress={() => onSocialLogin("instagram")}
+          onPress={() => handleSocialLogin("instagram")}
           accessibilityLabel="Sign in with Instagram"
         >
           <Text style={styles.socialIcon}>📷</Text>
@@ -160,7 +192,7 @@ export function SignInScreen({
       <TouchableOpacity
         testID="sign-up-link"
         style={styles.footerLink}
-        onPress={onSignUp}
+        onPress={handleSignUp}
         accessibilityRole="link"
       >
         <Text style={styles.footerText}>
@@ -171,7 +203,7 @@ export function SignInScreen({
       <TouchableOpacity
         testID="forgot-password-link"
         style={styles.footerLink}
-        onPress={onForgotPassword}
+        onPress={handleForgotPassword}
         accessibilityRole="link"
       >
         <Text style={styles.linkText}>Forgot Password</Text>

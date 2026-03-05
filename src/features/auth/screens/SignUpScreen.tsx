@@ -14,7 +14,9 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { colors, palette } from "../../../shared/theme";
+import { useAuth } from "../../../app/AuthContext";
 
 interface SignUpCredentials {
   email: string;
@@ -23,8 +25,8 @@ interface SignUpCredentials {
 }
 
 interface SignUpScreenProps {
-  onSignUp: (credentials: SignUpCredentials) => void;
-  onSignIn: () => void;
+  onSignUp?: (credentials: SignUpCredentials) => void;
+  onSignIn?: () => void;
 }
 
 const validateEmail = (email: string): boolean => {
@@ -35,22 +37,35 @@ const validateEmail = (email: string): boolean => {
 export function SignUpScreen({
   onSignUp,
   onSignIn,
-}: SignUpScreenProps): React.ReactElement {
+}: SignUpScreenProps = {}): React.ReactElement {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
+  const auth = useAuth();
+  const navigation = useNavigation<any>();
 
   const handleSignUp = () => {
-    // Validate email
     if (!validateEmail(email)) {
       setEmailError("Invalid Email Address!!!");
       return;
     }
     setEmailError(null);
-    onSignUp({ email, password, confirmPassword });
+    if (onSignUp) {
+      onSignUp({ email, password, confirmPassword });
+    } else {
+      auth.signIn();
+    }
+  };
+
+  const handleSignIn = () => {
+    if (onSignIn) {
+      onSignIn();
+    } else {
+      navigation.navigate("SignIn");
+    }
   };
 
   return (
@@ -175,7 +190,7 @@ export function SignUpScreen({
       <TouchableOpacity
         testID="sign-in-link"
         style={styles.footerLink}
-        onPress={onSignIn}
+        onPress={handleSignIn}
         accessibilityRole="link"
       >
         <Text style={styles.footerText}>

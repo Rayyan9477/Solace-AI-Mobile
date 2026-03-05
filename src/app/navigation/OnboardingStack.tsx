@@ -24,6 +24,8 @@ import { OTPSetupScreen } from "../../features/onboarding/screens/OTPSetupScreen
 import { OTPEntryScreen } from "../../features/onboarding/screens/OTPEntryScreen";
 import { FingerprintSetupScreen } from "../../features/onboarding/screens/FingerprintSetupScreen";
 import { VerificationSetupScreen } from "../../features/onboarding/screens/VerificationSetupScreen";
+import { ProfileSetupWelcomeScreen } from "../../features/onboarding/screens/ProfileSetupWelcomeScreen";
+import { ProfileEmergencyContactScreen } from "../../features/onboarding/screens/ProfileEmergencyContactScreen";
 
 // Assessment Screens
 import { AssessmentIntroScreen } from "../../features/assessment/screens/AssessmentIntroScreen";
@@ -64,14 +66,14 @@ export function OnboardingStack(): React.ReactElement {
     >
       {/* Profile Setup Flow (Screens 15-25) */}
 
-      {/* Screen 15: Profile Setup Welcome - TODO: Create this screen */}
-      {/* <Stack.Screen
+      {/* Screen 15: Profile Setup Welcome */}
+      <Stack.Screen
         name="ProfileSetupWelcome"
         component={ProfileSetupWelcomeScreen}
         options={{
           animation: "fade",
         }}
-      /> */}
+      />
 
       {/* Screen 16-18: Name, Birth Date, Gender - TODO: Consolidate into ProfileDetails */}
 
@@ -104,14 +106,14 @@ export function OnboardingStack(): React.ReactElement {
         }}
       />
 
-      {/* Screen 24: Emergency Contact - TODO: Create this screen */}
-      {/* <Stack.Screen
+      {/* Screen 24: Emergency Contact */}
+      <Stack.Screen
         name="ProfileEmergencyContact"
         component={ProfileEmergencyContactScreen}
         options={{
           animation: "slide_from_right",
         }}
-      /> */}
+      />
 
       {/* Screen 25: Biometric Security Setup */}
       <Stack.Screen

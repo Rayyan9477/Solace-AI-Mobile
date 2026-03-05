@@ -51,17 +51,17 @@ interface DateDivider extends BaseMessage {
 type ChatMessage = UserMessage | AIMessage | EmotionBadge | DateDivider;
 
 interface ActiveChatScreenProps {
-  chatsRemaining: number;
-  modelName: string;
-  messages: ChatMessage[];
-  isAITyping: boolean;
-  inputText: string;
-  crisisDetected?: boolean; // AI-detected crisis keywords in conversation
-  onBack: () => void;
-  onSearch: () => void;
-  onSendMessage: (message: string) => void;
-  onAttachment: () => void;
-  onInputChange: (text: string) => void;
+  chatsRemaining?: number;
+  modelName?: string;
+  messages?: ChatMessage[];
+  isAITyping?: boolean;
+  inputText?: string;
+  crisisDetected?: boolean;
+  onBack?: () => void;
+  onSearch?: () => void;
+  onSendMessage?: (message: string) => void;
+  onAttachment?: () => void;
+  onInputChange?: (text: string) => void;
 }
 
 const SENTIMENT_COLORS: Record<Sentiment, string> = {
@@ -71,18 +71,18 @@ const SENTIMENT_COLORS: Record<Sentiment, string> = {
 };
 
 export function ActiveChatScreen({
-  chatsRemaining,
-  modelName,
-  messages,
-  isAITyping,
-  inputText,
+  chatsRemaining = 0,
+  modelName = "Solace AI",
+  messages = [],
+  isAITyping = false,
+  inputText = "",
   crisisDetected = false,
   onBack,
   onSearch,
   onSendMessage,
   onAttachment,
   onInputChange,
-}: ActiveChatScreenProps): React.ReactElement {
+}: ActiveChatScreenProps = {}): React.ReactElement {
   const [showCrisisModal, setShowCrisisModal] = useState(false);
 
   const handleSend = () => {

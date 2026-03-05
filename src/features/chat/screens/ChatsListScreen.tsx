@@ -26,30 +26,30 @@ interface ChatConversation {
 }
 
 interface ChatsListScreenProps {
-  recentChats: ChatConversation[];
-  trashChats: ChatConversation[];
-  recentCount: number;
-  trashCount: number;
-  activeTab: TabType;
-  onBack: () => void;
-  onTabChange: (tab: TabType) => void;
-  onChatPress: (id: string) => void;
-  onSeeAllRecent: () => void;
-  onSeeAllTrash: () => void;
+  recentChats?: ChatConversation[];
+  trashChats?: ChatConversation[];
+  recentCount?: number;
+  trashCount?: number;
+  activeTab?: TabType;
+  onBack?: () => void;
+  onTabChange?: (tab: TabType) => void;
+  onChatPress?: (id: string) => void;
+  onSeeAllRecent?: () => void;
+  onSeeAllTrash?: () => void;
 }
 
 export function ChatsListScreen({
-  recentChats,
-  trashChats,
-  recentCount,
-  trashCount,
-  activeTab,
+  recentChats = [],
+  trashChats = [],
+  recentCount = 0,
+  trashCount = 0,
+  activeTab = "recent",
   onBack,
   onTabChange,
   onChatPress,
   onSeeAllRecent,
   onSeeAllTrash,
-}: ChatsListScreenProps): React.ReactElement {
+}: ChatsListScreenProps = {}): React.ReactElement {
   const renderChatItem = (chat: ChatConversation, isTrash: boolean = false) => (
     <TouchableOpacity
       key={chat.id}
