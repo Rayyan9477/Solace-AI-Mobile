@@ -26,20 +26,20 @@ interface Article {
 }
 
 interface HomeDashboardScreenProps {
-  userName: string;
+  userName?: string;
   userAvatar?: string;
-  currentDate: Date;
-  solaceScore: number;
-  solaceStatus: SolaceStatus;
-  currentMood: MoodType;
-  mindfulHours: number;
-  sleepQuality: number;
-  journalPages: number;
-  stressLevel: number;
-  weeklyMoods: readonly MoodType[];
-  conversationCount: number;
-  articles: Article[];
-  notificationCount: number;
+  currentDate?: Date;
+  solaceScore?: number;
+  solaceStatus?: SolaceStatus;
+  currentMood?: MoodType;
+  mindfulHours?: number;
+  sleepQuality?: number;
+  journalPages?: number;
+  stressLevel?: number;
+  weeklyMoods?: readonly MoodType[];
+  conversationCount?: number;
+  articles?: Article[];
+  notificationCount?: number;
   onSolaceScorePress?: () => void;
   onMoodPress?: () => void;
   onMindfulHoursPress?: () => void;
@@ -78,20 +78,20 @@ const formatNumber = (num: number): string => {
 };
 
 export function HomeDashboardScreen({
-  userName,
+  userName = "User",
   userAvatar,
-  currentDate,
-  solaceScore,
-  solaceStatus,
-  currentMood,
-  mindfulHours,
-  sleepQuality,
-  journalPages,
-  stressLevel,
-  weeklyMoods,
-  conversationCount,
-  articles,
-  notificationCount,
+  currentDate = new Date(),
+  solaceScore = 0,
+  solaceStatus = "Mentally Stable",
+  currentMood = "neutral",
+  mindfulHours = 0,
+  sleepQuality = 0,
+  journalPages = 0,
+  stressLevel = 0,
+  weeklyMoods = [],
+  conversationCount = 0,
+  articles = [],
+  notificationCount = 0,
   onSolaceScorePress,
   onMoodPress,
   onMindfulHoursPress,
@@ -102,7 +102,7 @@ export function HomeDashboardScreen({
   onArticlePress,
   onSearchPress,
   onNotificationPress,
-}: HomeDashboardScreenProps): React.ReactElement {
+}: HomeDashboardScreenProps = {}): React.ReactElement {
   return (
     <View testID="home-dashboard-screen" style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>

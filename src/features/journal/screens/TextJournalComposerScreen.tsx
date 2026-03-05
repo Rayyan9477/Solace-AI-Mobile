@@ -58,32 +58,32 @@ interface Stressor {
 }
 
 interface TextJournalComposerScreenProps {
-  activeTab: "text" | "voice";
-  title: string;
-  content: string;
-  stressLevel: number;
-  emotions: Emotion[];
-  stressors: Stressor[];
-  crisisDetected?: boolean; // Crisis keywords detected in journal content
-  onBack: () => void;
-  onTitleChange: (text: string) => void;
-  onContentChange: (text: string) => void;
-  onStressLevelChange: (value: number) => void;
-  onEmotionSelect: (id: string) => void;
-  onStressorSelect: (id: string) => void;
-  onCreate: () => void;
-  onTabChange: (tab: "text" | "voice") => void;
-  onUndo: () => void;
-  onRedo: () => void;
+  activeTab?: "text" | "voice";
+  title?: string;
+  content?: string;
+  stressLevel?: number;
+  emotions?: Emotion[];
+  stressors?: Stressor[];
+  crisisDetected?: boolean;
+  onBack?: () => void;
+  onTitleChange?: (text: string) => void;
+  onContentChange?: (text: string) => void;
+  onStressLevelChange?: (value: number) => void;
+  onEmotionSelect?: (id: string) => void;
+  onStressorSelect?: (id: string) => void;
+  onCreate?: () => void;
+  onTabChange?: (tab: "text" | "voice") => void;
+  onUndo?: () => void;
+  onRedo?: () => void;
 }
 
 export function TextJournalComposerScreen({
-  activeTab,
-  title,
-  content,
-  stressLevel,
-  emotions,
-  stressors,
+  activeTab = "text",
+  title = "",
+  content = "",
+  stressLevel = 3,
+  emotions = [],
+  stressors = [],
   crisisDetected = false,
   onBack,
   onEmotionSelect,
@@ -92,7 +92,7 @@ export function TextJournalComposerScreen({
   onTabChange,
   onUndo,
   onRedo,
-}: TextJournalComposerScreenProps): React.ReactElement {
+}: TextJournalComposerScreenProps = {}): React.ReactElement {
   const [showCrisisModal, setShowCrisisModal] = useState(false);
 
   const handleAccessCrisisSupport = (): void => {

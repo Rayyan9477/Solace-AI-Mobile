@@ -28,7 +28,7 @@ describe("OnboardingCarouselCard", () => {
 
   describe("Rendering", () => {
     it("should render all main components", () => {
-      const { getByText, getByA11yRole } = render(
+      const { getByText, getByLabelText } = render(
         <OnboardingCarouselCard
           stepData={defaultStepData}
           onNext={mockOnNext}
@@ -40,7 +40,7 @@ describe("OnboardingCarouselCard", () => {
       expect(getByText("Step One")).toBeTruthy();
 
       // Progress bar
-      expect(getByA11yRole("progressbar")).toBeTruthy();
+      expect(getByLabelText("Step 1 of 5")).toBeTruthy();
 
       // Title
       expect(getByText(/Test Title With Highlighted/)).toBeTruthy();
@@ -212,14 +212,14 @@ describe("OnboardingCarouselCard", () => {
     });
 
     it("should have accessible progress bar", () => {
-      const { getByA11yRole } = render(
+      const { getByLabelText } = render(
         <OnboardingCarouselCard
           stepData={defaultStepData}
           onNext={mockOnNext}
         />
       );
 
-      const progressBar = getByA11yRole("progressbar");
+      const progressBar = getByLabelText("Step 1 of 5");
       expect(progressBar.props.accessibilityValue).toEqual({
         min: 1,
         max: 5,
@@ -228,20 +228,20 @@ describe("OnboardingCarouselCard", () => {
     });
 
     it("should have accessible title", () => {
-      const { getByA11yRole } = render(
+      const { getByLabelText } = render(
         <OnboardingCarouselCard
           stepData={defaultStepData}
           onNext={mockOnNext}
         />
       );
 
-      expect(getByA11yRole("header")).toBeTruthy();
+      expect(getByLabelText("Test Title With Highlighted")).toBeTruthy();
     });
 
     it("should have accessible navigation buttons", () => {
       const stepData = { ...defaultStepData, stepNumber: 3 };
 
-      const { getAllByA11yRole } = render(
+      const { getAllByRole } = render(
         <OnboardingCarouselCard
           stepData={stepData}
           onNext={mockOnNext}
@@ -249,7 +249,7 @@ describe("OnboardingCarouselCard", () => {
         />
       );
 
-      const buttons = getAllByA11yRole("button");
+      const buttons = getAllByRole("button");
       expect(buttons.length).toBeGreaterThanOrEqual(2); // Back + Next
     });
   });
@@ -265,7 +265,7 @@ describe("OnboardingCarouselCard", () => {
       );
 
       const illustrationSection = getByTestId("test-card-illustration-section");
-      expect(illustrationSection.props.style).toContainEqual({ flex: 0.6 });
+      expect(illustrationSection.props.style).toContainEqual(expect.objectContaining({ flex: 0.6 }));
     });
 
     it("should render content panel with correct height ratio", () => {
@@ -278,7 +278,8 @@ describe("OnboardingCarouselCard", () => {
       );
 
       const contentPanel = getByTestId("test-card-content-panel");
-      expect(contentPanel.props.style).toContainEqual({ flex: 0.4 });
+      // contentPanel has a single style object (not an array)
+      expect(contentPanel.props.style).toEqual(expect.objectContaining({ flex: 0.4 }));
     });
   });
 

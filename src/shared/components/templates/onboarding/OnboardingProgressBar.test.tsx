@@ -86,10 +86,12 @@ describe("OnboardingProgressBar", () => {
 
   describe("Accessibility", () => {
     it("should have progressbar role", () => {
-      const { getByA11yRole } = render(
+      const { getByLabelText } = render(
         <OnboardingProgressBar currentStep={2} totalSteps={5} />
       );
-      expect(getByA11yRole("progressbar")).toBeTruthy();
+      const progressbar = getByLabelText("Step 2 of 5");
+      expect(progressbar).toBeTruthy();
+      expect(progressbar.props.accessibilityRole).toBe("progressbar");
     });
 
     it("should have proper accessibility label", () => {
@@ -100,11 +102,11 @@ describe("OnboardingProgressBar", () => {
     });
 
     it("should have correct accessibility value", () => {
-      const { getByA11yRole } = render(
+      const { getByLabelText } = render(
         <OnboardingProgressBar currentStep={4} totalSteps={5} />
       );
 
-      const progressbar = getByA11yRole("progressbar");
+      const progressbar = getByLabelText("Step 4 of 5");
       expect(progressbar.props.accessibilityValue).toEqual({
         min: 1,
         max: 5,

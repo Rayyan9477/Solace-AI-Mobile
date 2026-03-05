@@ -10,6 +10,7 @@
 import React from "react";
 import { View, Image, StyleSheet, type ImageStyle } from "react-native";
 import type { OnboardingCarouselCardProps } from "./OnboardingCarouselCard.types";
+import { palette } from "../../../theme";
 import { StepBadge } from "./StepBadge";
 import { OnboardingProgressBar } from "./OnboardingProgressBar";
 import { OnboardingTitle } from "./OnboardingTitle";
@@ -152,7 +153,7 @@ export function OnboardingCarouselCard({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
   },
   illustrationSection: {
     flex: 0.6,
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
   },
   contentPanel: {
     flex: 0.4,
-    backgroundColor: "#1C1410",
+    backgroundColor: palette.brown[900],
     paddingTop: 32,
     paddingBottom: 40,
     paddingHorizontal: 24,

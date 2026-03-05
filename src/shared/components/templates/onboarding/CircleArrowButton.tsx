@@ -6,6 +6,7 @@
 import React from "react";
 import { Pressable, StyleSheet, type ViewStyle } from "react-native";
 import type { CircleArrowButtonProps } from "./OnboardingCarouselCard.types";
+import { palette } from "../../../theme";
 
 /**
  * Simple arrow icon using Unicode characters
@@ -53,8 +54,8 @@ export function CircleArrowButton({
   variant = "next",
   disabled = false,
   size = 56,
-  backgroundColor = "#C4A574",
-  iconColor = "#FFFFFF",
+  backgroundColor = palette.tan[500],
+  iconColor = palette.white,
   accessibilityLabel,
   testID,
   style,
@@ -100,6 +101,7 @@ export function CircleArrowButton({
       hitSlop={hitSlop}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
+      accessibilityHint={direction === "right" ? "Double tap to go to next step" : "Double tap to go back"}
       accessibilityState={{
         disabled,
       }}

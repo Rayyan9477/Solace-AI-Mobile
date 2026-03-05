@@ -32,13 +32,13 @@ interface CalendarDay {
 }
 
 interface JournalDashboardScreenProps {
-  journalCount: number;
-  periodLabel: string;
-  calendarData: CalendarDay[];
-  onBack: () => void;
-  onAddJournal: () => void;
-  onSeeAllStats: () => void;
-  onDayPress: (index: number) => void;
+  journalCount?: number;
+  periodLabel?: string;
+  calendarData?: CalendarDay[];
+  onBack?: () => void;
+  onAddJournal?: () => void;
+  onSeeAllStats?: () => void;
+  onDayPress?: (index: number) => void;
 }
 
 /* ---------- helpers ---------- */
@@ -50,14 +50,14 @@ const statusDotColor: Record<JournalStatus, string> = {
 
 /* ---------- component ---------- */
 export function JournalDashboardScreen({
-  journalCount,
-  periodLabel,
-  calendarData,
+  journalCount = 0,
+  periodLabel = "This Week",
+  calendarData = [],
   onBack,
   onAddJournal,
   onSeeAllStats,
   onDayPress,
-}: JournalDashboardScreenProps): React.ReactElement {
+}: JournalDashboardScreenProps = {}): React.ReactElement {
   return (
     <View testID="journal-dashboard-screen" style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>

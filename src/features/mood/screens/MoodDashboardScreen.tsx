@@ -22,26 +22,28 @@ interface WeeklyMoodEntry {
   color: string;
 }
 
+const DEFAULT_MOOD: MoodData = { emoji: "\u{1F610}", label: "Neutral", color: palette.brown[700] };
+
 interface MoodDashboardScreenProps {
-  currentMood: MoodData;
-  weeklyData: WeeklyMoodEntry[];
-  onBack: () => void;
-  onFilter: () => void;
-  onStatistics: () => void;
-  onSelectMood: () => void;
-  onDayPress: (entry: WeeklyMoodEntry) => void;
-  onAddMood: () => void;
+  currentMood?: MoodData;
+  weeklyData?: WeeklyMoodEntry[];
+  onBack?: () => void;
+  onFilter?: () => void;
+  onStatistics?: () => void;
+  onSelectMood?: () => void;
+  onDayPress?: (entry: WeeklyMoodEntry) => void;
+  onAddMood?: () => void;
 }
 
 export function MoodDashboardScreen({
-  currentMood,
-  weeklyData,
+  currentMood = DEFAULT_MOOD,
+  weeklyData = [],
   onBack,
   onFilter,
   onStatistics,
   onDayPress,
   onAddMood,
-}: MoodDashboardScreenProps): React.ReactElement {
+}: MoodDashboardScreenProps = {}): React.ReactElement {
   return (
     <View
       testID="mood-dashboard-screen"
