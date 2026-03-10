@@ -86,6 +86,12 @@ export interface ButtonProps {
   /** Accessibility label for screen readers */
   accessibilityLabel?: string;
 
+  /** Accessibility hint for screen readers */
+  accessibilityHint?: string;
+
+  /** Accessibility state (e.g., checked for toggles) */
+  accessibilityState?: Record<string, boolean | undefined>;
+
   /** Additional button container styles */
   style?: ViewStyle;
 

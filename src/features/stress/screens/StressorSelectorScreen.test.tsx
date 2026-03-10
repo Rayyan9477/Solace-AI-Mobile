@@ -168,7 +168,7 @@ describe("StressorSelectorScreen", () => {
     const { getByTestId } = renderScreen({ selectedStressorId: "loneliness" });
     const bubble = getByTestId("stressor-bubble-work");
     const flatStyle = Object.assign({}, ...[].concat(bubble.props.style));
-    expect(flatStyle.backgroundColor).toBe("#3D2E23");
+    expect(flatStyle.backgroundColor).toBe("#3D2D24");
   });
 
   it("selected bubble is larger than unselected", () => {
@@ -269,7 +269,7 @@ describe("StressorSelectorScreen", () => {
       ...[].concat(lonelyBubble.props.style),
     );
     expect(workStyle.backgroundColor).toBe("#9AAD5C");
-    expect(lonelyStyle.backgroundColor).toBe("#3D2E23");
+    expect(lonelyStyle.backgroundColor).toBe("#3D2D24");
   });
 
   // Branding

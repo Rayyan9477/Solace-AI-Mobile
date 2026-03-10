@@ -59,6 +59,7 @@ function SliderPoint({
       disabled={disabled}
       accessibilityRole="button"
       accessibilityLabel={`Select ${MOOD_CONFIGS[mood].label} mood`}
+      accessibilityHint={`Double tap to set your mood to ${MOOD_CONFIGS[mood].label}`}
       accessibilityState={{ selected: isSelected }}
       style={[
         styles.sliderPoint,

@@ -204,7 +204,8 @@ export function SearchBar({
         onPress={handleClear}
         accessibilityRole="button"
         accessibilityLabel="Clear search"
-        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        accessibilityHint="Double tap to clear search text"
+        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         style={({ pressed }) => [
           styles.clearButton,
           pressed && styles.clearButtonPressed,

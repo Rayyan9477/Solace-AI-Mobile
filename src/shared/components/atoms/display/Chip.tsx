@@ -160,7 +160,12 @@ export function Chip({
         selected,
         disabled,
       }}
-      hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+      hitSlop={{
+        top: Math.max(0, Math.ceil((44 - config.height) / 2)),
+        bottom: Math.max(0, Math.ceil((44 - config.height) / 2)),
+        left: 6,
+        right: 6,
+      }}
       style={[
         styles.container,
         {

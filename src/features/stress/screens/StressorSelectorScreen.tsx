@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { palette } from "../../../shared/theme";
 
 interface StressorOption {
   id: string;
@@ -22,13 +23,13 @@ interface StressorSelectorScreenProps {
   onContinue: () => void;
 }
 
-const colors = {
-  background: "#1C1410",
-  white: "#FFFFFF",
-  selectedGreen: "#9AAD5C",
-  unselectedBrown: "#3D2E23",
-  bannerOrange: "#E8853A",
-  continueBg: "#C4A574",
+const localColors = {
+  background: palette.brown[900],
+  white: palette.white,
+  selectedGreen: palette.olive[500],
+  unselectedBrown: palette.brown[700],
+  bannerOrange: palette.accent.orange,
+  continueBg: palette.tan[500],
   textSecondary: "rgba(255,255,255,0.6)",
 } as const;
 
@@ -147,14 +148,14 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   backIcon: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 24,
   },
   bannerContainer: {
     paddingHorizontal: 24,
   },
   bannerText: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 14,
     fontWeight: "700",
     marginLeft: 8,
@@ -170,15 +171,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   bubbleLabelSelected: {
-    color: colors.background,
+    color: localColors.background,
     fontSize: 18,
   },
   bubbleLabelUnselected: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 13,
   },
   bubbleSelected: {
-    backgroundColor: colors.selectedGreen,
+    backgroundColor: localColors.selectedGreen,
     height: 140,
     width: 140,
   },
@@ -187,17 +188,17 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   bubbleUnselected: {
-    backgroundColor: colors.unselectedBrown,
+    backgroundColor: localColors.unselectedBrown,
     height: 70,
     width: 70,
   },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: localColors.background,
     flex: 1,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: colors.continueBg,
+    backgroundColor: localColors.continueBg,
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 44,
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   continueText: {
-    color: colors.background,
+    color: localColors.background,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -220,7 +221,7 @@ const styles = StyleSheet.create({
   },
   impactBanner: {
     alignItems: "center",
-    backgroundColor: colors.bannerOrange,
+    backgroundColor: localColors.bannerOrange,
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -228,14 +229,14 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   subtitle: {
-    color: colors.textSecondary,
+    color: localColors.textSecondary,
     fontSize: 15,
     lineHeight: 22,
     marginTop: 8,
     paddingHorizontal: 24,
   },
   title: {
-    color: colors.white,
+    color: localColors.white,
     fontSize: 28,
     fontWeight: "800",
     marginTop: 16,

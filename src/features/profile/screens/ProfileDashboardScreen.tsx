@@ -19,18 +19,18 @@ import {
 import { palette } from "../../../shared/theme";
 
 interface ProfileDashboardScreenProps {
-  username: string;
-  membershipTier: string;
-  age: string;
-  weight: string;
-  height: string;
-  solaceScore: number;
-  scoreStatus: string;
-  currentMood: string;
-  moodData: number[];
-  onSettings: () => void;
-  onScorePress: () => void;
-  onMoodPress: () => void;
+  username?: string;
+  membershipTier?: string;
+  age?: string;
+  weight?: string;
+  height?: string;
+  solaceScore?: number;
+  scoreStatus?: string;
+  currentMood?: string;
+  moodData?: number[];
+  onSettings?: () => void;
+  onScorePress?: () => void;
+  onMoodPress?: () => void;
 }
 
 const localColors = {
@@ -47,19 +47,19 @@ const localColors = {
 } as const;
 
 export function ProfileDashboardScreen({
-  username,
-  membershipTier,
-  age,
-  weight,
-  height,
-  solaceScore,
-  scoreStatus,
-  currentMood,
-  moodData,
+  username = "User",
+  membershipTier = "Free",
+  age = "--",
+  weight = "--",
+  height = "--",
+  solaceScore = 0,
+  scoreStatus = "Stable",
+  currentMood = "Neutral",
+  moodData = [],
   onSettings,
   onScorePress,
   onMoodPress,
-}: ProfileDashboardScreenProps): React.ReactElement {
+}: ProfileDashboardScreenProps = {}): React.ReactElement {
   return (
     <View testID="profile-dashboard-screen" style={styles.container}>
       <ScrollView

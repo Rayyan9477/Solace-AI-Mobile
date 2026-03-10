@@ -123,7 +123,7 @@ describe("Button Component", () => {
       const style = flattenStyle(button.props.style);
       expect(style).toEqual(
         expect.objectContaining({
-          minHeight: 36,
+          minHeight: 44,
           paddingHorizontal: 12,
         })
       );

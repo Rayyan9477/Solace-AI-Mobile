@@ -32,29 +32,29 @@ interface Insight {
 }
 
 interface ExpressionAnalysisScreenProps {
-  capturedImageUri: string;
-  analysisComplete: boolean;
-  overallMoodScore: number;
-  emotionData: EmotionData[];
-  insights: Insight[];
-  analysisTimestamp: Date;
-  onBack: () => void;
-  onRetake: () => void;
-  onContinue: () => void;
-  onSaveAnalysis: () => void;
+  capturedImageUri?: string;
+  analysisComplete?: boolean;
+  overallMoodScore?: number;
+  emotionData?: EmotionData[];
+  insights?: Insight[];
+  analysisTimestamp?: Date;
+  onBack?: () => void;
+  onRetake?: () => void;
+  onContinue?: () => void;
+  onSaveAnalysis?: () => void;
 }
 
 export function ExpressionAnalysisScreen({
-  capturedImageUri,
-  analysisComplete,
-  overallMoodScore,
-  emotionData,
-  insights,
+  capturedImageUri = "",
+  analysisComplete = false,
+  overallMoodScore = 50,
+  emotionData = [],
+  insights = [],
   onBack,
   onRetake,
   onContinue,
   onSaveAnalysis,
-}: ExpressionAnalysisScreenProps): React.ReactElement {
+}: ExpressionAnalysisScreenProps = {}): React.ReactElement {
   const [showCrisisModal, setShowCrisisModal] = useState(false);
 
   // Crisis detection: Mood score < 30 indicates severe emotional distress

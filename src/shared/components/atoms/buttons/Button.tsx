@@ -128,6 +128,8 @@ export function Button({
   fullWidth = false,
   testID,
   accessibilityLabel,
+  accessibilityHint,
+  accessibilityState: externalA11yState,
   style,
   labelStyle,
 }: ButtonProps): React.ReactElement {
@@ -141,7 +143,7 @@ export function Button({
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      minHeight: sizeSpec.height,
+      minHeight: Math.max(sizeSpec.height, 44),
       paddingHorizontal: sizeSpec.paddingHorizontal,
       borderRadius: 8,
       backgroundColor: isDisabled
@@ -212,9 +214,11 @@ export function Button({
       disabled={isDisabled}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel || label}
+      accessibilityHint={accessibilityHint}
       accessibilityState={{
         disabled: isDisabled,
         busy: loading,
+        ...externalA11yState,
       }}
       style={({ pressed }) => [
         buttonStyle,

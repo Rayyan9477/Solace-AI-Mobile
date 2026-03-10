@@ -5,14 +5,11 @@
 
 import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
-import { Linking, Alert } from "react-native";
+import { Alert } from "react-native";
 import { CrisisModal } from "./CrisisModal";
 
-// Mock React Native modules
-jest.mock("react-native/Libraries/Linking/Linking", () => ({
-  canOpenURL: jest.fn(),
-  openURL: jest.fn(),
-}));
+// Get the mocked Linking from the internal path (mocked globally in jest.setup.js)
+const Linking = require("react-native/Libraries/Linking/Linking");
 
 jest.spyOn(Alert, "alert");
 
@@ -24,8 +21,8 @@ describe("CrisisModal", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (Linking.canOpenURL as jest.Mock).mockResolvedValue(true);
-    (Linking.openURL as jest.Mock).mockResolvedValue(true);
+    Linking.canOpenURL.mockResolvedValue(true);
+    Linking.openURL.mockResolvedValue(true);
   });
 
   describe("Visibility", () => {
@@ -258,9 +255,10 @@ describe("CrisisModal", () => {
     });
 
     it("should have proper accessibility hint on resources", () => {
-      const { getByA11yHint } = render(<CrisisModal {...defaultProps} />);
+      const { getAllByHintText } = render(<CrisisModal {...defaultProps} />);
 
-      expect(getByA11yHint("Activates to connect with crisis support")).toBeTruthy();
+      const hintElements = getAllByHintText("Activates to connect with crisis support");
+      expect(hintElements.length).toBe(3); // All 3 resource buttons
     });
 
     it("should announce acknowledgment state", () => {
