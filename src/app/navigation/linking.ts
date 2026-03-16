@@ -98,7 +98,6 @@ export const linking: LinkingOptions<RootStackParamList> = {
               SolaceScoreInsights: "score/insights",
               AISuggestions: "suggestions",
               MindfulnessActivities: "mindfulness",
-              ScoreHistory: "score/history",
               SolaceScoreIncrease: "score/increase",
             },
           },
@@ -146,7 +145,6 @@ export const linking: LinkingOptions<RootStackParamList> = {
               JournalCalendar: "calendar",
               JournalInsights: "insights",
               TextJournalComposer: "compose",
-              DeleteJournalConfirmation: "delete/:entryId",
             },
           },
 
@@ -172,113 +170,6 @@ export const linking: LinkingOptions<RootStackParamList> = {
         },
       },
 
-      // Modal Screens (Top-level modals)
-      SearchModal: {
-        path: "search",
-        screens: {
-          SearchLoading: "loading",
-          SearchNoResults: "no-results",
-          SearchResults: "results",
-        },
-      },
-
-      NotificationsModal: {
-        path: "notifications",
-        screens: {
-          NotificationsInbox: "",
-          NotificationSettings: "settings",
-          NotificationDetail: ":notificationId",
-          MoodTransitionAlert: "mood-transition",
-          FreudScoreIncreaseNotification: "score-increase",
-          CriticalScoreWarning: "critical-score",
-          SleepQualityIncreaseNotification: "sleep-increase",
-        },
-      },
-
-      CommunityModal: {
-        path: "community",
-        screens: {
-          CommunityWelcome: "",
-          CommunityFeed: "feed",
-          PostDetail: "post/:postId",
-          CreatePost: "new",
-          UserProfile: "user/:userId",
-          SuccessStories: "stories",
-          SupportGroups: "groups",
-          CommunityChatbot: "chatbot",
-          PostCategories: "categories",
-          CommunityNotifications: "notifications",
-        },
-      },
-
-      ResourcesModal: {
-        path: "resources",
-        screens: {
-          ResourcesHome: "",
-          ArticlesList: "articles",
-          ArticleDetail: "article/:articleId",
-          CoursesList: "courses",
-          CourseDetail: "course/:courseId",
-          VideoPlayer: "video/:videoId",
-          Bookmarks: "bookmarks",
-          ResourceSearch: "search",
-        },
-      },
-
-      SleepModal: {
-        path: "sleep",
-        screens: {
-          SleepDashboard: "",
-          SleepSchedule: "schedule",
-          SleepStages: "stages",
-          SleepCalendar: "calendar",
-          SleepInsights: "insights",
-          SleepQualityIncrease: "increase",
-          LogSleepData: "log",
-          SleepReminders: "reminders",
-          SleepHistory: "history",
-          SleepAISuggestions: "suggestions",
-        },
-      },
-
-      StressModal: {
-        path: "stress",
-        screens: {
-          StressDashboard: "",
-          StressAssessment: "assessment",
-          StressTriggers: "triggers",
-          CopingStrategies: "coping",
-          QuickRelief: "relief",
-          StressTrends: "trends",
-          BreathingExercise: "breathing",
-        },
-      },
-
-      MindfulModal: {
-        path: "mindful",
-        screens: {
-          MindfulDashboard: "",
-          SessionSetup: "setup",
-          ActiveSession: "session",
-          SessionComplete: "complete",
-          MindfulAnalytics: "analytics",
-          SoundscapeLibrary: "soundscapes",
-          MeditationTimer: "timer",
-          BreathingExercises: "breathing",
-          SessionHistory: "history",
-        },
-      },
-
-      ErrorModal: {
-        path: "error",
-        screens: {
-          Error404: "404",
-          Error500: "500",
-          NoConnection: "offline",
-          Maintenance: "maintenance",
-          Forbidden: "403",
-        },
-      },
     },
   },
 
@@ -319,7 +210,6 @@ const screenPaths: Record<string, string> = {
   SolaceScoreInsights: "home/score/insights",
   AISuggestions: "home/suggestions",
   MindfulnessActivities: "home/mindfulness",
-  ScoreHistory: "home/score/history",
   SolaceScoreIncrease: "home/score/increase",
 
   // Mood screens
@@ -352,7 +242,6 @@ const screenPaths: Record<string, string> = {
   JournalCalendar: "journal/calendar",
   JournalInsights: "journal/insights",
   TextJournalComposer: "journal/compose",
-  DeleteJournalConfirmation: "journal/delete/:entryId",
 
   // Profile screens
   ProfileDashboard: "profile",

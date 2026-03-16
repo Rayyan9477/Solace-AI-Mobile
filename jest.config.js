@@ -5,7 +5,6 @@ module.exports = {
   ],
   testPathIgnorePatterns: [
     "/node_modules/",
-    "test/integration/MoodTrackingWorkflow\\.test\\.ts$",
     "\\.spec\\.js$",
   ],
   transformIgnorePatterns: [

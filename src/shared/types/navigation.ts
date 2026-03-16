@@ -94,7 +94,7 @@ export type AuthStackParamList = {
   /** Screen 14: Verification Email Sent */
   VerificationSent: {
     /** Email address where verification was sent */
-    email: string;
+    email?: string;
   };
 };
 
@@ -136,7 +136,7 @@ export type OnboardingStackParamList = {
   /** Screen 23: OTP verification */
   ProfileOTPVerification: {
     /** Phone number for OTP */
-    phoneNumber: string;
+    phoneNumber?: string;
   };
 
   /** Screen 24: Emergency contact */
@@ -188,9 +188,9 @@ export type OnboardingStackParamList = {
   /** Screen 39: Results display */
   AssessmentResults: {
     /** Calculated Freud Score */
-    freudScore: number;
+    freudScore?: number;
     /** Assessment completion timestamp */
-    completedAt: Date;
+    completedAt?: Date;
   };
 };
 
@@ -218,9 +218,6 @@ export type DashboardStackParamList = {
 
   /** Screen 44: Mindfulness activities */
   MindfulnessActivities: undefined;
-
-  /** Screen 45: Score history/trends */
-  ScoreHistory: undefined;
 
   /** Screen 46: Celebration modal for score increase */
   SolaceScoreIncrease: {
@@ -375,11 +372,6 @@ export type JournalStackParamList = {
   /** Screen 71: Text journal composer */
   TextJournalComposer: undefined;
 
-  /** Screen 72: Delete confirmation */
-  DeleteJournalConfirmation: {
-    /** Entry ID to delete */
-    entryId: string;
-  };
 };
 
 // ============================================================================

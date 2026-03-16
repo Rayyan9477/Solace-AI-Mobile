@@ -29,6 +29,8 @@ interface AuthState {
   hasCompletedOnboarding: boolean;
 }
 
+type AuthStateUpdate = AuthState | ((prev: AuthState) => AuthState);
+
 const DEFAULT_AUTH_STATE: AuthState = {
   isAuthenticated: false,
   hasCompletedOnboarding: false,
@@ -59,26 +61,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }): React
   }, []);
 
   // Persist auth state on change
-  const persistState = useCallback(async (next: AuthState) => {
-    setAuthState(next);
+  const persistState = useCallback(async (update: AuthStateUpdate) => {
+    let nextState = DEFAULT_AUTH_STATE;
+
+    setAuthState((prevState) => {
+      nextState = typeof update === "function" ? update(prevState) : update;
+      return nextState;
+    });
+
     try {
-      await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(next));
+      await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextState));
     } catch {
       // Storage write failure is non-critical
     }
   }, []);
 
   const signIn = useCallback(() => {
-    persistState({ ...authState, isAuthenticated: true });
-  }, [authState, persistState]);
+    persistState((prevState) => ({ ...prevState, isAuthenticated: true }));
+  }, [persistState]);
 
   const signOut = useCallback(() => {
     persistState(DEFAULT_AUTH_STATE);
   }, [persistState]);
 
   const completeOnboarding = useCallback(() => {
-    persistState({ ...authState, hasCompletedOnboarding: true });
-  }, [authState, persistState]);
+    persistState((prevState) => ({ ...prevState, hasCompletedOnboarding: true }));
+  }, [persistState]);
 
   return (
     <AuthContext.Provider

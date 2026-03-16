@@ -11,19 +11,18 @@
  * After completion, the user proceeds to the main app (MainFlow).
  */
 
-import React from "react";
+import React, { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import type { OnboardingStackParamList } from "../../shared/types/navigation";
+import type { OnboardingScreenProps, OnboardingStackParamList } from "../../shared/types/navigation";
 import { colors } from "../../shared/theme";
+import { useAuth } from "../AuthContext";
 
 // Profile Setup Screens
 import { ProfileSetupDetailsScreen } from "../../features/onboarding/screens/ProfileSetupDetailsScreen";
 import { ProfileSetupAvatarScreen } from "../../features/onboarding/screens/ProfileSetupAvatarScreen";
 import { PasswordSetupScreen } from "../../features/onboarding/screens/PasswordSetupScreen";
-import { OTPSetupScreen } from "../../features/onboarding/screens/OTPSetupScreen";
 import { OTPEntryScreen } from "../../features/onboarding/screens/OTPEntryScreen";
 import { FingerprintSetupScreen } from "../../features/onboarding/screens/FingerprintSetupScreen";
-import { VerificationSetupScreen } from "../../features/onboarding/screens/VerificationSetupScreen";
 import { ProfileSetupWelcomeScreen } from "../../features/onboarding/screens/ProfileSetupWelcomeScreen";
 import { ProfileEmergencyContactScreen } from "../../features/onboarding/screens/ProfileEmergencyContactScreen";
 
@@ -31,7 +30,6 @@ import { ProfileEmergencyContactScreen } from "../../features/onboarding/screens
 import { AssessmentIntroScreen } from "../../features/assessment/screens/AssessmentIntroScreen";
 import { AssessmentQuestionScreen } from "../../features/assessment/screens/AssessmentQuestionScreen";
 import { AssessmentAgeScreen } from "../../features/assessment/screens/AssessmentAgeScreen";
-import { AssessmentGenderScreen } from "../../features/assessment/screens/AssessmentGenderScreen";
 import { AssessmentStressLevelScreen } from "../../features/assessment/screens/AssessmentStressLevelScreen";
 import { AssessmentOtherSymptomsScreen } from "../../features/assessment/screens/AssessmentOtherSymptomsScreen";
 import { AssessmentExpressionAnalysisScreen } from "../../features/assessment/screens/AssessmentExpressionAnalysisScreen";
@@ -45,6 +43,347 @@ import { SolaceScoreUnstableScreen } from "../../features/onboarding/screens/Sol
 import { SolaceScoreCriticalScreen } from "../../features/onboarding/screens/SolaceScoreCriticalScreen";
 
 const Stack = createNativeStackNavigator<OnboardingStackParamList>();
+
+const TOTAL_ASSESSMENT_STEPS = 14;
+
+interface QuestionOption {
+  icon: string;
+  id: string;
+  label: string;
+}
+
+type AssessmentQuestionRoute =
+  | "AssessmentPrimaryConcern"
+  | "AssessmentWeight"
+  | "AssessmentMood"
+  | "AssessmentMentalState"
+  | "AssessmentSadnessFrequency"
+  | "AssessmentMedicationsQuestion"
+  | "AssessmentTherapist"
+  | "AssessmentExercise";
+
+const ASSESSMENT_QUESTION_CONFIG: Record<
+  AssessmentQuestionRoute,
+  {
+    currentStep: number;
+    nextRoute: keyof OnboardingStackParamList;
+    options: QuestionOption[];
+    question: string;
+  }
+> = {
+  AssessmentExercise: {
+    currentStep: 11,
+    nextRoute: "AssessmentExpressionAnalysis",
+    options: [
+      { icon: "🏃", id: "daily", label: "Daily" },
+      { icon: "📅", id: "weekly", label: "A few times a week" },
+      { icon: "😴", id: "rarely", label: "Rarely" },
+      { icon: "🚫", id: "never", label: "Never" },
+    ],
+    question: "How often do you exercise?",
+  },
+  AssessmentMedicationsQuestion: {
+    currentStep: 8,
+    nextRoute: "AssessmentMedicationDetails",
+    options: [
+      { icon: "💊", id: "yes", label: "Yes, currently" },
+      { icon: "📋", id: "past", label: "In the past" },
+      { icon: "✅", id: "no", label: "No" },
+    ],
+    question: "Are you taking any medications for mental health?",
+  },
+  AssessmentMentalState: {
+    currentStep: 6,
+    nextRoute: "AssessmentSadnessFrequency",
+    options: [
+      { icon: "🌤", id: "steady", label: "Mostly steady" },
+      { icon: "🌥", id: "mixed", label: "Mixed throughout the day" },
+      { icon: "🌧", id: "low", label: "Mostly low" },
+    ],
+    question: "How would you describe your current mental state?",
+  },
+  AssessmentMood: {
+    currentStep: 4,
+    nextRoute: "AssessmentStressTriggers",
+    options: [
+      { icon: "🙂", id: "good", label: "Mostly good" },
+      { icon: "😐", id: "neutral", label: "Neutral" },
+      { icon: "😟", id: "stressed", label: "Stressed" },
+      { icon: "😢", id: "low", label: "Low mood" },
+    ],
+    question: "How have you been feeling lately?",
+  },
+  AssessmentPrimaryConcern: {
+    currentStep: 1,
+    nextRoute: "AssessmentAge",
+    options: [
+      { icon: "😰", id: "anxiety", label: "Anxiety" },
+      { icon: "😔", id: "low-mood", label: "Low mood" },
+      { icon: "🛌", id: "sleep", label: "Sleep difficulties" },
+      { icon: "🧠", id: "focus", label: "Focus and clarity" },
+    ],
+    question: "What's your primary concern right now?",
+  },
+  AssessmentSadnessFrequency: {
+    currentStep: 7,
+    nextRoute: "AssessmentMedicationsQuestion",
+    options: [
+      { icon: "🌞", id: "rare", label: "Rarely" },
+      { icon: "🌤", id: "sometimes", label: "Sometimes" },
+      { icon: "🌧", id: "often", label: "Often" },
+      { icon: "⛈", id: "daily", label: "Nearly every day" },
+    ],
+    question: "How often have you felt sad in the last two weeks?",
+  },
+  AssessmentTherapist: {
+    currentStep: 10,
+    nextRoute: "AssessmentExercise",
+    options: [
+      { icon: "🧑‍⚕️", id: "yes", label: "Yes" },
+      { icon: "🤔", id: "considering", label: "Considering it" },
+      { icon: "❌", id: "no", label: "No" },
+    ],
+    question: "Do you currently have a therapist?",
+  },
+  AssessmentWeight: {
+    currentStep: 3,
+    nextRoute: "AssessmentMood",
+    options: [
+      { icon: "⚖️", id: "stable", label: "Stable" },
+      { icon: "⬆️", id: "gain", label: "Recent weight gain" },
+      { icon: "⬇️", id: "loss", label: "Recent weight loss" },
+      { icon: "❔", id: "unsure", label: "Unsure" },
+    ],
+    question: "How would you describe your recent weight trend?",
+  },
+};
+
+function ProfileDetailsRoute({ navigation }: OnboardingScreenProps<"ProfileNameInput">): React.ReactElement {
+  return (
+    <ProfileSetupDetailsScreen
+      onBack={() => navigation.goBack()}
+      onContinue={() => navigation.navigate("ProfileAvatar")}
+      onEditPhoto={() => navigation.navigate("ProfileAvatar")}
+      onGenderPress={() => {}}
+      onLocationPress={() => {}}
+    />
+  );
+}
+
+function ProfileAvatarRoute({ navigation }: OnboardingScreenProps<"ProfileAvatar">): React.ReactElement {
+  return (
+    <ProfileSetupAvatarScreen
+      onBack={() => navigation.goBack()}
+      onContinue={() => navigation.navigate("ProfilePasswordSetup")}
+      onUpload={() => {}}
+    />
+  );
+}
+
+function ProfilePasswordRoute({ navigation }: OnboardingScreenProps<"ProfilePasswordSetup">): React.ReactElement {
+  return (
+    <PasswordSetupScreen
+      onBack={() => navigation.goBack()}
+      onContinue={() => navigation.navigate("ProfileOTPVerification", { phoneNumber: "" })}
+    />
+  );
+}
+
+function ProfileOTPRoute({ navigation }: OnboardingScreenProps<"ProfileOTPVerification">): React.ReactElement {
+  return (
+    <OTPEntryScreen
+      onBack={() => navigation.goBack()}
+      onContinue={() => navigation.navigate("ProfileBiometricSetup")}
+      onResend={() => {}}
+    />
+  );
+}
+
+function ProfileBiometricRoute({ navigation }: OnboardingScreenProps<"ProfileBiometricSetup">): React.ReactElement {
+  return (
+    <FingerprintSetupScreen
+      onBack={() => navigation.goBack()}
+      onContinue={() => navigation.navigate("AssessmentIntro")}
+      onSkip={() => navigation.navigate("AssessmentIntro")}
+    />
+  );
+}
+
+function AssessmentIntroRoute({ navigation }: OnboardingScreenProps<"AssessmentIntro">): React.ReactElement {
+  return (
+    <AssessmentIntroScreen
+      onBack={() => navigation.goBack()}
+      onStart={() => navigation.navigate("AssessmentPrimaryConcern")}
+    />
+  );
+}
+
+function AssessmentQuestionRouteScreen(
+  props: OnboardingScreenProps<AssessmentQuestionRoute>,
+): React.ReactElement {
+  const { navigation, route } = props;
+  const config = ASSESSMENT_QUESTION_CONFIG[route.name];
+
+  return (
+    <AssessmentQuestionScreen
+      currentStep={config.currentStep}
+      totalSteps={TOTAL_ASSESSMENT_STEPS}
+      question={config.question}
+      options={config.options}
+      onBack={() => navigation.goBack()}
+      onContinue={() => navigation.navigate(config.nextRoute)}
+    />
+  );
+}
+
+function AssessmentAgeRoute({ navigation }: OnboardingScreenProps<"AssessmentAge">): React.ReactElement {
+  return (
+    <AssessmentAgeScreen
+      currentStep={2}
+      totalSteps={TOTAL_ASSESSMENT_STEPS}
+      onBack={() => navigation.goBack()}
+      onContinue={() => navigation.navigate("AssessmentWeight")}
+    />
+  );
+}
+
+function AssessmentStressRoute({ navigation }: OnboardingScreenProps<"AssessmentStressTriggers">): React.ReactElement {
+  return (
+    <AssessmentStressLevelScreen
+      currentStep={5}
+      totalSteps={TOTAL_ASSESSMENT_STEPS}
+      onBack={() => navigation.goBack()}
+      onContinue={() => navigation.navigate("AssessmentMentalState")}
+    />
+  );
+}
+
+function AssessmentMedicationDetailsRoute({
+  navigation,
+}: OnboardingScreenProps<"AssessmentMedicationDetails">): React.ReactElement {
+  return (
+    <AssessmentOtherSymptomsScreen
+      currentStep={9}
+      totalSteps={TOTAL_ASSESSMENT_STEPS}
+      onBack={() => navigation.goBack()}
+      onContinue={() => navigation.navigate("AssessmentTherapist")}
+    />
+  );
+}
+
+function AssessmentExpressionRoute({
+  navigation,
+}: OnboardingScreenProps<"AssessmentExpressionAnalysis">): React.ReactElement {
+  return (
+    <AssessmentExpressionAnalysisScreen
+      currentStep={12}
+      totalSteps={TOTAL_ASSESSMENT_STEPS}
+      onBack={() => navigation.goBack()}
+      onContinue={() => navigation.navigate("AssessmentSoundAnalysis")}
+    />
+  );
+}
+
+function AssessmentSoundRoute({
+  navigation,
+}: OnboardingScreenProps<"AssessmentSoundAnalysis">): React.ReactElement {
+  return (
+    <AssessmentSoundAnalysisScreen
+      currentStep={13}
+      totalSteps={TOTAL_ASSESSMENT_STEPS}
+      onBack={() => navigation.goBack()}
+      onContinue={() => navigation.navigate("AssessmentScoreAnalysis")}
+    />
+  );
+}
+
+function AssessmentScoreAnalysisRoute({
+  navigation,
+}: OnboardingScreenProps<"AssessmentScoreAnalysis">): React.ReactElement {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.replace("AssessmentResults", {
+        completedAt: new Date(),
+        freudScore: 72,
+      });
+    }, 1200);
+
+    return () => clearTimeout(timer);
+  }, [navigation]);
+
+  return <CompilingDataScreen />;
+}
+
+function AssessmentResultsRoute({
+  navigation,
+  route,
+}: OnboardingScreenProps<"AssessmentResults">): React.ReactElement {
+  const score = route.params?.freudScore ?? 72;
+  const category = score >= 70 ? "healthy" : score >= 40 ? "unstable" : "critical";
+
+  return (
+    <AssessmentResultsScreen
+      score={score}
+      category={category}
+      breakdown={[
+        { color: colors.status.info, label: "Mood", score: 72 },
+        { color: colors.status.success, label: "Stress", score: 68 },
+        { color: colors.status.warning, label: "Sleep", score: 74 },
+      ]}
+      recommendations={[
+        "Continue checking in with your mood daily.",
+        "Spend a few minutes on guided breathing today.",
+        "Reach out to your support system this week.",
+      ]}
+      onContinue={() => {
+        const target = category === "healthy" ? "SolaceScoreHealthy" : category === "unstable" ? "SolaceScoreUnstable" : "SolaceScoreCritical";
+        navigation.replace(target);
+      }}
+      onViewDetails={() => {}}
+    />
+  );
+}
+
+function SolaceScoreHealthyRoute(): React.ReactElement {
+  const { completeOnboarding } = useAuth();
+
+  return (
+    <SolaceScoreHealthyScreen
+      score={72}
+      onScheduleAppointment={() => {}}
+      onContinue={() => {
+        completeOnboarding();
+      }}
+    />
+  );
+}
+
+function SolaceScoreUnstableRoute(): React.ReactElement {
+  const { completeOnboarding } = useAuth();
+
+  return (
+    <SolaceScoreUnstableScreen
+      score={58}
+      onScheduleAppointment={() => {}}
+      onContinue={() => {
+        completeOnboarding();
+      }}
+    />
+  );
+}
+
+function SolaceScoreCriticalRoute(): React.ReactElement {
+  const { completeOnboarding } = useAuth();
+
+  return (
+    <SolaceScoreCriticalScreen
+      score={28}
+      onContinue={() => {
+        completeOnboarding();
+      }}
+    />
+  );
+}
 
 /**
  * OnboardingStack Navigator Component
@@ -75,6 +414,31 @@ export function OnboardingStack(): React.ReactElement {
         }}
       />
 
+      <Stack.Screen
+        name="ProfileNameInput"
+        component={ProfileDetailsRoute}
+      />
+
+      <Stack.Screen
+        name="ProfileBirthDate"
+        component={ProfileDetailsRoute}
+      />
+
+      <Stack.Screen
+        name="ProfileGender"
+        component={ProfileDetailsRoute}
+      />
+
+      <Stack.Screen
+        name="ProfileLocation"
+        component={ProfileDetailsRoute}
+      />
+
+      <Stack.Screen
+        name="ProfileOccupation"
+        component={ProfileDetailsRoute}
+      />
+
       {/* Screen 16-18: Name, Birth Date, Gender - TODO: Consolidate into ProfileDetails */}
 
       {/* Screen 19-20: Location, Occupation - TODO: Add to ProfileDetails */}
@@ -82,7 +446,7 @@ export function OnboardingStack(): React.ReactElement {
       {/* Screen 21: Avatar Selection */}
       <Stack.Screen
         name="ProfileAvatar"
-        component={ProfileSetupAvatarScreen}
+        component={ProfileAvatarRoute}
         options={{
           animation: "slide_from_right",
         }}
@@ -91,7 +455,7 @@ export function OnboardingStack(): React.ReactElement {
       {/* Screen 22: Password Setup */}
       <Stack.Screen
         name="ProfilePasswordSetup"
-        component={PasswordSetupScreen}
+        component={ProfilePasswordRoute}
         options={{
           animation: "slide_from_right",
         }}
@@ -100,7 +464,7 @@ export function OnboardingStack(): React.ReactElement {
       {/* Screen 23: OTP Verification */}
       <Stack.Screen
         name="ProfileOTPVerification"
-        component={OTPEntryScreen}
+        component={ProfileOTPRoute}
         options={{
           animation: "slide_from_right",
         }}
@@ -118,7 +482,7 @@ export function OnboardingStack(): React.ReactElement {
       {/* Screen 25: Biometric Security Setup */}
       <Stack.Screen
         name="ProfileBiometricSetup"
-        component={FingerprintSetupScreen}
+        component={ProfileBiometricRoute}
         options={{
           animation: "slide_from_right",
         }}
@@ -129,7 +493,7 @@ export function OnboardingStack(): React.ReactElement {
       {/* Screen 26: Assessment Intro */}
       <Stack.Screen
         name="AssessmentIntro"
-        component={AssessmentIntroScreen}
+        component={AssessmentIntroRoute}
         options={{
           animation: "slide_from_right",
         }}
@@ -138,19 +502,16 @@ export function OnboardingStack(): React.ReactElement {
       {/* Screen 27: Primary Concern */}
       <Stack.Screen
         name="AssessmentPrimaryConcern"
-        component={AssessmentQuestionScreen}
+        component={AssessmentQuestionRouteScreen}
         options={{
           animation: "slide_from_right",
-        }}
-        initialParams={{
-          questionType: "primary-concern",
         }}
       />
 
       {/* Screen 28: Age Entry */}
       <Stack.Screen
         name="AssessmentAge"
-        component={AssessmentAgeScreen}
+        component={AssessmentAgeRoute}
         options={{
           animation: "slide_from_right",
         }}
@@ -159,31 +520,25 @@ export function OnboardingStack(): React.ReactElement {
       {/* Screen 29: Weight Entry */}
       <Stack.Screen
         name="AssessmentWeight"
-        component={AssessmentQuestionScreen}
+        component={AssessmentQuestionRouteScreen}
         options={{
           animation: "slide_from_right",
-        }}
-        initialParams={{
-          questionType: "weight",
         }}
       />
 
       {/* Screen 30: Mood Selection */}
       <Stack.Screen
         name="AssessmentMood"
-        component={AssessmentQuestionScreen}
+        component={AssessmentQuestionRouteScreen}
         options={{
           animation: "slide_from_right",
-        }}
-        initialParams={{
-          questionType: "mood",
         }}
       />
 
       {/* Screen 31: Stress Triggers */}
       <Stack.Screen
         name="AssessmentStressTriggers"
-        component={AssessmentStressLevelScreen}
+        component={AssessmentStressRoute}
         options={{
           animation: "slide_from_right",
         }}
@@ -192,43 +547,34 @@ export function OnboardingStack(): React.ReactElement {
       {/* Screen 32: Mental State */}
       <Stack.Screen
         name="AssessmentMentalState"
-        component={AssessmentQuestionScreen}
+        component={AssessmentQuestionRouteScreen}
         options={{
           animation: "slide_from_right",
-        }}
-        initialParams={{
-          questionType: "mental-state",
         }}
       />
 
       {/* Screen 33: Sadness Frequency */}
       <Stack.Screen
         name="AssessmentSadnessFrequency"
-        component={AssessmentQuestionScreen}
+        component={AssessmentQuestionRouteScreen}
         options={{
           animation: "slide_from_right",
-        }}
-        initialParams={{
-          questionType: "sadness-frequency",
         }}
       />
 
       {/* Screen 34: Medications Question */}
       <Stack.Screen
         name="AssessmentMedicationsQuestion"
-        component={AssessmentQuestionScreen}
+        component={AssessmentQuestionRouteScreen}
         options={{
           animation: "slide_from_right",
-        }}
-        initialParams={{
-          questionType: "medications",
         }}
       />
 
       {/* Screen 35: Medication Details */}
       <Stack.Screen
         name="AssessmentMedicationDetails"
-        component={AssessmentOtherSymptomsScreen}
+        component={AssessmentMedicationDetailsRoute}
         options={{
           animation: "slide_from_right",
         }}
@@ -237,31 +583,25 @@ export function OnboardingStack(): React.ReactElement {
       {/* Screen 36: Have Therapist */}
       <Stack.Screen
         name="AssessmentTherapist"
-        component={AssessmentQuestionScreen}
+        component={AssessmentQuestionRouteScreen}
         options={{
           animation: "slide_from_right",
-        }}
-        initialParams={{
-          questionType: "therapist",
         }}
       />
 
       {/* Screen 37: Exercise Frequency */}
       <Stack.Screen
         name="AssessmentExercise"
-        component={AssessmentQuestionScreen}
+        component={AssessmentQuestionRouteScreen}
         options={{
           animation: "slide_from_right",
-        }}
-        initialParams={{
-          questionType: "exercise",
         }}
       />
 
       {/* Screen 38: Score Analysis (Loading) */}
       <Stack.Screen
         name="AssessmentScoreAnalysis"
-        component={CompilingDataScreen}
+        component={AssessmentScoreAnalysisRoute}
         options={{
           animation: "fade",
           gestureEnabled: false, // No going back during analysis
@@ -271,7 +611,7 @@ export function OnboardingStack(): React.ReactElement {
       {/* Screen 39: Results Display */}
       <Stack.Screen
         name="AssessmentResults"
-        component={AssessmentResultsScreen}
+        component={AssessmentResultsRoute}
         options={{
           animation: "fade",
           gestureEnabled: false, // No going back from results
@@ -281,7 +621,7 @@ export function OnboardingStack(): React.ReactElement {
       {/* Additional Assessment Screens (Expression/Sound Analysis) */}
       <Stack.Screen
         name="AssessmentExpressionAnalysis"
-        component={AssessmentExpressionAnalysisScreen}
+        component={AssessmentExpressionRoute}
         options={{
           animation: "slide_from_right",
         }}
@@ -289,7 +629,7 @@ export function OnboardingStack(): React.ReactElement {
 
       <Stack.Screen
         name="AssessmentSoundAnalysis"
-        component={AssessmentSoundAnalysisScreen}
+        component={AssessmentSoundRoute}
         options={{
           animation: "slide_from_right",
         }}
@@ -298,7 +638,7 @@ export function OnboardingStack(): React.ReactElement {
       {/* Score Result Screens (Based on score value) */}
       <Stack.Screen
         name="SolaceScoreHealthy"
-        component={SolaceScoreHealthyScreen}
+        component={SolaceScoreHealthyRoute}
         options={{
           animation: "fade",
           gestureEnabled: false,
@@ -307,7 +647,7 @@ export function OnboardingStack(): React.ReactElement {
 
       <Stack.Screen
         name="SolaceScoreUnstable"
-        component={SolaceScoreUnstableScreen}
+        component={SolaceScoreUnstableRoute}
         options={{
           animation: "fade",
           gestureEnabled: false,
@@ -316,7 +656,7 @@ export function OnboardingStack(): React.ReactElement {
 
       <Stack.Screen
         name="SolaceScoreCritical"
-        component={SolaceScoreCriticalScreen}
+        component={SolaceScoreCriticalRoute}
         options={{
           animation: "fade",
           gestureEnabled: false,
