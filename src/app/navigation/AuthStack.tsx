@@ -12,6 +12,7 @@
  */
 
 import React from "react";
+import { Alert } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { AuthScreenProps, AuthStackParamList } from "../../shared/types/navigation";
 import { colors } from "../../shared/theme";
@@ -103,13 +104,13 @@ function WelcomeIntroRoute({ navigation }: AuthScreenProps<"WelcomeIntro">): Rea
   );
 }
 
-function ForgotPasswordRoute({ navigation }: AuthScreenProps<"ForgotPassword">): React.ReactElement {
+function ForgotPasswordRoute({ navigation, route }: AuthScreenProps<"ForgotPassword">): React.ReactElement {
   return (
     <ForgotPasswordScreen
       onBack={() => navigation.goBack()}
       onSendPassword={() =>
         navigation.navigate("VerificationSent", {
-          email: "user@example.com",
+          email: (route?.params as any)?.email || "your email",
         })
       }
     />
@@ -125,7 +126,7 @@ function VerificationSentRoute({ route, navigation }: AuthScreenProps<"Verificat
       maskedDestination={maskedDestination}
       onBack={() => navigation.goBack()}
       onDismiss={() => navigation.navigate("SignIn")}
-      onResend={() => {}}
+      onResend={() => Alert.alert("Verification Resent", "Verification code has been resent to your email.")}
     />
   );
 }

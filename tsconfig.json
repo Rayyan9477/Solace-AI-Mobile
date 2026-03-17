@@ -7,7 +7,7 @@
     "resolveJsonModule": true,
     "jsx": "react-native",
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
@@ -19,14 +19,12 @@
       "@components/*": ["./src/shared/components/*"],
       "@utils/*": ["./src/shared/utils/*"],
       "@theme/*": ["./src/shared/theme/*"],
-      "@app/*": ["./src/app/*"],
-      "@ui/*": ["./src/ui/*"]
+      "@app/*": ["./src/app/*"]
     }
   },
   "include": [
     "src/**/*",
-    "App.tsx",
-    "app.json"
+    "App.tsx"
   ],
   "exclude": [
     "node_modules",

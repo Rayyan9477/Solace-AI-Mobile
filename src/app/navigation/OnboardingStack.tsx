@@ -16,6 +16,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { OnboardingScreenProps, OnboardingStackParamList } from "../../shared/types/navigation";
 import { colors } from "../../shared/theme";
 import { useAuth } from "../AuthContext";
+import { calculateSolaceScore } from "../../features/assessment/utils/scoreCalculator";
 
 // Profile Setup Screens
 import { ProfileSetupDetailsScreen } from "../../features/onboarding/screens/ProfileSetupDetailsScreen";
@@ -164,8 +165,8 @@ function ProfileDetailsRoute({ navigation }: OnboardingScreenProps<"ProfileNameI
       onBack={() => navigation.goBack()}
       onContinue={() => navigation.navigate("ProfileAvatar")}
       onEditPhoto={() => navigation.navigate("ProfileAvatar")}
-      onGenderPress={() => {}}
-      onLocationPress={() => {}}
+      onGenderPress={() => navigation.navigate("ProfileGender")}
+      onLocationPress={() => navigation.navigate("ProfileLocation")}
     />
   );
 }
@@ -203,8 +204,8 @@ function ProfileBiometricRoute({ navigation }: OnboardingScreenProps<"ProfileBio
   return (
     <FingerprintSetupScreen
       onBack={() => navigation.goBack()}
-      onContinue={() => navigation.navigate("AssessmentIntro")}
-      onSkip={() => navigation.navigate("AssessmentIntro")}
+      onContinue={() => navigation.navigate("ProfileEmergencyContact")}
+      onSkip={() => navigation.navigate("ProfileEmergencyContact")}
     />
   );
 }
@@ -301,10 +302,11 @@ function AssessmentScoreAnalysisRoute({
   navigation,
 }: OnboardingScreenProps<"AssessmentScoreAnalysis">): React.ReactElement {
   useEffect(() => {
+    const result = calculateSolaceScore({});
     const timer = setTimeout(() => {
       navigation.replace("AssessmentResults", {
-        completedAt: new Date(),
-        freudScore: 72,
+        completedAt: Date.now(),
+        freudScore: result.score,
       });
     }, 1200);
 
@@ -318,38 +320,33 @@ function AssessmentResultsRoute({
   navigation,
   route,
 }: OnboardingScreenProps<"AssessmentResults">): React.ReactElement {
-  const score = route.params?.freudScore ?? 72;
+  const score = route.params?.freudScore ?? 50;
   const category = score >= 70 ? "healthy" : score >= 40 ? "unstable" : "critical";
+
+  const result = calculateSolaceScore({});
 
   return (
     <AssessmentResultsScreen
       score={score}
       category={category}
-      breakdown={[
-        { color: colors.status.info, label: "Mood", score: 72 },
-        { color: colors.status.success, label: "Stress", score: 68 },
-        { color: colors.status.warning, label: "Sleep", score: 74 },
-      ]}
-      recommendations={[
-        "Continue checking in with your mood daily.",
-        "Spend a few minutes on guided breathing today.",
-        "Reach out to your support system this week.",
-      ]}
+      breakdown={result.breakdown}
+      recommendations={result.recommendations}
       onContinue={() => {
         const target = category === "healthy" ? "SolaceScoreHealthy" : category === "unstable" ? "SolaceScoreUnstable" : "SolaceScoreCritical";
-        navigation.replace(target);
+        navigation.replace(target, { score });
       }}
       onViewDetails={() => {}}
     />
   );
 }
 
-function SolaceScoreHealthyRoute(): React.ReactElement {
+function SolaceScoreHealthyRoute({ route }: OnboardingScreenProps<"SolaceScoreHealthy">): React.ReactElement {
   const { completeOnboarding } = useAuth();
+  const score = route.params?.score ?? 72;
 
   return (
     <SolaceScoreHealthyScreen
-      score={72}
+      score={score}
       onScheduleAppointment={() => {}}
       onContinue={() => {
         completeOnboarding();
@@ -358,12 +355,13 @@ function SolaceScoreHealthyRoute(): React.ReactElement {
   );
 }
 
-function SolaceScoreUnstableRoute(): React.ReactElement {
+function SolaceScoreUnstableRoute({ route }: OnboardingScreenProps<"SolaceScoreUnstable">): React.ReactElement {
   const { completeOnboarding } = useAuth();
+  const score = route.params?.score ?? 50;
 
   return (
     <SolaceScoreUnstableScreen
-      score={58}
+      score={score}
       onScheduleAppointment={() => {}}
       onContinue={() => {
         completeOnboarding();
@@ -372,12 +370,13 @@ function SolaceScoreUnstableRoute(): React.ReactElement {
   );
 }
 
-function SolaceScoreCriticalRoute(): React.ReactElement {
+function SolaceScoreCriticalRoute({ route }: OnboardingScreenProps<"SolaceScoreCritical">): React.ReactElement {
   const { completeOnboarding } = useAuth();
+  const score = route.params?.score ?? 20;
 
   return (
     <SolaceScoreCriticalScreen
-      score={28}
+      score={score}
       onContinue={() => {
         completeOnboarding();
       }}
@@ -393,7 +392,7 @@ function SolaceScoreCriticalRoute(): React.ReactElement {
 export function OnboardingStack(): React.ReactElement {
   return (
     <Stack.Navigator
-      initialRouteName="AssessmentIntro"
+      initialRouteName="ProfileSetupWelcome"
       screenOptions={{
         headerShown: false, // All onboarding screens have custom headers
         animation: "slide_from_right", // Consistent forward navigation

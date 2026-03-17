@@ -15,6 +15,7 @@
  */
 
 import React from "react";
+import { ActivityIndicator, View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../../shared/types/navigation";
 import { colors } from "../../shared/theme";
@@ -137,7 +138,15 @@ export function RootNavigator({
  * Default export connected to AuthContext
  */
 export default function RootNavigatorContainer(): React.ReactElement {
-  const { isAuthenticated, hasCompletedOnboarding } = useAuth();
+  const { isAuthenticated, hasCompletedOnboarding, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.background.primary }}>
+        <ActivityIndicator size="large" color={colors.text.primary} />
+      </View>
+    );
+  }
 
   return (
     <RootNavigator

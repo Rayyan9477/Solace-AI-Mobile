@@ -6,7 +6,7 @@ module.exports = {
     "plugin:react-native/all",
     "plugin:react-native-a11y/all",
   ],
-  plugins: ["prettier", "react-native", "react-native-a11y"],
+  plugins: ["prettier", "react-native", "react-native-a11y", "react-hooks"],
   rules: {
     "prettier/prettier": "warn",
     // React Native specific

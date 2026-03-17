@@ -2,19 +2,19 @@ module.exports = {
   preset: "jest-expo",
   setupFilesAfterEnv: [
     "@testing-library/jest-native/extend-expect",
+    "./jest.setup.js",
   ],
   testPathIgnorePatterns: [
     "/node_modules/",
     "\\.spec\\.js$",
   ],
   transformIgnorePatterns: [
-    "node_modules/(?!(jest-)?react-native|@react-native|react-redux|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|native-base|@react-native-firebase/.*)",
+    "node_modules/(?!(jest-)?react-native|@react-native|react-redux|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|native-base|@react-native-firebase/.*|react-native-worklets)",
   ],
   moduleNameMapper: {
     "\\.svg": "<rootDir>/__mocks__/svgMock.js",
     "^src/(.*)$": "<rootDir>/src/$1",
   },
-  setupFiles: ["./jest.setup.js"],
   collectCoverage: true,
   collectCoverageFrom: [
     "src/**/*.{js,jsx,ts,tsx}",

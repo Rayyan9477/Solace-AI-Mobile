@@ -50,7 +50,7 @@ describe("RootNavigator", () => {
       });
 
       // Assessment intro screen should be visible (initial screen of OnboardingFlow)
-      expect(getByTestId("assessment-intro-screen")).toBeTruthy();
+      expect(getByTestId("profile-setup-welcome-screen")).toBeTruthy();
     });
 
     it("should render MainFlow when user is authenticated and onboarded", () => {
@@ -73,7 +73,7 @@ describe("RootNavigator", () => {
         hasCompletedOnboarding: true,
       });
 
-      expect(queryByTestId("assessment-intro-screen")).toBeNull();
+      expect(queryByTestId("profile-setup-welcome-screen")).toBeNull();
     });
 
     it("should not show auth screens to authenticated users", () => {
@@ -102,7 +102,7 @@ describe("RootNavigator", () => {
         hasCompletedOnboarding: false,
       });
 
-      expect(getByTestId("assessment-intro-screen")).toBeTruthy();
+      expect(getByTestId("profile-setup-welcome-screen")).toBeTruthy();
     });
   });
 

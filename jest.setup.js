@@ -152,6 +152,8 @@ jest.mock("react-native/Libraries/Components/Keyboard/Keyboard", () => {
     addListener: jest.fn(() => ({ remove: jest.fn() })),
     removeListener: jest.fn(),
     dismiss: jest.fn(),
+    isVisible: jest.fn(() => false),
+    metrics: jest.fn(() => undefined),
   };
   return { __esModule: true, default: keyboard, ...keyboard };
 });
@@ -590,6 +592,28 @@ jest.mock("@react-navigation/native", () => ({
     params: {},
   })),
 }));
+
+// Mock react-native-safe-area-context (provides safe area insets for ScreenContainer)
+jest.mock("react-native-safe-area-context", () => {
+  const React = require("react");
+  const insets = { top: 0, bottom: 0, left: 0, right: 0 };
+  const frame = { x: 0, y: 0, width: 0, height: 0 };
+  const SafeAreaInsetsContext = React.createContext(insets);
+  const SafeAreaFrameContext = React.createContext(frame);
+  return {
+    useSafeAreaInsets: jest.fn(() => insets),
+    useSafeAreaFrame: jest.fn(() => frame),
+    SafeAreaProvider: ({ children }) => children,
+    SafeAreaView: ({ children, ...props }) =>
+      React.createElement(require("react-native").View, props, children),
+    SafeAreaInsetsContext,
+    SafeAreaFrameContext,
+    initialWindowMetrics: {
+      frame,
+      insets,
+    },
+  };
+});
 
 // Mock expo-linking (deep link handling)
 jest.mock("expo-linking", () => ({

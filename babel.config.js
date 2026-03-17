@@ -9,9 +9,6 @@ module.exports = function (api) {
   return {
     presets: ['babel-preset-expo'],
     plugins: [
-      // React Native Reanimated plugin (must be last)
-      'react-native-reanimated/plugin',
-
       // Module resolver for path aliases
       [
         'module-resolver',
@@ -24,9 +21,7 @@ module.exports = function (api) {
             '@components': './src/shared/components',
             '@utils': './src/shared/utils',
             '@theme': './src/shared/theme',
-            '@expo': './src/shared/expo',
             '@app': './src/app',
-            '@ui': './src/ui',
           },
           extensions: [
             '.ios.ts',
@@ -41,6 +36,9 @@ module.exports = function (api) {
           ],
         },
       ],
+
+      // React Native Reanimated plugin (must be last)
+      'react-native-reanimated/plugin',
     ],
     env: {
       production: {

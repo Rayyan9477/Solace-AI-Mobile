@@ -5,6 +5,118 @@
 
 const { defineConfig, devices } = require("@playwright/test");
 
+const fullMatrixEnabled = process.env.PLAYWRIGHT_FULL_MATRIX === "1";
+
+const coreProjects = [
+  {
+    name: "chromium-desktop",
+    use: {
+      ...devices["Desktop Chrome"],
+      viewport: { width: 1200, height: 800 },
+    },
+  },
+  {
+    name: "mobile-chrome",
+    use: {
+      ...devices["Pixel 5"],
+      viewport: { width: 393, height: 851 },
+    },
+  },
+];
+
+const extendedProjects = [
+  {
+    name: "firefox-desktop",
+    use: {
+      ...devices["Desktop Firefox"],
+      viewport: { width: 1200, height: 800 },
+    },
+  },
+  {
+    name: "webkit-desktop",
+    use: {
+      ...devices["Desktop Safari"],
+      viewport: { width: 1200, height: 800 },
+    },
+  },
+  {
+    name: "mobile-safari",
+    use: {
+      ...devices["iPhone 12"],
+      viewport: { width: 390, height: 844 },
+    },
+  },
+  {
+    name: "iphone-14-pro",
+    use: {
+      ...devices["iPhone 14 Pro"],
+      viewport: { width: 393, height: 852 },
+    },
+  },
+  {
+    name: "samsung-galaxy-s21",
+    use: {
+      ...devices["Galaxy S8"],
+      viewport: { width: 360, height: 740 },
+    },
+  },
+  {
+    name: "pixel-7",
+    use: {
+      ...devices["Pixel 7"],
+      viewport: { width: 412, height: 915 },
+    },
+  },
+  {
+    name: "ipad",
+    use: {
+      ...devices["iPad Pro"],
+      viewport: { width: 1024, height: 1366 },
+    },
+  },
+  {
+    name: "android-tablet",
+    use: {
+      ...devices["Galaxy Tab S4"],
+      viewport: { width: 712, height: 1138 },
+    },
+  },
+  {
+    name: "small-screen",
+    use: {
+      ...devices["Desktop Chrome"],
+      viewport: { width: 320, height: 568 },
+    },
+  },
+  {
+    name: "large-screen",
+    use: {
+      ...devices["Desktop Chrome"],
+      viewport: { width: 1920, height: 1080 },
+    },
+  },
+  {
+    name: "mental-health-comprehensive",
+    use: {
+      ...devices["iPhone 12"],
+      viewport: { width: 390, height: 844 },
+      colorScheme: "light",
+      reducedMotion: "reduce",
+      timezoneId: "America/New_York",
+    },
+  },
+  {
+    name: "accessibility-focused",
+    use: {
+      ...devices["Desktop Chrome"],
+      viewport: { width: 1200, height: 800 },
+      colorScheme: "dark",
+      reducedMotion: "reduce",
+      forcedColors: "active",
+    },
+  },
+];
+
 module.exports = defineConfig({
   // Test directory
   testDir: "./tests",
@@ -68,133 +180,8 @@ module.exports = defineConfig({
     navigationTimeout: 30000,
   },
 
-  // Test projects for different browsers and devices
-  projects: [
-    // Desktop Browsers
-    {
-      name: "chromium-desktop",
-      use: {
-        ...devices["Desktop Chrome"],
-        viewport: { width: 1200, height: 800 },
-      },
-    },
-
-    {
-      name: "firefox-desktop",
-      use: {
-        ...devices["Desktop Firefox"],
-        viewport: { width: 1200, height: 800 },
-      },
-    },
-
-    {
-      name: "webkit-desktop",
-      use: {
-        ...devices["Desktop Safari"],
-        viewport: { width: 1200, height: 800 },
-      },
-    },
-
-    // Mobile Devices
-    {
-      name: "mobile-chrome",
-      use: {
-        ...devices["Pixel 5"],
-        viewport: { width: 393, height: 851 },
-      },
-    },
-
-    {
-      name: "mobile-safari",
-      use: {
-        ...devices["iPhone 12"],
-        viewport: { width: 390, height: 844 },
-      },
-    },
-
-    {
-      name: "iphone-14-pro",
-      use: {
-        ...devices["iPhone 14 Pro"],
-        viewport: { width: 393, height: 852 },
-      },
-    },
-
-    {
-      name: "samsung-galaxy-s21",
-      use: {
-        ...devices["Galaxy S8"],
-        viewport: { width: 360, height: 740 },
-      },
-    },
-
-    {
-      name: "pixel-7",
-      use: {
-        ...devices["Pixel 7"],
-        viewport: { width: 412, height: 915 },
-      },
-    },
-
-    // Tablet Devices
-    {
-      name: "ipad",
-      use: {
-        ...devices["iPad Pro"],
-        viewport: { width: 1024, height: 1366 },
-      },
-    },
-
-    {
-      name: "android-tablet",
-      use: {
-        ...devices["Galaxy Tab S4"],
-        viewport: { width: 712, height: 1138 },
-      },
-    },
-
-    // Edge Cases
-    {
-      name: "small-screen",
-      use: {
-        ...devices["Desktop Chrome"],
-        viewport: { width: 320, height: 568 },
-      },
-    },
-
-    {
-      name: "large-screen",
-      use: {
-        ...devices["Desktop Chrome"],
-        viewport: { width: 1920, height: 1080 },
-      },
-    },
-
-    // Specific Mental Health App Testing
-    {
-      name: "mental-health-comprehensive",
-      use: {
-        ...devices["iPhone 12"],
-        viewport: { width: 390, height: 844 },
-        // Simulate user preferences for mental health apps
-        colorScheme: "light",
-        reducedMotion: "reduce",
-        timezoneId: "America/New_York",
-      },
-    },
-
-    {
-      name: "accessibility-focused",
-      use: {
-        ...devices["Desktop Chrome"],
-        viewport: { width: 1200, height: 800 },
-        // Accessibility testing settings
-        colorScheme: "dark",
-        reducedMotion: "reduce",
-        forcedColors: "active",
-      },
-    },
-  ],
+  // Run core projects by default; set PLAYWRIGHT_FULL_MATRIX=1 for full cross-device matrix.
+  projects: fullMatrixEnabled ? [...coreProjects, ...extendedProjects] : coreProjects,
 
   // Web server configuration (if needed)
   webServer: {

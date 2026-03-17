@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "freud.ai",
-    "slug": "freudai-mobile",
-    "scheme": "freudai",
+    "slug": "solace-ai-mobile",
+    "scheme": "solace",
     "version": "2.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
@@ -21,7 +21,9 @@
       "**/*"
     ],
     "plugins": [
-      "expo-font"
+      "expo-font",
+      "expo-camera",
+      "expo-av"
     ],
     "experiments": {
       "typedRoutes": false
@@ -45,8 +47,7 @@
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
-              "freudai",
-              "fb$(FACEBOOK_APP_ID)"
+              "solace"
             ]
           }
         ]
@@ -63,7 +64,8 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE",
-        "android.permission.VIBRATE"
+        "android.permission.VIBRATE",
+        "android.permission.CAMERA"
       ],
       "intentFilters": [
         {
@@ -71,7 +73,7 @@
           "autoVerify": true,
           "data": [
             {
-              "scheme": "freudai",
+              "scheme": "solace",
               "host": "auth",
               "pathPrefix": "/callback"
             }

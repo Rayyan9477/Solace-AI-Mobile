@@ -8,7 +8,7 @@
  * Persists auth state to AsyncStorage for session continuity.
  */
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AUTH_STORAGE_KEY = "@solace/auth_state";
@@ -50,7 +50,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }): React
       try {
         const stored = await AsyncStorage.getItem(AUTH_STORAGE_KEY);
         if (stored) {
-          setAuthState(JSON.parse(stored));
+          const parsed = JSON.parse(stored);
+          if (
+            typeof parsed === 'object' && parsed !== null &&
+            typeof parsed.isAuthenticated === 'boolean' &&
+            typeof parsed.hasCompletedOnboarding === 'boolean'
+          ) {
+            setAuthState(parsed);
+          } else {
+            console.error("Invalid auth state in storage, using defaults");
+          }
         }
       } catch {
         // Silently fall back to default state
@@ -62,19 +71,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }): React
 
   // Persist auth state on change
   const persistState = useCallback(async (update: AuthStateUpdate) => {
-    let nextState = DEFAULT_AUTH_STATE;
-
-    setAuthState((prevState) => {
-      nextState = typeof update === "function" ? update(prevState) : update;
-      return nextState;
-    });
-
     try {
+      const nextState = typeof update === "function" ? update(authState) : update;
+      setAuthState(nextState);
       await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextState));
-    } catch {
-      // Storage write failure is non-critical
+    } catch (error) {
+      console.error("Failed to persist auth state:", error);
     }
-  }, []);
+  }, [authState]);
 
   const signIn = useCallback(() => {
     persistState((prevState) => ({ ...prevState, isAuthenticated: true }));
@@ -88,17 +92,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }): React
     persistState((prevState) => ({ ...prevState, hasCompletedOnboarding: true }));
   }, [persistState]);
 
+  const contextValue = useMemo(() => ({
+    isAuthenticated: authState.isAuthenticated,
+    hasCompletedOnboarding: authState.hasCompletedOnboarding,
+    isLoading,
+    signIn,
+    signOut,
+    completeOnboarding,
+  }), [authState.isAuthenticated, authState.hasCompletedOnboarding, isLoading, signIn, signOut, completeOnboarding]);
+
   return (
-    <AuthContext.Provider
-      value={{
-        isAuthenticated: authState.isAuthenticated,
-        hasCompletedOnboarding: authState.hasCompletedOnboarding,
-        isLoading,
-        signIn,
-        signOut,
-        completeOnboarding,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

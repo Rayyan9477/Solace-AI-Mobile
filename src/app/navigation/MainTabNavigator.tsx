@@ -15,6 +15,7 @@
 import React, { Suspense } from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import type { MainTabParamList } from "../../shared/types/navigation";
 import { colors, palette } from "../../shared/theme";
@@ -56,12 +57,45 @@ function StackLoadingFallback(): React.ReactElement {
   );
 }
 
+// Stable tab wrapper components (outside MainTabNavigator to avoid re-mounting)
+const DashboardTab = () => (
+  <Suspense fallback={<StackLoadingFallback />}>
+    <DashboardStack />
+  </Suspense>
+);
+
+const MoodTab = () => (
+  <Suspense fallback={<StackLoadingFallback />}>
+    <MoodStack />
+  </Suspense>
+);
+
+const ChatTab = () => (
+  <Suspense fallback={<StackLoadingFallback />}>
+    <ChatStack />
+  </Suspense>
+);
+
+const JournalTab = () => (
+  <Suspense fallback={<StackLoadingFallback />}>
+    <JournalStack />
+  </Suspense>
+);
+
+const ProfileTab = () => (
+  <Suspense fallback={<StackLoadingFallback />}>
+    <ProfileStack />
+  </Suspense>
+);
+
 /**
  * MainTabNavigator Component
  * @description Bottom tab navigator for main app flow
  * @returns {React.ReactElement} Main tab navigator
  */
 export function MainTabNavigator(): React.ReactElement {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tab.Navigator
       initialRouteName="DashboardTab"
@@ -71,8 +105,8 @@ export function MainTabNavigator(): React.ReactElement {
           backgroundColor: colors.background.primary,
           borderTopColor: palette.tan[500],
           borderTopWidth: 1,
-          height: 60,
-          paddingBottom: 8,
+          height: 60 + insets.bottom,
+          paddingBottom: insets.bottom + 8,
           paddingTop: 8,
         },
         tabBarActiveTintColor: palette.tan[500],
@@ -86,6 +120,7 @@ export function MainTabNavigator(): React.ReactElement {
       {/* Dashboard Tab - Lazy Loaded */}
       <Tab.Screen
         name="DashboardTab"
+        component={DashboardTab}
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ color, size }) => (
@@ -93,17 +128,12 @@ export function MainTabNavigator(): React.ReactElement {
           ),
           tabBarAccessibilityLabel: "Home dashboard",
         }}
-      >
-        {() => (
-          <Suspense fallback={<StackLoadingFallback />}>
-            <DashboardStack />
-          </Suspense>
-        )}
-      </Tab.Screen>
+      />
 
       {/* Mood Tab - Lazy Loaded */}
       <Tab.Screen
         name="MoodTab"
+        component={MoodTab}
         options={{
           tabBarLabel: "Mood",
           tabBarIcon: ({ color, size }) => (
@@ -111,17 +141,12 @@ export function MainTabNavigator(): React.ReactElement {
           ),
           tabBarAccessibilityLabel: "Mood tracking",
         }}
-      >
-        {() => (
-          <Suspense fallback={<StackLoadingFallback />}>
-            <MoodStack />
-          </Suspense>
-        )}
-      </Tab.Screen>
+      />
 
       {/* Chat Tab - Lazy Loaded */}
       <Tab.Screen
         name="ChatTab"
+        component={ChatTab}
         options={{
           tabBarLabel: "Chat",
           tabBarIcon: ({ color, size }) => (
@@ -130,17 +155,12 @@ export function MainTabNavigator(): React.ReactElement {
           tabBarAccessibilityLabel: "AI therapy chat",
           tabBarBadge: undefined, // TODO: Add unread message count
         }}
-      >
-        {() => (
-          <Suspense fallback={<StackLoadingFallback />}>
-            <ChatStack />
-          </Suspense>
-        )}
-      </Tab.Screen>
+      />
 
       {/* Journal Tab - Lazy Loaded */}
       <Tab.Screen
         name="JournalTab"
+        component={JournalTab}
         options={{
           tabBarLabel: "Journal",
           tabBarIcon: ({ color, size }) => (
@@ -148,17 +168,12 @@ export function MainTabNavigator(): React.ReactElement {
           ),
           tabBarAccessibilityLabel: "Mental health journal",
         }}
-      >
-        {() => (
-          <Suspense fallback={<StackLoadingFallback />}>
-            <JournalStack />
-          </Suspense>
-        )}
-      </Tab.Screen>
+      />
 
       {/* Profile Tab - Lazy Loaded */}
       <Tab.Screen
         name="ProfileTab"
+        component={ProfileTab}
         options={{
           tabBarLabel: "Profile",
           tabBarIcon: ({ color, size }) => (
@@ -166,13 +181,7 @@ export function MainTabNavigator(): React.ReactElement {
           ),
           tabBarAccessibilityLabel: "User profile and settings",
         }}
-      >
-        {() => (
-          <Suspense fallback={<StackLoadingFallback />}>
-            <ProfileStack />
-          </Suspense>
-        )}
-      </Tab.Screen>
+      />
     </Tab.Navigator>
   );
 }

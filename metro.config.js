@@ -15,16 +15,9 @@ config.transformer.getTransformOptions = async () => ({
   },
 });
 
-config.transformer.minifierConfig = {
-  compress: {
-    drop_console: true,      // Remove console.log in production
-    dead_code: true,          // Remove dead code
-    reduce_vars: true,        // Optimize variable references
-  },
-  mangle: {
-    keep_fnames: true, // Important for React components
-  },
-};
+// Note: minifierConfig removed - it was Terser-specific but Metro SDK 54 uses
+// esbuild by default. Console removal is handled by babel-plugin-transform-remove-console
+// in the production env of babel.config.js.
 
 // Web-specific optimizations
 if (process.env.EXPO_PLATFORM === 'web') {
