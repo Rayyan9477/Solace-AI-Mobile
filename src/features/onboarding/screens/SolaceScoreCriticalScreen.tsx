@@ -24,6 +24,7 @@ export function SolaceScoreCriticalScreen({
   onContinue,
 }: SolaceScoreCriticalScreenProps): React.ReactElement {
   const [showCrisisModal, setShowCrisisModal] = useState(false);
+  const [hasAcknowledgedCrisis, setHasAcknowledgedCrisis] = useState(false);
 
   /**
    * Handle crisis hotline button press
@@ -32,6 +33,11 @@ export function SolaceScoreCriticalScreen({
   const handleCallHotline = (): void => {
     setShowCrisisModal(true);
     onCallHotline?.(); // Call optional callback if provided
+  };
+
+  const handleCrisisModalDismiss = (): void => {
+    setShowCrisisModal(false);
+    setHasAcknowledgedCrisis(true);
   };
 
   return (
@@ -79,10 +85,12 @@ export function SolaceScoreCriticalScreen({
 
         <TouchableOpacity
           testID="continue-button"
-          style={styles.continueButton}
+          style={[styles.continueButton, !hasAcknowledgedCrisis && { opacity: 0.4 }]}
           onPress={onContinue}
+          disabled={!hasAcknowledgedCrisis}
           accessibilityRole="button"
           accessibilityLabel="Continue to main app"
+          accessibilityState={{ disabled: !hasAcknowledgedCrisis }}
         >
           <Text style={styles.continueButtonText}>Continue</Text>
         </TouchableOpacity>
@@ -91,7 +99,7 @@ export function SolaceScoreCriticalScreen({
       {/* Crisis Support Modal */}
       <CrisisModal
         visible={showCrisisModal}
-        onDismiss={() => setShowCrisisModal(false)}
+        onDismiss={handleCrisisModalDismiss}
         triggerSource="score"
         requireAcknowledge
         testID="crisis-modal-score"

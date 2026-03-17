@@ -11,6 +11,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  FlatList,
   StyleSheet,
 } from "react-native";
 import { palette } from "../../../shared/theme";
@@ -106,57 +107,11 @@ export function SearchResultsScreen({
         </TouchableOpacity>
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        {/* Results Header */}
-        <View style={styles.resultsHeader}>
-          <Text style={styles.resultCount}>
-            {resultCount} Results Found.
-          </Text>
+      <FlatList
+        data={results}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item: result }) => (
           <TouchableOpacity
-            testID="sort-button"
-            style={styles.sortButton}
-            onPress={onSortPress}
-            accessibilityRole="button"
-            accessibilityLabel={`Sort by ${sortLabel}`}
-          >
-            <Text style={styles.sortLabel}>
-              {sortLabel} {"\u25BC"}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Category Filters */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.chipsRow}
-        >
-          {categories.map((cat) => (
-            <TouchableOpacity
-              key={cat.id}
-              testID={`category-chip-${cat.id}`}
-              style={[
-                styles.chip,
-                selectedCategoryId === cat.id && styles.chipSelected,
-              ]}
-              onPress={() => onCategorySelect(cat.id)}
-              accessibilityRole="button"
-              accessibilityLabel={cat.label}
-            >
-              <Text style={styles.chipText}>
-                {cat.icon} {cat.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        {/* Results List */}
-        {results.map((result) => (
-          <TouchableOpacity
-            key={result.id}
             testID={`result-row-${result.id}`}
             style={styles.resultRow}
             onPress={() => onResultPress(result)}
@@ -181,8 +136,56 @@ export function SearchResultsScreen({
               {"\u203A"}
             </Text>
           </TouchableOpacity>
-        ))}
-      </ScrollView>
+        )}
+        ListHeaderComponent={
+          <>
+            {/* Results Header */}
+            <View style={styles.resultsHeader}>
+              <Text style={styles.resultCount}>
+                {resultCount} {resultCount === 1 ? 'Result' : 'Results'} Found.
+              </Text>
+              <TouchableOpacity
+                testID="sort-button"
+                style={styles.sortButton}
+                onPress={onSortPress}
+                accessibilityRole="button"
+                accessibilityLabel={`Sort by ${sortLabel}`}
+              >
+                <Text style={styles.sortLabel}>
+                  {sortLabel} {"\u25BC"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Category Filters */}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.chipsRow}
+            >
+              {categories.map((cat) => (
+                <TouchableOpacity
+                  key={cat.id}
+                  testID={`category-chip-${cat.id}`}
+                  style={[
+                    styles.chip,
+                    selectedCategoryId === cat.id && styles.chipSelected,
+                  ]}
+                  onPress={() => onCategorySelect(cat.id)}
+                  accessibilityRole="button"
+                  accessibilityLabel={cat.label}
+                >
+                  <Text style={styles.chipText}>
+                    {cat.icon} {cat.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </>
+        }
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      />
     </View>
   );
 }

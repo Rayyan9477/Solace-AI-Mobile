@@ -100,8 +100,9 @@ export function NotificationSettingsScreen({
                   item.enabled ? styles.toggleOn : styles.toggleOff,
                 ]}
                 onPress={() => onToggle(item.id, !item.enabled)}
-                accessibilityRole="button"
+                accessibilityRole="switch"
                 accessibilityLabel={`Toggle ${item.label}`}
+                accessibilityState={{ checked: item.enabled }}
               >
                 <View
                   style={[
@@ -199,8 +200,9 @@ export function NotificationSettingsScreen({
                     item.enabled ? styles.toggleOn : styles.toggleOff,
                   ]}
                   onPress={() => onToggle(item.id, !item.enabled)}
-                  accessibilityRole="button"
+                  accessibilityRole="switch"
                   accessibilityLabel={`Toggle ${item.label}`}
+                  accessibilityState={{ checked: item.enabled }}
                 >
                   <View
                     style={[

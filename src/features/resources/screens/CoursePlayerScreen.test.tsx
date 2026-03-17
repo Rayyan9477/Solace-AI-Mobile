@@ -157,9 +157,9 @@ describe("CoursePlayerScreen", () => {
     expect(getByTestId("next-lesson-card")).toBeTruthy();
   });
 
-  it("displays 'NEXT COURSE' label", () => {
+  it("displays 'NEXT LESSON' label", () => {
     const { getByText } = render(<CoursePlayerScreen {...defaultProps} />);
-    expect(getByText("NEXT COURSE")).toBeTruthy();
+    expect(getByText("NEXT LESSON")).toBeTruthy();
   });
 
   it("displays next lesson title", () => {

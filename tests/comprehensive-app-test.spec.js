@@ -119,9 +119,11 @@ test.describe("Auth Flow", () => {
     const testIds = await getTestIds(page);
     // After splash, should see next auth screen or still splash
     const hasAuthScreen =
-      testIds.includes("welcome-intro-screen") ||
+      testIds.includes("welcome-screen") ||
       testIds.includes("sign-in-screen") ||
       testIds.includes("loading-progress-screen") ||
+      testIds.includes("quote-splash-screen") ||
+      testIds.includes("fetching-data-screen") ||
       testIds.includes("splash-screen");
 
     expect(hasAuthScreen).toBeTruthy();

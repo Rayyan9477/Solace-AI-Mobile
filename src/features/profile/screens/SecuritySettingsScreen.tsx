@@ -81,8 +81,9 @@ export function SecuritySettingsScreen({
                 option.enabled ? styles.toggleOn : styles.toggleOff,
               ]}
               onPress={() => onToggle(option.id, !option.enabled)}
-              accessibilityRole="button"
+              accessibilityRole="switch"
               accessibilityLabel={`Toggle ${option.title}`}
+              accessibilityState={{ checked: option.enabled }}
             >
               <View
                 style={[

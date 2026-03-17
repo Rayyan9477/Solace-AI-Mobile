@@ -106,7 +106,7 @@ export function CoursePlayerScreen({
         accessibilityRole="button"
         accessibilityLabel={`Next lesson: ${nextLessonTitle}`}
       >
-        <Text style={styles.nextLabel}>NEXT COURSE</Text>
+        <Text style={styles.nextLabel}>NEXT LESSON</Text>
         <View style={styles.nextLessonRow}>
           <View style={styles.nextPlayIcon}>
             <Text style={styles.nextPlayIconText}>{"\u25B6"}</Text>

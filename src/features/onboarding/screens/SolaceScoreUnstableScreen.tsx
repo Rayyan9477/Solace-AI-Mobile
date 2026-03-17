@@ -24,7 +24,7 @@ export function SolaceScoreUnstableScreen({
     <View
       testID="solace-score-unstable-screen"
       style={styles.container}
-      accessibilityLabel="Your Solace Score result, you are mentally unstable, please consult a psychologist"
+      accessibilityLabel="Your Solace Score result, you may benefit from additional support, please consult a psychologist"
     >
       {/* Page Title */}
       <View style={styles.headerSection}>
@@ -42,8 +42,8 @@ export function SolaceScoreUnstableScreen({
 
       {/* Message Section */}
       <View style={styles.messageSection}>
-        <Text style={styles.primaryMessage}>You're mentally unstable</Text>
-        <Text style={styles.secondaryMessage}>Consult psychologist</Text>
+        <Text style={styles.primaryMessage}>You may benefit from additional support</Text>
+        <Text style={styles.secondaryMessage}>Consider speaking with a professional</Text>
       </View>
 
       {/* Button Section */}

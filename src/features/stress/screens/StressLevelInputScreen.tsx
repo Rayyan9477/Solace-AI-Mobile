@@ -29,21 +29,25 @@ const localColors = {
 
 const LEVELS = [1, 2, 3, 4, 5];
 
-// Arc point positions (percentage-based, bottom-left to top-right)
+// Gauge container dimensions for pixel calculations
+const GAUGE_WIDTH = 300;
+const GAUGE_HEIGHT = 300;
+
+// Arc point positions (pixel-based, computed from percentages of container)
 const ARC_POSITIONS = [
-  { left: "8%", top: "80%" },
-  { left: "18%", top: "58%" },
-  { left: "30%", top: "40%" },
-  { left: "48%", top: "26%" },
-  { left: "68%", top: "18%" },
+  { left: (8 / 100) * GAUGE_WIDTH, top: (80 / 100) * GAUGE_HEIGHT },
+  { left: (18 / 100) * GAUGE_WIDTH, top: (58 / 100) * GAUGE_HEIGHT },
+  { left: (30 / 100) * GAUGE_WIDTH, top: (40 / 100) * GAUGE_HEIGHT },
+  { left: (48 / 100) * GAUGE_WIDTH, top: (26 / 100) * GAUGE_HEIGHT },
+  { left: (68 / 100) * GAUGE_WIDTH, top: (18 / 100) * GAUGE_HEIGHT },
 ];
 
 // Segment positions connecting arc points
 const SEGMENT_POSITIONS = [
-  { left: "8%", top: "80%", width: 60, rotate: "-65deg" },
-  { left: "18%", top: "58%", width: 60, rotate: "-50deg" },
-  { left: "30%", top: "40%", width: 70, rotate: "-35deg" },
-  { left: "48%", top: "26%", width: 70, rotate: "-20deg" },
+  { left: (8 / 100) * GAUGE_WIDTH, top: (80 / 100) * GAUGE_HEIGHT, width: 60, rotate: "-65deg" },
+  { left: (18 / 100) * GAUGE_WIDTH, top: (58 / 100) * GAUGE_HEIGHT, width: 60, rotate: "-50deg" },
+  { left: (30 / 100) * GAUGE_WIDTH, top: (40 / 100) * GAUGE_HEIGHT, width: 70, rotate: "-35deg" },
+  { left: (48 / 100) * GAUGE_WIDTH, top: (26 / 100) * GAUGE_HEIGHT, width: 70, rotate: "-20deg" },
 ];
 
 export function StressLevelInputScreen({
@@ -79,7 +83,7 @@ export function StressLevelInputScreen({
           {/* Arc Segments */}
           <View testID="arc-segments" style={styles.arcSegmentsContainer}>
             {SEGMENT_POSITIONS.map((seg, index) => {
-              const isActive = index + 1 < selectedLevel;
+              const isActive = index + 1 <= selectedLevel;
               return (
                 <View
                   key={`segment-${index}`}
@@ -233,9 +237,9 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   levelDisplay: {
-    bottom: "15%",
+    bottom: (15 / 100) * GAUGE_HEIGHT,
     position: "absolute",
-    right: "10%",
+    right: (10 / 100) * GAUGE_WIDTH,
   },
   levelLabel: {
     color: localColors.white,

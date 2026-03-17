@@ -107,12 +107,22 @@ describe("SolaceScoreCriticalScreen", () => {
     expect(getByText("Continue")).toBeTruthy();
   });
 
-  it("calls onContinue when Continue button is pressed", () => {
+  it("does not call onContinue when Continue button is pressed before acknowledging crisis", () => {
     const { getByTestId } = render(
       <SolaceScoreCriticalScreen {...defaultProps} />
     );
     fireEvent.press(getByTestId("continue-button"));
-    expect(mockOnContinue).toHaveBeenCalledTimes(1);
+    expect(mockOnContinue).not.toHaveBeenCalled();
+  });
+
+  it("Continue button is initially disabled", () => {
+    const { getByTestId } = render(
+      <SolaceScoreCriticalScreen {...defaultProps} />
+    );
+    const button = getByTestId("continue-button");
+    expect(button.props.accessibilityState).toEqual(
+      expect.objectContaining({ disabled: true })
+    );
   });
 
   it("has purple background", () => {

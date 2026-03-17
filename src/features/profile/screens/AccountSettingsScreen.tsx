@@ -124,8 +124,9 @@ export function AccountSettingsScreen({
                       item.toggleValue ? styles.toggleOn : styles.toggleOff,
                     ]}
                     onPress={() => onToggle(item.id, !item.toggleValue)}
-                    accessibilityRole="button"
+                    accessibilityRole="switch"
                     accessibilityLabel={`Toggle ${item.label}`}
+                    accessibilityState={{ checked: item.toggleValue }}
                   >
                     <View
                       style={[

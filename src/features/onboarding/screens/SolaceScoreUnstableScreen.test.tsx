@@ -61,14 +61,14 @@ describe("SolaceScoreUnstableScreen", () => {
     const { getByText } = render(
       <SolaceScoreUnstableScreen {...defaultProps} />
     );
-    expect(getByText("You're mentally unstable")).toBeTruthy();
+    expect(getByText("You may benefit from additional support")).toBeTruthy();
   });
 
   it("displays the secondary message", () => {
     const { getByText } = render(
       <SolaceScoreUnstableScreen {...defaultProps} />
     );
-    expect(getByText("Consult psychologist")).toBeTruthy();
+    expect(getByText("Consider speaking with a professional")).toBeTruthy();
   });
 
   it("displays the Schedule appointment button", () => {
@@ -199,6 +199,6 @@ describe("SolaceScoreUnstableScreen", () => {
       <SolaceScoreUnstableScreen {...defaultProps} />
     );
     const screen = getByTestId("solace-score-unstable-screen");
-    expect(screen.props.accessibilityLabel).toContain("unstable");
+    expect(screen.props.accessibilityLabel).toContain("additional support");
   });
 });
