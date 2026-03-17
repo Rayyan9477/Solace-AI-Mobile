@@ -64,15 +64,17 @@ describe("MoodCalendar", () => {
     });
 
     it("renders day headers", () => {
-      const { getByText, getAllByText } = render(
+      const { getByText } = render(
         <MoodCalendar testID="mood-calendar" weeks={mockWeeks} />,
       );
 
-      expect(getByText("M")).toBeTruthy();
-      expect(getAllByText("T").length).toBeGreaterThanOrEqual(1); // T appears twice (Tue, Thu)
-      expect(getByText("W")).toBeTruthy();
-      expect(getByText("F")).toBeTruthy();
-      expect(getAllByText("S").length).toBeGreaterThanOrEqual(1); // S appears twice (Sat, Sun)
+      expect(getByText("Mo")).toBeTruthy();
+      expect(getByText("Tu")).toBeTruthy();
+      expect(getByText("We")).toBeTruthy();
+      expect(getByText("Th")).toBeTruthy();
+      expect(getByText("Fr")).toBeTruthy();
+      expect(getByText("Sa")).toBeTruthy();
+      expect(getByText("Su")).toBeTruthy();
     });
 
     it("renders correct number of weeks", () => {

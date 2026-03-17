@@ -33,15 +33,19 @@ const localColors = {
   textSecondary: "rgba(255,255,255,0.6)",
 } as const;
 
-// Bubble positions (percentage-based scatter layout)
-const BUBBLE_LAYOUT: Record<string, { left: string; top: string }> = {
-  work: { left: "12%", top: "5%" },
-  life: { left: "65%", top: "12%" },
-  relationship: { left: "0%", top: "35%" },
-  loneliness: { left: "25%", top: "25%" },
-  finance: { left: "68%", top: "38%" },
-  kids: { left: "5%", top: "60%" },
-  other: { left: "62%", top: "62%" },
+// Bubble selector container dimensions for pixel calculations
+const SELECTOR_WIDTH = 340;
+const SELECTOR_HEIGHT = 400;
+
+// Bubble positions (pixel-based, computed from percentages of container)
+const BUBBLE_LAYOUT: Record<string, { left: number; top: number }> = {
+  work: { left: (12 / 100) * SELECTOR_WIDTH, top: (5 / 100) * SELECTOR_HEIGHT },
+  life: { left: (65 / 100) * SELECTOR_WIDTH, top: (12 / 100) * SELECTOR_HEIGHT },
+  relationship: { left: (0 / 100) * SELECTOR_WIDTH, top: (35 / 100) * SELECTOR_HEIGHT },
+  loneliness: { left: (25 / 100) * SELECTOR_WIDTH, top: (25 / 100) * SELECTOR_HEIGHT },
+  finance: { left: (68 / 100) * SELECTOR_WIDTH, top: (38 / 100) * SELECTOR_HEIGHT },
+  kids: { left: (5 / 100) * SELECTOR_WIDTH, top: (60 / 100) * SELECTOR_HEIGHT },
+  other: { left: (62 / 100) * SELECTOR_WIDTH, top: (62 / 100) * SELECTOR_HEIGHT },
 };
 
 export function StressorSelectorScreen({
@@ -82,8 +86,8 @@ export function StressorSelectorScreen({
         {stressors.map((stressor) => {
           const isSelected = stressor.id === selectedStressorId;
           const position = BUBBLE_LAYOUT[stressor.id] || {
-            left: "30%",
-            top: "30%",
+            left: (30 / 100) * SELECTOR_WIDTH,
+            top: (30 / 100) * SELECTOR_HEIGHT,
           };
           return (
             <TouchableOpacity

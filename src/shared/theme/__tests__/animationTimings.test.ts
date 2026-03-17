@@ -6,13 +6,13 @@
 
 import {
   animations,
-  easings,
   animationPresets,
   type DurationKey,
   type StaggerKey,
   type EasingKey,
   type AnimationPresetKey,
 } from "../animationTimings";
+import { easings } from "../easingCurves";
 
 describe("Animation Timings", () => {
   describe("animations object", () => {

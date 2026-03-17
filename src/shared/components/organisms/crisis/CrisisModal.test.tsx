@@ -70,7 +70,7 @@ describe("CrisisModal", () => {
       fireEvent.press(callButton);
 
       await waitFor(() => {
-        expect(Linking.canOpenURL).toHaveBeenCalledWith("tel:988");
+        expect(Linking.canOpenURL).not.toHaveBeenCalled();
         expect(Linking.openURL).toHaveBeenCalledWith("tel:988");
       });
     });
@@ -82,7 +82,7 @@ describe("CrisisModal", () => {
       fireEvent.press(textButton);
 
       await waitFor(() => {
-        expect(Linking.canOpenURL).toHaveBeenCalledWith("sms:741741?body=HOME");
+        expect(Linking.canOpenURL).not.toHaveBeenCalled();
         expect(Linking.openURL).toHaveBeenCalledWith("sms:741741?body=HOME");
       });
     });
@@ -104,13 +104,14 @@ describe("CrisisModal", () => {
 
       const { getByText } = render(<CrisisModal {...defaultProps} />);
 
-      const callButton = getByText("Call 988 Now");
-      fireEvent.press(callButton);
+      // Use international resources (url type) since tel/sms bypass canOpenURL
+      const urlButton = getByText("View International Resources");
+      fireEvent.press(urlButton);
 
       await waitFor(() => {
         expect(Alert.alert).toHaveBeenCalledWith(
           "Unable to Open",
-          expect.stringContaining("988 Suicide & Crisis Lifeline")
+          expect.stringContaining("International Resources")
         );
       });
     });
@@ -325,6 +326,9 @@ describe("CrisisModal", () => {
       // Close
       const closeButton = getByText("Close");
       fireEvent.press(closeButton);
+
+      // Hide modal
+      rerender(<CrisisModal {...defaultProps} requireAcknowledge visible={false} />);
 
       // Reopen
       rerender(<CrisisModal {...defaultProps} requireAcknowledge visible={true} />);

@@ -134,12 +134,12 @@ export const DEFAULT_LEGEND_ITEMS: LegendItem[] = [
 /**
  * Day abbreviations starting from Monday
  */
-export const DAY_ABBREVIATIONS_MON = ["M", "T", "W", "T", "F", "S", "S"];
+export const DAY_ABBREVIATIONS_MON = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
 /**
  * Day abbreviations starting from Sunday
  */
-export const DAY_ABBREVIATIONS_SUN = ["S", "M", "T", "W", "T", "F", "S"];
+export const DAY_ABBREVIATIONS_SUN = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
 /**
  * Get status color

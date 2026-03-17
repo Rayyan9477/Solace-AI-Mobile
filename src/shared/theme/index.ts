@@ -30,7 +30,7 @@ export type {
 } from "./gradients";
 
 // Animation Timings (Task 1.1.3)
-export { animations, easings, animationPresets } from "./animationTimings";
+export { animations, animationPresets } from "./animationTimings";
 export type {
   DurationKey,
   StaggerKey,
@@ -39,6 +39,10 @@ export type {
   SpringConfig,
   AnimationPreset,
 } from "./animationTimings";
+
+// Easing curves separated to avoid Reanimated import side effects
+// Import directly from '@/shared/theme/easingCurves' when needed
+export { easingCurves, easings } from "./easingCurves";
 
 // Z-Index Scale (Task 1.1.4)
 export { zIndex } from "./zIndex";
@@ -53,5 +57,5 @@ export { spacing } from "./spacing";
 export type { SpacingKey } from "./spacing";
 
 // Theme Hook (Task 3C.2)
-export { useTheme, theme } from "./useTheme";
+export { useTheme, ThemeProvider, theme } from "./useTheme";
 export type { Theme } from "./useTheme";

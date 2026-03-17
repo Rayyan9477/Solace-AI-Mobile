@@ -13,7 +13,7 @@
  * CLINICAL REVIEW REQUIRED before production deployment
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   View,
@@ -101,6 +101,12 @@ export function CrisisModal({
 }: CrisisModalProps): React.ReactElement {
   const [hasAcknowledged, setHasAcknowledged] = useState(false);
 
+  useEffect(() => {
+    if (visible) {
+      setHasAcknowledged(false);
+    }
+  }, [visible]);
+
   const supportMessage = customMessage || getSupportMessage(triggerSource);
 
   /**
@@ -124,14 +130,19 @@ export function CrisisModal({
           return;
       }
 
-      const canOpen = await Linking.canOpenURL(url);
-      if (canOpen) {
+      if (resource.type === "phone" || resource.type === "sms") {
+        // For tel: and sms: schemes, open directly (canOpenURL unreliable on Android 11+)
         await Linking.openURL(url);
       } else {
-        Alert.alert(
-          "Unable to Open",
-          `Please contact ${resource.name} directly: ${resource.value}`
-        );
+        const canOpen = await Linking.canOpenURL(url);
+        if (canOpen) {
+          await Linking.openURL(url);
+        } else {
+          Alert.alert(
+            "Unable to Open",
+            `Please contact ${resource.name} directly: ${resource.value}`
+          );
+        }
       }
     } catch (error) {
       console.error("Error opening crisis resource:", error);
@@ -176,7 +187,6 @@ export function CrisisModal({
       <View
         style={[styles.overlay, style]}
         accessibilityRole="alert"
-        accessibilityLiveRegion="assertive"
         accessibilityLabel="Crisis support resources available"
       >
         <View style={styles.modalContainer}>
@@ -244,8 +254,16 @@ export function CrisisModal({
             <View style={styles.emergencyContainer}>
               <Text style={styles.emergencyText}>
                 If you're in immediate danger, please call{" "}
-                <Text style={styles.emergencyNumber}>911</Text> or go to your
-                nearest emergency room.
+                <Text
+                  style={styles.emergencyNumber}
+                  onPress={() => Linking.openURL("tel:911")}
+                  accessibilityRole="link"
+                  accessibilityLabel="Call 911"
+                  accessibilityHint="Tap to dial 911"
+                >
+                  911
+                </Text>
+                {" "}or go to your nearest emergency room.
               </Text>
             </View>
 
@@ -299,7 +317,7 @@ export function CrisisModal({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: `${palette.black}${palette.alpha[85]}`,
+    backgroundColor: `${palette.black}${palette.alpha[80]}`,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
@@ -384,7 +402,7 @@ const styles = StyleSheet.create({
     borderColor: `${palette.white}${palette.alpha[10]}`,
   },
   resourceCardPressed: {
-    backgroundColor: `${palette.white}${palette.alpha[8]}`,
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     transform: [{ scale: 0.98 }],
   },
   resourceContent: {
@@ -476,7 +494,7 @@ const styles = StyleSheet.create({
     borderColor: `${palette.white}${palette.alpha[10]}`,
   },
   closeButtonPressed: {
-    backgroundColor: `${palette.white}${palette.alpha[8]}`,
+    backgroundColor: `${palette.white}${palette.alpha[10]}`,
     transform: [{ scale: 0.98 }],
   },
   closeButtonText: {

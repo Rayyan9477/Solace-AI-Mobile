@@ -35,7 +35,7 @@ export function FAQAccordion({
       {/* Question Row */}
       <View style={styles.questionRow}>
         <Text style={styles.question}>{question}</Text>
-        <Text style={styles.chevron}>{isExpanded ? "⌃" : "⌄"}</Text>
+        <Text style={styles.chevron}>{isExpanded ? "▲" : "▼"}</Text>
       </View>
 
       {/* Answer (only visible when expanded) */}

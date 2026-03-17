@@ -156,7 +156,7 @@ function EmotionBadge({ emotion, testID }: EmotionBadgeProps) {
       style={[styles.emotionBadge, { backgroundColor }]}
     >
       <Text style={styles.emotionText}>
-        Emotion: {emotionText}. Data Updated.
+        Emotion detected: {emotionText}
       </Text>
     </View>
   );

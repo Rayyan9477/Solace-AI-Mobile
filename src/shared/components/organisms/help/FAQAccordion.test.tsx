@@ -39,12 +39,12 @@ describe("FAQAccordion", () => {
 
   it("shows down chevron when collapsed", () => {
     const { getByText } = render(<FAQAccordion {...defaultProps} isExpanded={false} />);
-    expect(getByText("⌄")).toBeTruthy();
+    expect(getByText("▼")).toBeTruthy();
   });
 
   it("shows up chevron when expanded", () => {
     const { getByText } = render(<FAQAccordion {...defaultProps} isExpanded={true} />);
-    expect(getByText("⌃")).toBeTruthy();
+    expect(getByText("▲")).toBeTruthy();
   });
 
   it("calls onPress when tapped", () => {

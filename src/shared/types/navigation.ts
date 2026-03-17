@@ -190,7 +190,25 @@ export type OnboardingStackParamList = {
     /** Calculated Freud Score */
     freudScore?: number;
     /** Assessment completion timestamp */
-    completedAt?: Date;
+    completedAt?: number;
+  };
+
+  /** Solace Score Healthy result screen */
+  SolaceScoreHealthy: {
+    /** Calculated score */
+    score?: number;
+  };
+
+  /** Solace Score Unstable result screen */
+  SolaceScoreUnstable: {
+    /** Calculated score */
+    score?: number;
+  };
+
+  /** Solace Score Critical result screen */
+  SolaceScoreCritical: {
+    /** Calculated score */
+    score?: number;
   };
 };
 
@@ -317,9 +335,9 @@ export type ChatStackParamList = {
   /** Screen 61: Sleep quality chart */
   SleepQualityChart: {
     /** Date range start */
-    startDate: Date;
+    startDate: number;
     /** Date range end */
-    endDate: Date;
+    endDate: number;
   };
 
   /** Screen 62: Freud Score trend chart */
@@ -393,7 +411,7 @@ export type SleepStackParamList = {
   /** Screen 75: Sleep stages visualization */
   SleepStages: {
     /** Date for sleep data */
-    date: Date;
+    date: number;
   };
 
   /** Screen 76: Sleep calendar */
@@ -812,15 +830,15 @@ export type RootStackParamList = {
   /** Main app flow */
   MainFlow: NavigatorScreenParams<MainTabParamList>;
 
-  /** Modal Screens (not part of nested navigators) */
-  SearchModal: NavigatorScreenParams<SearchStackParamList>;
-  NotificationsModal: NavigatorScreenParams<NotificationsStackParamList>;
-  CommunityModal: NavigatorScreenParams<CommunityStackParamList>;
-  ResourcesModal: NavigatorScreenParams<ResourcesStackParamList>;
-  SleepModal: NavigatorScreenParams<SleepStackParamList>;
-  StressModal: NavigatorScreenParams<StressStackParamList>;
-  MindfulModal: NavigatorScreenParams<MindfulStackParamList>;
-  ErrorModal: NavigatorScreenParams<ErrorStackParamList>;
+  // TODO: Re-add when modal navigation is implemented
+  // SearchModal: NavigatorScreenParams<SearchStackParamList>;
+  // NotificationsModal: NavigatorScreenParams<NotificationsStackParamList>;
+  // CommunityModal: NavigatorScreenParams<CommunityStackParamList>;
+  // ResourcesModal: NavigatorScreenParams<ResourcesStackParamList>;
+  // SleepModal: NavigatorScreenParams<SleepStackParamList>;
+  // StressModal: NavigatorScreenParams<StressStackParamList>;
+  // MindfulModal: NavigatorScreenParams<MindfulStackParamList>;
+  // ErrorModal: NavigatorScreenParams<ErrorStackParamList>;
 };
 
 // ============================================================================

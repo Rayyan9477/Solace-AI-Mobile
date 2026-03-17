@@ -251,7 +251,7 @@ describe("ChatBubble", () => {
         />,
       );
 
-      expect(getByText(/Emotion:/)).toBeTruthy();
+      expect(getByText(/Emotion detected:/)).toBeTruthy();
     });
 
     it("uses correct color for positive sentiment", () => {

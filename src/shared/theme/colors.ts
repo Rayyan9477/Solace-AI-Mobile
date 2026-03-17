@@ -390,7 +390,8 @@ export const colorUtils = {
    * @returns Hex color with alpha
    */
   addAlpha(hexColor: string, alpha: number): string {
-    const alphaHex = Math.round((alpha / 100) * 255).toString(16).padStart(2, "0");
+    const clampedAlpha = Math.max(0, Math.min(100, alpha));
+    const alphaHex = Math.round((clampedAlpha / 100) * 255).toString(16).padStart(2, "0");
     return `${hexColor}${alphaHex}`;
   },
 
@@ -401,10 +402,13 @@ export const colorUtils = {
    * @returns rgba string
    */
   hexToRgba(hexColor: string, alpha: number): string {
-    const hex = hexColor.replace("#", "");
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
+    let cleanHex = hexColor.startsWith('#') ? hexColor.slice(1) : hexColor;
+    if (cleanHex.length === 3) {
+      cleanHex = cleanHex.split('').map(c => c + c).join('');
+    }
+    const r = parseInt(cleanHex.substring(0, 2), 16);
+    const g = parseInt(cleanHex.substring(2, 4), 16);
+    const b = parseInt(cleanHex.substring(4, 6), 16);
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   },
 };

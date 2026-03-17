@@ -188,7 +188,7 @@ describe("Accessibility Validation Tests", () => {
       expect(modal.props.accessibilityRole).toBe("alert");
     });
 
-    it("should have assertive live region", () => {
+    it("should have alert role (no explicit live region, role=alert implies it)", () => {
       const { getByLabelText } = render(
         <CrisisModal
           visible={true}
@@ -199,7 +199,8 @@ describe("Accessibility Validation Tests", () => {
       );
 
       const modal = getByLabelText("Crisis support resources available");
-      expect(modal.props.accessibilityLiveRegion).toBe("assertive");
+      // accessibilityLiveRegion was removed; role="alert" implicitly acts as assertive
+      expect(modal.props.accessibilityRole).toBe("alert");
     });
 
     it("should announce modal content immediately", () => {

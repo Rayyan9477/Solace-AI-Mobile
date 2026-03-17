@@ -25,6 +25,7 @@ import { shadows } from "./shadows";
 import { gradients } from "./gradients";
 import { zIndex } from "./zIndex";
 import { animations } from "./animationTimings";
+import { spacing } from "./spacing";
 
 /**
  * Theme object containing all design tokens
@@ -36,6 +37,7 @@ export const theme = {
   gradients,
   zIndex,
   animations,
+  spacing,
 } as const;
 
 /**
