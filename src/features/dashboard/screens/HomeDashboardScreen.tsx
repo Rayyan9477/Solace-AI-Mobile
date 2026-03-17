@@ -15,6 +15,7 @@ import {
   Image,
 } from "react-native";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 type MoodType = "happy" | "sad" | "neutral" | "angry" | "anxious";
 type SolaceStatus = "Mentally Stable" | "Needs Attention" | "Critical";
@@ -104,7 +105,7 @@ export function HomeDashboardScreen({
   onNotificationPress,
 }: HomeDashboardScreenProps = {}): React.ReactElement {
   return (
-    <View testID="home-dashboard-screen" style={styles.container}>
+    <ScreenContainer testID="home-dashboard-screen" style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
@@ -308,7 +309,7 @@ export function HomeDashboardScreen({
           </ScrollView>
         </View>
       </ScrollView>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -371,7 +372,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   conversationCount: {
     color: palette.white,

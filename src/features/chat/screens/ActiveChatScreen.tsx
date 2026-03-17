@@ -5,7 +5,7 @@
  * @phase Phase 3D: Integrated CrisisModal for AI-detected crisis content
  */
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -13,6 +13,8 @@ import {
   TextInput,
   StyleSheet,
   FlatList,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { CrisisModal } from "../../../shared/components/organisms/crisis";
 import { palette, colors } from "../../../shared/theme";
@@ -84,10 +86,20 @@ export function ActiveChatScreen({
   onInputChange,
 }: ActiveChatScreenProps = {}): React.ReactElement {
   const [showCrisisModal, setShowCrisisModal] = useState(false);
+  const flatListRef = useRef<FlatList>(null);
+
+  // After messages update, scroll to bottom
+  useEffect(() => {
+    if (messages.length > 0 && flatListRef.current) {
+      setTimeout(() => {
+        flatListRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    }
+  }, [messages.length]);
 
   const handleSend = () => {
     if (inputText.trim()) {
-      onSendMessage(inputText.trim());
+      onSendMessage?.(inputText.trim());
     }
   };
 
@@ -95,7 +107,7 @@ export function ActiveChatScreen({
     setShowCrisisModal(true);
   };
 
-  const renderMessage = ({ item }: { item: ChatMessage }) => {
+  const renderMessage = useCallback(({ item }: { item: ChatMessage }) => {
     if (item.type === "user") {
       return (
         <View
@@ -138,7 +150,7 @@ export function ActiveChatScreen({
           ]}
         >
           <Text style={styles.emotionText}>
-            Emotion: {item.emotions.join(", ")}. Data Updated.
+            Emotion detected: {item.emotions.join(", ")}
           </Text>
         </View>
       );
@@ -158,7 +170,7 @@ export function ActiveChatScreen({
     }
 
     return null;
-  };
+  }, []);
 
   return (
     <View testID="active-chat-screen" style={styles.container}>
@@ -190,9 +202,13 @@ export function ActiveChatScreen({
         </TouchableOpacity>
       </View>
 
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardAvoid}
+      >
       {/* Crisis Alert Banner - Shows when AI detects crisis content */}
       {crisisDetected && (
-        <View testID="crisis-alert-banner" style={styles.crisisAlertBanner}>
+        <View testID="crisis-alert-banner" style={styles.crisisAlertBanner} accessibilityRole="alert" accessibilityLiveRegion="assertive">
           <View style={styles.crisisAlertContent}>
             <Text style={styles.crisisAlertIcon}>❤️‍🩹</Text>
             <View style={styles.crisisAlertText}>
@@ -216,6 +232,7 @@ export function ActiveChatScreen({
 
       {/* Message List */}
       <FlatList
+        ref={flatListRef}
         testID="message-list"
         data={messages}
         renderItem={renderMessage}
@@ -223,6 +240,17 @@ export function ActiveChatScreen({
         style={styles.messageList}
         contentContainerStyle={styles.messageListContent}
         showsVerticalScrollIndicator={false}
+        windowSize={10}
+        maxToRenderPerBatch={10}
+        initialNumToRender={15}
+        removeClippedSubviews={true}
+        ListEmptyComponent={
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 100 }}>
+            <Text style={{ color: palette.gray[400], fontSize: 16 }}>
+              Start a conversation with Solace AI
+            </Text>
+          </View>
+        }
       />
 
       {/* Typing Indicator */}
@@ -273,6 +301,7 @@ export function ActiveChatScreen({
           <Text style={styles.sendIcon}>→</Text>
         </TouchableOpacity>
       </View>
+      </KeyboardAvoidingView>
 
       {/* Crisis Modal */}
       <CrisisModal
@@ -344,6 +373,9 @@ const styles = StyleSheet.create({
     backgroundColor: palette.brown[900],
     flex: 1,
     paddingTop: 60,
+  },
+  keyboardAvoid: {
+    flex: 1,
   },
   crisisAlertBanner: {
     backgroundColor: colors.crisis.background,

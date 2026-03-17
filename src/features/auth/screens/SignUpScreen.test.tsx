@@ -121,7 +121,7 @@ describe("SignUpScreen", () => {
     const { getByTestId, getByText } = render(<SignUpScreen {...defaultProps} />);
     fireEvent.changeText(getByTestId("email-input"), "invalid-email");
     fireEvent.press(getByTestId("sign-up-button"));
-    expect(getByText(/Invalid Email Address/)).toBeTruthy();
+    expect(getByText(/Please enter a valid email address/)).toBeTruthy();
   });
 
   it("sign up button has proper accessibility", () => {

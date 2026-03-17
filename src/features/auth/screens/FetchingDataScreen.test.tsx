@@ -31,9 +31,9 @@ describe("FetchingDataScreen", () => {
     expect(getByText("Fetching Data...")).toBeTruthy();
   });
 
-  it("displays the shake hint", () => {
+  it("displays the setup hint", () => {
     const { getByText } = render(<FetchingDataScreen onComplete={mockOnComplete} />);
-    expect(getByText(/Shake screen to interact/)).toBeTruthy();
+    expect(getByText(/Setting up your experience/)).toBeTruthy();
   });
 
   it("renders decorative circles", () => {

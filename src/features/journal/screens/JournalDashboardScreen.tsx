@@ -125,7 +125,7 @@ export function JournalDashboardScreen({
                 key={`${entry.day}-${index}`}
                 testID={`calendar-day-${index}`}
                 style={styles.calendarColumn}
-                onPress={() => onDayPress(index)}
+                onPress={() => onDayPress?.(index)}
                 accessibilityRole="button"
                 accessibilityLabel={`${entry.day}: ${entry.status}`}
               >

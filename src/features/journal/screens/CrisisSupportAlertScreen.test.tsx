@@ -18,6 +18,8 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import { CrisisSupportAlertScreen } from "./CrisisSupportAlertScreen";
 
+const Linking = require("react-native/Libraries/Linking/Linking");
+
 describe("CrisisSupportAlertScreen", () => {
   const mockOnCrisisSupport = jest.fn();
   const mockOnCallForHelp = jest.fn();
@@ -34,6 +36,7 @@ describe("CrisisSupportAlertScreen", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    Linking.openURL.mockResolvedValue(true);
   });
 
   // --- Rendering ---
@@ -167,10 +170,19 @@ describe("CrisisSupportAlertScreen", () => {
     expect(getByTestId("dismiss-button")).toBeTruthy();
   });
 
-  it("calls onDismiss when dismiss is pressed", () => {
+  it("does not call onDismiss when dismiss is pressed before acknowledging", () => {
     const { getByTestId } = render(
       <CrisisSupportAlertScreen {...defaultProps} />
     );
+    fireEvent.press(getByTestId("dismiss-button"));
+    expect(mockOnDismiss).not.toHaveBeenCalled();
+  });
+
+  it("calls onDismiss when dismiss is pressed after acknowledging", () => {
+    const { getByTestId } = render(
+      <CrisisSupportAlertScreen {...defaultProps} />
+    );
+    fireEvent.press(getByTestId("acknowledge-button"));
     fireEvent.press(getByTestId("dismiss-button"));
     expect(mockOnDismiss).toHaveBeenCalledTimes(1);
   });
@@ -183,10 +195,19 @@ describe("CrisisSupportAlertScreen", () => {
     expect(getByTestId("close-button")).toBeTruthy();
   });
 
-  it("calls onClose when close is pressed", () => {
+  it("does not call onClose when close is pressed before acknowledging", () => {
     const { getByTestId } = render(
       <CrisisSupportAlertScreen {...defaultProps} />
     );
+    fireEvent.press(getByTestId("close-button"));
+    expect(mockOnClose).not.toHaveBeenCalled();
+  });
+
+  it("calls onClose when close is pressed after acknowledging", () => {
+    const { getByTestId } = render(
+      <CrisisSupportAlertScreen {...defaultProps} />
+    );
+    fireEvent.press(getByTestId("acknowledge-button"));
     fireEvent.press(getByTestId("close-button"));
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
@@ -226,7 +247,7 @@ describe("CrisisSupportAlertScreen", () => {
     );
     const btn = getByTestId("call-for-help-button");
     expect(btn.props.accessibilityRole).toBe("button");
-    expect(btn.props.accessibilityLabel).toBe("Call for help");
+    expect(btn.props.accessibilityLabel).toBe("Call 988 for help");
     expect(btn.props.style).toEqual(
       expect.objectContaining({ minHeight: 44 })
     );

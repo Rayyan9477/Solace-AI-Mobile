@@ -13,10 +13,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { colors, palette } from "../../../shared/theme";
 import { useAuth } from "../../../app/AuthContext";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface SignUpCredentials {
   email: string;
@@ -44,15 +47,25 @@ export function SignUpScreen({
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const auth = useAuth();
   const navigation = useNavigation<any>();
 
   const handleSignUp = () => {
     if (!validateEmail(email)) {
-      setEmailError("Invalid Email Address!!!");
+      setEmailError("Please enter a valid email address");
       return;
     }
     setEmailError(null);
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
+    setPasswordError(null);
     if (onSignUp) {
       onSignUp({ email, password, confirmPassword });
     } else {
@@ -69,6 +82,11 @@ export function SignUpScreen({
   };
 
   return (
+    <ScreenContainer backgroundColor={colors.background.primary}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.keyboardAvoid}
+    >
     <ScrollView
       testID="sign-up-screen"
       style={styles.container}
@@ -125,7 +143,7 @@ export function SignUpScreen({
       {/* Password Input */}
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>Password</Text>
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer, passwordError && styles.inputContainerError]}>
           <Text style={styles.inputIcon}>🔒</Text>
           <TextInput
             testID="password-input"
@@ -133,7 +151,10 @@ export function SignUpScreen({
             placeholder="Enter your password..."
             placeholderTextColor={colors.form.placeholder}
             value={password}
-            onChangeText={setPassword}
+            onChangeText={(text) => {
+              setPassword(text);
+              if (passwordError) setPasswordError(null);
+            }}
             secureTextEntry={!showPassword}
             autoCapitalize="none"
             accessibilityLabel="Password"
@@ -151,15 +172,18 @@ export function SignUpScreen({
       {/* Password Confirmation Input */}
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>Password Confirmation</Text>
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer, passwordError && styles.inputContainerError]}>
           <Text style={styles.inputIcon}>🔒</Text>
           <TextInput
             testID="confirm-password-input"
             style={styles.input}
-            placeholder="Enter your password..."
+            placeholder="Confirm your password..."
             placeholderTextColor={colors.form.placeholder}
             value={confirmPassword}
-            onChangeText={setConfirmPassword}
+            onChangeText={(text) => {
+              setConfirmPassword(text);
+              if (passwordError) setPasswordError(null);
+            }}
             secureTextEntry={!showConfirmPassword}
             autoCapitalize="none"
             accessibilityLabel="Confirm Password"
@@ -172,6 +196,12 @@ export function SignUpScreen({
             <Text style={styles.toggleIcon}>{showConfirmPassword ? "👁" : "👁‍🗨"}</Text>
           </TouchableOpacity>
         </View>
+        {passwordError && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorIcon}>⚠</Text>
+            <Text style={styles.errorText}>{passwordError}</Text>
+          </View>
+        )}
       </View>
 
       {/* Sign Up Button */}
@@ -198,6 +228,8 @@ export function SignUpScreen({
         </Text>
       </TouchableOpacity>
     </ScrollView>
+    </KeyboardAvoidingView>
+    </ScreenContainer>
   );
 }
 
@@ -229,6 +261,9 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: colors.background.primary,
+    flex: 1,
+  },
+  keyboardAvoid: {
     flex: 1,
   },
   contentContainer: {

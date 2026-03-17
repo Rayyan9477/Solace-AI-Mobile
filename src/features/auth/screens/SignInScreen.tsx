@@ -13,10 +13,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { colors, palette } from "../../../shared/theme";
 import { useAuth } from "../../../app/AuthContext";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface SignInCredentials {
   email: string;
@@ -41,14 +44,28 @@ export function SignInScreen({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const auth = useAuth();
   const navigation = useNavigation<any>();
 
-  const handleSignIn = () => {
-    if (onSignIn) {
-      onSignIn({ email, password });
-    } else {
-      auth.signIn();
+  const validateEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+  const handleSignIn = async () => {
+    if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    }
+    setEmailError(null);
+    setIsLoading(true);
+    try {
+      if (onSignIn) {
+        onSignIn({ email, password });
+      } else {
+        auth.signIn();
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -77,6 +94,11 @@ export function SignInScreen({
   };
 
   return (
+    <ScreenContainer backgroundColor={colors.background.primary}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.keyboardAvoid}
+    >
     <ScrollView
       testID="sign-in-screen"
       style={styles.container}
@@ -104,7 +126,7 @@ export function SignInScreen({
       {/* Email Input */}
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>Email Address</Text>
-        <View style={[styles.inputContainer, email && styles.inputContainerFocused]}>
+        <View style={[styles.inputContainer, email && styles.inputContainerFocused, emailError && styles.inputContainerError]}>
           <Text style={styles.inputIcon}>✉</Text>
           <TextInput
             testID="email-input"
@@ -112,13 +134,19 @@ export function SignInScreen({
             placeholder="Enter your email..."
             placeholderTextColor={colors.form.placeholder}
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(text) => {
+              setEmail(text);
+              if (emailError) setEmailError(null);
+            }}
             keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
             accessibilityLabel="Email Address"
           />
         </View>
+        {emailError && (
+          <Text testID="email-error" style={styles.errorText}>{emailError}</Text>
+        )}
       </View>
 
       {/* Password Input */}
@@ -151,12 +179,13 @@ export function SignInScreen({
       {/* Sign In Button */}
       <TouchableOpacity
         testID="sign-in-button"
-        style={styles.signInButton}
+        style={[styles.signInButton, (!email || !password || isLoading) && styles.signInButtonDisabled]}
         onPress={handleSignIn}
+        disabled={!email || !password || isLoading}
         accessibilityRole="button"
         accessibilityLabel="Sign In"
       >
-        <Text style={styles.signInButtonText}>Sign In</Text>
+        <Text style={styles.signInButtonText}>{isLoading ? "Signing In..." : "Sign In"}</Text>
         <Text style={styles.arrowIcon}>→</Text>
       </TouchableOpacity>
 
@@ -209,6 +238,8 @@ export function SignInScreen({
         <Text style={styles.linkText}>Forgot Password</Text>
       </TouchableOpacity>
     </ScrollView>
+    </KeyboardAvoidingView>
+    </ScreenContainer>
   );
 }
 
@@ -240,6 +271,9 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: colors.background.primary,
+    flex: 1,
+  },
+  keyboardAvoid: {
     flex: 1,
   },
   contentContainer: {
@@ -306,6 +340,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginVertical: 2,
   },
+  errorText: {
+    color: colors.text.warning,
+    fontSize: 14,
+    marginTop: 8,
+  },
+  inputContainerError: {
+    borderColor: colors.form.borderError,
+  },
   signInButton: {
     alignItems: "center",
     backgroundColor: palette.tan[500],
@@ -316,6 +358,9 @@ const styles = StyleSheet.create({
     marginTop: 32,
     minHeight: 56,
     paddingVertical: 16,
+  },
+  signInButtonDisabled: {
+    opacity: 0.5,
   },
   signInButtonText: {
     color: colors.text.inverse,

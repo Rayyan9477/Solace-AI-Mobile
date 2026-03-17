@@ -20,12 +20,13 @@
  * supportive, non-triggering language per clinical best practices.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
+  Linking,
 } from "react-native";
 import { palette } from "../../../shared/theme";
 
@@ -44,9 +45,26 @@ export function CrisisSupportAlertScreen({
   onDismiss,
   onClose,
 }: CrisisSupportAlertScreenProps): React.ReactElement | null {
+  const [hasAcknowledged, setHasAcknowledged] = useState(false);
+
   if (!visible) {
     return null;
   }
+
+  const handleCallForHelp = (): void => {
+    Linking.openURL("tel:988");
+    onCallForHelp();
+  };
+
+  const handleDismiss = (): void => {
+    if (!hasAcknowledged) return;
+    onDismiss();
+  };
+
+  const handleClose = (): void => {
+    if (!hasAcknowledged) return;
+    onClose();
+  };
 
   return (
     <View testID="crisis-support-alert-screen" style={styles.container}>
@@ -93,20 +111,34 @@ export function CrisisSupportAlertScreen({
         <TouchableOpacity
           testID="call-for-help-button"
           style={styles.secondaryButton}
-          onPress={onCallForHelp}
+          onPress={handleCallForHelp}
           accessibilityRole="button"
-          accessibilityLabel="Call for help"
+          accessibilityLabel="Call 988 for help"
         >
           <Text style={styles.secondaryButtonText}>Call For Help!</Text>
           <Text style={styles.secondaryButtonIcon}>📞</Text>
         </TouchableOpacity>
 
+        {/* Acknowledge Button */}
+        {!hasAcknowledged && (
+          <TouchableOpacity
+            testID="acknowledge-button"
+            style={styles.acknowledgeButton}
+            onPress={() => setHasAcknowledged(true)}
+            accessibilityRole="button"
+            accessibilityLabel="I understand these resources are available"
+          >
+            <Text style={styles.acknowledgeButtonText}>I Understand</Text>
+          </TouchableOpacity>
+        )}
+
         {/* Bottom Actions */}
         <View style={styles.bottomActions}>
           <TouchableOpacity
             testID="dismiss-button"
-            style={styles.dismissButton}
-            onPress={onDismiss}
+            style={[styles.dismissButton, !hasAcknowledged && styles.disabledButton]}
+            onPress={handleDismiss}
+            disabled={!hasAcknowledged}
             accessibilityRole="button"
             accessibilityLabel="Dismiss alert"
           >
@@ -114,8 +146,9 @@ export function CrisisSupportAlertScreen({
           </TouchableOpacity>
           <TouchableOpacity
             testID="close-button"
-            style={styles.closeButton}
-            onPress={onClose}
+            style={[styles.closeButton, !hasAcknowledged && styles.disabledButton]}
+            onPress={handleClose}
+            disabled={!hasAcknowledged}
             accessibilityRole="button"
             accessibilityLabel="Close alert"
           >
@@ -285,6 +318,27 @@ const styles = StyleSheet.create({
     color: palette.white,
     fontSize: 15,
     fontWeight: "700",
+  },
+  acknowledgeButton: {
+    alignItems: "center",
+    backgroundColor: `${palette.tan[500]}${palette.alpha[20]}`,
+    borderColor: `${palette.tan[500]}${palette.alpha[30]}`,
+    borderRadius: 16,
+    borderWidth: 1,
+    marginHorizontal: 24,
+    marginTop: 12,
+    minHeight: 44,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    width: "85%",
+  },
+  acknowledgeButtonText: {
+    color: palette.tan[500],
+    fontSize: 15,
+    fontWeight: "700",
+  },
+  disabledButton: {
+    opacity: 0.4,
   },
   title: {
     color: palette.white,

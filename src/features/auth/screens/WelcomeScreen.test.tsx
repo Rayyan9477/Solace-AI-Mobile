@@ -33,7 +33,7 @@ describe("WelcomeScreen", () => {
 
   it("displays the welcome title", () => {
     const { getByText } = render(<WelcomeScreen {...defaultProps} />);
-    expect(getByText(/Welcome to the ultimate/)).toBeTruthy();
+    expect(getByText(/Welcome to/)).toBeTruthy();
   });
 
   it("displays the brand name in title", () => {

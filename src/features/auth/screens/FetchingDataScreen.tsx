@@ -19,7 +19,6 @@ export function FetchingDataScreen({
   delay = 2500,
 }: FetchingDataScreenProps): React.ReactElement {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const pulseAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     // Fade-in animation
@@ -29,29 +28,13 @@ export function FetchingDataScreen({
       useNativeDriver: true,
     }).start();
 
-    // Pulse animation for dots
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 1.1,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-
     // Auto-transition after delay
     const timer = setTimeout(() => {
       onComplete();
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [onComplete, delay, fadeAnim, pulseAnim]);
+  }, [onComplete, delay, fadeAnim]);
 
   return (
     <View
@@ -75,7 +58,7 @@ export function FetchingDataScreen({
           <View testID="shake-icon" style={styles.shakeIcon}>
             <Text style={styles.shakeIconText}>📱</Text>
           </View>
-          <Text style={styles.hintText}>Shake screen to interact!</Text>
+          <Text style={styles.hintText}>Setting up your experience...</Text>
         </View>
       </Animated.View>
     </View>

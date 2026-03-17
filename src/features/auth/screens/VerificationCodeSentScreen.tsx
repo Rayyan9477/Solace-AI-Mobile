@@ -7,13 +7,14 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { colors, palette } from "../../../shared/theme";
 
 interface VerificationCodeSentScreenProps {
   maskedDestination: string;
-  onResend: () => void;
-  onDismiss: () => void;
-  onBack: () => void;
+  onResend?: () => void;
+  onDismiss?: () => void;
+  onBack?: () => void;
 }
 
 export function VerificationCodeSentScreen({
@@ -22,6 +23,12 @@ export function VerificationCodeSentScreen({
   onDismiss,
   onBack,
 }: VerificationCodeSentScreenProps): React.ReactElement {
+  const navigation = useNavigation<any>();
+
+  const handleBack = () => {
+    if (onBack) onBack();
+    else navigation.goBack();
+  };
   return (
     <View testID="verification-code-sent-screen" style={styles.container}>
       {/* Overlay Background */}
@@ -31,7 +38,7 @@ export function VerificationCodeSentScreen({
       <TouchableOpacity
         testID="back-button"
         style={styles.backButton}
-        onPress={onBack}
+        onPress={handleBack}
         accessibilityRole="button"
         accessibilityLabel="Go back"
       >

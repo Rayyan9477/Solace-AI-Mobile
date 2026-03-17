@@ -13,23 +13,29 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { colors, palette } from "../../../shared/theme";
 
 type RecoveryMethod = "2fa" | "password" | "google";
 
 interface ForgotPasswordScreenProps {
-  onBack: () => void;
-  onSendPassword: (method: RecoveryMethod) => void;
+  onBack?: () => void;
+  onSendPassword?: (method: RecoveryMethod) => void;
 }
 
 export function ForgotPasswordScreen({
   onBack,
   onSendPassword,
 }: ForgotPasswordScreenProps): React.ReactElement {
+  const navigation = useNavigation<any>();
   const [selectedMethod, setSelectedMethod] = useState<RecoveryMethod>("password");
 
+  const handleBack = () => {
+    if (onBack) onBack(); else navigation.goBack();
+  };
+
   const handleSendPassword = () => {
-    onSendPassword(selectedMethod);
+    if (onSendPassword) onSendPassword(selectedMethod);
   };
 
   const renderMethodOption = (
@@ -65,7 +71,7 @@ export function ForgotPasswordScreen({
       <TouchableOpacity
         testID="back-button"
         style={styles.backButton}
-        onPress={onBack}
+        onPress={handleBack}
         accessibilityRole="button"
         accessibilityLabel="Go back"
       >
@@ -93,9 +99,9 @@ export function ForgotPasswordScreen({
         style={styles.sendButton}
         onPress={handleSendPassword}
         accessibilityRole="button"
-        accessibilityLabel="Send Password"
+        accessibilityLabel="Send Reset Link"
       >
-        <Text style={styles.sendButtonText}>Send Password</Text>
+        <Text style={styles.sendButtonText}>Send Reset Link</Text>
         <Text style={styles.sendButtonIcon}>🔒</Text>
       </TouchableOpacity>
     </ScrollView>
