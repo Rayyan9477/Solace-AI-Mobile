@@ -7,6 +7,7 @@
 
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 type Gender = "male" | "female";
@@ -94,9 +95,7 @@ export function AssessmentGenderScreen({
             <View style={styles.personBody} />
             <View style={styles.personBeard} />
           </View>
-          <Text testID="male-symbol" style={styles.genderSymbol}>
-            ♂
-          </Text>
+          <Icon testID="male-symbol" name="male-outline" size={32} color={`${palette.white}${palette.alpha[30]}`} style={styles.genderSymbol} />
         </TouchableOpacity>
 
         {/* Female Card */}
@@ -118,9 +117,7 @@ export function AssessmentGenderScreen({
             <View style={[styles.personBody, styles.personBodyFemale]} />
             <View style={styles.personHair} />
           </View>
-          <Text testID="female-symbol" style={styles.genderSymbol}>
-            ♀
-          </Text>
+          <Icon testID="female-symbol" name="female-outline" size={32} color={`${palette.white}${palette.alpha[30]}`} style={styles.genderSymbol} />
         </TouchableOpacity>
       </View>
 
@@ -133,7 +130,7 @@ export function AssessmentGenderScreen({
         accessibilityLabel="Skip this question"
       >
         <Text style={styles.skipButtonText}>Prefer to skip, thanks</Text>
-        <Text style={styles.skipButtonIcon}>✕</Text>
+        <Icon name="close-outline" size={14} color={palette.white} style={styles.skipButtonIcon} />
       </TouchableOpacity>
 
       {/* Continue Button */}
@@ -228,8 +225,6 @@ const styles = StyleSheet.create({
   },
   genderSymbol: {
     bottom: 16,
-    color: `${palette.white}${palette.alpha[30]}`,
-    fontSize: 32,
     left: 16,
     position: "absolute",
   },
@@ -340,8 +335,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   skipButtonIcon: {
-    color: palette.white,
-    fontSize: 14,
     marginLeft: 8,
   },
   skipButtonText: {

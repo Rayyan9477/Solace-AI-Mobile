@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface AssessmentIntroScreenProps {
@@ -41,7 +42,7 @@ export function AssessmentIntroScreen({
             <View style={[styles.brainHalf, styles.brainHalfRight]} />
           </View>
           <View style={styles.heartIcon}>
-            <Text style={styles.heartEmoji}>❤️</Text>
+            <Icon name="heart-outline" size={24} color={palette.onboarding.step2} />
           </View>
         </View>
       </View>
@@ -57,7 +58,7 @@ export function AssessmentIntroScreen({
         {/* Info Cards */}
         <View testID="info-cards" style={styles.infoCards}>
           <View style={styles.infoCard}>
-            <Text style={styles.infoIcon}>📋</Text>
+            <Icon name="clipboard-outline" size={20} color={palette.white} style={styles.infoIcon} />
             <Text style={styles.infoText}>14 questions</Text>
           </View>
           <View style={styles.infoCard}>
@@ -151,7 +152,8 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   heartEmoji: {
-    fontSize: 24,
+    alignItems: "center",
+    justifyContent: "center",
   },
   heartIcon: {
     bottom: -10,
@@ -186,7 +188,6 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   infoIcon: {
-    fontSize: 20,
     marginRight: 8,
   },
   infoText: {
