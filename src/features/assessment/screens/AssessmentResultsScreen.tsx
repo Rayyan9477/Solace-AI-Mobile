@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 type Category = "healthy" | "unstable" | "critical";
@@ -30,17 +31,17 @@ const CATEGORY_CONFIG = {
   healthy: {
     color: palette.olive[500],
     label: "Healthy",
-    emoji: "✨",
+    icon: "checkmark-circle-outline",
   },
   unstable: {
     color: palette.onboarding.step2,
     label: "Unstable",
-    emoji: "⚠️",
+    icon: "warning-outline",
   },
   critical: {
     color: palette.red[500],
     label: "Critical",
-    emoji: "🚨",
+    icon: "alert-circle-outline",
   },
 };
 
@@ -79,7 +80,7 @@ export function AssessmentResultsScreen({
             testID="category-badge"
             style={[styles.categoryBadge, { backgroundColor: categoryConfig.color }]}
           >
-            <Text style={styles.categoryEmoji}>{categoryConfig.emoji}</Text>
+            <Icon name={categoryConfig.icon} size={16} color={palette.white} style={styles.categoryEmoji} />
             <Text style={styles.categoryText}>{categoryConfig.label}</Text>
           </View>
         </View>
@@ -196,7 +197,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   categoryEmoji: {
-    fontSize: 16,
     marginRight: 6,
   },
   categoryText: {

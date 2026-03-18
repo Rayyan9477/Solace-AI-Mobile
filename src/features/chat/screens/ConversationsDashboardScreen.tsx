@@ -13,6 +13,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 type SubscriptionTier = "Basic" | "Pro";
@@ -78,14 +79,14 @@ export function ConversationsDashboardScreen({
           <View style={styles.statsRow}>
             {/* Quota Stat */}
             <View testID="quota-stat" style={styles.statItem}>
-              <Text style={styles.statIcon}>💬</Text>
+              <Icon name="chatbubbles-outline" size={24} color={palette.white} style={styles.statIcon} />
               <Text style={styles.statValue}>{remainingQuota}</Text>
               <Text style={styles.statLabel}>Left this month</Text>
             </View>
 
             {/* Support Stat */}
             <View testID="support-stat" style={styles.statItem}>
-              <Text style={styles.statIcon}>📊</Text>
+              <Icon name="bar-chart-outline" size={24} color={palette.white} style={styles.statIcon} />
               <Text style={styles.statValue}>{supportLevel}</Text>
               <Text style={styles.statLabel}>Response & Support</Text>
             </View>
@@ -101,7 +102,7 @@ export function ConversationsDashboardScreen({
             accessibilityRole="button"
             accessibilityLabel="Filter conversations"
           >
-            <Text style={styles.actionButtonIcon}>⚙️</Text>
+            <Icon name="settings-outline" size={24} color={palette.white} />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -121,7 +122,7 @@ export function ConversationsDashboardScreen({
             accessibilityRole="button"
             accessibilityLabel="Chat settings"
           >
-            <Text style={styles.actionButtonIcon}>⚙️</Text>
+            <Icon name="settings-outline" size={24} color={palette.white} />
           </TouchableOpacity>
         </View>
 
@@ -129,15 +130,15 @@ export function ConversationsDashboardScreen({
         {isBasicTier && (
           <View testID="upsell-card" style={styles.upsellCard}>
             <View style={styles.upsellContent}>
-              <Text style={styles.upsellMascot}>🤖</Text>
+              <Icon name="hardware-chip-outline" size={48} color={palette.white} style={styles.upsellMascot} />
               <View style={styles.upsellTextContent}>
                 <Text style={styles.upsellTitle}>Upgrade to Pro!</Text>
                 <View style={styles.benefitRow}>
-                  <Text style={styles.benefitCheck}>✓</Text>
+                  <Icon name="checkmark-outline" size={16} color={palette.white} style={styles.benefitCheck} />
                   <Text style={styles.benefitText}>24/7 Live & Fast Support</Text>
                 </View>
                 <View style={styles.benefitRow}>
-                  <Text style={styles.benefitCheck}>✓</Text>
+                  <Icon name="checkmark-outline" size={16} color={palette.white} style={styles.benefitCheck} />
                   <Text style={styles.benefitText}>Unlimited Conversations!</Text>
                 </View>
               </View>
@@ -168,9 +169,6 @@ const styles = StyleSheet.create({
     minWidth: 44,
     width: 56,
   },
-  actionButtonIcon: {
-    fontSize: 24,
-  },
   actionButtonsRow: {
     flexDirection: "row",
     justifyContent: "center",
@@ -194,9 +192,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   benefitCheck: {
-    color: palette.white,
-    fontSize: 14,
-    fontWeight: "600",
     marginRight: 8,
   },
   benefitRow: {
@@ -258,7 +253,6 @@ const styles = StyleSheet.create({
     backgroundColor: palette.olive[500],
   },
   statIcon: {
-    fontSize: 24,
     marginBottom: 8,
   },
   statItem: {
@@ -319,7 +313,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   upsellMascot: {
-    fontSize: 48,
     marginRight: 16,
   },
   upsellTextContent: {

@@ -17,6 +17,7 @@ import {
   Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { colors, palette } from "../../../shared/theme";
 import { useAuth } from "../../../app/AuthContext";
 import { ScreenContainer } from "../../../shared/components/atoms/layout";
@@ -127,7 +128,7 @@ export function SignInScreen({
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>Email Address</Text>
         <View style={[styles.inputContainer, email && styles.inputContainerFocused, emailError && styles.inputContainerError]}>
-          <Text style={styles.inputIcon}>✉</Text>
+          <Icon name="mail-outline" size={20} color={palette.tan[400]} style={styles.inputIcon} />
           <TextInput
             testID="email-input"
             style={styles.input}
@@ -145,7 +146,9 @@ export function SignInScreen({
           />
         </View>
         {emailError && (
-          <Text testID="email-error" style={styles.errorText}>{emailError}</Text>
+          <View accessibilityRole="alert" accessibilityLiveRegion="assertive">
+            <Text testID="email-error" style={styles.errorText}>{emailError}</Text>
+          </View>
         )}
       </View>
 
@@ -153,7 +156,7 @@ export function SignInScreen({
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>Password</Text>
         <View style={styles.inputContainer}>
-          <Text style={styles.inputIcon}>🔒</Text>
+          <Icon name="lock-closed-outline" size={20} color={palette.tan[400]} style={styles.inputIcon} />
           <TextInput
             testID="password-input"
             style={styles.input}
@@ -171,7 +174,11 @@ export function SignInScreen({
             style={styles.toggleButton}
             accessibilityLabel={showPassword ? "Hide password" : "Show password"}
           >
-            <Text style={styles.toggleIcon}>{showPassword ? "👁" : "👁‍🗨"}</Text>
+            <Icon
+              name={showPassword ? "eye-outline" : "eye-off-outline"}
+              size={20}
+              style={styles.toggleIcon}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -197,7 +204,7 @@ export function SignInScreen({
           onPress={() => handleSocialLogin("facebook")}
           accessibilityLabel="Sign in with Facebook"
         >
-          <Text style={styles.socialIcon}>f</Text>
+          <Icon name="logo-facebook" size={22} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity
           testID="google-login"
@@ -205,7 +212,7 @@ export function SignInScreen({
           onPress={() => handleSocialLogin("google")}
           accessibilityLabel="Sign in with Google"
         >
-          <Text style={styles.socialIcon}>G</Text>
+          <Icon name="logo-google" size={22} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity
           testID="instagram-login"
@@ -213,7 +220,7 @@ export function SignInScreen({
           onPress={() => handleSocialLogin("instagram")}
           accessibilityLabel="Sign in with Instagram"
         >
-          <Text style={styles.socialIcon}>📷</Text>
+          <Icon name="logo-instagram" size={22} color="#fff" />
         </TouchableOpacity>
       </View>
 
@@ -320,7 +327,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   inputIcon: {
-    fontSize: 18,
     marginRight: 12,
   },
   inputLabel: {
@@ -341,7 +347,7 @@ const styles = StyleSheet.create({
     marginVertical: 2,
   },
   errorText: {
-    color: colors.text.warning,
+    color: colors.text.error,
     fontSize: 14,
     marginTop: 8,
   },
@@ -401,7 +407,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   toggleIcon: {
-    fontSize: 18,
     opacity: 0.6,
   },
 });

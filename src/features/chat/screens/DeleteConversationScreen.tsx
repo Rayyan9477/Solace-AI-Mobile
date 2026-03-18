@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface DeleteConversationScreenProps {
@@ -53,7 +54,7 @@ export function DeleteConversationScreen({
       <View style={styles.content}>
         {/* Warning Icon */}
         <View testID="warning-icon" style={styles.warningIconContainer}>
-          <Text style={styles.warningIcon}>⚠️</Text>
+          <Icon name="warning-outline" size={48} color={palette.onboarding.step2} />
         </View>
 
         {/* Title */}
@@ -68,7 +69,7 @@ export function DeleteConversationScreen({
         {/* Conversation Details */}
         <View testID="conversation-details" style={styles.detailsCard}>
           <View style={styles.detailsIcon}>
-            <Text style={styles.detailsIconText}>💬</Text>
+            <Icon name="chatbubble-outline" size={24} color={palette.white} />
           </View>
           <View style={styles.detailsContent}>
             <Text style={styles.detailsTitle}>{conversationTitle}</Text>
@@ -232,9 +233,6 @@ const styles = StyleSheet.create({
     marginRight: 12,
     width: 48,
   },
-  detailsIconText: {
-    fontSize: 20,
-  },
   detailsSubtitle: {
     color: palette.gray[400],
     fontSize: 13,
@@ -261,9 +259,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginTop: 16,
     textAlign: "center",
-  },
-  warningIcon: {
-    fontSize: 48,
   },
   warningIconContainer: {
     alignItems: "center",

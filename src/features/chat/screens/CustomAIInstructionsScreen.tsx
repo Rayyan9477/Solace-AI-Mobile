@@ -14,6 +14,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface CommunicationStyle {
@@ -139,7 +140,7 @@ export function CustomAIInstructionsScreen({
                   {style.label}
                 </Text>
                 {style.selected && (
-                  <Text style={styles.checkmark}>✓</Text>
+                  <Icon name="checkmark-circle-outline" size={16} color={palette.olive[500]} style={styles.checkmark} />
                 )}
               </TouchableOpacity>
             ))}
@@ -148,7 +149,10 @@ export function CustomAIInstructionsScreen({
 
         {/* Tips Section */}
         <View style={styles.tipsContainer}>
-          <Text style={styles.tipsTitle}>💡 Tips</Text>
+          <View style={styles.tipsTitleRow}>
+            <Icon name="bulb-outline" size={16} color={palette.white} />
+            <Text style={styles.tipsTitle}> Tips</Text>
+          </View>
           <Text style={styles.tipsText}>
             • Be specific about your goals and preferences{"\n"}
             • Mention topics you want to focus on{"\n"}
@@ -219,9 +223,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   checkmark: {
-    color: palette.olive[500],
-    fontSize: 14,
-    fontWeight: "700",
     marginLeft: 8,
   },
   container: {
@@ -360,11 +361,15 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 22,
   },
+  tipsTitleRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    marginBottom: 8,
+  },
   tipsTitle: {
     color: palette.white,
     fontSize: 14,
     fontWeight: "600",
-    marginBottom: 8,
   },
   unsavedDot: {
     color: palette.onboarding.step2,

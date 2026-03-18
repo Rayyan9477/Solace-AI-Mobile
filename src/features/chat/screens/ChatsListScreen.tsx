@@ -13,7 +13,10 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
+import { LinearGradient } from "expo-linear-gradient";
 import { palette } from "../../../shared/theme";
+import { EmptyState } from "../../../shared/components/molecules/feedback";
 
 type TabType = "recent" | "trash";
 
@@ -36,6 +39,7 @@ interface ChatsListScreenProps {
   onChatPress?: (id: string) => void;
   onSeeAllRecent?: () => void;
   onSeeAllTrash?: () => void;
+  onNewChat?: () => void;
 }
 
 export function ChatsListScreen({
@@ -49,18 +53,19 @@ export function ChatsListScreen({
   onChatPress,
   onSeeAllRecent,
   onSeeAllTrash,
+  onNewChat,
 }: ChatsListScreenProps = {}): React.ReactElement {
   const renderChatItem = (chat: ChatConversation, isTrash: boolean = false) => (
     <TouchableOpacity
       key={chat.id}
       testID={`chat-item-${chat.id}`}
       style={[styles.chatItem, isTrash && styles.chatItemTrash]}
-      onPress={() => onChatPress(chat.id)}
+      onPress={() => onChatPress?.(chat.id)}
       accessibilityRole="button"
       accessibilityLabel={`Open conversation: ${chat.title}`}
     >
       <View testID={`chat-avatar-${chat.id}`} style={styles.chatAvatar}>
-        <Text style={styles.avatarEmoji}>💬</Text>
+        <Icon name="chatbubble-outline" size={24} color={palette.white} />
       </View>
       <View style={styles.chatContent}>
         <Text
@@ -86,7 +91,13 @@ export function ChatsListScreen({
   return (
     <View testID="chats-list-screen" style={styles.container}>
       {/* Header Section - Orange gradient */}
-      <View testID="header-section" style={styles.headerSection}>
+      <LinearGradient
+        testID="header-section"
+        colors={["#E8853A", "#C06A28"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.headerSection}
+      >
         <TouchableOpacity
           testID="back-button"
           style={styles.backButton}
@@ -96,7 +107,7 @@ export function ChatsListScreen({
         >
           <Text style={styles.backButtonIcon}>{"<"}</Text>
         </TouchableOpacity>
-        <Text style={styles.screenTitle}>My AI Chats</Text>
+        <Text style={styles.screenTitle} accessibilityRole="header">My AI Chats</Text>
 
         {/* Segmented Control */}
         <View testID="segmented-control" style={styles.segmentedControl}>
@@ -106,7 +117,7 @@ export function ChatsListScreen({
               styles.segmentTab,
               activeTab === "recent" && styles.segmentTabActive,
             ]}
-            onPress={() => onTabChange("recent")}
+            onPress={() => onTabChange?.("recent")}
             accessibilityRole="tab"
             accessibilityState={{ selected: activeTab === "recent" }}
           >
@@ -125,7 +136,7 @@ export function ChatsListScreen({
               styles.segmentTab,
               activeTab === "trash" && styles.segmentTabActive,
             ]}
-            onPress={() => onTabChange("trash")}
+            onPress={() => onTabChange?.("trash")}
             accessibilityRole="tab"
             accessibilityState={{ selected: activeTab === "trash" }}
           >
@@ -139,7 +150,7 @@ export function ChatsListScreen({
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </LinearGradient>
 
       {/* Content Area */}
       <ScrollView
@@ -160,7 +171,21 @@ export function ChatsListScreen({
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
           </View>
-          {recentChats.map((chat) => renderChatItem(chat))}
+          {recentChats.length === 0 ? (
+            <EmptyState
+              testID="recent-chats-empty"
+              title="No conversations yet"
+              description="Start your first AI therapy session"
+              action={
+                onNewChat
+                  ? { label: "New Conversation", onPress: onNewChat }
+                  : undefined
+              }
+              variant="card"
+            />
+          ) : (
+            recentChats.map((chat) => renderChatItem(chat))
+          )}
         </View>
 
         {/* Trash Section */}
@@ -176,7 +201,16 @@ export function ChatsListScreen({
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
           </View>
-          {trashChats.map((chat) => renderChatItem(chat, true))}
+          {trashChats.length === 0 ? (
+            <EmptyState
+              testID="trash-chats-empty"
+              title="Trash is empty"
+              description="Deleted conversations will appear here"
+              variant="compact"
+            />
+          ) : (
+            trashChats.map((chat) => renderChatItem(chat, true))
+          )}
         </View>
       </ScrollView>
     </View>
@@ -184,9 +218,6 @@ export function ChatsListScreen({
 }
 
 const styles = StyleSheet.create({
-  avatarEmoji: {
-    fontSize: 20,
-  },
   backButton: {
     alignItems: "center",
     borderColor: `${palette.white}${palette.alpha[30]}`,
@@ -256,7 +287,8 @@ const styles = StyleSheet.create({
     paddingTop: 24,
   },
   headerSection: {
-    backgroundColor: palette.onboarding.step2,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
     paddingBottom: 24,
     paddingHorizontal: 24,
     paddingTop: 60,

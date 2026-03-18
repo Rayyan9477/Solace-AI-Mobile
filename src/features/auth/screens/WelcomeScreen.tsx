@@ -7,17 +7,30 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { colors, palette } from "../../../shared/theme";
 
 interface WelcomeScreenProps {
-  onGetStarted: () => void;
-  onSignIn: () => void;
+  onGetStarted?: () => void;
+  onSignIn?: () => void;
 }
 
 export function WelcomeScreen({
   onGetStarted,
   onSignIn,
 }: WelcomeScreenProps): React.ReactElement {
+  const navigation = useNavigation<any>();
+
+  const handleGetStarted = () => {
+    if (onGetStarted) onGetStarted();
+    else navigation.navigate("OnboardingStep1");
+  };
+
+  const handleSignIn = () => {
+    if (onSignIn) onSignIn();
+    else navigation.navigate("SignIn");
+  };
   return (
     <View testID="welcome-screen" style={styles.container}>
       {/* Logo */}
@@ -36,23 +49,22 @@ export function WelcomeScreen({
 
       {/* Title */}
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Welcome to the ultimate</Text>
+        <Text style={styles.title}>Welcome to</Text>
         <Text style={styles.titleBrand}>
-          <Text style={styles.brandUnderline}>Solace</Text>
-          <Text> UI Kit!</Text>
+          <Text style={styles.brandUnderline}>Solace AI</Text>
         </Text>
       </View>
 
       {/* Subtitle */}
       <Text style={styles.subtitle}>
-        Your mindful mental health AI companion{"\n"}for everyone, anywhere 🌿
+        Your mindful mental health AI companion{"\n"}for everyone, anywhere
       </Text>
 
       {/* Illustration */}
       <View testID="illustration-container" style={styles.illustrationContainer}>
         <View style={styles.illustrationCircle}>
           {/* Placeholder for mascot illustration */}
-          <Text style={styles.mascotPlaceholder}>🤖</Text>
+          <Icon name="hardware-chip-outline" size={64} color={palette.tan[500]} />
         </View>
       </View>
 
@@ -60,7 +72,7 @@ export function WelcomeScreen({
       <TouchableOpacity
         testID="get-started-button"
         style={styles.getStartedButton}
-        onPress={onGetStarted}
+        onPress={handleGetStarted}
         accessibilityRole="button"
         accessibilityLabel="Get Started"
       >
@@ -72,7 +84,7 @@ export function WelcomeScreen({
       <TouchableOpacity
         testID="sign-in-link"
         style={styles.signInContainer}
-        onPress={onSignIn}
+        onPress={handleSignIn}
         accessibilityRole="link"
         accessibilityLabel="Sign In to existing account"
       >
@@ -159,9 +171,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginVertical: 1,
   },
-  mascotPlaceholder: {
-    fontSize: 80,
-  },
+  mascotPlaceholder: {},
   signInContainer: {
     marginBottom: 32,
     marginTop: 16,

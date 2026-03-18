@@ -15,6 +15,7 @@ import {
   FlatList,
   Image,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface MediaContent {
@@ -130,7 +131,7 @@ export function ChatWithMediaScreen({
             <Text style={styles.messageText}>{item.content}</Text>
           </View>
           <View testID={`user-avatar-${item.id}`} style={styles.userAvatar}>
-            <Text style={styles.avatarEmoji}>👤</Text>
+            <Icon name="person-circle-outline" size={24} color={palette.white} />
           </View>
         </View>
       );
@@ -143,7 +144,7 @@ export function ChatWithMediaScreen({
           style={[styles.messageBubble, styles.aiMessage]}
         >
           <View testID={`ai-avatar-${item.id}`} style={styles.aiAvatar}>
-            <Text style={styles.avatarEmoji}>🤖</Text>
+            <Icon name="hardware-chip-outline" size={24} color={palette.white} />
           </View>
           <View style={styles.aiMessageContainer}>
             <View style={[styles.messageContent, styles.aiMessageContent]}>
@@ -184,7 +185,7 @@ export function ChatWithMediaScreen({
           accessibilityRole="button"
           accessibilityLabel="Search messages"
         >
-          <Text style={styles.searchIcon}>🔍</Text>
+          <Icon name="search-outline" size={22} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -203,7 +204,7 @@ export function ChatWithMediaScreen({
       {isAITyping && (
         <View testID="typing-indicator" style={styles.typingIndicator}>
           <View style={styles.aiAvatar}>
-            <Text style={styles.avatarEmoji}>🤖</Text>
+            <Icon name="hardware-chip-outline" size={24} color={palette.white} />
           </View>
           <View style={styles.typingBubble}>
             <Text style={styles.typingText}>Solace AI is thinking...</Text>
@@ -225,7 +226,7 @@ export function ChatWithMediaScreen({
           accessibilityRole="button"
           accessibilityLabel="Add attachment"
         >
-          <Text style={styles.attachmentIcon}>📎</Text>
+          <Icon name="attach-outline" size={22} color={palette.white} />
         </TouchableOpacity>
         <TextInput
           testID="message-input"
@@ -277,12 +278,6 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: "center",
     width: 44,
-  },
-  attachmentIcon: {
-    fontSize: 20,
-  },
-  avatarEmoji: {
-    fontSize: 20,
   },
   backButton: {
     alignItems: "center",
@@ -399,9 +394,6 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: "center",
     width: 44,
-  },
-  searchIcon: {
-    fontSize: 20,
   },
   sendButton: {
     alignItems: "center",

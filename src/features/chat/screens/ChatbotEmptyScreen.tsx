@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface ChatbotEmptyScreenProps {
@@ -46,12 +47,12 @@ export function ChatbotEmptyScreen({
         {/* Mascot Illustration */}
         <View testID="mascot-illustration" style={styles.mascotContainer}>
           <View style={styles.mascotInner}>
-            <Text style={styles.mascotEmoji}>🤖</Text>
-            <Text style={styles.mascotAccent}>🌿</Text>
+            <Icon name="hardware-chip-outline" size={80} color={palette.white} />
+            <Icon name="leaf-outline" size={32} color={palette.olive[500]} style={styles.mascotAccent} />
           </View>
           <View style={styles.mascotDecorations}>
-            <Text style={styles.decorationLeft}>☕</Text>
-            <Text style={styles.decorationRight}>✨</Text>
+            <Icon name="cafe-outline" size={24} color={palette.white} style={styles.decorationLeft} />
+            <Icon name="sparkles-outline" size={24} color={palette.white} style={styles.decorationRight} />
           </View>
         </View>
 
@@ -114,13 +115,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   decorationLeft: {
-    fontSize: 24,
     left: 0,
     position: "absolute",
     top: 0,
   },
   decorationRight: {
-    fontSize: 24,
     position: "absolute",
     right: 0,
     top: 0,
@@ -148,7 +147,6 @@ const styles = StyleSheet.create({
   },
   mascotAccent: {
     bottom: -10,
-    fontSize: 32,
     position: "absolute",
     right: -10,
   },
@@ -161,9 +159,6 @@ const styles = StyleSheet.create({
     height: 60,
     position: "relative",
     width: 200,
-  },
-  mascotEmoji: {
-    fontSize: 80,
   },
   mascotInner: {
     alignItems: "center",

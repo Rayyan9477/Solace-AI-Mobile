@@ -16,6 +16,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { CrisisModal } from "../../../shared/components/organisms/crisis";
 import { palette, colors } from "../../../shared/theme";
 
@@ -118,7 +119,7 @@ export function ActiveChatScreen({
             <Text style={styles.messageText}>{item.content}</Text>
           </View>
           <View testID={`user-avatar-${item.id}`} style={styles.userAvatar}>
-            <Text style={styles.avatarEmoji}>👤</Text>
+            <Icon name="person-circle-outline" size={24} color={palette.white} />
           </View>
         </View>
       );
@@ -131,7 +132,7 @@ export function ActiveChatScreen({
           style={[styles.messageBubble, styles.aiMessage]}
         >
           <View testID={`ai-avatar-${item.id}`} style={styles.aiAvatar}>
-            <Text style={styles.avatarEmoji}>🤖</Text>
+            <Icon name="hardware-chip-outline" size={24} color={palette.white} />
           </View>
           <View style={[styles.messageContent, styles.aiMessageContent]}>
             <Text style={styles.messageText}>{item.content}</Text>
@@ -198,7 +199,7 @@ export function ActiveChatScreen({
           accessibilityRole="button"
           accessibilityLabel="Search messages"
         >
-          <Text style={styles.searchIcon}>🔍</Text>
+          <Icon name="search-outline" size={22} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -210,7 +211,7 @@ export function ActiveChatScreen({
       {crisisDetected && (
         <View testID="crisis-alert-banner" style={styles.crisisAlertBanner} accessibilityRole="alert" accessibilityLiveRegion="assertive">
           <View style={styles.crisisAlertContent}>
-            <Text style={styles.crisisAlertIcon}>❤️‍🩹</Text>
+            <Icon name="heart-outline" size={24} color={palette.red[300]} style={styles.crisisAlertIcon} />
             <View style={styles.crisisAlertText}>
               <Text style={styles.crisisAlertTitle}>Support Available</Text>
               <Text style={styles.crisisAlertDescription}>
@@ -257,7 +258,7 @@ export function ActiveChatScreen({
       {isAITyping && (
         <View testID="typing-indicator" style={styles.typingIndicator}>
           <View style={styles.aiAvatar}>
-            <Text style={styles.avatarEmoji}>🤖</Text>
+            <Icon name="hardware-chip-outline" size={24} color={palette.white} />
           </View>
           <View style={styles.typingBubble}>
             <Text style={styles.typingText}>Solace AI is thinking...</Text>
@@ -279,7 +280,7 @@ export function ActiveChatScreen({
           accessibilityRole="button"
           accessibilityLabel="Add attachment"
         >
-          <Text style={styles.attachmentIcon}>📎</Text>
+          <Icon name="attach-outline" size={22} color={palette.white} />
         </TouchableOpacity>
         <TextInput
           testID="message-input"
@@ -336,12 +337,6 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: "center",
     width: 44,
-  },
-  attachmentIcon: {
-    fontSize: 20,
-  },
-  avatarEmoji: {
-    fontSize: 20,
   },
   backButton: {
     alignItems: "center",
@@ -411,7 +406,6 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   crisisAlertIcon: {
-    fontSize: 24,
     marginRight: 12,
   },
   crisisAlertText: {
@@ -505,9 +499,6 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: "center",
     width: 44,
-  },
-  searchIcon: {
-    fontSize: 20,
   },
   sendButton: {
     alignItems: "center",

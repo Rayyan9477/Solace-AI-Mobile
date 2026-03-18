@@ -13,6 +13,7 @@ import {
   TextInput,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface LimitationPage {
@@ -87,7 +88,7 @@ export function ChatLimitationsScreen({
           accessibilityRole="button"
           accessibilityLabel="Search"
         >
-          <Text style={styles.searchIcon}>🔍</Text>
+          <Icon name="search-outline" size={22} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -96,11 +97,11 @@ export function ChatLimitationsScreen({
         {/* Robot Illustration */}
         <View testID="robot-illustration" style={styles.illustrationContainer}>
           <View style={styles.illustrationCircle}>
-            <Text style={styles.robotEmoji}>🤖</Text>
+            <Icon name="hardware-chip-outline" size={64} color={palette.white} />
           </View>
           <View style={styles.decorations}>
-            <Text style={styles.decorationLeft}>✨</Text>
-            <Text style={styles.decorationRight}>🌿</Text>
+            <Icon name="sparkles-outline" size={24} color={palette.white} style={styles.decorationLeft} />
+            <Icon name="leaf-outline" size={24} color={palette.olive[500]} style={styles.decorationRight} />
           </View>
         </View>
 
@@ -150,7 +151,7 @@ export function ChatLimitationsScreen({
           accessibilityRole="button"
           accessibilityLabel="Add attachment"
         >
-          <Text style={styles.attachmentIcon}>📎</Text>
+          <Icon name="attach-outline" size={22} color={palette.white} />
         </TouchableOpacity>
         <TextInput
           testID="message-input"
@@ -181,9 +182,6 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: "center",
     width: 44,
-  },
-  attachmentIcon: {
-    fontSize: 20,
   },
   backButton: {
     alignItems: "center",
@@ -235,13 +233,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   decorationLeft: {
-    fontSize: 24,
     left: -30,
     position: "absolute",
     top: 20,
   },
   decorationRight: {
-    fontSize: 24,
     position: "absolute",
     right: -30,
     top: 20,
@@ -320,17 +316,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 16,
   },
-  robotEmoji: {
-    fontSize: 64,
-  },
   searchButton: {
     alignItems: "center",
     height: 44,
     justifyContent: "center",
     width: 44,
-  },
-  searchIcon: {
-    fontSize: 20,
   },
   sendButton: {
     alignItems: "center",

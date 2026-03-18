@@ -7,6 +7,7 @@
 
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface QuestionOption {
@@ -106,7 +107,7 @@ export function AssessmentQuestionScreen({
               accessibilityState={{ selected: isSelected }}
               accessibilityLabel={option.label}
             >
-              <Text style={styles.optionIcon}>{option.icon}</Text>
+              <Icon name={option.icon} size={24} color={isSelected ? palette.brown[900] : palette.white} style={styles.optionIcon} />
               <Text
                 style={[
                   styles.optionLabel,
@@ -256,7 +257,6 @@ const styles = StyleSheet.create({
     borderColor: palette.olive[500],
   },
   optionIcon: {
-    fontSize: 24,
     marginRight: 12,
   },
   optionLabel: {

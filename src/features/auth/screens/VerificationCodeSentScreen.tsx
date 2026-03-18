@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { colors, palette } from "../../../shared/theme";
 
@@ -50,7 +51,7 @@ export function VerificationCodeSentScreen({
         {/* Illustration */}
         <View testID="illustration-container" style={styles.illustrationContainer}>
           <View style={styles.illustrationCircle}>
-            <Text style={styles.illustrationPlaceholder}>🔐</Text>
+            <Icon name="shield-checkmark-outline" size={64} color={palette.white} />
           </View>
         </View>
 
@@ -62,7 +63,7 @@ export function VerificationCodeSentScreen({
 
         {/* Subtitle */}
         <Text style={styles.subtitle}>
-          Didn't receive the link? Then re-send{"\n"}the password below! 🔑
+          Didn't receive the link? Then re-send{"\n"}the password below!
         </Text>
 
         {/* Re-Send Password Button */}
@@ -74,7 +75,7 @@ export function VerificationCodeSentScreen({
           accessibilityLabel="Re-Send Password"
         >
           <Text style={styles.resendButtonText}>Re-Send Password</Text>
-          <Text style={styles.lockIcon}>🔒</Text>
+          <Icon name="lock-closed-outline" size={16} color={colors.text.inverse} style={styles.lockIcon} />
         </TouchableOpacity>
 
         {/* Send Password Button (Disabled) */}
@@ -87,7 +88,7 @@ export function VerificationCodeSentScreen({
           accessibilityState={{ disabled: true }}
         >
           <Text style={styles.sendPasswordButtonText}>Send Password</Text>
-          <Text style={styles.lockIconDisabled}>🔒</Text>
+          <Icon name="lock-closed-outline" size={16} color={colors.text.secondary} style={styles.lockIconDisabled} />
         </TouchableOpacity>
       </View>
 
@@ -99,7 +100,7 @@ export function VerificationCodeSentScreen({
         accessibilityRole="button"
         accessibilityLabel="Close"
       >
-        <Text style={styles.dismissIcon}>✕</Text>
+        <Icon name="close-outline" size={20} color={colors.text.inverse} />
       </TouchableOpacity>
     </View>
   );

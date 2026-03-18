@@ -6,6 +6,7 @@
 
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+import { processColor } from "react-native";
 import { ChatsListScreen } from "./ChatsListScreen";
 
 describe("ChatsListScreen", () => {
@@ -228,13 +229,13 @@ describe("ChatsListScreen", () => {
   it("has orange gradient header background", () => {
     const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
     const header = getByTestId("header-section");
-    const styles = Array.isArray(header.props.style)
-      ? header.props.style
-      : [header.props.style];
-    const hasBackgroundColor = styles.some(
-      (s) => s?.backgroundColor === "#E8853A"
-    );
-    expect(hasBackgroundColor).toBe(true);
+    // Header is now a LinearGradient. The mock converts hex strings to numeric
+    // ARGB values via processColor before passing them to the native layer,
+    // so we compare using the same conversion.
+    expect(header.props.colors).toEqual([
+      processColor("#E8853A"),
+      processColor("#C06A28"),
+    ]);
   });
 
   it("has dark background for content area", () => {

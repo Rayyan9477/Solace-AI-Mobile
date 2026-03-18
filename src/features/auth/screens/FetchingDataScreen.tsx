@@ -7,6 +7,7 @@
 
 import React, { useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { colors, palette } from "../../../shared/theme";
 
 interface FetchingDataScreenProps {
@@ -56,7 +57,7 @@ export function FetchingDataScreen({
 
         <View style={styles.hintContainer}>
           <View testID="shake-icon" style={styles.shakeIcon}>
-            <Text style={styles.shakeIconText}>📱</Text>
+            <Icon name="phone-portrait-outline" size={20} color={colors.text.primary} />
           </View>
           <Text style={styles.hintText}>Setting up your experience...</Text>
         </View>

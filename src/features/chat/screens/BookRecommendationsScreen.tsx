@@ -14,6 +14,7 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 type ColorTheme = "tan" | "orange" | "teal" | "purple";
@@ -67,11 +68,11 @@ const COLOR_THEMES: Record<ColorTheme, string> = {
   purple: "#9A5CAD",
 };
 
-const BOOK_EMOJIS: Record<ColorTheme, string> = {
-  tan: "📚",
-  orange: "📕",
-  teal: "📗",
-  purple: "📘",
+const BOOK_ICONS: Record<ColorTheme, string> = {
+  tan: "library-outline",
+  orange: "book-outline",
+  teal: "book-outline",
+  purple: "book-outline",
 };
 
 export function BookRecommendationsScreen({
@@ -109,7 +110,7 @@ export function BookRecommendationsScreen({
           { backgroundColor: COLOR_THEMES[book.colorTheme] },
         ]}
       >
-        <Text style={styles.bookEmoji}>{BOOK_EMOJIS[book.colorTheme]}</Text>
+        <Icon name={BOOK_ICONS[book.colorTheme]} size={24} color={palette.white} />
       </View>
       <View style={styles.bookInfo}>
         <Text style={styles.bookTitle}>{book.title}</Text>
@@ -143,7 +144,7 @@ export function BookRecommendationsScreen({
             <Text style={styles.messageText}>{item.content}</Text>
           </View>
           <View testID={`user-avatar-${item.id}`} style={styles.userAvatar}>
-            <Text style={styles.avatarEmoji}>👤</Text>
+            <Icon name="person-circle-outline" size={24} color={palette.white} />
           </View>
         </View>
       );
@@ -156,7 +157,7 @@ export function BookRecommendationsScreen({
           style={[styles.messageBubble, styles.aiMessage]}
         >
           <View testID={`ai-avatar-${item.id}`} style={styles.aiAvatar}>
-            <Text style={styles.avatarEmoji}>🤖</Text>
+            <Icon name="hardware-chip-outline" size={24} color={palette.white} />
           </View>
           <View style={styles.aiMessageContainer}>
             <View style={[styles.messageContent, styles.aiMessageContent]}>
@@ -201,7 +202,7 @@ export function BookRecommendationsScreen({
           accessibilityRole="button"
           accessibilityLabel="Search messages"
         >
-          <Text style={styles.searchIcon}>🔍</Text>
+          <Icon name="search-outline" size={22} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -220,7 +221,7 @@ export function BookRecommendationsScreen({
       {isAITyping && (
         <View testID="typing-indicator" style={styles.typingIndicator}>
           <View style={styles.aiAvatar}>
-            <Text style={styles.avatarEmoji}>🤖</Text>
+            <Icon name="hardware-chip-outline" size={24} color={palette.white} />
           </View>
           <View style={styles.typingBubble}>
             <Text style={styles.typingText}>Solace AI is thinking...</Text>
@@ -242,7 +243,7 @@ export function BookRecommendationsScreen({
           accessibilityRole="button"
           accessibilityLabel="Add attachment"
         >
-          <Text style={styles.attachmentIcon}>📎</Text>
+          <Icon name="attach-outline" size={22} color={palette.white} />
         </TouchableOpacity>
         <TextInput
           testID="message-input"
@@ -295,12 +296,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 44,
   },
-  attachmentIcon: {
-    fontSize: 20,
-  },
-  avatarEmoji: {
-    fontSize: 20,
-  },
   backButton: {
     alignItems: "center",
     borderColor: palette.brown[700],
@@ -330,9 +325,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     minHeight: 44,
     padding: 12,
-  },
-  bookEmoji: {
-    fontSize: 20,
   },
   bookIcon: {
     alignItems: "center",
@@ -444,9 +436,6 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: "center",
     width: 44,
-  },
-  searchIcon: {
-    fontSize: 20,
   },
   sendButton: {
     alignItems: "center",

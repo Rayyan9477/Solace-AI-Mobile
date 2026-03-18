@@ -14,6 +14,7 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 import { CrisisModal } from "../../../shared/components/organisms/crisis";
 
@@ -108,7 +109,7 @@ export function CrisisDetectionScreen({
       accessibilityLabel={`Contact ${professional.name}`}
     >
       <View style={styles.professionalAvatar}>
-        <Text style={styles.avatarEmoji}>👨‍⚕️</Text>
+        <Icon name="medkit-outline" size={24} color={palette.white} />
       </View>
       <View style={styles.professionalInfo}>
         <View style={styles.professionalHeader}>
@@ -118,13 +119,13 @@ export function CrisisDetectionScreen({
               testID={`verified-badge-${professional.id}`}
               style={styles.verifiedBadge}
             >
-              <Text style={styles.verifiedIcon}>✓</Text>
+              <Icon name="checkmark-circle-outline" size={12} color={palette.white} />
             </View>
           )}
         </View>
         <Text style={styles.professionalRole}>{professional.role}</Text>
         <View style={styles.professionalMeta}>
-          <Text style={styles.ratingText}>★ {professional.rating}</Text>
+          <Icon name="star-outline" size={12} color={palette.tan[500]} /><Text style={styles.ratingText}> {professional.rating}</Text>
           {professional.freeSession && (
             <View style={styles.freeSessionBadge}>
               <Text style={styles.freeSessionText}>Free Session</Text>
@@ -146,7 +147,7 @@ export function CrisisDetectionScreen({
             <Text style={styles.messageText}>{item.content}</Text>
           </View>
           <View testID={`user-avatar-${item.id}`} style={styles.userAvatar}>
-            <Text style={styles.avatarEmoji}>👤</Text>
+            <Icon name="person-circle-outline" size={24} color={palette.white} />
           </View>
         </View>
       );
@@ -159,7 +160,7 @@ export function CrisisDetectionScreen({
           style={[styles.messageBubble, styles.aiMessage]}
         >
           <View testID={`ai-avatar-${item.id}`} style={styles.aiAvatar}>
-            <Text style={styles.avatarEmoji}>🤖</Text>
+            <Icon name="hardware-chip-outline" size={24} color={palette.white} />
           </View>
           <View style={styles.aiMessageContainer}>
             <View style={[styles.messageContent, styles.aiMessageContent]}>
@@ -180,9 +181,11 @@ export function CrisisDetectionScreen({
         <View
           testID={`crisis-badge-${item.id}`}
           style={styles.crisisBadge}
+          accessibilityRole="alert"
+          accessibilityLiveRegion="assertive"
         >
           <View style={styles.crisisIcon}>
-            <Text style={styles.crisisIconText}>⚠️</Text>
+            <Icon name="warning-outline" size={20} color={palette.white} />
           </View>
           <View style={styles.crisisContent}>
             <Text style={styles.crisisEmotions}>
@@ -223,7 +226,7 @@ export function CrisisDetectionScreen({
           accessibilityRole="button"
           accessibilityLabel="Search messages"
         >
-          <Text style={styles.searchIcon}>🔍</Text>
+          <Icon name="search-outline" size={22} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -266,7 +269,7 @@ export function CrisisDetectionScreen({
       {isAITyping && (
         <View testID="typing-indicator" style={styles.typingIndicator}>
           <View style={styles.aiAvatar}>
-            <Text style={styles.avatarEmoji}>🤖</Text>
+            <Icon name="hardware-chip-outline" size={24} color={palette.white} />
           </View>
           <View style={styles.typingBubble}>
             <Text style={styles.typingText}>Solace AI is thinking...</Text>
@@ -288,7 +291,7 @@ export function CrisisDetectionScreen({
           accessibilityRole="button"
           accessibilityLabel="Add attachment"
         >
-          <Text style={styles.attachmentIcon}>📎</Text>
+          <Icon name="attach-outline" size={22} color={palette.white} />
         </TouchableOpacity>
         <TextInput
           testID="message-input"
@@ -348,12 +351,6 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: "center",
     width: 44,
-  },
-  attachmentIcon: {
-    fontSize: 20,
-  },
-  avatarEmoji: {
-    fontSize: 20,
   },
   backButton: {
     alignItems: "center",
@@ -418,9 +415,6 @@ const styles = StyleSheet.create({
   crisisIcon: {
     alignItems: "center",
     justifyContent: "center",
-  },
-  crisisIconText: {
-    fontSize: 20,
   },
   crisisStatus: {
     color: palette.white,
@@ -574,9 +568,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 44,
   },
-  searchIcon: {
-    fontSize: 20,
-  },
   sendButton: {
     alignItems: "center",
     backgroundColor: palette.olive[500],
@@ -641,11 +632,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 6,
     width: 16,
-  },
-  verifiedIcon: {
-    color: palette.white,
-    fontSize: 10,
-    fontWeight: "700",
   },
 });
 

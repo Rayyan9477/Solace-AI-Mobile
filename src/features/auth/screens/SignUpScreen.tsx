@@ -17,6 +17,7 @@ import {
   Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { colors, palette } from "../../../shared/theme";
 import { useAuth } from "../../../app/AuthContext";
 import { ScreenContainer } from "../../../shared/components/atoms/layout";
@@ -115,7 +116,7 @@ export function SignUpScreen({
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>Email Address</Text>
         <View style={[styles.inputContainer, emailError && styles.inputContainerError]}>
-          <Text style={styles.inputIcon}>✉</Text>
+          <Icon name="mail-outline" size={20} color={palette.tan[400]} style={styles.inputIcon} />
           <TextInput
             testID="email-input"
             style={styles.input}
@@ -133,9 +134,11 @@ export function SignUpScreen({
           />
         </View>
         {emailError && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorIcon}>⚠</Text>
-            <Text style={styles.errorText}>{emailError}</Text>
+          <View accessibilityRole="alert" accessibilityLiveRegion="assertive">
+            <View style={styles.errorContainer}>
+              <Icon name="warning-outline" size={16} color={palette.red[500]} style={styles.errorIcon} />
+              <Text style={styles.errorText}>{emailError}</Text>
+            </View>
           </View>
         )}
       </View>
@@ -144,7 +147,7 @@ export function SignUpScreen({
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>Password</Text>
         <View style={[styles.inputContainer, passwordError && styles.inputContainerError]}>
-          <Text style={styles.inputIcon}>🔒</Text>
+          <Icon name="lock-closed-outline" size={20} color={palette.tan[400]} style={styles.inputIcon} />
           <TextInput
             testID="password-input"
             style={styles.input}
@@ -163,8 +166,13 @@ export function SignUpScreen({
             testID="password-toggle"
             onPress={() => setShowPassword(!showPassword)}
             style={styles.toggleButton}
+            accessibilityLabel={showPassword ? "Hide password" : "Show password"}
           >
-            <Text style={styles.toggleIcon}>{showPassword ? "👁" : "👁‍🗨"}</Text>
+            <Icon
+              name={showPassword ? "eye-outline" : "eye-off-outline"}
+              size={20}
+              style={styles.toggleIcon}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -173,7 +181,7 @@ export function SignUpScreen({
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>Password Confirmation</Text>
         <View style={[styles.inputContainer, passwordError && styles.inputContainerError]}>
-          <Text style={styles.inputIcon}>🔒</Text>
+          <Icon name="lock-closed-outline" size={20} color={palette.tan[400]} style={styles.inputIcon} />
           <TextInput
             testID="confirm-password-input"
             style={styles.input}
@@ -192,14 +200,21 @@ export function SignUpScreen({
             testID="confirm-password-toggle"
             onPress={() => setShowConfirmPassword(!showConfirmPassword)}
             style={styles.toggleButton}
+            accessibilityLabel={showConfirmPassword ? "Hide password" : "Show password"}
           >
-            <Text style={styles.toggleIcon}>{showConfirmPassword ? "👁" : "👁‍🗨"}</Text>
+            <Icon
+              name={showConfirmPassword ? "eye-outline" : "eye-off-outline"}
+              size={20}
+              style={styles.toggleIcon}
+            />
           </TouchableOpacity>
         </View>
         {passwordError && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorIcon}>⚠</Text>
-            <Text style={styles.errorText}>{passwordError}</Text>
+          <View accessibilityRole="alert" accessibilityLiveRegion="assertive">
+            <View style={styles.errorContainer}>
+              <Icon name="warning-outline" size={16} color={palette.red[500]} style={styles.errorIcon} />
+              <Text style={styles.errorText}>{passwordError}</Text>
+            </View>
           </View>
         )}
       </View>
@@ -279,12 +294,10 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   errorIcon: {
-    color: colors.text.warning,
-    fontSize: 16,
     marginRight: 8,
   },
   errorText: {
-    color: colors.text.primary,
+    color: colors.text.error,
     fontSize: 14,
   },
   footerLink: {
@@ -328,7 +341,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   inputIcon: {
-    fontSize: 18,
     marginRight: 12,
   },
   inputLabel: {
@@ -379,7 +391,6 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   toggleIcon: {
-    fontSize: 18,
     opacity: 0.6,
   },
 });

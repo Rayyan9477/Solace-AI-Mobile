@@ -14,6 +14,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { colors, palette } from "../../../shared/theme";
 
 type RecoveryMethod = "2fa" | "password" | "google";
@@ -41,7 +42,7 @@ export function ForgotPasswordScreen({
   const renderMethodOption = (
     method: RecoveryMethod,
     label: string,
-    icon: string
+    icon: React.ReactElement
   ) => {
     const isSelected = selectedMethod === method;
     return (
@@ -54,7 +55,7 @@ export function ForgotPasswordScreen({
         accessibilityLabel={`${label} recovery method`}
       >
         <View style={styles.methodIconContainer}>
-          <Text style={styles.methodIcon}>{icon}</Text>
+          {icon}
         </View>
         <Text style={styles.methodLabel}>{label}</Text>
       </TouchableOpacity>
@@ -88,9 +89,9 @@ export function ForgotPasswordScreen({
 
       {/* Recovery Method Options */}
       <View style={styles.methodsContainer}>
-        {renderMethodOption("2fa", "Use 2FA", "🔐")}
-        {renderMethodOption("password", "Password", "🔑")}
-        {renderMethodOption("google", "Google Authenticator", "🔒")}
+        {renderMethodOption("2fa", "Use 2FA", <Icon name="shield-checkmark-outline" size={28} color={palette.tan[400]} />)}
+        {renderMethodOption("password", "Password", <Icon name="key-outline" size={28} color={palette.tan[400]} />)}
+        {renderMethodOption("google", "Google Authenticator", <Icon name="lock-closed-outline" size={28} color={palette.tan[400]} />)}
       </View>
 
       {/* Send Password Button */}
@@ -102,7 +103,7 @@ export function ForgotPasswordScreen({
         accessibilityLabel="Send Reset Link"
       >
         <Text style={styles.sendButtonText}>Send Reset Link</Text>
-        <Text style={styles.sendButtonIcon}>🔒</Text>
+        <Icon name="lock-closed-outline" size={18} color={palette.tan[500]} style={styles.sendButtonIcon} />
       </TouchableOpacity>
     </ScrollView>
   );
@@ -131,9 +132,7 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingBottom: 40,
   },
-  methodIcon: {
-    fontSize: 32,
-  },
+  methodIcon: {},
   methodIconContainer: {
     alignItems: "center",
     backgroundColor: colors.background.tertiary,
@@ -178,7 +177,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   sendButtonIcon: {
-    fontSize: 18,
     marginLeft: 8,
   },
   sendButtonText: {
