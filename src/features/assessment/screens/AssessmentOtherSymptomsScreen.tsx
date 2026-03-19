@@ -15,6 +15,7 @@ import {
   ScrollView,
 } from "react-native";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface AssessmentOtherSymptomsScreenProps {
   currentStep: number;
@@ -79,7 +80,7 @@ export function AssessmentOtherSymptomsScreen({
     symptoms.some((s) => s.toLowerCase() === symptom.toLowerCase());
 
   return (
-    <View testID="assessment-other-symptoms-screen" style={styles.container}>
+    <ScreenContainer testID="assessment-other-symptoms-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
@@ -209,7 +210,7 @@ export function AssessmentOtherSymptomsScreen({
           <Text style={styles.continueButtonIcon}>→</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -235,9 +236,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
-    paddingTop: 60,
   },
   content: {
     flex: 1,

@@ -9,6 +9,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 type Category = "healthy" | "unstable" | "critical";
 
@@ -56,7 +57,7 @@ export function AssessmentResultsScreen({
   const categoryConfig = CATEGORY_CONFIG[category];
 
   return (
-    <View testID="assessment-results-screen" style={styles.container}>
+    <ScreenContainer testID="assessment-results-screen" style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
@@ -144,7 +145,7 @@ export function AssessmentResultsScreen({
           <Text style={styles.continueButtonIcon}>→</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -205,9 +206,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
-    paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",

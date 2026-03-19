@@ -8,6 +8,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface AssessmentSoundAnalysisScreenProps {
   currentStep: number;
@@ -53,7 +54,7 @@ export function AssessmentSoundAnalysisScreen({
   };
 
   return (
-    <View testID="assessment-sound-analysis-screen" style={styles.container}>
+    <ScreenContainer testID="assessment-sound-analysis-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
@@ -197,7 +198,7 @@ export function AssessmentSoundAnalysisScreen({
           <Text style={styles.continueButtonIcon}>→</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -228,9 +229,6 @@ const styles = StyleSheet.create({
     width: 60,
   },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
-    paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",

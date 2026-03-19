@@ -8,6 +8,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 type StressLevel = 1 | 2 | 3 | 4 | 5;
 
@@ -51,7 +52,7 @@ export function AssessmentStressLevelScreen({
   const levels: StressLevel[] = [1, 2, 3, 4, 5];
 
   return (
-    <View testID="assessment-stress-level-screen" style={styles.container}>
+    <ScreenContainer testID="assessment-stress-level-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
@@ -146,7 +147,7 @@ export function AssessmentStressLevelScreen({
           <Text style={styles.continueButtonIcon}>→</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -172,9 +173,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
-    paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",

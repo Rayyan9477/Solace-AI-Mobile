@@ -21,6 +21,7 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 
 import type { MoodSelectorProps, MoodLevel } from "./MoodSelector.types";
 import {
@@ -186,7 +187,7 @@ export function MoodSelector({
         ) : (
           <>
             <Text style={styles.confirmButtonText}>{confirmButtonText}</Text>
-            <Text style={styles.confirmButtonIcon}>✓</Text>
+            <Icon name="checkmark-outline" size={18} color={palette.brown[900]} />
           </>
         )}
       </TouchableOpacity>
@@ -210,11 +211,7 @@ const styles = StyleSheet.create({
   confirmButtonDisabled: {
     opacity: 0.6,
   },
-  confirmButtonIcon: {
-    color: palette.brown[900],
-    fontSize: 18,
-    fontWeight: "600",
-  },
+  confirmButtonIcon: {},
   confirmButtonText: {
     color: palette.brown[900],
     fontSize: 16,

@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 type Gender = "male" | "female";
 
@@ -36,7 +37,7 @@ export function AssessmentGenderScreen({
   };
 
   return (
-    <View testID="assessment-gender-screen" style={styles.container}>
+    <ScreenContainer testID="assessment-gender-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
@@ -146,7 +147,7 @@ export function AssessmentGenderScreen({
           <Text style={styles.continueButtonIcon}>→</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -176,9 +177,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
-    paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",

@@ -195,11 +195,15 @@ export const palette = {
     white08: "rgba(255, 255, 255, 0.08)",
     white10: "rgba(255, 255, 255, 0.1)",
     white12: "rgba(255, 255, 255, 0.12)",
+    white15: "rgba(255, 255, 255, 0.15)",
     white18: "rgba(255, 255, 255, 0.18)",
     white20: "rgba(255, 255, 255, 0.2)",
     white30: "rgba(255, 255, 255, 0.3)",
     white40: "rgba(255, 255, 255, 0.4)",
+    white60: "rgba(255, 255, 255, 0.6)",
     black50: "rgba(0, 0, 0, 0.5)",
+    black60: "rgba(0, 0, 0, 0.6)",
+    black70: "rgba(0, 0, 0, 0.7)",
   },
   semantic: {
     info: "#818CF8",
@@ -231,10 +235,10 @@ export const colors = {
   text: {
     primary: palette.white,           // Primary text
     secondary: palette.gray[400],     // Secondary text
-    tertiary: palette.gray[500],      // Tertiary/disabled text
+    tertiary: palette.gray[400],      // Tertiary/disabled text
     inverse: palette.brown[900],      // Text on light backgrounds
     accent: palette.tan[500],         // Highlighted/accent text
-    disabled: palette.gray[600],      // Disabled text
+    disabled: palette.gray[500],      // Disabled text
     muted: palette.stone[400],        // Muted text
     error: palette.red[500],          // Error messages
     success: palette.green[500],      // Success messages
@@ -300,7 +304,7 @@ export const colors = {
     border: `${palette.white}${palette.alpha[20]}`,
     borderFocus: palette.tan[500],
     borderError: palette.red[500],
-    placeholder: palette.gray[500],
+    placeholder: palette.gray[400],
     label: palette.gray[400],
   },
 

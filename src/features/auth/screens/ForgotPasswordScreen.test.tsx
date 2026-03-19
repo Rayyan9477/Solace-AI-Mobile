@@ -90,9 +90,9 @@ describe("ForgotPasswordScreen", () => {
   it("has correct dark background color", () => {
     const { getByTestId } = render(<ForgotPasswordScreen {...defaultProps} />);
     const container = getByTestId("forgot-password-screen");
-    const styles = Array.isArray(container.props.style) ? container.props.style : [container.props.style];
-    const hasBackgroundColor = styles.some((s) => s?.backgroundColor === "#1C1410");
-    expect(hasBackgroundColor).toBe(true);
+    const { StyleSheet } = require("react-native");
+    const flatStyle = StyleSheet.flatten(container.props.style);
+    expect(flatStyle).toEqual(expect.objectContaining({ backgroundColor: "#1C1410" }));
   });
 
   it("send password button has proper accessibility", () => {

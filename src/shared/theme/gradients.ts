@@ -36,7 +36,11 @@ export type GradientPreset =
   | "energizing"
   | "grounding"
   | "therapeutic"
-  | "crisis";
+  | "crisis"
+  | "darkCard"
+  | "darkHero"
+  | "accentFade"
+  | "darkSurface";
 
 /**
  * Expo LinearGradient compatible props
@@ -116,6 +120,46 @@ export const gradients: Record<GradientPreset, GradientConfig> = {
     colors: ["#FEE2E2", "#FECACA", "#FCA5A5"],
     direction: "vertical",
     locations: [0, 0.5, 1],
+  },
+
+  /**
+   * Dark Card gradient - deep warm brown tones
+   * Use for: Card backgrounds, elevated surfaces in dark mode
+   */
+  darkCard: {
+    colors: ["#3D2D24", "#2A1F1A"],
+    direction: "vertical",
+    locations: [0, 1],
+  },
+
+  /**
+   * Dark Hero gradient - dramatic dark brown sweep
+   * Use for: Hero sections, large feature banners, splash areas in dark mode
+   */
+  darkHero: {
+    colors: ["#57493D", "#1C1410"],
+    direction: "diagonal",
+    locations: [0, 1],
+  },
+
+  /**
+   * Accent Fade gradient - warm tan to amber progression
+   * Use for: Accent panels, highlighted content, calls to action
+   */
+  accentFade: {
+    colors: ["#C4A574", "#8B6F47"],
+    direction: "horizontal",
+    locations: [0, 1],
+  },
+
+  /**
+   * Dark Surface gradient - subtle dark background depth
+   * Use for: Screen backgrounds, deep surfaces, modal backdrops in dark mode
+   */
+  darkSurface: {
+    colors: ["#2A1F1A", "#1C1410"],
+    direction: "vertical",
+    locations: [0, 1],
   },
 };
 

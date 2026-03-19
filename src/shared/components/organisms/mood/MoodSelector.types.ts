@@ -105,35 +105,35 @@ export const MOOD_CONFIGS: Record<MoodLevel, MoodConfig> = {
   depressed: {
     mood: "depressed",
     index: 0,
-    emoji: "😵",
+    emoji: "sad-outline",
     label: "Depressed",
     backgroundColor: "#7B68B5", // Purple
   },
   sad: {
     mood: "sad",
     index: 1,
-    emoji: "😢",
+    emoji: "sad-outline",
     label: "Sad",
     backgroundColor: "#E8853A", // Orange
   },
   neutral: {
     mood: "neutral",
     index: 2,
-    emoji: "😐",
+    emoji: "remove-circle-outline",
     label: "Neutral",
     backgroundColor: "#8B7355", // Brown/tan
   },
   happy: {
     mood: "happy",
     index: 3,
-    emoji: "🙂",
+    emoji: "happy-outline",
     label: "Happy",
     backgroundColor: "#F5C563", // Yellow/golden
   },
   overjoyed: {
     mood: "overjoyed",
     index: 4,
-    emoji: "😄",
+    emoji: "happy-outline",
     label: "Overjoyed",
     backgroundColor: "#9AAD5C", // Green/olive
   },

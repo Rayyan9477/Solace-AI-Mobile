@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface QuestionOption {
   id: string;
@@ -44,7 +45,7 @@ export function AssessmentQuestionScreen({
   const progress = currentStep / totalSteps;
 
   return (
-    <View testID="assessment-question-screen" style={styles.container}>
+    <ScreenContainer testID="assessment-question-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
@@ -160,7 +161,7 @@ export function AssessmentQuestionScreen({
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -189,9 +190,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
-    paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",

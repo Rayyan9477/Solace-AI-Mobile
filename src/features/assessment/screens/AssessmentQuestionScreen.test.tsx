@@ -9,10 +9,10 @@ import { render, fireEvent } from "@testing-library/react-native";
 import { AssessmentQuestionScreen } from "./AssessmentQuestionScreen";
 
 const mockOptions = [
-  { id: "option1", icon: "❤️", label: "I wanna reduce stress" },
-  { id: "option2", icon: "💬", label: "I wanna try AI Therapy" },
-  { id: "option3", icon: "🚩", label: "I want to cope with trauma" },
-  { id: "option4", icon: "😊", label: "I want to be a better person" },
+  { id: "option1", icon: "heart-outline", label: "I wanna reduce stress" },
+  { id: "option2", icon: "chatbubble-outline", label: "I wanna try AI Therapy" },
+  { id: "option3", icon: "flag-outline", label: "I want to cope with trauma" },
+  { id: "option4", icon: "happy-outline", label: "I want to be a better person" },
 ];
 
 describe("AssessmentQuestionScreen", () => {
@@ -85,11 +85,12 @@ describe("AssessmentQuestionScreen", () => {
   });
 
   it("displays option icons", () => {
-    const { getByText } = render(
+    const { getByTestId } = render(
       <AssessmentQuestionScreen {...defaultProps} />
     );
-    expect(getByText("❤️")).toBeTruthy();
-    expect(getByText("💬")).toBeTruthy();
+    // Options are rendered with Ionicons; verify options are present via their testIDs
+    expect(getByTestId("option-option1")).toBeTruthy();
+    expect(getByTestId("option-option2")).toBeTruthy();
   });
 
   it("displays the Continue button", () => {

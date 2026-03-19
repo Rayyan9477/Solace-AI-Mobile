@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import type { ArticleCardProps } from "./ArticleCard.types";
 import { formatCount } from "./ArticleCard.types";
 import { palette } from "../../../theme";
@@ -38,9 +39,24 @@ export function ArticleCard({
       <Text style={styles.title} numberOfLines={2}>{title}</Text>
       {(viewCount || likeCount || commentCount) && (
         <View style={styles.metrics}>
-          {viewCount && <Text style={styles.metricText}>👁 {formatCount(viewCount)}</Text>}
-          {likeCount && <Text style={styles.metricText}>♡ {formatCount(likeCount)}</Text>}
-          {commentCount && <Text style={styles.metricText}>💬 {formatCount(commentCount)}</Text>}
+          {viewCount && (
+            <View style={styles.metricItem}>
+              <Icon name="eye-outline" size={12} color={palette.gray[400]} />
+              <Text style={styles.metricText}> {formatCount(viewCount)}</Text>
+            </View>
+          )}
+          {likeCount && (
+            <View style={styles.metricItem}>
+              <Icon name="heart-outline" size={12} color={palette.gray[400]} />
+              <Text style={styles.metricText}> {formatCount(likeCount)}</Text>
+            </View>
+          )}
+          {commentCount && (
+            <View style={styles.metricItem}>
+              <Icon name="chatbubble-outline" size={12} color={palette.gray[400]} />
+              <Text style={styles.metricText}> {formatCount(commentCount)}</Text>
+            </View>
+          )}
         </View>
       )}
     </Container>
@@ -52,6 +68,7 @@ const styles = StyleSheet.create({
   categoryText: { color: palette.white, fontSize: 12, fontWeight: "600" },
   container: { backgroundColor: palette.gray[700], borderRadius: 12, overflow: "hidden", padding: 12 },
   image: { backgroundColor: palette.gray[600], borderRadius: 8, height: 120, width: "100%" },
+  metricItem: { flexDirection: "row", alignItems: "center" },
   metrics: { flexDirection: "row", gap: 12, marginTop: 8 },
   metricText: { color: palette.gray[400], fontSize: 12 },
   title: { color: palette.white, fontSize: 16, fontWeight: "600", lineHeight: 22, marginTop: 8 },

@@ -9,6 +9,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface AssessmentIntroScreenProps {
   onStart: () => void;
@@ -20,7 +21,7 @@ export function AssessmentIntroScreen({
   onBack,
 }: AssessmentIntroScreenProps): React.ReactElement {
   return (
-    <View testID="assessment-intro-screen" style={styles.container}>
+    <ScreenContainer testID="assessment-intro-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -86,7 +87,7 @@ export function AssessmentIntroScreen({
           <Text style={styles.startButtonIcon}>→</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -131,9 +132,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
-    paddingTop: 60,
   },
   content: {
     alignItems: "center",
