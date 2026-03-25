@@ -17,6 +17,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
 import { palette } from "../../../shared/theme";
 import { EmptyState } from "../../../shared/components/molecules/feedback";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 type TabType = "recent" | "trash";
 
@@ -89,7 +90,7 @@ export function ChatsListScreen({
   );
 
   return (
-    <View testID="chats-list-screen" style={styles.container}>
+    <ScreenContainer testID="chats-list-screen" style={styles.container}>
       {/* Header Section - Orange gradient */}
       <LinearGradient
         testID="header-section"
@@ -213,7 +214,7 @@ export function ChatsListScreen({
           )}
         </View>
       </ScrollView>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -291,7 +292,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 24,
     paddingBottom: 24,
     paddingHorizontal: 24,
-    paddingTop: 60,
   },
   moodBadge: {
     borderRadius: 12,

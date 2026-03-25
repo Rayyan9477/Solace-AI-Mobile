@@ -13,7 +13,9 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface Tip {
   id: string;
@@ -39,21 +41,21 @@ export function VoiceExpressionReadyScreen({
   onSkip,
   onRequestPermission,
 }: VoiceExpressionReadyScreenProps): React.ReactElement {
-  const getTipIcon = (iconType: string): string => {
+  const getTipIconName = (iconType: string): string => {
     switch (iconType) {
       case "quiet":
-        return "🤫";
+        return "volume-mute-outline";
       case "speak":
-        return "🗣️";
+        return "mic-outline";
       case "express":
-        return "💭";
+        return "chatbubble-ellipses-outline";
       default:
-        return "💡";
+        return "bulb-outline";
     }
   };
 
   return (
-    <View testID="voice-expression-ready-screen" style={styles.container}>
+    <ScreenContainer testID="voice-expression-ready-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -77,7 +79,7 @@ export function VoiceExpressionReadyScreen({
         {/* Microphone Icon */}
         <View testID="microphone-icon" style={styles.microphoneContainer}>
           <View style={styles.microphoneCircle}>
-            <Text style={styles.microphoneIcon}>🎙️</Text>
+            <Icon name="mic-outline" size={40} color={palette.white} />
           </View>
           <View style={styles.microphonePulse} />
         </View>
@@ -92,7 +94,7 @@ export function VoiceExpressionReadyScreen({
         {!microphonePermissionGranted && (
           <View testID="permission-required" style={styles.permissionContainer}>
             <View style={styles.permissionBanner}>
-              <Text style={styles.permissionIcon}>🔒</Text>
+              <Icon name="lock-closed-outline" size={24} color={palette.white} style={styles.permissionIcon} />
               <View style={styles.permissionTextContainer}>
                 <Text style={styles.permissionTitle}>
                   Microphone Access Required
@@ -126,7 +128,7 @@ export function VoiceExpressionReadyScreen({
               style={styles.tipCard}
             >
               <View style={styles.tipIconContainer}>
-                <Text style={styles.tipIcon}>{getTipIcon(tip.icon)}</Text>
+                <Icon name={getTipIconName(tip.icon)} size={20} color={palette.white} />
               </View>
               <View style={styles.tipContent}>
                 <Text style={styles.tipTitle}>{tip.title}</Text>
@@ -147,12 +149,12 @@ export function VoiceExpressionReadyScreen({
             accessibilityRole="button"
             accessibilityLabel="Start recording"
           >
-            <Text style={styles.startButtonIcon}>🎤</Text>
+            <Icon name="mic-circle-outline" size={20} color={palette.white} style={styles.startButtonIcon} />
             <Text style={styles.startButtonText}>Start Recording</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.disabledButton}>
-            <Text style={styles.disabledButtonIcon}>🎤</Text>
+            <Icon name="mic-circle-outline" size={20} color={palette.gray[400]} style={styles.disabledButtonIcon} />
             <Text style={styles.disabledButtonText}>Start Recording</Text>
           </View>
         )}
@@ -167,7 +169,7 @@ export function VoiceExpressionReadyScreen({
           <Text style={styles.skipButtonText}>Skip for now</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -195,9 +197,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   disabledButton: {
     alignItems: "center",

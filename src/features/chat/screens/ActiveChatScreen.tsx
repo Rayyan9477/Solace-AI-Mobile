@@ -19,6 +19,7 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 import { CrisisModal } from "../../../shared/components/organisms/crisis";
 import { palette, colors } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 type MessageType = "user" | "ai" | "emotion" | "date";
 type Sentiment = "positive" | "negative" | "neutral";
@@ -174,7 +175,7 @@ export function ActiveChatScreen({
   }, []);
 
   return (
-    <View testID="active-chat-screen" style={styles.container}>
+    <ScreenContainer testID="active-chat-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -311,7 +312,7 @@ export function ActiveChatScreen({
         triggerSource="chat"
         requireAcknowledge={true}
       />
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -365,9 +366,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   keyboardAvoid: {
     flex: 1,

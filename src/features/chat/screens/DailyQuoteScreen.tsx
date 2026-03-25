@@ -7,7 +7,9 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface DailyQuoteScreenProps {
   quote: string;
@@ -34,7 +36,7 @@ export function DailyQuoteScreen({
   onContinue,
 }: DailyQuoteScreenProps): React.ReactElement {
   return (
-    <View testID="daily-quote-screen" style={styles.container}>
+    <ScreenContainer testID="daily-quote-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -77,7 +79,7 @@ export function DailyQuoteScreen({
           {/* Saved Indicator */}
           {isSaved && (
             <View testID="saved-indicator" style={styles.savedIndicator}>
-              <Text style={styles.savedIcon}>💜</Text>
+              <Icon name="bookmark-outline" size={14} color={palette.olive[500]} style={styles.savedIcon} />
               <Text style={styles.savedText}>Saved to favorites</Text>
             </View>
           )}
@@ -92,7 +94,7 @@ export function DailyQuoteScreen({
             accessibilityRole="button"
             accessibilityLabel="Share quote"
           >
-            <Text style={styles.actionIcon}>📤</Text>
+            <Icon name="share-outline" size={20} color={palette.gray[400]} style={styles.actionIcon} />
             <Text style={styles.actionText}>Share</Text>
           </TouchableOpacity>
 
@@ -103,7 +105,7 @@ export function DailyQuoteScreen({
             accessibilityRole="button"
             accessibilityLabel="Save quote"
           >
-            <Text style={styles.actionIcon}>{isSaved ? "💜" : "🤍"}</Text>
+            <Icon name={isSaved ? "heart" : "heart-outline"} size={20} color={isSaved ? palette.olive[500] : palette.gray[400]} style={styles.actionIcon} />
             <Text style={styles.actionText}>{isSaved ? "Saved" : "Save"}</Text>
           </TouchableOpacity>
 
@@ -114,7 +116,7 @@ export function DailyQuoteScreen({
             accessibilityRole="button"
             accessibilityLabel="Get new quote"
           >
-            <Text style={styles.actionIcon}>🔄</Text>
+            <Icon name="refresh-outline" size={20} color={palette.gray[400]} style={styles.actionIcon} />
             <Text style={styles.actionText}>New</Text>
           </TouchableOpacity>
         </View>
@@ -137,7 +139,7 @@ export function DailyQuoteScreen({
           <Text style={styles.continueButtonText}>Continue</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -157,7 +159,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   actionIcon: {
-    fontSize: 20,
     marginBottom: 4,
   },
   actionRow: {
@@ -214,9 +215,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   content: {
     alignItems: "center",
@@ -283,7 +282,6 @@ const styles = StyleSheet.create({
     lineHeight: 32,
   },
   savedIcon: {
-    fontSize: 14,
     marginRight: 6,
   },
   savedIndicator: {

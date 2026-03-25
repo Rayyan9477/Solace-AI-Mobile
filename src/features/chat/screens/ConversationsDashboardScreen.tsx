@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 type SubscriptionTier = "Basic" | "Pro";
 type SupportLevel = "Slow" | "Fast" | "24/7";
@@ -45,7 +46,7 @@ export function ConversationsDashboardScreen({
   const isBasicTier = subscriptionTier === "Basic";
 
   return (
-    <View testID="conversations-dashboard-screen" style={styles.container}>
+    <ScreenContainer testID="conversations-dashboard-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -155,7 +156,7 @@ export function ConversationsDashboardScreen({
           </View>
         )}
       </ScrollView>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -204,9 +205,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   filterButton: {
     backgroundColor: palette.onboarding.step2,
@@ -220,7 +219,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   goProButtonText: {
-    color: "#2E7D32",
+    color: palette.olive[700],
     fontSize: 14,
     fontWeight: "600",
   },
@@ -304,7 +303,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   upsellCard: {
-    backgroundColor: "#2E7D32",
+    backgroundColor: palette.olive[700],
     borderRadius: 20,
     marginHorizontal: 24,
     padding: 20,

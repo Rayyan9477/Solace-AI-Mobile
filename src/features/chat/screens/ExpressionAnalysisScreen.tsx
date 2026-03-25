@@ -15,8 +15,10 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { CrisisModal } from "../../../shared/components/organisms/crisis";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface EmotionData {
   emotion: string;
@@ -64,24 +66,24 @@ export function ExpressionAnalysisScreen({
     setShowCrisisModal(true);
   };
 
-  const getInsightIcon = (iconType: string): string => {
+  const getInsightIconName = (iconType: string): string => {
     switch (iconType) {
       case "peaceful":
-        return "🧘";
+        return "body-outline";
       case "eye":
-        return "👁️";
+        return "eye-outline";
       case "smile":
-        return "😊";
+        return "happy-outline";
       case "energy":
-        return "⚡";
+        return "flash-outline";
       default:
-        return "💡";
+        return "bulb-outline";
     }
   };
 
   if (!analysisComplete) {
     return (
-      <View testID="expression-analysis-screen" style={styles.container}>
+      <ScreenContainer testID="expression-analysis-screen" style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity
@@ -115,12 +117,12 @@ export function ExpressionAnalysisScreen({
             Solace AI is processing your facial features
           </Text>
         </View>
-      </View>
+      </ScreenContainer>
     );
   }
 
   return (
-    <View testID="expression-analysis-screen" style={styles.container}>
+    <ScreenContainer testID="expression-analysis-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -140,7 +142,7 @@ export function ExpressionAnalysisScreen({
           accessibilityRole="button"
           accessibilityLabel="Save analysis"
         >
-          <Text style={styles.saveIcon}>💾</Text>
+          <Icon name="save-outline" size={22} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -223,9 +225,7 @@ export function ExpressionAnalysisScreen({
               style={styles.insightCard}
             >
               <View style={styles.insightIcon}>
-                <Text style={styles.insightIconText}>
-                  {getInsightIcon(insight.icon)}
-                </Text>
+                <Icon name={getInsightIconName(insight.icon)} size={22} color={palette.white} />
               </View>
               <View style={styles.insightContent}>
                 <Text style={styles.insightTitle}>{insight.title}</Text>
@@ -281,7 +281,7 @@ export function ExpressionAnalysisScreen({
         triggerSource="assessment"
         requireAcknowledge={true}
       />
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -310,9 +310,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
@@ -440,9 +438,6 @@ const styles = StyleSheet.create({
     marginRight: 12,
     width: 44,
   },
-  insightIconText: {
-    fontSize: 20,
-  },
   insightTitle: {
     color: palette.white,
     fontSize: 15,
@@ -540,9 +535,6 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: "center",
     width: 44,
-  },
-  saveIcon: {
-    fontSize: 20,
   },
   scrollContent: {
     paddingBottom: 16,

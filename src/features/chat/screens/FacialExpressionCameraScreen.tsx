@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 type CameraFacing = "front" | "back";
@@ -61,7 +62,7 @@ export function FacialExpressionCameraScreen({
           testID="heart-rate-indicator"
           style={[styles.biometricCard, styles.heartRateCard]}
         >
-          <Text style={styles.biometricIcon}>💚</Text>
+          <Icon name="checkmark-circle-outline" size={16} color={palette.olive[500]} style={styles.biometricIcon} />
           <Text style={styles.biometricValue}>{heartRate || "--"}</Text>
           <Text style={styles.biometricUnit}>bpm</Text>
         </View>
@@ -69,7 +70,7 @@ export function FacialExpressionCameraScreen({
           testID="blood-pressure-indicator"
           style={[styles.biometricCard, styles.bloodPressureCard]}
         >
-          <Text style={styles.biometricIcon}>💜</Text>
+          <Icon name="radio-button-on-outline" size={16} color="#9A5CAD" style={styles.biometricIcon} />
           <Text style={styles.biometricValue}>{bloodPressureSys || "--"}</Text>
           <Text style={styles.biometricUnit}>sys</Text>
         </View>
@@ -95,7 +96,7 @@ export function FacialExpressionCameraScreen({
 
       {/* Instruction Banner */}
       <View testID="instruction-banner" style={styles.instructionBanner}>
-        <Text style={styles.warningIcon}>⚠️</Text>
+        <Icon name="warning-outline" size={16} color={palette.brown[900]} />
         <Text style={styles.instructionText}>{instructionText}</Text>
       </View>
 
@@ -109,7 +110,7 @@ export function FacialExpressionCameraScreen({
             accessibilityRole="button"
             accessibilityLabel="Open gallery"
           >
-            <Text style={styles.controlIcon}>🖼</Text>
+            <Icon name="image-outline" size={22} color={palette.white} />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -129,7 +130,7 @@ export function FacialExpressionCameraScreen({
             accessibilityRole="button"
             accessibilityLabel="Flip camera"
           >
-            <Text style={styles.controlIcon}>🔄</Text>
+            <Icon name="camera-reverse-outline" size={22} color={palette.white} />
           </TouchableOpacity>
         </View>
 
@@ -140,7 +141,7 @@ export function FacialExpressionCameraScreen({
             accessibilityRole="button"
             accessibilityLabel="Camera mode"
           >
-            <Text style={styles.modeIcon}>📷</Text>
+            <Icon name="camera-outline" size={22} color={palette.white} />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -150,7 +151,7 @@ export function FacialExpressionCameraScreen({
             accessibilityRole="button"
             accessibilityLabel="Analytics mode"
           >
-            <Text style={styles.modeIcon}>📊</Text>
+            <Icon name="bar-chart-outline" size={22} color={palette.white} />
           </TouchableOpacity>
         </View>
       </View>
@@ -186,7 +187,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   biometricIcon: {
-    fontSize: 16,
     marginRight: 6,
   },
   biometricUnit: {
@@ -250,9 +250,6 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
     width: 50,
-  },
-  controlIcon: {
-    fontSize: 20,
   },
   controlsContainer: {
     backgroundColor: palette.brown[900],
@@ -325,12 +322,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
-  },
-  modeIcon: {
-    fontSize: 20,
-  },
-  warningIcon: {
-    fontSize: 16,
   },
 });
 

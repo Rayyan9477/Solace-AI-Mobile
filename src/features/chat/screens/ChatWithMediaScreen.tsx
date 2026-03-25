@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface MediaContent {
   id: string;
@@ -160,7 +161,7 @@ export function ChatWithMediaScreen({
   };
 
   return (
-    <View testID="chat-with-media-screen" style={styles.container}>
+    <ScreenContainer testID="chat-with-media-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -248,7 +249,7 @@ export function ChatWithMediaScreen({
           <Text style={styles.sendIcon}>→</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -306,9 +307,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   header: {
     alignItems: "center",

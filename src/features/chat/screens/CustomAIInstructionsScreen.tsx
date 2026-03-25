@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface CommunicationStyle {
   id: string;
@@ -47,7 +48,7 @@ export function CustomAIInstructionsScreen({
   onReset,
 }: CustomAIInstructionsScreenProps): React.ReactElement {
   return (
-    <View testID="custom-ai-instructions-screen" style={styles.container}>
+    <ScreenContainer testID="custom-ai-instructions-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -186,7 +187,7 @@ export function CustomAIInstructionsScreen({
           <Text style={styles.saveButtonText}>Save Instructions</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -226,9 +227,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   description: {
     color: palette.gray[400],

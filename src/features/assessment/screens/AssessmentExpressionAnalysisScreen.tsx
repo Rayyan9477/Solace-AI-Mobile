@@ -13,7 +13,9 @@ import {
   TextInput,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface AssessmentExpressionAnalysisScreenProps {
   currentStep: number;
@@ -56,7 +58,7 @@ export function AssessmentExpressionAnalysisScreen({
   };
 
   return (
-    <View
+    <ScreenContainer
       testID="assessment-expression-analysis-screen"
       style={styles.container}
     >
@@ -134,7 +136,7 @@ export function AssessmentExpressionAnalysisScreen({
         accessibilityLabel="Use voice input instead of typing"
       >
         <View style={styles.voiceIconContainer}>
-          <Text style={styles.voiceIcon}>🎙</Text>
+          <Icon name="mic-outline" size={20} color={palette.white} />
         </View>
         <Text style={styles.voiceInputText}>Use voice Instead</Text>
       </TouchableOpacity>
@@ -152,7 +154,7 @@ export function AssessmentExpressionAnalysisScreen({
           <Text style={styles.continueButtonIcon}>→</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -178,9 +180,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
-    paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
@@ -296,7 +295,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   voiceIcon: {
-    fontSize: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
   voiceIconContainer: {
     marginRight: 8,

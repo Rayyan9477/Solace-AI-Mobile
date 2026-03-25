@@ -14,7 +14,9 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 type TimeRange = "1week" | "1month" | "3months" | "6months" | "1year";
 
@@ -89,7 +91,7 @@ export function SolaceScoreProgressScreen({
     <View testID="score-chart" style={styles.chartContainer}>
       <View style={styles.chartHeader}>
         <View style={styles.chartTitleRow}>
-          <Text style={styles.chartIcon}>🧠</Text>
+          <Icon name="hardware-chip-outline" size={16} color={palette.white} style={styles.chartIcon} />
           <Text style={styles.chartTitle}>Solace Score</Text>
         </View>
         <TouchableOpacity
@@ -152,7 +154,7 @@ export function SolaceScoreProgressScreen({
             <Text style={styles.messageText}>{item.content}</Text>
           </View>
           <View testID={`user-avatar-${item.id}`} style={styles.userAvatar}>
-            <Text style={styles.avatarEmoji}>👤</Text>
+            <Icon name="person-circle-outline" size={20} color={palette.white} />
           </View>
         </View>
       );
@@ -165,7 +167,7 @@ export function SolaceScoreProgressScreen({
           style={[styles.messageBubble, styles.aiMessage]}
         >
           <View testID={`ai-avatar-${item.id}`} style={styles.aiAvatar}>
-            <Text style={styles.avatarEmoji}>🤖</Text>
+            <Icon name="hardware-chip-outline" size={20} color={palette.white} />
           </View>
           <View style={styles.aiMessageContainer}>
             <View style={[styles.messageContent, styles.aiMessageContent]}>
@@ -181,7 +183,7 @@ export function SolaceScoreProgressScreen({
   };
 
   return (
-    <View testID="solace-score-progress-screen" style={styles.container}>
+    <ScreenContainer testID="solace-score-progress-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -206,7 +208,7 @@ export function SolaceScoreProgressScreen({
           accessibilityRole="button"
           accessibilityLabel="Search messages"
         >
-          <Text style={styles.searchIcon}>🔍</Text>
+          <Icon name="search-outline" size={20} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -225,7 +227,7 @@ export function SolaceScoreProgressScreen({
       {isAITyping && (
         <View testID="typing-indicator" style={styles.typingIndicator}>
           <View style={styles.aiAvatar}>
-            <Text style={styles.avatarEmoji}>🤖</Text>
+            <Icon name="hardware-chip-outline" size={20} color={palette.white} />
           </View>
           <View style={styles.typingBubble}>
             <Text style={styles.typingText}>Solace AI is thinking...</Text>
@@ -247,7 +249,7 @@ export function SolaceScoreProgressScreen({
           accessibilityRole="button"
           accessibilityLabel="Add attachment"
         >
-          <Text style={styles.attachmentIcon}>📎</Text>
+          <Icon name="attach-outline" size={20} color={palette.white} />
         </TouchableOpacity>
         <TextInput
           testID="message-input"
@@ -269,7 +271,7 @@ export function SolaceScoreProgressScreen({
           <Text style={styles.sendIcon}>→</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -380,9 +382,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   currentScoreContainer: {
     alignItems: "center",

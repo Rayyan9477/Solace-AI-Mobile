@@ -13,7 +13,9 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface MoodTrendData {
   week: string;
@@ -63,19 +65,19 @@ export function MonthlyHealthReportScreen({
   const scoreChange = metrics.overallScore - metrics.previousScore;
   const isPositiveChange = scoreChange >= 0;
 
-  const getInsightIcon = (type: string): string => {
+  const getInsightIconName = (type: string): string => {
     switch (type) {
       case "positive":
-        return "✨";
+        return "checkmark-circle-outline";
       case "negative":
-        return "⚠️";
+        return "warning-outline";
       default:
-        return "💡";
+        return "bulb-outline";
     }
   };
 
   return (
-    <View testID="monthly-health-report-screen" style={styles.container}>
+    <ScreenContainer testID="monthly-health-report-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -95,7 +97,7 @@ export function MonthlyHealthReportScreen({
           accessibilityRole="button"
           accessibilityLabel="Share report"
         >
-          <Text style={styles.shareIcon}>📤</Text>
+          <Icon name="share-outline" size={22} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -152,25 +154,25 @@ export function MonthlyHealthReportScreen({
         {/* Metrics Grid */}
         <View testID="metrics-grid" style={styles.metricsGrid}>
           <View testID="metric-mood" style={styles.metricCard}>
-            <Text style={styles.metricIcon}>😊</Text>
+            <Icon name="happy-outline" size={24} color={palette.white} style={styles.metricIcon} />
             <Text style={styles.metricValue}>{metrics.moodAverage}</Text>
             <Text style={styles.metricLabel}>Avg Mood</Text>
           </View>
 
           <View testID="metric-sleep" style={styles.metricCard}>
-            <Text style={styles.metricIcon}>😴</Text>
+            <Icon name="moon-outline" size={24} color={palette.white} style={styles.metricIcon} />
             <Text style={styles.metricValue}>{metrics.sleepQuality}%</Text>
             <Text style={styles.metricLabel}>Sleep Quality</Text>
           </View>
 
           <View testID="metric-activity" style={styles.metricCard}>
-            <Text style={styles.metricIcon}>🏃</Text>
+            <Icon name="fitness-outline" size={24} color={palette.white} style={styles.metricIcon} />
             <Text style={styles.metricValue}>{metrics.activityDays}</Text>
             <Text style={styles.metricLabel}>Active Days</Text>
           </View>
 
           <View testID="metric-journal" style={styles.metricCard}>
-            <Text style={styles.metricIcon}>📝</Text>
+            <Icon name="document-text-outline" size={24} color={palette.white} style={styles.metricIcon} />
             <Text style={styles.metricValue}>{metrics.journalEntries}</Text>
             <Text style={styles.metricLabel}>Journal Entries</Text>
           </View>
@@ -186,9 +188,7 @@ export function MonthlyHealthReportScreen({
               style={styles.insightCard}
             >
               <View style={styles.insightIconContainer}>
-                <Text style={styles.insightIcon}>
-                  {getInsightIcon(insight.type)}
-                </Text>
+                <Icon name={getInsightIconName(insight.type)} size={20} color={palette.white} />
               </View>
               <View style={styles.insightContent}>
                 <Text style={styles.insightTitle}>{insight.title}</Text>
@@ -210,7 +210,7 @@ export function MonthlyHealthReportScreen({
           accessibilityRole="button"
           accessibilityLabel="Download report"
         >
-          <Text style={styles.downloadIcon}>📥</Text>
+          <Icon name="download-outline" size={16} color={palette.white} style={styles.downloadIcon} />
           <Text style={styles.downloadText}>Download</Text>
         </TouchableOpacity>
 
@@ -224,7 +224,7 @@ export function MonthlyHealthReportScreen({
           <Text style={styles.viewDetailsText}>View Details</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -282,9 +282,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   downloadButton: {
     alignItems: "center",
@@ -298,7 +296,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   downloadIcon: {
-    fontSize: 16,
     marginRight: 8,
   },
   downloadText: {
@@ -334,9 +331,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginTop: 4,
   },
-  insightIcon: {
-    fontSize: 20,
-  },
   insightIconContainer: {
     alignItems: "center",
     backgroundColor: palette.brown[700],
@@ -362,7 +356,6 @@ const styles = StyleSheet.create({
     width: "48%",
   },
   metricIcon: {
-    fontSize: 24,
     marginBottom: 8,
   },
   metricLabel: {
@@ -455,9 +448,6 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: "center",
     width: 44,
-  },
-  shareIcon: {
-    fontSize: 20,
   },
   viewDetailsButton: {
     alignItems: "center",

@@ -17,6 +17,7 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 import { CrisisModal } from "../../../shared/components/organisms/crisis";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 type MessageType = "user" | "ai" | "crisis";
 type Severity = "low" | "medium" | "high";
@@ -201,7 +202,7 @@ export function CrisisDetectionScreen({
   };
 
   return (
-    <View testID="crisis-detection-screen" style={styles.container}>
+    <ScreenContainer testID="crisis-detection-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -321,7 +322,7 @@ export function CrisisDetectionScreen({
         triggerSource="chat"
         requireAcknowledge={true}
       />
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -390,9 +391,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   crisisBadge: {
     alignItems: "center",

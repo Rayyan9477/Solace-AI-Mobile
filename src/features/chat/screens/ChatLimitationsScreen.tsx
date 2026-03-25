@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface LimitationPage {
   id: string;
@@ -64,7 +65,7 @@ export function ChatLimitationsScreen({
   };
 
   return (
-    <View testID="chat-limitations-screen" style={styles.container}>
+    <ScreenContainer testID="chat-limitations-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -172,7 +173,7 @@ export function ChatLimitationsScreen({
           <Text style={styles.sendIcon}>→</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -222,9 +223,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   contentArea: {
     alignItems: "center",

@@ -16,6 +16,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { colors, palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 type RecoveryMethod = "2fa" | "password" | "google";
 
@@ -63,9 +64,9 @@ export function ForgotPasswordScreen({
   };
 
   return (
+    <ScreenContainer testID="forgot-password-screen" backgroundColor={colors.background.primary}>
     <ScrollView
-      testID="forgot-password-screen"
-      style={styles.container}
+      style={styles.scrollView}
       contentContainerStyle={styles.contentContainer}
     >
       {/* Back Button */}
@@ -106,6 +107,7 @@ export function ForgotPasswordScreen({
         <Icon name="lock-closed-outline" size={18} color={palette.tan[500]} style={styles.sendButtonIcon} />
       </TouchableOpacity>
     </ScrollView>
+    </ScreenContainer>
   );
 }
 
@@ -124,8 +126,7 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
     fontSize: 20,
   },
-  container: {
-    backgroundColor: colors.background.primary,
+  scrollView: {
     flex: 1,
   },
   contentContainer: {

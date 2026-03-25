@@ -15,7 +15,9 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 type CommunicationStyle = "casual" | "formal" | "fun";
 
@@ -56,18 +58,18 @@ interface NewConversationScreenProps {
 }
 
 const ICON_EMOJIS: Record<string, string> = {
-  icon1: "🌟",
-  icon2: "🌙",
-  icon3: "🌈",
-  icon4: "🌿",
-  icon5: "💫",
-  icon6: "🎯",
+  icon1: "star-outline",
+  icon2: "moon-outline",
+  icon3: "color-palette-outline",
+  icon4: "leaf-outline",
+  icon5: "sparkles-outline",
+  icon6: "radio-button-on-outline",
 };
 
 const STYLE_ICONS: Record<CommunicationStyle, string> = {
-  casual: "😊",
-  formal: "👔",
-  fun: "🎉",
+  casual: "happy-outline",
+  formal: "business-outline",
+  fun: "sparkles-outline",
 };
 
 export function NewConversationScreen({
@@ -107,7 +109,7 @@ export function NewConversationScreen({
   const selectedGoal = goalOptions.find((g) => g.id === therapyGoal);
 
   return (
-    <View testID="new-conversation-screen" style={styles.container}>
+    <ScreenContainer testID="new-conversation-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -224,9 +226,7 @@ export function NewConversationScreen({
                 accessibilityState={{ selected: selectedIcon === icon }}
                 accessibilityLabel={`Select icon ${icon}`}
               >
-                <Text style={styles.iconEmoji}>
-                  {ICON_EMOJIS[icon] || "⭐"}
-                </Text>
+                <Icon name={ICON_EMOJIS[icon] || "star-outline"} size={24} color={palette.white} />
               </TouchableOpacity>
             ))}
           </View>
@@ -250,7 +250,7 @@ export function NewConversationScreen({
                   accessibilityState={{ selected: communicationStyle === style }}
                   accessibilityLabel={`${style} communication style`}
                 >
-                  <Text style={styles.styleIcon}>{STYLE_ICONS[style]}</Text>
+                  <Icon name={STYLE_ICONS[style]} size={20} color={palette.white} style={styles.styleIcon} />
                   <Text
                     style={[
                       styles.styleText,
@@ -313,12 +313,10 @@ export function NewConversationScreen({
           <Text style={styles.createButtonText}>
             {isCreating ? "Creating..." : "Create Conversation"}
           </Text>
-          <Text testID="create-button-icon" style={styles.createButtonIcon}>
-            🔒
-          </Text>
+          <Icon testID="create-button-icon" name="lock-closed-outline" size={18} color={palette.brown[900]} style={styles.createButtonIcon} />
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -363,9 +361,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   createButton: {
     alignItems: "center",
@@ -379,7 +375,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   createButtonIcon: {
-    fontSize: 18,
     marginLeft: 8,
   },
   createButtonText: {
@@ -431,9 +426,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: 16,
   },
-  iconEmoji: {
-    fontSize: 24,
-  },
   iconOption: {
     alignItems: "center",
     backgroundColor: palette.brown[800],
@@ -469,7 +461,6 @@ const styles = StyleSheet.create({
     backgroundColor: palette.olive[500],
   },
   styleIcon: {
-    fontSize: 20,
     marginBottom: 4,
   },
   styleRow: {
