@@ -19,7 +19,9 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
 
 /* ---------- types ---------- */
 interface StatCategory {
@@ -57,7 +59,7 @@ export function JournalStatsScreen({
   const maxCount = Math.max(stats.skipped.count, stats.negative.count, stats.positive.count, 1);
 
   return (
-    <View testID="journal-stats-screen" style={styles.container}>
+    <ScreenContainer testID="journal-stats-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -67,7 +69,7 @@ export function JournalStatsScreen({
           accessibilityRole="button"
           accessibilityLabel="Go back"
         >
-          <Text style={styles.backIcon}>☽</Text>
+          <Icon name="chevron-back-outline" size={20} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -84,7 +86,7 @@ export function JournalStatsScreen({
           accessibilityRole="button"
           accessibilityLabel="Open chat"
         >
-          <Text style={styles.chatIcon}>💬</Text>
+          <Icon name="chatbubble-outline" size={20} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -127,7 +129,7 @@ export function JournalStatsScreen({
           );
         })}
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -195,7 +197,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   emojiCircle: {
     alignItems: "center",

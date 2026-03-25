@@ -28,6 +28,7 @@ import {
   StyleSheet,
   Linking,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface CrisisSupportAlertScreenProps {
@@ -67,7 +68,12 @@ export function CrisisSupportAlertScreen({
   };
 
   return (
-    <View testID="crisis-support-alert-screen" style={styles.container}>
+    <View
+      testID="crisis-support-alert-screen"
+      style={styles.container}
+      accessibilityRole="alert"
+      accessibilityLiveRegion="assertive"
+    >
       {/* Backdrop */}
       <View testID="modal-backdrop" style={styles.backdrop} />
 
@@ -78,7 +84,7 @@ export function CrisisSupportAlertScreen({
           <View style={styles.plantLeft} />
           <View style={styles.plantRight} />
           <View style={styles.personCircle}>
-            <Text style={styles.personEmoji}>😰</Text>
+            <Icon name="alert-circle-outline" size={48} color={palette.white} />
           </View>
         </View>
 
@@ -101,7 +107,7 @@ export function CrisisSupportAlertScreen({
           accessibilityRole="button"
           accessibilityLabel="Access crisis support"
         >
-          <Text style={styles.primaryButtonIcon}>⚠️</Text>
+          <Icon name="warning-outline" size={16} color={palette.white} style={styles.primaryButtonIcon} />
           <Text style={styles.primaryButtonText}>
             Crisis Support Now Active.
           </Text>
@@ -116,7 +122,7 @@ export function CrisisSupportAlertScreen({
           accessibilityLabel="Call 988 for help"
         >
           <Text style={styles.secondaryButtonText}>Call For Help!</Text>
-          <Text style={styles.secondaryButtonIcon}>📞</Text>
+          <Icon name="call-outline" size={16} color={palette.white} style={styles.secondaryButtonIcon} />
         </TouchableOpacity>
 
         {/* Acknowledge Button */}
@@ -152,7 +158,7 @@ export function CrisisSupportAlertScreen({
             accessibilityRole="button"
             accessibilityLabel="Close alert"
           >
-            <Text style={styles.closeIcon}>✕</Text>
+            <Icon name="close-outline" size={18} color={palette.white} />
           </TouchableOpacity>
         </View>
       </View>

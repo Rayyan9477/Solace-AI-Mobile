@@ -21,7 +21,9 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
 
 interface CalendarDay {
   dayLabel: string;
@@ -62,7 +64,7 @@ export function JournalTimelineScreen({
   onSortChange,
 }: JournalTimelineScreenProps): React.ReactElement {
   return (
-    <View testID="journal-timeline-screen" style={styles.container}>
+    <ScreenContainer testID="journal-timeline-screen" style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Back Button */}
         <TouchableOpacity
@@ -72,7 +74,7 @@ export function JournalTimelineScreen({
           accessibilityRole="button"
           accessibilityLabel="Go back"
         >
-          <Text style={styles.backIcon}>☽</Text>
+          <Icon name="chevron-back-outline" size={20} color={palette.white} />
         </TouchableOpacity>
 
         {/* Title */}
@@ -196,14 +198,15 @@ export function JournalTimelineScreen({
                     ↗ {entry.aiSuggestions} AI Suggestions
                   </Text>
                   <Text style={styles.metaSeparator}>•</Text>
-                  <Text style={styles.metaText}>♡ {entry.heartRate}bpm</Text>
+                  <Icon name="heart-outline" size={12} color={palette.gray[400]} />
+                  <Text style={styles.metaText}> {entry.heartRate}bpm</Text>
                 </View>
               </View>
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -258,7 +261,6 @@ const styles = StyleSheet.create({
     backgroundColor: palette.brown[900],
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
   },
   entryContent: {
     flex: 1,

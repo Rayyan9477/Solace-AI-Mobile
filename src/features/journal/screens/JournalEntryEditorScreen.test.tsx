@@ -56,7 +56,9 @@ describe("JournalEntryEditorScreen", () => {
     const { getByTestId } = render(
       <JournalEntryEditorScreen {...defaultProps} />
     );
-    expect(getByTestId("journal-entry-editor-screen").props.style).toEqual(
+    const { StyleSheet } = require("react-native");
+    const flatStyle = StyleSheet.flatten(getByTestId("journal-entry-editor-screen").props.style);
+    expect(flatStyle).toEqual(
       expect.objectContaining({ backgroundColor: "#1C1410" })
     );
   });

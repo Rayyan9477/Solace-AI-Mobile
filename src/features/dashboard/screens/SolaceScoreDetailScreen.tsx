@@ -13,7 +13,9 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 type ScoreStatus = "Normal" | "Elevated" | "Critical";
 
@@ -57,20 +59,20 @@ const formatDate = (date: Date): string => {
 const getStatusColor = (status: ScoreStatus): string => {
   switch (status) {
     case "Normal":
-      return "#4CAF50";
+      return palette.green[500];
     case "Elevated":
-      return "#FFC107";
+      return palette.amber[500];
     case "Critical":
-      return "#F44336";
+      return palette.red[500];
     default:
-      return "#4CAF50";
+      return palette.green[500];
   }
 };
 
 const getScoreIndicatorColor = (score: number): string => {
-  if (score >= 80) return "#4CAF50";
-  if (score >= 50) return "#FFC107";
-  return "#F44336";
+  if (score >= 80) return palette.green[500];
+  if (score >= 50) return palette.amber[500];
+  return palette.red[500];
 };
 
 export function SolaceScoreDetailScreen({
@@ -84,7 +86,7 @@ export function SolaceScoreDetailScreen({
   onHistoryEntryPress,
 }: SolaceScoreDetailScreenProps): React.ReactElement {
   return (
-    <View testID="solace-score-detail-screen" style={styles.container}>
+    <ScreenContainer testID="solace-score-detail-screen" backgroundColor={palette.green[700]} style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -106,7 +108,7 @@ export function SolaceScoreDetailScreen({
           accessibilityRole="button"
           accessibilityLabel="View chart"
         >
-          <Text style={styles.chartIcon}>📊</Text>
+          <Icon name="bar-chart-outline" size={24} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -179,7 +181,7 @@ export function SolaceScoreDetailScreen({
           ))}
         </ScrollView>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -212,9 +214,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   container: {
-    backgroundColor: "#2E7D32",
     flex: 1,
-    paddingTop: 60,
   },
   header: {
     alignItems: "center",

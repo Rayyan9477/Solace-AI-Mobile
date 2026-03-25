@@ -21,7 +21,9 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
 
 interface JournalEntryEditorScreenProps {
   title: string;
@@ -69,7 +71,7 @@ export function JournalEntryEditorScreen({
   };
 
   return (
-    <View testID="journal-entry-editor-screen" style={styles.container}>
+    <ScreenContainer testID="journal-entry-editor-screen" style={styles.container}>
       <ScrollView
         style={styles.scrollArea}
         showsVerticalScrollIndicator={false}
@@ -83,7 +85,7 @@ export function JournalEntryEditorScreen({
             accessibilityRole="button"
             accessibilityLabel="Go back"
           >
-            <Text style={styles.backIcon}>☽</Text>
+            <Icon name="chevron-back-outline" size={20} color={palette.white} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Edit Journal</Text>
           <View style={styles.headerSpacer} />
@@ -132,7 +134,7 @@ export function JournalEntryEditorScreen({
           accessibilityRole="button"
           accessibilityLabel="Go to home"
         >
-          <Text style={styles.toolbarIcon}>🏠</Text>
+          <Icon name="home-outline" size={20} color={palette.white} />
         </TouchableOpacity>
         <TouchableOpacity
           testID="toolbar-edit"
@@ -141,7 +143,7 @@ export function JournalEntryEditorScreen({
           accessibilityRole="button"
           accessibilityLabel="Edit entry"
         >
-          <Text style={styles.toolbarIcon}>✏️</Text>
+          <Icon name="pencil-outline" size={20} color={palette.white} />
         </TouchableOpacity>
         <TouchableOpacity
           testID="toolbar-share"
@@ -159,10 +161,10 @@ export function JournalEntryEditorScreen({
           accessibilityRole="button"
           accessibilityLabel="Journal settings"
         >
-          <Text style={styles.toolbarIcon}>⚙️</Text>
+          <Icon name="settings-outline" size={20} color={palette.white} />
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -224,7 +226,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 24,
-    paddingTop: 60,
+    paddingTop: 16,
   },
   headerSpacer: { width: 44 },
   headerTitle: {

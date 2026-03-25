@@ -14,7 +14,9 @@ import {
   ScrollView,
   Image,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface Activity {
   id: string;
@@ -54,16 +56,16 @@ interface MindfulnessActivitiesScreenProps {
   onMarkCompleted: () => void;
 }
 
-const getActivityEmoji = (icon: string): string => {
+const getActivityIcon = (icon: string): string => {
   switch (icon) {
     case "meditation":
-      return "🧘";
+      return "body-outline";
     case "journal":
-      return "📔";
+      return "journal-outline";
     case "affirmation":
-      return "💪";
+      return "fitness-outline";
     default:
-      return "✨";
+      return "sparkles-outline";
   }
 };
 
@@ -80,7 +82,7 @@ export function MindfulnessActivitiesScreen({
   onMarkCompleted,
 }: MindfulnessActivitiesScreenProps): React.ReactElement {
   return (
-    <View testID="mindfulness-activities-screen" style={styles.container}>
+    <ScreenContainer testID="mindfulness-activities-screen" style={styles.container}>
       {/* Header Section - Green gradient */}
       <View testID="header-section" style={styles.headerSection}>
         <TouchableOpacity
@@ -129,9 +131,7 @@ export function MindfulnessActivitiesScreen({
                 accessibilityLabel={activity.name}
               >
                 <View style={styles.activityIconContainer}>
-                  <Text style={styles.activityIcon}>
-                    {getActivityEmoji(activity.icon)}
-                  </Text>
+                  <Icon name={getActivityIcon(activity.icon)} size={24} color={palette.white} />
                 </View>
                 <Text style={styles.activityLabel} numberOfLines={2}>
                   {activity.name}
@@ -190,7 +190,7 @@ export function MindfulnessActivitiesScreen({
                 testID={`benefit-tag-${index}`}
                 style={styles.benefitTag}
               >
-                <Text style={styles.benefitCheckmark}>✓</Text>
+                <Icon name="checkmark-outline" size={14} color={palette.olive[500]} style={styles.benefitCheckmark} />
                 <Text style={styles.benefitText}>{benefit}</Text>
               </View>
             ))}
@@ -212,10 +212,10 @@ export function MindfulnessActivitiesScreen({
           <Text style={styles.markCompletedText}>
             {isMarking ? "Marking..." : "Mark As Completed"}
           </Text>
-          <Text style={styles.markCompletedIcon}>✓</Text>
+          <Icon name="checkmark-outline" size={18} color={palette.brown[900]} style={styles.markCompletedIcon} />
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -326,10 +326,9 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerSection: {
-    backgroundColor: "#2E7D32",
+    backgroundColor: palette.olive[700],
     paddingBottom: 24,
     paddingHorizontal: 24,
-    paddingTop: 60,
   },
   markCompletedButton: {
     alignItems: "center",

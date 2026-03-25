@@ -14,6 +14,7 @@ import {
   ScrollView,
   Image,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
@@ -54,11 +55,11 @@ interface HomeDashboardScreenProps {
 }
 
 const MOOD_EMOJI: Record<MoodType, string> = {
-  happy: "😊",
-  sad: "😢",
-  neutral: "😐",
-  angry: "😠",
-  anxious: "😰",
+  happy: "happy-outline",
+  sad: "sad-outline",
+  neutral: "remove-circle-outline",
+  angry: "alert-circle-outline",
+  anxious: "alert-outline",
 };
 
 const formatDate = (date: Date): string => {
@@ -128,7 +129,7 @@ export function HomeDashboardScreen({
               accessibilityRole="button"
               accessibilityLabel="Notifications"
             >
-              <Text style={styles.bellIcon}>🔔</Text>
+              <Icon name="notifications-outline" size={24} color={palette.tan[400]} />
               {notificationCount > 0 && (
                 <View testID="notification-badge" style={styles.notificationBadge}>
                   <Text style={styles.badgeText}>{notificationCount}</Text>
@@ -146,13 +147,13 @@ export function HomeDashboardScreen({
           accessibilityRole="button"
           accessibilityLabel="Search"
         >
-          <Text style={styles.searchIcon}>🔍</Text>
+          <Icon name="search-outline" size={20} color={palette.tan[400]} style={styles.searchIcon} />
           <Text style={styles.searchPlaceholder}>Search anything</Text>
         </TouchableOpacity>
 
         {/* Mental Health Metrics Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Mental Health Metrics</Text>
+          <Text style={styles.sectionTitle} accessibilityRole="header">Mental Health Metrics</Text>
 
           {/* Solace Score Card - Large */}
           <TouchableOpacity
@@ -182,7 +183,7 @@ export function HomeDashboardScreen({
               accessibilityLabel={`Mood: ${currentMood}`}
             >
               <Text style={styles.metricLabel}>Mood</Text>
-              <Text style={styles.moodEmoji}>{MOOD_EMOJI[currentMood]}</Text>
+              <Icon name={MOOD_EMOJI[currentMood]} size={28} color={palette.tan[400]} />
             </TouchableOpacity>
 
             {/* Mindful Hours Card */}
@@ -251,9 +252,7 @@ export function HomeDashboardScreen({
               <Text style={styles.metricLabel}>Mood Tracker</Text>
               <View style={styles.weeklyMoods}>
                 {weeklyMoods.map((mood, index) => (
-                  <Text key={index} style={styles.weeklyMoodEmoji}>
-                    {MOOD_EMOJI[mood]}
-                  </Text>
+                  <Icon key={index} name={MOOD_EMOJI[mood]} size={16} color={palette.tan[400]} />
                 ))}
               </View>
             </TouchableOpacity>
@@ -359,9 +358,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: "600",
   },
-  bellIcon: {
-    fontSize: 20,
-  },
+  bellIcon: {},
   chatbotSection: {
     backgroundColor: palette.brown[800],
     borderRadius: 16,
@@ -426,9 +423,7 @@ const styles = StyleSheet.create({
     marginHorizontal: -4,
     marginTop: 12,
   },
-  moodEmoji: {
-    fontSize: 28,
-  },
+  moodEmoji: {},
   notificationBadge: {
     alignItems: "center",
     backgroundColor: palette.onboarding.step2,
@@ -499,7 +494,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   searchIcon: {
-    fontSize: 16,
     marginRight: 8,
   },
   searchPlaceholder: {

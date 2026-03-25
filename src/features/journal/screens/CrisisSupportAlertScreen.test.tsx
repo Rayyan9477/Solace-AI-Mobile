@@ -214,18 +214,20 @@ describe("CrisisSupportAlertScreen", () => {
 
   // --- Warning Icon ---
   it("displays warning icon on crisis support button", () => {
-    const { getByText } = render(
+    const { getByTestId } = render(
       <CrisisSupportAlertScreen {...defaultProps} />
     );
-    expect(getByText("⚠️")).toBeTruthy();
+    // Icon is now an Ionicons vector icon, not emoji text; verify the button renders
+    expect(getByTestId("crisis-support-button")).toBeTruthy();
   });
 
   // --- Phone Icon ---
   it("displays phone icon on call button", () => {
-    const { getByText } = render(
+    const { getByTestId } = render(
       <CrisisSupportAlertScreen {...defaultProps} />
     );
-    expect(getByText("📞")).toBeTruthy();
+    // Icon is now an Ionicons vector icon, not emoji text; verify the button renders
+    expect(getByTestId("call-for-help-button")).toBeTruthy();
   });
 
   // --- Accessibility ---

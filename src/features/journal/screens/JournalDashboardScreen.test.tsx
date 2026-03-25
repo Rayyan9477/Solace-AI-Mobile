@@ -52,7 +52,9 @@ describe("JournalDashboardScreen", () => {
       <JournalDashboardScreen {...defaultProps} />
     );
     const screen = getByTestId("journal-dashboard-screen");
-    expect(screen.props.style).toEqual(
+    const { StyleSheet } = require("react-native");
+    const flatStyle = StyleSheet.flatten(screen.props.style);
+    expect(flatStyle).toEqual(
       expect.objectContaining({ backgroundColor: "#1C1410" })
     );
   });
@@ -251,9 +253,11 @@ describe("JournalDashboardScreen", () => {
       <JournalDashboardScreen {...defaultProps} />
     );
     const fab = getByTestId("add-journal-fab");
-    expect(fab.props.style).toEqual(
-      expect.objectContaining({ minHeight: 44 })
-    );
+    // The shared FAB component applies style as an array via Pressable's
+    // style function. Flatten it before asserting the minimum touch target.
+    const { StyleSheet } = require("react-native");
+    const flatStyle = StyleSheet.flatten(fab.props.style);
+    expect(flatStyle.minHeight).toBeGreaterThanOrEqual(44);
   });
 
   it("See All button has proper accessibility", () => {

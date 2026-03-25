@@ -21,7 +21,11 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { FAB } from "../../../shared/components/atoms/buttons";
+import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
 
 /* ---------- types ---------- */
 type JournalStatus = "positive" | "negative" | "skipped";
@@ -59,10 +63,16 @@ export function JournalDashboardScreen({
   onDayPress,
 }: JournalDashboardScreenProps = {}): React.ReactElement {
   return (
-    <View testID="journal-dashboard-screen" style={styles.container}>
+    <ScreenContainer testID="journal-dashboard-screen" style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Hero Section */}
-        <View testID="hero-section" style={styles.heroSection}>
+        <LinearGradient
+          testID="hero-section"
+          colors={["#C4A574", "#8B6F47"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={styles.heroSection}
+        >
           {/* Decorative Background Shapes */}
           <View testID="decorative-elements" style={styles.decorativeContainer}>
             <View style={[styles.decorativeCircle, styles.circleOne]} />
@@ -79,9 +89,9 @@ export function JournalDashboardScreen({
               accessibilityRole="button"
               accessibilityLabel="Go back"
             >
-              <Text style={styles.backIcon}>☽</Text>
+              <Icon name="chevron-back-outline" size={20} color={palette.white} />
             </TouchableOpacity>
-            <Text style={styles.heroTitle}>Health Journal</Text>
+            <Text style={styles.heroTitle} accessibilityRole="header">Health Journal</Text>
             <View style={styles.headerSpacer} />
           </View>
 
@@ -92,16 +102,14 @@ export function JournalDashboardScreen({
           </Text>
 
           {/* FAB */}
-          <TouchableOpacity
+          <FAB
             testID="add-journal-fab"
-            style={styles.fab}
             onPress={onAddJournal}
-            accessibilityRole="button"
+            color={palette.brown[700]}
             accessibilityLabel="Add new journal entry"
-          >
-            <Text style={styles.fabIcon}>+</Text>
-          </TouchableOpacity>
-        </View>
+            style={styles.fab}
+          />
+        </LinearGradient>
 
         {/* Statistics Section */}
         <View style={styles.statsSection}>
@@ -172,7 +180,7 @@ export function JournalDashboardScreen({
           </View>
         </View>
       </ScrollView>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -256,26 +264,8 @@ const styles = StyleSheet.create({
     top: 0,
   },
   fab: {
-    alignItems: "center",
     alignSelf: "center",
-    backgroundColor: palette.brown[700],
-    borderRadius: 28,
-    elevation: 4,
-    height: 56,
-    justifyContent: "center",
     marginTop: 24,
-    minHeight: 44,
-    minWidth: 44,
-    shadowColor: palette.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    width: 56,
-  },
-  fabIcon: {
-    color: palette.white,
-    fontSize: 28,
-    fontWeight: "400",
   },
   headerSpacer: {
     width: 44,
@@ -285,10 +275,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 24,
-    paddingTop: 60,
+    paddingTop: 16,
   },
   heroSection: {
-    backgroundColor: palette.tan[600],
     borderBottomLeftRadius: 28,
     borderBottomRightRadius: 28,
     overflow: "hidden",

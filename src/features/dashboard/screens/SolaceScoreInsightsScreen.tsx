@@ -13,7 +13,9 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 type PeriodType = "Weekly" | "Monthly" | "Yearly";
 type MoodType = "happy" | "sad" | "neutral" | "angry" | "meh";
@@ -65,20 +67,20 @@ const formatDateLabel = (date: Date): string => {
   return `${day} ${months[date.getMonth()]}`;
 };
 
-const getMoodEmoji = (mood: MoodType): string => {
+const getMoodIconName = (mood: MoodType): string => {
   switch (mood) {
     case "happy":
-      return "😊";
+      return "happy-outline";
     case "sad":
-      return "😢";
+      return "sad-outline";
     case "neutral":
-      return "😐";
+      return "remove-circle-outline";
     case "angry":
-      return "😤";
+      return "alert-circle-outline";
     case "meh":
-      return "😑";
+      return "remove-outline";
     default:
-      return "😐";
+      return "help-circle-outline";
   }
 };
 
@@ -100,7 +102,7 @@ export function SolaceScoreInsightsScreen({
   );
 
   return (
-    <View testID="solace-score-insights-screen" style={styles.container}>
+    <ScreenContainer testID="solace-score-insights-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -120,7 +122,7 @@ export function SolaceScoreInsightsScreen({
           accessibilityRole="button"
           accessibilityLabel="Toggle dark mode"
         >
-          <Text style={styles.darkModeIcon}>🌙</Text>
+          <Icon name="moon-outline" size={20} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -156,7 +158,7 @@ export function SolaceScoreInsightsScreen({
             <View style={styles.legendItems}>
               <View testID="legend-positive" style={styles.legendItem}>
                 <View
-                  style={[styles.legendDot, { backgroundColor: "#4CAF50" }]}
+                  style={[styles.legendDot, { backgroundColor: palette.green[500] }]}
                 />
                 <Text style={styles.legendText}>Positive</Text>
               </View>
@@ -242,7 +244,7 @@ export function SolaceScoreInsightsScreen({
           <View testID="weekly-mood-row" style={styles.weeklyMoodRow}>
             {weeklyMoods.map((item, index) => (
               <View key={index} style={styles.moodDay}>
-                <Text style={styles.moodEmoji}>{getMoodEmoji(item.mood)}</Text>
+                <Icon name={getMoodIconName(item.mood)} size={24} color={palette.tan[400]} />
                 <Text style={styles.dayLabel}>{item.day}</Text>
               </View>
             ))}
@@ -261,7 +263,7 @@ export function SolaceScoreInsightsScreen({
         <Text style={styles.swipeIcon}>》</Text>
         <Text style={styles.aiSuggestionsText}>Swipe for AI suggestions</Text>
       </TouchableOpacity>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -328,7 +330,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   barPositive: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: palette.green[500],
     width: "100%",
   },
   chartLegend: {
@@ -345,9 +347,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   content: {
     flex: 1,

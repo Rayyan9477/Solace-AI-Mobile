@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface SuggestionCompletedModalProps {
@@ -57,8 +58,8 @@ export function SuggestionCompletedModal({
         {/* Illustration Card */}
         <View testID="illustration-card" style={styles.illustrationCard}>
           <View style={styles.illustration}>
-            <Text style={styles.illustrationEmoji}>🎉</Text>
-            <Text style={styles.illustrationSubEmoji}>✨</Text>
+            <Icon name="checkmark-circle-outline" size={80} color={palette.olive[500]} />
+            <Icon name="sparkles-outline" size={32} color={palette.tan[400]} style={styles.illustrationSubEmoji} />
           </View>
         </View>
 
@@ -82,7 +83,7 @@ export function SuggestionCompletedModal({
           accessibilityLabel="Dismiss and continue"
         >
           <Text style={styles.dismissButtonText}>Great, Thanks!</Text>
-          <Text style={styles.dismissButtonIcon}>✓</Text>
+          <Icon name="checkmark-outline" size={18} color={palette.brown[900]} style={styles.dismissButtonIcon} />
         </TouchableOpacity>
       </View>
 
@@ -106,7 +107,7 @@ export function SuggestionCompletedModal({
             accessibilityRole="button"
             accessibilityLabel="Close"
           >
-            <Text style={styles.swipeDismissIcon}>✕</Text>
+            <Icon name="close-outline" size={16} color={palette.gray[400]} />
           </TouchableOpacity>
         </View>
       )}
