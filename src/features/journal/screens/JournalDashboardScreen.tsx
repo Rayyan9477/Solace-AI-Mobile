@@ -26,6 +26,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 import { FAB } from "../../../shared/components/atoms/buttons";
 import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
+import { EmptyState } from "../../../shared/components/molecules/feedback/EmptyState";
 
 /* ---------- types ---------- */
 type JournalStatus = "positive" | "negative" | "skipped";
@@ -39,7 +40,6 @@ interface JournalDashboardScreenProps {
   journalCount?: number;
   periodLabel?: string;
   calendarData?: CalendarDay[];
-  onBack?: () => void;
   onAddJournal?: () => void;
   onSeeAllStats?: () => void;
   onDayPress?: (index: number) => void;
@@ -57,7 +57,6 @@ export function JournalDashboardScreen({
   journalCount = 0,
   periodLabel = "This Week",
   calendarData = [],
-  onBack,
   onAddJournal,
   onSeeAllStats,
   onDayPress,
@@ -82,15 +81,7 @@ export function JournalDashboardScreen({
 
           {/* Header Row */}
           <View style={styles.heroHeader}>
-            <TouchableOpacity
-              testID="back-button"
-              style={styles.backButton}
-              onPress={onBack}
-              accessibilityRole="button"
-              accessibilityLabel="Go back"
-            >
-              <Icon name="chevron-back-outline" size={20} color={palette.white} />
-            </TouchableOpacity>
+            <View style={styles.headerSpacer} />
             <Text style={styles.heroTitle} accessibilityRole="header">Health Journal</Text>
             <View style={styles.headerSpacer} />
           </View>
@@ -127,26 +118,36 @@ export function JournalDashboardScreen({
           </View>
 
           {/* Weekly Calendar Grid */}
-          <View testID="calendar-grid" style={styles.calendarGrid}>
-            {calendarData.map((entry, index) => (
-              <TouchableOpacity
-                key={`${entry.day}-${index}`}
-                testID={`calendar-day-${index}`}
-                style={styles.calendarColumn}
-                onPress={() => onDayPress?.(index)}
-                accessibilityRole="button"
-                accessibilityLabel={`${entry.day}: ${entry.status}`}
-              >
-                <Text style={styles.calendarDayLabel}>{entry.day}</Text>
-                <View
-                  style={[
-                    styles.calendarDot,
-                    { backgroundColor: statusDotColor[entry.status] },
-                  ]}
-                />
-              </TouchableOpacity>
-            ))}
-          </View>
+          {calendarData.length === 0 ? (
+            <EmptyState
+              testID="journal-stats-empty-state"
+              variant="compact"
+              icon={<Icon name="journal-outline" size={40} color={palette.gray[500]} />}
+              title="No journal entries yet"
+              description="Start journaling to see your trends"
+            />
+          ) : (
+            <View testID="calendar-grid" style={styles.calendarGrid}>
+              {calendarData.map((entry, index) => (
+                <TouchableOpacity
+                  key={`${entry.day}-${index}`}
+                  testID={`calendar-day-${index}`}
+                  style={styles.calendarColumn}
+                  onPress={() => onDayPress?.(index)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${entry.day}: ${entry.status}`}
+                >
+                  <Text style={styles.calendarDayLabel}>{entry.day}</Text>
+                  <View
+                    style={[
+                      styles.calendarDot,
+                      { backgroundColor: statusDotColor[entry.status] },
+                    ]}
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
 
           {/* Legend */}
           <View testID="legend" style={styles.legend}>
@@ -186,21 +187,6 @@ export function JournalDashboardScreen({
 
 /* ---------- styles ---------- */
 const styles = StyleSheet.create({
-  backButton: {
-    alignItems: "center",
-    borderColor: `${palette.white}${palette.alpha[30]}`,
-    borderRadius: 22,
-    borderWidth: 1,
-    height: 44,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    width: 44,
-  },
-  backIcon: {
-    color: palette.white,
-    fontSize: 22,
-  },
   calendarColumn: {
     alignItems: "center",
     flex: 1,

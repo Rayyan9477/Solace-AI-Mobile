@@ -5,7 +5,7 @@
  *
  * Features:
  * - Theme: Gray/Muted (palette.onboarding.step3)
- * - Illustration: Person writing in journal
+ * - Illustration: Concentric circles with journal icon
  * - Message: AI Mental Journaling & AI Therapy Chatbot
  */
 
@@ -13,19 +13,18 @@ import React from "react";
 import { OnboardingCarouselCard } from "../../../shared/components/templates/onboarding";
 import type { OnboardingStepData } from "../../../shared/components/templates/onboarding";
 import type { AuthScreenProps } from "../../../shared/types/navigation";
-import { PlaceholderIllustration } from "../../../assets/illustrations/PlaceholderIllustration";
+import { OnboardingIllustration } from "../../../assets/illustrations/OnboardingIllustration";
 import { palette } from "../../../shared/theme";
 
 /**
  * Step 3 configuration data
- * TODO: Replace PlaceholderIllustration with actual onboarding-step3.png image
  */
 const STEP_DATA: OnboardingStepData = {
   stepNumber: 3,
   stepLabel: "Step Three",
   title: "AI Mental Journaling & AI Therapy Chatbot",
   highlightedWords: ["Mental"],
-  illustrationComponent: <PlaceholderIllustration stepNumber={3} color={palette.onboarding.step3} />,
+  illustrationComponent: <OnboardingIllustration step={3} />,
   backgroundColor: palette.onboarding.step3,
   totalSteps: 5,
 };

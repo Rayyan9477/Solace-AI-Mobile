@@ -5,7 +5,7 @@
  *
  * Features:
  * - Theme: Olive Green (palette.onboarding.step1)
- * - Illustration: Person meditating
+ * - Illustration: Concentric circles with person icon
  * - Message: Personalize Your Mental Health State With AI
  */
 
@@ -13,19 +13,18 @@ import React from "react";
 import { OnboardingCarouselCard } from "../../../shared/components/templates/onboarding";
 import type { OnboardingStepData } from "../../../shared/components/templates/onboarding";
 import type { AuthScreenProps } from "../../../shared/types/navigation";
-import { PlaceholderIllustration } from "../../../assets/illustrations/PlaceholderIllustration";
+import { OnboardingIllustration } from "../../../assets/illustrations/OnboardingIllustration";
 import { palette } from "../../../shared/theme";
 
 /**
  * Step 1 configuration data
- * TODO: Replace PlaceholderIllustration with actual onboarding-step1.png image
  */
 const STEP_DATA: OnboardingStepData = {
   stepNumber: 1,
   stepLabel: "Step One",
   title: "Personalize Your Mental Health State With AI",
   highlightedWords: ["Health State"],
-  illustrationComponent: <PlaceholderIllustration stepNumber={1} color={palette.onboarding.step1} />,
+  illustrationComponent: <OnboardingIllustration step={1} />,
   backgroundColor: palette.onboarding.step1,
   totalSteps: 5,
 };

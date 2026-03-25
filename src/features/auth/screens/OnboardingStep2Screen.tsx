@@ -5,7 +5,7 @@
  *
  * Features:
  * - Theme: Orange/Amber (palette.onboarding.step2)
- * - Illustration: Person with emotion faces
+ * - Illustration: Concentric circles with heart icon
  * - Message: Intelligent Mood Tracking & Emotion Insights
  */
 
@@ -13,19 +13,18 @@ import React from "react";
 import { OnboardingCarouselCard } from "../../../shared/components/templates/onboarding";
 import type { OnboardingStepData } from "../../../shared/components/templates/onboarding";
 import type { AuthScreenProps } from "../../../shared/types/navigation";
-import { PlaceholderIllustration } from "../../../assets/illustrations/PlaceholderIllustration";
+import { OnboardingIllustration } from "../../../assets/illustrations/OnboardingIllustration";
 import { palette } from "../../../shared/theme";
 
 /**
  * Step 2 configuration data
- * TODO: Replace PlaceholderIllustration with actual onboarding-step2.png image
  */
 const STEP_DATA: OnboardingStepData = {
   stepNumber: 2,
   stepLabel: "Step Two",
   title: "Intelligent Mood Tracking & Emotion Insights",
   highlightedWords: ["Intelligent"],
-  illustrationComponent: <PlaceholderIllustration stepNumber={2} color={palette.onboarding.step2} />,
+  illustrationComponent: <OnboardingIllustration step={2} />,
   backgroundColor: palette.onboarding.step2,
   totalSteps: 5,
 };

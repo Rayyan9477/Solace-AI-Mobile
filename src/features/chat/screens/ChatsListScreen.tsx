@@ -35,7 +35,6 @@ interface ChatsListScreenProps {
   recentCount?: number;
   trashCount?: number;
   activeTab?: TabType;
-  onBack?: () => void;
   onTabChange?: (tab: TabType) => void;
   onChatPress?: (id: string) => void;
   onSeeAllRecent?: () => void;
@@ -49,7 +48,6 @@ export function ChatsListScreen({
   recentCount = 0,
   trashCount = 0,
   activeTab = "recent",
-  onBack,
   onTabChange,
   onChatPress,
   onSeeAllRecent,
@@ -99,15 +97,6 @@ export function ChatsListScreen({
         end={{ x: 0, y: 1 }}
         style={styles.headerSection}
       >
-        <TouchableOpacity
-          testID="back-button"
-          style={styles.backButton}
-          onPress={onBack}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-        >
-          <Text style={styles.backButtonIcon}>{"<"}</Text>
-        </TouchableOpacity>
         <Text style={styles.screenTitle} accessibilityRole="header">My AI Chats</Text>
 
         {/* Segmented Control */}
@@ -219,22 +208,6 @@ export function ChatsListScreen({
 }
 
 const styles = StyleSheet.create({
-  backButton: {
-    alignItems: "center",
-    borderColor: `${palette.white}${palette.alpha[30]}`,
-    borderRadius: 20,
-    borderWidth: 1,
-    height: 40,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    width: 40,
-  },
-  backButtonIcon: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "600",
-  },
   chatAvatar: {
     alignItems: "center",
     backgroundColor: palette.brown[800],

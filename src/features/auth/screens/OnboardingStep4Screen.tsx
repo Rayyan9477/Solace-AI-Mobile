@@ -5,7 +5,7 @@
  *
  * Features:
  * - Theme: Golden/Mustard (palette.onboarding.step4)
- * - Illustration: Person spreading arms joyfully
+ * - Illustration: Concentric circles with leaf icon
  * - Message: Mindful Resources That Makes You Happy
  */
 
@@ -13,19 +13,18 @@ import React from "react";
 import { OnboardingCarouselCard } from "../../../shared/components/templates/onboarding";
 import type { OnboardingStepData } from "../../../shared/components/templates/onboarding";
 import type { AuthScreenProps } from "../../../shared/types/navigation";
-import { PlaceholderIllustration } from "../../../assets/illustrations/PlaceholderIllustration";
+import { OnboardingIllustration } from "../../../assets/illustrations/OnboardingIllustration";
 import { palette } from "../../../shared/theme";
 
 /**
  * Step 4 configuration data
- * TODO: Replace PlaceholderIllustration with actual onboarding-step4.png image
  */
 const STEP_DATA: OnboardingStepData = {
   stepNumber: 4,
   stepLabel: "Step Four",
   title: "Mindful Resources That Makes You Happy",
   highlightedWords: ["Resources"],
-  illustrationComponent: <PlaceholderIllustration stepNumber={4} color={palette.onboarding.step4} />,
+  illustrationComponent: <OnboardingIllustration step={4} />,
   backgroundColor: palette.onboarding.step4,
   totalSteps: 5,
 };

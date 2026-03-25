@@ -5,7 +5,7 @@
  *
  * Features:
  * - Theme: Purple/Lavender (palette.onboarding.step5)
- * - Illustration: Multiple hands holding heart
+ * - Illustration: Concentric circles with people icon
  * - Message: Loving & Supportive Community
  */
 
@@ -13,19 +13,18 @@ import React from "react";
 import { OnboardingCarouselCard } from "../../../shared/components/templates/onboarding";
 import type { OnboardingStepData } from "../../../shared/components/templates/onboarding";
 import type { AuthScreenProps } from "../../../shared/types/navigation";
-import { PlaceholderIllustration } from "../../../assets/illustrations/PlaceholderIllustration";
+import { OnboardingIllustration } from "../../../assets/illustrations/OnboardingIllustration";
 import { palette } from "../../../shared/theme";
 
 /**
  * Step 5 configuration data
- * TODO: Replace PlaceholderIllustration with actual onboarding-step5.png image
  */
 const STEP_DATA: OnboardingStepData = {
   stepNumber: 5,
   stepLabel: "Step Five",
   title: "Loving & Supportive Community",
   highlightedWords: ["Community"],
-  illustrationComponent: <PlaceholderIllustration stepNumber={5} color={palette.onboarding.step5} />,
+  illustrationComponent: <OnboardingIllustration step={5} />,
   backgroundColor: palette.onboarding.step5,
   totalSteps: 5,
 };

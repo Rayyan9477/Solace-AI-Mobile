@@ -13,6 +13,8 @@ import {
   TextInput,
   StyleSheet,
   FlatList,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
@@ -255,65 +257,70 @@ export function CrisisDetectionScreen({
         </View>
       )}
 
-      {/* Message List */}
-      <FlatList
-        testID="message-list"
-        data={messages}
-        renderItem={renderMessage}
-        keyExtractor={(item) => item.id}
-        style={styles.messageList}
-        contentContainerStyle={styles.messageListContent}
-        showsVerticalScrollIndicator={false}
-      />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        {/* Message List */}
+        <FlatList
+          testID="message-list"
+          data={messages}
+          renderItem={renderMessage}
+          keyExtractor={(item) => item.id}
+          style={styles.messageList}
+          contentContainerStyle={styles.messageListContent}
+          showsVerticalScrollIndicator={false}
+        />
 
-      {/* Typing Indicator */}
-      {isAITyping && (
-        <View testID="typing-indicator" style={styles.typingIndicator}>
-          <View style={styles.aiAvatar}>
-            <Icon name="hardware-chip-outline" size={24} color={palette.white} />
-          </View>
-          <View style={styles.typingBubble}>
-            <Text style={styles.typingText}>Solace AI is thinking...</Text>
-            <View style={styles.typingDots}>
-              <View style={styles.typingDot} />
-              <View style={styles.typingDot} />
-              <View style={styles.typingDot} />
+        {/* Typing Indicator */}
+        {isAITyping && (
+          <View testID="typing-indicator" style={styles.typingIndicator}>
+            <View style={styles.aiAvatar}>
+              <Icon name="hardware-chip-outline" size={24} color={palette.white} />
+            </View>
+            <View style={styles.typingBubble}>
+              <Text style={styles.typingText}>Solace AI is thinking...</Text>
+              <View style={styles.typingDots}>
+                <View style={styles.typingDot} />
+                <View style={styles.typingDot} />
+                <View style={styles.typingDot} />
+              </View>
             </View>
           </View>
-        </View>
-      )}
+        )}
 
-      {/* Chat Input Area */}
-      <View testID="chat-input-area" style={styles.chatInputArea}>
-        <TouchableOpacity
-          testID="attachment-button"
-          style={styles.attachmentButton}
-          onPress={onAttachment}
-          accessibilityRole="button"
-          accessibilityLabel="Add attachment"
-        >
-          <Icon name="attach-outline" size={22} color={palette.white} />
-        </TouchableOpacity>
-        <TextInput
-          testID="message-input"
-          style={styles.messageInput}
-          value={inputText}
-          onChangeText={onInputChange}
-          placeholder="Type to start chatting..."
-          placeholderTextColor={palette.gray[400]}
-          accessibilityLabel="Message input"
-          multiline
-        />
-        <TouchableOpacity
-          testID="send-button"
-          style={styles.sendButton}
-          onPress={handleSend}
-          accessibilityRole="button"
-          accessibilityLabel="Send message"
-        >
-          <Text style={styles.sendIcon}>→</Text>
-        </TouchableOpacity>
-      </View>
+        {/* Chat Input Area */}
+        <View testID="chat-input-area" style={styles.chatInputArea}>
+          <TouchableOpacity
+            testID="attachment-button"
+            style={styles.attachmentButton}
+            onPress={onAttachment}
+            accessibilityRole="button"
+            accessibilityLabel="Add attachment"
+          >
+            <Icon name="attach-outline" size={22} color={palette.white} />
+          </TouchableOpacity>
+          <TextInput
+            testID="message-input"
+            style={styles.messageInput}
+            value={inputText}
+            onChangeText={onInputChange}
+            placeholder="Type to start chatting..."
+            placeholderTextColor={palette.gray[400]}
+            accessibilityLabel="Message input"
+            multiline
+          />
+          <TouchableOpacity
+            testID="send-button"
+            style={styles.sendButton}
+            onPress={handleSend}
+            accessibilityRole="button"
+            accessibilityLabel="Send message"
+          >
+            <Text style={styles.sendIcon}>→</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
 
       {/* Crisis Modal */}
       <CrisisModal

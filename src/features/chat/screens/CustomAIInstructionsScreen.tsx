@@ -13,6 +13,8 @@ import {
   TextInput,
   StyleSheet,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
@@ -49,6 +51,10 @@ export function CustomAIInstructionsScreen({
 }: CustomAIInstructionsScreenProps): React.ReactElement {
   return (
     <ScreenContainer testID="custom-ai-instructions-screen" style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -187,6 +193,7 @@ export function CustomAIInstructionsScreen({
           <Text style={styles.saveButtonText}>Save Instructions</Text>
         </TouchableOpacity>
       </View>
+      </KeyboardAvoidingView>
     </ScreenContainer>
   );
 }

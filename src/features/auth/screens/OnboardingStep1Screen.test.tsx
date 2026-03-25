@@ -132,16 +132,16 @@ describe("OnboardingStep1Screen", () => {
   });
 
   describe("Illustration", () => {
-    it("should render placeholder illustration", () => {
+    it("should render onboarding illustration", () => {
       const { getByTestId } = renderWithNavigation();
 
       expect(getByTestId("onboarding-step1-screen-illustration")).toBeTruthy();
     });
 
-    it("should show placeholder with correct step number", () => {
-      const { getByText } = renderWithNavigation();
+    it("should have accessible illustration label", () => {
+      const { getByLabelText } = renderWithNavigation();
 
-      expect(getByText("Step 1")).toBeTruthy();
+      expect(getByLabelText("Personalise your mental health with AI")).toBeTruthy();
     });
   });
 

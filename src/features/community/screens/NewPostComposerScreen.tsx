@@ -15,6 +15,8 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { palette } from "../../../shared/theme";
 
@@ -82,6 +84,10 @@ export function NewPostComposerScreen({
 }: NewPostComposerScreenProps): React.ReactElement {
   return (
     <View testID="new-post-composer-screen" style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
@@ -236,6 +242,7 @@ export function NewPostComposerScreen({
           </TouchableOpacity>
         </View>
       </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }

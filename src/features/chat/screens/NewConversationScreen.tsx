@@ -14,6 +14,8 @@ import {
   Switch,
   StyleSheet,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
@@ -110,6 +112,10 @@ export function NewConversationScreen({
 
   return (
     <ScreenContainer testID="new-conversation-screen" style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -316,6 +322,7 @@ export function NewConversationScreen({
           <Icon testID="create-button-icon" name="lock-closed-outline" size={18} color={palette.brown[900]} style={styles.createButtonIcon} />
         </TouchableOpacity>
       </View>
+      </KeyboardAvoidingView>
     </ScreenContainer>
   );
 }

@@ -63,7 +63,6 @@ describe("ChatsListScreen", () => {
     recentCount: 4,
     trashCount: 16,
     activeTab: "recent" as const,
-    onBack: mockOnBack,
     onTabChange: mockOnTabChange,
     onChatPress: mockOnChatPress,
     onSeeAllRecent: mockOnSeeAllRecent,
@@ -82,17 +81,6 @@ describe("ChatsListScreen", () => {
   it("displays the header section", () => {
     const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
     expect(getByTestId("header-section")).toBeTruthy();
-  });
-
-  it("displays the back button", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByTestId("back-button")).toBeTruthy();
-  });
-
-  it("calls onBack when back button is pressed", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("back-button"));
-    expect(mockOnBack).toHaveBeenCalledTimes(1);
   });
 
   it("displays the screen title", () => {
@@ -250,22 +238,6 @@ describe("ChatsListScreen", () => {
     expect(hasBackgroundColor).toBe(true);
   });
 
-  it("back button has minimum touch target size", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    const button = getByTestId("back-button");
-    const styles = Array.isArray(button.props.style)
-      ? button.props.style.flat()
-      : [button.props.style];
-    const buttonStyles = styles.reduce(
-      (acc: Record<string, unknown>, s: Record<string, unknown>) => ({
-        ...acc,
-        ...s,
-      }),
-      {}
-    );
-    expect(buttonStyles.minHeight).toBeGreaterThanOrEqual(44);
-  });
-
   it("chat items have minimum touch target size", () => {
     const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
     const item = getByTestId("chat-item-1");
@@ -280,13 +252,6 @@ describe("ChatsListScreen", () => {
       {}
     );
     expect(itemStyles.minHeight).toBeGreaterThanOrEqual(44);
-  });
-
-  it("back button has proper accessibility", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    const button = getByTestId("back-button");
-    expect(button.props.accessibilityRole).toBe("button");
-    expect(button.props.accessibilityLabel).toBe("Go back");
   });
 
   it("tab buttons have proper accessibility", () => {

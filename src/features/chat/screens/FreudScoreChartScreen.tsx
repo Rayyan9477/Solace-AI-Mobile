@@ -6,7 +6,7 @@ import { palette } from "../../../shared/theme";
 export function FreudScoreChartScreen(): React.ReactElement {
   const navigation = useNavigation();
   return (
-    <View testID="freud-score-chart-screen" style={styles.container}>
+    <View testID="solace-score-chart-screen" style={styles.container}>
       <TouchableOpacity
         testID="back-button"
         style={styles.backButton}
@@ -16,7 +16,7 @@ export function FreudScoreChartScreen(): React.ReactElement {
       >
         <Text style={styles.backIcon}>←</Text>
       </TouchableOpacity>
-      <Text style={styles.title}>Freud Score Chart</Text>
+      <Text style={styles.title}>Solace Score Chart</Text>
       <Text style={styles.subtitle}>Coming Soon</Text>
     </View>
   );

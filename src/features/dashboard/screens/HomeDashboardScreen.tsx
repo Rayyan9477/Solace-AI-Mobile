@@ -17,6 +17,7 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 import { ScreenContainer } from "../../../shared/components/atoms/layout";
+import { EmptyState } from "../../../shared/components/molecules/feedback/EmptyState";
 
 type MoodType = "happy" | "sad" | "neutral" | "angry" | "anxious";
 type SolaceStatus = "Mentally Stable" | "Needs Attention" | "Critical";
@@ -282,30 +283,40 @@ export function HomeDashboardScreen({
         {/* Mindful Articles Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Mindful Articles</Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.articlesScroll}
-          >
-            {articles.map((article) => (
-              <TouchableOpacity
-                key={article.id}
-                testID={`article-card-${article.id}`}
-                style={styles.articleCard}
-                onPress={() => onArticlePress?.(article.id)}
-                accessibilityRole="button"
-                accessibilityLabel={article.title}
-              >
-                <Image
-                  source={{ uri: article.thumbnail }}
-                  style={styles.articleThumbnail}
-                />
-                <Text style={styles.articleTitle} numberOfLines={2}>
-                  {article.title}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+          {articles.length === 0 ? (
+            <EmptyState
+              testID="articles-empty-state"
+              variant="compact"
+              icon={<Icon name="book-outline" size={40} color={palette.gray[500]} />}
+              title="No articles yet"
+              description="Mindful content coming soon"
+            />
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.articlesScroll}
+            >
+              {articles.map((article) => (
+                <TouchableOpacity
+                  key={article.id}
+                  testID={`article-card-${article.id}`}
+                  style={styles.articleCard}
+                  onPress={() => onArticlePress?.(article.id)}
+                  accessibilityRole="button"
+                  accessibilityLabel={article.title}
+                >
+                  <Image
+                    source={{ uri: article.thumbnail }}
+                    style={styles.articleThumbnail}
+                  />
+                  <Text style={styles.articleTitle} numberOfLines={2}>
+                    {article.title}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          )}
         </View>
       </ScrollView>
     </ScreenContainer>
