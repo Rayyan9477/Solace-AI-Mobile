@@ -19,8 +19,10 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { CrisisModal } from "../../../shared/components/organisms/crisis";
 import { palette, colors as themeColors } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
 
 const localColors = {
   screenBg: palette.brown[900],
@@ -100,7 +102,7 @@ export function TextJournalComposerScreen({
   };
 
   return (
-    <View testID="text-journal-composer-screen" style={styles.container}>
+    <ScreenContainer testID="text-journal-composer-screen" style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Back Button */}
         <TouchableOpacity
@@ -110,7 +112,7 @@ export function TextJournalComposerScreen({
           accessibilityRole="button"
           accessibilityLabel="Go back"
         >
-          <Text style={styles.backIcon}>☽</Text>
+          <Icon name="chevron-back-outline" size={20} color={localColors.white} />
         </TouchableOpacity>
 
         {/* Title */}
@@ -120,7 +122,7 @@ export function TextJournalComposerScreen({
         <View testID="tab-selector" style={styles.tabSelector}>
           <TouchableOpacity
             style={[styles.tab, activeTab === "text" && styles.tabActive]}
-            onPress={() => onTabChange("text")}
+            onPress={() => onTabChange?.("text")}
             accessibilityRole="button"
           >
             <Text
@@ -134,7 +136,7 @@ export function TextJournalComposerScreen({
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.tab, activeTab === "voice" && styles.tabActive]}
-            onPress={() => onTabChange("voice")}
+            onPress={() => onTabChange?.("voice")}
             accessibilityRole="button"
           >
             <Text
@@ -150,9 +152,14 @@ export function TextJournalComposerScreen({
 
         {/* Crisis Alert Banner - Shows when crisis keywords detected */}
         {crisisDetected && (
-          <View testID="crisis-alert-banner" style={styles.crisisAlertBanner}>
+          <View
+            testID="crisis-alert-banner"
+            style={styles.crisisAlertBanner}
+            accessibilityRole="alert"
+            accessibilityLiveRegion="assertive"
+          >
             <View style={styles.crisisAlertContent}>
-              <Text style={styles.crisisAlertIcon}>❤️‍🩹</Text>
+              <Icon name="heart-outline" size={24} color={palette.red[300]} style={styles.crisisAlertIcon} />
               <View style={styles.crisisAlertText}>
                 <Text style={styles.crisisAlertTitle}>Support Available</Text>
                 <Text style={styles.crisisAlertDescription}>
@@ -175,7 +182,7 @@ export function TextJournalComposerScreen({
         {/* Journal Title */}
         <Text style={styles.fieldLabel}>Journal Title</Text>
         <View style={styles.titleInput}>
-          <Text style={styles.titleIcon}>📝</Text>
+          <Icon name="document-text-outline" size={18} color={localColors.white} style={styles.titleIcon} />
           <Text style={styles.titleValue}>{title}</Text>
         </View>
 
@@ -236,7 +243,7 @@ export function TextJournalComposerScreen({
                 styles.emotionCircle,
                 emotion.selected && styles.emotionSelected,
               ]}
-              onPress={() => onEmotionSelect(emotion.id)}
+              onPress={() => onEmotionSelect?.(emotion.id)}
               accessibilityRole="button"
               accessibilityLabel={`Select ${emotion.id} emotion`}
             >
@@ -256,7 +263,7 @@ export function TextJournalComposerScreen({
                 styles.stressorChip,
                 stressor.selected && styles.stressorChipSelected,
               ]}
-              onPress={() => onStressorSelect(stressor.id)}
+              onPress={() => onStressorSelect?.(stressor.id)}
               accessibilityRole="button"
               accessibilityLabel={`Select ${stressor.label} stressor`}
             >
@@ -299,7 +306,7 @@ export function TextJournalComposerScreen({
         triggerSource="journal"
         requireAcknowledge={true}
       />
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -320,7 +327,6 @@ const styles = StyleSheet.create({
     backgroundColor: localColors.screenBg,
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
   },
   crisisAlertBanner: {
     backgroundColor: themeColors.crisis.background,

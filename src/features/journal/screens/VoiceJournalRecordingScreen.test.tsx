@@ -33,7 +33,9 @@ describe("VoiceJournalRecordingScreen", () => {
 
   it("uses dark background", () => {
     const { getByTestId } = render(<VoiceJournalRecordingScreen {...defaultProps} />);
-    expect(getByTestId("voice-recording-screen").props.style).toEqual(
+    const { StyleSheet } = require("react-native");
+    const flatStyle = StyleSheet.flatten(getByTestId("voice-recording-screen").props.style);
+    expect(flatStyle).toEqual(
       expect.objectContaining({ backgroundColor: "#1C1410" })
     );
   });

@@ -30,6 +30,8 @@ interface FilterMoodBottomSheetProps {
   onHelp: () => void;
 }
 
+const SLIDER_TRACK_WIDTH = 240;
+
 export function FilterMoodBottomSheet({
   visible,
   moodTypes,
@@ -127,13 +129,13 @@ export function FilterMoodBottomSheet({
                 testID="swing-value"
                 style={[
                   styles.sliderFill,
-                  { width: `${(moodSwingValue / 10) * 100}%` },
+                  { width: (moodSwingValue / 10) * SLIDER_TRACK_WIDTH },
                 ]}
               />
               <View
                 style={[
                   styles.sliderThumb,
-                  { left: `${(moodSwingValue / 10) * 100}%` },
+                  { left: (moodSwingValue / 10) * SLIDER_TRACK_WIDTH },
                 ]}
               />
             </View>

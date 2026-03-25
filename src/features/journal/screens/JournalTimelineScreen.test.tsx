@@ -117,7 +117,9 @@ describe("JournalTimelineScreen", () => {
     const { getByTestId } = render(
       <JournalTimelineScreen {...defaultProps} />
     );
-    expect(getByTestId("journal-timeline-screen").props.style).toEqual(
+    const { StyleSheet } = require("react-native");
+    const flatStyle = StyleSheet.flatten(getByTestId("journal-timeline-screen").props.style);
+    expect(flatStyle).toEqual(
       expect.objectContaining({ backgroundColor: "#1C1410" })
     );
   });

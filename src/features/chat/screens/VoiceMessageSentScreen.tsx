@@ -13,6 +13,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface VoiceMessageSentScreenProps {
@@ -72,7 +73,7 @@ export function VoiceMessageSentScreen({
         {/* Success Icon */}
         <View testID="success-icon" style={styles.successIconContainer}>
           <View style={styles.successIconCircle}>
-            <Text style={styles.successIcon}>✓</Text>
+            <Icon name="checkmark-circle-outline" size={56} color={palette.white} />
           </View>
         </View>
 

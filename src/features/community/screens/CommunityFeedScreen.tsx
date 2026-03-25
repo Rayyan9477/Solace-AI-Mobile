@@ -13,6 +13,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  FlatList,
   StyleSheet,
 } from "react-native";
 import { palette } from "../../../shared/theme";
@@ -75,68 +76,11 @@ export function CommunityFeedScreen({
 }: CommunityFeedScreenProps): React.ReactElement {
   return (
     <View testID="community-feed-screen" style={styles.container}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        {/* Header */}
-        <View style={styles.header}>
+      <FlatList
+        data={posts}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item: post }) => (
           <TouchableOpacity
-            testID="back-button"
-            style={styles.backButton}
-            onPress={onBack}
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-          >
-            <Text style={styles.backIcon}>{"\u2190"}</Text>
-          </TouchableOpacity>
-          <View style={styles.userBadge}>
-            <View style={styles.avatar} />
-            <View style={styles.userInfo}>
-              <Text style={styles.username}>{username}</Text>
-              <View style={styles.userStats}>
-                <Text style={styles.userStatText}>{totalPosts}</Text>
-                <Text style={styles.userStatText}>
-                  {"\u2B50"} {rating}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        {/* Browse By */}
-        <View style={styles.browseSection}>
-          <Text style={styles.browseLabel}>Browse By</Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.filterRow}
-          >
-            {filters.map((filter) => (
-              <TouchableOpacity
-                key={filter.id}
-                testID={`filter-pill-${filter.id}`}
-                style={[
-                  styles.filterPill,
-                  selectedFilterId === filter.id && styles.filterPillSelected,
-                ]}
-                onPress={() => onFilterSelect(filter.id)}
-                accessibilityRole="button"
-                accessibilityLabel={filter.label}
-              >
-                <Text style={styles.filterPillText}>
-                  {filter.emoji ? `${filter.emoji} ` : ""}
-                  {filter.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-
-        {/* Post Cards */}
-        {posts.map((post) => (
-          <TouchableOpacity
-            key={post.id}
             testID={`post-card-${post.id}`}
             style={styles.postCard}
             onPress={() => onPostPress(post.id)}
@@ -161,8 +105,67 @@ export function CommunityFeedScreen({
               </Text>
             </View>
           </TouchableOpacity>
-        ))}
-      </ScrollView>
+        )}
+        ListHeaderComponent={
+          <>
+            {/* Header */}
+            <View style={styles.header}>
+              <TouchableOpacity
+                testID="back-button"
+                style={styles.backButton}
+                onPress={onBack}
+                accessibilityRole="button"
+                accessibilityLabel="Go back"
+              >
+                <Text style={styles.backIcon}>{"\u2190"}</Text>
+              </TouchableOpacity>
+              <View style={styles.userBadge}>
+                <View style={styles.avatar} />
+                <View style={styles.userInfo}>
+                  <Text style={styles.username}>{username}</Text>
+                  <View style={styles.userStats}>
+                    <Text style={styles.userStatText}>{totalPosts}</Text>
+                    <Text style={styles.userStatText}>
+                      {"\u2B50"} {rating}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            {/* Browse By */}
+            <View style={styles.browseSection}>
+              <Text style={styles.browseLabel}>Browse By</Text>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.filterRow}
+              >
+                {filters.map((filter) => (
+                  <TouchableOpacity
+                    key={filter.id}
+                    testID={`filter-pill-${filter.id}`}
+                    style={[
+                      styles.filterPill,
+                      selectedFilterId === filter.id && styles.filterPillSelected,
+                    ]}
+                    onPress={() => onFilterSelect(filter.id)}
+                    accessibilityRole="button"
+                    accessibilityLabel={filter.label}
+                  >
+                    <Text style={styles.filterPillText}>
+                      {filter.emoji ? `${filter.emoji} ` : ""}
+                      {filter.label}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          </>
+        }
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      />
 
       {/* FAB */}
       <TouchableOpacity

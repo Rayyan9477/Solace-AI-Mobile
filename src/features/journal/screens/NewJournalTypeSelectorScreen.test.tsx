@@ -38,7 +38,9 @@ describe("NewJournalTypeSelectorScreen", () => {
     const { getByTestId } = render(
       <NewJournalTypeSelectorScreen {...defaultProps} />
     );
-    expect(getByTestId("new-journal-type-screen").props.style).toEqual(
+    const { StyleSheet } = require("react-native");
+    const flatStyle = StyleSheet.flatten(getByTestId("new-journal-type-screen").props.style);
+    expect(flatStyle).toEqual(
       expect.objectContaining({ backgroundColor: "#1C1410" })
     );
   });

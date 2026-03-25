@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface FilterSolaceScoreSheetProps {
@@ -84,9 +85,7 @@ export function FilterSolaceScoreSheet({
             accessibilityRole="button"
             accessibilityLabel="Select from date"
           >
-            <Text testID="from-date-calendar-icon" style={styles.calendarIcon}>
-              📅
-            </Text>
+            <Icon testID="from-date-calendar-icon" name="calendar-outline" size={16} color={palette.tan[400]} style={styles.calendarIcon} />
             <Text style={styles.dateText}>{formatDate(fromDate)}</Text>
           </TouchableOpacity>
         </View>
@@ -101,9 +100,7 @@ export function FilterSolaceScoreSheet({
             accessibilityRole="button"
             accessibilityLabel="Select to date"
           >
-            <Text testID="to-date-calendar-icon" style={styles.calendarIcon}>
-              📅
-            </Text>
+            <Icon testID="to-date-calendar-icon" name="calendar-outline" size={16} color={palette.tan[400]} style={styles.calendarIcon} />
             <Text style={styles.dateText}>{formatDate(toDate)}</Text>
           </TouchableOpacity>
         </View>
@@ -167,7 +164,7 @@ export function FilterSolaceScoreSheet({
         <Text style={styles.applyButtonText}>
           Filter Solace Score ({matchingCount})
         </Text>
-        <Text style={styles.filterIcon}>🔍</Text>
+        <Icon name="funnel-outline" size={16} color={palette.brown[900]} style={styles.filterIcon} />
       </TouchableOpacity>
     </View>
   );

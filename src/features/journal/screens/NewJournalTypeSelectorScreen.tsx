@@ -19,7 +19,9 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
 
 interface NewJournalTypeSelectorScreenProps {
   selectedType: "voice" | "text" | null;
@@ -37,7 +39,7 @@ export function NewJournalTypeSelectorScreen({
   onCreate,
 }: NewJournalTypeSelectorScreenProps): React.ReactElement {
   return (
-    <View testID="new-journal-type-screen" style={styles.container}>
+    <ScreenContainer testID="new-journal-type-screen" style={styles.container}>
       {/* Back Button */}
       <TouchableOpacity
         testID="back-button"
@@ -46,7 +48,7 @@ export function NewJournalTypeSelectorScreen({
         accessibilityRole="button"
         accessibilityLabel="Go back"
       >
-        <Text style={styles.backIcon}>☽</Text>
+        <Icon name="chevron-back-outline" size={20} color={palette.white} />
       </TouchableOpacity>
 
       {/* Title */}
@@ -64,7 +66,7 @@ export function NewJournalTypeSelectorScreen({
         accessibilityLabel="Select voice journal"
       >
         <View style={[styles.iconCircle, { backgroundColor: palette.olive[500] }]}>
-          <Text style={styles.iconEmoji}>🎙</Text>
+          <Icon name="mic-outline" size={20} color={palette.white} />
         </View>
         <View style={styles.cardContent}>
           <Text style={styles.cardTitle}>Voice Journal</Text>
@@ -89,7 +91,7 @@ export function NewJournalTypeSelectorScreen({
         accessibilityLabel="Select text journal"
       >
         <View style={[styles.iconCircle, { backgroundColor: palette.onboarding.step2 }]}>
-          <Text style={styles.iconEmoji}>📝</Text>
+          <Icon name="document-text-outline" size={20} color={palette.white} />
         </View>
         <View style={styles.cardContent}>
           <Text style={styles.cardTitle}>Text journal</Text>
@@ -115,7 +117,7 @@ export function NewJournalTypeSelectorScreen({
       >
         <Text style={styles.ctaText}>Create Journal  +</Text>
       </TouchableOpacity>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -173,7 +175,6 @@ const styles = StyleSheet.create({
     backgroundColor: palette.brown[900],
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
   },
   ctaButton: {
     alignItems: "center",

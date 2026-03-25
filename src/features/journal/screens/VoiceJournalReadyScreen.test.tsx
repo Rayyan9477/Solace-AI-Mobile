@@ -30,7 +30,9 @@ describe("VoiceJournalReadyScreen", () => {
 
   it("uses dark background", () => {
     const { getByTestId } = render(<VoiceJournalReadyScreen {...defaultProps} />);
-    expect(getByTestId("voice-journal-ready-screen").props.style).toEqual(
+    const { StyleSheet } = require("react-native");
+    const flatStyle = StyleSheet.flatten(getByTestId("voice-journal-ready-screen").props.style);
+    expect(flatStyle).toEqual(
       expect.objectContaining({ backgroundColor: "#1C1410" })
     );
   });

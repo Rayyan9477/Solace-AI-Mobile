@@ -13,7 +13,9 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 type CategoryType = "mindfulness" | "physical" | "social" | "professional";
 type SortType = "newest" | "oldest" | "duration" | "category";
@@ -58,26 +60,26 @@ const getSortLabel = (sort: SortType): string => {
   }
 };
 
-const getCategoryIconEmoji = (icon: string): string => {
+const getCategoryIconName = (icon: string): string => {
   switch (icon) {
     case "meditation":
-      return "🧘";
+      return "body-outline";
     case "yoga":
-      return "🧘‍♀️";
+      return "body-outline";
     case "running":
-      return "🏃";
+      return "fitness-outline";
     case "cycling":
-      return "🚴";
+      return "bicycle-outline";
     case "social":
-      return "👥";
+      return "people-outline";
     case "people":
-      return "🤝";
+      return "people-outline";
     case "therapy":
-      return "💬";
+      return "chatbubble-outline";
     case "phone":
-      return "📞";
+      return "call-outline";
     default:
-      return "✨";
+      return "sparkles-outline";
   }
 };
 
@@ -91,7 +93,7 @@ export function AISuggestionsScreen({
   onSuggestionPress,
 }: AISuggestionsScreenProps): React.ReactElement {
   return (
-    <View testID="ai-suggestions-screen" style={styles.container}>
+    <ScreenContainer testID="ai-suggestions-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -111,7 +113,7 @@ export function AISuggestionsScreen({
           accessibilityRole="button"
           accessibilityLabel="Toggle dark mode"
         >
-          <Text style={styles.darkModeIcon}>🌙</Text>
+          <Icon name="moon-outline" size={20} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -120,11 +122,11 @@ export function AISuggestionsScreen({
         <Text style={styles.screenTitle}>AI Score Suggestions</Text>
         <View style={styles.statsRow}>
           <View style={styles.statBadge}>
-            <Text style={styles.statIcon}>📍</Text>
+            <Icon name="location-outline" size={14} color={palette.white} style={styles.statIcon} />
             <Text style={styles.statText}>{totalCount} Total</Text>
           </View>
           <View style={styles.statBadge}>
-            <Text style={styles.statIcon}>🤖</Text>
+            <Icon name="hardware-chip-outline" size={14} color={palette.white} style={styles.statIcon} />
             <Text style={styles.statText}>Solace AI</Text>
           </View>
         </View>
@@ -172,9 +174,7 @@ export function AISuggestionsScreen({
                     { backgroundColor: iconItem.color },
                   ]}
                 >
-                  <Text style={styles.categoryIconText}>
-                    {getCategoryIconEmoji(iconItem.icon)}
-                  </Text>
+                  <Icon name={getCategoryIconName(iconItem.icon)} size={16} color={palette.white} />
                 </View>
               ))}
               <View
@@ -202,7 +202,7 @@ export function AISuggestionsScreen({
           </TouchableOpacity>
         ))}
       </ScrollView>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -258,9 +258,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   countBadge: {
     alignItems: "center",

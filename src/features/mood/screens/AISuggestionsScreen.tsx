@@ -13,6 +13,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface Activity {
@@ -62,7 +63,7 @@ export function AISuggestionsScreen({
         >
           <Text style={styles.backButtonIcon}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Mood History</Text>
+        <Text style={styles.headerTitle}>AI Suggestions</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -161,7 +162,7 @@ export function AISuggestionsScreen({
                         accessibilityLabel={`${activity.selected ? "Deselect" : "Select"} ${activity.label}`}
                       >
                         {activity.selected && (
-                          <Text style={styles.checkmark}>✓</Text>
+                          <Icon name="checkmark-circle-outline" size={14} color={palette.white} style={{ marginRight: 6 }} />
                         )}
                         <Text
                           style={[

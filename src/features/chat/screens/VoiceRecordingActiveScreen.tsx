@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface VoiceRecordingActiveScreenProps {
@@ -120,7 +121,7 @@ export function VoiceRecordingActiveScreen({
           accessibilityRole="button"
           accessibilityLabel="Cancel recording"
         >
-          <Text style={styles.cancelIcon}>✕</Text>
+          <Icon name="close-outline" size={20} color={palette.onboarding.step2} />
         </TouchableOpacity>
 
         {/* Pause/Resume Button */}

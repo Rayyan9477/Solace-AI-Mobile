@@ -12,7 +12,9 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
-import { palette } from "../../../shared/theme";
+import Icon from "react-native-vector-icons/Ionicons";
+import { palette, applyShadow } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
 
 interface VoiceJournalRecordingScreenProps {
   transcribedText: string;
@@ -33,7 +35,7 @@ export function VoiceJournalRecordingScreen({
   onConfirm,
 }: VoiceJournalRecordingScreenProps): React.ReactElement {
   return (
-    <View testID="voice-recording-screen" style={styles.container}>
+    <ScreenContainer testID="voice-recording-screen" style={styles.container}>
       {/* Back Button */}
       <TouchableOpacity
         testID="back-button"
@@ -42,7 +44,7 @@ export function VoiceJournalRecordingScreen({
         accessibilityRole="button"
         accessibilityLabel="Go back"
       >
-        <Text style={styles.backIcon}>☽</Text>
+        <Icon name="chevron-back-outline" size={20} color={palette.white} />
       </TouchableOpacity>
 
       {/* Transcription Display */}
@@ -81,7 +83,7 @@ export function VoiceJournalRecordingScreen({
           accessibilityRole="button"
           accessibilityLabel="Stop recording"
         >
-          <Text style={styles.micIcon}>🎙</Text>
+          <Icon name="mic-outline" size={32} color={palette.brown[900]} />
         </TouchableOpacity>
 
         <View style={styles.actionBar}>
@@ -92,7 +94,7 @@ export function VoiceJournalRecordingScreen({
             accessibilityRole="button"
             accessibilityLabel="Cancel recording"
           >
-            <Text style={styles.actionIcon}>✕</Text>
+            <Icon name="close-outline" size={18} color={palette.white} />
           </TouchableOpacity>
 
           <Text style={styles.timerText}>{recordingDuration}</Text>
@@ -104,11 +106,11 @@ export function VoiceJournalRecordingScreen({
             accessibilityRole="button"
             accessibilityLabel="Confirm recording"
           >
-            <Text style={styles.actionIcon}>✓</Text>
+            <Icon name="checkmark-outline" size={18} color={palette.white} />
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -173,19 +175,14 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   micButton: {
     alignItems: "center",
     backgroundColor: palette.white,
     borderRadius: 40,
-    elevation: 4,
     height: 80,
     justifyContent: "center",
-    shadowColor: palette.black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
+    ...applyShadow("lg"),
     width: 80,
   },
   micIcon: {

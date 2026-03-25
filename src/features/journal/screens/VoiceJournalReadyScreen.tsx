@@ -9,7 +9,9 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { palette } from "../../../shared/theme";
+import Icon from "react-native-vector-icons/Ionicons";
+import { palette, applyShadow } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
 
 interface VoiceJournalReadyScreenProps {
   onBack: () => void;
@@ -25,7 +27,7 @@ export function VoiceJournalReadyScreen({
   onConfirm,
 }: VoiceJournalReadyScreenProps): React.ReactElement {
   return (
-    <View testID="voice-journal-ready-screen" style={styles.container}>
+    <ScreenContainer testID="voice-journal-ready-screen" style={styles.container}>
       {/* Back Button */}
       <TouchableOpacity
         testID="back-button"
@@ -34,7 +36,7 @@ export function VoiceJournalReadyScreen({
         accessibilityRole="button"
         accessibilityLabel="Go back"
       >
-        <Text style={styles.backIcon}>☽</Text>
+        <Icon name="chevron-back-outline" size={20} color={palette.white} />
       </TouchableOpacity>
 
       {/* Prompt */}
@@ -67,7 +69,7 @@ export function VoiceJournalReadyScreen({
           accessibilityRole="button"
           accessibilityLabel="Start recording"
         >
-          <Text style={styles.micIcon}>🎙</Text>
+          <Icon name="mic-outline" size={32} color={palette.brown[900]} />
         </TouchableOpacity>
 
         {/* Action Bar */}
@@ -79,7 +81,7 @@ export function VoiceJournalReadyScreen({
             accessibilityRole="button"
             accessibilityLabel="Cancel recording"
           >
-            <Text style={styles.cancelIcon}>✕</Text>
+            <Icon name="close-outline" size={18} color={palette.white} />
           </TouchableOpacity>
 
           <Text style={styles.statusLabel}>Ready</Text>
@@ -91,11 +93,11 @@ export function VoiceJournalReadyScreen({
             accessibilityRole="button"
             accessibilityLabel="Confirm recording"
           >
-            <Text style={styles.confirmIcon}>✓</Text>
+            <Icon name="checkmark-outline" size={18} color={palette.white} />
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -165,19 +167,14 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   micButton: {
     alignItems: "center",
     backgroundColor: palette.white,
     borderRadius: 40,
-    elevation: 4,
     height: 80,
     justifyContent: "center",
-    shadowColor: palette.black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
+    ...applyShadow("lg"),
     width: 80,
   },
   micIcon: {

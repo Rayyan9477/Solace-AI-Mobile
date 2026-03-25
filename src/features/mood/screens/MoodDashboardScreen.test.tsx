@@ -6,6 +6,7 @@
 
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+import { processColor } from "react-native";
 import { MoodDashboardScreen } from "./MoodDashboardScreen";
 
 describe("MoodDashboardScreen", () => {
@@ -87,12 +88,10 @@ describe("MoodDashboardScreen", () => {
   it("applies mood color to hero section background", () => {
     const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
     const hero = getByTestId("mood-hero-section");
-    const flatStyle = Array.isArray(hero.props.style)
-      ? Object.assign({}, ...hero.props.style)
-      : hero.props.style;
-    expect(flatStyle).toEqual(
-      expect.objectContaining({ backgroundColor: "#F5C563" })
-    );
+    // Hero is now a LinearGradient. The mock converts hex strings to numeric
+    // ARGB values via processColor before passing them to the native layer,
+    // so we compare using the same conversion.
+    expect(hero.props.colors[0]).toBe(processColor(mockCurrentMood.color));
   });
 
   it("displays decorative circles in hero section", () => {
@@ -220,7 +219,9 @@ describe("MoodDashboardScreen", () => {
   it("uses dark background for lower section", () => {
     const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
     const screen = getByTestId("mood-dashboard-screen");
-    expect(screen.props.style).toEqual(
+    const { StyleSheet } = require("react-native");
+    const flatStyle = StyleSheet.flatten(screen.props.style);
+    expect(flatStyle).toEqual(
       expect.objectContaining({ backgroundColor: "#1C1410" })
     );
   });

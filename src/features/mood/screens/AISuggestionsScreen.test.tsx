@@ -82,8 +82,9 @@ describe("AISuggestionsScreen", () => {
   });
 
   it("displays screen title", () => {
-    const { getByText } = render(<AISuggestionsScreen {...defaultProps} />);
-    expect(getByText("Mood History")).toBeTruthy();
+    const { getAllByText } = render(<AISuggestionsScreen {...defaultProps} />);
+    const matches = getAllByText("AI Suggestions");
+    expect(matches.length).toBeGreaterThanOrEqual(1);
   });
 
   // --- Segmented Control ---
@@ -98,8 +99,8 @@ describe("AISuggestionsScreen", () => {
   });
 
   it("displays AI Suggestions tab", () => {
-    const { getByText } = render(<AISuggestionsScreen {...defaultProps} />);
-    expect(getByText("AI Suggestions")).toBeTruthy();
+    const { getByTestId } = render(<AISuggestionsScreen {...defaultProps} />);
+    expect(getByTestId("tab-suggestions")).toBeTruthy();
   });
 
   it("highlights the AI Suggestions tab", () => {

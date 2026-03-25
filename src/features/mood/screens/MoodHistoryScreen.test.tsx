@@ -257,7 +257,9 @@ describe("MoodHistoryScreen", () => {
   it("uses dark background color", () => {
     const { getByTestId } = render(<MoodHistoryScreen {...defaultProps} />);
     const screen = getByTestId("mood-history-screen");
-    expect(screen.props.style).toEqual(
+    const { StyleSheet } = require("react-native");
+    const flatStyle = StyleSheet.flatten(screen.props.style);
+    expect(flatStyle).toEqual(
       expect.objectContaining({ backgroundColor: "#1C1410" })
     );
   });
