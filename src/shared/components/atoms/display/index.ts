@@ -31,3 +31,7 @@ export type { DividerProps, DividerOrientation, DividerVariant } from "./Divider
 // Skeleton (Task 2.2.7)
 export { Skeleton } from "./Skeleton";
 export type { SkeletonProps, SkeletonShape } from "./Skeleton.types";
+
+// AppIcon
+export { AppIcon } from "./AppIcon";
+export type { AppIconProps } from "./AppIcon";

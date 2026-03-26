@@ -26,6 +26,12 @@ import { AuthStack } from "./AuthStack";
 import { OnboardingStack } from "./OnboardingStack";
 import { MainTabNavigator } from "./MainTabNavigator";
 
+// Feature Modal Stacks
+import { SleepStack } from "./stacks/SleepStack";
+import { StressStack } from "./stacks/StressStack";
+import { CommunityStack } from "./stacks/CommunityStack";
+import { NotificationsStack } from "./stacks/NotificationsStack";
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 /**
@@ -110,12 +116,26 @@ export function RootNavigator({
         />
       )}
 
-      {/* Modal Screens (Available from any flow) */}
-      {/* TODO: Add modal screens in Phase 3B-3D */}
-      {/*
+      {/* Feature Modal Stacks (accessible from anywhere in the main app) */}
       <Stack.Screen
-        name="SearchModal"
-        component={SearchStack}
+        name="SleepModal"
+        component={SleepStack}
+        options={{
+          presentation: "modal",
+          animation: "slide_from_bottom",
+        }}
+      />
+      <Stack.Screen
+        name="StressModal"
+        component={StressStack}
+        options={{
+          presentation: "modal",
+          animation: "slide_from_bottom",
+        }}
+      />
+      <Stack.Screen
+        name="CommunityModal"
+        component={CommunityStack}
         options={{
           presentation: "modal",
           animation: "slide_from_bottom",
@@ -129,7 +149,6 @@ export function RootNavigator({
           animation: "slide_from_bottom",
         }}
       />
-      */}
     </Stack.Navigator>
   );
 }

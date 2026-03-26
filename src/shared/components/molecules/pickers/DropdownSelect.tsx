@@ -23,6 +23,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 
 import type {
   DropdownSelectProps,
@@ -80,7 +81,7 @@ function CheckIcon({ size = 16, color = colors.selected }) {
         justifyContent: "center",
       }}
     >
-      <Text style={{ color, fontSize: size - 2, fontWeight: "bold" }}>✓</Text>
+      <Icon name="checkmark-outline" size={size} color={color} />
     </View>
   );
 }

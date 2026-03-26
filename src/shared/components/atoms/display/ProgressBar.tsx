@@ -17,6 +17,7 @@ import React, { useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Animated, Easing } from "react-native";
 import type { ProgressBarProps, ProgressBarVariant, ProgressBarSize } from "./ProgressBar.types";
 import { palette } from "../../../theme";
+import { useReducedMotion } from "../../../hooks/useReducedMotion";
 
 /**
  * Color tokens from theme
@@ -87,6 +88,7 @@ export function ProgressBar({
   accessibilityLabel,
   style,
 }: ProgressBarProps): React.ReactElement {
+  const reduceMotion = useReducedMotion();
   const config = sizeConfig[size];
   const fillColor = getVariantColor(variant);
   const clampedValue = clampValue(value);
@@ -95,7 +97,7 @@ export function ProgressBar({
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if (indeterminate) {
+    if (indeterminate && !reduceMotion) {
       const animation = Animated.loop(
         Animated.timing(animatedValue, {
           toValue: 1,
@@ -109,7 +111,7 @@ export function ProgressBar({
     } else {
       animatedValue.setValue(0);
     }
-  }, [indeterminate, animatedValue]);
+  }, [indeterminate, reduceMotion, animatedValue]);
 
   // Indeterminate fill animation
   const indeterminateLeft = animatedValue.interpolate({
@@ -139,6 +141,22 @@ export function ProgressBar({
       >
         {/* Fill */}
         {indeterminate ? (
+          reduceMotion ? (
+            // Static fill: same visual width as the sweeping bar, no movement
+            <View
+              testID={testID ? `${testID}-fill` : "progress-fill"}
+              style={[
+                styles.fill,
+                styles.indeterminateFill,
+                {
+                  width: "30%",
+                  backgroundColor: fillColor,
+                  borderRadius: config.borderRadius,
+                  left: 0,
+                },
+              ]}
+            />
+          ) : (
           <Animated.View
             testID={testID ? `${testID}-fill` : "progress-fill"}
             style={[
@@ -152,6 +170,7 @@ export function ProgressBar({
               },
             ]}
           />
+          )
         ) : (
           <View
             testID={testID ? `${testID}-fill` : "progress-fill"}

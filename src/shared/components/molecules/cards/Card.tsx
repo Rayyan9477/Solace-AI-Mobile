@@ -21,12 +21,17 @@ import {
   StyleSheet,
   type ViewStyle,
 } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated";
 import type {
   CardProps,
   CardVariant,
   CardSize,
 } from "./Card.types";
-import { palette } from "../../../theme";
+import { palette, applyShadow } from "../../../theme";
 
 /**
  * Color tokens from theme
@@ -40,9 +45,6 @@ const colors = {
   // Border
   borderOutlined: palette.gray[600],
   borderSelected: palette.indigo[400],
-
-  // Shadow
-  shadowColor: palette.black,
 
   // States
   pressedOverlay: `${palette.white}${palette.alpha[5]}`,
@@ -63,13 +65,7 @@ const sizeConfig: Record<
 /**
  * Shadow configuration for elevated variant
  */
-const elevatedShadow = {
-  shadowColor: colors.shadowColor,
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.25,
-  shadowRadius: 4,
-  elevation: 4,
-};
+const elevatedShadow = applyShadow("md");
 
 /**
  * Card Component
@@ -176,6 +172,23 @@ export function Card({
     }
   };
 
+  // Spring animation for press feedback
+  const scale = useSharedValue(1);
+
+  const animatedCardStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    if (!disabled) {
+      scale.value = withSpring(0.95, { damping: 15, stiffness: 150 });
+    }
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 150 });
+  };
+
   // Render content
   const renderContent = () => (
     <>
@@ -198,25 +211,28 @@ export function Card({
   // Render as Pressable if pressable
   if (pressable) {
     return (
-      <Pressable
-        testID={testID}
-        onPress={handlePress}
-        onLongPress={handleLongPress}
-        disabled={disabled}
-        accessibilityRole="button"
-        accessibilityLabel={accessibilityLabel}
-        accessibilityState={{
-          disabled,
-          selected,
-        }}
-        style={({ pressed }) => [
-          containerStyle,
-          pressed && !disabled && styles.pressed,
-          style,
-        ]}
-      >
-        {renderContent()}
-      </Pressable>
+      <Animated.View style={[animatedCardStyle, style]}>
+        <Pressable
+          testID={testID}
+          onPress={handlePress}
+          onLongPress={handleLongPress}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          disabled={disabled}
+          accessibilityRole="button"
+          accessibilityLabel={accessibilityLabel}
+          accessibilityState={{
+            disabled,
+            selected,
+          }}
+          style={({ pressed }) => [
+            containerStyle,
+            pressed && !disabled && styles.pressed,
+          ]}
+        >
+          {renderContent()}
+        </Pressable>
+      </Animated.View>
     );
   }
 

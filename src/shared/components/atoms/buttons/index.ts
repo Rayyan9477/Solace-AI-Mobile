@@ -21,3 +21,10 @@ export type {
   IconButtonVariant,
   IconButtonSize,
 } from "./IconButton.types";
+
+// FAB - Floating Action Button (shared atom)
+export { FAB } from "./FAB";
+export type { FABProps } from "./FAB";
+
+// BackButton - Unified back navigation button
+export { BackButton } from "./BackButton";

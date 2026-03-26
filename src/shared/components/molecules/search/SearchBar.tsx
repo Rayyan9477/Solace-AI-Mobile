@@ -25,6 +25,7 @@ import {
   type ViewStyle,
   type TextStyle,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import type {
   SearchBarProps,
   SearchBarVariant,
@@ -186,10 +187,8 @@ export function SearchBar({
     if (leftIcon) return leftIcon;
 
     return (
-      <View testID={testID ? `${testID}-icon` : "search-icon"}>
-        <Text style={[styles.searchIcon, { fontSize: config.iconSize }]}>
-          🔍
-        </Text>
+      <View testID={testID ? `${testID}-icon` : "search-icon"} style={styles.searchIcon}>
+        <Icon name="search-outline" size={config.iconSize} color={colors.icon} />
       </View>
     );
   };
@@ -211,9 +210,7 @@ export function SearchBar({
           pressed && styles.clearButtonPressed,
         ]}
       >
-        <Text style={[styles.clearIcon, { fontSize: config.iconSize - 2 }]}>
-          ✕
-        </Text>
+        <Icon name="close-circle-outline" size={config.iconSize} color={colors.text} />
       </Pressable>
     );
   };
@@ -257,6 +254,8 @@ export function SearchBar({
 const styles = StyleSheet.create({
   searchIcon: {
     opacity: 0.7,
+    alignItems: "center",
+    justifyContent: "center",
   },
   clearButton: {
     width: 24,
@@ -269,10 +268,7 @@ const styles = StyleSheet.create({
   clearButtonPressed: {
     backgroundColor: colors.clearButtonPressed,
   },
-  clearIcon: {
-    color: colors.text,
-    fontWeight: "600",
-  },
+  clearIcon: {},
 });
 
 export default SearchBar;

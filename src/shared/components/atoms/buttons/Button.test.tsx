@@ -239,7 +239,7 @@ describe("Button Component", () => {
       const style = flattenStyle(button.props.style);
       expect(style).toEqual(
         expect.objectContaining({
-          opacity: 0.5,
+          opacity: 0.6,
         })
       );
     });

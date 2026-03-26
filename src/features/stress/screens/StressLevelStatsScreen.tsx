@@ -8,7 +8,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { palette } from "../../../shared/theme";
+import { palette, colors } from "../../../shared/theme";
 
 interface StressBubble {
   level: string;
@@ -25,29 +25,26 @@ interface StressLevelStatsScreenProps {
   onBubblePress: (level: string) => void;
 }
 
-const localColors = {
-  background: palette.brown[900],
-  white: palette.white,
-  textSecondary: "rgba(255,255,255,0.6)",
-  periodBg: palette.brown[800],
-} as const;
-
 // Legend items with colors
 const LEGEND_ITEMS = [
   { label: "Calm", color: palette.olive[500] },
-  { label: "Normal", color: "#6B6B6B" },
-  { label: "Elevated", color: "#C4A535" },
+  { label: "Normal", color: palette.stone[500] },
+  { label: "Elevated", color: palette.gold[500] },
   { label: "Stressed", color: palette.accent.orange },
   { label: "Extreme", color: palette.accent.purple },
 ];
 
-// Bubble layout positions (percentage-based)
-const BUBBLE_POSITIONS: Record<string, { left: string; top: string }> = {
-  Calm: { left: "10%", top: "55%" },
-  Stressed: { left: "25%", top: "10%" },
-  Normal: { left: "60%", top: "25%" },
-  Elevated: { left: "2%", top: "20%" },
-  Extreme: { left: "65%", top: "70%" },
+// Bubble chart container dimensions for pixel calculations
+const BUBBLE_CHART_WIDTH = 340;
+const BUBBLE_CHART_HEIGHT = 400;
+
+// Bubble layout positions (pixel-based, computed from percentages of container)
+const BUBBLE_POSITIONS: Record<string, { left: number; top: number }> = {
+  Calm: { left: (10 / 100) * BUBBLE_CHART_WIDTH, top: (55 / 100) * BUBBLE_CHART_HEIGHT },
+  Stressed: { left: (25 / 100) * BUBBLE_CHART_WIDTH, top: (10 / 100) * BUBBLE_CHART_HEIGHT },
+  Normal: { left: (60 / 100) * BUBBLE_CHART_WIDTH, top: (25 / 100) * BUBBLE_CHART_HEIGHT },
+  Elevated: { left: (2 / 100) * BUBBLE_CHART_WIDTH, top: (20 / 100) * BUBBLE_CHART_HEIGHT },
+  Extreme: { left: (65 / 100) * BUBBLE_CHART_WIDTH, top: (70 / 100) * BUBBLE_CHART_HEIGHT },
 };
 
 const MIN_BUBBLE_SIZE = 60;
@@ -130,8 +127,8 @@ export function StressLevelStatsScreen({
         {bubbles.map((bubble) => {
           const size = getBubbleSize(bubble.count, maxCount);
           const position = BUBBLE_POSITIONS[bubble.level] || {
-            left: "30%",
-            top: "30%",
+            left: (30 / 100) * BUBBLE_CHART_WIDTH,
+            top: (30 / 100) * BUBBLE_CHART_HEIGHT,
           };
           return (
             <TouchableOpacity
@@ -184,7 +181,7 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   backIcon: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 24,
   },
   bubble: {
@@ -197,12 +194,12 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   bubbleValue: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 24,
     fontWeight: "800",
   },
   container: {
-    backgroundColor: localColors.background,
+    backgroundColor: colors.background.primary,
     flex: 1,
   },
   header: {
@@ -231,7 +228,7 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   legendLabel: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 13,
     fontWeight: "500",
   },
@@ -240,7 +237,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   periodArrow: {
-    color: localColors.textSecondary,
+    color: palette.opacity.white60,
     fontSize: 12,
     marginLeft: 4,
   },
@@ -255,14 +252,14 @@ const styles = StyleSheet.create({
   },
   periodSelector: {
     alignItems: "center",
-    backgroundColor: localColors.periodBg,
+    backgroundColor: colors.background.secondary,
     borderRadius: 20,
     flexDirection: "row",
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
   periodText: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 14,
     fontWeight: "600",
   },
@@ -276,7 +273,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   title: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 28,
     fontWeight: "800",
     marginTop: 8,

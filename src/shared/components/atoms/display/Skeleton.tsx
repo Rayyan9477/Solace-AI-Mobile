@@ -15,6 +15,7 @@ import React, { useEffect, useRef } from "react";
 import { View, StyleSheet, Animated, Easing, DimensionValue } from "react-native";
 import type { SkeletonProps, SkeletonShape } from "./Skeleton.types";
 import { palette } from "../../../theme";
+import { useReducedMotion } from "../../../hooks/useReducedMotion";
 
 /**
  * Color tokens from theme
@@ -79,11 +80,13 @@ export function Skeleton({
         : defaults.borderRadius
       : defaults.borderRadius);
 
+  const reduceMotion = useReducedMotion();
+
   // Shimmer animation
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if (animated) {
+    if (animated && !reduceMotion) {
       const animation = Animated.loop(
         Animated.sequence([
           Animated.timing(animatedValue, {
@@ -103,9 +106,10 @@ export function Skeleton({
       animation.start();
       return () => animation.stop();
     }
-  }, [animated, animatedValue]);
+  }, [animated, reduceMotion, animatedValue]);
 
-  const animatedBackgroundColor = animated
+  // When reduceMotion is on, always use the static base color (no shimmer interpolation)
+  const animatedBackgroundColor = animated && !reduceMotion
     ? animatedValue.interpolate({
         inputRange: [0, 1],
         outputRange: [colors.base, colors.highlight],

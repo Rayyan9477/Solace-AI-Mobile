@@ -21,6 +21,7 @@ import {
   StyleSheet,
   type ViewStyle,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import type { ToastProps, ToastVariant } from "./Toast.types";
 import { palette } from "../../../theme";
 
@@ -58,13 +59,13 @@ const variantColors: Record<
 };
 
 /**
- * Default icons per variant
+ * Default icon name per variant
  */
-const variantIcons: Record<ToastVariant, string> = {
-  info: "ℹ",
-  success: "✓",
-  warning: "⚠",
-  error: "✕",
+const variantIconNames: Record<ToastVariant, string> = {
+  info: "information-circle-outline",
+  success: "checkmark-circle-outline",
+  warning: "warning-outline",
+  error: "close-circle-outline",
 };
 
 /**
@@ -177,12 +178,12 @@ export function Toast({
       {icon ? (
         icon
       ) : (
-        <Text
+        <View
           testID={testID ? `${testID}-icon` : "toast-icon"}
-          style={[styles.icon, { color: colors.icon }]}
+          style={styles.icon}
         >
-          {variantIcons[variant]}
-        </Text>
+          <Icon name={variantIconNames[variant]} size={18} color={colors.icon} />
+        </View>
       )}
 
       {/* Message */}
@@ -225,9 +226,7 @@ export function Toast({
           ]}
           hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}
         >
-          <Text style={[styles.closeButtonText, { color: colors.text }]}>
-            ✕
-          </Text>
+          <Icon name="close-outline" size={16} color={colors.text} />
         </Pressable>
       )}
     </View>
@@ -253,11 +252,9 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
   },
   icon: {
-    fontSize: 18,
-    fontWeight: "600",
     marginRight: 12,
     width: 20,
-    textAlign: "center",
+    alignItems: "center",
   },
   message: {
     flex: 1,
@@ -284,10 +281,7 @@ const styles = StyleSheet.create({
   closeButtonPressed: {
     opacity: 0.7,
   },
-  closeButtonText: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
+  closeButtonText: {},
 });
 
 export default Toast;

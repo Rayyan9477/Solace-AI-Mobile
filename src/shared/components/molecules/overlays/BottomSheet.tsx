@@ -12,7 +12,7 @@
  * - Full accessibility support
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -82,13 +82,6 @@ export function BottomSheet({
   contentStyle,
   headerRight,
 }: BottomSheetProps): React.ReactElement | null {
-  // Handle backdrop press
-  const handleBackdropPress = () => {
-    if (dismissOnBackdropPress) {
-      onDismiss();
-    }
-  };
-
   // Determine accessibility label
   const sheetAccessibilityLabel = accessibilityLabel || title || "Bottom sheet";
 
@@ -97,7 +90,30 @@ export function BottomSheet({
     height: height as ViewStyle["height"],
   };
 
-  if (!visible) {
+  // Keep the RN Modal mounted until its slide exit animation completes.
+  const [internalVisible, setInternalVisible] = useState(visible);
+
+  useEffect(() => {
+    if (visible) {
+      setInternalVisible(true);
+    }
+  }, [visible]);
+
+  const handleDismiss = () => {
+    if (!visible) {
+      setInternalVisible(false);
+    }
+    onDismiss();
+  };
+
+  // Handle backdrop press
+  const handleBackdropPress = () => {
+    if (dismissOnBackdropPress) {
+      handleDismiss();
+    }
+  };
+
+  if (!internalVisible) {
     return null;
   }
 
@@ -106,7 +122,12 @@ export function BottomSheet({
       visible={visible}
       transparent
       animationType="slide"
-      onRequestClose={onDismiss}
+      onRequestClose={handleDismiss}
+      onDismiss={() => {
+        if (!visible) {
+          setInternalVisible(false);
+        }
+      }}
       testID={testID}
     >
       <View style={styles.overlay}>

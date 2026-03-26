@@ -14,6 +14,11 @@
 
 import React, { useMemo } from "react";
 import { Pressable, StyleSheet, type ViewStyle } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated";
 import type {
   IconButtonProps,
   IconButtonVariant,
@@ -136,13 +141,27 @@ export function IconButton({
     return baseStyle;
   }, [sizeValue, circular, colors, disabled]);
 
-  // Pressed style handler
-  const getPressedStyle = (pressed: boolean): ViewStyle => {
+  // Spring animation for press feedback
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    if (!disabled) {
+      scale.value = withSpring(0.95, { damping: 15, stiffness: 150 });
+    }
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 150 });
+  };
+
+  // Pressed background color handler (color change stays on Pressable, scale moves to Animated.View)
+  const getPressedBackgroundStyle = (pressed: boolean): ViewStyle => {
     if (pressed && !disabled) {
-      return {
-        transform: [{ scale: 0.95 }],
-        backgroundColor: colors.pressedBackground,
-      };
+      return { backgroundColor: colors.pressedBackground };
     }
     return {};
   };
@@ -151,6 +170,8 @@ export function IconButton({
     <Pressable
       testID={testID}
       onPress={disabled ? undefined : onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       disabled={disabled}
       hitSlop={hitSlop}
       accessibilityRole="button"
@@ -158,11 +179,20 @@ export function IconButton({
       accessibilityState={{
         disabled,
       }}
-      style={({ pressed }) => [buttonStyle, getPressedStyle(pressed), style]}
+      style={({ pressed }) => [buttonStyle, getPressedBackgroundStyle(pressed), style]}
     >
-      {icon}
+      <Animated.View style={[styles.animatedContent, animatedStyle]}>
+        {icon}
+      </Animated.View>
     </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  animatedContent: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
 
 export default IconButton;

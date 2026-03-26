@@ -23,6 +23,11 @@ import {
   type ViewStyle,
   type TextStyle,
 } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated";
 import type {
   ButtonProps,
   ButtonVariant,
@@ -31,6 +36,7 @@ import type {
   VariantColors,
 } from "./Button.types";
 import { shadows, palette } from "../../../theme";
+import { useHaptic } from "../../../hooks/useHaptic";
 
 /**
  * Size specifications
@@ -51,16 +57,16 @@ const variantColors: Record<ButtonVariant, VariantColors> = {
     text: palette.white,
     border: "transparent",
     pressedBackground: palette.stone[600],
-    disabledBackground: palette.stone[600],
-    disabledText: palette.stone[400],
+    disabledBackground: palette.brown[700],
+    disabledText: palette.gray[500],
   },
   secondary: {
     background: palette.stone[200],
     text: palette.stone[900],
     border: "transparent",
     pressedBackground: palette.stone[300],
-    disabledBackground: palette.stone[100],
-    disabledText: palette.stone[400],
+    disabledBackground: palette.brown[700],
+    disabledText: palette.gray[500],
   },
   outline: {
     background: "transparent",
@@ -68,7 +74,7 @@ const variantColors: Record<ButtonVariant, VariantColors> = {
     border: palette.stone[500],
     pressedBackground: `${palette.stone[500]}${palette.alpha[10]}`,
     disabledBackground: "transparent",
-    disabledText: palette.stone[400],
+    disabledText: palette.gray[500],
   },
   ghost: {
     background: "transparent",
@@ -76,15 +82,15 @@ const variantColors: Record<ButtonVariant, VariantColors> = {
     border: "transparent",
     pressedBackground: `${palette.stone[500]}${palette.alpha[10]}`,
     disabledBackground: "transparent",
-    disabledText: palette.stone[400],
+    disabledText: palette.gray[500],
   },
   crisis: {
     background: palette.red[500],
     text: palette.white,
     border: palette.red[600],
     pressedBackground: palette.red[600],
-    disabledBackground: palette.red[300],
-    disabledText: palette.red[200],
+    disabledBackground: palette.brown[700],
+    disabledText: palette.gray[500],
   },
   link: {
     background: "transparent",
@@ -92,7 +98,7 @@ const variantColors: Record<ButtonVariant, VariantColors> = {
     border: "transparent",
     pressedBackground: "transparent",
     disabledBackground: "transparent",
-    disabledText: palette.blue[300],
+    disabledText: palette.gray[500],
   },
 };
 
@@ -136,6 +142,7 @@ export function Button({
   const isDisabled = disabled || loading;
   const sizeSpec = sizeSpecs[size];
   const colors = variantColors[variant];
+  const haptic = useHaptic();
 
   // Compute button styles
   const buttonStyle = useMemo((): ViewStyle => {
@@ -158,9 +165,11 @@ export function Button({
       baseStyle.width = "100%";
     }
 
-    // Disabled opacity
+    // Disabled opacity — use 0.6 for slightly more visibility than the previous 0.5.
+    // Background color is already switched to disabledBackground via the ternary above,
+    // so opacity alone is a secondary cue; together they make disabled clearly distinct.
     if (isDisabled) {
-      baseStyle.opacity = 0.5;
+      baseStyle.opacity = 0.6;
     }
 
     // Crisis variant gets shadow
@@ -196,13 +205,27 @@ export function Button({
     return baseStyle;
   }, [sizeSpec, colors, isDisabled, variant]);
 
-  // Pressed style handler
-  const getPressedStyle = (pressed: boolean): ViewStyle => {
+  // Spring animation for press feedback
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    if (!isDisabled) {
+      scale.value = withSpring(0.95, { damping: 15, stiffness: 150 });
+    }
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 150 });
+  };
+
+  // Pressed background color handler (color change stays on Pressable, scale moves to Animated.View)
+  const getPressedBackgroundStyle = (pressed: boolean): ViewStyle => {
     if (pressed && !isDisabled) {
-      return {
-        transform: [{ scale: 0.96 }],
-        backgroundColor: colors.pressedBackground,
-      };
+      return { backgroundColor: colors.pressedBackground };
     }
     return {};
   };
@@ -210,7 +233,9 @@ export function Button({
   return (
     <Pressable
       testID={testID}
-      onPress={isDisabled ? undefined : onPress}
+      onPress={isDisabled ? undefined : () => { haptic.light(); onPress?.(); }}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       disabled={isDisabled}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel || label}
@@ -222,37 +247,44 @@ export function Button({
       }}
       style={({ pressed }) => [
         buttonStyle,
-        getPressedStyle(pressed),
+        getPressedBackgroundStyle(pressed),
         style,
       ]}
     >
-      {loading ? (
-        <ActivityIndicator
-          testID={testID ? `${testID}-indicator` : undefined}
-          size="small"
-          color={colors.text}
-        />
-      ) : (
-        <>
-          {leftIcon && (
-            <View style={styles.iconLeft}>{leftIcon}</View>
-          )}
-          <Text
-            style={[computedLabelStyle, labelStyle]}
-            numberOfLines={1}
-          >
-            {label}
-          </Text>
-          {rightIcon && (
-            <View style={styles.iconRight}>{rightIcon}</View>
-          )}
-        </>
-      )}
+      <Animated.View style={[styles.animatedContent, animatedStyle]}>
+        {loading ? (
+          <ActivityIndicator
+            testID={testID ? `${testID}-indicator` : undefined}
+            size="small"
+            color={colors.text}
+          />
+        ) : (
+          <>
+            {leftIcon && (
+              <View style={styles.iconLeft}>{leftIcon}</View>
+            )}
+            <Text
+              style={[computedLabelStyle, labelStyle]}
+              numberOfLines={1}
+            >
+              {label}
+            </Text>
+            {rightIcon && (
+              <View style={styles.iconRight}>{rightIcon}</View>
+            )}
+          </>
+        )}
+      </Animated.View>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
+  animatedContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   iconLeft: {
     marginRight: 8,
   },

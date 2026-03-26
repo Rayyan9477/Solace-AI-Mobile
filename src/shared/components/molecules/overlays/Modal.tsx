@@ -13,7 +13,7 @@
  * - Full accessibility support
  */
 
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -23,6 +23,7 @@ import {
   type ViewStyle,
   type TextStyle,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import type { ModalProps, ModalSize } from "./Modal.types";
 import { palette } from "../../../theme";
 
@@ -119,17 +120,38 @@ export function Modal({
     maxHeight: "80%",
   }), [config]);
 
-  // Handle backdrop press
-  const handleBackdropPress = () => {
-    if (dismissOnBackdropPress) {
-      onDismiss();
-    }
-  };
-
   // Determine accessibility label
   const modalAccessibilityLabel = accessibilityLabel || title || "Modal";
 
-  if (!visible) {
+  // Keep the RN Modal mounted until its exit animation completes.
+  // `internalVisible` stays true after `visible` turns false, and is only
+  // cleared once the RN Modal fires onDismiss after the animation finishes.
+  const [internalVisible, setInternalVisible] = useState(visible);
+
+  useEffect(() => {
+    if (visible) {
+      setInternalVisible(true);
+    }
+    // When visible goes false we do NOT immediately set internalVisible to false —
+    // we let the onDismiss callback (fired post-animation) do it.
+  }, [visible]);
+
+  const handleModalDismiss = () => {
+    if (!visible) {
+      setInternalVisible(false);
+    }
+    // Always propagate to the parent so consumers can react immediately
+    onDismiss();
+  };
+
+  // Handle backdrop press
+  const handleBackdropPress = () => {
+    if (dismissOnBackdropPress) {
+      handleModalDismiss();
+    }
+  };
+
+  if (!internalVisible) {
     return null;
   }
 
@@ -138,7 +160,12 @@ export function Modal({
       visible={visible}
       transparent
       animationType="fade"
-      onRequestClose={onDismiss}
+      onRequestClose={handleModalDismiss}
+      onDismiss={() => {
+        if (!visible) {
+          setInternalVisible(false);
+        }
+      }}
       testID={testID}
     >
       <View style={styles.overlay}>
@@ -171,7 +198,7 @@ export function Modal({
               {showCloseButton && (
                 <Pressable
                   testID={testID ? `${testID}-close-button` : "modal-close-button"}
-                  onPress={onDismiss}
+                  onPress={handleModalDismiss}
                   accessibilityRole="button"
                   accessibilityLabel="Close modal"
                   style={({ pressed }) => [
@@ -180,7 +207,7 @@ export function Modal({
                   ]}
                   hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}
                 >
-                  <Text style={styles.closeButtonText}>✕</Text>
+                  <Icon name="close-outline" size={20} color={colors.closeButton} />
                 </Pressable>
               )}
             </View>
@@ -271,9 +298,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   closeButtonText: {
-    fontSize: 18,
     color: colors.closeButton,
-    fontWeight: "500",
   },
   content: {
     marginBottom: 16,
