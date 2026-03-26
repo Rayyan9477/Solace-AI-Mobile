@@ -16,7 +16,7 @@ import {
   FlatList,
   StyleSheet,
 } from "react-native";
-import { palette } from "../../../shared/theme";
+import { palette, colors } from "../../../shared/theme";
 
 interface FilterItem {
   id: string;
@@ -50,17 +50,6 @@ interface CommunityFeedScreenProps {
   onProfilePress: () => void;
 }
 
-const colors = {
-  background: palette.background.primary,
-  white: palette.text.primary,
-  cardBg: palette.background.secondary,
-  textSecondary: palette.text.secondary,
-  pillBg: palette.background.secondary,
-  pillSelected: palette.accent.orange,
-  badgeBg: palette.background.tertiary,
-  fabBg: palette.background.quaternary,
-  engagementText: palette.text.tertiary,
-} as const;
 
 export function CommunityFeedScreen({
   username,
@@ -194,24 +183,24 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
+  backIcon: { color: colors.text.primary, fontSize: 24 },
   browseLabel: {
-    color: colors.white,
+    color: colors.text.primary,
     fontSize: 16,
     fontWeight: "700",
     marginBottom: 12,
   },
   browseSection: { marginTop: 16, paddingHorizontal: 24 },
-  container: { backgroundColor: colors.background, flex: 1 },
+  container: { backgroundColor: colors.background.primary, flex: 1 },
   engagementRow: {
     flexDirection: "row",
     gap: 16,
     marginTop: 12,
   },
-  engagementText: { color: colors.engagementText, fontSize: 13 },
+  engagementText: { color: colors.text.tertiary, fontSize: 13 },
   fab: {
     alignItems: "center",
-    backgroundColor: colors.fabBg,
+    backgroundColor: palette.background.quaternary,
     borderRadius: 28,
     bottom: 24,
     height: 56,
@@ -222,16 +211,16 @@ const styles = StyleSheet.create({
     right: 24,
     width: 56,
   },
-  fabIcon: { color: colors.white, fontSize: 28, fontWeight: "300" },
+  fabIcon: { color: colors.text.primary, fontSize: 28, fontWeight: "300" },
   filterPill: {
-    backgroundColor: colors.pillBg,
+    backgroundColor: colors.background.secondary,
     borderRadius: 20,
     marginRight: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  filterPillSelected: { backgroundColor: colors.pillSelected },
-  filterPillText: { color: colors.white, fontSize: 13, fontWeight: "600" },
+  filterPillSelected: { backgroundColor: palette.accent.orange },
+  filterPillText: { color: colors.text.primary, fontSize: 13, fontWeight: "600" },
   filterRow: { paddingRight: 24 },
   header: {
     alignItems: "center",
@@ -246,7 +235,7 @@ const styles = StyleSheet.create({
     gap: 8,
     marginLeft: 12,
   },
-  postAuthorName: { color: colors.white, fontSize: 14, fontWeight: "600" },
+  postAuthorName: { color: colors.text.primary, fontSize: 14, fontWeight: "600" },
   postAuthorRow: { alignItems: "center", flexDirection: "row" },
   postAvatar: {
     backgroundColor: palette.opacity.white10,
@@ -255,28 +244,28 @@ const styles = StyleSheet.create({
     width: 36,
   },
   postBadge: {
-    backgroundColor: colors.badgeBg,
+    backgroundColor: colors.background.tertiary,
     borderRadius: 8,
-    color: colors.textSecondary,
+    color: colors.text.secondary,
     fontSize: 11,
     overflow: "hidden",
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
   postCard: {
-    backgroundColor: colors.cardBg,
+    backgroundColor: colors.background.secondary,
     borderRadius: 16,
     marginHorizontal: 24,
     marginTop: 12,
     padding: 16,
   },
   postContent: {
-    color: colors.white,
+    color: colors.text.primary,
     fontSize: 14,
     lineHeight: 22,
     marginTop: 12,
   },
-  postTimestamp: { color: colors.textSecondary, fontSize: 12 },
+  postTimestamp: { color: colors.text.secondary, fontSize: 12 },
   scrollContent: { paddingBottom: 96 },
   userBadge: {
     alignItems: "center",
@@ -285,9 +274,9 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   userInfo: { marginLeft: 12 },
-  userStatText: { color: colors.textSecondary, fontSize: 12, marginRight: 12 },
+  userStatText: { color: colors.text.secondary, fontSize: 12, marginRight: 12 },
   userStats: { flexDirection: "row", marginTop: 2 },
-  username: { color: colors.white, fontSize: 15, fontWeight: "700" },
+  username: { color: colors.text.primary, fontSize: 15, fontWeight: "700" },
 });
 
 export default CommunityFeedScreen;
