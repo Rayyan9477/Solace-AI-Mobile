@@ -32,6 +32,7 @@ import {
   getMoodBackgroundColor,
 } from "./MoodSelector.types";
 import { palette } from "../../../theme";
+import { useHaptic } from "../../../hooks/useHaptic";
 
 /**
  * Slider Point Component
@@ -58,6 +59,7 @@ function SliderPoint({
       testID={testID}
       onPress={onPress}
       disabled={disabled}
+      activeOpacity={0.7}
       accessibilityRole="button"
       accessibilityLabel={`Select ${MOOD_CONFIGS[mood].label} mood`}
       accessibilityHint={`Double tap to set your mood to ${MOOD_CONFIGS[mood].label}`}
@@ -112,6 +114,7 @@ export function MoodSelector({
     value || "neutral",
   );
   const currentMood = value !== undefined ? value : internalMood;
+  const haptic = useHaptic();
 
   const isDisabled = disabled || loading;
   const backgroundColor = getMoodBackgroundColor(currentMood);
@@ -126,6 +129,7 @@ export function MoodSelector({
 
   const handleConfirm = () => {
     if (isDisabled) return;
+    haptic.medium();
     onConfirm?.(currentMood);
   };
 
@@ -170,6 +174,7 @@ export function MoodSelector({
         testID={`${testID}-confirm`}
         onPress={handleConfirm}
         disabled={isDisabled}
+        activeOpacity={0.7}
         accessibilityRole="button"
         accessibilityLabel={`${confirmButtonText} - ${MOOD_CONFIGS[currentMood].label}`}
         accessibilityState={{ disabled: isDisabled }}

@@ -293,7 +293,6 @@ export function generateDeepLink(screen: string, params?: Record<string, string>
 
   if (!pathTemplate) {
     // Screen not found in mapping, return base URL
-    console.warn(`Screen "${screen}" not found in deep link mapping`);
     return `${baseUrl}${screen.toLowerCase()}`;
   }
 

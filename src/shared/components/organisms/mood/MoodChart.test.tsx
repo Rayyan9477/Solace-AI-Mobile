@@ -366,12 +366,12 @@ describe("MoodChart Helper Functions", () => {
   });
 
   describe("getMoodChartEmoji", () => {
-    it("returns correct emoji for each mood", () => {
-      expect(getMoodChartEmoji("depressed")).toBe("😵");
-      expect(getMoodChartEmoji("sad")).toBe("😢");
-      expect(getMoodChartEmoji("neutral")).toBe("😐");
-      expect(getMoodChartEmoji("happy")).toBe("🙂");
-      expect(getMoodChartEmoji("overjoyed")).toBe("😄");
+    it("returns correct icon name for each mood", () => {
+      expect(getMoodChartEmoji("depressed")).toBe("sad-outline");
+      expect(getMoodChartEmoji("sad")).toBe("sad-outline");
+      expect(getMoodChartEmoji("neutral")).toBe("remove-circle-outline");
+      expect(getMoodChartEmoji("happy")).toBe("happy-outline");
+      expect(getMoodChartEmoji("overjoyed")).toBe("happy-outline");
     });
   });
 

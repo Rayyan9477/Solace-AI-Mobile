@@ -25,6 +25,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 
 import type {
   MessageInputProps,
@@ -75,18 +76,18 @@ function AttachmentPreview({
   onRemove,
   testID,
 }: AttachmentPreviewProps) {
-  const getIcon = () => {
+  const getIconName = (): string => {
     switch (attachment.type) {
       case "image":
-        return "🖼️";
+        return "image-outline";
       case "video":
-        return "🎬";
+        return "videocam-outline";
       case "audio":
-        return "🎵";
+        return "musical-notes-outline";
       case "file":
-        return "📄";
+        return "document-outline";
       default:
-        return "📎";
+        return "attach-outline";
     }
   };
 
@@ -99,7 +100,7 @@ function AttachmentPreview({
         />
       ) : (
         <View style={styles.attachmentIcon}>
-          <Text style={styles.attachmentIconText}>{getIcon()}</Text>
+          <Icon name={getIconName()} size={24} color={colors.iconDefault} />
         </View>
       )}
       {attachment.name && (
@@ -240,7 +241,7 @@ export function MessageInput({
             accessibilityLabel="Add attachment"
             accessibilityRole="button"
           >
-            <Text style={styles.actionButtonIcon}>📎</Text>
+            <Icon name="attach-outline" size={20} color={colors.iconDefault} />
           </TouchableOpacity>
         ) : null}
 
@@ -277,7 +278,7 @@ export function MessageInput({
             accessibilityLabel="Record voice message"
             accessibilityRole="button"
           >
-            <Text style={styles.actionButtonIcon}>🎤</Text>
+            <Icon name="mic-outline" size={20} color={isRecording ? colors.text : colors.iconDefault} />
           </TouchableOpacity>
         ) : null}
 
@@ -293,7 +294,7 @@ export function MessageInput({
           accessibilityLabel="Send message"
           accessibilityRole="button"
         >
-          <Text style={styles.sendButtonIcon}>➤</Text>
+          <Icon name="send-outline" size={18} color={colors.background} />
         </TouchableOpacity>
       </View>
     </View>
@@ -311,9 +312,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.recordingIndicator,
     borderRadius: 22,
   },
-  actionButtonIcon: {
-    fontSize: 20,
-  },
   attachmentIcon: {
     alignItems: "center",
     backgroundColor: colors.attachmentBg,
@@ -321,9 +319,6 @@ const styles = StyleSheet.create({
     height: 48,
     justifyContent: "center",
     width: 48,
-  },
-  attachmentIconText: {
-    fontSize: 24,
   },
   attachmentImage: {
     borderRadius: 8,
@@ -420,10 +415,6 @@ const styles = StyleSheet.create({
   sendButtonDisabled: {
     backgroundColor: colors.border,
     opacity: 0.5,
-  },
-  sendButtonIcon: {
-    color: colors.background,
-    fontSize: 18,
   },
   voiceRecordingContainer: {
     alignItems: "center",

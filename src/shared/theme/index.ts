@@ -59,3 +59,11 @@ export type { SpacingKey } from "./spacing";
 // Theme Hook (Task 3C.2)
 export { useTheme, ThemeProvider, theme } from "./useTheme";
 export type { Theme } from "./useTheme";
+
+// Border Radius Tokens
+export { borderRadius } from "./borderRadius";
+export type { BorderRadiusKey } from "./borderRadius";
+
+// Typography Tokens
+export { fontFamily, fontWeight, letterSpacing, typeScale } from "./typography";
+export type { TypeScaleKey, FontWeightKey } from "./typography";

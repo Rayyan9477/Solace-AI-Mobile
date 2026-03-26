@@ -26,6 +26,7 @@ import {
 } from "react-native";
 import type { CrisisModalProps, CrisisResource } from "./CrisisModal.types";
 import { palette } from "../../../theme";
+import { useHaptic } from "../../../hooks/useHaptic";
 
 /**
  * Crisis support resources
@@ -100,12 +101,14 @@ export function CrisisModal({
   style,
 }: CrisisModalProps): React.ReactElement {
   const [hasAcknowledged, setHasAcknowledged] = useState(false);
+  const haptic = useHaptic();
 
   useEffect(() => {
     if (visible) {
       setHasAcknowledged(false);
+      haptic.warning();
     }
-  }, [visible]);
+  }, [visible]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const supportMessage = customMessage || getSupportMessage(triggerSource);
 

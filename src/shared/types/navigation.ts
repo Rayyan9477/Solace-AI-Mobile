@@ -830,13 +830,21 @@ export type RootStackParamList = {
   /** Main app flow */
   MainFlow: NavigatorScreenParams<MainTabParamList>;
 
-  // TODO: Re-add when modal navigation is implemented
+  /** Sleep feature modal flow */
+  SleepModal: NavigatorScreenParams<SleepStackParamList>;
+
+  /** Stress management modal flow */
+  StressModal: NavigatorScreenParams<StressStackParamList>;
+
+  /** Community feature modal flow */
+  CommunityModal: NavigatorScreenParams<CommunityStackParamList>;
+
+  /** Notifications modal flow */
+  NotificationsModal: NavigatorScreenParams<NotificationsStackParamList>;
+
+  // TODO: Re-add when implemented
   // SearchModal: NavigatorScreenParams<SearchStackParamList>;
-  // NotificationsModal: NavigatorScreenParams<NotificationsStackParamList>;
-  // CommunityModal: NavigatorScreenParams<CommunityStackParamList>;
   // ResourcesModal: NavigatorScreenParams<ResourcesStackParamList>;
-  // SleepModal: NavigatorScreenParams<SleepStackParamList>;
-  // StressModal: NavigatorScreenParams<StressStackParamList>;
   // MindfulModal: NavigatorScreenParams<MindfulStackParamList>;
   // ErrorModal: NavigatorScreenParams<ErrorStackParamList>;
 };

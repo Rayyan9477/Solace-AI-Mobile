@@ -13,12 +13,14 @@
  * - Full accessibility support
  */
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
+  Animated,
+  Easing,
 } from "react-native";
 
 import type { ScoreCardProps } from "./ScoreCard.types";
@@ -31,6 +33,7 @@ import {
   calculateGaugeProgress,
 } from "./ScoreCard.types";
 import { palette } from "../../../theme";
+import { useReducedMotion } from "../../../hooks/useReducedMotion";
 
 /**
  * Circular Gauge Component
@@ -41,6 +44,7 @@ interface GaugeProps {
   size: number;
   strokeWidth: number;
   color: string;
+  animatedScore: Animated.Value;
   testID?: string;
 }
 
@@ -50,13 +54,26 @@ function CircularGauge({
   size,
   strokeWidth,
   color,
+  animatedScore,
   testID,
 }: GaugeProps) {
-  const progress = calculateGaugeProgress(score, maxScore);
-
   // Calculate the border width to create the arc effect
   // We use a technique with partial borders to simulate a gauge
   const innerSize = size - strokeWidth * 2;
+
+  // Derive animated progress (0-1) and rotation (-90 to 270 deg) from animatedScore
+  const animatedRotation = animatedScore.interpolate({
+    inputRange: [0, maxScore],
+    outputRange: ["-90deg", "270deg"],
+    extrapolate: "clamp",
+  });
+
+  // For the border-trick quadrant coloring we use discrete steps;
+  // since Animated can't do conditional styling, we split into 4 quadrant
+  // borders driven by interpolated opacity overlays on top of a pre-colored base.
+  // Simpler approach: animate only the rotation so the visible arc sweeps.
+  // The existing quadrant border trick stays but is driven by the animated value.
+  const progress = calculateGaugeProgress(score, maxScore);
 
   return (
     <View
@@ -79,8 +96,8 @@ function CircularGauge({
         ]}
       />
 
-      {/* Progress indicator (simplified - using border trick) */}
-      <View
+      {/* Animated progress indicator — rotation drives the sweep */}
+      <Animated.View
         testID={`${testID}-progress`}
         style={[
           styles.gaugeProgress,
@@ -90,8 +107,7 @@ function CircularGauge({
             borderRadius: innerSize / 2,
             borderWidth: strokeWidth,
             borderColor: color,
-            // Rotate to start from top and show progress
-            transform: [{ rotate: `${-90 + progress * 360}deg` }],
+            transform: [{ rotate: animatedRotation }],
             borderTopColor: color,
             borderRightColor: progress > 0.25 ? color : "transparent",
             borderBottomColor: progress > 0.5 ? color : "transparent",
@@ -181,16 +197,38 @@ export function ScoreCard({
   size = "md",
   showGauge = true,
   showTrend = true,
+  animated: animateProp = true,
   loading = false,
   disabled = false,
   testID,
   accessibilityLabel,
   style,
 }: ScoreCardProps): React.ReactElement {
+  const reducedMotion = useReducedMotion();
   const specs = SIZE_SPECS[size];
   const color = getStatusColor(score, maxScore);
   const defaultStatus = getDefaultStatusLabel(score, maxScore);
   const displayStatus = statusLabel || defaultStatus;
+
+  // Animated score value — drives the gauge rotation from 0 to actual score
+  const animatedScore = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const shouldAnimate = animateProp && !reducedMotion;
+
+    if (!shouldAnimate) {
+      animatedScore.setValue(score);
+      return;
+    }
+
+    animatedScore.setValue(0);
+    Animated.timing(animatedScore, {
+      toValue: score,
+      duration: 1000,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false, // Rotation on border styles requires JS driver
+    }).start();
+  }, [score, animateProp, reducedMotion, animatedScore]);
 
   const defaultAccessibilityLabel = `${title}: ${score}, ${displayStatus}`;
   const isPressable = onPress && !disabled;
@@ -199,6 +237,7 @@ export function ScoreCard({
   const containerProps = isPressable
     ? {
         onPress,
+        activeOpacity: 0.7,
         accessibilityRole: "button" as const,
       }
     : {};
@@ -233,6 +272,7 @@ export function ScoreCard({
             size={specs.gaugeSize}
             strokeWidth={specs.strokeWidth}
             color={color}
+            animatedScore={animatedScore}
           />
 
           {/* Score in center */}

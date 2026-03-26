@@ -15,11 +15,16 @@ jest.mock("react-native-worklets", () => ({
 // Mock react-native-reanimated (v4 - complete standalone mock)
 jest.mock("react-native-reanimated", () => {
   const React = require("react");
-  const View = require("react-native").View;
+  const { View, Text, Image, ScrollView, FlatList } = require("react-native");
 
   return {
     __esModule: true,
     default: {
+      View,
+      Text,
+      Image,
+      ScrollView,
+      FlatList,
       createAnimatedComponent: (component) => component,
       addWhitelistedNativeProps: jest.fn(),
       addWhitelistedUIProps: jest.fn(),

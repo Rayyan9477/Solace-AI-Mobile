@@ -186,11 +186,11 @@ export function getMoodChartColor(mood: MoodLevel): string {
  */
 export function getMoodChartEmoji(mood: MoodLevel): string {
   const emojis: Record<MoodLevel, string> = {
-    depressed: "😵",
-    sad: "😢",
-    neutral: "😐",
-    happy: "🙂",
-    overjoyed: "😄",
+    depressed: "sad-outline",
+    sad: "sad-outline",
+    neutral: "remove-circle-outline",
+    happy: "happy-outline",
+    overjoyed: "happy-outline",
   };
   return emojis[mood];
 }

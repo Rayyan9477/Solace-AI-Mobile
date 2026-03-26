@@ -7,6 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import type { PostCardProps } from "./PostCard.types";
 import { formatTimestamp, formatCount } from "./PostCard.types";
 import { palette } from "../../../theme";
@@ -43,7 +44,7 @@ export function PostCard({
         <View style={styles.authorInfo}>
           <View style={styles.usernameRow}>
             <Text style={styles.username}>{author.username}</Text>
-            {author.isVerified && <Text style={styles.verified}>✓</Text>}
+            {author.isVerified && <Icon name="checkmark-circle-outline" size={14} color={palette.olive[500]} style={styles.verified} />}
           </View>
           <View style={styles.metaRow}>
             <Text style={styles.badge}>{author.badge}</Text>
@@ -60,10 +61,18 @@ export function PostCard({
 
       {/* Engagement Row */}
       <View style={styles.engagementRow}>
-        <Text style={styles.metricText}>👁 {formatCount(viewCount)}</Text>
-        <TouchableOpacity onPress={handleLike}>
+        <View style={styles.metricItem}>
+          <Icon name="eye-outline" size={12} color={palette.gray[400]} />
+          <Text style={styles.metricText}> {formatCount(viewCount)}</Text>
+        </View>
+        <TouchableOpacity onPress={handleLike} style={styles.metricItem}>
+          <Icon
+            name={isLiked ? "heart" : "heart-outline"}
+            size={12}
+            color={isLiked ? palette.orange[500] : palette.gray[400]}
+          />
           <Text style={[styles.metricText, isLiked && styles.liked]}>
-            {isLiked ? "♥" : "♡"} {formatCount(likeCount)}
+            {" "}{formatCount(likeCount)}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleShare}>
@@ -82,6 +91,7 @@ const styles = StyleSheet.create({
   container: { backgroundColor: palette.gray[700], borderRadius: 12, padding: 16 },
   content: { color: palette.white, fontSize: 14, lineHeight: 20 },
   engagementRow: { flexDirection: "row", gap: 16, marginTop: 12 },
+  metricItem: { flexDirection: "row", alignItems: "center" },
   image: { backgroundColor: palette.gray[600], borderRadius: 8, height: 200, marginTop: 12, width: "100%" },
   liked: { color: palette.orange[500] },
   metaRow: { flexDirection: "row", gap: 8, marginTop: 2 },
@@ -89,7 +99,7 @@ const styles = StyleSheet.create({
   timestamp: { color: palette.gray[500], fontSize: 12 },
   username: { color: palette.white, fontSize: 14, fontWeight: "600" },
   usernameRow: { flexDirection: "row", gap: 4 },
-  verified: { color: palette.olive[500], fontSize: 14 },
+  verified: {},
 });
 
 export default PostCard;

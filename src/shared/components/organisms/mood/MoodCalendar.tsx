@@ -72,6 +72,7 @@ function DayCell({
       testID={testID}
       onPress={onPress}
       disabled={disabled || day.status === "none"}
+      activeOpacity={0.7}
       accessibilityRole="button"
       accessibilityLabel={`${monthName} ${day.dayOfMonth}, ${statusLabel}`}
       accessibilityState={{ selected: isSelected }}

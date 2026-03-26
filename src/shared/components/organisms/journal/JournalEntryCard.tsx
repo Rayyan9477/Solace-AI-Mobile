@@ -20,6 +20,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 
 import type { JournalEntryCardProps } from "./JournalEntryCard.types";
 import { formatEntryTime } from "./JournalEntryCard.types";
@@ -128,7 +129,11 @@ export function JournalEntryCard({
             ↗ {aiSuggestionsCount} AI Suggestions
           </Text>
           {heartRate && (
-            <Text style={styles.metadataText}>• ♡{heartRate}</Text>
+            <View style={styles.heartRateItem}>
+              <Text style={styles.metadataText}>• </Text>
+              <Icon name="heart-outline" size={12} color={palette.gray[400]} />
+              <Text style={styles.metadataText}>{heartRate}</Text>
+            </View>
           )}
         </View>
       </View>
@@ -156,6 +161,10 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     marginLeft: 12,
+  },
+  heartRateItem: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   metadata: {
     flexDirection: "row",

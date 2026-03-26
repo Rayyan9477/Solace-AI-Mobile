@@ -15,6 +15,7 @@
 import React, { Suspense } from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import type { MainTabParamList } from "../../shared/types/navigation";
@@ -44,6 +45,52 @@ const ProfileStack = React.lazy(() =>
 );
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
+
+/**
+ * Routes that should display full-screen without the tab bar.
+ * These are detail/composer/immersive screens nested inside each tab stack.
+ */
+const FULLSCREEN_ROUTES = new Set([
+  // Chat stack detail screens
+  "ActiveChat",
+  "NewConversation",
+  "VoiceInput",
+  "ExpressionAnalysis",
+  "ExpressionAnalysisResults",
+  "CrisisSupportAlert",
+  // Journal stack detail screens
+  "CreateJournalEntry",
+  "EditJournalEntry",
+  "VoiceJournalRecording",
+  "JournalEntryDetail",
+  "JournalCalendar",
+  "JournalInsights",
+  "TextJournalComposer",
+  // Mood stack detail screens
+  "MoodSelector",
+  "MoodHistory",
+  "MoodCalendar",
+  "MoodAnalytics",
+  "MoodAISuggestions",
+  // Dashboard stack detail screens
+  "SolaceScoreDetail",
+  "SolaceScoreInsights",
+  "AISuggestions",
+  "MindfulnessActivities",
+  "SolaceScoreIncrease",
+]);
+
+/**
+ * Returns `{ display: 'none' }` when a fullscreen route is focused,
+ * otherwise returns `undefined` to let the navigator use its default style.
+ */
+function getTabBarVisibility(route: Parameters<typeof getFocusedRouteNameFromRoute>[0]): { display: "none" } | undefined {
+  const routeName = getFocusedRouteNameFromRoute(route);
+  if (routeName !== undefined && FULLSCREEN_ROUTES.has(routeName)) {
+    return { display: "none" };
+  }
+  return undefined;
+}
 
 /**
  * Loading Fallback Component
@@ -121,66 +168,106 @@ export function MainTabNavigator(): React.ReactElement {
       <Tab.Screen
         name="DashboardTab"
         component={DashboardTab}
-        options={{
+        options={({ route }) => ({
           tabBarLabel: "Home",
           tabBarIcon: ({ color, size }) => (
             <Icon name="home" size={size} color={color} />
           ),
           tabBarAccessibilityLabel: "Home dashboard",
-        }}
+          tabBarStyle: getTabBarVisibility(route) ?? {
+            backgroundColor: colors.background.primary,
+            borderTopColor: palette.tan[500],
+            borderTopWidth: 1,
+            height: 60 + insets.bottom,
+            paddingBottom: insets.bottom + 8,
+            paddingTop: 8,
+          },
+        })}
       />
 
       {/* Mood Tab - Lazy Loaded */}
       <Tab.Screen
         name="MoodTab"
         component={MoodTab}
-        options={{
+        options={({ route }) => ({
           tabBarLabel: "Mood",
           tabBarIcon: ({ color, size }) => (
             <Icon name="heart" size={size} color={color} />
           ),
           tabBarAccessibilityLabel: "Mood tracking",
-        }}
+          tabBarStyle: getTabBarVisibility(route) ?? {
+            backgroundColor: colors.background.primary,
+            borderTopColor: palette.tan[500],
+            borderTopWidth: 1,
+            height: 60 + insets.bottom,
+            paddingBottom: insets.bottom + 8,
+            paddingTop: 8,
+          },
+        })}
       />
 
       {/* Chat Tab - Lazy Loaded */}
       <Tab.Screen
         name="ChatTab"
         component={ChatTab}
-        options={{
+        options={({ route }) => ({
           tabBarLabel: "Chat",
           tabBarIcon: ({ color, size }) => (
             <Icon name="chatbubbles" size={size} color={color} />
           ),
           tabBarAccessibilityLabel: "AI therapy chat",
           tabBarBadge: undefined, // TODO: Add unread message count
-        }}
+          tabBarStyle: getTabBarVisibility(route) ?? {
+            backgroundColor: colors.background.primary,
+            borderTopColor: palette.tan[500],
+            borderTopWidth: 1,
+            height: 60 + insets.bottom,
+            paddingBottom: insets.bottom + 8,
+            paddingTop: 8,
+          },
+        })}
       />
 
       {/* Journal Tab - Lazy Loaded */}
       <Tab.Screen
         name="JournalTab"
         component={JournalTab}
-        options={{
+        options={({ route }) => ({
           tabBarLabel: "Journal",
           tabBarIcon: ({ color, size }) => (
             <Icon name="book" size={size} color={color} />
           ),
           tabBarAccessibilityLabel: "Mental health journal",
-        }}
+          tabBarStyle: getTabBarVisibility(route) ?? {
+            backgroundColor: colors.background.primary,
+            borderTopColor: palette.tan[500],
+            borderTopWidth: 1,
+            height: 60 + insets.bottom,
+            paddingBottom: insets.bottom + 8,
+            paddingTop: 8,
+          },
+        })}
       />
 
       {/* Profile Tab - Lazy Loaded */}
       <Tab.Screen
         name="ProfileTab"
         component={ProfileTab}
-        options={{
+        options={({ route }) => ({
           tabBarLabel: "Profile",
           tabBarIcon: ({ color, size }) => (
             <Icon name="person" size={size} color={color} />
           ),
           tabBarAccessibilityLabel: "User profile and settings",
-        }}
+          tabBarStyle: getTabBarVisibility(route) ?? {
+            backgroundColor: colors.background.primary,
+            borderTopColor: palette.tan[500],
+            borderTopWidth: 1,
+            height: 60 + insets.bottom,
+            paddingBottom: insets.bottom + 8,
+            paddingTop: 8,
+          },
+        })}
       />
     </Tab.Navigator>
   );

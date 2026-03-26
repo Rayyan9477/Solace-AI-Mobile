@@ -6,6 +6,7 @@
 
 import { render, fireEvent } from "@testing-library/react-native";
 import React from "react";
+import { StyleSheet } from "react-native";
 
 import { ScoreCard } from "./ScoreCard";
 import type { ScoreStatus, TrendDirection } from "./ScoreCard.types";
@@ -142,11 +143,8 @@ describe("ScoreCard", () => {
       );
 
       const gauge = getByTestId("score-card-gauge-progress");
-      expect(gauge.props.style).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ borderColor: STATUS_COLORS.critical }),
-        ]),
-      );
+      const flatStyle = StyleSheet.flatten(gauge.props.style);
+      expect(flatStyle.borderColor).toBe(STATUS_COLORS.critical);
     });
 
     it("applies stable color for good scores", () => {
@@ -155,11 +153,8 @@ describe("ScoreCard", () => {
       );
 
       const gauge = getByTestId("score-card-gauge-progress");
-      expect(gauge.props.style).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ borderColor: STATUS_COLORS.stable }),
-        ]),
-      );
+      const flatStyle = StyleSheet.flatten(gauge.props.style);
+      expect(flatStyle.borderColor).toBe(STATUS_COLORS.stable);
     });
   });
 

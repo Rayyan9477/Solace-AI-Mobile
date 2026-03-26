@@ -22,10 +22,12 @@ import {
   Animated,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 
 import type { TypingIndicatorProps } from "./TypingIndicator.types";
 import { sizeSpecs, getTypingText } from "./TypingIndicator.types";
 import { palette } from "../../../theme";
+import { useReducedMotion } from "../../../hooks/useReducedMotion";
 
 /**
  * Color tokens from theme
@@ -67,7 +69,7 @@ function Avatar({ uri, size, testID }: AvatarProps) {
             { width: size, height: size, borderRadius: size / 2 },
           ]}
         >
-          <Text style={[styles.avatarText, { fontSize: size * 0.5 }]}>🤖</Text>
+          <Icon name="hardware-chip-outline" size={size * 0.5} color={colors.avatarText} />
         </View>
       )}
     </View>
@@ -81,13 +83,19 @@ interface AnimatedDotProps {
   size: number;
   delay: number;
   duration: number;
+  reduceMotion: boolean;
   testID?: string;
 }
 
-function AnimatedDot({ size, delay, duration, testID }: AnimatedDotProps) {
+function AnimatedDot({ size, delay, duration, reduceMotion, testID }: AnimatedDotProps) {
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    if (reduceMotion) {
+      // Keep the value at 0 (static dot) — do not start the loop
+      return;
+    }
+
     const animation = Animated.loop(
       Animated.sequence([
         Animated.delay(delay),
@@ -109,7 +117,7 @@ function AnimatedDot({ size, delay, duration, testID }: AnimatedDotProps) {
     return () => {
       animation.stop();
     };
-  }, [animatedValue, delay, duration]);
+  }, [animatedValue, delay, duration, reduceMotion]);
 
   const translateY = animatedValue.interpolate({
     inputRange: [0, 1],
@@ -146,6 +154,7 @@ interface DotsContainerProps {
   dotSize: number;
   spacing: number;
   duration: number;
+  reduceMotion: boolean;
   testID?: string;
 }
 
@@ -154,6 +163,7 @@ function DotsContainer({
   dotSize,
   spacing,
   duration,
+  reduceMotion,
   testID,
 }: DotsContainerProps) {
   const dots = Array.from({ length: dotCount }, (_, index) => index);
@@ -167,6 +177,7 @@ function DotsContainer({
           size={dotSize}
           delay={index * delayPerDot}
           duration={duration}
+          reduceMotion={reduceMotion}
           testID={`${testID?.replace("-dots", "")}-dot-${index}`}
         />
       ))}
@@ -211,6 +222,8 @@ export function TypingIndicator({
   accessibilityLabel,
   style,
 }: TypingIndicatorProps): React.ReactElement | null {
+  const reduceMotion = useReducedMotion();
+
   // Don't render if not typing
   if (!isTyping) {
     return null;
@@ -259,6 +272,7 @@ export function TypingIndicator({
               dotSize={specs.dotSize}
               spacing={specs.spacing}
               duration={animationDuration}
+              reduceMotion={reduceMotion}
               testID={`${testID}-dots`}
             />
           )}
@@ -280,9 +294,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.avatarBg,
     justifyContent: "center",
   },
-  avatarText: {
-    color: colors.avatarText,
-  },
+  avatarText: {},
   bubbleContainer: {
     alignItems: "center",
     backgroundColor: colors.background,

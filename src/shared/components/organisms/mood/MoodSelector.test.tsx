@@ -441,12 +441,12 @@ describe("MoodSelector Helper Functions", () => {
   });
 
   describe("getMoodEmoji", () => {
-    it("returns correct emoji for each mood", () => {
-      expect(getMoodEmoji("depressed")).toBe("😵");
-      expect(getMoodEmoji("sad")).toBe("😢");
-      expect(getMoodEmoji("neutral")).toBe("😐");
-      expect(getMoodEmoji("happy")).toBe("🙂");
-      expect(getMoodEmoji("overjoyed")).toBe("😄");
+    it("returns correct icon name for each mood", () => {
+      expect(getMoodEmoji("depressed")).toBe("sad-outline");
+      expect(getMoodEmoji("sad")).toBe("sad-outline");
+      expect(getMoodEmoji("neutral")).toBe("remove-circle-outline");
+      expect(getMoodEmoji("happy")).toBe("happy-outline");
+      expect(getMoodEmoji("overjoyed")).toBe("happy-outline");
     });
   });
 
