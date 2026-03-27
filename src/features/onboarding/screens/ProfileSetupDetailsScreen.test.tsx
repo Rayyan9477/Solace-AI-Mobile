@@ -229,12 +229,21 @@ describe("ProfileSetupDetailsScreen", () => {
     expect(getByText(/Continue/)).toBeTruthy();
   });
 
-  it("calls onContinue when Continue button is pressed", () => {
+  it("calls onContinue when Continue button is pressed after entering name", () => {
+    const { getByTestId } = render(
+      <ProfileSetupDetailsScreen {...defaultProps} />
+    );
+    fireEvent.changeText(getByTestId("full-name-input"), "John Doe");
+    fireEvent.press(getByTestId("continue-button"));
+    expect(mockOnContinue).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not call onContinue when full name is empty", () => {
     const { getByTestId } = render(
       <ProfileSetupDetailsScreen {...defaultProps} />
     );
     fireEvent.press(getByTestId("continue-button"));
-    expect(mockOnContinue).toHaveBeenCalledTimes(1);
+    expect(mockOnContinue).not.toHaveBeenCalled();
   });
 
   it("has dark background color", () => {

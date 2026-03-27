@@ -8,6 +8,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface ProfileSetupAvatarScreenProps {
   onBack: () => void;
@@ -21,7 +22,7 @@ export function ProfileSetupAvatarScreen({
   onUpload,
 }: ProfileSetupAvatarScreenProps): React.ReactElement {
   return (
-    <View testID="profile-setup-avatar-screen" style={styles.container}>
+    <ScreenContainer testID="profile-setup-avatar-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -92,7 +93,7 @@ export function ProfileSetupAvatarScreen({
         </TouchableOpacity>
         <Text style={styles.uploadLabel}>Or upload your profile</Text>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -161,10 +162,7 @@ const styles = StyleSheet.create({
     top: 20,
   },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
   },
   contentSection: {
     alignItems: "center",

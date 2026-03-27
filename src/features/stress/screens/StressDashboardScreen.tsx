@@ -7,7 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { palette } from "../../../shared/theme";
+import { palette, colors } from "../../../shared/theme";
 
 interface StressDashboardScreenProps {
   stressScore: number;
@@ -21,18 +21,6 @@ interface StressDashboardScreenProps {
   onImpactCardPress: () => void;
 }
 
-const localColors = {
-  background: palette.brown[900],
-  heroOrange: palette.accent.orange,
-  white: palette.white,
-  cardBg: palette.brown[800],
-  textSecondary: "rgba(255,255,255,0.6)",
-  settingsBg: "#5C4A2A",
-  seeAllColor: palette.green[450],
-  chartBarGreen: palette.olive[500],
-  chartBarOlive: "#7B8A3E",
-  chartLineBlue: palette.accent.purple,
-} as const;
 
 export function StressDashboardScreen({
   stressScore,
@@ -171,7 +159,7 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   backIcon: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 24,
   },
   bar: {
@@ -180,10 +168,10 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   barGreen: {
-    backgroundColor: localColors.chartBarGreen,
+    backgroundColor: palette.olive[500],
   },
   barOlive: {
-    backgroundColor: localColors.chartBarOlive,
+    backgroundColor: palette.olive[700],
   },
   barRow: {
     flexDirection: "row",
@@ -198,12 +186,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   cardTitle: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 14,
     fontWeight: "700",
   },
   cardValue: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 16,
     fontWeight: "600",
     marginTop: 4,
@@ -259,18 +247,18 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerLabel: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 16,
     fontWeight: "600",
     marginLeft: 8,
   },
   heroSection: {
-    backgroundColor: localColors.heroOrange,
+    backgroundColor: palette.accent.orange,
     overflow: "hidden",
     paddingBottom: 40,
   },
   lineChartPlaceholder: {
-    backgroundColor: localColors.chartLineBlue,
+    backgroundColor: palette.accent.purple,
     borderRadius: 4,
     height: 40,
     opacity: 0.3,
@@ -284,24 +272,24 @@ const styles = StyleSheet.create({
     paddingTop: 24,
   },
   scoreLabel: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 22,
     fontWeight: "600",
     marginTop: 8,
   },
   scoreNumber: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 80,
     fontWeight: "800",
   },
   seeAllText: {
-    color: localColors.seeAllColor,
+    color: palette.green[450],
     fontSize: 14,
     fontWeight: "600",
   },
   settingsButton: {
     alignItems: "center",
-    backgroundColor: localColors.settingsBg,
+    backgroundColor: colors.background.elevated,
     borderRadius: 28,
     height: 56,
     justifyContent: "center",
@@ -316,7 +304,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   statCard: {
-    backgroundColor: localColors.cardBg,
+    backgroundColor: colors.background.secondary,
     borderRadius: 16,
     flex: 1,
     padding: 16,
@@ -327,13 +315,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   statsSection: {
-    backgroundColor: localColors.background,
+    backgroundColor: colors.background.primary,
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 20,
   },
   statsTitle: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 18,
     fontWeight: "700",
   },

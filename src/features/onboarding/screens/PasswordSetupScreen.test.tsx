@@ -102,8 +102,16 @@ describe("PasswordSetupScreen", () => {
     expect(getByText(/Continue/)).toBeTruthy();
   });
 
-  it("calls onContinue when Continue button is pressed", () => {
+  it("does not call onContinue when Continue button is pressed with weak password", () => {
     const { getByTestId } = render(<PasswordSetupScreen {...defaultProps} />);
+    fireEvent.press(getByTestId("continue-button"));
+    expect(mockOnContinue).not.toHaveBeenCalled();
+  });
+
+  it("calls onContinue when Continue button is pressed with strong enough password", () => {
+    const { getByTestId } = render(<PasswordSetupScreen {...defaultProps} />);
+    const input = getByTestId("password-input");
+    fireEvent.changeText(input, "StrongPass1");
     fireEvent.press(getByTestId("continue-button"));
     expect(mockOnContinue).toHaveBeenCalledTimes(1);
   });

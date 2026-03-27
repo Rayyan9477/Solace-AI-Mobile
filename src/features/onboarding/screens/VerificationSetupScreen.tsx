@@ -7,7 +7,9 @@
 
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface VerificationPreferences {
   biometricEnabled: boolean;
@@ -34,7 +36,7 @@ export function VerificationSetupScreen({
   };
 
   return (
-    <View testID="verification-setup-screen" style={styles.container}>
+    <ScreenContainer testID="verification-setup-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -63,7 +65,7 @@ export function VerificationSetupScreen({
           </View>
           {/* Checkmark overlay */}
           <View style={styles.checkmarkOverlay}>
-            <Text style={styles.checkmarkIcon}>✓</Text>
+            <Icon name="checkmark-circle-outline" size={24} color={palette.olive[500]} />
           </View>
         </View>
       </View>
@@ -86,9 +88,7 @@ export function VerificationSetupScreen({
             ]}
           >
             {biometricEnabled && (
-              <Text testID="biometric-checkmark" style={styles.checkboxCheckmark}>
-                ✓
-              </Text>
+              <Icon testID="biometric-checkmark" name="checkmark-circle-outline" size={14} color={palette.white} />
             )}
           </View>
           <Text style={styles.checkboxLabel}>Biometric Verification</Text>
@@ -110,9 +110,7 @@ export function VerificationSetupScreen({
             ]}
           >
             {notificationEnabled && (
-              <Text testID="notification-checkmark" style={styles.checkboxCheckmark}>
-                ✓
-              </Text>
+              <Icon testID="notification-checkmark" name="checkmark-circle-outline" size={14} color={palette.white} />
             )}
           </View>
           <Text style={styles.checkboxLabel}>Enable Notification</Text>
@@ -132,7 +130,7 @@ export function VerificationSetupScreen({
           <Text style={styles.continueButtonIcon}>→</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -173,9 +171,8 @@ const styles = StyleSheet.create({
     borderColor: palette.olive[500],
   },
   checkboxCheckmark: {
-    color: palette.white,
-    fontSize: 14,
-    fontWeight: "700",
+    alignItems: "center",
+    justifyContent: "center",
   },
   checkboxLabel: {
     color: palette.white,
@@ -190,9 +187,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   checkmarkIcon: {
-    color: palette.olive[500],
-    fontSize: 24,
-    fontWeight: "700",
+    alignItems: "center",
+    justifyContent: "center",
   },
   checkmarkOverlay: {
     alignItems: "center",
@@ -206,10 +202,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",

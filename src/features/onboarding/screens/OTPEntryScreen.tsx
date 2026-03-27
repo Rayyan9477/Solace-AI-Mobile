@@ -12,8 +12,12 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface OTPEntryScreenProps {
   onBack: () => void;
@@ -57,7 +61,7 @@ export function OTPEntryScreen({
   };
 
   return (
-    <View testID="otp-entry-screen" style={styles.container}>
+    <ScreenContainer testID="otp-entry-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -76,72 +80,80 @@ export function OTPEntryScreen({
       <View style={styles.contentSection}>
         <Text style={styles.title}>Enter 4 digit OTP Code</Text>
         <Text style={styles.subtitle}>
-          Scan your biometric fingerprint to make your{"\n"}account more secure.
+          Enter the verification code sent to your phone.
         </Text>
       </View>
 
-      {/* OTP Input Section */}
-      <View testID="otp-input-container" style={styles.otpContainer}>
-        {[0, 1, 2, 3].map((index) => (
-          <View
-            key={index}
-            testID={`digit-box-${index}`}
-            style={[
-              styles.digitBox,
-              focusedIndex === index && styles.digitBoxFocused,
-              otp[index] && styles.digitBoxFilled,
-            ]}
-          >
-            <TextInput
-              ref={(ref) => (inputRefs.current[index] = ref)}
-              style={styles.digitInput}
-              value={otp[index]}
-              onChangeText={(text) => handleDigitChange(text, index)}
-              onKeyPress={(e) => handleKeyPress(e.nativeEvent.key, index)}
-              onFocus={() => setFocusedIndex(index)}
-              keyboardType="number-pad"
-              maxLength={1}
-              selectTextOnFocus
-              accessibilityLabel={`Digit ${index + 1} of 4`}
-            />
-          </View>
-        ))}
-      </View>
-
-      {/* Error Chip */}
-      {error && (
-        <View testID="error-chip" style={styles.errorChip}>
-          <Text style={styles.errorIcon}>⚠</Text>
-          <Text style={styles.errorText}>{error}</Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        {/* OTP Input Section */}
+        <View testID="otp-input-container" style={styles.otpContainer}>
+          {[0, 1, 2, 3].map((index) => (
+            <View
+              key={index}
+              testID={`digit-box-${index}`}
+              style={[
+                styles.digitBox,
+                focusedIndex === index && styles.digitBoxFocused,
+                otp[index] && styles.digitBoxFilled,
+              ]}
+            >
+              <TextInput
+                ref={(ref) => (inputRefs.current[index] = ref)}
+                style={styles.digitInput}
+                value={otp[index]}
+                onChangeText={(text) => handleDigitChange(text, index)}
+                onKeyPress={(e) => handleKeyPress(e.nativeEvent.key, index)}
+                onFocus={() => setFocusedIndex(index)}
+                keyboardType="number-pad"
+                maxLength={1}
+                selectTextOnFocus
+                autoFocus={index === 0}
+                accessibilityLabel={`Digit ${index + 1} of 4`}
+              />
+            </View>
+          ))}
         </View>
-      )}
 
-      {/* Continue Button */}
-      <TouchableOpacity
-        testID="continue-button"
-        style={styles.continueButton}
-        onPress={() => onContinue(otp.join(""))}
-        accessibilityRole="button"
-        accessibilityLabel="Continue to next step"
-      >
-        <Text style={styles.continueButtonText}>Continue</Text>
-        <Text style={styles.continueButtonIcon}>→</Text>
-      </TouchableOpacity>
+        {/* Error Chip */}
+        {error && (
+          <View accessibilityRole="alert" accessibilityLiveRegion="assertive">
+            <View testID="error-chip" style={styles.errorChip}>
+              <Icon name="warning-outline" size={14} color={palette.white} style={styles.errorIcon} />
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          </View>
+        )}
 
-      {/* Resend Link */}
-      <TouchableOpacity
-        testID="resend-link"
-        style={styles.resendLink}
-        onPress={onResend}
-        accessibilityRole="link"
-        accessibilityLabel="Resend OTP"
-      >
-        <Text style={styles.resendText}>
-          Didn't receive the OTP?{" "}
-          <Text style={styles.resendLinkText}>Re-send.</Text>
-        </Text>
-      </TouchableOpacity>
-    </View>
+        {/* Continue Button */}
+        <TouchableOpacity
+          testID="continue-button"
+          style={styles.continueButton}
+          onPress={() => onContinue(otp.join(""))}
+          accessibilityRole="button"
+          accessibilityLabel="Continue to next step"
+        >
+          <Text style={styles.continueButtonText}>Continue</Text>
+          <Text style={styles.continueButtonIcon}>→</Text>
+        </TouchableOpacity>
+
+        {/* Resend Link */}
+        <TouchableOpacity
+          testID="resend-link"
+          style={styles.resendLink}
+          onPress={onResend}
+          accessibilityRole="link"
+          accessibilityLabel="Resend OTP"
+        >
+          <Text style={styles.resendText}>
+            Didn't receive the OTP?{" "}
+            <Text style={styles.resendLinkText}>Re-send.</Text>
+          </Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </ScreenContainer>
   );
 }
 
@@ -163,10 +175,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
   },
   contentSection: {
     alignItems: "center",
@@ -198,7 +207,9 @@ const styles = StyleSheet.create({
   digitBox: {
     alignItems: "center",
     backgroundColor: palette.brown[800],
+    borderColor: palette.brown[600],
     borderRadius: 12,
+    borderWidth: 1,
     height: 64,
     justifyContent: "center",
     marginHorizontal: 8,
@@ -208,7 +219,9 @@ const styles = StyleSheet.create({
     backgroundColor: palette.brown[800],
   },
   digitBoxFocused: {
-    backgroundColor: palette.olive[500],
+    backgroundColor: palette.brown[700],
+    borderColor: palette.tan[500],
+    borderWidth: 2,
   },
   digitInput: {
     color: palette.white,
@@ -229,7 +242,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   errorIcon: {
-    fontSize: 14,
     marginRight: 8,
   },
   errorText: {

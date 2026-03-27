@@ -51,7 +51,7 @@ describe("OTPEntryScreen", () => {
 
   it("displays the subtitle", () => {
     const { getByText } = render(<OTPEntryScreen {...defaultProps} />);
-    expect(getByText(/Scan your biometric fingerprint/)).toBeTruthy();
+    expect(getByText(/Enter the verification code sent to your phone/)).toBeTruthy();
   });
 
   it("displays the OTP input container", () => {

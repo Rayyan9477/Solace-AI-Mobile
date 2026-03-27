@@ -12,8 +12,12 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface OTPSetupScreenProps {
   onBack: () => void;
@@ -59,7 +63,7 @@ export function OTPSetupScreen({
   };
 
   return (
-    <View testID="otp-setup-screen" style={styles.container}>
+    <ScreenContainer testID="otp-setup-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -78,8 +82,8 @@ export function OTPSetupScreen({
       <View testID="illustration" style={styles.illustrationContainer}>
         <View style={styles.illustration}>
           <View style={styles.shieldIcon}>
-            <Text style={styles.shieldEmoji}>🛡️</Text>
-            <Text style={styles.checkEmoji}>✓</Text>
+            <Icon name="shield-checkmark-outline" size={80} color={palette.white} />
+            <Icon name="checkmark-outline" size={24} color={palette.white} style={styles.checkEmoji} />
           </View>
         </View>
       </View>
@@ -92,59 +96,64 @@ export function OTPSetupScreen({
         </Text>
       </View>
 
-      {/* Phone Input Section */}
-      <View testID="phone-input-container" style={styles.phoneInputContainer}>
-        {/* Country Selector */}
-        <TouchableOpacity
-          testID="country-selector"
-          style={styles.countrySelector}
-          onPress={onCountryPress}
-          accessibilityRole="button"
-          accessibilityLabel="Select country"
-        >
-          <Text testID="country-flag" style={styles.countryFlag}>🇺🇸</Text>
-          <Text testID="country-chevron" style={styles.countryChevron}>▼</Text>
-        </TouchableOpacity>
-
-        {/* Divider */}
-        <View style={styles.divider} />
-
-        {/* Phone Input */}
-        <TextInput
-          testID="phone-input"
-          style={styles.phoneInput}
-          value={phoneNumber}
-          onChangeText={handlePhoneChange}
-          placeholder={`(${countryCode}) XXX-XXX-XXXX`}
-          placeholderTextColor={palette.gray[450]}
-          keyboardType="phone-pad"
-          accessibilityLabel="Phone number input"
-        />
-
-        {/* Copy Button */}
-        <TouchableOpacity
-          testID="copy-button"
-          style={styles.copyButton}
-          onPress={handleCopy}
-          accessibilityRole="button"
-          accessibilityLabel="Copy phone number"
-        >
-          <Text style={styles.copyIcon}>📋</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Send OTP Button */}
-      <TouchableOpacity
-        testID="send-otp-button"
-        style={styles.sendOTPButton}
-        onPress={() => onSendOTP(phoneNumber)}
-        accessibilityRole="button"
-        accessibilityLabel="Send OTP"
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
       >
-        <Text style={styles.sendOTPButtonText}>Send OTP</Text>
-        <Text style={styles.sendOTPButtonIcon}>→</Text>
-      </TouchableOpacity>
-    </View>
+        {/* Phone Input Section */}
+        <View testID="phone-input-container" style={styles.phoneInputContainer}>
+          {/* Country Selector */}
+          <TouchableOpacity
+            testID="country-selector"
+            style={styles.countrySelector}
+            onPress={onCountryPress}
+            accessibilityRole="button"
+            accessibilityLabel="Select country"
+          >
+            <Text testID="country-flag" style={styles.countryFlag}>🇺🇸</Text>
+            <Text testID="country-chevron" style={styles.countryChevron}>▼</Text>
+          </TouchableOpacity>
+
+          {/* Divider */}
+          <View style={styles.divider} />
+
+          {/* Phone Input */}
+          <TextInput
+            testID="phone-input"
+            style={styles.phoneInput}
+            value={phoneNumber}
+            onChangeText={handlePhoneChange}
+            placeholder={`(${countryCode}) XXX-XXX-XXXX`}
+            placeholderTextColor={palette.gray[450]}
+            keyboardType="phone-pad"
+            accessibilityLabel="Phone number input"
+          />
+
+          {/* Copy Button */}
+          <TouchableOpacity
+            testID="copy-button"
+            style={styles.copyButton}
+            onPress={handleCopy}
+            accessibilityRole="button"
+            accessibilityLabel="Copy phone number"
+          >
+            <Icon name="copy-outline" size={20} color={palette.white} />
+          </TouchableOpacity>
+        </View>
+
+        {/* Send OTP Button */}
+        <TouchableOpacity
+          testID="send-otp-button"
+          style={styles.sendOTPButton}
+          onPress={() => onSendOTP(phoneNumber)}
+          accessibilityRole="button"
+          accessibilityLabel="Send OTP"
+        >
+          <Text style={styles.sendOTPButtonText}>Send OTP</Text>
+          <Text style={styles.sendOTPButtonIcon}>→</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </ScreenContainer>
   );
 }
 
@@ -167,17 +176,11 @@ const styles = StyleSheet.create({
   },
   checkEmoji: {
     bottom: 10,
-    color: palette.white,
-    fontSize: 24,
-    fontWeight: "bold",
     position: "absolute",
     right: 15,
   },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
   },
   contentSection: {
     alignItems: "center",
@@ -190,7 +193,8 @@ const styles = StyleSheet.create({
     width: 44,
   },
   copyIcon: {
-    fontSize: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
   countryChevron: {
     color: palette.gray[450],
@@ -274,7 +278,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   shieldEmoji: {
-    fontSize: 80,
+    alignItems: "center",
+    justifyContent: "center",
   },
   shieldIcon: {
     alignItems: "center",

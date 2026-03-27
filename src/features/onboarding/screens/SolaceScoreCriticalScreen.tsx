@@ -9,6 +9,7 @@
 
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { CrisisModal } from "../../../shared/components/organisms/crisis";
 import { palette } from "../../../shared/theme";
 
@@ -77,9 +78,7 @@ export function SolaceScoreCriticalScreen({
           accessibilityRole="button"
           accessibilityLabel="Access crisis support resources including 988 hotline"
         >
-          <Text testID="phone-icon" style={styles.phoneIcon}>
-            📞
-          </Text>
+          <Icon testID="phone-icon" name="call-outline" size={20} color={palette.onboarding.step5} style={styles.phoneIcon} />
           <Text style={styles.callHotlineButtonText}>Access Crisis Support</Text>
         </TouchableOpacity>
 
@@ -169,7 +168,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   phoneIcon: {
-    fontSize: 20,
     marginRight: 8,
   },
   primaryMessage: {

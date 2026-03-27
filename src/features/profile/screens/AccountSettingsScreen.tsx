@@ -14,7 +14,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import { palette } from "../../../shared/theme";
+import { palette, colors } from "../../../shared/theme";
 
 interface SettingsItemData {
   id: string;
@@ -37,16 +37,6 @@ interface AccountSettingsScreenProps {
   onToggle: (id: string, value: boolean) => void;
 }
 
-const localColors = {
-  background: palette.brown[900],
-  white: palette.white,
-  cardBg: palette.brown[800],
-  textSecondary: `${palette.white}${palette.alpha[60]}`,
-  destructive: palette.onboarding.step2,
-  toggleOn: palette.olive[500],
-  toggleOff: palette.brown[700],
-  chevron: `${palette.white}${palette.alpha[30]}`,
-} as const;
 
 export function AccountSettingsScreen({
   sections,
@@ -155,9 +145,9 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: localColors.white, fontSize: 24 },
-  chevron: { color: localColors.chevron, fontSize: 24 },
-  container: { backgroundColor: localColors.background, flex: 1 },
+  backIcon: { color: colors.text.primary, fontSize: 24 },
+  chevron: { color: palette.opacity.white30, fontSize: 24 },
+  container: { backgroundColor: colors.background.primary, flex: 1 },
   header: {
     alignItems: "center",
     flexDirection: "row",
@@ -165,40 +155,40 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerTitle: {
-    color: localColors.white,
-    fontSize: 20,
-    fontWeight: "700",
+    color: colors.text.primary,
+    fontSize: 18,
+    fontWeight: "600",
     marginLeft: 12,
   },
   itemLabel: {
-    color: localColors.white,
+    color: colors.text.primary,
     flex: 1,
     fontSize: 15,
     fontWeight: "500",
   },
-  itemLabelDestructive: { color: localColors.destructive },
+  itemLabelDestructive: { color: palette.onboarding.step2 },
   itemRight: {
     alignItems: "center",
     flexDirection: "row",
     gap: 8,
   },
   itemValue: {
-    color: localColors.textSecondary,
+    color: palette.opacity.white60,
     fontSize: 14,
   },
   scrollContent: { paddingBottom: 48 },
   section: { marginTop: 24, paddingHorizontal: 24 },
   sectionTitle: {
-    color: localColors.textSecondary,
+    color: palette.opacity.white60,
     fontSize: 13,
     fontWeight: "600",
     marginBottom: 8,
     textTransform: "uppercase",
   },
-  sectionTitleDestructive: { color: localColors.destructive },
+  sectionTitleDestructive: { color: palette.onboarding.step2 },
   settingsItem: {
     alignItems: "center",
-    backgroundColor: localColors.cardBg,
+    backgroundColor: colors.background.secondary,
     borderRadius: 12,
     flexDirection: "row",
     marginTop: 4,
@@ -213,10 +203,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
     width: 52,
   },
-  toggleOff: { backgroundColor: localColors.toggleOff },
-  toggleOn: { backgroundColor: localColors.toggleOn },
+  toggleOff: { backgroundColor: colors.background.tertiary },
+  toggleOn: { backgroundColor: palette.olive[500] },
   toggleThumb: {
-    backgroundColor: localColors.white,
+    backgroundColor: colors.text.primary,
     borderRadius: 14,
     height: 28,
     width: 28,

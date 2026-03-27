@@ -12,8 +12,12 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface PasswordSetupScreenProps {
   onBack: () => void;
@@ -66,19 +70,19 @@ function calculateStrength(password: string): {
     return {
       strength: "weak",
       percentage: (score / 5) * 100,
-      message: "Weak!! Increase strength 💪",
+      message: "Weak! Increase strength",
     };
   } else if (score <= 3) {
     return {
       strength: "medium",
       percentage: (score / 5) * 100,
-      message: "Getting better! Keep going 👍",
+      message: "Getting better! Keep going",
     };
   } else {
     return {
       strength: "strong",
       percentage: (score / 5) * 100,
-      message: "Strong password! 🎉",
+      message: "Strong password!",
     };
   }
 }
@@ -91,6 +95,7 @@ export function PasswordSetupScreen({
   const [showPassword, setShowPassword] = useState(false);
 
   const strengthResult = useMemo(() => calculateStrength(password), [password]);
+  const isPasswordStrong = strengthResult.strength === "medium" || strengthResult.strength === "strong";
 
   const requirementsMet = useMemo(() => {
     return passwordRequirements.map((req) => ({
@@ -113,7 +118,7 @@ export function PasswordSetupScreen({
   };
 
   return (
-    <View testID="password-setup-screen" style={styles.container}>
+    <ScreenContainer testID="password-setup-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -128,6 +133,10 @@ export function PasswordSetupScreen({
         <Text style={styles.headerTitle}>Password Setup</Text>
       </View>
 
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
       {/* Password Input Section */}
       <View style={styles.inputSection}>
         <View
@@ -142,6 +151,7 @@ export function PasswordSetupScreen({
             secureTextEntry={!showPassword}
             placeholder="Enter password"
             placeholderTextColor={palette.gray[450]}
+            autoFocus
             accessibilityLabel="Password input"
           />
           <TouchableOpacity
@@ -151,7 +161,7 @@ export function PasswordSetupScreen({
             accessibilityRole="button"
             accessibilityLabel={showPassword ? "Hide password" : "Show password"}
           >
-            <Text style={styles.toggleIcon}>{showPassword ? "👁" : "👁‍🗨"}</Text>
+            <Icon name={showPassword ? "eye-outline" : "eye-off-outline"} size={18} color={palette.white} />
           </TouchableOpacity>
         </View>
       </View>
@@ -170,12 +180,14 @@ export function PasswordSetupScreen({
             ]}
           />
         </View>
-        <Text
-          testID="strength-message"
-          style={[styles.strengthMessage, { color: getStrengthColor() }]}
-        >
-          {strengthResult.message}
-        </Text>
+        <View accessibilityLiveRegion="polite">
+          <Text
+            testID="strength-message"
+            style={[styles.strengthMessage, { color: getStrengthColor() }]}
+          >
+            {strengthResult.message}
+          </Text>
+        </View>
       </View>
 
       {/* Requirements Section */}
@@ -188,7 +200,12 @@ export function PasswordSetupScreen({
               req.met && styles.requirementChipMet,
             ]}
           >
-            <Text style={styles.requirementIcon}>{req.met ? "✓" : "⚠"}</Text>
+            <Icon
+              name={req.met ? "checkmark-outline" : "close-outline"}
+              size={14}
+              color={req.met ? palette.olive[500] : palette.onboarding.step2}
+              style={styles.requirementIcon}
+            />
             <Text
               style={[
                 styles.requirementText,
@@ -205,8 +222,9 @@ export function PasswordSetupScreen({
       <View style={styles.buttonSection}>
         <TouchableOpacity
           testID="continue-button"
-          style={styles.continueButton}
+          style={[styles.continueButton, !isPasswordStrong && styles.continueButtonDisabled]}
           onPress={() => onContinue(password)}
+          disabled={!isPasswordStrong}
           accessibilityRole="button"
           accessibilityLabel="Continue to next step"
         >
@@ -214,7 +232,8 @@ export function PasswordSetupScreen({
           <Text style={styles.continueButtonIcon}>→</Text>
         </TouchableOpacity>
       </View>
-    </View>
+      </KeyboardAvoidingView>
+    </ScreenContainer>
   );
 }
 
@@ -241,10 +260,7 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
   },
   continueButton: {
     alignItems: "center",
@@ -255,6 +271,9 @@ const styles = StyleSheet.create({
     minHeight: 56,
     paddingHorizontal: 32,
     paddingVertical: 16,
+  },
+  continueButtonDisabled: {
+    opacity: 0.5,
   },
   continueButtonIcon: {
     color: palette.brown[900],
@@ -314,7 +333,6 @@ const styles = StyleSheet.create({
     borderColor: palette.olive[500],
   },
   requirementIcon: {
-    fontSize: 14,
     marginRight: 6,
   },
   requirementText: {
@@ -364,7 +382,8 @@ const styles = StyleSheet.create({
     width: 40,
   },
   toggleIcon: {
-    fontSize: 18,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

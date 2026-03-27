@@ -13,8 +13,12 @@ import {
   TextInput,
   StyleSheet,
   ScrollView,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
-import { palette } from "../../../shared/theme";
+import Icon from "react-native-vector-icons/Ionicons";
+import { palette, applyShadow } from "../../../shared/theme";
 
 interface ProfileSetupDetailsScreenProps {
   onBack: () => void;
@@ -39,8 +43,8 @@ export function ProfileSetupDetailsScreen({
   const [showPassword, setShowPassword] = useState(false);
   const [accountType, setAccountType] = useState<AccountType>("patient");
   const [weight, setWeight] = useState(65);
-  const [gender, setGender] = useState("Trans Female");
-  const [location, setLocation] = useState("Tokyo, Japan");
+  const [gender, setGender] = useState("");
+  const [location, setLocation] = useState("");
 
   const accountTypes: { id: AccountType; label: string }[] = [
     { id: "psychiatrist", label: "Psychiatrist" },
@@ -69,6 +73,10 @@ export function ProfileSetupDetailsScreen({
         <View style={styles.squiggle2} />
       </View>
 
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -77,7 +85,7 @@ export function ProfileSetupDetailsScreen({
         {/* Profile Photo Section */}
         <View style={styles.photoSection}>
           <View testID="profile-photo" style={styles.profilePhoto}>
-            <Text style={styles.photoPlaceholder}>👤</Text>
+            <Icon name="person-circle-outline" size={40} color={palette.gray[450]} />
           </View>
           <TouchableOpacity
             testID="edit-photo-button"
@@ -86,7 +94,7 @@ export function ProfileSetupDetailsScreen({
             accessibilityRole="button"
             accessibilityLabel="Edit profile photo"
           >
-            <Text style={styles.editPhotoIcon}>🔗</Text>
+            <Icon name="camera-outline" size={14} color={palette.brown[900]} />
           </TouchableOpacity>
         </View>
 
@@ -96,7 +104,7 @@ export function ProfileSetupDetailsScreen({
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Full Name</Text>
             <View style={styles.inputContainer}>
-              <Text style={styles.inputIcon}>👤</Text>
+              <Icon name="person-outline" size={20} color={palette.gray[450]} style={styles.inputIcon} />
               <TextInput
                 testID="full-name-input"
                 style={styles.textInput}
@@ -132,7 +140,7 @@ export function ProfileSetupDetailsScreen({
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Password</Text>
             <View style={styles.inputContainer}>
-              <Text style={styles.inputIcon}>🔒</Text>
+              <Icon name="lock-closed-outline" size={20} color={palette.gray[450]} style={styles.inputIcon} />
               <TextInput
                 testID="password-input"
                 style={styles.textInput}
@@ -150,7 +158,7 @@ export function ProfileSetupDetailsScreen({
                 accessibilityRole="button"
                 accessibilityLabel={showPassword ? "Hide password" : "Show password"}
               >
-                <Text style={styles.toggleIcon}>{showPassword ? "👁" : "👁‍🗨"}</Text>
+                <Icon name={showPassword ? "eye-outline" : "eye-off-outline"} size={18} color={palette.white} />
               </TouchableOpacity>
             </View>
           </View>
@@ -217,8 +225,8 @@ export function ProfileSetupDetailsScreen({
               accessibilityRole="button"
               accessibilityLabel="Select gender"
             >
-              <Text style={styles.dropdownIcon}>⚧</Text>
-              <Text style={styles.dropdownText}>{gender}</Text>
+              <Icon name="people-outline" size={20} color={palette.gray[450]} style={styles.dropdownIcon} />
+              <Text style={[styles.dropdownText, !gender && styles.dropdownPlaceholder]}>{gender || "Select gender"}</Text>
               <Text style={styles.dropdownChevron}>▼</Text>
             </TouchableOpacity>
           </View>
@@ -233,8 +241,8 @@ export function ProfileSetupDetailsScreen({
               accessibilityRole="button"
               accessibilityLabel="Select location"
             >
-              <Text style={styles.dropdownIcon}>📍</Text>
-              <Text style={styles.dropdownText}>{location}</Text>
+              <Icon name="location-outline" size={20} color={palette.gray[450]} style={styles.dropdownIcon} />
+              <Text style={[styles.dropdownText, !location && styles.dropdownPlaceholder]}>{location || "Select location"}</Text>
               <Text style={styles.dropdownChevron}>▼</Text>
             </TouchableOpacity>
           </View>
@@ -244,7 +252,13 @@ export function ProfileSetupDetailsScreen({
         <TouchableOpacity
           testID="continue-button"
           style={styles.continueButton}
-          onPress={onContinue}
+          onPress={() => {
+            if (!fullName.trim()) {
+              Alert.alert("Validation Error", "Please enter your full name before continuing.");
+              return;
+            }
+            onContinue();
+          }}
           accessibilityRole="button"
           accessibilityLabel="Continue to next step"
         >
@@ -252,6 +266,7 @@ export function ProfileSetupDetailsScreen({
           <Text style={styles.continueButtonIcon}>→</Text>
         </TouchableOpacity>
       </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -323,8 +338,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   dropdownIcon: {
-    fontSize: 20,
     marginRight: 12,
+  },
+  dropdownPlaceholder: {
+    color: palette.gray[450],
   },
   dropdownText: {
     color: palette.white,
@@ -343,7 +360,8 @@ const styles = StyleSheet.create({
     width: 32,
   },
   editPhotoIcon: {
-    fontSize: 14,
+    alignItems: "center",
+    justifyContent: "center",
   },
   fieldGroup: {
     marginBottom: 20,
@@ -371,7 +389,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   inputIcon: {
-    fontSize: 20,
     marginRight: 12,
   },
   label: {
@@ -380,13 +397,13 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     letterSpacing: 0.5,
     marginBottom: 8,
-    textTransform: "uppercase",
   },
   passwordToggle: {
     padding: 8,
   },
   photoPlaceholder: {
-    fontSize: 48,
+    alignItems: "center",
+    justifyContent: "center",
   },
   photoSection: {
     alignItems: "center",
@@ -450,14 +467,10 @@ const styles = StyleSheet.create({
   sliderThumb: {
     backgroundColor: palette.white,
     borderRadius: 12,
-    elevation: 2,
     height: 24,
     marginLeft: -12,
     position: "absolute",
-    shadowColor: palette.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    ...applyShadow("md"),
     width: 24,
   },
   sliderTrack: {
@@ -503,7 +516,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   toggleIcon: {
-    fontSize: 18,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
