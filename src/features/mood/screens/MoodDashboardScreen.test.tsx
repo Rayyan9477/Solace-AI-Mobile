@@ -36,7 +36,6 @@ describe("MoodDashboardScreen", () => {
   const defaultProps = {
     currentMood: mockCurrentMood,
     weeklyData: mockWeeklyData,
-    onBack: mockOnBack,
     onFilter: mockOnFilter,
     onStatistics: mockOnStatistics,
     onSelectMood: mockOnSelectMood,
@@ -52,17 +51,6 @@ describe("MoodDashboardScreen", () => {
   it("renders the screen container", () => {
     const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
     expect(getByTestId("mood-dashboard-screen")).toBeTruthy();
-  });
-
-  it("displays the back button", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    expect(getByTestId("back-button")).toBeTruthy();
-  });
-
-  it("calls onBack when back button is pressed", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("back-button"));
-    expect(mockOnBack).toHaveBeenCalledTimes(1);
   });
 
   // --- Hero Section ---
@@ -174,26 +162,6 @@ describe("MoodDashboardScreen", () => {
   });
 
   // --- Accessibility ---
-  it("back button meets minimum touch target size", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    const backButton = getByTestId("back-button");
-    expect(backButton.props.style).toEqual(
-      expect.objectContaining({ minHeight: 44 })
-    );
-  });
-
-  it("back button has proper accessibility role", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    expect(getByTestId("back-button").props.accessibilityRole).toBe("button");
-  });
-
-  it("back button has proper accessibility label", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    expect(getByTestId("back-button").props.accessibilityLabel).toBe(
-      "Go back"
-    );
-  });
-
   it("add mood button has proper accessibility", () => {
     const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
     const fab = getByTestId("add-mood-button");

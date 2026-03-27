@@ -7,7 +7,9 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface FingerprintSetupScreenProps {
   onBack: () => void;
@@ -21,7 +23,7 @@ export function FingerprintSetupScreen({
   onSkip,
 }: FingerprintSetupScreenProps): React.ReactElement {
   return (
-    <View testID="fingerprint-setup-screen" style={styles.container}>
+    <ScreenContainer testID="fingerprint-setup-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -59,7 +61,7 @@ export function FingerprintSetupScreen({
 
           {/* Fingerprint Icon */}
           <View testID="fingerprint-icon" style={styles.fingerprintIcon}>
-            <Text style={styles.fingerprintEmoji}>👆</Text>
+            <Icon name="finger-print-outline" size={80} color={palette.white} style={styles.fingerprintEmoji} />
             {/* Fingerprint pattern circles */}
             <View style={styles.fingerprintPattern}>
               <View style={[styles.patternCircle, styles.patternCircle1]} />
@@ -78,8 +80,8 @@ export function FingerprintSetupScreen({
         <Text style={styles.title}>Fingerprint Setup</Text>
         <Text style={styles.subtitle}>
           Scan your biometric fingerprint to make your{"\n"}account more secure.
-          🔑
         </Text>
+        <Icon name="key-outline" size={24} color={palette.gray[400]} style={styles.keyIcon} />
       </View>
 
       {/* Continue Button */}
@@ -95,7 +97,7 @@ export function FingerprintSetupScreen({
           <Text style={styles.continueButtonIcon}>→</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -122,10 +124,7 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
   },
   contentSection: {
     alignItems: "center",
@@ -183,8 +182,10 @@ const styles = StyleSheet.create({
     top: 0,
   },
   fingerprintEmoji: {
-    fontSize: 80,
     opacity: 0,
+  },
+  keyIcon: {
+    marginTop: 12,
   },
   fingerprintIcon: {
     alignItems: "center",

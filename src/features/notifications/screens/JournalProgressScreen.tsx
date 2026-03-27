@@ -8,7 +8,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { palette } from "../../../shared/theme";
+import { palette, colors } from "../../../shared/theme";
 
 interface JournalProgressScreenProps {
   completedCount: number;
@@ -18,14 +18,6 @@ interface JournalProgressScreenProps {
   onSeeJournal: () => void;
 }
 
-const colors = {
-  background: palette.background.primary,
-  white: palette.text.primary,
-  textSecondary: palette.text.secondary,
-  illustrationBg: palette.primary.gold,
-  ctaButtonBg: palette.primary.gold,
-  ctaButtonText: palette.background.primary,
-} as const;
 
 export function JournalProgressScreen({
   completedCount,
@@ -59,8 +51,9 @@ export function JournalProgressScreen({
         </Text>
         <Text style={styles.title}>Journal Completed</Text>
         <Text style={styles.message}>
-          You still need to complete {remainingCount} daily {journalWord} this
-          month. Keep it up!
+          {remainingCount === 0
+            ? "Congratulations! You've completed all your daily journals this month!"
+            : `You still need to complete ${remainingCount} daily ${journalWord} this month. Keep it up!`}
         </Text>
       </View>
 
@@ -91,8 +84,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
-  container: { backgroundColor: colors.background, flex: 1 },
+  backIcon: { color: colors.text.primary, fontSize: 24 },
+  container: { backgroundColor: colors.background.primary, flex: 1 },
   contentSection: {
     alignItems: "center",
     paddingHorizontal: 24,
@@ -100,7 +93,7 @@ const styles = StyleSheet.create({
   },
   ctaButton: {
     alignItems: "center",
-    backgroundColor: colors.ctaButtonBg,
+    backgroundColor: palette.primary.gold,
     borderRadius: 28,
     justifyContent: "center",
     minHeight: 44,
@@ -108,7 +101,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   ctaButtonText: {
-    color: colors.ctaButtonText,
+    color: colors.background.primary,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -118,26 +111,26 @@ const styles = StyleSheet.create({
     paddingTop: 24,
   },
   illustration: {
-    backgroundColor: colors.illustrationBg,
+    backgroundColor: palette.primary.gold,
     borderRadius: 16,
     height: 200,
     marginHorizontal: 24,
     marginTop: 16,
   },
   message: {
-    color: colors.textSecondary,
+    color: colors.text.secondary,
     fontSize: 15,
     lineHeight: 24,
     marginTop: 12,
     textAlign: "center",
   },
   progressFraction: {
-    color: colors.white,
+    color: colors.text.primary,
     fontSize: 48,
     fontWeight: "800",
   },
   title: {
-    color: colors.white,
+    color: colors.text.primary,
     fontSize: 22,
     fontWeight: "800",
     marginTop: 8,

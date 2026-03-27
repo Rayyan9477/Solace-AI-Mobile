@@ -16,7 +16,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import { palette } from "../../../shared/theme";
+import { palette, colors } from "../../../shared/theme";
 
 interface NotificationItem {
   id: string;
@@ -44,13 +44,6 @@ interface NotificationsDashboardScreenProps {
   onOptionsPress: (sectionId: string) => void;
 }
 
-const colors = {
-  background: palette.background.primary,
-  white: palette.text.primary,
-  textSecondary: palette.text.secondary,
-  badgeBg: palette.accent.orange,
-  cardBg: palette.background.secondary,
-} as const;
 
 export function NotificationsDashboardScreen({
   unreadCount,
@@ -74,9 +67,11 @@ export function NotificationsDashboardScreen({
           <Text style={styles.backIcon}>{"\u2190"}</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Notifications</Text>
-        <View style={styles.unreadBadge}>
-          <Text style={styles.unreadBadgeText}>+{unreadCount}</Text>
-        </View>
+        {unreadCount > 0 && (
+          <View style={styles.unreadBadge}>
+            <Text style={styles.unreadBadgeText}>+{unreadCount}</Text>
+          </View>
+        )}
         <View style={styles.headerSpacer} />
         <TouchableOpacity
           testID="settings-button"
@@ -180,16 +175,16 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  backIcon: { color: colors.white, fontSize: 24 },
+  backIcon: { color: colors.text.primary, fontSize: 24 },
   badge: {
-    backgroundColor: colors.cardBg,
+    backgroundColor: colors.background.secondary,
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
-  badgeText: { color: colors.textSecondary, fontSize: 11, fontWeight: "600" },
+  badgeText: { color: colors.text.secondary, fontSize: 11, fontWeight: "600" },
   checkmark: { color: palette.accent.green, fontSize: 18 },
-  container: { backgroundColor: colors.background, flex: 1 },
+  container: { backgroundColor: colors.background.primary, flex: 1 },
   header: {
     alignItems: "center",
     flexDirection: "row",
@@ -198,7 +193,7 @@ const styles = StyleSheet.create({
   },
   headerSpacer: { flex: 1 },
   headerTitle: {
-    color: colors.white,
+    color: colors.text.primary,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 8,
@@ -212,12 +207,12 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   notificationSubtitle: {
-    color: colors.textSecondary,
+    color: colors.text.secondary,
     fontSize: 13,
     marginTop: 2,
   },
   notificationTitle: {
-    color: colors.white,
+    color: colors.text.primary,
     fontSize: 14,
     fontWeight: "600",
   },
@@ -227,7 +222,7 @@ const styles = StyleSheet.create({
     minHeight: 44,
     minWidth: 44,
   },
-  optionsIcon: { color: colors.textSecondary, fontSize: 18 },
+  optionsIcon: { color: colors.text.secondary, fontSize: 18 },
   scrollContent: { paddingBottom: 48 },
   sectionHeader: {
     alignItems: "center",
@@ -237,7 +232,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   sectionTitle: {
-    color: colors.textSecondary,
+    color: colors.text.secondary,
     fontSize: 13,
     fontWeight: "600",
   },
@@ -249,14 +244,14 @@ const styles = StyleSheet.create({
   },
   settingsIcon: { fontSize: 20 },
   unreadBadge: {
-    backgroundColor: colors.badgeBg,
+    backgroundColor: palette.accent.orange,
     borderRadius: 10,
     marginLeft: 8,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
   unreadBadgeText: {
-    color: colors.white,
+    color: colors.text.primary,
     fontSize: 11,
     fontWeight: "700",
   },

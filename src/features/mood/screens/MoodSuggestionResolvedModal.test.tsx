@@ -83,11 +83,12 @@ describe("MoodSuggestionResolvedModal", () => {
     expect(getByText(/Great job/)).toBeTruthy();
   });
 
-  it("displays celebration emoji", () => {
-    const { getByText } = render(
+  it("displays celebration icon in transformation illustration", () => {
+    const { getByTestId } = render(
       <MoodSuggestionResolvedModal {...defaultProps} />
     );
-    expect(getByText("🙌")).toBeTruthy();
+    // Celebration icon is now an Ionicons vector icon, not emoji text; verify illustration renders
+    expect(getByTestId("transformation-illustration")).toBeTruthy();
   });
 
   // --- Dynamic Score ---

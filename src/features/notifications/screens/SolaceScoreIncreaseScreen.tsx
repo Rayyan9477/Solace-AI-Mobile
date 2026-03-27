@@ -55,7 +55,7 @@ export function SolaceScoreIncreaseScreen({
 
       {/* Content */}
       <View style={styles.contentSection}>
-        <Text style={styles.scoreChange}>+{scoreChange}</Text>
+        <Text style={styles.scoreChange}>{scoreChange > 0 ? '+' : ''}{scoreChange}</Text>
         <Text style={styles.title}>Solace Score Increased</Text>
         <Text style={styles.message}>
           You're {percentageChange}% happier compared to {comparisonPeriod}.

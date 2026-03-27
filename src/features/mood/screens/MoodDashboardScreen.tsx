@@ -7,7 +7,13 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { FAB } from "../../../shared/components/atoms/buttons";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
+import { EmptyState } from "../../../shared/components/molecules/feedback/EmptyState";
+import { Skeleton } from "../../../shared/components/atoms/display";
 
 interface MoodData {
   emoji: string;
@@ -24,10 +30,11 @@ interface WeeklyMoodEntry {
 
 const DEFAULT_MOOD: MoodData = { emoji: "\u{1F610}", label: "Neutral", color: palette.brown[700] };
 
+const MAX_BAR_HEIGHT = 100;
+
 interface MoodDashboardScreenProps {
   currentMood?: MoodData;
   weeklyData?: WeeklyMoodEntry[];
-  onBack?: () => void;
   onFilter?: () => void;
   onStatistics?: () => void;
   onSelectMood?: () => void;
@@ -38,21 +45,23 @@ interface MoodDashboardScreenProps {
 export function MoodDashboardScreen({
   currentMood = DEFAULT_MOOD,
   weeklyData = [],
-  onBack,
   onFilter,
   onStatistics,
   onDayPress,
   onAddMood,
 }: MoodDashboardScreenProps = {}): React.ReactElement {
   return (
-    <View
+    <ScreenContainer
       testID="mood-dashboard-screen"
       style={styles.container}
     >
       {/* Hero Section */}
-      <View
+      <LinearGradient
         testID="mood-hero-section"
-        style={[styles.heroSection, { backgroundColor: currentMood.color }]}
+        colors={[currentMood.color, "#1C1410"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.heroSection}
       >
         {/* Decorative Circles */}
         <View testID="decorative-circles" style={styles.decorativeCircles}>
@@ -63,16 +72,8 @@ export function MoodDashboardScreen({
 
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity
-            testID="back-button"
-            style={styles.backButton}
-            onPress={onBack}
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-          >
-            <Text style={styles.backButtonIcon}>←</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Mood Tracker</Text>
+          <View style={styles.headerSpacer} />
+          <Text style={styles.headerTitle} accessibilityRole="header">Mood Tracker</Text>
           <TouchableOpacity
             testID="statistics-button"
             style={styles.statisticsButton}
@@ -80,7 +81,7 @@ export function MoodDashboardScreen({
             accessibilityRole="button"
             accessibilityLabel="View mood statistics"
           >
-            <Text style={styles.statisticsIcon}>📊</Text>
+            <Icon name="bar-chart-outline" size={18} color={palette.white} />
           </TouchableOpacity>
         </View>
 
@@ -89,7 +90,7 @@ export function MoodDashboardScreen({
           <Text style={styles.moodEmoji}>{currentMood.emoji}</Text>
           <Text style={styles.moodLabel}>{currentMood.label}</Text>
         </View>
-      </View>
+      </LinearGradient>
 
       {/* Content Section */}
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -103,56 +104,68 @@ export function MoodDashboardScreen({
             accessibilityRole="button"
             accessibilityLabel="Filter moods"
           >
-            <Text style={styles.filterIcon}>🔍</Text>
+            <Icon name="search-outline" size={14} color={palette.white} style={{ marginRight: 6 }} />
             <Text style={styles.filterText}>Filter</Text>
           </TouchableOpacity>
         </View>
 
         {/* Weekly Mood Chart */}
-        <View testID="weekly-mood-chart" style={styles.chartContainer}>
-          {weeklyData.map((entry) => (
-            <TouchableOpacity
-              key={entry.day}
-              testID={`mood-bar-${entry.day}`}
-              style={styles.barColumn}
-              onPress={() => onDayPress(entry)}
-              accessibilityRole="button"
-              accessibilityLabel={`${entry.day}: ${entry.emoji}`}
-            >
-              <Text
-                testID={`mood-bar-emoji-${entry.day}`}
-                style={styles.barEmoji}
+        {weeklyData.length === 0 && currentMood === DEFAULT_MOOD ? (
+          <View testID="skeleton-weekly-chart" style={styles.skeletonChartContainer}>
+            <Skeleton shape="rect" width="100%" height={120} borderRadius={12} />
+          </View>
+        ) : weeklyData.length === 0 ? (
+          <EmptyState
+            testID="weekly-mood-empty-state"
+            variant="compact"
+            icon={<Icon name="happy-outline" size={40} color={palette.gray[500]} />}
+            title="No mood data this week"
+            description="Log your mood to see weekly trends"
+            style={styles.emptyStateContainer}
+          />
+        ) : (
+          <View testID="weekly-mood-chart" style={styles.chartContainer}>
+            {weeklyData.map((entry) => (
+              <TouchableOpacity
+                key={entry.day}
+                testID={`mood-bar-${entry.day}`}
+                style={styles.barColumn}
+                onPress={() => onDayPress?.(entry)}
+                accessibilityRole="button"
+                accessibilityLabel={`${entry.day}: ${entry.emoji}`}
               >
-                {entry.emoji}
-              </Text>
-              <View style={styles.barTrack}>
-                <View
-                  style={[
-                    styles.barFill,
-                    {
-                      height: `${entry.value}%`,
-                      backgroundColor: entry.color,
-                    },
-                  ]}
-                />
-              </View>
-              <Text style={styles.barDayLabel}>{entry.day}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+                <Text
+                  testID={`mood-bar-emoji-${entry.day}`}
+                  style={styles.barEmoji}
+                >
+                  {entry.emoji}
+                </Text>
+                <View style={styles.barTrack}>
+                  <View
+                    style={[
+                      styles.barFill,
+                      {
+                        height: (Math.max(0, Math.min(100, entry.value)) / 100) * MAX_BAR_HEIGHT,
+                        backgroundColor: entry.color,
+                      },
+                    ]}
+                  />
+                </View>
+                <Text style={styles.barDayLabel}>{entry.day}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
       </ScrollView>
 
       {/* Floating Action Button */}
-      <TouchableOpacity
+      <FAB
         testID="add-mood-button"
-        style={styles.fab}
         onPress={onAddMood}
-        accessibilityRole="button"
         accessibilityLabel="Add mood entry"
-      >
-        <Text style={styles.fabIcon}>+</Text>
-      </TouchableOpacity>
-    </View>
+        style={styles.fab}
+      />
+    </ScreenContainer>
   );
 }
 
@@ -163,22 +176,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 16,
     paddingHorizontal: 24,
-  },
-  backButton: {
-    alignItems: "center",
-    borderColor: `${palette.white}${palette.alpha[30]}`,
-    borderRadius: 20,
-    borderWidth: 1,
-    height: 40,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    width: 40,
-  },
-  backButtonIcon: {
-    color: palette.white,
-    fontSize: 20,
-    fontWeight: "600",
   },
   barColumn: {
     alignItems: "center",
@@ -215,6 +212,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     paddingHorizontal: 12,
     paddingVertical: 20,
+  },
+  emptyStateContainer: {
+    backgroundColor: palette.brown[800],
+    borderRadius: 16,
+    marginHorizontal: 24,
+  },
+  skeletonChartContainer: {
+    marginHorizontal: 24,
   },
   circle: {
     borderColor: `${palette.white}${palette.alpha[15]}`,
@@ -256,27 +261,9 @@ const styles = StyleSheet.create({
     top: 0,
   },
   fab: {
-    alignItems: "center",
-    backgroundColor: palette.onboarding.step2,
-    borderRadius: 28,
     bottom: 32,
-    elevation: 4,
-    height: 56,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
     position: "absolute",
     right: 24,
-    shadowColor: palette.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    width: 56,
-  },
-  fabIcon: {
-    color: palette.white,
-    fontSize: 28,
-    fontWeight: "600",
   },
   filterButton: {
     alignItems: "center",
@@ -302,7 +289,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 24,
-    paddingTop: 60,
+  },
+  headerSpacer: {
+    width: 40,
+    height: 40,
   },
   headerTitle: {
     color: palette.white,

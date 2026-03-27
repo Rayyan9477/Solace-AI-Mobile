@@ -14,6 +14,8 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { palette } from "../../../shared/theme";
 
@@ -107,45 +109,50 @@ export function HelpCenterScreen({
         </TouchableOpacity>
       </View>
 
-      {/* Search */}
-      <View style={styles.searchContainer}>
-        <TextInput
-          testID="search-input"
-          style={styles.searchInput}
-          value={searchQuery}
-          onChangeText={onSearchChange}
-          placeholder="Where can I find..."
-          placeholderTextColor={localColors.textSecondary}
-          accessibilityLabel="Search FAQs"
-        />
-      </View>
-
-      {/* FAQ List */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
       >
-        {faqs.map((faq) => (
-          <TouchableOpacity
-            key={faq.id}
-            testID={`faq-${faq.id}`}
-            style={styles.faqItem}
-            onPress={() => onFaqToggle(faq.id)}
-            accessibilityRole="button"
-            accessibilityLabel={faq.question}
-          >
-            <View style={styles.faqHeader}>
-              <Text style={styles.faqQuestion}>{faq.question}</Text>
-              <Text style={styles.faqChevron}>
-                {faq.isExpanded ? "\u2303" : "\u2304"}
-              </Text>
-            </View>
-            {faq.isExpanded && (
-              <Text style={styles.faqAnswer}>{faq.answer}</Text>
-            )}
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+        {/* Search */}
+        <View style={styles.searchContainer}>
+          <TextInput
+            testID="search-input"
+            style={styles.searchInput}
+            value={searchQuery}
+            onChangeText={onSearchChange}
+            placeholder="Where can I find..."
+            placeholderTextColor={localColors.textSecondary}
+            accessibilityLabel="Search FAQs"
+          />
+        </View>
+
+        {/* FAQ List */}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
+          {faqs.map((faq) => (
+            <TouchableOpacity
+              key={faq.id}
+              testID={`faq-${faq.id}`}
+              style={styles.faqItem}
+              onPress={() => onFaqToggle(faq.id)}
+              accessibilityRole="button"
+              accessibilityLabel={faq.question}
+            >
+              <View style={styles.faqHeader}>
+                <Text style={styles.faqQuestion}>{faq.question}</Text>
+                <Text style={styles.faqChevron}>
+                  {faq.isExpanded ? "\u2303" : "\u2304"}
+                </Text>
+              </View>
+              {faq.isExpanded && (
+                <Text style={styles.faqAnswer}>{faq.answer}</Text>
+              )}
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }

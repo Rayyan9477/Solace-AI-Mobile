@@ -6,6 +6,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface MoodSuggestionResolvedModalProps {
@@ -40,7 +41,7 @@ export function MoodSuggestionResolvedModal({
           accessibilityRole="button"
           accessibilityLabel="Close modal"
         >
-          <Text style={styles.closeIcon}>✕</Text>
+          <Icon name="close-outline" size={18} color={palette.gray[400]} />
         </TouchableOpacity>
 
         {/* Transformation Illustration */}
@@ -50,17 +51,17 @@ export function MoodSuggestionResolvedModal({
         >
           <View style={styles.illustrationRow}>
             <View style={styles.sadFigure}>
-              <Text style={styles.figureEmoji}>😢</Text>
+              <Icon name="sad-outline" size={36} color={palette.onboarding.step2} />
             </View>
             <View style={styles.arrowContainer}>
               <Text style={styles.arrow}>→</Text>
             </View>
             <View style={styles.happyFigure}>
-              <Text style={styles.figureEmoji}>😄</Text>
+              <Icon name="happy-outline" size={36} color={palette.olive[500]} />
             </View>
           </View>
           <View style={styles.maskContainer}>
-            <Text style={styles.maskEmoji}>🎭</Text>
+            <Icon name="color-palette-outline" size={24} color={palette.tan[500]} />
           </View>
         </View>
 
@@ -78,7 +79,7 @@ export function MoodSuggestionResolvedModal({
             Great job on completing the suggestion! Keep up the positive
             momentum.
           </Text>
-          <Text style={styles.celebrationEmoji}>🙌</Text>
+          <Icon name="ribbon-outline" size={24} color={palette.olive[500]} />
         </View>
 
         {/* Calendar Strip */}

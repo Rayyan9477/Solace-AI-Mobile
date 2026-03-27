@@ -10,10 +10,13 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
+  FlatList,
   StyleSheet,
 } from "react-native";
-import { palette } from "../../../shared/theme";
+import Icon from "react-native-vector-icons/Ionicons";
+import { palette, applyShadow } from "../../../shared/theme";
+import { EmptyState } from "../../../shared/components/molecules/feedback";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface MoodEntry {
   id: string;
@@ -48,7 +51,7 @@ export function MoodHistoryScreen({
   onEdit,
 }: MoodHistoryScreenProps): React.ReactElement {
   return (
-    <View testID="mood-history-screen" style={styles.container}>
+    <ScreenContainer testID="mood-history-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -68,7 +71,7 @@ export function MoodHistoryScreen({
           accessibilityRole="button"
           accessibilityLabel="Filter mood history"
         >
-          <Text style={styles.filterIcon}>🔍</Text>
+          <Icon name="funnel-outline" size={18} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -115,38 +118,53 @@ export function MoodHistoryScreen({
       </View>
 
       {/* Mood Entries List */}
-      <ScrollView style={styles.listContainer} showsVerticalScrollIndicator={false}>
-        {entries.map((entry) => (
-          <TouchableOpacity
-            key={entry.id}
-            testID={`mood-entry-${entry.id}`}
-            style={styles.entryCard}
-            onPress={() => onEntryPress(entry)}
-            accessibilityRole="button"
-            accessibilityLabel={`${entry.date}: ${entry.mood}`}
-          >
-            <View style={styles.entryDateColumn}>
-              <Text style={styles.entryDate}>{entry.date}</Text>
-            </View>
-            <View style={styles.entryMoodColumn}>
-              <Text style={styles.entryEmoji}>{entry.emoji}</Text>
-              <Text style={styles.entryMood}>{entry.mood}</Text>
-            </View>
-            <View style={styles.entryBiometrics}>
-              <View style={styles.biometricRow}>
-                <Text style={styles.biometricIcon}>❤️</Text>
-                <Text style={styles.biometricValue}>{entry.heartRate} bpm</Text>
+      {entries.length === 0 ? (
+        <View style={styles.emptyStateContainer}>
+          <EmptyState
+            testID="mood-history-empty"
+            title="No mood entries yet"
+            description="Log your mood to see your history and trends"
+            variant="default"
+          />
+        </View>
+      ) : (
+        <FlatList
+          data={entries}
+          keyExtractor={(item) => item.id || `entry-${item.date}`}
+          renderItem={({ item: entry }) => (
+            <TouchableOpacity
+              testID={`mood-entry-${entry.id}`}
+              style={styles.entryCard}
+              onPress={() => onEntryPress(entry)}
+              accessibilityRole="button"
+              accessibilityLabel={`${entry.date}: ${entry.mood}`}
+            >
+              <View style={styles.entryDateColumn}>
+                <Text style={styles.entryDate}>{entry.date}</Text>
               </View>
-              <View style={styles.biometricRow}>
-                <Text style={styles.biometricIcon}>⚡</Text>
-                <Text style={styles.biometricValue}>
-                  {entry.bloodPressure} sys
-                </Text>
+              <View style={styles.entryMoodColumn}>
+                <Text style={styles.entryEmoji}>{entry.emoji}</Text>
+                <Text style={styles.entryMood}>{entry.mood}</Text>
               </View>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+              <View style={styles.entryBiometrics}>
+                <View style={styles.biometricRow}>
+                  <Icon name="heart-outline" size={12} color={palette.gray[400]} style={{ marginRight: 4 }} />
+                  <Text style={styles.biometricValue}>{entry.heartRate} bpm</Text>
+                </View>
+                <View style={styles.biometricRow}>
+                  <Icon name="flash-outline" size={12} color={palette.gray[400]} style={{ marginRight: 4 }} />
+                  <Text style={styles.biometricValue}>
+                    {entry.bloodPressure} sys
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )}
+          style={styles.listContainer}
+          contentContainerStyle={{ paddingBottom: 100 }}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
 
       {/* Bottom Action Bar */}
       <View testID="bottom-action-bar" style={styles.bottomActionBar}>
@@ -157,7 +175,7 @@ export function MoodHistoryScreen({
           accessibilityRole="button"
           accessibilityLabel="Mood settings"
         >
-          <Text style={styles.actionIcon}>⚙️</Text>
+          <Icon name="settings-outline" size={22} color={palette.white} />
         </TouchableOpacity>
         <TouchableOpacity
           testID="add-button"
@@ -175,10 +193,10 @@ export function MoodHistoryScreen({
           accessibilityRole="button"
           accessibilityLabel="Edit mood entries"
         >
-          <Text style={styles.actionIcon}>✏️</Text>
+          <Icon name="pencil-outline" size={22} color={palette.white} />
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -198,15 +216,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: palette.onboarding.step2,
     borderRadius: 28,
-    elevation: 4,
     height: 56,
     justifyContent: "center",
     minHeight: 44,
     minWidth: 44,
-    shadowColor: palette.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    ...applyShadow("md"),
     width: 56,
   },
   addIcon: {
@@ -254,9 +268,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   entryBiometrics: {
     alignItems: "flex-end",
@@ -314,7 +326,14 @@ const styles = StyleSheet.create({
   headerTitle: {
     color: palette.white,
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: "600",
+  },
+  emptyStateContainer: {
+    flex: 1,
+    justifyContent: "center",
+    paddingBottom: 100,
+    paddingHorizontal: 24,
+    paddingTop: 16,
   },
   listContainer: {
     flex: 1,

@@ -7,7 +7,8 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
-import { palette } from "../../../shared/theme";
+import { palette, applyShadow } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
 interface ChartDataPoint {
   date: string;
@@ -35,6 +36,9 @@ interface MoodStatsScreenProps {
   onDayPress: (entry: WeeklyEmoji) => void;
 }
 
+const CHART_AREA_HEIGHT = 180;
+const CHART_AREA_WIDTH = 300;
+
 export function MoodStatsScreen({
   selectedTimeRange,
   timeRanges,
@@ -44,12 +48,13 @@ export function MoodStatsScreen({
   trendDescription,
   onBack,
   onTimeRangeChange,
+  onDataPointPress,
   onSortChange,
   onAddMood,
   onDayPress,
 }: MoodStatsScreenProps): React.ReactElement {
   return (
-    <View testID="mood-stats-screen" style={styles.container}>
+    <ScreenContainer testID="mood-stats-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -119,11 +124,11 @@ export function MoodStatsScreen({
                 style={[
                   styles.dataPoint,
                   {
-                    bottom: `${point.value}%`,
-                    left: `${(index / Math.max(chartData.length - 1, 1)) * 100}%`,
+                    bottom: (Math.max(0, Math.min(100, point.value)) / 100) * CHART_AREA_HEIGHT,
+                    left: (index / Math.max(chartData.length - 1, 1)) * CHART_AREA_WIDTH,
                   },
                 ]}
-                onPress={() => onDayPress}
+                onPress={() => onDataPointPress?.(point)}
                 accessibilityLabel={`${point.date}: ${point.emoji}`}
               >
                 <View style={styles.dataPointDot} />
@@ -167,7 +172,7 @@ export function MoodStatsScreen({
       >
         <Text style={styles.fabIcon}>+</Text>
       </TouchableOpacity>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -211,9 +216,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
-    paddingTop: 60,
   },
   content: {
     flex: 1,
@@ -255,17 +258,13 @@ const styles = StyleSheet.create({
     backgroundColor: palette.onboarding.step2,
     borderRadius: 28,
     bottom: 32,
-    elevation: 4,
     height: 56,
     justifyContent: "center",
     minHeight: 44,
     minWidth: 44,
     position: "absolute",
     right: 24,
-    shadowColor: palette.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    ...applyShadow("md"),
     width: 56,
   },
   fabIcon: {
@@ -283,7 +282,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     color: palette.white,
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: "600",
   },
   sortButton: {
     alignItems: "center",
