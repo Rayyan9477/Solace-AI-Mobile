@@ -18,6 +18,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { palette } from "../../../shared/theme";
 import { EmptyState } from "../../../shared/components/molecules/feedback";
 import { ScreenContainer } from "../../../shared/components/atoms/layout";
+import { Skeleton } from "../../../shared/components/atoms/display";
 
 type TabType = "recent" | "trash";
 
@@ -35,6 +36,7 @@ interface ChatsListScreenProps {
   recentCount?: number;
   trashCount?: number;
   activeTab?: TabType;
+  isLoading?: boolean;
   onTabChange?: (tab: TabType) => void;
   onChatPress?: (id: string) => void;
   onSeeAllRecent?: () => void;
@@ -48,6 +50,7 @@ export function ChatsListScreen({
   recentCount = 0,
   trashCount = 0,
   activeTab = "recent",
+  isLoading = false,
   onTabChange,
   onChatPress,
   onSeeAllRecent,
@@ -161,7 +164,13 @@ export function ChatsListScreen({
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
           </View>
-          {recentChats.length === 0 ? (
+          {isLoading ? (
+            <View testID="skeleton-recent-chats">
+              <Skeleton shape="rect" width="100%" height={60} borderRadius={8} style={styles.skeletonRow} />
+              <Skeleton shape="rect" width="100%" height={60} borderRadius={8} style={styles.skeletonRow} />
+              <Skeleton shape="rect" width="100%" height={60} borderRadius={8} style={styles.skeletonRow} />
+            </View>
+          ) : recentChats.length === 0 ? (
             <EmptyState
               testID="recent-chats-empty"
               title="No conversations yet"
@@ -300,6 +309,9 @@ const styles = StyleSheet.create({
     color: palette.tan[500],
     fontSize: 14,
     fontWeight: "500",
+  },
+  skeletonRow: {
+    marginBottom: 12,
   },
   segmentTab: {
     borderRadius: 16,

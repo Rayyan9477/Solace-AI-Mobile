@@ -6,9 +6,11 @@
  * @phase Phase 3C: Refactored to use theme tokens
  */
 
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Animated } from "react-native";
 import { palette } from "../../../shared/theme";
+import { animationPresets } from "../../../shared/theme/animationTimings";
+import { useReducedMotion } from "../../../shared/hooks/useReducedMotion";
 
 interface BreathingExerciseActiveScreenProps {
   soundName: string;
@@ -46,6 +48,54 @@ export function BreathingExerciseActiveScreen({
   onPlayPause,
   onForward,
 }: BreathingExerciseActiveScreenProps): React.ReactElement {
+  const reducedMotion = useReducedMotion();
+
+  const { from, to, duration } = animationPresets.breathingCircle;
+  const scaleAnim = useRef(new Animated.Value(from.scale)).current;
+  const opacityAnim = useRef(new Animated.Value(from.opacity)).current;
+
+  useEffect(() => {
+    if (reducedMotion) {
+      // Show resting state statically — no loop started
+      scaleAnim.setValue(from.scale);
+      opacityAnim.setValue(from.opacity);
+      return;
+    }
+
+    const expand = Animated.parallel([
+      Animated.timing(scaleAnim, {
+        toValue: to.scale,
+        duration,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacityAnim, {
+        toValue: to.opacity,
+        duration,
+        useNativeDriver: true,
+      }),
+    ]);
+
+    const contract = Animated.parallel([
+      Animated.timing(scaleAnim, {
+        toValue: from.scale,
+        duration,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacityAnim, {
+        toValue: from.opacity,
+        duration,
+        useNativeDriver: true,
+      }),
+    ]);
+
+    const loop = Animated.loop(Animated.sequence([expand, contract]));
+    loop.start();
+
+    return () => {
+      loop.stop();
+    };
+  }, [reducedMotion, scaleAnim, opacityAnim, from.scale, from.opacity, to.scale, to.opacity, duration]);
+
   return (
     <View
       testID="breathing-exercise-active-screen"
@@ -61,9 +111,19 @@ export function BreathingExerciseActiveScreen({
 
       {/* Breathing Circle */}
       <View testID="breathing-circle" style={styles.breathingCircle}>
-        <View style={[styles.ring, styles.ringOuter]} />
-        <View style={[styles.ring, styles.ringMiddle]} />
-        <View style={[styles.ring, styles.ringInner]} />
+        <Animated.View
+          style={[
+            styles.breathingCircleAnimated,
+            {
+              transform: [{ scale: scaleAnim }],
+              opacity: opacityAnim,
+            },
+          ]}
+        >
+          <View style={[styles.ring, styles.ringOuter]} />
+          <View style={[styles.ring, styles.ringMiddle]} />
+          <View style={[styles.ring, styles.ringInner]} />
+        </Animated.View>
 
         <Text testID="instruction-text" style={styles.instructionText}>
           {instruction}
@@ -133,6 +193,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     justifyContent: "center",
+  },
+  breathingCircleAnimated: {
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
   },
   container: {
     flex: 1,

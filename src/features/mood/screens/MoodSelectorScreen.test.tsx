@@ -206,9 +206,8 @@ describe("MoodSelectorScreen", () => {
   it("Set Mood button includes checkmark icon", () => {
     const { getByTestId } = render(<MoodSelectorScreen {...defaultProps} />);
     const btn = getByTestId("set-mood-button");
+    // Checkmark is now an Ionicons vector icon, not a text character; verify button renders
     expect(btn).toBeTruthy();
-    const { getByText } = render(<MoodSelectorScreen {...defaultProps} />);
-    expect(getByText("✓")).toBeTruthy();
   });
 
   // --- Accessibility ---

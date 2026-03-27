@@ -7,7 +7,10 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
+import { useHaptic } from "../../../shared/hooks/useHaptic";
 
 interface MoodOption {
   index: number;
@@ -31,12 +34,33 @@ export function MoodSelectorScreen({
   onMoodChange,
   onSetMood,
 }: MoodSelectorScreenProps): React.ReactElement {
+  const haptic = useHaptic();
+
+  if (selectedMoodIndex < 0 || selectedMoodIndex >= moodOptions.length) {
+    return (
+      <ScreenContainer testID="mood-selector-screen" backgroundColor={palette.brown[900]} style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            testID="back-button"
+            style={styles.backButton}
+            onPress={onBack}
+            activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+          >
+            <Text style={styles.backButtonIcon}>←</Text>
+          </TouchableOpacity>
+        </View>
+      </ScreenContainer>
+    );
+  }
   const selectedMood = moodOptions[selectedMoodIndex];
 
   return (
-    <View
+    <ScreenContainer
       testID="mood-selector-screen"
-      style={[styles.container, { backgroundColor: selectedMood.color }]}
+      backgroundColor={selectedMood.color}
+      style={styles.container}
     >
       {/* Header */}
       <View style={styles.header}>
@@ -78,7 +102,8 @@ export function MoodSelectorScreen({
                 styles.sliderPoint,
                 option.index === selectedMoodIndex && styles.sliderPointActive,
               ]}
-              onPress={() => onMoodChange(option.index)}
+              onPress={() => { haptic.light(); onMoodChange(option.index); }}
+              activeOpacity={0.7}
               accessibilityRole="button"
               accessibilityLabel={`Select ${option.label}`}
             >
@@ -99,14 +124,15 @@ export function MoodSelectorScreen({
           testID="set-mood-button"
           style={styles.setMoodButton}
           onPress={onSetMood}
+          activeOpacity={0.7}
           accessibilityRole="button"
           accessibilityLabel="Set mood"
         >
-          <Text style={styles.checkmarkIcon}>✓</Text>
+          <Icon name="checkmark-outline" size={18} color={palette.white} style={{ marginRight: 8 }} />
           <Text style={styles.setMoodText}>Set Mood</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -139,7 +165,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: 60,
   },
   content: {
     alignItems: "center",

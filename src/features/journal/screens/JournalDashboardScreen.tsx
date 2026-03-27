@@ -27,6 +27,7 @@ import { palette } from "../../../shared/theme";
 import { FAB } from "../../../shared/components/atoms/buttons";
 import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
 import { EmptyState } from "../../../shared/components/molecules/feedback/EmptyState";
+import { Skeleton } from "../../../shared/components/atoms/display";
 
 /* ---------- types ---------- */
 type JournalStatus = "positive" | "negative" | "skipped";
@@ -40,6 +41,7 @@ interface JournalDashboardScreenProps {
   journalCount?: number;
   periodLabel?: string;
   calendarData?: CalendarDay[];
+  isLoading?: boolean;
   onAddJournal?: () => void;
   onSeeAllStats?: () => void;
   onDayPress?: (index: number) => void;
@@ -57,6 +59,7 @@ export function JournalDashboardScreen({
   journalCount = 0,
   periodLabel = "This Week",
   calendarData = [],
+  isLoading = false,
   onAddJournal,
   onSeeAllStats,
   onDayPress,
@@ -118,7 +121,11 @@ export function JournalDashboardScreen({
           </View>
 
           {/* Weekly Calendar Grid */}
-          {calendarData.length === 0 ? (
+          {isLoading ? (
+            <View testID="skeleton-journal-stats" style={styles.skeletonStats}>
+              <Skeleton shape="rect" width="100%" height={100} borderRadius={12} />
+            </View>
+          ) : calendarData.length === 0 ? (
             <EmptyState
               testID="journal-stats-empty-state"
               variant="compact"
@@ -312,6 +319,9 @@ const styles = StyleSheet.create({
     color: palette.tan[500],
     fontSize: 14,
     fontWeight: "600",
+  },
+  skeletonStats: {
+    marginTop: 16,
   },
   seeAllTouchable: {
     minHeight: 44,
