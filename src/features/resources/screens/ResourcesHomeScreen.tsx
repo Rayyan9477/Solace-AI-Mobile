@@ -16,7 +16,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import { palette } from "../../../shared/theme";
+import { palette, colors } from "../../../shared/theme";
 
 interface ArticleItem {
   id: string;
@@ -53,17 +53,6 @@ interface ResourcesHomeScreenProps {
   onAddPress: () => void;
 }
 
-const localColors = {
-  background: palette.brown[900],
-  white: palette.white,
-  cardBg: palette.brown[800],
-  textSecondary: `${palette.white}${palette.alpha[60]}`,
-  categoryBadge: palette.olive[500],
-  fabBg: "#5C4A2A",
-  seeAll: palette.tan[500],
-  metricText: `${palette.white}${palette.alpha[50]}`,
-  ratingYellow: "#E8C94A",
-} as const;
 
 export function ResourcesHomeScreen({
   articleCount,
@@ -256,19 +245,19 @@ export function ResourcesHomeScreen({
 const styles = StyleSheet.create({
   articleBadge: {
     alignSelf: "flex-start",
-    backgroundColor: localColors.categoryBadge,
+    backgroundColor: palette.olive[500],
     borderRadius: 8,
     marginTop: 8,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
   articleBadgeText: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 10,
     fontWeight: "600",
   },
   articleCard: {
-    backgroundColor: localColors.cardBg,
+    backgroundColor: colors.background.secondary,
     borderRadius: 16,
     marginRight: 12,
     padding: 12,
@@ -284,7 +273,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   articleTitle: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 13,
     fontWeight: "600",
     lineHeight: 18,
@@ -297,23 +286,23 @@ const styles = StyleSheet.create({
     minWidth: 44,
   },
   backIcon: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 24,
   },
   categoryBadge: {
     alignSelf: "flex-start",
-    backgroundColor: localColors.categoryBadge,
+    backgroundColor: palette.olive[500],
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
   categoryBadgeText: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 11,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: localColors.background,
+    backgroundColor: colors.background.primary,
     flex: 1,
   },
   courseAvatar: {
@@ -325,7 +314,7 @@ const styles = StyleSheet.create({
     width: 48,
   },
   courseAvatarIcon: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 16,
   },
   courseInfo: {
@@ -333,12 +322,12 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   courseInstructor: {
-    color: localColors.textSecondary,
+    color: palette.opacity.white60,
     fontSize: 12,
     marginTop: 2,
   },
   courseMetric: {
-    color: localColors.textSecondary,
+    color: palette.opacity.white60,
     fontSize: 11,
     marginRight: 12,
   },
@@ -348,7 +337,7 @@ const styles = StyleSheet.create({
   },
   courseRow: {
     alignItems: "center",
-    backgroundColor: localColors.cardBg,
+    backgroundColor: colors.background.secondary,
     borderRadius: 16,
     flexDirection: "row",
     marginBottom: 8,
@@ -356,13 +345,13 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   courseTitle: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 15,
     fontWeight: "600",
   },
   fabButton: {
     alignItems: "center",
-    backgroundColor: localColors.fabBg,
+    backgroundColor: colors.background.elevated,
     borderRadius: 28,
     height: 56,
     justifyContent: "center",
@@ -378,12 +367,12 @@ const styles = StyleSheet.create({
     right: 0,
   },
   fabIcon: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 28,
     fontWeight: "300",
   },
   featuredCard: {
-    backgroundColor: localColors.cardBg,
+    backgroundColor: colors.background.secondary,
     borderRadius: 16,
     marginHorizontal: 24,
     overflow: "hidden",
@@ -397,7 +386,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   featuredTitle: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 16,
     fontWeight: "700",
     lineHeight: 22,
@@ -408,7 +397,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   metricText: {
-    color: localColors.metricText,
+    color: palette.opacity.white40,
     fontSize: 11,
     marginRight: 8,
   },
@@ -420,7 +409,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   optionsIcon: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 20,
   },
   scrollContent: {
@@ -434,21 +423,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   sectionLabel: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 16,
     fontWeight: "700",
   },
   seeAllText: {
-    color: localColors.seeAll,
+    color: colors.interactive.default,
     fontSize: 13,
     fontWeight: "600",
   },
   statDot: {
-    color: localColors.textSecondary,
+    color: palette.opacity.white60,
     marginHorizontal: 8,
   },
   statText: {
-    color: localColors.textSecondary,
+    color: palette.opacity.white60,
     fontSize: 13,
   },
   statsRow: {
@@ -458,7 +447,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   title: {
-    color: localColors.white,
+    color: colors.text.primary,
     fontSize: 28,
     fontWeight: "800",
     marginTop: 16,

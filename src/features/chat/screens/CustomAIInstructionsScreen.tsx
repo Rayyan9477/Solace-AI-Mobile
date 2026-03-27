@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     color: palette.white,
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: "600",
   },
   headerTitleContainer: {
     alignItems: "center",

@@ -13,6 +13,8 @@ import {
   ScrollView,
   FlatList,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { palette } from "../../../shared/theme";
 
@@ -70,6 +72,10 @@ export function SearchResultsScreen({
 }: SearchResultsScreenProps): React.ReactElement {
   return (
     <View testID="search-results-screen" style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -186,6 +192,7 @@ export function SearchResultsScreen({
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       />
+      </KeyboardAvoidingView>
     </View>
   );
 }

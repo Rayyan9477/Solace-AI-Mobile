@@ -18,6 +18,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 import { ScreenContainer } from "../../../shared/components/atoms/layout";
 import { EmptyState } from "../../../shared/components/molecules/feedback/EmptyState";
+import { Skeleton } from "../../../shared/components/atoms/display";
 
 type MoodType = "happy" | "sad" | "neutral" | "angry" | "anxious";
 type SolaceStatus = "Mentally Stable" | "Needs Attention" | "Critical";
@@ -106,6 +107,8 @@ export function HomeDashboardScreen({
   onSearchPress,
   onNotificationPress,
 }: HomeDashboardScreenProps = {}): React.ReactElement {
+  const showSkeletons = solaceScore === 0 && mindfulHours === 0 && sleepQuality === 0 && journalPages === 0;
+
   return (
     <ScreenContainer testID="home-dashboard-screen" style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -156,129 +159,179 @@ export function HomeDashboardScreen({
         <View style={styles.section}>
           <Text style={styles.sectionTitle} accessibilityRole="header">Mental Health Metrics</Text>
 
-          {/* Solace Score Card - Large */}
-          <TouchableOpacity
-            testID="solace-score-card"
-            style={styles.solaceScoreCard}
-            onPress={onSolaceScorePress}
-            accessibilityRole="button"
-            accessibilityLabel={`Solace Score ${solaceScore}, ${solaceStatus}`}
-          >
-            <View style={styles.scoreGaugeContainer}>
-              <View style={styles.scoreGauge}>
-                <Text style={styles.scoreValue}>{solaceScore}</Text>
+          {showSkeletons ? (
+            <>
+              {/* Skeleton: Solace Score ring */}
+              <View testID="skeleton-score-card" style={styles.skeletonScoreCard}>
+                <Skeleton shape="circle" width={120} height={120} />
+                <View style={styles.skeletonScoreLabels}>
+                  <Skeleton shape="text" width={100} height={14} />
+                  <Skeleton shape="text" width={80} height={12} style={styles.skeletonGap} />
+                </View>
               </View>
-            </View>
-            <Text style={styles.scoreLabel}>Solace Score</Text>
-            <Text style={styles.scoreStatus}>{solaceStatus}</Text>
-          </TouchableOpacity>
 
-          {/* Metrics Grid */}
-          <View style={styles.metricsGrid}>
-            {/* Mood Card */}
-            <TouchableOpacity
-              testID="mood-card"
-              style={styles.metricCard}
-              onPress={onMoodPress}
-              accessibilityRole="button"
-              accessibilityLabel={`Mood: ${currentMood}`}
-            >
-              <Text style={styles.metricLabel}>Mood</Text>
-              <Icon name={MOOD_EMOJI[currentMood]} size={28} color={palette.tan[400]} />
-            </TouchableOpacity>
-
-            {/* Mindful Hours Card */}
-            <TouchableOpacity
-              testID="mindful-hours-card"
-              style={styles.metricCard}
-              onPress={onMindfulHoursPress}
-              accessibilityRole="button"
-              accessibilityLabel={`Mindful Hours: ${mindfulHours} hours`}
-            >
-              <Text style={styles.metricLabel}>Mindful Hours</Text>
-              <Text style={styles.metricValue}>{mindfulHours} Hrs</Text>
-            </TouchableOpacity>
-
-            {/* Sleep Quality Card */}
-            <TouchableOpacity
-              testID="sleep-quality-card"
-              style={styles.metricCard}
-              onPress={onSleepQualityPress}
-              accessibilityRole="button"
-              accessibilityLabel={`Sleep Quality: ${sleepQuality}%`}
-            >
-              <Text style={styles.metricLabel}>Sleep Quality</Text>
-              <View style={styles.sleepBar}>
-                <View
-                  style={[styles.sleepBarFill, { width: `${sleepQuality}%` }]}
-                />
+              {/* Skeleton: Metric cards grid */}
+              <View style={styles.metricsGrid}>
+                <View style={styles.metricCard}>
+                  <Skeleton shape="rect" width="100%" height={80} borderRadius={12} />
+                </View>
+                <View style={styles.metricCard}>
+                  <Skeleton shape="rect" width="100%" height={80} borderRadius={12} />
+                </View>
+                <View style={styles.metricCard}>
+                  <Skeleton shape="rect" width="100%" height={80} borderRadius={12} />
+                </View>
+                <View style={styles.metricCard}>
+                  <Skeleton shape="rect" width="100%" height={80} borderRadius={12} />
+                </View>
               </View>
-            </TouchableOpacity>
 
-            {/* Journal Card */}
-            <TouchableOpacity
-              testID="journal-card"
-              style={styles.metricCard}
-              onPress={onJournalPress}
-              accessibilityRole="button"
-              accessibilityLabel={`Mental Journal: ${journalPages} pages`}
-            >
-              <Text style={styles.metricLabel}>Mental Journal</Text>
-              <Text style={styles.metricValue}>{journalPages} Pages</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Secondary Metrics Row */}
-          <View style={styles.secondaryMetrics}>
-            {/* Stress Level */}
-            <TouchableOpacity
-              testID="stress-level-card"
-              style={styles.secondaryCard}
-              onPress={onStressLevelPress}
-              accessibilityRole="button"
-              accessibilityLabel={`Stress Level: ${stressLevel} out of 5`}
-            >
-              <Text style={styles.metricLabel}>Stress Level</Text>
-              <Text style={styles.metricValue}>{stressLevel}/5</Text>
-            </TouchableOpacity>
-
-            {/* Mood Tracker */}
-            <TouchableOpacity
-              testID="mood-tracker-card"
-              style={styles.secondaryCard}
-              onPress={onMoodPress}
-              accessibilityRole="button"
-              accessibilityLabel="Weekly Mood Tracker"
-            >
-              <Text style={styles.metricLabel}>Mood Tracker</Text>
-              <View style={styles.weeklyMoods}>
-                {weeklyMoods.map((mood, index) => (
-                  <Icon key={index} name={MOOD_EMOJI[mood]} size={16} color={palette.tan[400]} />
-                ))}
+              {/* Skeleton: Secondary metrics */}
+              <View style={styles.secondaryMetrics}>
+                <View style={styles.secondaryCard}>
+                  <Skeleton shape="rect" width="100%" height={60} borderRadius={12} />
+                </View>
+                <View style={styles.secondaryCard}>
+                  <Skeleton shape="rect" width="100%" height={60} borderRadius={12} />
+                </View>
               </View>
-            </TouchableOpacity>
-          </View>
+            </>
+          ) : (
+            <>
+              {/* Solace Score Card - Large */}
+              <TouchableOpacity
+                testID="solace-score-card"
+                style={styles.solaceScoreCard}
+                onPress={onSolaceScorePress}
+                accessibilityRole="button"
+                accessibilityLabel={`Solace Score ${solaceScore}, ${solaceStatus}`}
+              >
+                <View style={styles.scoreGaugeContainer}>
+                  <View style={styles.scoreGauge}>
+                    <Text style={styles.scoreValue}>{solaceScore}</Text>
+                  </View>
+                </View>
+                <Text style={styles.scoreLabel}>Solace Score</Text>
+                <Text style={styles.scoreStatus}>{solaceStatus}</Text>
+              </TouchableOpacity>
+
+              {/* Metrics Grid */}
+              <View style={styles.metricsGrid}>
+                {/* Mood Card */}
+                <TouchableOpacity
+                  testID="mood-card"
+                  style={styles.metricCard}
+                  onPress={onMoodPress}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Mood: ${currentMood}`}
+                >
+                  <Text style={styles.metricLabel}>Mood</Text>
+                  <Icon name={MOOD_EMOJI[currentMood]} size={28} color={palette.tan[400]} />
+                </TouchableOpacity>
+
+                {/* Mindful Hours Card */}
+                <TouchableOpacity
+                  testID="mindful-hours-card"
+                  style={styles.metricCard}
+                  onPress={onMindfulHoursPress}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Mindful Hours: ${mindfulHours} hours`}
+                >
+                  <Text style={styles.metricLabel}>Mindful Hours</Text>
+                  <Text style={styles.metricValue}>{mindfulHours} Hrs</Text>
+                </TouchableOpacity>
+
+                {/* Sleep Quality Card */}
+                <TouchableOpacity
+                  testID="sleep-quality-card"
+                  style={styles.metricCard}
+                  onPress={onSleepQualityPress}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Sleep Quality: ${sleepQuality}%`}
+                >
+                  <Text style={styles.metricLabel}>Sleep Quality</Text>
+                  <View style={styles.sleepBar}>
+                    <View
+                      style={[styles.sleepBarFill, { width: `${sleepQuality}%` }]}
+                    />
+                  </View>
+                </TouchableOpacity>
+
+                {/* Journal Card */}
+                <TouchableOpacity
+                  testID="journal-card"
+                  style={styles.metricCard}
+                  onPress={onJournalPress}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Mental Journal: ${journalPages} pages`}
+                >
+                  <Text style={styles.metricLabel}>Mental Journal</Text>
+                  <Text style={styles.metricValue}>{journalPages} Pages</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Secondary Metrics Row */}
+              <View style={styles.secondaryMetrics}>
+                {/* Stress Level */}
+                <TouchableOpacity
+                  testID="stress-level-card"
+                  style={styles.secondaryCard}
+                  onPress={onStressLevelPress}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Stress Level: ${stressLevel} out of 5`}
+                >
+                  <Text style={styles.metricLabel}>Stress Level</Text>
+                  <Text style={styles.metricValue}>{stressLevel}/5</Text>
+                </TouchableOpacity>
+
+                {/* Mood Tracker */}
+                <TouchableOpacity
+                  testID="mood-tracker-card"
+                  style={styles.secondaryCard}
+                  onPress={onMoodPress}
+                  accessibilityRole="button"
+                  accessibilityLabel="Weekly Mood Tracker"
+                >
+                  <Text style={styles.metricLabel}>Mood Tracker</Text>
+                  <View style={styles.weeklyMoods}>
+                    {weeklyMoods.map((mood, index) => (
+                      <Icon key={index} name={MOOD_EMOJI[mood]} size={16} color={palette.tan[400]} />
+                    ))}
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
         </View>
 
         {/* AI Therapy Chatbot Section */}
-        <TouchableOpacity
-          testID="chatbot-section"
-          style={styles.chatbotSection}
-          onPress={onChatbotPress}
-          accessibilityRole="button"
-          accessibilityLabel="AI Therapy Chatbot"
-        >
-          <Text style={styles.sectionTitle}>AI Therapy Chatbot</Text>
-          <Text style={styles.conversationCount}>
-            {formatNumber(conversationCount)}
-          </Text>
-          <Text style={styles.conversationLabel}>Conversations</Text>
-          <View style={styles.recommendationButton}>
-            <Text style={styles.recommendationText}>
-              Get recommendation for the day's needs
-            </Text>
+        {showSkeletons ? (
+          <View testID="skeleton-chatbot-section" style={[styles.chatbotSection, styles.skeletonChatbot]}>
+            <Skeleton shape="text" width={160} height={18} />
+            <Skeleton shape="text" width={80} height={36} style={styles.skeletonGap} />
+            <Skeleton shape="text" width={120} height={14} style={styles.skeletonGap} />
+            <Skeleton shape="rect" width="100%" height={44} borderRadius={8} style={styles.skeletonGap} />
           </View>
-        </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            testID="chatbot-section"
+            style={styles.chatbotSection}
+            onPress={onChatbotPress}
+            accessibilityRole="button"
+            accessibilityLabel="AI Therapy Chatbot"
+          >
+            <Text style={styles.sectionTitle}>AI Therapy Chatbot</Text>
+            <Text style={styles.conversationCount}>
+              {formatNumber(conversationCount)}
+            </Text>
+            <Text style={styles.conversationLabel}>Conversations</Text>
+            <View style={styles.recommendationButton}>
+              <Text style={styles.recommendationText}>
+                Get recommendation for the day's needs
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
 
         {/* Mindful Articles Section */}
         <View style={styles.section}>
@@ -550,6 +603,23 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginTop: 12,
     padding: 20,
+  },
+  skeletonChatbot: {
+    gap: 0,
+  },
+  skeletonGap: {
+    marginTop: 8,
+  },
+  skeletonScoreCard: {
+    alignItems: "center",
+    backgroundColor: palette.brown[800],
+    borderRadius: 16,
+    marginTop: 12,
+    padding: 20,
+  },
+  skeletonScoreLabels: {
+    alignItems: "center",
+    marginTop: 12,
   },
   weeklyMoodEmoji: {
     fontSize: 16,

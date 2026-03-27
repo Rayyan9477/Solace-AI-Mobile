@@ -7,7 +7,7 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { palette } from "../../../shared/theme";
+import { palette, applyShadow } from "../../../shared/theme";
 
 interface StartSleepingScreenProps {
   onStartSleep: () => void;
@@ -118,15 +118,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: palette.tan[600],
     borderRadius: 44,
-    elevation: 4,
     height: 88,
     justifyContent: "center",
     minHeight: 44,
     minWidth: 44,
-    shadowColor: palette.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+    ...applyShadow("md"),
     width: 88,
   },
   playIcon: {

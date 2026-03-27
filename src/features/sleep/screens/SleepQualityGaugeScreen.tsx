@@ -7,7 +7,9 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { palette } from "../../../shared/theme";
+import Icon from "react-native-vector-icons/Ionicons";
+import { palette, applyShadow } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
 
 interface SleepDistribution {
   normal: number;
@@ -45,7 +47,7 @@ export function SleepQualityGaugeScreen({
   onChartCenter,
 }: SleepQualityGaugeScreenProps): React.ReactElement {
   return (
-    <View testID="sleep-quality-gauge-screen" style={styles.container}>
+    <ScreenContainer testID="sleep-quality-gauge-screen" style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -55,7 +57,7 @@ export function SleepQualityGaugeScreen({
           accessibilityRole="button"
           accessibilityLabel="Go back"
         >
-          <Text style={styles.backIcon}>☽</Text>
+          <Icon name="chevron-back-outline" size={20} color={palette.white} />
         </TouchableOpacity>
       </View>
 
@@ -110,7 +112,7 @@ export function SleepQualityGaugeScreen({
           accessibilityRole="button"
           accessibilityLabel="View chart details"
         >
-          <Text style={styles.chartCenterIcon}>📊</Text>
+          <Icon name="bar-chart-outline" size={24} color={palette.brown[900]} />
         </TouchableOpacity>
       </View>
 
@@ -123,7 +125,7 @@ export function SleepQualityGaugeScreen({
           accessibilityRole="button"
           accessibilityLabel="Go to home"
         >
-          <Text style={styles.bottomNavIcon}>🏠</Text>
+          <Icon name="home-outline" size={20} color={palette.white} />
         </TouchableOpacity>
         <TouchableOpacity
           testID="settings-button"
@@ -132,10 +134,10 @@ export function SleepQualityGaugeScreen({
           accessibilityRole="button"
           accessibilityLabel="Sleep settings"
         >
-          <Text style={styles.bottomNavIcon}>⚙️</Text>
+          <Icon name="settings-outline" size={20} color={palette.white} />
         </TouchableOpacity>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -178,14 +180,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: palette.white,
     borderRadius: 28,
-    elevation: 4,
     height: 56,
     justifyContent: "center",
     marginTop: -28,
-    shadowColor: palette.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    ...applyShadow("md"),
     width: 56,
     zIndex: 10,
   },
@@ -216,7 +214,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 24,
-    paddingTop: 60,
+    paddingTop: 16,
   },
   improvementText: {
     color: palette.gray[400],

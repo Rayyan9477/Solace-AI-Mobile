@@ -29,7 +29,6 @@ describe("JournalDashboardScreen", () => {
     journalCount: 34,
     periodLabel: "this year",
     calendarData: mockCalendarData,
-    onBack: mockOnBack,
     onAddJournal: mockOnAddJournal,
     onSeeAllStats: mockOnSeeAllStats,
     onDayPress: mockOnDayPress,
@@ -93,22 +92,6 @@ describe("JournalDashboardScreen", () => {
       <JournalDashboardScreen {...defaultProps} />
     );
     expect(getByTestId("decorative-elements")).toBeTruthy();
-  });
-
-  // --- Back Button (Crescent Moon) ---
-  it("displays the back button", () => {
-    const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    expect(getByTestId("back-button")).toBeTruthy();
-  });
-
-  it("calls onBack when back button is pressed", () => {
-    const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    fireEvent.press(getByTestId("back-button"));
-    expect(mockOnBack).toHaveBeenCalledTimes(1);
   });
 
   // --- FAB (Add Journal) ---
@@ -213,32 +196,6 @@ describe("JournalDashboardScreen", () => {
   });
 
   // --- Accessibility ---
-  it("back button has proper accessibility role", () => {
-    const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    const btn = getByTestId("back-button");
-    expect(btn.props.accessibilityRole).toBe("button");
-  });
-
-  it("back button has proper accessibility label", () => {
-    const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    const btn = getByTestId("back-button");
-    expect(btn.props.accessibilityLabel).toBe("Go back");
-  });
-
-  it("back button meets minimum touch target (44pt)", () => {
-    const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    const btn = getByTestId("back-button");
-    expect(btn.props.style).toEqual(
-      expect.objectContaining({ minHeight: 44 })
-    );
-  });
-
   it("FAB has proper accessibility", () => {
     const { getByTestId } = render(
       <JournalDashboardScreen {...defaultProps} />

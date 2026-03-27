@@ -105,7 +105,9 @@ describe("SleepCalendarHistoryScreen", () => {
   it("uses dark background color #1C1410", () => {
     const { getByTestId } = render(<SleepCalendarHistoryScreen {...defaultProps} />);
     const screen = getByTestId("sleep-calendar-history-screen");
-    expect(screen.props.style).toEqual(
+    const { StyleSheet } = require("react-native");
+    const flatStyle = StyleSheet.flatten(screen.props.style);
+    expect(flatStyle).toEqual(
       expect.objectContaining({ backgroundColor: "#1C1410" })
     );
   });

@@ -23,6 +23,7 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 
 import type {
   ChatBubbleProps,
@@ -89,9 +90,11 @@ function Avatar({ uri, sender, testID }: AvatarProps) {
             sender === "ai" && styles.avatarAI,
           ]}
         >
-          <Text style={styles.avatarText}>
-            {sender === "ai" ? "🤖" : "👤"}
-          </Text>
+          <Icon
+            name={sender === "ai" ? "hardware-chip-outline" : "person-circle-outline"}
+            size={16}
+            color={sender === "ai" ? colors.userText : colors.avatarBg}
+          />
         </View>
       )}
     </View>
@@ -107,33 +110,48 @@ interface StatusIndicatorProps {
 }
 
 function StatusIndicator({ status, testID }: StatusIndicatorProps) {
-  const getStatusText = () => {
-    switch (status) {
-      case "sending":
-        return "○";
-      case "sent":
-        return "✓";
-      case "delivered":
-        return "✓✓";
-      case "read":
-        return "✓✓";
-      case "error":
-        return "!";
-      default:
-        return "";
-    }
-  };
+  const color =
+    status === "read" ? colors.statusSent :
+    status === "error" ? colors.statusError :
+    colors.textMuted;
+
+  if (status === "sent") {
+    return (
+      <Icon
+        testID={testID}
+        name="checkmark-outline"
+        size={12}
+        color={color}
+        style={styles.statusIndicator}
+      />
+    );
+  }
+  if (status === "delivered" || status === "read") {
+    return (
+      <Icon
+        testID={testID}
+        name="checkmark-done-outline"
+        size={12}
+        color={color}
+        style={styles.statusIndicator}
+      />
+    );
+  }
+
+  const fallbackText =
+    status === "sending" ? "○" :
+    status === "error" ? "!" :
+    "";
 
   return (
     <Text
       testID={testID}
       style={[
         styles.statusIndicator,
-        status === "read" && styles.statusRead,
         status === "error" && styles.statusError,
       ]}
     >
-      {getStatusText()}
+      {fallbackText}
     </Text>
   );
 }
@@ -462,9 +480,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     width: 36,
   },
-  avatarText: {
-    fontSize: 16,
-  },
+  avatarText: {},
   bubble: {
     borderRadius: 16,
     maxWidth: "85%",

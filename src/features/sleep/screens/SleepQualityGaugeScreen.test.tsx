@@ -44,7 +44,9 @@ describe("SleepQualityGaugeScreen", () => {
   it("uses dark background color", () => {
     const { getByTestId } = render(<SleepQualityGaugeScreen {...defaultProps} />);
     const screen = getByTestId("sleep-quality-gauge-screen");
-    expect(screen.props.style).toEqual(
+    const { StyleSheet } = require("react-native");
+    const flatStyle = StyleSheet.flatten(screen.props.style);
+    expect(flatStyle).toEqual(
       expect.objectContaining({ backgroundColor: "#1C1410" })
     );
   });

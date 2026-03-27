@@ -7,7 +7,9 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
-import { palette } from "../../../shared/theme";
+import Icon from "react-native-vector-icons/Ionicons";
+import { palette, applyShadow } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
 
 interface CalendarDay {
   date: number;
@@ -69,7 +71,7 @@ export function SleepCalendarHistoryScreen({
   onAddSleep,
 }: SleepCalendarHistoryScreenProps): React.ReactElement {
   return (
-    <View testID="sleep-calendar-history-screen" style={styles.container}>
+    <ScreenContainer testID="sleep-calendar-history-screen" style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
@@ -80,7 +82,7 @@ export function SleepCalendarHistoryScreen({
             accessibilityRole="button"
             accessibilityLabel="Go back"
           >
-            <Text style={styles.backIcon}>☽</Text>
+            <Icon name="chevron-back-outline" size={20} color={palette.white} />
           </TouchableOpacity>
         </View>
 
@@ -261,7 +263,7 @@ export function SleepCalendarHistoryScreen({
       >
         <Text style={styles.fabIcon}>+</Text>
       </TouchableOpacity>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -328,17 +330,13 @@ const styles = StyleSheet.create({
     backgroundColor: palette.olive[500],
     borderRadius: 28,
     bottom: 32,
-    elevation: 4,
     height: 56,
     justifyContent: "center",
     minHeight: 44,
     minWidth: 44,
     position: "absolute",
     right: 24,
-    shadowColor: palette.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    ...applyShadow("md"),
     width: 56,
   },
   fabIcon: {
@@ -348,7 +346,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 24,
-    paddingTop: 60,
+    paddingTop: 16,
   },
   historyDateColumn: {
     marginRight: 12,

@@ -277,8 +277,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     color: localColors.white,
-    fontSize: 20,
-    fontWeight: "700",
+    fontSize: 18,
+    fontWeight: "600",
     marginLeft: 12,
   },
   itemValue: {

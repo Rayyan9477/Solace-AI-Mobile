@@ -7,7 +7,9 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
-import { palette } from "../../../shared/theme";
+import Icon from "react-native-vector-icons/Ionicons";
+import { palette, applyShadow } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
 
 type SleepQuality = "Excellent" | "Good" | "Fair" | "Poor" | "Insomniac";
 
@@ -37,7 +39,7 @@ export function SleepDashboardScreen({
   onMetricPress,
 }: SleepDashboardScreenProps): React.ReactElement {
   return (
-    <View testID="sleep-dashboard-screen" style={styles.container}>
+    <ScreenContainer testID="sleep-dashboard-screen" style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Hero Section */}
         <View testID="sleep-hero-section" style={[styles.heroSection, { backgroundColor: palette.onboarding.step5 }]}>
@@ -58,7 +60,7 @@ export function SleepDashboardScreen({
               accessibilityRole="button"
               accessibilityLabel="Go back"
             >
-              <Text style={styles.backIcon}>☽</Text>
+              <Icon name="chevron-back-outline" size={20} color={palette.white} />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Sleep Quality</Text>
             <View style={styles.headerSpacer} />
@@ -110,7 +112,7 @@ export function SleepDashboardScreen({
             >
               <View style={styles.metricHeader}>
                 <Text style={styles.metricLabel}>Rem</Text>
-                <Text style={styles.metricIcon}>🛏️</Text>
+                <Icon name="bed-outline" size={18} color={palette.white} />
               </View>
               <View testID="rem-progress-ring" style={styles.progressRingContainer}>
                 <View style={[styles.progressRingTrack, styles.remRingSize]}>
@@ -140,7 +142,7 @@ export function SleepDashboardScreen({
             >
               <View style={styles.metricHeader}>
                 <Text style={styles.metricLabel}>Core</Text>
-                <Text style={styles.metricIcon}>💤</Text>
+                <Icon name="moon-outline" size={18} color={palette.white} />
               </View>
               <View testID="core-progress-ring" style={styles.progressRingContainer}>
                 <View style={[styles.progressRingTrack, styles.coreRingSize]}>
@@ -162,7 +164,7 @@ export function SleepDashboardScreen({
           </View>
         </View>
       </ScrollView>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -232,15 +234,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: palette.brown[700],
     borderRadius: 28,
-    elevation: 4,
     height: 56,
     justifyContent: "center",
     minHeight: 44,
     minWidth: 44,
-    shadowColor: palette.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    ...applyShadow("md"),
     width: 56,
   },
   fabContainer: {
@@ -258,7 +256,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 24,
-    paddingTop: 60,
+    paddingTop: 16,
   },
   headerSpacer: {
     width: 44,
@@ -266,7 +264,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     color: palette.white,
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: "600",
   },
   heroSection: {
     borderBottomLeftRadius: 24,

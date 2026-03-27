@@ -1,6 +1,6 @@
 /**
  * ProfileDashboardScreen Component
- * @description Profile overview with avatar, stats, Solace Score card, and mood card
+ * @description Profile overview with avatar, stats, Solace Score card, mood card, and settings menu
  * @task Task 3.17.2: Profile Dashboard Screen (Screen 141)
  * @phase Phase 3C: Refactored to use theme tokens
  * @audit-fix "Shinomiya Kaguya" → appropriate placeholder name
@@ -16,6 +16,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { palette } from "../../../shared/theme";
 
 interface ProfileDashboardScreenProps {
@@ -31,6 +32,17 @@ interface ProfileDashboardScreenProps {
   onSettings?: () => void;
   onScorePress?: () => void;
   onMoodPress?: () => void;
+  onNavigateAccountSettings?: () => void;
+  onNavigatePersonalInfo?: () => void;
+  onNavigateNotifications?: () => void;
+  onNavigateSecurityPrivacy?: () => void;
+  onNavigateLinkedDevices?: () => void;
+  onNavigateLanguage?: () => void;
+  onNavigateHelpCenter?: () => void;
+  onNavigateSendFeedback?: () => void;
+  onNavigateInviteFriends?: () => void;
+  onNavigateAboutSolace?: () => void;
+  onSignOut?: () => void;
 }
 
 const localColors = {
@@ -44,7 +56,21 @@ const localColors = {
   scoreColor: palette.tan[500],
   moodBarBg: `${palette.white}${palette.alpha[20]}`,
   moodBarActive: palette.olive[500],
+  menuBg: palette.brown[800],
+  menuItemBorder: `${palette.white}${palette.alpha[10]}`,
+  menuIcon: palette.tan[400],
+  menuChevron: palette.gray[400],
+  signOutText: palette.red[500],
+  signOutBg: `${palette.red[500]}${palette.alpha[10]}`,
+  signOutBorder: `${palette.red[500]}${palette.alpha[30]}`,
 } as const;
+
+interface MenuItem {
+  key: string;
+  label: string;
+  icon: string;
+  onPress?: () => void;
+}
 
 export function ProfileDashboardScreen({
   username = "User",
@@ -59,7 +85,81 @@ export function ProfileDashboardScreen({
   onSettings,
   onScorePress,
   onMoodPress,
+  onNavigateAccountSettings,
+  onNavigatePersonalInfo,
+  onNavigateNotifications,
+  onNavigateSecurityPrivacy,
+  onNavigateLinkedDevices,
+  onNavigateLanguage,
+  onNavigateHelpCenter,
+  onNavigateSendFeedback,
+  onNavigateInviteFriends,
+  onNavigateAboutSolace,
+  onSignOut,
 }: ProfileDashboardScreenProps = {}): React.ReactElement {
+  const menuItems: MenuItem[] = [
+    {
+      key: "account-settings",
+      label: "Account Settings",
+      icon: "person-outline",
+      onPress: onNavigateAccountSettings,
+    },
+    {
+      key: "personal-info",
+      label: "Personal Information",
+      icon: "information-circle-outline",
+      onPress: onNavigatePersonalInfo,
+    },
+    {
+      key: "notifications",
+      label: "Notifications",
+      icon: "notifications-outline",
+      onPress: onNavigateNotifications,
+    },
+    {
+      key: "security-privacy",
+      label: "Security & Privacy",
+      icon: "shield-checkmark-outline",
+      onPress: onNavigateSecurityPrivacy,
+    },
+    {
+      key: "linked-devices",
+      label: "Linked Devices",
+      icon: "phone-portrait-outline",
+      onPress: onNavigateLinkedDevices,
+    },
+    {
+      key: "language",
+      label: "Language",
+      icon: "globe-outline",
+      onPress: onNavigateLanguage,
+    },
+    {
+      key: "help-center",
+      label: "Help Center",
+      icon: "help-circle-outline",
+      onPress: onNavigateHelpCenter,
+    },
+    {
+      key: "send-feedback",
+      label: "Send Feedback",
+      icon: "chatbox-outline",
+      onPress: onNavigateSendFeedback,
+    },
+    {
+      key: "invite-friends",
+      label: "Invite Friends",
+      icon: "people-outline",
+      onPress: onNavigateInviteFriends,
+    },
+    {
+      key: "about-solace",
+      label: "About Solace",
+      icon: "information-outline",
+      onPress: onNavigateAboutSolace,
+    },
+  ];
+
   return (
     <View testID="profile-dashboard-screen" style={styles.container}>
       <ScrollView
@@ -83,7 +183,7 @@ export function ProfileDashboardScreen({
               <Text style={styles.settingsIcon}>{"\u2699\uFE0F"}</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.username}>{username}</Text>
+          <Text style={styles.username} accessibilityRole="header">{username}</Text>
           <View style={styles.membershipBadge}>
             <Text style={styles.membershipText}>{membershipTier}</Text>
           </View>
@@ -141,6 +241,52 @@ export function ProfileDashboardScreen({
             </View>
           </TouchableOpacity>
         </View>
+
+        {/* Settings Menu Section */}
+        <View testID="settings-menu" style={styles.menuSection}>
+          <Text style={styles.menuSectionTitle}>Settings</Text>
+          <View style={styles.menuContainer}>
+            {menuItems.map((item, index) => (
+              <TouchableOpacity
+                key={item.key}
+                testID={`menu-item-${item.key}`}
+                style={[
+                  styles.menuItem,
+                  index < menuItems.length - 1 && styles.menuItemBorder,
+                ]}
+                onPress={item.onPress}
+                accessibilityRole="button"
+                accessibilityLabel={item.label}
+              >
+                <View style={styles.menuItemIcon}>
+                  <Icon
+                    name={item.icon}
+                    size={20}
+                    color={localColors.menuIcon}
+                  />
+                </View>
+                <Text style={styles.menuItemLabel}>{item.label}</Text>
+                <Icon
+                  name="chevron-forward-outline"
+                  size={18}
+                  color={localColors.menuChevron}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* Sign Out Button */}
+        <TouchableOpacity
+          testID="sign-out-button"
+          style={styles.signOutButton}
+          onPress={onSignOut}
+          accessibilityRole="button"
+          accessibilityLabel="Sign out"
+        >
+          <Icon name="log-out-outline" size={20} color={localColors.signOutText} />
+          <Text style={styles.signOutText}>Sign Out</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -190,6 +336,47 @@ const styles = StyleSheet.create({
     color: localColors.badgeText,
     fontSize: 12,
     fontWeight: "600",
+  },
+  menuContainer: {
+    backgroundColor: localColors.menuBg,
+    borderRadius: 16,
+    overflow: "hidden",
+  },
+  menuItem: {
+    alignItems: "center",
+    flexDirection: "row",
+    minHeight: 56,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+  },
+  menuItemBorder: {
+    borderBottomColor: localColors.menuItemBorder,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  menuItemIcon: {
+    alignItems: "center",
+    height: 32,
+    justifyContent: "center",
+    marginRight: 12,
+    width: 32,
+  },
+  menuItemLabel: {
+    color: palette.white,
+    flex: 1,
+    fontSize: 15,
+    fontWeight: "500",
+  },
+  menuSection: {
+    marginTop: 32,
+    paddingHorizontal: 24,
+  },
+  menuSectionTitle: {
+    color: localColors.textSecondary,
+    fontSize: 12,
+    fontWeight: "700",
+    letterSpacing: 0.8,
+    marginBottom: 8,
+    textTransform: "uppercase",
   },
   moodBar: {
     backgroundColor: localColors.moodBarActive,
@@ -247,6 +434,25 @@ const styles = StyleSheet.create({
     right: -16,
   },
   settingsIcon: { fontSize: 20 },
+  signOutButton: {
+    alignItems: "center",
+    backgroundColor: localColors.signOutBg,
+    borderColor: localColors.signOutBorder,
+    borderRadius: 16,
+    borderWidth: 1,
+    flexDirection: "row",
+    gap: 10,
+    justifyContent: "center",
+    marginHorizontal: 24,
+    marginTop: 16,
+    minHeight: 56,
+    paddingVertical: 16,
+  },
+  signOutText: {
+    color: localColors.signOutText,
+    fontSize: 16,
+    fontWeight: "600",
+  },
   statItem: { alignItems: "center" },
   statLabel: {
     color: localColors.textSecondary,
