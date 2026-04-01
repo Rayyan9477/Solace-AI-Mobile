@@ -8,7 +8,7 @@
  * Persists auth state to AsyncStorage for session continuity.
  */
 
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AUTH_STORAGE_KEY = "@solace/auth_state";
@@ -42,7 +42,12 @@ const DEFAULT_AUTH_STATE: AuthState = {
  */
 export function AuthProvider({ children }: { children: React.ReactNode }): React.ReactElement {
   const [authState, setAuthState] = useState<AuthState>(DEFAULT_AUTH_STATE);
+  const authStateRef = useRef<AuthState>(DEFAULT_AUTH_STATE);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    authStateRef.current = authState;
+  }, [authState]);
 
   // Load persisted auth state on mount
   useEffect(() => {
@@ -72,13 +77,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }): React
   // Persist auth state on change
   const persistState = useCallback(async (update: AuthStateUpdate) => {
     try {
-      const nextState = typeof update === "function" ? update(authState) : update;
+      const nextState = typeof update === "function" ? update(authStateRef.current) : update;
+      authStateRef.current = nextState;
       setAuthState(nextState);
       await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextState));
     } catch (error) {
       console.error("Failed to persist auth state:", error);
     }
-  }, [authState]);
+  }, []);
 
   const signIn = useCallback(() => {
     persistState((prevState) => ({ ...prevState, isAuthenticated: true }));

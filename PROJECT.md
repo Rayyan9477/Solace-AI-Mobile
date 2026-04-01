@@ -231,48 +231,64 @@ test/
 4. **Separation of Concerns** - Features own their screens and components
 5. **Reusability** - Shared components in `shared/` directory
 
-### State Management
+### Runtime Composition (Current)
 
-**Redux Toolkit** with Redux Persist for client-side state management:
+The current runtime app wiring is context-driven for auth/session state and stack-driven for navigation.
 
-- **Auth State**: User credentials and session (persisted with timeout)
-- **Mood Data**: User mood entries and analytics
-- **Chat History**: Conversation data
-- **Assessment Results**: Test results and scores
-- **Theme Preference**: Light/dark mode selection
-- **Notifications**: Push notification settings
+```mermaid
+flowchart TD
+    App["App.tsx"] --> Boundary["ErrorBoundary"]
+    Boundary --> Auth["AuthProvider\nAsyncStorage persisted auth state"]
+    Auth --> Theme["ThemeProvider\nshared theme tokens"]
+    Theme --> Nav["NavigationContainer\nlinking enabled"]
+    Nav --> Root["RootNavigator"]
+    Root --> AuthFlow["AuthFlow"]
+    Root --> OnboardingFlow["OnboardingFlow"]
+    Root --> MainFlow["MainFlow"]
+    Root --> Modals["Modal Stacks\nSleep, Stress, Community, Notifications"]
 
-```javascript
-// State structure
-{
-  auth: { user, token, isAuthenticated },
-  mood: { entries, currentMood, stats },
-  chat: { messages, sessionHistory },
-  assessment: { results, inProgress },
-  theme: { mode, autoDetect },
-  notifications: { enabled, settings }
-}
+    classDef core fill:#0B132B,stroke:#22D3EE,color:#FFFFFF,stroke-width:2px;
+    classDef flow fill:#1F2937,stroke:#F59E0B,color:#FFFFFF,stroke-width:2px;
+    classDef modal fill:#7C2D12,stroke:#FCD34D,color:#FFFFFF,stroke-width:2px;
+
+    class App,Boundary,Auth,Theme,Nav,Root core;
+    class AuthFlow,OnboardingFlow,MainFlow flow;
+    class Modals modal;
 ```
 
 ### Navigation Structure
 
 React Navigation v6 with stack and tab navigation:
 
-```
-├── AuthStack (Login, SignUp, ForgotPassword)
-└── AppStack (Authenticated user)
-    ├── MainTabs
-    │   ├── DashboardTab → MainAppScreen
-    │   ├── MoodTab → MoodTrackerScreen
-    │   ├── ChatTab → ChatScreen
-    │   ├── WellnessTab → WellnessScreen
-    │   └── ProfileTab → ProfileScreen
-    ├── Modal Screens (higher priority)
-    │   ├── CrisisModal
-    │   ├── JournalModal
-    │   └── SettingsModal
-    └── Stack Screens (nested)
-        └── DetailScreens, etc.
+```mermaid
+flowchart LR
+  Start["App Launch"] --> Load["Read persisted auth state"]
+  Load --> AuthCheck{"isAuthenticated?"}
+  AuthCheck -->|No| AuthStack["AuthStack\nSplash to SignIn/SignUp"]
+  AuthCheck -->|Yes| OnboardCheck{"hasCompletedOnboarding?"}
+  OnboardCheck -->|No| OnboardingStack["OnboardingStack\nProfile + Assessment"]
+  OnboardCheck -->|Yes| MainTabs["MainTabNavigator"]
+
+  MainTabs --> Dashboard["Dashboard Tab"]
+  MainTabs --> Mood["Mood Tab"]
+  MainTabs --> Chat["Chat Tab"]
+  MainTabs --> Journal["Journal Tab"]
+  MainTabs --> Profile["Profile Tab"]
+
+  MainTabs -. opens .-> SleepModal["Sleep Modal"]
+  MainTabs -. opens .-> StressModal["Stress Modal"]
+  MainTabs -. opens .-> CommunityModal["Community Modal"]
+  MainTabs -. opens .-> NotificationsModal["Notifications Modal"]
+
+  classDef step fill:#0F172A,stroke:#22D3EE,color:#FFFFFF,stroke-width:2px;
+  classDef decision fill:#334155,stroke:#FBBF24,color:#FFFFFF,stroke-width:2px;
+  classDef tabs fill:#14532D,stroke:#4ADE80,color:#FFFFFF,stroke-width:2px;
+  classDef modal fill:#7F1D1D,stroke:#F87171,color:#FFFFFF,stroke-width:2px;
+
+  class Start,Load,AuthStack,OnboardingStack step;
+  class AuthCheck,OnboardCheck decision;
+  class MainTabs,Dashboard,Mood,Chat,Journal,Profile tabs;
+  class SleepModal,StressModal,CommunityModal,NotificationsModal modal;
 ```
 
 ### Theme System
@@ -317,6 +333,19 @@ import { formatDate } from '@utils/dateUtils';
 
 // ❌ Avoid
 import { Button } from '../../../shared/components/atoms/Button';
+```
+
+### Diagram Tooling (Mermaid)
+
+For local rendering/export and docs quality checks:
+
+```bash
+npm install -D @mermaid-js/mermaid-cli markdownlint-cli prettier
+```
+
+```bash
+npx mmdc -i docs/diagrams/navigation-flow.mmd -o docs/diagrams/navigation-flow.svg
+npx markdownlint "**/*.md"
 ```
 
 ---
