@@ -87,3 +87,6 @@ NUL
 # Check error boundaries and loading states implementation
 # Use Playwright to test app screens for blank screen issues
 # Fix any identified blank screen issues'
+
+#Ignore cursor AI rules
+.cursor\rules\codacy.mdc
