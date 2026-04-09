@@ -1,0 +1,95 @@
+// ============================================================================
+// Solace AI — Section metadata
+// Controls the section grouping and display order of the 42 screens.
+// ============================================================================
+
+export const sections = [
+  {
+    id: 'auth',
+    number: '01',
+    title: 'Auth & Onboarding',
+    kicker: 'First impression',
+    subtitle: 'The premium opening — editorial typography, breathing orb, calm CTAs.',
+    screens: ['welcome', 'signin', 'onboarding', 'assessment'],
+  },
+  {
+    id: 'main',
+    number: '02',
+    title: 'Main Experience',
+    kicker: 'Daily ritual',
+    subtitle: 'Where users live — the home, the mood, the chat, the journal, the self.',
+    screens: ['home', 'mood', 'chat', 'journal', 'profile'],
+  },
+  {
+    id: 'wellness',
+    number: '03',
+    title: 'Wellness Features',
+    kicker: 'Therapeutic moments',
+    subtitle: 'Mindfulness, sleep, and crisis support — immersive, calming, never alarming.',
+    screens: ['breathing', 'sleep', 'crisis'],
+  },
+  {
+    id: 'brand',
+    number: '04',
+    title: 'Brand Moments',
+    kicker: 'Signature',
+    subtitle: 'The recurring breathing orb and editorial opening.',
+    screens: ['splash', 'quote'],
+  },
+  {
+    id: 'onboarding-plus',
+    number: '05',
+    title: 'Onboarding → First Value',
+    kicker: 'Personalization',
+    subtitle: 'Security, permissions, assessment.',
+    screens: ['goals', 'biometric', 'notif-primer', 'assessment-intro', 'assessment-results'],
+  },
+  {
+    id: 'daily-loop',
+    number: '06',
+    title: 'Daily Loop',
+    kicker: 'Hero flow',
+    subtitle: 'Home → check-in → reflect.',
+    screens: ['home-v2', 'checkin', 'mood-calendar', 'mood-insights'],
+  },
+  {
+    id: 'therapy',
+    number: '07',
+    title: 'AI Therapy',
+    kicker: 'Conversations',
+    subtitle: 'Voice, chat, and what you learn from them.',
+    screens: ['chat-list', 'voice', 'session-summary', 'cbt'],
+  },
+  {
+    id: 'journal',
+    number: '08',
+    title: 'Journal',
+    kicker: 'Reflection',
+    subtitle: 'Writing, reading, patterns.',
+    screens: ['journal-composer', 'journal-detail'],
+  },
+  {
+    id: 'mindful-sleep',
+    number: '09',
+    title: 'Mindfulness → Sleep',
+    kicker: 'Rest',
+    subtitle: 'From library to player to rest.',
+    screens: ['mindful-library', 'mindful-player', 'session-complete', 'sleep-log', 'soundscapes'],
+  },
+  {
+    id: 'system',
+    number: '10',
+    title: 'System Screens',
+    kicker: 'Utilities',
+    subtitle: 'Search, notifications, settings, commerce.',
+    screens: ['notifications', 'search', 'account-settings', 'paywall'],
+  },
+  {
+    id: 'states',
+    number: '11',
+    title: 'States → Loading, Empty, Error',
+    kicker: 'Resilience',
+    subtitle: 'What users see when things aren\'t ready yet.',
+    screens: ['loading', 'empty', 'offline', 'not-found'],
+  },
+];

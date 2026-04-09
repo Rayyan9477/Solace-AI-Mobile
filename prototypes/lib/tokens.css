@@ -1,0 +1,147 @@
+/* ==========================================================================
+   Solace AI — Design Tokens v4
+   Single source of truth for all design decisions.
+   ========================================================================== */
+
+:root {
+  /* ---- Color: midnight base (deeper, bluer than v3) ---- */
+  --mn-950: #040818;  /* app background */
+  --mn-900: #070C20;
+  --mn-800: #0E1430;  /* cards, raised surfaces */
+  --mn-700: #161D3D;  /* modals, elevated panels */
+  --mn-600: #202A55;
+  --mn-500: #2C3870;
+
+  /* ---- Color: aurora (cosmic blue primary) ---- */
+  --aurora-100: #D6E0FF;
+  --aurora-300: #8AA3FF;  /* links, secondary CTAs */
+  --aurora-500: #6B8FFF;  /* primary aurora */
+  --aurora-700: #4A6FE5;
+
+  /* ---- Color: sage (therapeutic calm) ---- */
+  --sage-100: #D8EADF;
+  --sage-300: #9BC4B0;    /* primary brand, calm CTAs */
+  --sage-500: #7AAA94;
+  --sage-700: #5A8A78;
+  --sage-900: #2F5345;
+
+  /* ---- Color: peach (energy, warmth) ---- */
+  --peach-100: #FCE3D4;
+  --peach-300: #F4A77E;   /* FAB, user chat bubble */
+  --peach-500: #E88B5A;
+  --peach-700: #B86A3E;
+
+  /* ---- Color: lavender (sleep, mindfulness) ---- */
+  --lavender-100: #E0DAF3;
+  --lavender-300: #A89AE0;
+  --lavender-500: #8B7CC8;
+  --lavender-700: #6B5BA8;
+
+  /* ---- Color: warm (text + neutrals) ---- */
+  --warm-50:  #F5F1EA;    /* primary text (warm white, never pure white) */
+  --warm-100: #EAE3D5;
+  --warm-200: #C7BEA9;
+  --warm-300: #A9A192;
+  --warm-400: #8B95A8;    /* secondary text */
+  --warm-500: #5A6478;    /* muted, captions */
+  --warm-700: #3A4255;
+  --mist:     #BFCFE8;    /* breathing element accent */
+
+  /* ---- Spacing scale (4px base, mobile-first) ---- */
+  --sp-1: 4px;
+  --sp-2: 8px;    /* minimum gap between touch targets */
+  --sp-3: 12px;
+  --sp-4: 16px;   /* default padding */
+  --sp-5: 20px;
+  --sp-6: 24px;   /* hero card padding */
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* ---- Touch targets (accessibility critical) ---- */
+  --touch-min: 44px;      /* iOS HIG + Material Design minimum */
+  --touch-comfy: 48px;    /* comfortable */
+
+  /* ---- Radius ---- */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 20px;
+  --r-2xl: 24px;
+  --r-3xl: 28px;
+  --r-full: 9999px;
+
+  /* ---- Type scale ---- */
+  --fs-2xs: 10px;    /* bracket labels only */
+  --fs-xs:  11px;    /* metadata */
+  --fs-sm:  13px;    /* body secondary */
+  --fs-base: 15px;   /* body primary (mobile-friendly, ≥16px for core content) */
+  --fs-md:  17px;    /* emphasized body */
+  --fs-lg:  20px;    /* h3 */
+  --fs-xl:  24px;    /* h2 */
+  --fs-2xl: 30px;    /* h1 on inner screens */
+  --fs-3xl: 36px;    /* hero h1 */
+  --fs-4xl: 48px;    /* display */
+  --fs-hero: 56px;   /* score hero */
+
+  /* ---- Type families ---- */
+  --ff-display: 'Fraunces', Georgia, serif;
+  --ff-sans:    'Inter', system-ui, -apple-system, sans-serif;
+  --ff-mono:    'Fira Code', ui-monospace, monospace;
+
+  /* ---- Line height ---- */
+  --lh-tight: 1.05;
+  --lh-snug:  1.2;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.65;
+
+  /* ---- Letter spacing ---- */
+  --ls-tight: -0.015em;
+  --ls-wide:  0.05em;
+  --ls-widest: 0.18em;
+
+  /* ---- Motion ---- */
+  --dur-instant: 100ms;
+  --dur-fast: 150ms;   /* micro-interactions */
+  --dur-base: 200ms;   /* default */
+  --dur-slow: 300ms;   /* modal/page */
+  --dur-slower: 500ms; /* decorative only */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);      /* entering */
+  --ease-in:  cubic-bezier(0.55, 0, 1, 0.45);      /* exiting */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);    /* transitions */
+
+  /* ---- Elevation ---- */
+  --shadow-sm: 0 2px 8px -2px rgba(0,0,0,0.3), inset 0 1px 0 0 rgba(255,255,255,0.04);
+  --shadow-md: 0 8px 24px -8px rgba(0,0,0,0.45), inset 0 1px 0 0 rgba(255,255,255,0.06);
+  --shadow-lg: 0 20px 50px -20px rgba(0,0,0,0.6), inset 0 1px 0 0 rgba(255,255,255,0.07);
+  --shadow-cosmic: 0 30px 80px -30px rgba(74,111,229,0.35), 0 8px 32px 0 rgba(0,0,0,0.5), inset 0 1px 0 0 rgba(255,255,255,0.07);
+  --glow-sage: 0 0 40px -8px rgba(155,196,176,0.45);
+  --glow-peach: 0 8px 24px -8px rgba(244,167,126,0.55);
+  --glow-aurora: 0 0 60px -10px rgba(107,143,255,0.4);
+
+  /* ---- Z-index scale (consistent) ---- */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 20;
+  --z-fab: 30;
+  --z-modal: 40;
+  --z-status: 50;
+  --z-tooltip: 60;
+}
+
+/* ---- Reduced motion support (CRITICAL) ---- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .breath-orb,
+  .breath-orb-warm {
+    filter: blur(22px) !important;
+  }
+}
