@@ -112,7 +112,7 @@ export const screen = {
                 const isToday = i===6;
                 return `
                   <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                    <div class="w-full rounded-t-md ${isToday?'bg-lavender-300':'bg-lavender-300/25'}" style="height:${pct}%" aria-label="${weekDays[i]} ${h} hours"></div>
+                    <div class="w-full rounded-t-md ${isToday?'bg-lavender-300':'bg-lavender-300/40'}" style="height:${pct}%" aria-label="${weekDays[i]} ${h} hours"></div>
                     <span class="text-[9px] font-mono ${isToday?'text-lavender-300 font-bold':'text-warm-500'}">${weekDays[i]}</span>
                   </div>
                 `;
