@@ -42,13 +42,16 @@ export const screen = {
             <!-- Mood row -->
             <div class="px-2 mb-7" role="radiogroup" aria-label="Mood intensity">
               <div class="flex justify-between">
-                ${[1,2,3,4,5].map(i => `
+                ${[1,2,3,4,5].map(i => {
+                  const labels = {1:'Struggling',2:'Down',3:'Neutral',4:'Content',5:'Overjoyed'};
+                  return `
                   <button type="button" role="radio" aria-checked="${i===4?'true':'false'}"
+                          aria-label="${labels[i]}"
                           class="${i===4?'ring-2 ring-sage-300 rounded-full ring-offset-2 ring-offset-midnight-950':''}"
                           style="min-height:44px;">
                     ${moodFace(i, 40)}
                   </button>
-                `).join('')}
+                `}).join('')}
               </div>
             </div>
 

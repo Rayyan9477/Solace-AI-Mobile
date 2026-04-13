@@ -35,7 +35,7 @@ export const screen = {
               <input id="search-input" type="search"
                      class="bg-transparent outline-none flex-1 text-[13px] text-warm-50 placeholder-warm-500"
                      placeholder="Search everything&hellip;" value="anxiety"/>
-              <button type="button" class="w-6 h-6 rounded-full bg-white/8 flex items-center justify-center" aria-label="Clear search">
+              <button type="button" class="w-8 h-8 rounded-full bg-white/8 flex items-center justify-center" style="min-width:44px;min-height:44px;" aria-label="Clear search">
                 <i data-lucide="x" class="w-3 h-3 text-warm-400" aria-hidden="true"></i>
               </button>
             </div>

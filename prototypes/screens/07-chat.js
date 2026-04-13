@@ -123,14 +123,14 @@ export const screen = {
       <!-- Input -->
       <form class="px-5 pb-7 pt-3 border-t border-white/5" onsubmit="event.preventDefault()">
         <div class="glass rounded-full pl-4 pr-1.5 py-1.5 flex items-center gap-2">
-          <button type="button" class="icon-btn" style="width:36px;height:36px;" aria-label="Attach file">
+          <button type="button" class="icon-btn" style="width:44px;height:44px;" aria-label="Attach file">
             <i data-lucide="plus" class="w-5 h-5 text-warm-400" aria-hidden="true"></i>
           </button>
           <label for="chat-input" class="sr-only">Message Solace</label>
           <input id="chat-input" type="text"
                  placeholder="Type how you feel&hellip;"
                  class="flex-1 bg-transparent outline-none text-[13px] text-warm-50 placeholder-warm-500 py-2" />
-          <button type="button" class="icon-btn" style="width:36px;height:36px;" aria-label="Record voice message">
+          <button type="button" class="icon-btn" style="width:44px;height:44px;" aria-label="Record voice message">
             <i data-lucide="mic" class="w-4 h-4 text-warm-400" aria-hidden="true"></i>
           </button>
           <button type="submit" class="icon-btn btn-sage" style="width:40px;height:40px;" aria-label="Send message">

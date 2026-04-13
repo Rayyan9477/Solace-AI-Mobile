@@ -81,16 +81,16 @@ export const screen = {
 
         <!-- Bottom actions -->
         <div class="flex items-center justify-around">
-          <button type="button" class="flex items-center gap-1.5 text-[10px] text-warm-400 px-3 py-2" aria-label="Ambient sound: rain">
+          <button type="button" class="flex items-center gap-1.5 text-[10px] text-warm-400 px-3" style="min-height:44px;" aria-label="Ambient sound: rain">
             <i data-lucide="volume-2" class="w-3.5 h-3.5" aria-hidden="true"></i> Rain
           </button>
-          <button type="button" class="flex items-center gap-1.5 text-[10px] text-warm-400 px-3 py-2" aria-label="Favorite">
+          <button type="button" class="flex items-center gap-1.5 text-[10px] text-warm-400 px-3" style="min-height:44px;" aria-label="Favorite">
             <i data-lucide="heart" class="w-3.5 h-3.5" aria-hidden="true"></i>
           </button>
-          <button type="button" class="flex items-center gap-1.5 text-[10px] text-warm-400 px-3 py-2" aria-label="Download">
+          <button type="button" class="flex items-center gap-1.5 text-[10px] text-warm-400 px-3" style="min-height:44px;" aria-label="Download">
             <i data-lucide="download" class="w-3.5 h-3.5" aria-hidden="true"></i>
           </button>
-          <button type="button" class="flex items-center gap-1.5 text-[10px] text-warm-400 px-3 py-2" aria-label="Share">
+          <button type="button" class="flex items-center gap-1.5 text-[10px] text-warm-400 px-3" style="min-height:44px;" aria-label="Share">
             <i data-lucide="share-2" class="w-3.5 h-3.5" aria-hidden="true"></i>
           </button>
         </div>

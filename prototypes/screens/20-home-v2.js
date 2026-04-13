@@ -31,15 +31,18 @@ export const screen = {
           <div class="absolute -top-10 -right-10 w-40 h-40 breath-orb opacity-65" aria-hidden="true"></div>
           <p id="checkin-q" class="relative text-sm text-warm-50 font-medium mb-4">How are you right now?</p>
           <div class="relative flex justify-between items-end gap-2" role="radiogroup" aria-label="Current mood">
-            ${[1,2,3,4,5].map(i => `
+            ${[1,2,3,4,5].map(i => {
+              const labels = {1:'Struggling',2:'Down',3:'Neutral',4:'Content',5:'Overjoyed'};
+              return `
               <button type="button" role="radio" aria-checked="${i===4?'true':'false'}"
+                      aria-label="${labels[i]}"
                       class="flex-1 flex flex-col items-center gap-1.5 ${i===4?'scale-110':''}"
                       style="min-height:44px;">
                 <div class="${i===4?'ring-2 ring-sage-300 ring-offset-2 ring-offset-midnight-800 rounded-full':''}">
                   ${moodFace(i, 40)}
                 </div>
               </button>
-            `).join('')}
+            `}).join('')}
           </div>
         </section>
 

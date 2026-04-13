@@ -21,13 +21,16 @@ export const screen = {
         <div class="glass rounded-2xl p-3 mb-4" role="radiogroup" aria-label="Current mood">
           <p class="bracket-label text-warm-500 mb-2.5 text-center">How are you right now?</p>
           <div class="flex justify-between items-center">
-            ${[1,2,3,4,5].map(i => `
+            ${[1,2,3,4,5].map(i => {
+              const labels = {1:'Struggling',2:'Down',3:'Neutral',4:'Content',5:'Overjoyed'};
+              return `
               <button type="button" role="radio" aria-checked="${i===4?'true':'false'}"
+                      aria-label="${labels[i]}"
                       class="${i===4?'ring-2 ring-sage-300 rounded-full ring-offset-2 ring-offset-midnight-800':''}"
                       style="min-height:44px;">
                 ${moodFace(i, 36)}
               </button>
-            `).join('')}
+            `}).join('')}
           </div>
         </div>
 
@@ -51,7 +54,7 @@ export const screen = {
             <span class="text-peach-300 font-medium bracket-label">Prompt</span> &nbsp;
             What&rsquo;s one thing you&rsquo;re grateful for right now?
           </p>
-          <button type="button" class="text-[14px] text-warm-500 leading-none px-2" aria-label="Dismiss prompt">&times;</button>
+          <button type="button" class="text-[14px] text-warm-500 leading-none flex items-center justify-center" style="min-width:44px;min-height:44px;" aria-label="Dismiss prompt">&times;</button>
         </div>
 
         <!-- Body text -->

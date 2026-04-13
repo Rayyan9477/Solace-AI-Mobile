@@ -41,7 +41,7 @@ export const screen = {
                   <span class="font-display text-3xl font-light text-warm-50" aria-hidden="true">R</span>
                 </div>
               </div>
-              <button type="button" class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full btn-peach flex items-center justify-center border-2 border-midnight-950"
+              <button type="button" class="absolute -bottom-1 -right-1 w-11 h-11 rounded-full btn-peach flex items-center justify-center border-2 border-midnight-950"
                       aria-label="Change photo">
                 <i data-lucide="camera" class="w-3 h-3" aria-hidden="true"></i>
               </button>
