@@ -1,4 +1,43 @@
-# Solace AI — Design Critique, v2 Suggestions & v3 Refresh
+# Solace AI — Design Critique, v2 Suggestions, v3 Refresh & v4 Refactor
+
+---
+
+## v4 refactor — what changed (Apr 2026)
+
+v3 reached the aesthetic target but was contained in two 1000+ line monolith files (`screens.js`, `screens-v2.js`). v4 restructures for production scalability and adds **runtime theme switching**.
+
+### Architectural changes
+
+- **One file per screen** — 42 individual files under `screens/`, each exporting `{ id, label, section, render }`. Much easier to diff, review, and port to React Native (1:1 with final component files).
+- **ES module loader** — `main.js` uses native `import()` to load every screen; `sections.js` drives section grouping. No build step.
+- **Shared helpers extracted** — `lib/helpers.js` exports `phone()`, `statusBar`, `tabBar()`, `miniHeader()`, `moodFace()`, `button()`, `statTile()` as reusable modules.
+- **Design tokens split** — `lib/tokens.css` holds all CSS custom properties; `lib/base.css` holds component styles; `lib/tailwind.config.js` maps Tailwind classes to the CSS vars (so theme switching works with utility classes too).
+
+### Theme system (v4.1)
+
+Added 5 presets — **Cosmic Night**, **Warm Earth**, **Ocean Calm**, **Deep Forest**, **Soft Rose** — each overrides the `--mn-*`, `--aurora-*`, `--sage-*`, `--peach-*`, `--lavender-*`, `--warm-*` palette vars plus the `--ch-*` RGB channels (used by rgba gradients in `breath-orb`, `smoke`, `mesh-bg`, `glass-aurora`). Stored in `lib/themes.js` with `applyTheme(id)` and `restoreTheme()` functions. Persisted in `localStorage`.
+
+The theme switcher is a 5-dot UI in the header. Active ring indicator on the selected preset.
+
+### Accessibility pass (all screens)
+
+- `prefers-reduced-motion` media query disables all animations
+- 44px minimum touch targets on all icon buttons (iOS HIG / Material Design baseline)
+- `focus-visible` outline rings on all `button`, `a`, `input`, `textarea`
+- Semantic HTML: `<header>`, `<nav>`, `<section>`, `<article>`, `<figure>`, `<form>`, `<label>`, `<ul>`/`<li>`
+- ARIA: `role="radiogroup"`, `role="log" aria-live="polite"`, `role="progressbar"`, `aria-labelledby`, `aria-current`
+- `aria-hidden="true"` on decorative orbs, blobs, icons
+- Mood face radio buttons have individual `aria-label` per level ("Struggling", "Down", "Neutral", "Content", "Overjoyed")
+
+### Per-screen captures
+
+Added `exports/screens/` directory with **42 individual PNG captures** (one per phone frame). Each is referenced in `SCREENS.md` with the screen's design intent, key components, accessibility notes, and theme-aware elements.
+
+### Final state
+
+- **42/42 screens** render cleanly (0 console errors, 0 unresolved icons, 0 template artifacts, 0 unlabeled buttons, 0 small functional touch targets)
+- **5/5 themes** verified — CSS vars + data-theme attribute both update correctly
+- **SCREENS.md** provides complete implementation guide for the React Native build
 
 ---
 

@@ -4,6 +4,8 @@ Reference designs for the mobile redesign sprint. Self-contained HTML + Tailwind
 
 **v4.0 refresh (Apr 2026):** The prototype is now built as **one file per screen** (42 files), with shared helpers in `lib/` and an ES-module loader in `main.js`. Every screen was rewritten against a stricter design system with an accessibility-first pass (focus rings, 44px touch targets, `prefers-reduced-motion`, semantic HTML, ARIA labels). The cosmic editorial aesthetic is preserved, but each surface has been refined in isolation — the file-per-screen architecture makes it possible to iterate on one screen without fear of ripple effects.
 
+**Theme system (v4.1):** All 42 screens support live theme switching between **5 presets** — Cosmic Night (default), Warm Earth, Ocean Calm, Deep Forest, and Soft Rose. Theme choice persists in `localStorage`. See [Theme system](#theme-system) below. Implementation reference for React Native: mirror the preset objects into a `ThemeContext`.
+
 ---
 
 ## Architecture
