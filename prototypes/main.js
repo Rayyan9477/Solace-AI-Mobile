@@ -95,13 +95,12 @@ async function mount() {
       btn.addEventListener('click', () => {
         const id = btn.dataset.themeId;
         applyTheme(id);
-        // Update active ring
+        // Update active ring indicator only
         themePlaceholder.querySelectorAll('[data-theme-id]').forEach(b => {
           b.style.borderColor = b.dataset.themeId === id ? 'var(--aurora-300)' : 'rgba(255,255,255,0.1)';
         });
-        // Re-render all screens (they read from CSS vars, but gradients in inline styles need refresh)
-        host.innerHTML = sections.map(sec => renderSection(sec, screenMap)).join('');
-        if (window.lucide) window.lucide.createIcons({ attrs: { 'stroke-width': 1.75 } });
+        // Screens read colors from CSS vars at runtime — no re-render needed.
+        // This preserves focus, scroll position, and lazy-loaded state.
       });
     });
   }
