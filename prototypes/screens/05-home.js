@@ -29,7 +29,7 @@ export const screen = {
         </h1>
 
         <!-- Solace Score hero card -->
-        <article class="mt-6 hero-card glass-aurora rounded-3xl p-6 overflow-hidden relative" aria-labelledby="score-label">
+        <article class="mt-6 hero-card glass-aurora rounded-3xl p-6 overflow-hidden relative card-lift" aria-labelledby="score-label">
           <div class="absolute -top-20 -right-20 w-64 h-64 breath-orb opacity-65" aria-hidden="true"></div>
           <div class="relative">
             <div class="flex items-start justify-between mb-5">

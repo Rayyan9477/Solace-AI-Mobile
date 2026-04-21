@@ -33,7 +33,7 @@ export const screen = {
           <div class="w-72 h-72 rounded-full border border-aurora-300/18 flex items-center justify-center">
             <div class="w-60 h-60 rounded-full border border-sage-300/22 flex items-center justify-center">
               <div class="w-48 h-48 rounded-full border border-sage-300/32 flex items-center justify-center">
-                <div class="w-32 h-32 rounded-full flex items-center justify-center"
+                <div class="w-32 h-32 rounded-full flex items-center justify-center breath-orb-478"
                      style="background: radial-gradient(circle at 35% 35%, rgba(155,196,176,0.65), rgba(107,143,255,0.32) 60%, transparent); box-shadow: 0 0 110px 12px rgba(155,196,176,0.4), inset 0 0 32px rgba(255,255,255,0.12);">
                   <p class="font-display text-2xl italic text-warm-50">Breathe in</p>
                 </div>

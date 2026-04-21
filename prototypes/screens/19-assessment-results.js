@@ -2,6 +2,7 @@
 // Post-assessment wrap: big score ring + breakdown bars + personalized recommendations.
 
 import { statusBar, miniHeader } from '../lib/helpers.js';
+import { illustrationGrowth } from '../lib/illustrations.js';
 
 export const screen = {
   id: 'assessment-results',
@@ -34,8 +35,15 @@ export const screen = {
             <span class="italic">okay, Rayyan.</span>
           </h1>
 
+          <!-- Growth illustration above the score ring -->
+          <div class="flex justify-center mb-2 mt-2" aria-hidden="true">
+            <div class="w-28 h-28 opacity-90" style="filter: drop-shadow(0 0 24px rgba(155,196,176,0.30));">
+              ${illustrationGrowth}
+            </div>
+          </div>
+
           <!-- Big score ring -->
-          <div class="flex justify-center my-8">
+          <div class="flex justify-center my-6">
             <div class="relative w-56 h-56" role="img" aria-label="Score 68 out of 100, moderate">
               <svg viewBox="0 0 200 200" class="w-full h-full -rotate-90" aria-hidden="true">
                 <circle cx="100" cy="100" r="88" stroke="rgba(255,255,255,0.05)" stroke-width="14" fill="none"/>

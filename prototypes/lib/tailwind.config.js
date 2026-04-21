@@ -1,4 +1,5 @@
-// Tailwind CDN runtime config — injected from index.html before CDN loads
+// Tailwind CDN runtime config
+// Colors reference CSS custom properties from tokens.css so theme switching works.
 window.tailwind = window.tailwind || {};
 window.tailwind.config = {
   theme: {
@@ -9,24 +10,45 @@ window.tailwind.config = {
         mono: ['Fira Code', 'JetBrains Mono', 'monospace'],
       },
       colors: {
+        // Map Tailwind color classes to CSS custom properties
+        // This means `bg-midnight-950` reads `var(--mn-950)` at runtime
         midnight: {
-          950: '#040818', 900: '#070C20', 800: '#0E1430',
-          700: '#161D3D', 600: '#202A55', 500: '#2C3870',
+          950: 'var(--mn-950)', 900: 'var(--mn-900)', 800: 'var(--mn-800)',
+          700: 'var(--mn-700)', 600: 'var(--mn-600)', 500: 'var(--mn-500)',
         },
-        ink: { 950: '#040818', 900: '#070C20', 800: '#0E1430', 700: '#161D3D', 600: '#202A55' },
-        aurora: { 100: '#D6E0FF', 300: '#8AA3FF', 500: '#6B8FFF', 700: '#4A6FE5' },
-        sage: { 50: '#EEF5F1', 100: '#D8EADF', 300: '#9BC4B0', 500: '#7AAA94', 700: '#5A8A78', 900: '#2F5345' },
-        peach: { 100: '#FCE3D4', 300: '#F4A77E', 500: '#E88B5A', 700: '#B86A3E' },
-        lavender: { 100: '#E0DAF3', 300: '#A89AE0', 500: '#8B7CC8', 700: '#6B5BA8' },
-        warm: { 50: '#F5F1EA', 100: '#EAE3D5', 200: '#C7BEA9', 400: '#8B95A8', 500: '#5A6478', 700: '#3A4255' },
-        mist: '#BFCFE8',
+        ink: {
+          950: 'var(--mn-950)', 900: 'var(--mn-900)', 800: 'var(--mn-800)',
+          700: 'var(--mn-700)', 600: 'var(--mn-600)',
+        },
+        aurora: {
+          100: 'var(--aurora-100)', 300: 'var(--aurora-300)',
+          500: 'var(--aurora-500)', 700: 'var(--aurora-700)',
+        },
+        sage: {
+          50: '#EEF5F1',
+          100: 'var(--sage-100)', 300: 'var(--sage-300)',
+          500: 'var(--sage-500)', 700: 'var(--sage-700)', 900: 'var(--sage-900)',
+        },
+        peach: {
+          100: 'var(--peach-100)', 300: 'var(--peach-300)',
+          500: 'var(--peach-500)', 700: 'var(--peach-700)',
+        },
+        lavender: {
+          100: 'var(--lavender-100)', 300: 'var(--lavender-300)',
+          500: 'var(--lavender-500)', 700: 'var(--lavender-700)',
+        },
+        warm: {
+          50: 'var(--warm-50)', 100: 'var(--warm-100)', 200: 'var(--warm-200)',
+          400: 'var(--warm-400)', 500: 'var(--warm-500)', 700: 'var(--warm-700)',
+        },
+        mist: 'var(--mist)',
       },
       boxShadow: {
-        'glass': '0 8px 32px 0 rgba(0,0,0,0.4), inset 0 1px 0 0 rgba(255,255,255,0.06)',
-        'sage-glow': '0 0 40px -8px rgba(155,196,176,0.45)',
-        'peach-glow': '0 8px 24px -8px rgba(244,167,126,0.55)',
-        'aurora-glow': '0 0 60px -10px rgba(107,143,255,0.4)',
-        'cosmic': '0 30px 80px -30px rgba(74,111,229,0.25), 0 8px 32px 0 rgba(0,0,0,0.5), inset 0 1px 0 0 rgba(255,255,255,0.07)',
+        'glass': 'var(--shadow-md)',
+        'sage-glow': 'var(--glow-sage)',
+        'peach-glow': 'var(--glow-peach)',
+        'aurora-glow': 'var(--glow-aurora)',
+        'cosmic': 'var(--shadow-cosmic)',
       },
     },
   },

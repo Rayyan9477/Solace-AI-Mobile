@@ -2,6 +2,7 @@
 // Soft warm palette (not alarming red). Direct call/text/international + talk to AI fallback.
 
 import { statusBar } from '../lib/helpers.js';
+import { illustrationReach } from '../lib/illustrations.js';
 
 export const screen = {
   id: 'crisis',
@@ -23,14 +24,10 @@ export const screen = {
 
       <div class="relative px-6 pt-6 pb-12">
 
-        <!-- Soft heart icon -->
-        <div class="flex justify-center mb-6" aria-hidden="true">
-          <div class="w-24 h-24 rounded-full flex items-center justify-center"
-               style="background: radial-gradient(circle, rgba(244,167,126,0.18), transparent 70%);">
-            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-peach-300/35 to-peach-300/10 backdrop-blur-xl flex items-center justify-center border border-peach-300/30"
-                 style="box-shadow: 0 8px 24px -8px rgba(244,167,126,0.55);">
-              <i data-lucide="heart-handshake" class="w-7 h-7 text-peach-300"></i>
-            </div>
+        <!-- Reach illustration replaces icon blob -->
+        <div class="flex justify-center mb-4" aria-hidden="true">
+          <div class="w-44 h-40 opacity-95" style="filter: drop-shadow(0 0 32px rgba(244,167,126,0.35));">
+            ${illustrationReach}
           </div>
         </div>
 

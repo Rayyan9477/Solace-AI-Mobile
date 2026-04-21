@@ -76,7 +76,7 @@ export const screen = {
             <div class="glass rounded-2xl rounded-tl-sm px-4 py-3">
               <p class="text-[13px] text-warm-50 leading-relaxed">
                 That&rsquo;s a really common pattern called <span class="text-sage-300 font-medium">rumination</span>.
-                Let&rsquo;s try a quick grounding exercise to interrupt it.
+                Let&rsquo;s try a quick grounding exercise to interrupt it.<span class="stream-cursor" aria-hidden="true"></span>
               </p>
             </div>
 
@@ -113,10 +113,11 @@ export const screen = {
             <i data-lucide="sparkles" class="w-3 h-3 text-midnight-950"></i>
           </div>
           <div class="glass rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-sage-300 animate-pulse"></span>
-            <span class="w-1.5 h-1.5 rounded-full bg-sage-300 animate-pulse" style="animation-delay:0.2s"></span>
-            <span class="w-1.5 h-1.5 rounded-full bg-sage-300 animate-pulse" style="animation-delay:0.4s"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-sage-300 typing-dot"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-sage-300 typing-dot"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-sage-300 typing-dot"></span>
           </div>
+          <p class="text-[9px] text-warm-500 mt-1 ml-10 font-mono">Reading your last 3 check-ins&hellip;</p>
         </div>
       </div>
 

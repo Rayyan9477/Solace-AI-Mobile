@@ -2,6 +2,7 @@
 // The premium opening. Editorial headline + breathing orb + trust signals + primary CTA.
 
 import { statusBar } from '../lib/helpers.js';
+import { illustrationBreath } from '../lib/illustrations.js';
 
 export const screen = {
   id: 'welcome',
@@ -10,13 +11,14 @@ export const screen = {
   render: () => `
     ${statusBar}
     <div class="mesh-bg h-full relative flex flex-col">
-      <!-- Layered cosmic depth -->
-      <div class="absolute top-24 left-6 w-52 h-52 breath-orb opacity-75" aria-hidden="true"></div>
-      <div class="absolute top-44 right-2 w-40 h-40 breath-orb-warm opacity-60" aria-hidden="true"></div>
+      <!-- Breath illustration replaces raw gradient blobs -->
+      <div class="absolute top-16 left-1/2 -translate-x-1/2 w-56 h-56 opacity-90" aria-hidden="true"
+           style="filter: drop-shadow(0 0 40px rgba(107,143,255,0.35));">
+        ${illustrationBreath}
+      </div>
+      <!-- Residual ambient glows that sit behind/around the SVG -->
       <div class="absolute top-72 left-28 w-32 h-32 rounded-full" aria-hidden="true"
-           style="background:radial-gradient(circle at 30% 30%, rgba(168,154,224,0.5), transparent 70%);filter:blur(26px);"></div>
-      <div class="absolute top-12 right-12 w-28 h-28 rounded-full" aria-hidden="true"
-           style="background:radial-gradient(circle at 30% 30%, rgba(107,143,255,0.45), transparent 70%);filter:blur(30px);"></div>
+           style="background:radial-gradient(circle at 30% 30%, rgba(168,154,224,0.25), transparent 70%);filter:blur(26px);"></div>
 
       <div class="relative z-10 flex-1 flex flex-col px-8 pt-12">
 
@@ -29,7 +31,7 @@ export const screen = {
             </div>
             <span class="font-display text-lg font-medium tracking-tight text-warm-50">Solace</span>
           </div>
-          <span class="bracket-label text-warm-500">v4.0</span>
+          <span class="bracket-label text-warm-500">v4.2</span>
         </div>
 
         <!-- Hero -->
