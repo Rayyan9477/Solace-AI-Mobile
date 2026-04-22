@@ -1,10 +1,12 @@
-# Solace AI — Design Prototypes v4.0
+# Solace AI — Design Prototypes v4.2
 
 Reference designs for the mobile redesign sprint. Self-contained HTML + Tailwind CDN + Lucide icons. **Zero build step.**
 
 **v4.0 refresh (Apr 2026):** The prototype is now built as **one file per screen** (42 files), with shared helpers in `lib/` and an ES-module loader in `main.js`. Every screen was rewritten against a stricter design system with an accessibility-first pass (focus rings, 44px touch targets, `prefers-reduced-motion`, semantic HTML, ARIA labels). The cosmic editorial aesthetic is preserved, but each surface has been refined in isolation — the file-per-screen architecture makes it possible to iterate on one screen without fear of ripple effects.
 
 **Theme system (v4.1):** All 42 screens support live theme switching between **5 presets** — Cosmic Night (default), Warm Earth, Ocean Calm, Deep Forest, and Soft Rose. Theme choice persists in `localStorage`. See [Theme system](#theme-system) below. Implementation reference for React Native: mirror the preset objects into a `ThemeContext`.
+
+**Motion + illustrations + RN specs (v4.2):** Added `lib/motion.css` with **16 animation primitives** (breathing orb, typing dots, wave bars, burst sparkles, streaming cursor, staggered reveals) informed by 2026 wellness UX research (Finch, Calm, Headspace, Wysa). Added `lib/illustrations.js` with **6 custom SVG illustrations** replacing generic blobs on hero screens (Welcome, Assessment Results, Crisis, Empty Journal, 404, Session Complete). All theme-aware via `--ch-*` RGB channel variables. Added `RN-SPECS.md` with complete React Native implementation guides for the 8 highest-priority screens (component trees, Reanimated v4 animations, a11y, haptics, platform notes). Added `system.html` — a standalone design system showcase exposing tokens, typography, spacing, components, motion, illustrations, and themes for design team review.
 
 ---
 

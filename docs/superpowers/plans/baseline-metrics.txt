@@ -1,0 +1,80 @@
+=== Solace AI Mobile — Pre-migration Baseline ===
+Captured: 2026-04-22T15:09:43Z
+Branch: main
+HEAD: 0b60c22
+
+=== File counts ===
+Total TS/TSX under src/: 535
+Source files (non-test): 333
+Test files: 202
+
+=== Screen counts per feature ===
+  assessment         9 screens
+  auth               14 screens
+  chat               24 screens
+  community          10 screens
+  dashboard          7 screens
+  errors             5 screens
+  journal            12 screens
+  mindful            8 screens
+  mood               9 screens
+  notifications      6 screens
+  onboarding         13 screens
+  profile            14 screens
+  resources          7 screens
+  search             5 screens
+  sleep              10 screens
+  stress             7 screens
+
+=== Legacy palette usage (brown/tan/olive/gold/stone) ===
+Files importing legacy palette tokens: 160
+
+=== Installed deps of interest ===
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "expo:install": "npx install-expo-modules@latest",
+    "prebuild": "expo prebuild",
+    "@expo/metro-runtime": "~6.1.2",
+    "@expo/prebuild-config": "~54.0.8",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/netinfo": "^11.4.1",
+    "@react-native-community/slider": "5.0.1",
+    "@react-navigation/bottom-tabs": "^6.5.20",
+    "@react-navigation/native": "^6.1.18",
+    "@react-navigation/native-stack": "^6.11.0",
+    "expo": "^54.0.33",
+    "expo-apple-authentication": "~8.0.8",
+    "expo-auth-session": "~7.0.10",
+    "expo-av": "~16.0.8",
+    "expo-camera": "~17.0.10",
+    "expo-crypto": "~15.0.8",
+    "expo-file-system": "~19.0.21",
+    "expo-font": "~14.0.11",
+    "expo-haptics": "~15.0.8",
+    "expo-image-picker": "~17.0.10",
+    "expo-linear-gradient": "~15.0.8",
+    "expo-secure-store": "~15.0.8",
+    "expo-speech": "~14.0.8",
+    "expo-splash-screen": "~31.0.13",
+    "expo-sqlite": "~16.0.10",
+    "expo-status-bar": "~3.0.9",
+
+=== TypeScript baseline ===
+tsc --noEmit exit code: 2 (pre-existing errors)
+Total error lines: 330
+Top error sources:
+  - ~84 lines: missing @types/react-native-vector-icons
+  - ~60 lines: tests for screens we delete in Sprints 3-4
+  - remaining: misc type holes in legacy screens
+
+Migration rule adjustment (documented 2026-04-22):
+  Rule #2 amended: tsc error count must NEVER INCREASE at sprint boundaries.
+  Baseline ceiling: 330 errors. Goal: monotonically decrease.
+
+=== Jest baseline ===
+Test suites: 203 passed
+Tests: 5261 passed
+Snapshots: 0
+Wall time: ~19.8s
