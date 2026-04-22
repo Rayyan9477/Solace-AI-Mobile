@@ -1,0 +1,275 @@
+/* ============================================================================
+   Solace AI — Motion System v4.2
+   Based on 2026 wellness UX research + Apple HIG + Material motion guidelines.
+   ============================================================================
+   Core principles:
+   - 150-300ms for micro-interactions (200ms default)
+   - ease-out for entering, ease-in for exiting
+   - In-place expansion from origin (not slide-from-edge)
+   - Morphing > cross-fading for state changes
+   - Maximum 1-2 animated elements per view
+   - All motion disabled via prefers-reduced-motion (handled in tokens.css)
+   ============================================================================ */
+
+/* ---------------------------------------------------------------------------
+   ENTRANCE ANIMATIONS (for cards, sections, modals on mount)
+   Use with: class="anim-enter-[type]"
+   --------------------------------------------------------------------------- */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes expand-from-origin {
+  from { opacity: 0; transform: scale(0.8); transform-origin: var(--origin, center); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes halo-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.05); }
+}
+
+.anim-enter-fade { animation: fade-in var(--dur-base) var(--ease-out) both; }
+.anim-enter-slide-up { animation: slide-up var(--dur-base) var(--ease-out) both; }
+.anim-enter-slide-down { animation: slide-down var(--dur-base) var(--ease-out) both; }
+.anim-enter-scale { animation: scale-in var(--dur-base) var(--ease-out) both; }
+.anim-enter-expand { animation: expand-from-origin var(--dur-base) var(--ease-out) both; }
+
+/* Staggered child reveals — use with inline style="animation-delay: NNms" */
+.anim-stagger > * { animation: slide-up var(--dur-base) var(--ease-out) both; }
+.anim-stagger > *:nth-child(1) { animation-delay: 40ms; }
+.anim-stagger > *:nth-child(2) { animation-delay: 80ms; }
+.anim-stagger > *:nth-child(3) { animation-delay: 120ms; }
+.anim-stagger > *:nth-child(4) { animation-delay: 160ms; }
+.anim-stagger > *:nth-child(5) { animation-delay: 200ms; }
+.anim-stagger > *:nth-child(6) { animation-delay: 240ms; }
+.anim-stagger > *:nth-child(7) { animation-delay: 280ms; }
+.anim-stagger > *:nth-child(8) { animation-delay: 320ms; }
+
+/* ---------------------------------------------------------------------------
+   AMBIENT / IDLE ANIMATIONS (always-on background life)
+   Pattern #3 from research: "active-listening" idle — slow, non-distracting
+   --------------------------------------------------------------------------- */
+
+@keyframes ambient-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(8px, -4px) scale(1.02); }
+  50% { transform: translate(-4px, 6px) scale(1.04); }
+  75% { transform: translate(-8px, -2px) scale(1.02); }
+}
+
+@keyframes ambient-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(1.06); }
+}
+
+@keyframes slow-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.anim-drift { animation: ambient-drift 12s var(--ease-inout) infinite; }
+.anim-ambient-pulse { animation: ambient-pulse 5s var(--ease-inout) infinite; }
+.anim-slow-spin { animation: slow-spin 40s linear infinite; }
+
+/* ---------------------------------------------------------------------------
+   INTERACTIVE STATES (hover, press, focus — for prototype demo)
+   In production RN these would be react-native-gesture-handler + reanimated.
+   --------------------------------------------------------------------------- */
+
+.interactive {
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    background-color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+  cursor: pointer;
+}
+.interactive:hover { transform: translateY(-1px); }
+.interactive:active { transform: scale(0.98); transition-duration: var(--dur-instant); }
+
+/* Card lift — for touchable cards (glass, hero-card) */
+.card-lift {
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-slow) var(--ease-out);
+}
+.card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px -16px rgba(0,0,0,0.5), 0 8px 16px -8px rgba(var(--ch-aurora), 0.2);
+}
+
+/* Chip selection ripple — for filter pills and tag chips */
+.chip-ripple {
+  position: relative;
+  overflow: hidden;
+  transition: background-color var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out);
+}
+.chip-ripple::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at center, rgba(var(--ch-sage), 0.25), transparent 60%);
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-out);
+  pointer-events: none;
+}
+.chip-ripple:active::after { opacity: 1; transition-duration: var(--dur-instant); }
+
+/* ---------------------------------------------------------------------------
+   SIGNATURE: BREATHING ORB 4-7-8 RHYTHM
+   Authentic 4-7-8: inhale 4s, hold 7s, exhale 8s (total 19s cycle)
+   The orb now scales with the cycle — educational + calming.
+   --------------------------------------------------------------------------- */
+
+@keyframes breathe-478 {
+  0%    { transform: scale(1);    opacity: 0.85; }   /* start inhale */
+  21%   { transform: scale(1.25); opacity: 1;    }   /* end inhale (4s / 19s = 21%) */
+  58%   { transform: scale(1.25); opacity: 1;    }   /* end hold (7s) */
+  100%  { transform: scale(1);    opacity: 0.85; }   /* end exhale (8s) */
+}
+
+.breath-orb-478 { animation: breathe-478 19s var(--ease-inout) infinite; }
+
+/* ---------------------------------------------------------------------------
+   PROGRESS RING REVEAL
+   Ring stroke-dashoffset animates in on mount, drawing the arc.
+   --------------------------------------------------------------------------- */
+
+@keyframes ring-draw {
+  from { stroke-dashoffset: 553; }
+  to   { stroke-dashoffset: var(--ring-target, 166); }
+}
+
+.ring-draw { animation: ring-draw 1.4s var(--ease-out) both; }
+
+/* ---------------------------------------------------------------------------
+   TYPING INDICATOR — 3-dot wave
+   --------------------------------------------------------------------------- */
+
+@keyframes typing-dot {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-3px); }
+}
+
+.typing-dot {
+  animation: typing-dot 1.4s var(--ease-inout) infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 200ms; }
+.typing-dot:nth-child(3) { animation-delay: 400ms; }
+
+/* ---------------------------------------------------------------------------
+   SUCCESS / COMPLETION BURST (for session-complete, milestone)
+   Pattern from research: "satisfying without startling" — 400ms, not 2s.
+   --------------------------------------------------------------------------- */
+
+@keyframes burst-sparkle {
+  0% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+  100% { opacity: 0.8; transform: scale(1) rotate(360deg); }
+}
+
+.anim-burst { animation: burst-sparkle 700ms var(--ease-out) both; }
+.anim-burst:nth-of-type(2) { animation-delay: 100ms; }
+.anim-burst:nth-of-type(3) { animation-delay: 200ms; }
+
+/* ---------------------------------------------------------------------------
+   MORPH BADGE (for morphing state indicators)
+   Pattern #2: morphing icons over swapping icons.
+   --------------------------------------------------------------------------- */
+
+@keyframes badge-morph {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.7) rotate(90deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.anim-morph { animation: badge-morph 280ms var(--ease-inout); }
+
+/* ---------------------------------------------------------------------------
+   VOICE WAVEFORM — bars pulse to varying heights
+   --------------------------------------------------------------------------- */
+
+@keyframes wave-pulse {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+.wave-bar { transform-origin: center; animation: wave-pulse 1.1s var(--ease-inout) infinite; }
+.wave-bar:nth-child(3n)    { animation-duration: 0.9s;  animation-delay: -0.2s; }
+.wave-bar:nth-child(3n+1)  { animation-duration: 1.3s;  animation-delay: -0.6s; }
+.wave-bar:nth-child(5n)    { animation-duration: 0.7s;  animation-delay: -0.4s; }
+.wave-bar:nth-child(7n)    { animation-duration: 1.5s;  animation-delay: -1s; }
+
+/* ---------------------------------------------------------------------------
+   STREAMING MESSAGE (for AI chat — buffered typewriter feel)
+   --------------------------------------------------------------------------- */
+
+@keyframes stream-cursor {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.stream-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--sage-300);
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: stream-cursor 900ms steps(2, end) infinite;
+}
+
+/* ---------------------------------------------------------------------------
+   FOCUS RING (enhanced — aurora glow instead of basic outline)
+   --------------------------------------------------------------------------- */
+
+.focus-glow:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--mn-950),
+    0 0 0 4px var(--aurora-300),
+    0 0 20px -4px rgba(var(--ch-aurora), 0.6);
+}
+
+/* ---------------------------------------------------------------------------
+   SECTION REVEAL (for sections scrolling into view)
+   Uses prefers-reduced-motion in tokens.css to disable globally.
+   --------------------------------------------------------------------------- */
+
+@keyframes section-reveal {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.section-reveal { animation: section-reveal 500ms var(--ease-out) both; }
+
+/* ---------------------------------------------------------------------------
+   BACKDROP SHIFT (subtle parallax on hero mesh — not scroll-jacking)
+   --------------------------------------------------------------------------- */
+
+@keyframes backdrop-shift {
+  0%, 100% { background-position: 50% 50%, 50% 50%; }
+  50% { background-position: 52% 48%, 48% 52%; }
+}
+
+.anim-backdrop { animation: backdrop-shift 25s var(--ease-inout) infinite; }

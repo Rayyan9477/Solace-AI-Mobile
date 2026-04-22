@@ -11,7 +11,7 @@ export const screen = {
     const bars = Array(34).fill(0).map((_,i) => {
       const h = 12 + Math.abs(Math.sin(i*0.5)) * 48 + (i%3===0 ? 12 : 0);
       const op = 0.35 + Math.abs(Math.sin(i*0.3)) * 0.6;
-      return `<div class="w-1 rounded-full bg-gradient-to-t from-sage-300 to-aurora-300" style="height:${h}px;opacity:${op};"></div>`;
+      return `<div class="wave-bar w-1 rounded-full bg-gradient-to-t from-sage-300 to-aurora-300" style="height:${h}px;opacity:${op};"></div>`;
     }).join('');
 
     return `

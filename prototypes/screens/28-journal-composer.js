@@ -59,7 +59,11 @@ export const screen = {
 
         <!-- Body text -->
         <label for="entry-body" class="sr-only">Entry body</label>
-        <div id="entry-body" class="text-[14px] text-warm-50 leading-[1.65]" contenteditable="true">
+        <div id="entry-body" class="text-[14px] text-warm-50 leading-[1.65]"
+             contenteditable="true"
+             role="textbox"
+             aria-multiline="true"
+             aria-label="Journal entry body">
           Started the day with coffee and that book I&rsquo;ve been meaning to finish. The rain outside makes everything feel softer &mdash; like the world is holding its breath with me.
           <br/><br/>
           I&rsquo;m still anxious about the meeting today, but I&rsquo;m also noticing how much lighter I feel after journaling for the past week. Maybe Solace is onto something with the &ldquo;small consistent actions&rdquo; idea.

@@ -2,6 +2,7 @@
 // Editorial giant number with breathing orb + warm copy.
 
 import { statusBar } from '../lib/helpers.js';
+import { illustrationCompass } from '../lib/illustrations.js';
 
 export const screen = {
   id: 'not-found',
@@ -21,9 +22,13 @@ export const screen = {
 
         <div class="flex-1 flex flex-col items-center justify-center text-center">
           <div class="relative mb-6" role="img" aria-label="Page not found">
-            <p class="font-display text-[140px] font-light text-warm-50/8 leading-none tracking-tighter" aria-hidden="true">404</p>
+            <!-- Ghost 404 number behind the compass -->
+            <p class="font-display text-[120px] font-light text-warm-50/6 leading-none tracking-tighter text-center" aria-hidden="true">404</p>
+            <!-- Compass illustration centred over the number -->
             <div class="absolute inset-0 flex items-center justify-center" aria-hidden="true">
-              <div class="w-20 h-20 rounded-full breath-orb"></div>
+              <div class="w-36 h-36 opacity-92" style="filter: drop-shadow(0 0 24px rgba(107,143,255,0.30));">
+                ${illustrationCompass}
+              </div>
             </div>
           </div>
 

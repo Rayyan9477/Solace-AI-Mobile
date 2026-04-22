@@ -32,7 +32,7 @@ export const screen = {
         <p class="bracket-label text-aurora-300 mt-2">a quiet companion</p>
       </div>
 
-      <p class="absolute bottom-12 left-0 right-0 text-center bracket-label text-warm-500">v4.0 &middot; loading&hellip;</p>
+      <p class="absolute bottom-12 left-0 right-0 text-center bracket-label text-warm-500">v4.2 &middot; loading&hellip;</p>
     </div>
   `,
 };

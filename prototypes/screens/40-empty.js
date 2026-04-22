@@ -2,6 +2,7 @@
 // Warm invitation with suggested prompts.
 
 import { statusBar, miniHeader } from '../lib/helpers.js';
+import { illustrationJournalFlight } from '../lib/illustrations.js';
 
 export const screen = {
   id: 'empty',
@@ -22,16 +23,11 @@ export const screen = {
           ${miniHeader('Journal')}
 
           <div class="flex-1 flex flex-col items-center justify-center text-center px-4">
-            <!-- Illustration -->
-            <div class="relative mb-8" aria-hidden="true">
-              <div class="w-44 h-44 rounded-full border border-aurora-300/12 relative flex items-center justify-center">
-                <div class="absolute inset-6 rounded-full border border-sage-300/18"></div>
-                <div class="absolute inset-12 rounded-full border border-sage-300/25"></div>
-                <div class="absolute inset-16 rounded-full breath-orb"></div>
-                <i data-lucide="book-open" class="w-12 h-12 text-sage-300 relative z-10"></i>
+            <!-- Journal flight illustration -->
+            <div class="relative mb-6" aria-hidden="true">
+              <div class="w-44 h-44 opacity-95" style="filter: drop-shadow(0 0 28px rgba(107,143,255,0.28));">
+                ${illustrationJournalFlight}
               </div>
-              <i data-lucide="sparkle" class="w-3 h-3 text-peach-300 absolute top-4 -right-2"></i>
-              <i data-lucide="sparkle" class="w-2 h-2 text-aurora-300 absolute bottom-8 -left-3"></i>
             </div>
 
             <p class="bracket-label text-aurora-300 mb-2">Start somewhere</p>

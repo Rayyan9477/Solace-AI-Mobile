@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Solace AI &mdash; Design System v4.2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="./lib/tailwind.config.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="stylesheet" href="./lib/tokens.css" />
+  <link rel="stylesheet" href="./lib/base.css" />
+  <link rel="stylesheet" href="./lib/motion.css" />
+  <style>
+    .section-title { font-family: var(--ff-display); font-size: 40px; font-weight: 300; letter-spacing: -0.015em; color: var(--warm-50); }
+    .swatch { width: 120px; }
+    .swatch-chip { height: 72px; border-radius: var(--r-lg); border: 1px solid rgba(255,255,255,0.06); margin-bottom: var(--sp-2); }
+    .specimen { padding: var(--sp-5); border-radius: var(--r-xl); background: rgba(22,29,61,0.4); border: 1px solid rgba(255,255,255,0.05); }
+    .grid-outline { outline: 1px dashed rgba(138,163,255,0.2); outline-offset: -1px; }
+  </style>
+</head>
+
+<body class="antialiased">
+
+  <header class="px-12 pt-16 pb-10 max-w-[1600px] mx-auto">
+    <div class="flex items-start justify-between mb-8">
+      <div>
+        <p class="bracket-label text-aurora-300 mb-3">Solace AI &mdash; Design System</p>
+        <h1 class="font-display text-6xl font-light text-warm-50 tracking-tight leading-none">
+          Design System <span class="italic gradient-text">v4.2</span>
+        </h1>
+        <p class="font-display text-xl text-warm-400 mt-3 italic max-w-[720px]">
+          Tokens, components, motion, illustrations &mdash; the atomic layer behind the 42 screens.
+        </p>
+      </div>
+      <a href="./index.html" class="btn btn-sage" style="padding: 0 var(--sp-5); height: 48px;">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to prototypes
+      </a>
+    </div>
+    <div class="aurora-hairline"></div>
+  </header>
+
+  <main class="px-12 pb-32 max-w-[1600px] mx-auto">
+
+    <!-- ========================================================================
+         01 · COLOR TOKENS
+         ======================================================================== -->
+    <section class="mb-24">
+      <p class="bracket-label text-aurora-300 mb-3">01 &mdash; Color tokens</p>
+      <h2 class="section-title mb-2">Palette</h2>
+      <p class="text-warm-400 mb-10 max-w-xl">Every color flows through CSS custom properties. Switch the theme in the main prototype (<a href="./index.html" class="text-aurora-300 underline">index.html</a>) to see all tokens below update in lock-step.</p>
+
+      <div class="grid grid-cols-6 gap-6">
+        <!-- Midnight -->
+        <div>
+          <p class="bracket-label text-warm-500 mb-3">Midnight</p>
+          <div class="swatch">
+            <div class="swatch-chip" style="background: var(--mn-950);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--mn-950</p>
+            <p class="text-[10px] text-warm-500 font-mono">#040818</p>
+          </div>
+          <div class="swatch mt-4">
+            <div class="swatch-chip" style="background: var(--mn-800);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--mn-800</p>
+            <p class="text-[10px] text-warm-500 font-mono">Cards</p>
+          </div>
+          <div class="swatch mt-4">
+            <div class="swatch-chip" style="background: var(--mn-700);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--mn-700</p>
+            <p class="text-[10px] text-warm-500 font-mono">Modals</p>
+          </div>
+        </div>
+
+        <!-- Aurora -->
+        <div>
+          <p class="bracket-label text-aurora-300 mb-3">Aurora</p>
+          <div class="swatch">
+            <div class="swatch-chip" style="background: var(--aurora-500);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--aurora-500</p>
+            <p class="text-[10px] text-warm-500 font-mono">Primary</p>
+          </div>
+          <div class="swatch mt-4">
+            <div class="swatch-chip" style="background: var(--aurora-300);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--aurora-300</p>
+            <p class="text-[10px] text-warm-500 font-mono">Links</p>
+          </div>
+          <div class="swatch mt-4">
+            <div class="swatch-chip" style="background: var(--aurora-100);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--aurora-100</p>
+            <p class="text-[10px] text-warm-500 font-mono">Tints</p>
+          </div>
+        </div>
+
+        <!-- Sage -->
+        <div>
+          <p class="bracket-label text-sage-300 mb-3">Sage</p>
+          <div class="swatch">
+            <div class="swatch-chip" style="background: var(--sage-300);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--sage-300</p>
+            <p class="text-[10px] text-warm-500 font-mono">Therapeutic</p>
+          </div>
+          <div class="swatch mt-4">
+            <div class="swatch-chip" style="background: var(--sage-500);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--sage-500</p>
+          </div>
+          <div class="swatch mt-4">
+            <div class="swatch-chip" style="background: var(--sage-700);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--sage-700</p>
+          </div>
+        </div>
+
+        <!-- Peach -->
+        <div>
+          <p class="bracket-label text-peach-300 mb-3">Peach</p>
+          <div class="swatch">
+            <div class="swatch-chip" style="background: var(--peach-300);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--peach-300</p>
+            <p class="text-[10px] text-warm-500 font-mono">Energy</p>
+          </div>
+          <div class="swatch mt-4">
+            <div class="swatch-chip" style="background: var(--peach-500);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--peach-500</p>
+          </div>
+          <div class="swatch mt-4">
+            <div class="swatch-chip" style="background: var(--peach-700);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--peach-700</p>
+          </div>
+        </div>
+
+        <!-- Lavender -->
+        <div>
+          <p class="bracket-label text-lavender-300 mb-3">Lavender</p>
+          <div class="swatch">
+            <div class="swatch-chip" style="background: var(--lavender-300);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--lavender-300</p>
+            <p class="text-[10px] text-warm-500 font-mono">Mindful</p>
+          </div>
+          <div class="swatch mt-4">
+            <div class="swatch-chip" style="background: var(--lavender-500);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--lavender-500</p>
+          </div>
+          <div class="swatch mt-4">
+            <div class="swatch-chip" style="background: var(--lavender-700);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--lavender-700</p>
+          </div>
+        </div>
+
+        <!-- Warm -->
+        <div>
+          <p class="bracket-label text-warm-500 mb-3">Warm</p>
+          <div class="swatch">
+            <div class="swatch-chip" style="background: var(--warm-50);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--warm-50</p>
+            <p class="text-[10px] text-warm-500 font-mono">Text</p>
+          </div>
+          <div class="swatch mt-4">
+            <div class="swatch-chip" style="background: var(--warm-400);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--warm-400</p>
+          </div>
+          <div class="swatch mt-4">
+            <div class="swatch-chip" style="background: var(--warm-500);"></div>
+            <p class="text-[11px] text-warm-300 font-mono">--warm-500</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="aurora-hairline my-16"></div>
+
+    <!-- ========================================================================
+         02 · TYPOGRAPHY
+         ======================================================================== -->
+    <section class="mb-24">
+      <p class="bracket-label text-aurora-300 mb-3">02 &mdash; Typography</p>
+      <h2 class="section-title mb-2">Type scale</h2>
+      <p class="text-warm-400 mb-10 max-w-xl">Fraunces for emotional moments, Inter for body + UI, Fira Code for editorial labels and numerical data.</p>
+
+      <div class="grid grid-cols-2 gap-12">
+        <div class="specimen">
+          <p class="bracket-label text-warm-500 mb-6">Fraunces (display)</p>
+          <p class="font-display text-[56px] font-light leading-none text-warm-50 mb-4">Find your <span class="italic">quiet within.</span></p>
+          <p class="font-display text-[40px] font-light leading-tight text-warm-50 mb-4">Therapy that <span class="italic">learns you.</span></p>
+          <p class="font-display text-[24px] font-light leading-tight text-warm-200 mb-4">That's 10 minutes <span class="italic">for yourself.</span></p>
+          <p class="font-display text-[17px] italic text-warm-400">"Almost everything will work again if you unplug it."</p>
+        </div>
+        <div class="specimen">
+          <p class="bracket-label text-warm-500 mb-6">Inter (body + UI) &middot; Fira Code (mono)</p>
+          <p class="text-warm-50 text-[15px] mb-4 leading-relaxed">The quick brown fox jumps over the lazy dog. This is the primary body size for scannable content &mdash; 15px on mobile for good readability without feeling crowded.</p>
+          <p class="text-warm-400 text-[13px] mb-4 leading-relaxed">Secondary text at 13px &mdash; used for metadata, captions, and supporting details.</p>
+          <p class="text-warm-500 text-[11px] mb-6 leading-relaxed">Tertiary at 11px for timestamps and micro-labels.</p>
+          <p class="bracket-label text-aurora-300 mb-3">Bracket label</p>
+          <p class="bracket-label text-sage-300 mb-3">Wellness marker</p>
+          <p class="font-mono text-sm text-warm-200">72/100 &middot; 7h 48m &middot; v4.2.0</p>
+        </div>
+      </div>
+
+      <!-- Type scale table -->
+      <div class="specimen mt-8">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left border-b border-white/10">
+              <th class="py-3 bracket-label text-warm-500">Token</th>
+              <th class="py-3 bracket-label text-warm-500">Size</th>
+              <th class="py-3 bracket-label text-warm-500">Use</th>
+              <th class="py-3 bracket-label text-warm-500">Sample</th>
+            </tr>
+          </thead>
+          <tbody class="text-warm-300">
+            <tr class="border-b border-white/5"><td class="py-3 font-mono text-[11px]">--fs-hero</td><td class="font-mono">56px</td><td>Score hero</td><td><span class="font-display text-[24px]">72</span></td></tr>
+            <tr class="border-b border-white/5"><td class="py-3 font-mono text-[11px]">--fs-3xl</td><td class="font-mono">36px</td><td>Hero h1</td><td><span class="font-display text-[20px]">Good morning</span></td></tr>
+            <tr class="border-b border-white/5"><td class="py-3 font-mono text-[11px]">--fs-2xl</td><td class="font-mono">30px</td><td>Inner h1</td><td><span class="font-display text-[18px]">Your month</span></td></tr>
+            <tr class="border-b border-white/5"><td class="py-3 font-mono text-[11px]">--fs-xl</td><td class="font-mono">24px</td><td>h2</td><td><span class="font-display text-[16px]">This week</span></td></tr>
+            <tr class="border-b border-white/5"><td class="py-3 font-mono text-[11px]">--fs-lg</td><td class="font-mono">20px</td><td>h3</td><td><span class="font-display">For you today</span></td></tr>
+            <tr class="border-b border-white/5"><td class="py-3 font-mono text-[11px]">--fs-base</td><td class="font-mono">15px</td><td>Body primary</td><td><span>Body text</span></td></tr>
+            <tr class="border-b border-white/5"><td class="py-3 font-mono text-[11px]">--fs-sm</td><td class="font-mono">13px</td><td>Body secondary</td><td><span>Preview text</span></td></tr>
+            <tr class="border-b border-white/5"><td class="py-3 font-mono text-[11px]">--fs-xs</td><td class="font-mono">11px</td><td>Metadata</td><td><span>3 min ago</span></td></tr>
+            <tr><td class="py-3 font-mono text-[11px]">--fs-2xs</td><td class="font-mono">10px</td><td>Bracket labels</td><td><span class="bracket-label text-aurora-300">LABEL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="aurora-hairline my-16"></div>
+
+    <!-- ========================================================================
+         03 · SPACING + RADIUS
+         ======================================================================== -->
+    <section class="mb-24">
+      <p class="bracket-label text-aurora-300 mb-3">03 &mdash; Space + Radius</p>
+      <h2 class="section-title mb-2">4px base grid</h2>
+      <p class="text-warm-400 mb-10 max-w-xl">Every dimension is a multiple of 4. Touch targets enforce a 44px minimum. Radius scales proportionally from 8px (chips) to 28px (hero cards).</p>
+
+      <div class="grid grid-cols-2 gap-12">
+        <div class="specimen">
+          <p class="bracket-label text-warm-500 mb-4">Spacing scale</p>
+          <div class="flex items-end gap-3">
+            <div class="flex flex-col items-center gap-1"><div class="bg-sage-300" style="width:4px; height:16px;"></div><p class="font-mono text-[9px] text-warm-500">4</p></div>
+            <div class="flex flex-col items-center gap-1"><div class="bg-sage-300" style="width:8px; height:24px;"></div><p class="font-mono text-[9px] text-warm-500">8</p></div>
+            <div class="flex flex-col items-center gap-1"><div class="bg-sage-300" style="width:12px; height:32px;"></div><p class="font-mono text-[9px] text-warm-500">12</p></div>
+            <div class="flex flex-col items-center gap-1"><div class="bg-sage-300" style="width:16px; height:40px;"></div><p class="font-mono text-[9px] text-warm-500">16</p></div>
+            <div class="flex flex-col items-center gap-1"><div class="bg-sage-300" style="width:20px; height:48px;"></div><p class="font-mono text-[9px] text-warm-500">20</p></div>
+            <div class="flex flex-col items-center gap-1"><div class="bg-sage-300" style="width:24px; height:56px;"></div><p class="font-mono text-[9px] text-warm-500">24</p></div>
+            <div class="flex flex-col items-center gap-1"><div class="bg-sage-300" style="width:32px; height:72px;"></div><p class="font-mono text-[9px] text-warm-500">32</p></div>
+            <div class="flex flex-col items-center gap-1"><div class="bg-sage-300" style="width:48px; height:96px;"></div><p class="font-mono text-[9px] text-warm-500">48</p></div>
+          </div>
+          <p class="text-[11px] text-warm-500 mt-5">Touch min <span class="font-mono text-warm-200">44px</span> &middot; comfort <span class="font-mono text-warm-200">48px</span></p>
+        </div>
+
+        <div class="specimen">
+          <p class="bracket-label text-warm-500 mb-4">Radius scale</p>
+          <div class="flex items-end gap-4">
+            <div class="flex flex-col items-center gap-2">
+              <div class="bg-aurora-500" style="width:56px; height:56px; border-radius: 8px;"></div>
+              <p class="font-mono text-[9px] text-warm-500">8 &middot; chip</p>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <div class="bg-aurora-500" style="width:56px; height:56px; border-radius: 12px;"></div>
+              <p class="font-mono text-[9px] text-warm-500">12 &middot; input</p>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <div class="bg-aurora-500" style="width:56px; height:56px; border-radius: 16px;"></div>
+              <p class="font-mono text-[9px] text-warm-500">16 &middot; card</p>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <div class="bg-aurora-500" style="width:56px; height:56px; border-radius: 20px;"></div>
+              <p class="font-mono text-[9px] text-warm-500">20 &middot; card lg</p>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <div class="bg-aurora-500" style="width:56px; height:56px; border-radius: 24px;"></div>
+              <p class="font-mono text-[9px] text-warm-500">24 &middot; hero</p>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <div class="bg-aurora-500" style="width:56px; height:56px; border-radius: 28px;"></div>
+              <p class="font-mono text-[9px] text-warm-500">28 &middot; phone</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="aurora-hairline my-16"></div>
+
+    <!-- ========================================================================
+         04 · COMPONENTS
+         ======================================================================== -->
+    <section class="mb-24">
+      <p class="bracket-label text-aurora-300 mb-3">04 &mdash; Components</p>
+      <h2 class="section-title mb-2">Atomic library</h2>
+      <p class="text-warm-400 mb-10 max-w-xl">Every one of these renders somewhere in the 42-screen catalog. Click through to see them in context.</p>
+
+      <!-- Buttons -->
+      <div class="specimen mb-6">
+        <p class="bracket-label text-warm-500 mb-4">Buttons</p>
+        <div class="flex flex-wrap gap-3 items-center">
+          <button class="btn btn-primary" style="padding: 0 var(--sp-5);">Primary</button>
+          <button class="btn btn-sage" style="padding: 0 var(--sp-5);">Sage CTA</button>
+          <button class="btn btn-peach" style="padding: 0 var(--sp-5);">Peach CTA</button>
+          <button class="btn btn-aurora" style="padding: 0 var(--sp-5);">Aurora</button>
+          <button class="btn btn-lavender" style="padding: 0 var(--sp-5);">Lavender</button>
+          <button class="icon-btn glass" aria-label="Icon button"><i data-lucide="heart" class="w-4 h-4"></i></button>
+          <button class="icon-btn btn-peach" aria-label="FAB" style="width:56px;height:56px;"><i data-lucide="plus" class="w-6 h-6"></i></button>
+        </div>
+      </div>
+
+      <!-- Surfaces -->
+      <div class="grid grid-cols-3 gap-6 mb-6">
+        <div class="glass rounded-2xl p-5 card-lift">
+          <p class="bracket-label text-warm-500 mb-2">.glass</p>
+          <p class="text-[13px] text-warm-50">Default card surface, semi-transparent midnight with soft blur.</p>
+        </div>
+        <div class="glass-strong rounded-2xl p-5 card-lift">
+          <p class="bracket-label text-warm-500 mb-2">.glass-strong</p>
+          <p class="text-[13px] text-warm-50">Modals and hero stats &mdash; stronger blur and shadow.</p>
+        </div>
+        <div class="hero-card glass-aurora rounded-2xl p-5 card-lift relative">
+          <div class="absolute -top-6 -right-6 w-32 h-32 breath-orb opacity-60"></div>
+          <p class="bracket-label text-aurora-300 mb-2 relative">.glass-aurora &middot; .hero-card</p>
+          <p class="text-[13px] text-warm-50 relative">The one hero surface per screen. Gradient edge + cosmic tint.</p>
+        </div>
+      </div>
+
+      <!-- Chips -->
+      <div class="specimen mb-6">
+        <p class="bracket-label text-warm-500 mb-4">Chips</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="chip">Default</span>
+          <span class="chip"><i data-lucide="sparkles" class="w-3 h-3 text-aurora-300"></i>AI</span>
+          <span class="chip"><i data-lucide="flame" class="w-3 h-3 text-peach-300"></i>Streak 23</span>
+          <span class="chip"><i data-lucide="check" class="w-3 h-3 text-sage-300"></i>Completed</span>
+          <span class="chip"><span class="w-1.5 h-1.5 rounded-full bg-sage-300"></span>Live</span>
+          <span class="chip font-mono">7h 48m</span>
+        </div>
+      </div>
+
+      <!-- Ring progress -->
+      <div class="specimen mb-6">
+        <p class="bracket-label text-warm-500 mb-4">Ring progress</p>
+        <div class="flex gap-8 items-center">
+          <div class="ring-progress w-20 h-20" style="--p: 25%;"><div><span class="font-mono text-xs text-warm-50">25%</span></div></div>
+          <div class="ring-progress w-20 h-20" style="--p: 50%;"><div><span class="font-mono text-xs text-warm-50">50%</span></div></div>
+          <div class="ring-progress w-20 h-20" style="--p: 72%;"><div><span class="font-mono text-xs text-warm-50">72%</span></div></div>
+          <div class="ring-progress w-20 h-20" style="--p: 100%;"><div><i data-lucide="check" class="w-5 h-5 text-sage-300"></i></div></div>
+        </div>
+      </div>
+
+      <!-- Stat bar -->
+      <div class="specimen">
+        <p class="bracket-label text-warm-500 mb-4">Stat bars (sage &rarr; aurora)</p>
+        <div class="grid grid-cols-4 gap-4">
+          <div><p class="text-[11px] text-warm-400 mb-1">25%</p><div class="stat-bar"><span style="width:25%"></span></div></div>
+          <div><p class="text-[11px] text-warm-400 mb-1">50%</p><div class="stat-bar"><span style="width:50%"></span></div></div>
+          <div><p class="text-[11px] text-warm-400 mb-1">75%</p><div class="stat-bar"><span style="width:75%"></span></div></div>
+          <div><p class="text-[11px] text-warm-400 mb-1">100%</p><div class="stat-bar"><span style="width:100%"></span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="aurora-hairline my-16"></div>
+
+    <!-- ========================================================================
+         05 · MOTION
+         ======================================================================== -->
+    <section class="mb-24">
+      <p class="bracket-label text-aurora-300 mb-3">05 &mdash; Motion</p>
+      <h2 class="section-title mb-2">Living details</h2>
+      <p class="text-warm-400 mb-10 max-w-xl">16 animation primitives based on 2026 wellness research. All respect <code class="font-mono text-aurora-300 text-[12px]">prefers-reduced-motion</code>.</p>
+
+      <div class="grid grid-cols-4 gap-4">
+        <div class="specimen h-40 flex flex-col items-center justify-center">
+          <div class="w-16 h-16 breath-orb mb-3"></div>
+          <p class="bracket-label text-warm-500">.breath-orb</p>
+          <p class="text-[10px] text-warm-500 mt-1">6s cycle</p>
+        </div>
+
+        <div class="specimen h-40 flex flex-col items-center justify-center">
+          <div class="w-16 h-16 relative">
+            <div class="absolute inset-0 rounded-full border border-sage-300/30 anim-ambient-pulse"></div>
+            <div class="absolute inset-4 rounded-full bg-sage-300/30 anim-ambient-pulse"></div>
+          </div>
+          <p class="bracket-label text-warm-500 mt-3">.anim-ambient-pulse</p>
+          <p class="text-[10px] text-warm-500 mt-1">5s cycle</p>
+        </div>
+
+        <div class="specimen h-40 flex flex-col items-center justify-center">
+          <div class="glass rounded-2xl px-4 py-3 flex items-center gap-1.5 mb-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-sage-300 typing-dot"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-sage-300 typing-dot"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-sage-300 typing-dot"></span>
+          </div>
+          <p class="bracket-label text-warm-500">.typing-dot</p>
+          <p class="text-[10px] text-warm-500 mt-1">1.4s cycle</p>
+        </div>
+
+        <div class="specimen h-40 flex flex-col items-center justify-center">
+          <div class="flex items-center gap-0.5 h-12 mb-3">
+            <div class="wave-bar w-1 rounded-full bg-gradient-to-t from-sage-300 to-aurora-300" style="height:20px"></div>
+            <div class="wave-bar w-1 rounded-full bg-gradient-to-t from-sage-300 to-aurora-300" style="height:32px"></div>
+            <div class="wave-bar w-1 rounded-full bg-gradient-to-t from-sage-300 to-aurora-300" style="height:28px"></div>
+            <div class="wave-bar w-1 rounded-full bg-gradient-to-t from-sage-300 to-aurora-300" style="height:40px"></div>
+            <div class="wave-bar w-1 rounded-full bg-gradient-to-t from-sage-300 to-aurora-300" style="height:24px"></div>
+            <div class="wave-bar w-1 rounded-full bg-gradient-to-t from-sage-300 to-aurora-300" style="height:36px"></div>
+            <div class="wave-bar w-1 rounded-full bg-gradient-to-t from-sage-300 to-aurora-300" style="height:18px"></div>
+          </div>
+          <p class="bracket-label text-warm-500">.wave-bar</p>
+          <p class="text-[10px] text-warm-500 mt-1">1.1s stagger</p>
+        </div>
+
+        <div class="specimen h-40 flex flex-col items-center justify-center">
+          <div class="w-16 h-16 smoke mb-3"></div>
+          <p class="bracket-label text-warm-500">.smoke</p>
+          <p class="text-[10px] text-warm-500 mt-1">Static blur</p>
+        </div>
+
+        <div class="specimen h-40 flex flex-col items-center justify-center">
+          <div class="relative w-16 h-16 mb-3">
+            <i data-lucide="sparkle" class="w-4 h-4 text-peach-300 absolute top-0 right-0 anim-burst"></i>
+            <i data-lucide="sparkle" class="w-3 h-3 text-aurora-300 absolute bottom-0 left-0 anim-burst"></i>
+            <div class="w-10 h-10 rounded-full bg-sage-300/30 border border-sage-300/50 mx-auto flex items-center justify-center mt-3">
+              <i data-lucide="check" class="w-5 h-5 text-sage-300" stroke-width="2.5"></i>
+            </div>
+          </div>
+          <p class="bracket-label text-warm-500">.anim-burst</p>
+          <p class="text-[10px] text-warm-500 mt-1">700ms</p>
+        </div>
+
+        <div class="specimen h-40 flex flex-col items-center justify-center">
+          <p class="font-display text-[32px] text-warm-50 mb-3">H<span class="stream-cursor"></span></p>
+          <p class="bracket-label text-warm-500">.stream-cursor</p>
+          <p class="text-[10px] text-warm-500 mt-1">AI chat typing</p>
+        </div>
+
+        <div class="specimen h-40 flex flex-col items-center justify-center">
+          <button class="focus-glow glass rounded-xl px-4 py-3 mb-3 text-sm text-warm-50">Tab to focus</button>
+          <p class="bracket-label text-warm-500">.focus-glow</p>
+          <p class="text-[10px] text-warm-500 mt-1">Aurora ring</p>
+        </div>
+      </div>
+
+      <!-- Timing reference -->
+      <div class="specimen mt-6">
+        <p class="bracket-label text-warm-500 mb-4">Duration &amp; easing</p>
+        <div class="grid grid-cols-5 gap-4 text-[11px] text-warm-300 font-mono">
+          <div><p class="text-warm-500 mb-1 bracket-label">--dur-instant</p><p>100ms</p></div>
+          <div><p class="text-warm-500 mb-1 bracket-label">--dur-fast</p><p>150ms &middot; tap</p></div>
+          <div><p class="text-warm-500 mb-1 bracket-label">--dur-base</p><p>200ms &middot; default</p></div>
+          <div><p class="text-warm-500 mb-1 bracket-label">--dur-slow</p><p>300ms &middot; modal</p></div>
+          <div><p class="text-warm-500 mb-1 bracket-label">--dur-slower</p><p>500ms &middot; reveal</p></div>
+        </div>
+        <p class="text-[11px] text-warm-400 mt-4">Enter: <span class="font-mono text-sage-300">ease-out</span> &middot; exit: <span class="font-mono text-peach-300">ease-in</span> &middot; state change: <span class="font-mono text-aurora-300">ease-in-out</span></p>
+      </div>
+    </section>
+
+    <div class="aurora-hairline my-16"></div>
+
+    <!-- ========================================================================
+         06 · ILLUSTRATIONS
+         ======================================================================== -->
+    <section class="mb-24">
+      <p class="bracket-label text-aurora-300 mb-3">06 &mdash; Illustrations</p>
+      <h2 class="section-title mb-2">Custom SVG library</h2>
+      <p class="text-warm-400 mb-10 max-w-xl">Six inline SVG illustrations replacing generic gradient blobs on hero moments. All theme-aware via <code class="font-mono text-aurora-300 text-[12px]">--ch-*</code> RGB channels.</p>
+
+      <div class="grid grid-cols-3 gap-6">
+        <div class="specimen flex flex-col items-center" id="illus-breath">
+          <div class="w-full h-48 flex items-center justify-center" style="max-width:180px;"></div>
+          <p class="bracket-label text-warm-500">illustrationBreath</p>
+          <p class="text-[10px] text-warm-500 mt-1">Welcome &middot; Splash</p>
+        </div>
+        <div class="specimen flex flex-col items-center" id="illus-growth">
+          <div class="w-full h-48 flex items-center justify-center" style="max-width:180px;"></div>
+          <p class="bracket-label text-warm-500">illustrationGrowth</p>
+          <p class="text-[10px] text-warm-500 mt-1">Assessment results</p>
+        </div>
+        <div class="specimen flex flex-col items-center" id="illus-reach">
+          <div class="w-full h-48 flex items-center justify-center" style="max-width:180px;"></div>
+          <p class="bracket-label text-warm-500">illustrationReach</p>
+          <p class="text-[10px] text-warm-500 mt-1">Crisis support</p>
+        </div>
+        <div class="specimen flex flex-col items-center" id="illus-journal">
+          <div class="w-full h-48 flex items-center justify-center" style="max-width:180px;"></div>
+          <p class="bracket-label text-warm-500">illustrationJournalFlight</p>
+          <p class="text-[10px] text-warm-500 mt-1">Empty journal</p>
+        </div>
+        <div class="specimen flex flex-col items-center" id="illus-compass">
+          <div class="w-full h-48 flex items-center justify-center" style="max-width:180px;"></div>
+          <p class="bracket-label text-warm-500">illustrationCompass</p>
+          <p class="text-[10px] text-warm-500 mt-1">404 not found</p>
+        </div>
+        <div class="specimen flex flex-col items-center" id="illus-wave">
+          <div class="w-full h-48 flex items-center justify-center" style="max-width:180px;"></div>
+          <p class="bracket-label text-warm-500">illustrationWave</p>
+          <p class="text-[10px] text-warm-500 mt-1">Session complete</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="aurora-hairline my-16"></div>
+
+    <!-- ========================================================================
+         07 · THEMES
+         ======================================================================== -->
+    <section class="mb-24">
+      <p class="bracket-label text-aurora-300 mb-3">07 &mdash; Themes</p>
+      <h2 class="section-title mb-2">5 palettes, one system</h2>
+      <p class="text-warm-400 mb-10 max-w-xl">Every color token remaps through <code class="font-mono text-aurora-300 text-[12px]">data-theme</code> on the document root. Toggle themes in the main prototype.</p>
+
+      <div class="grid grid-cols-5 gap-4">
+        <div class="specimen text-center">
+          <div class="w-full h-28 rounded-xl mb-3 flex items-center justify-center" style="background:#040818;">
+            <div class="w-10 h-10 rounded-full" style="background:#6B8FFF;"></div>
+          </div>
+          <p class="font-display text-base text-warm-50">Cosmic Night</p>
+          <p class="text-[10px] text-warm-500 font-mono mt-1">#040818 / #6B8FFF</p>
+        </div>
+        <div class="specimen text-center">
+          <div class="w-full h-28 rounded-xl mb-3 flex items-center justify-center" style="background:#0F0B08;">
+            <div class="w-10 h-10 rounded-full" style="background:#D4915E;"></div>
+          </div>
+          <p class="font-display text-base text-warm-50">Warm Earth</p>
+          <p class="text-[10px] text-warm-500 font-mono mt-1">#0F0B08 / #D4915E</p>
+        </div>
+        <div class="specimen text-center">
+          <div class="w-full h-28 rounded-xl mb-3 flex items-center justify-center" style="background:#030D14;">
+            <div class="w-10 h-10 rounded-full" style="background:#5BB8C9;"></div>
+          </div>
+          <p class="font-display text-base text-warm-50">Ocean Calm</p>
+          <p class="text-[10px] text-warm-500 font-mono mt-1">#030D14 / #5BB8C9</p>
+        </div>
+        <div class="specimen text-center">
+          <div class="w-full h-28 rounded-xl mb-3 flex items-center justify-center" style="background:#040E08;">
+            <div class="w-10 h-10 rounded-full" style="background:#D4A545;"></div>
+          </div>
+          <p class="font-display text-base text-warm-50">Deep Forest</p>
+          <p class="text-[10px] text-warm-500 font-mono mt-1">#040E08 / #D4A545</p>
+        </div>
+        <div class="specimen text-center">
+          <div class="w-full h-28 rounded-xl mb-3 flex items-center justify-center" style="background:#0E0610;">
+            <div class="w-10 h-10 rounded-full" style="background:#D4789A;"></div>
+          </div>
+          <p class="font-display text-base text-warm-50">Soft Rose</p>
+          <p class="text-[10px] text-warm-500 font-mono mt-1">#0E0610 / #D4789A</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-white/5 py-12 px-12 text-center text-warm-500 text-sm max-w-[1600px] mx-auto">
+    <p class="bracket-label">Solace AI &mdash; Design System v4.2</p>
+    <p class="mt-2 text-[11px] font-mono opacity-70">42 screens &middot; 5 themes &middot; 16 motion primitives &middot; 6 illustrations &middot; accessibility-first</p>
+  </footer>
+
+  <script type="module">
+    import {
+      illustrationBreath, illustrationGrowth, illustrationReach,
+      illustrationJournalFlight, illustrationCompass, illustrationWave
+    } from './lib/illustrations.js';
+
+    const slots = {
+      'illus-breath':   illustrationBreath,
+      'illus-growth':   illustrationGrowth,
+      'illus-reach':    illustrationReach,
+      'illus-journal':  illustrationJournalFlight,
+      'illus-compass':  illustrationCompass,
+      'illus-wave':     illustrationWave,
+    };
+    Object.entries(slots).forEach(([id, svg]) => {
+      const box = document.querySelector('#' + id + ' > div');
+      if (box) box.innerHTML = svg;
+    });
+
+    if (window.lucide) window.lucide.createIcons({ attrs: { 'stroke-width': 1.75 } });
+  </script>
+</body>
+</html>

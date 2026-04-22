@@ -6,10 +6,10 @@
 /* ---- Page shell ---- */
 body {
   background:
-    radial-gradient(ellipse 1400px 900px at 15% -5%, rgba(107,143,255,0.06), transparent 55%),
-    radial-gradient(ellipse 1100px 800px at 85% 100%, rgba(168,154,224,0.045), transparent 60%),
-    radial-gradient(ellipse 900px 600px at 50% 50%, rgba(155,196,176,0.03), transparent 65%),
-    #02050E;
+    radial-gradient(ellipse 1400px 900px at 15% -5%, rgba(var(--ch-aurora),0.06), transparent 55%),
+    radial-gradient(ellipse 1100px 800px at 85% 100%, rgba(var(--ch-lavender),0.045), transparent 60%),
+    radial-gradient(ellipse 900px 600px at 50% 50%, rgba(var(--ch-sage),0.03), transparent 65%),
+    var(--mn-950);
   font-family: var(--ff-sans);
   color: var(--warm-50);
   min-height: 100vh;
@@ -102,10 +102,10 @@ body {
   box-shadow: var(--shadow-lg);
 }
 .glass-aurora {
-  background: linear-gradient(135deg, rgba(107,143,255,0.1) 0%, rgba(22,29,61,0.78) 100%);
+  background: linear-gradient(135deg, rgba(var(--ch-aurora),0.1) 0%, rgba(22,29,61,0.78) 100%);
   -webkit-backdrop-filter: blur(28px) saturate(160%);
   backdrop-filter: blur(28px) saturate(160%);
-  border: 1px solid rgba(107,143,255,0.2);
+  border: 1px solid rgba(var(--ch-aurora),0.2);
   box-shadow: var(--shadow-cosmic);
 }
 
@@ -165,9 +165,9 @@ body {
 .breath-orb {
   background: radial-gradient(
     circle at 30% 30%,
-    rgba(155,196,176,0.58) 0%,
-    rgba(107,143,255,0.34) 35%,
-    rgba(168,154,224,0.2) 60%,
+    rgba(var(--ch-sage),0.58) 0%,
+    rgba(var(--ch-aurora),0.34) 35%,
+    rgba(var(--ch-lavender),0.2) 60%,
     transparent 75%
   );
   filter: blur(22px);
@@ -176,8 +176,8 @@ body {
 .breath-orb-warm {
   background: radial-gradient(
     circle at 30% 30%,
-    rgba(244,167,126,0.5) 0%,
-    rgba(168,154,224,0.25) 50%,
+    rgba(var(--ch-peach),0.5) 0%,
+    rgba(var(--ch-lavender),0.25) 50%,
     transparent 75%
   );
   filter: blur(22px);
@@ -189,7 +189,7 @@ body {
 }
 
 .smoke {
-  background: radial-gradient(ellipse 60% 80% at 40% 40%, rgba(107,143,255,0.2), transparent 60%);
+  background: radial-gradient(ellipse 60% 80% at 40% 40%, rgba(var(--ch-aurora),0.2), transparent 60%);
   filter: blur(40px);
 }
 
@@ -204,17 +204,17 @@ body {
    ========================================================================== */
 .mesh-bg {
   background:
-    radial-gradient(at 18% 22%, rgba(155,196,176,0.2) 0%, transparent 50%),
-    radial-gradient(at 82% 75%, rgba(168,154,224,0.18) 0%, transparent 55%),
-    radial-gradient(at 50% 50%, rgba(107,143,255,0.14) 0%, transparent 50%),
-    radial-gradient(at 30% 80%, rgba(244,167,126,0.09) 0%, transparent 50%),
-    #040818;
+    radial-gradient(at 18% 22%, rgba(var(--ch-sage),0.2) 0%, transparent 50%),
+    radial-gradient(at 82% 75%, rgba(var(--ch-lavender),0.18) 0%, transparent 55%),
+    radial-gradient(at 50% 50%, rgba(var(--ch-aurora),0.14) 0%, transparent 50%),
+    radial-gradient(at 30% 80%, rgba(var(--ch-peach),0.09) 0%, transparent 50%),
+    var(--mn-950);
 }
 .mesh-night {
   background:
-    radial-gradient(at 50% 0%, rgba(107,143,255,0.2) 0%, transparent 60%),
-    radial-gradient(at 30% 100%, rgba(168,154,224,0.14) 0%, transparent 60%),
-    linear-gradient(180deg, #161D3D 0%, #040818 80%);
+    radial-gradient(at 50% 0%, rgba(var(--ch-aurora),0.2) 0%, transparent 60%),
+    radial-gradient(at 30% 100%, rgba(var(--ch-lavender),0.14) 0%, transparent 60%),
+    linear-gradient(180deg, var(--mn-700) 0%, var(--mn-950) 80%);
 }
 
 /* ==========================================================================

@@ -89,7 +89,7 @@ export const screen = {
             <i data-lucide="log-out" class="w-4 h-4" aria-hidden="true"></i> Sign out
           </button>
 
-          <p class="text-[9px] text-warm-500 text-center mt-6 font-mono">Solace v4.0.0 &middot; Made with care</p>
+          <p class="text-[9px] text-warm-500 text-center mt-6 font-mono">Solace v4.2.0 &middot; Made with care</p>
         </div>
       </div>
     `;
