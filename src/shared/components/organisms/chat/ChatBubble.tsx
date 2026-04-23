@@ -36,37 +36,40 @@ import { formatTimestamp, getEmotionColor } from "./ChatBubble.types";
 import { palette } from "../../../theme";
 
 /**
- * Color tokens from theme
+ * Color tokens — cosmic editorial (prototype v4.2).
+ *
+ * Reskin notes (Sprint 2):
+ * - User bubble swapped from sage (old "primary accent") to PEACH — the
+ *   prototype's chat spec uses peach for warmth on the sender side. Legacy
+ *   `palette.tan` would alias to sage and read cold.
+ * - AI bubble uses midnight-700 (via legacy `gray[700]` alias). When the
+ *   full chat screen ships in Sprint 5 it will be wrapped in <GlassCard/>.
+ * - `palette.orange` didn't exist in the legacy palette (latent undefined
+ *   bug). Swapped to `palette.peach[500]` — explicit cosmic value.
  */
 const colors = {
-  // Background colors
-  background: palette.brown[900],
-  userBubble: palette.tan[500],
-  aiBubble: palette.gray[700],
+  background: palette.midnight[950],
+  userBubble: palette.peach[300],    // NEW: peach, not tan/sage
+  aiBubble: palette.midnight[700],
 
-  // Text colors
-  userText: palette.brown[900],
-  aiText: palette.gray[100],
-  textSecondary: palette.gray[400],
-  textMuted: palette.gray[500],
+  userText: palette.midnight[950],
+  aiText: palette.warm[50],
+  textSecondary: palette.warm[400],
+  textMuted: palette.warm[500],
 
-  // Avatar
-  avatarBg: palette.olive[500],
+  avatarBg: palette.sage[300],
 
-  // Status colors
-  statusSending: palette.gray[400],
-  statusSent: palette.olive[500],
+  statusSending: palette.warm[400],
+  statusSent: palette.sage[500],
   statusError: palette.red[500],
 
-  // Emotion colors
-  emotionPositive: palette.olive[500],
-  emotionNegative: palette.orange[500],
-  emotionNeutral: palette.gray[400],
-  emotionCrisis: palette.red[500],
+  emotionPositive: palette.sage[500],
+  emotionNegative: palette.peach[500],  // was palette.orange[500] — undefined bug fix
+  emotionNeutral: palette.warm[400],
+  emotionCrisis: palette.peach[500],    // crisis = warm peach, never alarming red
 
-  // Reaction
-  reactionBg: palette.gray[600],
-  reactionSelected: palette.olive[500],
+  reactionBg: palette.midnight[600],
+  reactionSelected: palette.sage[300],
 };
 
 /**
@@ -482,18 +485,21 @@ const styles = StyleSheet.create({
   },
   avatarText: {},
   bubble: {
-    borderRadius: 16,
+    // Prototype spec: rounded-2xl body with ONE sharp corner near the speaker
+    // (top-left for AI, top-right for user) — that's the "tail" pointing toward
+    // the avatar side. Legacy code had sharp BOTTOM corner — flipped here.
+    borderRadius: 20,
     maxWidth: "85%",
     paddingHorizontal: 14,
     paddingVertical: 10,
   },
   bubbleAI: {
     backgroundColor: colors.aiBubble,
-    borderBottomLeftRadius: 4,
+    borderTopLeftRadius: 4,
   },
   bubbleUser: {
     backgroundColor: colors.userBubble,
-    borderBottomRightRadius: 4,
+    borderTopRightRadius: 4,
   },
   container: {
     flexDirection: "row",

@@ -433,9 +433,9 @@ describe("ChatBubble", () => {
       );
 
       const content = getByTestId("chat-bubble-content");
-      // User messages have tan/brown background
+      // User bubble uses peach-300 (warm sender accent per prototype v4.2)
       expect(content.props.style).toEqual(
-        expect.objectContaining({ backgroundColor: "#C4A574" }),
+        expect.objectContaining({ backgroundColor: "#F4A77E" }),
       );
     });
 
@@ -445,9 +445,10 @@ describe("ChatBubble", () => {
       );
 
       const content = getByTestId("chat-bubble-content");
-      // AI messages have darker background
+      // AI bubble uses midnight-700 (cosmic glass base — will be wrapped in
+      // <GlassCard/> when the full chat screen ships in Sprint 5).
       expect(content.props.style).toEqual(
-        expect.objectContaining({ backgroundColor: "#334155" }),
+        expect.objectContaining({ backgroundColor: "#161D3D" }),
       );
     });
 
