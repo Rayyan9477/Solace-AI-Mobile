@@ -40,7 +40,13 @@ export type GradientPreset =
   | "darkCard"
   | "darkHero"
   | "accentFade"
-  | "darkSurface";
+  | "darkSurface"
+  // Cosmic editorial presets (prototype v4.2)
+  | "sageCta"
+  | "peachCta"
+  | "auroraHero"
+  | "nightSky"
+  | "cosmicRainbow";
 
 /**
  * Expo LinearGradient compatible props
@@ -160,6 +166,56 @@ export const gradients: Record<GradientPreset, GradientConfig> = {
     colors: ["#2A1F1A", "#1C1410"],
     direction: "vertical",
     locations: [0, 1],
+  },
+
+  /**
+   * Sage CTA gradient - sage-300 → sage-500
+   * Use for: primary therapeutic CTAs (Log mood, Save journal)
+   */
+  sageCta: {
+    colors: ["#9BC4B0", "#7AAA94"],
+    direction: "diagonal",
+    locations: [0, 1],
+  },
+
+  /**
+   * Peach CTA gradient - peach-300 → peach-500
+   * Use for: energy CTAs, FAB, user chat bubble
+   */
+  peachCta: {
+    colors: ["#F4A77E", "#E88B5A"],
+    direction: "diagonal",
+    locations: [0, 1],
+  },
+
+  /**
+   * Aurora Hero gradient - aurora-300 → aurora-500
+   * Use for: AI cards, score rings, secondary hero elements
+   */
+  auroraHero: {
+    colors: ["#8AA3FF", "#6B8FFF"],
+    direction: "diagonal",
+    locations: [0, 1],
+  },
+
+  /**
+   * Night Sky gradient - midnight-700 → midnight-800 → midnight-950
+   * Use for: sleep dashboard, sleep-log, any night-mode hero surface
+   */
+  nightSky: {
+    colors: ["#161D3D", "#0E1430", "#040818"],
+    direction: "vertical",
+    locations: [0, 0.55, 1],
+  },
+
+  /**
+   * Cosmic Rainbow - sage → aurora → lavender → peach
+   * Use for: Welcome hero orb, Session Complete celebration, featured mindful cards
+   */
+  cosmicRainbow: {
+    colors: ["#9BC4B0", "#8AA3FF", "#A89AE0", "#F4A77E"],
+    direction: "diagonal",
+    locations: [0, 0.33, 0.66, 1],
   },
 };
 

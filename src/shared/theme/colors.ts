@@ -1,192 +1,265 @@
 /**
- * Color Tokens
- * @description Centralized color system for Solace AI Design System
+ * Color Tokens — Cosmic Editorial Palette (prototype v4.2)
  *
- * Dark Mode First Design
- * All colors are optimized for dark mode with proper contrast ratios
+ * Migration note (2026-04-22): this file was rewritten to ship the cosmic
+ * editorial palette (midnight / aurora / sage / peach / lavender / warm / mist).
+ * Legacy palette keys (`brown`, `tan`, `olive`, `gold`, `stone`, etc.) are
+ * **retained as aliases** so the ~160 legacy consumers keep compiling, but
+ * their values now render the cosmic equivalent colors. New code should import
+ * cosmic families directly (`palette.midnight[950]`, `palette.sage[300]`, …).
  *
- * Usage:
- * ```tsx
- * import { colors } from '@/shared/theme';
+ * Dark-mode first. Body text is warm-50 (#F5F1EA), NEVER pure white (#FFFFFF).
+ * Background is midnight-950 (#040818), NEVER pure black.
  *
- * const styles = StyleSheet.create({
- *   container: {
- *     backgroundColor: colors.background.primary,
- *     borderColor: colors.border.default,
- *   },
- * });
- * ```
+ * @example
+ *   import { colors, palette } from '@/shared/theme';
+ *   const s = StyleSheet.create({
+ *     bg:   { backgroundColor: palette.midnight[950] },
+ *     card: { backgroundColor: colors.background.card },
+ *   });
  */
 
-/**
- * Color Palette
- * Base colors used throughout the app
- */
+// -----------------------------------------------------------------------------
+// Cosmic palette (source of truth for new code)
+// -----------------------------------------------------------------------------
+
+const midnight = {
+  950: "#040818", // page background — deeper/bluer than pure black
+  900: "#070C20",
+  800: "#0E1430", // cards, raised surfaces
+  700: "#161D3D", // modals, elevated panels
+  600: "#202A55",
+} as const;
+
+const aurora = {
+  100: "#D6E0FF",
+  300: "#8AA3FF", // cosmic blue accent — links, secondary CTAs, kickers
+  500: "#6B8FFF", // primary aurora — button fills, pulse glows
+  700: "#4A6FE5",
+} as const;
+
+const sage = {
+  100: "#D8EADF",
+  300: "#9BC4B0", // primary therapeutic accent — ring progress, primary CTAs
+  500: "#7AAA94",
+  700: "#5A8A78",
+} as const;
+
+const peach = {
+  100: "#FCE3D4",
+  300: "#F4A77E", // energy accent — FAB, user chat bubble, streaks
+  500: "#E88B5A",
+} as const;
+
+const lavender = {
+  100: "#E0DAF3",
+  300: "#A89AE0", // mindfulness, sleep, grief
+  500: "#8B7CC8",
+} as const;
+
+const warm = {
+  50:  "#F5F1EA", // primary text — warm off-white (never #FFFFFF)
+  100: "#EAE3D5",
+  200: "#C7BEA9",
+  400: "#8B95A8", // secondary text
+  500: "#5A6478", // muted / captions / labels
+} as const;
+
+const mist = "#BFCFE8"; // breathing-element highlight
+
+// -----------------------------------------------------------------------------
+// Legacy → cosmic aliasing
+// -----------------------------------------------------------------------------
+// The 160 files that imported `palette.brown[900]`, `palette.tan[500]`,
+// `palette.olive[500]` etc. continue to compile. Values now render cosmic.
+//
+// Mapping rationale:
+//   brown  → midnight   (both are the "dark page" family)
+//   tan    → sage       (both were the "primary accent" family)
+//   olive  → sage       (olive 500 was widely used; sage is its cosmic heir)
+//   gold   → aurora     (gold 500 was accent CTAs; aurora is the new cosmic accent)
+//   stone  → midnight   (stone was a dark grayscale; midnight is the cosmic grayscale)
+//   accent.orange  → peach-500
+//   accent.green   → sage-300
+//   accent.purple  → lavender-500
+//   onboarding.stepN → themed step colors retuned to cosmic family
+// -----------------------------------------------------------------------------
+
+const brownAlias = {
+  900: midnight[950], // #040818 — main dark page bg
+  800: midnight[800], // #0E1430 — cards
+  700: midnight[700], // #161D3D — elevated
+  600: midnight[600], // #202A55 — floating
+  500: warm[500],     // #5A6478 — muted text
+  400: warm[400],     // #8B95A8 — secondary text
+} as const;
+
+const tanAlias = {
+  600: sage[500],     // #7AAA94 — pressed/hover
+  500: sage[300],     // #9BC4B0 — primary CTA
+  400: sage[100],     // #D8EADF — light accent
+  300: warm[100],     // #EAE3D5 — muted accent
+} as const;
+
+const oliveAlias = {
+  700: sage[700],     // #5A8A78
+  600: sage[500],     // #7AAA94
+  550: sage[500],
+  500: sage[300],     // #9BC4B0 — 29-use decorative color → primary sage
+  450: sage[300],
+  400: sage[100],     // #D8EADF
+  300: sage[100],
+} as const;
+
+const goldAlias = {
+  500: aurora[500],   // #6B8FFF
+  400: aurora[300],   // #8AA3FF
+} as const;
+
+const stoneAlias = {
+  100: warm[50],      // #F5F1EA
+  200: warm[100],     // #EAE3D5
+  300: warm[200],     // #C7BEA9
+  400: warm[400],     // #8B95A8
+  500: warm[500],     // #5A6478
+  600: midnight[600], // #202A55
+  700: midnight[700], // #161D3D
+  800: midnight[800], // #0E1430
+  900: midnight[950], // #040818
+} as const;
+
+// Status palettes (red / green / amber / blue / indigo) keep their hues because
+// semantic meaning (error, success, warning, info) is universal. They're tuned
+// slightly toward the warmer end to fit the cosmic context without screaming.
+const red = {
+  900: "#7F1D1D", 800: "#991B1B", 700: "#B91C1C", 600: "#DC2626",
+  500: "#E05D5D", // migrated from pure #EF4444 — same role, less clinical
+  400: "#F87171", 300: "#FCA5A5", 200: "#FECACA", 100: "#FEE2E2",
+} as const;
+
+const green = {
+  900: "#14532D", 800: "#166534", 700: "#15803D", 600: "#16A34A",
+  500: sage[500], // #7AAA94 — success in cosmic parlance = sage
+  450: sage[500],
+  400: sage[300], 300: sage[100], 200: sage[100], 100: sage[100],
+} as const;
+
+const amber = {
+  900: "#78350F", 800: "#92400E", 700: "#B45309", 600: "#D97706",
+  500: peach[500], // #E88B5A — warning in cosmic = peach (warm, not alarming)
+  450: peach[300],
+  400: peach[300], 300: peach[300], 200: peach[100], 100: peach[100],
+} as const;
+
+const blue = {
+  900: "#1E3A5F", 800: "#1E40AF", 700: "#1D4ED8", 600: "#2563EB",
+  500: aurora[500], // #6B8FFF
+  400: aurora[300], 300: aurora[300], 200: aurora[100], 100: aurora[100],
+} as const;
+
+const indigo = {
+  500: lavender[500], // #8B7CC8 — info in cosmic = lavender
+  400: lavender[300], // #A89AE0
+  300: lavender[300], 200: lavender[100], 100: lavender[100],
+} as const;
+
+const grayAlias = {
+  50:  warm[50],      // #F5F1EA
+  100: warm[100],     // #EAE3D5
+  200: warm[200],     // #C7BEA9
+  300: warm[200],
+  400: warm[400],     // #8B95A8 — placeholders, secondary
+  450: warm[400],
+  500: warm[500],     // #5A6478 — captions
+  600: midnight[600],
+  700: midnight[700],
+  800: midnight[800],
+  900: midnight[950],
+} as const;
+
+// Alpha hex suffixes (0-100 → hex two-digit)
+const alpha = {
+  5: "0D", 10: "1A", 15: "26", 20: "33", 30: "4D", 40: "66",
+  50: "80", 60: "99", 70: "B3", 80: "CC", 90: "E6",
+} as const;
+
+// Onboarding step colors retuned to cosmic theme palette
+const onboarding = {
+  step1: sage[300],     // AI Personalization
+  step2: peach[300],    // Mood tracking
+  step3: warm[400],     // Journaling
+  step4: aurora[500],   // Mindful resources
+  step5: lavender[500], // Community
+} as const;
+
+// -----------------------------------------------------------------------------
+// Complete palette export
+// -----------------------------------------------------------------------------
 export const palette = {
-  // Primary brand colors
-  brown: {
-    900: "#1C1410", // Primary dark brown background
-    800: "#2A1F1A",
-    700: "#3D2D24",
-    600: "#57493D",
-    500: "#78716C",
-    400: "#A8A29E",
-  },
-  tan: {
-    600: "#8B6F47", // Darker tan/brown variant
-    500: "#C4A574", // Primary accent tan/beige
-    400: "#D4B894",
-    300: "#E0CAA4",
-  },
-  olive: {
-    700: "#6B7B3A", // Matches onboarding.step1
-    600: "#8A9D52",
-    550: "#8B9D4C", // Darker olive variant for decorative elements
-    500: "#9AAD5C", // Most used decorative color (29 instances in organisms)
-    450: "#A0B55C", // Lighter olive variant for decorative elements
-    400: "#AAB978",
-    300: "#C4D19B",
-  },
-  gold: {
-    500: "#C4A535", // Matches onboarding.step4
-    400: "#F5C563",
-  },
-  stone: {
-    100: "#F5F5F4",
-    200: "#E7E5E4",
-    300: "#D6D3D1",
-    400: "#A8A29E",
-    500: "#78716C",
-    600: "#44403C",
-    700: "#3D3533",
-    800: "#292524",
-    900: "#1C1917",
-  },
+  // Cosmic families (new source of truth — prefer these in new code)
+  midnight,
+  aurora,
+  sage,
+  peach,
+  lavender,
+  warm,
+  mist,
 
-  // Semantic color scales (full scales for component variants)
-  red: {
-    900: "#7F1D1D",
-    800: "#991B1B",
-    700: "#B91C1C",
-    600: "#DC2626",
-    500: "#EF4444", // Primary error color
-    400: "#F87171",
-    300: "#FCA5A5",
-    200: "#FECACA",
-    100: "#FEE2E2",
-  },
-  green: {
-    900: "#14532D",
-    800: "#166534",
-    700: "#15803D",
-    600: "#16A34A",
-    500: "#22C55E", // Primary success color
-    450: "#4A9E8C", // Teal variant for healthy score screen
-    400: "#4ADE80",
-    300: "#86EFAC",
-    200: "#BBF7D0",
-    100: "#DCFCE7",
-  },
-  amber: {
-    900: "#78350F",
-    800: "#92400E",
-    700: "#B45309",
-    600: "#D97706",
-    500: "#F59E0B", // Primary warning color
-    450: "#FFD93D", // Bright yellow for medium password strength
-    400: "#FBBF24",
-    300: "#FCD34D",
-    200: "#FDE68A",
-    100: "#FEF3C7",
-  },
-  blue: {
-    900: "#1E3A5F",
-    800: "#1E40AF",
-    700: "#1D4ED8",
-    600: "#2563EB",
-    500: "#3B82F6",
-    400: "#60A5FA",
-    300: "#93C5FD",
-    200: "#BFDBFE",
-    100: "#DBEAFE",
-  },
-  indigo: {
-    500: "#6366F1",
-    400: "#818CF8", // Primary info color
-    300: "#A5B4FC",
-    200: "#C7D2FE",
-    100: "#E0E7FF",
-  },
+  // Legacy aliases (kept for back-compat — values point at cosmic equivalents)
+  brown: brownAlias,
+  tan: tanAlias,
+  olive: oliveAlias,
+  gold: goldAlias,
+  stone: stoneAlias,
 
-  // Legacy semantic colors (for backward compatibility)
-  success: "#22C55E",
-  warning: "#F59E0B",
-  error: "#EF4444",
-  info: "#818CF8",
+  // Status scales
+  red,
+  green,
+  amber,
+  blue,
+  indigo,
 
-  // Onboarding theme colors
-  onboarding: {
-    step1: "#6B7B3A", // Olive green - AI Personalization
-    step2: "#E8853A", // Orange - Mood Tracking
-    step3: "#6B6B6B", // Gray - Journaling
-    step4: "#C4A535", // Golden - Mindful Resources
-    step5: "#7B68B5", // Purple - Community
-  },
+  // Grayscale (legacy alias family)
+  gray: grayAlias,
 
-  // Grayscale
-  white: "#FFFFFF",
-  gray: {
-    50: "#F8FAFC",
-    100: "#F1F5F9",
-    200: "#E2E8F0",
-    300: "#CBD5E1",
-    400: "#94A3B8",
-    450: "#8A8A8A", // Placeholder/label gray
-    500: "#64748B",
-    600: "#475569",
-    700: "#334155",
-    800: "#1E293B",
-    900: "#0F172A",
-  },
-  black: "#000000",
+  // Legacy semantic shorthand
+  success: sage[500],
+  warning: peach[500],
+  error: red[500],
+  info: lavender[300],
 
-  // Transparency levels
-  alpha: {
-    5: "0D",   // 5%
-    10: "1A",  // 10%
-    15: "26",  // 15%
-    20: "33",  // 20%
-    30: "4D",  // 30%
-    40: "66",  // 40%
-    50: "80",  // 50%
-    60: "99",  // 60%
-    70: "B3",  // 70%
-    80: "CC",  // 80%
-    90: "E6",  // 90%
-  },
+  // Onboarding
+  onboarding,
 
-  // Semantic shorthand for palette-level access (used by feature screens)
+  // Grayscale extremes
+  white: "#FFFFFF", // present for legacy; new code should never use pure white
+  black: "#000000", // present for legacy; new code should never use pure black
+
+  // Alpha suffixes
+  alpha,
+
+  // Legacy palette-level shorthand (used by feature screens)
   background: {
-    primary: "#1C1410",
-    secondary: "#2A1F1A",
-    tertiary: "#3D2D24",
-    quaternary: "#4A3A2F",
-    hero: "#2A1F1A",
+    primary: midnight[950],
+    secondary: midnight[800],
+    tertiary: midnight[700],
+    quaternary: midnight[600],
+    hero: midnight[800],
   },
   text: {
-    primary: "#FFFFFF",
-    secondary: "#94A3B8",
-    tertiary: "#64748B",
-    disabled: "#475569",
-    inverse: "#1C1410",
+    primary: warm[50],      // NOT pure white — warm off-white per DESIGN.md § 1
+    secondary: warm[400],
+    tertiary: warm[500],
+    disabled: midnight[600],
+    inverse: midnight[950],
   },
   primary: {
-    gold: "#C4A574",
+    gold: aurora[500], // legacy name, cosmic value
   },
   accent: {
-    orange: "#E8853A",
-    green: "#9AAD5C",
-    purple: "#7B68B5",
+    orange: peach[500],
+    green: sage[300],
+    purple: lavender[500],
   },
   opacity: {
     white04: "rgba(255, 255, 255, 0.04)",
@@ -206,192 +279,156 @@ export const palette = {
     black70: "rgba(0, 0, 0, 0.7)",
   },
   semantic: {
-    info: "#818CF8",
-    success: "#22C55E",
-    warning: "#F59E0B",
-    error: "#EF4444",
+    info: lavender[300],
+    success: sage[500],
+    warning: peach[500],
+    error: red[500],
   },
 } as const;
 
-/**
- * Semantic Color Tokens
- * Organized by usage context for easy maintenance
- */
-export const colors = {
-  /**
-   * Background colors
-   */
-  background: {
-    primary: palette.brown[900],      // Main app background
-    secondary: palette.brown[800],    // Card backgrounds
-    tertiary: palette.brown[700],     // Elevated surfaces
-    overlay: `rgba(0, 0, 0, 0.85)`,   // Modal overlays
-    elevated: palette.brown[600],     // Floating elements
-  },
+// -----------------------------------------------------------------------------
+// Palette shape — widened version of `typeof palette`.
+//
+// The cosmic palette is declared with `as const`, which narrows every hex
+// string to a specific literal type. That is great for autocomplete on
+// constants but prevents alternate presets (warm-earth, ocean-calm, etc.)
+// from assigning different hex values into the same shape. `PaletteShape`
+// widens every string-literal to plain `string` while keeping the object
+// structure stable.
+// -----------------------------------------------------------------------------
+type WidenHex<T> = T extends string
+  ? string
+  : T extends object
+    ? { -readonly [K in keyof T]: WidenHex<T[K]> }
+    : T;
 
-  /**
-   * Text colors
-   */
-  text: {
-    primary: palette.white,           // Primary text
-    secondary: palette.gray[400],     // Secondary text
-    tertiary: palette.gray[400],      // Tertiary/disabled text
-    inverse: palette.brown[900],      // Text on light backgrounds
-    accent: palette.tan[500],         // Highlighted/accent text
-    disabled: palette.gray[500],      // Disabled text
-    muted: palette.stone[400],        // Muted text
-    error: palette.red[500],          // Error messages
-    success: palette.green[500],      // Success messages
-    warning: palette.amber[500],      // Warning messages
-    info: palette.indigo[400],        // Info messages
-  },
+export type PaletteShape = WidenHex<typeof palette>;
 
-  /**
-   * Border colors
-   */
-  border: {
-    default: `${palette.white}${palette.alpha[10]}`,     // Standard borders
-    light: `${palette.white}${palette.alpha[5]}`,        // Subtle borders
-    medium: `${palette.white}${palette.alpha[20]}`,      // Emphasized borders
-    heavy: `${palette.white}${palette.alpha[30]}`,       // Strong borders
-    accent: palette.tan[500],                             // Accent borders
-    error: palette.red[500],                              // Error borders
-  },
-
-  /**
-   * Interactive element colors
-   */
-  interactive: {
-    default: palette.tan[500],                            // Primary buttons, links
-    hover: palette.tan[400],                              // Hover state
-    active: palette.tan[300],                             // Active/pressed state
-    disabled: `${palette.tan[500]}${palette.alpha[30]}`, // Disabled state
-    ghost: `${palette.white}${palette.alpha[5]}`,        // Ghost button background
-  },
-
-  /**
-   * Status/feedback colors
-   */
-  status: {
-    success: {
-      background: `${palette.green[500]}${palette.alpha[15]}`,
-      border: `${palette.green[500]}${palette.alpha[30]}`,
-      text: palette.green[500],
+// -----------------------------------------------------------------------------
+// Semantic tokens — built from a palette.
+//
+// `buildColors(p)` rebuilds semantic tokens from ANY palette (used by the
+// runtime theme switcher in `useTheme.ts`). The exported `colors` constant is
+// the cosmic default — safe for module-level imports in tests, gradients, and
+// other places that must resolve at import time.
+// -----------------------------------------------------------------------------
+export function buildColors(p: PaletteShape) {
+  return {
+    background: {
+      primary:   p.midnight[950],
+      secondary: p.midnight[800],
+      tertiary:  p.midnight[700],
+      overlay:   "rgba(22,29,61,0.5)", // .glass — midnight-800 @ 50%
+      elevated:  p.midnight[600],
     },
-    warning: {
-      background: `${palette.amber[500]}${palette.alpha[15]}`,
-      border: `${palette.amber[500]}${palette.alpha[30]}`,
-      text: palette.amber[500],
+    text: {
+      primary:   p.warm[50],
+      secondary: p.warm[400],
+      tertiary:  p.warm[500],
+      inverse:   p.midnight[950],
+      accent:    p.sage[300],
+      disabled:  p.warm[500],
+      muted:     p.warm[500],
+      error:     p.red[500],
+      success:   p.sage[500],
+      warning:   p.peach[500],
+      info:      p.lavender[300],
     },
-    error: {
-      background: `${palette.red[500]}${palette.alpha[15]}`,
-      border: `${palette.red[500]}${palette.alpha[30]}`,
-      text: palette.red[500],
+    border: {
+      default:  `${p.white}${p.alpha[10]}`,
+      light:    `${p.white}${p.alpha[5]}`,
+      medium:   `${p.white}${p.alpha[20]}`,
+      heavy:    `${p.white}${p.alpha[30]}`,
+      accent:   p.sage[300],
+      error:    p.red[500],
+      hairline: `${p.white}${p.alpha[5]}`,
     },
-    info: {
-      background: `${palette.indigo[400]}${palette.alpha[15]}`,
-      border: `${palette.indigo[400]}${palette.alpha[30]}`,
-      text: palette.indigo[400],
+    interactive: {
+      default:  p.sage[300],
+      hover:    p.sage[500],
+      active:   p.sage[700],
+      disabled: `${p.sage[300]}${p.alpha[30]}`,
+      ghost:    `${p.white}${p.alpha[5]}`,
     },
-  },
-
-  /**
-   * Form element colors
-   */
-  form: {
-    background: `${palette.white}${palette.alpha[5]}`,
-    backgroundFocus: `${palette.white}${palette.alpha[10]}`,
-    border: `${palette.white}${palette.alpha[20]}`,
-    borderFocus: palette.tan[500],
-    borderError: palette.red[500],
-    placeholder: palette.gray[400],
-    label: palette.gray[400],
-  },
-
-  /**
-   * Badge/Tag colors
-   */
-  badge: {
-    default: {
-      background: palette.gray[600],
-      text: palette.gray[200],
+    status: {
+      success: {
+        background: `${p.sage[500]}${p.alpha[15]}`,
+        border:     `${p.sage[500]}${p.alpha[30]}`,
+        text:       p.sage[500],
+      },
+      warning: {
+        background: `${p.peach[500]}${p.alpha[15]}`,
+        border:     `${p.peach[500]}${p.alpha[30]}`,
+        text:       p.peach[500],
+      },
+      error: {
+        background: `${p.red[500]}${p.alpha[15]}`,
+        border:     `${p.red[500]}${p.alpha[30]}`,
+        text:       p.red[500],
+      },
+      info: {
+        background: `${p.lavender[300]}${p.alpha[15]}`,
+        border:     `${p.lavender[300]}${p.alpha[30]}`,
+        text:       p.lavender[300],
+      },
     },
-    success: {
-      background: `${palette.green[500]}${palette.alpha[20]}`,
-      text: palette.green[500],
+    form: {
+      background:      `${p.white}${p.alpha[5]}`,
+      backgroundFocus: `${p.white}${p.alpha[10]}`,
+      border:          `${p.white}${p.alpha[20]}`,
+      borderFocus:     p.sage[300],
+      borderError:     p.red[500],
+      placeholder:     p.warm[400],
+      label:           p.warm[400],
     },
-    warning: {
-      background: `${palette.amber[500]}${palette.alpha[20]}`,
-      text: palette.amber[500],
+    badge: {
+      default: { background: p.midnight[700], text: p.warm[100] },
+      success: { background: `${p.sage[500]}${p.alpha[20]}`,     text: p.sage[500] },
+      warning: { background: `${p.peach[500]}${p.alpha[20]}`,    text: p.peach[500] },
+      error:   { background: `${p.red[500]}${p.alpha[20]}`,      text: p.red[500] },
+      info:    { background: `${p.lavender[300]}${p.alpha[20]}`, text: p.lavender[300] },
     },
-    error: {
-      background: `${palette.red[500]}${palette.alpha[20]}`,
-      text: palette.red[500],
+    progress: {
+      track:   `${p.white}${p.alpha[10]}`,
+      fill:    p.sage[300],
+      success: p.sage[500],
+      warning: p.peach[500],
+      error:   p.red[500],
     },
-    info: {
-      background: `${palette.indigo[400]}${palette.alpha[20]}`,
-      text: palette.indigo[400],
+    crisis: {
+      primary:    p.peach[500],
+      background: `${p.peach[500]}${p.alpha[10]}`,
+      border:     `${p.peach[500]}${p.alpha[30]}`,
+      text:       p.peach[300],
     },
-  },
+    onboarding: p.onboarding,
+    chart: {
+      primary:    p.sage[300],
+      secondary:  p.aurora[500],
+      tertiary:   p.peach[300],
+      quaternary: p.lavender[300],
+      quinary:    p.amber[500],
+      grid:       `${p.white}${p.alpha[10]}`,
+    },
+    shadow: {
+      default: p.black,
+      subtle:  `${p.black}${p.alpha[20]}`,
+      medium:  `${p.black}${p.alpha[40]}`,
+      strong:  `${p.black}${p.alpha[60]}`,
+    },
+  } as const;
+}
 
-  /**
-   * Progress/loading colors
-   */
-  progress: {
-    track: palette.gray[700],
-    fill: palette.tan[500],
-    success: palette.green[500],
-    warning: palette.amber[500],
-    error: palette.red[500],
-  },
+export const colors = buildColors(palette as unknown as PaletteShape);
 
-  /**
-   * Crisis/safety colors
-   */
-  crisis: {
-    primary: palette.red[500],
-    background: `${palette.red[500]}${palette.alpha[10]}`,
-    border: `${palette.red[500]}${palette.alpha[30]}`,
-    text: palette.red[300], // Lighter red for text on dark
-  },
-
-  /**
-   * Onboarding step colors
-   */
-  onboarding: palette.onboarding,
-
-  /**
-   * Chart/data visualization colors
-   */
-  chart: {
-    primary: palette.tan[500],
-    secondary: palette.indigo[400],
-    tertiary: palette.green[500],
-    quaternary: palette.amber[500],
-    quinary: palette.red[500],
-    grid: `${palette.white}${palette.alpha[10]}`,
-  },
-
-  /**
-   * Shadow colors
-   */
-  shadow: {
-    default: palette.black,
-    subtle: `${palette.black}${palette.alpha[20]}`,
-    medium: `${palette.black}${palette.alpha[40]}`,
-    strong: `${palette.black}${palette.alpha[60]}`,
-  },
-} as const;
-
-/**
- * Color utility functions
- */
+// -----------------------------------------------------------------------------
+// Utility functions (unchanged API)
+// -----------------------------------------------------------------------------
 export const colorUtils = {
   /**
    * Add alpha channel to hex color
    * @param hexColor - Hex color string (e.g., "#FFFFFF")
    * @param alpha - Alpha value 0-100
-   * @returns Hex color with alpha
    */
   addAlpha(hexColor: string, alpha: number): string {
     const clampedAlpha = Math.max(0, Math.min(100, alpha));
@@ -403,12 +440,11 @@ export const colorUtils = {
    * Convert hex to rgba
    * @param hexColor - Hex color string
    * @param alpha - Alpha value 0-1
-   * @returns rgba string
    */
   hexToRgba(hexColor: string, alpha: number): string {
-    let cleanHex = hexColor.startsWith('#') ? hexColor.slice(1) : hexColor;
+    let cleanHex = hexColor.startsWith("#") ? hexColor.slice(1) : hexColor;
     if (cleanHex.length === 3) {
-      cleanHex = cleanHex.split('').map(c => c + c).join('');
+      cleanHex = cleanHex.split("").map((c) => c + c).join("");
     }
     const r = parseInt(cleanHex.substring(0, 2), 16);
     const g = parseInt(cleanHex.substring(2, 4), 16);
@@ -417,9 +453,9 @@ export const colorUtils = {
   },
 };
 
-/**
- * Type exports for TypeScript autocomplete
- */
+// -----------------------------------------------------------------------------
+// Type exports
+// -----------------------------------------------------------------------------
 export type ColorPalette = typeof palette;
 export type SemanticColors = typeof colors;
 export type ColorToken = keyof typeof colors;

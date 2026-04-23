@@ -48,9 +48,13 @@ export { easingCurves, easings } from "./easingCurves";
 export { zIndex } from "./zIndex";
 export type { ZIndexLevel } from "./zIndex";
 
-// Color Tokens (Task 3C.1)
-export { colors, palette, colorUtils } from "./colors";
+// Color Tokens (Task 3C.1 + cosmic migration)
+export { colors, palette, colorUtils, buildColors } from "./colors";
 export type { ColorPalette, SemanticColors, ColorToken } from "./colors";
+
+// Theme Presets (cosmic v4.2 — 5 runtime-switchable palettes)
+export { presets, presetList, DEFAULT_THEME_ID } from "./presets";
+export type { ThemeId, ThemePreset } from "./presets";
 
 // Spacing Tokens
 export { spacing } from "./spacing";

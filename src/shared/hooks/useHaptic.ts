@@ -48,5 +48,15 @@ export function useHaptic() {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
   }, [reduceMotion]);
 
-  return { light, medium, heavy, success, warning, error };
+  /**
+   * Selection haptic — a subtle tick used for picker-style interactions
+   * (mood face selection, radio group changes, slider stops, theme switching).
+   * Intentionally lighter than `light()`; never use for errors or warnings.
+   */
+  const selection = useCallback(() => {
+    if (reduceMotion || !Haptics || Platform.OS === "web") return;
+    Haptics.selectionAsync();
+  }, [reduceMotion]);
+
+  return { light, medium, heavy, success, warning, error, selection };
 }

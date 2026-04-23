@@ -95,11 +95,32 @@ const stagger: Record<StaggerKey, number> = {
 };
 
 /**
- * Animations object containing duration and stagger
+ * Reanimated spring presets for common press/enter/bounce feedback.
+ *
+ * Usage:
+ * ```ts
+ * import { animations } from '@/shared/theme';
+ * scale.value = withSpring(1, animations.springs.snappy);
+ * ```
+ */
+export const springs = {
+  /** Snappy feedback for button presses, toggles — quick recovery */
+  snappy: { damping: 18, stiffness: 300 } satisfies SpringConfig,
+  /** Gentle entrance for cards, modals — smooth settle */
+  gentle: { damping: 22, stiffness: 180 } satisfies SpringConfig,
+  /** Bouncy celebration — mood face select, success affordances */
+  bounce: { damping: 12, stiffness: 250 } satisfies SpringConfig,
+} as const;
+
+export type SpringPreset = keyof typeof springs;
+
+/**
+ * Animations object containing duration, stagger, and spring presets.
  */
 export const animations = {
   duration,
   stagger,
+  springs,
 } as const;
 
 /**
