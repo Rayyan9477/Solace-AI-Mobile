@@ -19,11 +19,9 @@ export * from "./journal";
 // Sessions organisms
 export * from "./sessions";
 
-// Resources organisms
-export * from "./resources";
-
-// Community organisms
-export * from "./community";
+// NOTE: `./resources` (ArticleCard) and `./community` (PostCard) organism
+// folders were deleted in Sprint 3 (prototype v4.2 migration) together with
+// the feature folders that consumed them.
 
 // Notifications organisms
 export * from "./notifications";
