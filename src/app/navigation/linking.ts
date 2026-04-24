@@ -258,19 +258,9 @@ const screenPaths: Record<string, string> = {
   AboutCompany: "profile/about",
   LiveChatSupport: "profile/support",
 
-  // Community screens
-  CommunityWelcome: "community",
-  CommunityFeed: "community/feed",
-  PostDetail: "community/post/:postId",
-  CreatePost: "community/new",
-  UserProfile: "community/user/:userId",
-
-  // Resources screens
-  ResourcesHome: "resources",
-  ArticlesList: "resources/articles",
-  ArticleDetail: "resources/article/:articleId",
-  CoursesList: "resources/courses",
-  CourseDetail: "resources/course/:courseId",
+  // NOTE: Sprint 3 (prototype v4.2) removed community/* and resources/* deep
+  // links together with the feature folders. Stress deep links were never
+  // registered at the root; they only existed under OnboardingStack.
 };
 
 /**
