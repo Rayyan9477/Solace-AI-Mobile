@@ -1,0 +1,209 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MoodFace snapshot renders a stable tree for level=4 content at 60px 1`] = `
+<View
+  accessibilityLabel="Content mood"
+  accessibilityRole="image"
+  style={
+    [
+      {
+        "alignItems": "center",
+        "justifyContent": "center",
+        "overflow": "hidden",
+      },
+      {
+        "borderRadius": 30,
+        "height": 60,
+        "width": 60,
+      },
+    ]
+  }
+>
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight={60}
+    bbWidth={60}
+    focusable={false}
+    height={60}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "flex": 0,
+          "height": 60,
+          "width": 60,
+        },
+      ]
+    }
+    vbHeight={100}
+    vbWidth={100}
+    width={60}
+  >
+    <RNSVGGroup
+      fill={
+        {
+          "payload": 4278190080,
+          "type": 0,
+        }
+      }
+    >
+      <RNSVGDefs>
+        <RNSVGLinearGradient
+          gradient={
+            [
+              0,
+              -6568784,
+              1,
+              -8738156,
+            ]
+          }
+          gradientTransform={null}
+          gradientUnits={0}
+          name="moodFace-grad-4"
+          x1="0"
+          x2="1"
+          y1="0"
+          y2="1"
+        />
+      </RNSVGDefs>
+      <RNSVGCircle
+        cx={50}
+        cy={50}
+        fill={
+          {
+            "brushRef": "moodFace-grad-4",
+            "type": 1,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+        r={50}
+      />
+      <RNSVGCircle
+        cx={50}
+        cy={42}
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+          ]
+        }
+        r={48}
+        stroke={
+          {
+            "payload": 956301311,
+            "type": 0,
+          }
+        }
+        strokeWidth={0.5}
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight={54}
+    bbWidth={54}
+    focusable={false}
+    height={54}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        {
+          "flex": 0,
+          "height": 54,
+          "width": 54,
+        },
+      ]
+    }
+    vbHeight={100}
+    vbWidth={100}
+    width={54}
+  >
+    <RNSVGGroup
+      fill={
+        {
+          "payload": 4278190080,
+          "type": 0,
+        }
+      }
+    >
+      <RNSVGCircle
+        cx={36}
+        cy={44}
+        fill={
+          {
+            "payload": 4278454296,
+            "type": 0,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+        r={3.5}
+      />
+      <RNSVGCircle
+        cx={64}
+        cy={44}
+        fill={
+          {
+            "payload": 4278454296,
+            "type": 0,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+        r={3.5}
+      />
+      <RNSVGPath
+        d="M35 60 Q50 70 65 60"
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeLinecap",
+          ]
+        }
+        stroke={
+          {
+            "payload": 4278454296,
+            "type": 0,
+          }
+        }
+        strokeLinecap={1}
+        strokeWidth={3.5}
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+</View>
+`;

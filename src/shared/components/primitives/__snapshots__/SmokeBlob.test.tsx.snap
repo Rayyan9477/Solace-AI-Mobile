@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SmokeBlob renders a stable snapshot 1`] = `
+<View
+  accessibilityElementsHidden={true}
+  importantForAccessibility="no-hide-descendants"
+  pointerEvents="none"
+  style={
+    [
+      {
+        "height": 200,
+        "width": 200,
+      },
+      undefined,
+    ]
+  }
+>
+  <RNSVGSvgView
+    bbHeight={200}
+    bbWidth={200}
+    focusable={false}
+    height={200}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "flex": 0,
+          "height": 200,
+          "width": 200,
+        },
+      ]
+    }
+    width={200}
+  >
+    <RNSVGGroup
+      fill={
+        {
+          "payload": 4278190080,
+          "type": 0,
+        }
+      }
+    >
+      <RNSVGDefs>
+        <RNSVGRadialGradient
+          cx="40%"
+          cy="40%"
+          fx="40%"
+          fy="40%"
+          gradient={
+            [
+              0,
+              865846448,
+              0.5,
+              312198320,
+              0.8,
+              10208432,
+            ]
+          }
+          gradientTransform={null}
+          gradientUnits={0}
+          name="smoke-sage-200"
+          rx="60%"
+          ry="80%"
+        />
+      </RNSVGDefs>
+      <RNSVGEllipse
+        cx={100}
+        cy={100}
+        fill={
+          {
+            "brushRef": "smoke-sage-200",
+            "type": 1,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+        rx={100}
+        ry={100}
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+</View>
+`;

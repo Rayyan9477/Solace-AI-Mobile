@@ -442,38 +442,6 @@ export type SleepStackParamList = {
 };
 
 // ============================================================================
-// STRESS STACK
-// Stress management screens
-// ============================================================================
-
-/**
- * Stress Stack Parameter List
- * @description Navigation params for stress management screens
- */
-export type StressStackParamList = {
-  /** Screen 83: Stress dashboard */
-  StressDashboard: undefined;
-
-  /** Screen 84: Stress level assessment */
-  StressAssessment: undefined;
-
-  /** Screen 85: Stress triggers identification */
-  StressTriggers: undefined;
-
-  /** Screen 86: Coping strategies */
-  CopingStrategies: undefined;
-
-  /** Screen 87: Quick relief exercises */
-  QuickRelief: undefined;
-
-  /** Screen 88: Stress trends analysis */
-  StressTrends: undefined;
-
-  /** Screen 89: Breathing exercise */
-  BreathingExercise: undefined;
-};
-
-// ============================================================================
 // MINDFUL STACK
 // Mindfulness/meditation screens
 // ============================================================================
@@ -521,105 +489,6 @@ export type MindfulStackParamList = {
 
   /** Screen 98: Session history */
   SessionHistory: undefined;
-};
-
-// ============================================================================
-// RESOURCES STACK
-// Educational resources and courses
-// ============================================================================
-
-/**
- * Resources Stack Parameter List
- * @description Navigation params for educational resources
- */
-export type ResourcesStackParamList = {
-  /** Screen 99: Resources home */
-  ResourcesHome: undefined;
-
-  /** Screen 100: Articles list */
-  ArticlesList: {
-    /** Filter by category */
-    category?: string;
-  };
-
-  /** Screen 101: Article detail */
-  ArticleDetail: {
-    /** Article ID */
-    articleId: string;
-  };
-
-  /** Screen 102: Courses list */
-  CoursesList: undefined;
-
-  /** Screen 103: Course detail */
-  CourseDetail: {
-    /** Course ID */
-    courseId: string;
-  };
-
-  /** Screen 104: Video player */
-  VideoPlayer: {
-    /** Video ID */
-    videoId: string;
-    /** Video title */
-    title: string;
-  };
-
-  /** Screen 105: Bookmarks/saved */
-  Bookmarks: undefined;
-
-  /** Screen 106: Resource search */
-  ResourceSearch: undefined;
-};
-
-// ============================================================================
-// COMMUNITY STACK
-// Community support and social features
-// ============================================================================
-
-/**
- * Community Stack Parameter List
- * @description Navigation params for community screens
- */
-export type CommunityStackParamList = {
-  /** Screen 107: Community welcome */
-  CommunityWelcome: undefined;
-
-  /** Screen 108: Community feed */
-  CommunityFeed: {
-    /** Filter by category */
-    filter?: string;
-  };
-
-  /** Screen 109: Post detail */
-  PostDetail: {
-    /** Post ID */
-    postId: string;
-  };
-
-  /** Screen 110: Create new post */
-  CreatePost: undefined;
-
-  /** Screen 111: User profile */
-  UserProfile: {
-    /** User ID */
-    userId: string;
-  };
-
-  /** Screen 112: Success stories */
-  SuccessStories: undefined;
-
-  /** Screen 113: Support groups */
-  SupportGroups: undefined;
-
-  /** Screen 114: Community chatbot */
-  CommunityChatbot: undefined;
-
-  /** Screen 115: Post categories */
-  PostCategories: undefined;
-
-  /** Screen 116: Community notifications */
-  CommunityNotifications: undefined;
 };
 
 // ============================================================================
@@ -833,20 +702,15 @@ export type RootStackParamList = {
   /** Sleep feature modal flow */
   SleepModal: NavigatorScreenParams<SleepStackParamList>;
 
-  /** Stress management modal flow */
-  StressModal: NavigatorScreenParams<StressStackParamList>;
-
-  /** Community feature modal flow */
-  CommunityModal: NavigatorScreenParams<CommunityStackParamList>;
-
   /** Notifications modal flow */
   NotificationsModal: NavigatorScreenParams<NotificationsStackParamList>;
 
-  // TODO: Re-add when implemented
-  // SearchModal: NavigatorScreenParams<SearchStackParamList>;
-  // ResourcesModal: NavigatorScreenParams<ResourcesStackParamList>;
-  // MindfulModal: NavigatorScreenParams<MindfulStackParamList>;
-  // ErrorModal: NavigatorScreenParams<ErrorStackParamList>;
+  // Future modal flows — re-add when implemented:
+  //   SearchModal, MindfulModal, ErrorModal, CrisisModal.
+  //
+  // Removed in Sprint 3 (prototype v4.2 migration):
+  //   StressModal, CommunityModal, ResourcesModal — the prototype has no
+  //   stress/community/resources section; those 36 screens are deleted.
 };
 
 // ============================================================================
@@ -918,15 +782,6 @@ export type SleepScreenProps<T extends keyof SleepStackParamList> = NativeStackS
 >;
 
 /**
- * Stress Screen Props Helper
- * @description Type helper for stress stack screens
- */
-export type StressScreenProps<T extends keyof StressStackParamList> = NativeStackScreenProps<
-  StressStackParamList,
-  T
->;
-
-/**
  * Mindful Screen Props Helper
  * @description Type helper for mindful stack screens
  */
@@ -934,20 +789,6 @@ export type MindfulScreenProps<T extends keyof MindfulStackParamList> = NativeSt
   MindfulStackParamList,
   T
 >;
-
-/**
- * Resources Screen Props Helper
- * @description Type helper for resources stack screens
- */
-export type ResourcesScreenProps<T extends keyof ResourcesStackParamList> =
-  NativeStackScreenProps<ResourcesStackParamList, T>;
-
-/**
- * Community Screen Props Helper
- * @description Type helper for community stack screens
- */
-export type CommunityScreenProps<T extends keyof CommunityStackParamList> =
-  NativeStackScreenProps<CommunityStackParamList, T>;
 
 /**
  * Search Screen Props Helper

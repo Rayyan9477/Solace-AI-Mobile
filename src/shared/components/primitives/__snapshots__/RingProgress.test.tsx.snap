@@ -1,0 +1,143 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RingProgress renders a stable snapshot 1`] = `
+<View
+  accessibilityRole="progressbar"
+  accessibilityValue={
+    {
+      "max": 100,
+      "min": 0,
+      "now": 72,
+    }
+  }
+  style={
+    [
+      {
+        "height": 160,
+        "width": 160,
+      },
+      {
+        "alignItems": "center",
+        "justifyContent": "center",
+      },
+      undefined,
+    ]
+  }
+>
+  <RNSVGSvgView
+    bbHeight={160}
+    bbWidth={160}
+    focusable={false}
+    height={160}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "flex": 0,
+          "height": 160,
+          "width": 160,
+        },
+      ]
+    }
+    width={160}
+  >
+    <RNSVGGroup
+      fill={
+        {
+          "payload": 4278190080,
+          "type": 0,
+        }
+      }
+    >
+      <RNSVGDefs>
+        <RNSVGLinearGradient
+          gradient={
+            [
+              0,
+              -6568784,
+              1,
+              -7691265,
+            ]
+          }
+          gradientTransform={null}
+          gradientUnits={0}
+          name="ringProgress-sage-160"
+          x1="0"
+          x2="1"
+          y1="0"
+          y2="1"
+        />
+      </RNSVGDefs>
+      <RNSVGCircle
+        cx={80}
+        cy={80}
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+          ]
+        }
+        r={75}
+        stroke={
+          {
+            "payload": 234881023,
+            "type": 0,
+          }
+        }
+        strokeWidth={10}
+      />
+      <RNSVGCircle
+        cx={80}
+        cy={80}
+        fill={null}
+        matrix={
+          [
+            6.123233995736766e-17,
+            -1,
+            1,
+            6.123233995736766e-17,
+            0,
+            160,
+          ]
+        }
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeDasharray",
+            "strokeLinecap",
+          ]
+        }
+        r={75}
+        stroke={
+          {
+            "brushRef": "ringProgress-sage-160",
+            "type": 1,
+          }
+        }
+        strokeDasharray={
+          [
+            471.23889803846896,
+            471.23889803846896,
+          ]
+        }
+        strokeLinecap={1}
+        strokeWidth={10}
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+</View>
+`;

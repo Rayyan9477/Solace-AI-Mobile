@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GlassCard renders a stable snapshot 1`] = `
+<View
+  style={
+    [
+      {
+        "borderWidth": 1,
+        "overflow": "hidden",
+        "position": "relative",
+      },
+      {
+        "borderColor": "rgba(255,255,255,0.06)",
+        "borderRadius": 20,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    intensity={20}
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "borderRadius": 20,
+        },
+      ]
+    }
+    tint="dark"
+  />
+  <View
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "backgroundColor": "rgba(22, 29, 61, 0.5)",
+          "borderRadius": 20,
+        },
+      ]
+    }
+  />
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "borderTopColor": "rgba(255,255,255,0.05)",
+          "borderTopWidth": 1,
+          "height": 1,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "borderRadius": 20,
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      {
+        "position": "relative",
+        "zIndex": 1,
+      }
+    }
+  >
+    <Text>
+      snap
+    </Text>
+  </View>
+</View>
+`;

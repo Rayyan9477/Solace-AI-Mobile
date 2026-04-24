@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GlassAuroraCard renders a stable snapshot 1`] = `
+<View
+  style={
+    [
+      {
+        "borderWidth": 1,
+        "elevation": 12,
+        "overflow": "hidden",
+        "position": "relative",
+        "shadowColor": "#6B8FFF",
+        "shadowOffset": {
+          "height": 16,
+          "width": 0,
+        },
+        "shadowOpacity": 0.28,
+        "shadowRadius": 32,
+      },
+      {
+        "borderColor": "rgba(107, 143, 255, 0.2)",
+        "borderRadius": 24,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    intensity={28}
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "borderRadius": 24,
+        },
+      ]
+    }
+    tint="dark"
+  />
+  <ViewManagerAdapter_ExpoLinearGradient
+    colors={
+      [
+        443256831,
+        3340115261,
+      ]
+    }
+    endPoint={
+      [
+        1,
+        1,
+      ]
+    }
+    startPoint={
+      [
+        0,
+        0,
+      ]
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "borderRadius": 24,
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      {
+        "position": "relative",
+        "zIndex": 1,
+      }
+    }
+  >
+    <Text>
+      snap
+    </Text>
+  </View>
+</View>
+`;
