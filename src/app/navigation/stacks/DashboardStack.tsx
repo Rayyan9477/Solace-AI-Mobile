@@ -1,27 +1,20 @@
 /**
  * Dashboard Stack Navigator
- * @description Navigation stack for dashboard/home feature screens
- * @module Navigation
+ * @description Navigation stack for dashboard / home feature screens.
+ *
+ * Sprint 4 (prototype v4.2): slimmed to HomeDashboard. The Solace-Score
+ * detail / insights / suggestions sub-screens were deleted; S6 builds
+ * Home v2 (prototype #20) which absorbs the score-card + insights inline.
  */
 
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { DashboardStackParamList } from "../../../shared/types/navigation";
 
-// Dashboard Screens
 import { HomeDashboardScreen } from "../../../features/dashboard/screens/HomeDashboardScreen";
-import { SolaceScoreDetailScreen } from "../../../features/dashboard/screens/SolaceScoreDetailScreen";
-import { SolaceScoreInsightsScreen } from "../../../features/dashboard/screens/SolaceScoreInsightsScreen";
-import { AISuggestionsScreen } from "../../../features/dashboard/screens/AISuggestionsScreen";
-import { MindfulnessActivitiesScreen } from "../../../features/dashboard/screens/MindfulnessActivitiesScreen";
-import { SleepQualityIncreaseScreen } from "../../../features/profile/screens/SleepQualityIncreaseScreen";
 
 const Stack = createNativeStackNavigator<DashboardStackParamList>();
 
-/**
- * DashboardStack Navigator Component
- * @returns {React.ReactElement} Dashboard stack navigator
- */
 export function DashboardStack(): React.ReactElement {
   return (
     <Stack.Navigator
@@ -32,15 +25,6 @@ export function DashboardStack(): React.ReactElement {
       }}
     >
       <Stack.Screen name="HomeDashboard" component={HomeDashboardScreen} />
-      <Stack.Screen name="SolaceScoreDetail" component={SolaceScoreDetailScreen} />
-      <Stack.Screen name="SolaceScoreInsights" component={SolaceScoreInsightsScreen} />
-      <Stack.Screen name="AISuggestions" component={AISuggestionsScreen} />
-      <Stack.Screen name="MindfulnessActivities" component={MindfulnessActivitiesScreen} />
-      <Stack.Screen
-        name="SolaceScoreIncrease"
-        component={SleepQualityIncreaseScreen}
-        options={{ presentation: "modal", animation: "fade" }}
-      />
     </Stack.Navigator>
   );
 }

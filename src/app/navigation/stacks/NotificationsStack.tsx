@@ -1,20 +1,19 @@
 /**
  * Notifications Stack Navigator
- * @description Navigation stack for smart notifications and alert screens
- * @module Navigation
+ * @description Navigation stack for the notifications inbox.
+ *
+ * Sprint 4 (prototype v4.2): slimmed to NotificationsInbox +
+ * NotificationSettings + NotificationDetail. The 5 per-notification-type
+ * "celebration" screens (SolaceScoreIncrease, JournalProgress,
+ * TherapyReminder, StressDecreased, MeditationReminder) were deleted;
+ * those become NotificationCard variants in S5.
  */
 
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { NotificationsStackParamList } from "../../../shared/types/navigation";
 
-// Notifications Screens
 import { NotificationsDashboardScreen } from "../../../features/notifications/screens/NotificationsDashboardScreen";
-import { SolaceScoreIncreaseScreen } from "../../../features/notifications/screens/SolaceScoreIncreaseScreen";
-import { JournalProgressScreen } from "../../../features/notifications/screens/JournalProgressScreen";
-import { TherapyReminderScreen } from "../../../features/notifications/screens/TherapyReminderScreen";
-import { StressDecreasedScreen } from "../../../features/notifications/screens/StressDecreasedScreen";
-import { MeditationReminderScreen } from "../../../features/notifications/screens/MeditationReminderScreen";
 import { NotificationSettingsScreen } from "../../../features/profile/screens/NotificationSettingsScreen";
 
 const Stack = createNativeStackNavigator<NotificationsStackParamList>();
@@ -26,15 +25,21 @@ const DEFAULT_CHATBOT_TOGGLES = [
 ];
 
 const DEFAULT_MISC_ITEMS = [
-  { id: "dnd-hours", label: "Do not disturb hours", type: "value" as const, value: "10:00 PM - 7:00 AM" },
-  { id: "community-updates", label: "Community updates", type: "toggle" as const, enabled: true },
+  {
+    id: "dnd-hours",
+    label: "Do not disturb hours",
+    type: "value" as const,
+    value: "10:00 PM - 7:00 AM",
+  },
+  {
+    id: "community-updates",
+    label: "Community updates",
+    type: "toggle" as const,
+    enabled: true,
+  },
 ];
 
-// ---------------------------------------------------------------------------
-// Route wrappers
-// ---------------------------------------------------------------------------
-
-function NotificationsDashboardRoute({ navigation }: any): React.ReactElement {
+function NotificationsInboxRoute({ navigation }: any): React.ReactElement {
   return (
     <NotificationsDashboardScreen
       unreadCount={3}
@@ -70,13 +75,15 @@ function NotificationSettingsRoute({ navigation }: any): React.ReactElement {
       return;
     }
 
-    setChatbotToggles((prev) => prev.map((item) => (
-      item.id === id ? { ...item, enabled: value } : item
-    )));
+    setChatbotToggles((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, enabled: value } : item)),
+    );
 
-    setMiscItems((prev) => prev.map((item) => (
-      item.id === id && item.type === "toggle" ? { ...item, enabled: value } : item
-    )));
+    setMiscItems((prev) =>
+      prev.map((item) =>
+        item.id === id && item.type === "toggle" ? { ...item, enabled: value } : item,
+      ),
+    );
   };
 
   return (
@@ -96,80 +103,20 @@ function NotificationSettingsRoute({ navigation }: any): React.ReactElement {
   );
 }
 
-function SolaceScoreIncreaseRoute({ navigation }: any): React.ReactElement {
+function NotificationDetailRoute({ navigation }: any): React.ReactElement {
+  // Placeholder until S9 builds a proper notification detail surface.
   return (
-    <SolaceScoreIncreaseScreen
-      scoreChange={5}
-      percentageChange={12}
-      currentScore={78}
-      comparisonPeriod="last week"
+    <NotificationsDashboardScreen
+      unreadCount={0}
+      sections={[]}
       onBack={() => navigation.goBack()}
-      onSeeScore={() => navigation.navigate("NotificationsInbox")}
+      onSettings={() => navigation.navigate("NotificationSettings")}
+      onNotificationPress={() => {}}
+      onOptionsPress={() => {}}
     />
   );
 }
 
-function JournalProgressRoute({ navigation }: any): React.ReactElement {
-  return (
-    <JournalProgressScreen
-      completedCount={6}
-      targetCount={10}
-      remainingCount={4}
-      onBack={() => navigation.goBack()}
-      onSeeJournal={() => navigation.navigate("NotificationsInbox")}
-    />
-  );
-}
-
-function TherapyReminderRoute({ navigation }: any): React.ReactElement {
-  return (
-    <TherapyReminderScreen
-      sessionTime="3:00 PM"
-      sessionTitle="Therapy Session"
-      countdownHours={2}
-      countdownMinutes={30}
-      onBack={() => navigation.goBack()}
-      onSeeSchedule={() => navigation.navigate("NotificationsInbox")}
-    />
-  );
-}
-
-function StressDecreasedRoute({ navigation }: any): React.ReactElement {
-  return (
-    <StressDecreasedScreen
-      currentLevel="Low"
-      emojis={[
-        { id: "relaxed", emoji: "😌", label: "Relaxed" },
-        { id: "calm", emoji: "😊", label: "Calm" },
-        { id: "happy", emoji: "😁", label: "Happy" },
-        { id: "content", emoji: "🙂", label: "Content" },
-        { id: "peaceful", emoji: "😇", label: "Peaceful" },
-      ]}
-      highlightedEmojiId="calm"
-      onBack={() => navigation.goBack()}
-      onSeeStressLevel={() => navigation.navigate("NotificationsInbox")}
-    />
-  );
-}
-
-function MeditationReminderRoute({ navigation }: any): React.ReactElement {
-  return (
-    <MeditationReminderScreen
-      recommendedDuration={15}
-      onBack={() => navigation.goBack()}
-      onStartMeditation={() => navigation.navigate("NotificationsInbox")}
-    />
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Stack Navigator
-// ---------------------------------------------------------------------------
-
-/**
- * NotificationsStack Navigator Component
- * @returns {React.ReactElement} Notifications stack navigator
- */
 export function NotificationsStack(): React.ReactElement {
   return (
     <Stack.Navigator
@@ -179,31 +126,11 @@ export function NotificationsStack(): React.ReactElement {
         animation: "slide_from_right",
       }}
     >
-      <Stack.Screen name="NotificationsInbox" component={NotificationsDashboardRoute} />
+      <Stack.Screen name="NotificationsInbox" component={NotificationsInboxRoute} />
       <Stack.Screen name="NotificationSettings" component={NotificationSettingsRoute} />
       <Stack.Screen
-        name="FreudScoreIncreaseNotification"
-        component={SolaceScoreIncreaseRoute}
-        options={{ presentation: "modal", animation: "fade" }}
-      />
-      <Stack.Screen
-        name="MoodTransitionAlert"
-        component={JournalProgressRoute}
-        options={{ presentation: "modal", animation: "fade" }}
-      />
-      <Stack.Screen
         name="NotificationDetail"
-        component={TherapyReminderRoute}
-        options={{ presentation: "modal", animation: "fade" }}
-      />
-      <Stack.Screen
-        name="CriticalScoreWarning"
-        component={StressDecreasedRoute}
-        options={{ presentation: "modal", animation: "fade" }}
-      />
-      <Stack.Screen
-        name="SleepQualityIncreaseNotification"
-        component={MeditationReminderRoute}
+        component={NotificationDetailRoute}
         options={{ presentation: "modal", animation: "fade" }}
       />
     </Stack.Navigator>
