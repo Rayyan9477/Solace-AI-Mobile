@@ -48,36 +48,21 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 
 /**
  * Routes that should display full-screen without the tab bar.
- * These are detail/composer/immersive screens nested inside each tab stack.
+ * Sprint 4 (prototype v4.2): trimmed to survivors. Sprints 6-9 will re-add
+ * routes for new immersive screens (DailyCheckIn, JournalComposer, etc.).
  */
 const FULLSCREEN_ROUTES = new Set([
-  // Chat stack detail screens
+  // Chat stack
   "ActiveChat",
-  "NewConversation",
-  "VoiceInput",
-  "ExpressionAnalysis",
-  "ExpressionAnalysisResults",
-  "CrisisSupportAlert",
-  // Journal stack detail screens
+  // Journal stack
   "CreateJournalEntry",
   "EditJournalEntry",
-  "VoiceJournalRecording",
   "JournalEntryDetail",
-  "JournalCalendar",
-  "JournalInsights",
   "TextJournalComposer",
-  // Mood stack detail screens
+  // Mood stack
   "MoodSelector",
-  "MoodHistory",
   "MoodCalendar",
   "MoodAnalytics",
-  "MoodAISuggestions",
-  // Dashboard stack detail screens
-  "SolaceScoreDetail",
-  "SolaceScoreInsights",
-  "AISuggestions",
-  "MindfulnessActivities",
-  "SolaceScoreIncrease",
 ]);
 
 /**

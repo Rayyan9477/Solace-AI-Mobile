@@ -11,6 +11,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { MoodStackParamList } from "../../../shared/types/navigation";
 
+import { palette } from "../../../shared/theme";
 import { MoodDashboardScreen } from "../../../features/mood/screens/MoodDashboardScreen";
 import { MoodSelectorScreen } from "../../../features/mood/screens/MoodSelectorScreen";
 import { MoodCalendarScreen } from "../../../features/mood/screens/MoodCalendarScreen";
@@ -18,12 +19,13 @@ import { MoodAnalyticsScreen } from "../../../features/mood/screens/MoodAnalytic
 
 const Stack = createNativeStackNavigator<MoodStackParamList>();
 
+// Cosmic palette mapping: 5-level mood gradient (grief → energy)
 const DEFAULT_MOOD_OPTIONS = [
-  { index: 0, label: "Struggling", emoji: "😢", color: "#7B6CB8" },
-  { index: 1, label: "Down", emoji: "😕", color: "#9B7EB0" },
-  { index: 2, label: "Neutral", emoji: "😐", color: "#C4A574" },
-  { index: 3, label: "Content", emoji: "🙂", color: "#9BC4B0" },
-  { index: 4, label: "Overjoyed", emoji: "😄", color: "#F4A77E" },
+  { index: 0, label: "Struggling", emoji: "😢", color: palette.lavender[500] },
+  { index: 1, label: "Down", emoji: "😕", color: palette.lavender[300] },
+  { index: 2, label: "Neutral", emoji: "😐", color: palette.warm[200] },
+  { index: 3, label: "Content", emoji: "🙂", color: palette.sage[300] },
+  { index: 4, label: "Overjoyed", emoji: "😄", color: palette.peach[300] },
 ];
 
 function MoodSelectorRoute({ navigation }: any): React.ReactElement {
