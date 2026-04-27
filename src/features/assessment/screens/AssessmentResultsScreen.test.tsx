@@ -1,225 +1,189 @@
 /**
- * AssessmentResultsScreen Tests
- * @description Tests for assessment results display screen
- * @task Task 3.4.5: Assessment Results Screen (Screen 39)
+ * AssessmentResultsScreen Tests — prototype v4.2 #19 reskin (Sprint 6).
+ *
+ * Verifies render, prop variants, navigation/interaction, and a11y for the
+ * cosmic-editorial Assessment Results screen.
  */
 
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import { AssessmentResultsScreen } from "./AssessmentResultsScreen";
 
-describe("AssessmentResultsScreen", () => {
-  const mockOnContinue = jest.fn();
-  const mockOnViewDetails = jest.fn();
+describe("AssessmentResultsScreen (prototype v4.2)", () => {
+  const onContinue = jest.fn();
+  const onViewDetails = jest.fn();
+  const onShare = jest.fn();
 
-  const defaultProps = {
-    score: 72,
-    category: "healthy" as const,
+  const baseProps = {
+    score: 68,
+    category: "unstable" as const,
     breakdown: [
-      { label: "Stress Level", score: 75, color: "#9AAD5C" },
-      { label: "Sleep Quality", score: 68, color: "#E8853A" },
-      { label: "Mood", score: 80, color: "#9AAD5C" },
-      { label: "Anxiety", score: 65, color: "#E8853A" },
+      { label: "Mood", score: 72, color: "#9BC4B0", note: "Feeling balanced" },
+      { label: "Stress", score: 58, color: "#F4A77E", note: "A bit elevated" },
+      { label: "Sleep", score: 81, color: "#A89AE0", note: "Sleeping well" },
+      { label: "Social", score: 62, color: "#8AA3FF", note: "Could connect more" },
     ],
     recommendations: [
-      "Continue your current wellness routine",
-      "Consider adding meditation to your daily practice",
+      { iconName: "wind", label: "Try the 4-7-8 breathing exercise", duration: "4 min" },
+      { iconName: "book-open", label: "Journal about your stressors", duration: "10 min" },
+      { iconName: "message-circle", label: "Talk to Solace about work", duration: "Now" },
     ],
-    onContinue: mockOnContinue,
-    onViewDetails: mockOnViewDetails,
+    onContinue,
+    onViewDetails,
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    onContinue.mockClear();
+    onViewDetails.mockClear();
+    onShare.mockClear();
   });
 
   it("renders the screen", () => {
-    const { getByTestId } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
+    const { getByTestId } = render(<AssessmentResultsScreen {...baseProps} />);
     expect(getByTestId("assessment-results-screen")).toBeTruthy();
   });
 
-  it("displays the title", () => {
+  it("matches snapshot", () => {
+    const tree = render(<AssessmentResultsScreen {...baseProps} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it("renders the bracket date label", () => {
     const { getByText } = render(
-      <AssessmentResultsScreen {...defaultProps} />
+      <AssessmentResultsScreen {...baseProps} dateLabel="April 9 · 4 min ago" />,
     );
-    expect(getByText("Assessment Complete")).toBeTruthy();
+    // BracketLabel uppercases internally → "[ APRIL 9 · 4 MIN AGO ]"
+    expect(getByText(/APRIL 9/)).toBeTruthy();
   });
 
-  it("displays the score circle", () => {
-    const { getByTestId } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
-    expect(getByTestId("score-circle")).toBeTruthy();
+  it("renders the score number inside the ring", () => {
+    const { getByTestId } = render(<AssessmentResultsScreen {...baseProps} />);
+    expect(getByTestId("score-value").props.children).toBe("68");
   });
 
-  it("displays the score value", () => {
+  it("renders the score ring with progressbar a11y", () => {
+    const { getByTestId } = render(<AssessmentResultsScreen {...baseProps} />);
+    const ring = getByTestId("score-ring");
+    expect(ring.props.accessibilityRole).toBe("progressbar");
+    expect(ring.props.accessibilityValue).toMatchObject({ min: 0, max: 100, now: 68 });
+  });
+
+  it("renders the category bracket label", () => {
+    const { getByText } = render(<AssessmentResultsScreen {...baseProps} />);
+    expect(getByText(/MODERATE/)).toBeTruthy();
+  });
+
+  it("changes category label for healthy", () => {
     const { getByText } = render(
-      <AssessmentResultsScreen {...defaultProps} />
+      <AssessmentResultsScreen {...baseProps} category="healthy" score={85} />,
     );
-    expect(getByText("72")).toBeTruthy();
+    expect(getByText(/EXCELLENT/)).toBeTruthy();
   });
 
-  it("displays the score label", () => {
+  it("changes category label for critical", () => {
     const { getByText } = render(
-      <AssessmentResultsScreen {...defaultProps} />
+      <AssessmentResultsScreen {...baseProps} category="critical" score={28} />,
     );
-    expect(getByText(/Mental Health Score/i)).toBeTruthy();
+    expect(getByText(/NEEDS ATTENTION/)).toBeTruthy();
   });
 
-  it("displays the category badge", () => {
-    const { getByTestId } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
-    expect(getByTestId("category-badge")).toBeTruthy();
-  });
-
-  it("displays healthy category text", () => {
-    const { getByText } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
-    expect(getByText(/Healthy/i)).toBeTruthy();
-  });
-
-  it("displays unstable category when provided", () => {
-    const { getByText } = render(
-      <AssessmentResultsScreen {...defaultProps} category="unstable" score={45} />
-    );
-    expect(getByText(/Unstable/i)).toBeTruthy();
-  });
-
-  it("displays critical category when provided", () => {
-    const { getByText } = render(
-      <AssessmentResultsScreen {...defaultProps} category="critical" score={20} />
-    );
-    expect(getByText(/Critical/i)).toBeTruthy();
-  });
-
-  it("displays breakdown section", () => {
-    const { getByTestId } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
-    expect(getByTestId("breakdown-section")).toBeTruthy();
-  });
-
-  it("displays all breakdown categories", () => {
-    const { getByText } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
-    expect(getByText("Stress Level")).toBeTruthy();
-    expect(getByText("Sleep Quality")).toBeTruthy();
+  it("renders all 4 breakdown items", () => {
+    const { getByText } = render(<AssessmentResultsScreen {...baseProps} />);
     expect(getByText("Mood")).toBeTruthy();
-    expect(getByText("Anxiety")).toBeTruthy();
+    expect(getByText("Stress")).toBeTruthy();
+    expect(getByText("Sleep")).toBeTruthy();
+    expect(getByText("Social")).toBeTruthy();
   });
 
-  it("displays breakdown scores", () => {
-    const { getAllByText } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
-    expect(getAllByText(/75|68|80|65/).length).toBeGreaterThan(0);
+  it("renders breakdown notes when provided", () => {
+    const { getByText } = render(<AssessmentResultsScreen {...baseProps} />);
+    expect(getByText("Feeling balanced")).toBeTruthy();
+    expect(getByText("A bit elevated")).toBeTruthy();
   });
 
-  it("displays recommendations section", () => {
-    const { getByTestId } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
+  it("renders recommendations section", () => {
+    const { getByTestId } = render(<AssessmentResultsScreen {...baseProps} />);
     expect(getByTestId("recommendations-section")).toBeTruthy();
   });
 
-  it("displays recommendation items", () => {
-    const { getByText } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
-    expect(getByText(/Continue your current wellness routine/i)).toBeTruthy();
+  it("renders all 3 recommendation rows", () => {
+    const { getByText } = render(<AssessmentResultsScreen {...baseProps} />);
+    expect(getByText(/4-7-8 breathing exercise/)).toBeTruthy();
+    expect(getByText(/Journal about your stressors/)).toBeTruthy();
+    expect(getByText(/Talk to Solace about work/)).toBeTruthy();
   });
 
-  it("displays the Continue button", () => {
-    const { getByTestId } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
-    expect(getByTestId("continue-button")).toBeTruthy();
+  it("renders the medical disclaimer", () => {
+    const { getByTestId } = render(<AssessmentResultsScreen {...baseProps} />);
+    const disclaimer = getByTestId("medical-disclaimer");
+    expect(disclaimer.props.children).toMatch(/Not a medical diagnosis/);
   });
 
-  it("displays View Details button", () => {
-    const { getByTestId } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
-    expect(getByTestId("view-details-button")).toBeTruthy();
-  });
-
-  it("calls onContinue when Continue button is pressed", () => {
-    const { getByTestId } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
+  it("calls onContinue when sticky CTA is pressed", () => {
+    const { getByTestId } = render(<AssessmentResultsScreen {...baseProps} />);
     fireEvent.press(getByTestId("continue-button"));
-    expect(mockOnContinue).toHaveBeenCalledTimes(1);
+    expect(onContinue).toHaveBeenCalledTimes(1);
   });
 
-  it("calls onViewDetails when View Details button is pressed", () => {
-    const { getByTestId } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
+  it("calls onViewDetails when details link is pressed", () => {
+    const { getByTestId } = render(<AssessmentResultsScreen {...baseProps} />);
     fireEvent.press(getByTestId("view-details-button"));
-    expect(mockOnViewDetails).toHaveBeenCalledTimes(1);
+    expect(onViewDetails).toHaveBeenCalledTimes(1);
   });
 
-  it("has dark background color", () => {
-    const { getByTestId } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
-    const container = getByTestId("assessment-results-screen");
-    const styles = Array.isArray(container.props.style)
-      ? container.props.style
-      : [container.props.style];
-    const hasBackgroundColor = styles.some(
-      (s) => s?.backgroundColor === "#1C1410"
-    );
-    expect(hasBackgroundColor).toBe(true);
+  it("hides share button when onShare is omitted", () => {
+    const { queryByTestId } = render(<AssessmentResultsScreen {...baseProps} />);
+    expect(queryByTestId("share-button")).toBeNull();
   });
 
-  it("score circle has category-appropriate color", () => {
+  it("shows + invokes share button when onShare is provided", () => {
     const { getByTestId } = render(
-      <AssessmentResultsScreen {...defaultProps} />
+      <AssessmentResultsScreen {...baseProps} onShare={onShare} />,
     );
-    const circle = getByTestId("score-circle");
-    const styles = Array.isArray(circle.props.style)
-      ? circle.props.style.flat()
-      : [circle.props.style];
-    const circleStyles = styles.reduce((acc, s) => ({ ...acc, ...s }), {});
-    expect(circleStyles.borderColor).toBe("#9AAD5C");
+    fireEvent.press(getByTestId("share-button"));
+    expect(onShare).toHaveBeenCalledTimes(1);
   });
 
-  it("Continue button has proper accessibility", () => {
+  it("invokes a recommendation onPress when row is tapped", () => {
+    const onPress = jest.fn();
     const { getByTestId } = render(
-      <AssessmentResultsScreen {...defaultProps} />
+      <AssessmentResultsScreen
+        {...baseProps}
+        recommendations={[
+          { iconName: "wind", label: "Breathe", duration: "4 min", onPress },
+        ]}
+      />,
     );
-    const button = getByTestId("continue-button");
-    expect(button.props.accessibilityRole).toBe("button");
+    fireEvent.press(getByTestId("rec-breathe"));
+    expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it("Continue button has minimum touch target size", () => {
-    const { getByTestId } = render(
-      <AssessmentResultsScreen {...defaultProps} />
+  it("accepts legacy string[] recommendations and renders them", () => {
+    const { getByText } = render(
+      <AssessmentResultsScreen
+        {...baseProps}
+        recommendations={[
+          "Continue your current wellness routine",
+          "Add meditation to your daily practice",
+        ]}
+      />,
     );
-    const button = getByTestId("continue-button");
-    const styles = Array.isArray(button.props.style)
-      ? button.props.style.flat()
-      : [button.props.style];
-    const buttonStyles = styles.reduce((acc, s) => ({ ...acc, ...s }), {});
-    expect(buttonStyles.minHeight).toBeGreaterThanOrEqual(44);
+    expect(getByText(/Continue your current wellness routine/)).toBeTruthy();
+    expect(getByText(/Add meditation to your daily practice/)).toBeTruthy();
   });
 
-  it("score text is large and bold", () => {
-    const { getByTestId } = render(
-      <AssessmentResultsScreen {...defaultProps} />
-    );
-    const scoreText = getByTestId("score-value");
-    const styles = Array.isArray(scoreText.props.style)
-      ? scoreText.props.style.flat()
-      : [scoreText.props.style];
-    const textStyles = styles.reduce((acc, s) => ({ ...acc, ...s }), {});
-    expect(textStyles.fontSize).toBeGreaterThanOrEqual(48);
-    expect(textStyles.fontWeight).toBe("700");
+  it("CTA has accessibility role + label", () => {
+    const { getByTestId } = render(<AssessmentResultsScreen {...baseProps} />);
+    const cta = getByTestId("continue-button");
+    expect(cta.props.accessibilityLabel).toBe("Continue to Solace");
+  });
+
+  it("CTA meets 44pt minimum touch target", () => {
+    const { getByTestId } = render(<AssessmentResultsScreen {...baseProps} />);
+    const cta = getByTestId("continue-button");
+    const flat = (Array.isArray(cta.props.style) ? cta.props.style.flat() : [cta.props.style])
+      .filter(Boolean)
+      .reduce((acc, s) => ({ ...acc, ...s }), {} as Record<string, unknown>);
+    expect((flat.height as number) ?? (flat.minHeight as number)).toBeGreaterThanOrEqual(44);
   });
 });

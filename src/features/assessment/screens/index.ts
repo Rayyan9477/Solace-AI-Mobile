@@ -1,22 +1,9 @@
 /**
- * Assessment Screens
- * @description Barrel exports for mental health assessment screens
- * @task Sprint 3.4: Mental Health Assessment
+ * Assessment Screens — Sprint 4 (prototype v4.2) survivor barrel.
+ * AssessmentIntro · AssessmentQuestion · AssessmentResults.
+ * S6 reskins these and adds internal pagination to AssessmentQuestionScreen.
  */
 
-// Intro Screen
 export { AssessmentIntroScreen } from "./AssessmentIntroScreen";
-
-// Question Screens
 export { AssessmentQuestionScreen } from "./AssessmentQuestionScreen";
-export { AssessmentGenderScreen } from "./AssessmentGenderScreen";
-export { AssessmentAgeScreen } from "./AssessmentAgeScreen";
-export { AssessmentOtherSymptomsScreen } from "./AssessmentOtherSymptomsScreen";
-export { AssessmentStressLevelScreen } from "./AssessmentStressLevelScreen";
-
-// Analysis Screens
-export { AssessmentSoundAnalysisScreen } from "./AssessmentSoundAnalysisScreen";
-export { AssessmentExpressionAnalysisScreen } from "./AssessmentExpressionAnalysisScreen";
-
-// Results Screen
 export { AssessmentResultsScreen } from "./AssessmentResultsScreen";

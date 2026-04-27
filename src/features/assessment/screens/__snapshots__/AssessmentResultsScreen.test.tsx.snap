@@ -1,0 +1,1741 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AssessmentResultsScreen (prototype v4.2) matches snapshot 1`] = `
+<View
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      {
+        "backgroundColor": "#040818",
+        "paddingBottom": 0,
+        "paddingTop": 0,
+      },
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ],
+    ]
+  }
+  testID="assessment-results-screen"
+>
+  <RCTScrollView
+    contentContainerStyle={
+      {
+        "paddingBottom": 120,
+        "paddingHorizontal": 24,
+      }
+    }
+    showsVerticalScrollIndicator={false}
+  >
+    <View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "paddingHorizontal": 24,
+            "paddingTop": 8,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "height": 36,
+              "width": 36,
+            }
+          }
+        />
+        <Text
+          accessibilityRole="header"
+          style={
+            [
+              {
+                "fontFamily": "FiraCode_500Medium",
+                "fontSize": 12,
+                "letterSpacing": 1.6,
+                "textTransform": "uppercase",
+              },
+              {
+                "color": "#F5F1EA",
+              },
+            ]
+          }
+        >
+          Your results
+        </Text>
+        <View
+          style={
+            {
+              "height": 36,
+              "width": 36,
+            }
+          }
+        />
+      </View>
+      <Text
+        accessibilityLabel="Today"
+        accessibilityRole="text"
+        style={
+          [
+            {
+              "fontSize": 10,
+              "lineHeight": 12,
+            },
+            {
+              "color": "#8AA3FF",
+              "fontFamily": "FiraCode_500Medium",
+              "letterSpacing": 1.5,
+            },
+            {
+              "marginTop": 24,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        [ TODAY ]
+      </Text>
+      <Text
+        accessibilityRole="text"
+        style={
+          [
+            {
+              "fontFamily": "Fraunces_400Regular",
+              "fontSize": 30,
+              "lineHeight": 32,
+              "marginBottom": 16,
+              "paddingHorizontal": 24,
+              "textAlign": "center",
+            },
+            {
+              "color": "#F5F1EA",
+            },
+          ]
+        }
+      >
+        You're 
+        <Text
+          style={
+            {
+              "fontFamily": "Fraunces_400Regular_Italic",
+              "fontStyle": "italic",
+            }
+          }
+        >
+          doing okay
+        </Text>
+        .
+      </Text>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "marginVertical": 16,
+          }
+        }
+      >
+        <View
+          accessibilityLabel="Score 68 out of 100, Moderate"
+          accessibilityRole="progressbar"
+          accessibilityValue={
+            {
+              "max": 100,
+              "min": 0,
+              "now": 68,
+            }
+          }
+          style={
+            [
+              {
+                "height": 200,
+                "width": 200,
+              },
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+              },
+              undefined,
+            ]
+          }
+          testID="score-ring"
+        >
+          <RNSVGSvgView
+            bbHeight={200}
+            bbWidth={200}
+            focusable={false}
+            height={200}
+            style={
+              [
+                {
+                  "backgroundColor": "transparent",
+                  "borderWidth": 0,
+                },
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                {
+                  "flex": 0,
+                  "height": 200,
+                  "width": 200,
+                },
+              ]
+            }
+            width={200}
+          >
+            <RNSVGGroup
+              fill={
+                {
+                  "payload": 4278190080,
+                  "type": 0,
+                }
+              }
+            >
+              <RNSVGDefs>
+                <RNSVGLinearGradient
+                  gradient={
+                    [
+                      0,
+                      -6568784,
+                      0.5,
+                      -7691265,
+                      1,
+                      -5727520,
+                    ]
+                  }
+                  gradientTransform={null}
+                  gradientUnits={0}
+                  name="scoreRing-200"
+                  x1="0"
+                  x2="1"
+                  y1="0"
+                  y2="1"
+                />
+              </RNSVGDefs>
+              <RNSVGCircle
+                cx={100}
+                cy={100}
+                fill={null}
+                propList={
+                  [
+                    "fill",
+                    "stroke",
+                    "strokeWidth",
+                  ]
+                }
+                r={93}
+                stroke={
+                  {
+                    "payload": 234881023,
+                    "type": 0,
+                  }
+                }
+                strokeWidth={14}
+              />
+              <RNSVGCircle
+                cx={100}
+                cy={100}
+                fill={null}
+                matrix={
+                  [
+                    6.123233995736766e-17,
+                    -1,
+                    1,
+                    6.123233995736766e-17,
+                    0,
+                    200,
+                  ]
+                }
+                propList={
+                  [
+                    "fill",
+                    "stroke",
+                    "strokeWidth",
+                    "strokeDasharray",
+                    "strokeLinecap",
+                  ]
+                }
+                r={93}
+                stroke={
+                  {
+                    "brushRef": "scoreRing-200",
+                    "type": 1,
+                  }
+                }
+                strokeDasharray={
+                  [
+                    584.3362335677015,
+                    584.3362335677015,
+                  ]
+                }
+                strokeLinecap={1}
+                strokeWidth={14}
+              />
+            </RNSVGGroup>
+          </RNSVGSvgView>
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "bottom": 0,
+                "justifyContent": "center",
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "Fraunces_300Light",
+                    "fontSize": 64,
+                    "letterSpacing": -1,
+                    "lineHeight": 64,
+                  },
+                  {
+                    "color": "#F5F1EA",
+                  },
+                ]
+              }
+              testID="score-value"
+            >
+              68
+            </Text>
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "FiraCode_400Regular",
+                    "fontSize": 10,
+                    "marginTop": 2,
+                  },
+                  {
+                    "color": "#5A6478",
+                  },
+                ]
+              }
+            >
+              out of 100
+            </Text>
+            <Text
+              accessibilityLabel="Moderate"
+              accessibilityRole="text"
+              style={
+                [
+                  {
+                    "fontSize": 10,
+                    "lineHeight": 12,
+                  },
+                  {
+                    "color": "#9BC4B0",
+                    "fontFamily": "FiraCode_500Medium",
+                    "letterSpacing": 1.5,
+                  },
+                  {
+                    "marginTop": 8,
+                  },
+                ]
+              }
+            >
+              [ MODERATE ]
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        style={
+          [
+            {
+              "borderRadius": 24,
+              "overflow": "hidden",
+            },
+            {
+              "marginBottom": 16,
+            },
+          ]
+        }
+        testID="breakdown-section"
+      >
+        <ViewManagerAdapter_ExpoLinearGradient
+          colors={
+            [
+              1936429055,
+              1083950256,
+              0,
+            ]
+          }
+          endPoint={
+            [
+              1,
+              1,
+            ]
+          }
+          locations={
+            [
+              0,
+              0.4,
+              1,
+            ]
+          }
+          startPoint={
+            [
+              0,
+              0,
+            ]
+          }
+          style={
+            [
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "borderRadius": 24,
+              },
+            ]
+          }
+        />
+        <View
+          style={
+            [
+              {
+                "overflow": "hidden",
+              },
+              {
+                "borderRadius": 23,
+                "margin": 1,
+              },
+            ]
+          }
+        >
+          <Text
+            accessibilityRole="header"
+            style={
+              [
+                {
+                  "fontFamily": "Inter_500Medium",
+                  "fontSize": 14,
+                  "marginBottom": 16,
+                },
+                {
+                  "color": "#F5F1EA",
+                },
+              ]
+            }
+          >
+            How it breaks down
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "width": "100%",
+                },
+                false,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "marginBottom": 6,
+                }
+              }
+            >
+              <Text
+                style={
+                  [
+                    {
+                      "fontFamily": "Inter_500Medium",
+                      "fontSize": 13,
+                    },
+                    {
+                      "color": "#F5F1EA",
+                    },
+                  ]
+                }
+              >
+                Mood
+              </Text>
+              <Text
+                style={
+                  [
+                    {
+                      "fontFamily": "FiraCode_500Medium",
+                      "fontSize": 12,
+                    },
+                    {
+                      "color": "#8B95A8",
+                    },
+                  ]
+                }
+              >
+                72
+              </Text>
+            </View>
+            <View
+              accessibilityLabel="Mood 72 out of 100"
+              accessibilityRole="progressbar"
+              accessibilityValue={
+                {
+                  "max": 100,
+                  "min": 0,
+                  "now": undefined,
+                }
+              }
+              style={
+                [
+                  {
+                    "backgroundColor": "rgba(255,255,255,0.04)",
+                    "overflow": "hidden",
+                    "width": "100%",
+                  },
+                  {
+                    "borderRadius": 2,
+                    "height": 4,
+                  },
+                  undefined,
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "height": "100%",
+                      "overflow": "hidden",
+                    },
+                    {
+                      "borderRadius": 2,
+                    },
+                    {
+                      "width": "undefined%",
+                    },
+                  ]
+                }
+              >
+                <ViewManagerAdapter_ExpoLinearGradient
+                  colors={
+                    [
+                      4288398512,
+                      4287276031,
+                    ]
+                  }
+                  endPoint={
+                    [
+                      1,
+                      0.5,
+                    ]
+                  }
+                  startPoint={
+                    [
+                      0,
+                      0.5,
+                    ]
+                  }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
+                  }
+                />
+              </View>
+            </View>
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "Inter_400Regular",
+                    "fontSize": 11,
+                    "marginTop": 6,
+                  },
+                  {
+                    "color": "#5A6478",
+                  },
+                ]
+              }
+            >
+              Feeling balanced
+            </Text>
+          </View>
+          <View
+            style={
+              [
+                {
+                  "width": "100%",
+                },
+                {
+                  "marginTop": 16,
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "marginBottom": 6,
+                }
+              }
+            >
+              <Text
+                style={
+                  [
+                    {
+                      "fontFamily": "Inter_500Medium",
+                      "fontSize": 13,
+                    },
+                    {
+                      "color": "#F5F1EA",
+                    },
+                  ]
+                }
+              >
+                Stress
+              </Text>
+              <Text
+                style={
+                  [
+                    {
+                      "fontFamily": "FiraCode_500Medium",
+                      "fontSize": 12,
+                    },
+                    {
+                      "color": "#8B95A8",
+                    },
+                  ]
+                }
+              >
+                58
+              </Text>
+            </View>
+            <View
+              accessibilityLabel="Stress 58 out of 100"
+              accessibilityRole="progressbar"
+              accessibilityValue={
+                {
+                  "max": 100,
+                  "min": 0,
+                  "now": undefined,
+                }
+              }
+              style={
+                [
+                  {
+                    "backgroundColor": "rgba(255,255,255,0.04)",
+                    "overflow": "hidden",
+                    "width": "100%",
+                  },
+                  {
+                    "borderRadius": 2,
+                    "height": 4,
+                  },
+                  undefined,
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "height": "100%",
+                      "overflow": "hidden",
+                    },
+                    {
+                      "borderRadius": 2,
+                    },
+                    {
+                      "width": "undefined%",
+                    },
+                  ]
+                }
+              >
+                <ViewManagerAdapter_ExpoLinearGradient
+                  colors={
+                    [
+                      4294223742,
+                      4293430106,
+                    ]
+                  }
+                  endPoint={
+                    [
+                      1,
+                      0.5,
+                    ]
+                  }
+                  startPoint={
+                    [
+                      0,
+                      0.5,
+                    ]
+                  }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
+                  }
+                />
+              </View>
+            </View>
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "Inter_400Regular",
+                    "fontSize": 11,
+                    "marginTop": 6,
+                  },
+                  {
+                    "color": "#5A6478",
+                  },
+                ]
+              }
+            >
+              A bit elevated
+            </Text>
+          </View>
+          <View
+            style={
+              [
+                {
+                  "width": "100%",
+                },
+                {
+                  "marginTop": 16,
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "marginBottom": 6,
+                }
+              }
+            >
+              <Text
+                style={
+                  [
+                    {
+                      "fontFamily": "Inter_500Medium",
+                      "fontSize": 13,
+                    },
+                    {
+                      "color": "#F5F1EA",
+                    },
+                  ]
+                }
+              >
+                Sleep
+              </Text>
+              <Text
+                style={
+                  [
+                    {
+                      "fontFamily": "FiraCode_500Medium",
+                      "fontSize": 12,
+                    },
+                    {
+                      "color": "#8B95A8",
+                    },
+                  ]
+                }
+              >
+                81
+              </Text>
+            </View>
+            <View
+              accessibilityLabel="Sleep 81 out of 100"
+              accessibilityRole="progressbar"
+              accessibilityValue={
+                {
+                  "max": 100,
+                  "min": 0,
+                  "now": undefined,
+                }
+              }
+              style={
+                [
+                  {
+                    "backgroundColor": "rgba(255,255,255,0.04)",
+                    "overflow": "hidden",
+                    "width": "100%",
+                  },
+                  {
+                    "borderRadius": 2,
+                    "height": 4,
+                  },
+                  undefined,
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "height": "100%",
+                      "overflow": "hidden",
+                    },
+                    {
+                      "borderRadius": 2,
+                    },
+                    {
+                      "width": "undefined%",
+                    },
+                  ]
+                }
+              >
+                <ViewManagerAdapter_ExpoLinearGradient
+                  colors={
+                    [
+                      4289239776,
+                      4287331528,
+                    ]
+                  }
+                  endPoint={
+                    [
+                      1,
+                      0.5,
+                    ]
+                  }
+                  startPoint={
+                    [
+                      0,
+                      0.5,
+                    ]
+                  }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
+                  }
+                />
+              </View>
+            </View>
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "Inter_400Regular",
+                    "fontSize": 11,
+                    "marginTop": 6,
+                  },
+                  {
+                    "color": "#5A6478",
+                  },
+                ]
+              }
+            >
+              Sleeping well
+            </Text>
+          </View>
+          <View
+            style={
+              [
+                {
+                  "width": "100%",
+                },
+                {
+                  "marginTop": 16,
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "marginBottom": 6,
+                }
+              }
+            >
+              <Text
+                style={
+                  [
+                    {
+                      "fontFamily": "Inter_500Medium",
+                      "fontSize": 13,
+                    },
+                    {
+                      "color": "#F5F1EA",
+                    },
+                  ]
+                }
+              >
+                Social
+              </Text>
+              <Text
+                style={
+                  [
+                    {
+                      "fontFamily": "FiraCode_500Medium",
+                      "fontSize": 12,
+                    },
+                    {
+                      "color": "#8B95A8",
+                    },
+                  ]
+                }
+              >
+                62
+              </Text>
+            </View>
+            <View
+              accessibilityLabel="Social 62 out of 100"
+              accessibilityRole="progressbar"
+              accessibilityValue={
+                {
+                  "max": 100,
+                  "min": 0,
+                  "now": undefined,
+                }
+              }
+              style={
+                [
+                  {
+                    "backgroundColor": "rgba(255,255,255,0.04)",
+                    "overflow": "hidden",
+                    "width": "100%",
+                  },
+                  {
+                    "borderRadius": 2,
+                    "height": 4,
+                  },
+                  undefined,
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "height": "100%",
+                      "overflow": "hidden",
+                    },
+                    {
+                      "borderRadius": 2,
+                    },
+                    {
+                      "width": "undefined%",
+                    },
+                  ]
+                }
+              >
+                <ViewManagerAdapter_ExpoLinearGradient
+                  colors={
+                    [
+                      4287276031,
+                      4285239295,
+                    ]
+                  }
+                  endPoint={
+                    [
+                      1,
+                      0.5,
+                    ]
+                  }
+                  startPoint={
+                    [
+                      0,
+                      0.5,
+                    ]
+                  }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
+                  }
+                />
+              </View>
+            </View>
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "Inter_400Regular",
+                    "fontSize": 11,
+                    "marginTop": 6,
+                  },
+                  {
+                    "color": "#5A6478",
+                  },
+                ]
+              }
+            >
+              Could connect more
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        style={
+          [
+            {
+              "borderWidth": 1,
+              "overflow": "hidden",
+              "position": "relative",
+            },
+            {
+              "borderColor": "rgba(255,255,255,0.06)",
+              "borderRadius": 20,
+            },
+            {
+              "marginBottom": 16,
+            },
+          ]
+        }
+        testID="recommendations-section"
+      >
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "transparent",
+              },
+              [
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                {
+                  "borderRadius": 20,
+                },
+              ],
+            ]
+          }
+        >
+          <ViewManagerAdapter_ExpoBlur
+            blurMethod="none"
+            blurReductionFactor={4}
+            intensity={20}
+            style={
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+            tint="dark"
+          />
+        </View>
+        <View
+          style={
+            [
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "backgroundColor": "rgba(22, 29, 61, 0.5)",
+                "borderRadius": 20,
+              },
+            ]
+          }
+        />
+        <View
+          pointerEvents="none"
+          style={
+            [
+              {
+                "borderTopColor": "rgba(255,255,255,0.05)",
+                "borderTopWidth": 1,
+                "height": 1,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              {
+                "borderRadius": 20,
+              },
+            ]
+          }
+        />
+        <View
+          style={
+            {
+              "position": "relative",
+              "zIndex": 1,
+            }
+          }
+        >
+          <Text
+            accessibilityRole="header"
+            style={
+              [
+                {
+                  "fontFamily": "Inter_500Medium",
+                  "fontSize": 14,
+                  "marginBottom": 16,
+                },
+                {
+                  "color": "#F5F1EA",
+                },
+              ]
+            }
+          >
+            What we suggest
+          </Text>
+          <View
+            accessibilityLabel="Try the 4-7-8 breathing exercise, 4 min"
+            accessibilityRole="button"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 12,
+                "minHeight": 48,
+                "opacity": 1,
+                "paddingVertical": 6,
+              }
+            }
+            testID="rec-try-the-4-7-8-breathing-exercise"
+          >
+            <View
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no-hide-descendants"
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#D8EADF",
+                    "borderRadius": 12,
+                    "height": 36,
+                    "justifyContent": "center",
+                    "width": 36,
+                  },
+                  undefined,
+                ]
+              }
+            >
+              <Text
+                accessibilityElementsHidden={true}
+                accessibilityRole="none"
+                allowFontScaling={false}
+                importantForAccessibility="no-hide-descendants"
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#9BC4B0",
+                      "fontSize": 18,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "ionicons",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+            <Text
+              numberOfLines={2}
+              style={
+                [
+                  {
+                    "flex": 1,
+                    "fontFamily": "Inter_400Regular",
+                    "fontSize": 13,
+                    "marginHorizontal": 12,
+                  },
+                  {
+                    "color": "#F5F1EA",
+                  },
+                ]
+              }
+            >
+              Try the 4-7-8 breathing exercise
+            </Text>
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "FiraCode_400Regular",
+                    "fontSize": 11,
+                  },
+                  {
+                    "color": "#5A6478",
+                  },
+                ]
+              }
+            >
+              4 min
+            </Text>
+            <Text
+              accessibilityElementsHidden={true}
+              accessibilityRole="none"
+              allowFontScaling={false}
+              importantForAccessibility="no-hide-descendants"
+              selectable={false}
+              style={
+                [
+                  {
+                    "color": "#5A6478",
+                    "fontSize": 14,
+                  },
+                  undefined,
+                  {
+                    "fontFamily": "ionicons",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
+                ]
+              }
+            >
+              
+            </Text>
+          </View>
+          <View
+            accessibilityLabel="Journal about your stressors, 10 min"
+            accessibilityRole="button"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 12,
+                "minHeight": 48,
+                "opacity": 1,
+                "paddingVertical": 6,
+              }
+            }
+            testID="rec-journal-about-your-stressors"
+          >
+            <View
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no-hide-descendants"
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#D8EADF",
+                    "borderRadius": 12,
+                    "height": 36,
+                    "justifyContent": "center",
+                    "width": 36,
+                  },
+                  undefined,
+                ]
+              }
+            >
+              <Text
+                accessibilityElementsHidden={true}
+                accessibilityRole="none"
+                allowFontScaling={false}
+                importantForAccessibility="no-hide-descendants"
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#9BC4B0",
+                      "fontSize": 18,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "ionicons",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+            <Text
+              numberOfLines={2}
+              style={
+                [
+                  {
+                    "flex": 1,
+                    "fontFamily": "Inter_400Regular",
+                    "fontSize": 13,
+                    "marginHorizontal": 12,
+                  },
+                  {
+                    "color": "#F5F1EA",
+                  },
+                ]
+              }
+            >
+              Journal about your stressors
+            </Text>
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "FiraCode_400Regular",
+                    "fontSize": 11,
+                  },
+                  {
+                    "color": "#5A6478",
+                  },
+                ]
+              }
+            >
+              10 min
+            </Text>
+            <Text
+              accessibilityElementsHidden={true}
+              accessibilityRole="none"
+              allowFontScaling={false}
+              importantForAccessibility="no-hide-descendants"
+              selectable={false}
+              style={
+                [
+                  {
+                    "color": "#5A6478",
+                    "fontSize": 14,
+                  },
+                  undefined,
+                  {
+                    "fontFamily": "ionicons",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
+                ]
+              }
+            >
+              
+            </Text>
+          </View>
+          <View
+            accessibilityLabel="Talk to Solace about work, Now"
+            accessibilityRole="button"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 12,
+                "minHeight": 48,
+                "opacity": 1,
+                "paddingVertical": 6,
+              }
+            }
+            testID="rec-talk-to-solace-about-work"
+          >
+            <View
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no-hide-descendants"
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#D8EADF",
+                    "borderRadius": 12,
+                    "height": 36,
+                    "justifyContent": "center",
+                    "width": 36,
+                  },
+                  undefined,
+                ]
+              }
+            >
+              <Text
+                accessibilityElementsHidden={true}
+                accessibilityRole="none"
+                allowFontScaling={false}
+                importantForAccessibility="no-hide-descendants"
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#9BC4B0",
+                      "fontSize": 18,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "ionicons",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                ?
+              </Text>
+            </View>
+            <Text
+              numberOfLines={2}
+              style={
+                [
+                  {
+                    "flex": 1,
+                    "fontFamily": "Inter_400Regular",
+                    "fontSize": 13,
+                    "marginHorizontal": 12,
+                  },
+                  {
+                    "color": "#F5F1EA",
+                  },
+                ]
+              }
+            >
+              Talk to Solace about work
+            </Text>
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "FiraCode_400Regular",
+                    "fontSize": 11,
+                  },
+                  {
+                    "color": "#5A6478",
+                  },
+                ]
+              }
+            >
+              Now
+            </Text>
+            <Text
+              accessibilityElementsHidden={true}
+              accessibilityRole="none"
+              allowFontScaling={false}
+              importantForAccessibility="no-hide-descendants"
+              selectable={false}
+              style={
+                [
+                  {
+                    "color": "#5A6478",
+                    "fontSize": 14,
+                  },
+                  undefined,
+                  {
+                    "fontFamily": "ionicons",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
+                ]
+              }
+            >
+              
+            </Text>
+          </View>
+        </View>
+      </View>
+      <Text
+        accessibilityRole="text"
+        style={
+          [
+            {
+              "fontFamily": "Inter_400Regular",
+              "fontSize": 11,
+              "lineHeight": 16,
+              "marginTop": 12,
+              "paddingHorizontal": 16,
+              "textAlign": "center",
+            },
+            {
+              "color": "#5A6478",
+            },
+          ]
+        }
+        testID="medical-disclaimer"
+      >
+        Not a medical diagnosis. If things feel overwhelming, please reach out to a professional.
+      </Text>
+      <View
+        accessibilityLabel="View detailed breakdown"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "minHeight": 44,
+            "opacity": 1,
+            "paddingVertical": 12,
+          }
+        }
+        testID="view-details-button"
+      >
+        <Text
+          style={
+            [
+              {
+                "fontFamily": "Inter_500Medium",
+                "fontSize": 13,
+              },
+              {
+                "color": "#8AA3FF",
+              },
+            ]
+          }
+        >
+          View detailed breakdown
+        </Text>
+      </View>
+    </View>
+  </RCTScrollView>
+  <View
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "paddingBottom": 24,
+          "paddingHorizontal": 24,
+          "paddingTop": 12,
+          "position": "absolute",
+          "right": 0,
+        },
+        {
+          "backgroundColor": "#040818",
+        },
+      ]
+    }
+  >
+    <View
+      accessibilityLabel="Continue to Solace"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": false,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        [
+          {
+            "alignItems": "center",
+            "backgroundColor": "#78716C",
+            "borderColor": "transparent",
+            "borderRadius": 8,
+            "borderWidth": 0,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "minHeight": 44,
+            "paddingHorizontal": 16,
+            "width": "100%",
+          },
+          {},
+          undefined,
+        ]
+      }
+      testID="continue-button"
+    >
+      <View
+        style={
+          [
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+            },
+            {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
+        }
+      >
+        <Text
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 16,
+                "fontWeight": "600",
+                "textAlign": "center",
+              },
+              undefined,
+            ]
+          }
+        />
+      </View>
+    </View>
+  </View>
+</View>
+`;
