@@ -84,7 +84,7 @@ function getTabBarVisibility(route: Parameters<typeof getFocusedRouteNameFromRou
 function StackLoadingFallback(): React.ReactElement {
   return (
     <View style={styles.loadingContainer}>
-      <ActivityIndicator size="large" color={palette.tan[500]} />
+      <ActivityIndicator size="large" color={palette.aurora[300]} />
     </View>
   );
 }
@@ -135,13 +135,13 @@ export function MainTabNavigator(): React.ReactElement {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: colors.background.primary,
-          borderTopColor: palette.tan[500],
+          borderTopColor: palette.aurora[300],
           borderTopWidth: 1,
           height: 60 + insets.bottom,
           paddingBottom: insets.bottom + 8,
           paddingTop: 8,
         },
-        tabBarActiveTintColor: palette.tan[500],
+        tabBarActiveTintColor: palette.aurora[300],
         tabBarInactiveTintColor: colors.text.disabled,
         tabBarLabelStyle: {
           fontSize: 12,
@@ -161,7 +161,7 @@ export function MainTabNavigator(): React.ReactElement {
           tabBarAccessibilityLabel: "Home dashboard",
           tabBarStyle: getTabBarVisibility(route) ?? {
             backgroundColor: colors.background.primary,
-            borderTopColor: palette.tan[500],
+            borderTopColor: palette.aurora[300],
             borderTopWidth: 1,
             height: 60 + insets.bottom,
             paddingBottom: insets.bottom + 8,
@@ -182,7 +182,7 @@ export function MainTabNavigator(): React.ReactElement {
           tabBarAccessibilityLabel: "Mood tracking",
           tabBarStyle: getTabBarVisibility(route) ?? {
             backgroundColor: colors.background.primary,
-            borderTopColor: palette.tan[500],
+            borderTopColor: palette.aurora[300],
             borderTopWidth: 1,
             height: 60 + insets.bottom,
             paddingBottom: insets.bottom + 8,
@@ -204,7 +204,7 @@ export function MainTabNavigator(): React.ReactElement {
           tabBarBadge: undefined, // TODO: Add unread message count
           tabBarStyle: getTabBarVisibility(route) ?? {
             backgroundColor: colors.background.primary,
-            borderTopColor: palette.tan[500],
+            borderTopColor: palette.aurora[300],
             borderTopWidth: 1,
             height: 60 + insets.bottom,
             paddingBottom: insets.bottom + 8,
@@ -225,7 +225,7 @@ export function MainTabNavigator(): React.ReactElement {
           tabBarAccessibilityLabel: "Mental health journal",
           tabBarStyle: getTabBarVisibility(route) ?? {
             backgroundColor: colors.background.primary,
-            borderTopColor: palette.tan[500],
+            borderTopColor: palette.aurora[300],
             borderTopWidth: 1,
             height: 60 + insets.bottom,
             paddingBottom: insets.bottom + 8,
@@ -246,7 +246,7 @@ export function MainTabNavigator(): React.ReactElement {
           tabBarAccessibilityLabel: "User profile and settings",
           tabBarStyle: getTabBarVisibility(route) ?? {
             backgroundColor: colors.background.primary,
-            borderTopColor: palette.tan[500],
+            borderTopColor: palette.aurora[300],
             borderTopWidth: 1,
             height: 60 + insets.bottom,
             paddingBottom: insets.bottom + 8,

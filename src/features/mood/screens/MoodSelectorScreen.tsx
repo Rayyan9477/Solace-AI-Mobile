@@ -1,31 +1,91 @@
 /**
- * MoodSelectorScreen Component
- * @description Interactive mood selector with curved slider and full-screen color backgrounds
- * @task Task 3.8.3: Mood Selector Screen (Screens 69-73)
- * @phase Phase 3C: Refactored to use theme tokens
+ * MoodSelectorScreen — prototype v4.2 #21 Daily Check-in reskin (Sprint 6).
+ *
+ * Big MoodFace hero wrapped in a BreathingOrb halo, 5-level radio strip,
+ * multi-select influence chips, optional freetext note, and a sticky sage CTA.
+ * Maps to `prototypes/screens/21-checkin.js`.
+ *
+ * Backwards-compatible with the legacy prop API. The new optional props
+ * (`selectedInfluences`, `onInfluencesChange`, `note`, `onNoteChange`,
+ * `onClose`) default gracefully so existing callers need no changes.
  */
 
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { palette } from "../../../shared/theme";
-import { ScreenContainer } from "../../../shared/components/atoms/layout";
-import { useHaptic } from "../../../shared/hooks/useHaptic";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-interface MoodOption {
+import { Button } from "@/shared/components/atoms/buttons/Button";
+import { AppIcon } from "@/shared/components/atoms/display/AppIcon";
+import { ScreenContainer } from "@/shared/components/atoms/layout";
+import { HashtagChip } from "@/shared/components/molecules/chips/HashtagChip";
+import { GlassInput } from "@/shared/components/molecules/forms/GlassInput";
+import {
+  BracketLabel,
+  BreathingOrb,
+  MoodFace,
+  MOOD_LABELS,
+  MOOD_LEVELS,
+  type MoodLevel,
+} from "@/shared/components/primitives";
+import { useReducedMotion } from "@/shared/hooks/useReducedMotion";
+import { useTheme } from "@/shared/theme/useTheme";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+export interface MoodOption {
   index: number;
   label: string;
   emoji: string;
   color: string;
 }
 
-interface MoodSelectorScreenProps {
+export interface MoodSelectorScreenProps {
+  /** 0–4; maps to MoodLevel 1–5 via +1 offset */
   selectedMoodIndex: number;
+  /** Legacy API: backward-compat label lookup only */
   moodOptions: MoodOption[];
   onBack: () => void;
   onMoodChange: (index: number) => void;
   onSetMood: () => void;
+  /** IDs of currently selected influence chips */
+  selectedInfluences?: string[];
+  onInfluencesChange?: (ids: string[]) => void;
+  note?: string;
+  onNoteChange?: (text: string) => void;
+  /** Defaults to onBack when omitted */
+  onClose?: () => void;
 }
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+interface InfluenceItem {
+  id: string;
+  label: string;
+}
+
+const INFLUENCES: InfluenceItem[] = [
+  { id: "sleep", label: "Sleep" },
+  { id: "work", label: "Work" },
+  { id: "family", label: "Family" },
+  { id: "exercise", label: "Exercise" },
+  { id: "food", label: "Food" },
+  { id: "weather", label: "Weather" },
+  { id: "friends", label: "Friends" },
+  { id: "health", label: "Health" },
+];
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 export function MoodSelectorScreen({
   selectedMoodIndex,
@@ -33,215 +93,360 @@ export function MoodSelectorScreen({
   onBack,
   onMoodChange,
   onSetMood,
+  selectedInfluences = [],
+  onInfluencesChange,
+  note = "",
+  onNoteChange,
+  onClose,
 }: MoodSelectorScreenProps): React.ReactElement {
-  const haptic = useHaptic();
+  const { palette, typography } = useTheme();
+  const reducedMotion = useReducedMotion();
 
-  if (selectedMoodIndex < 0 || selectedMoodIndex >= moodOptions.length) {
-    return (
-      <ScreenContainer testID="mood-selector-screen" backgroundColor={palette.brown[900]} style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            testID="back-button"
-            style={styles.backButton}
-            onPress={onBack}
-            activeOpacity={0.7}
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-          >
-            <Text style={styles.backButtonIcon}>←</Text>
-          </TouchableOpacity>
-        </View>
-      </ScreenContainer>
-    );
-  }
-  const selectedMood = moodOptions[selectedMoodIndex];
+  // Convert 0-based index to 1-based MoodLevel (clamp to valid range)
+  const moodLevel: MoodLevel = (Math.min(
+    Math.max(selectedMoodIndex + 1, 1),
+    5,
+  ) as MoodLevel);
+
+  const closeHandler = onClose ?? onBack;
+
+  // Backward-compat: look up label from legacy moodOptions if possible,
+  // else fall back to MOOD_LABELS.
+  const activeLegacyOption =
+    selectedMoodIndex >= 0 && selectedMoodIndex < moodOptions.length
+      ? moodOptions[selectedMoodIndex]
+      : null;
+  const moodDisplayLabel =
+    activeLegacyOption?.label ?? MOOD_LABELS[moodLevel];
+
+  const handleInfluenceToggle = (id: string): void => {
+    if (!onInfluencesChange) return;
+    const next = selectedInfluences.includes(id)
+      ? selectedInfluences.filter((i) => i !== id)
+      : [...selectedInfluences, id];
+    onInfluencesChange(next);
+  };
 
   return (
     <ScreenContainer
       testID="mood-selector-screen"
-      backgroundColor={selectedMood.color}
+      backgroundColor={palette.midnight[950]}
       style={styles.container}
     >
+      {/* Ambient orb — absolute, decorative */}
+      <View
+        style={styles.orbWrapper}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        pointerEvents="none"
+      >
+        <BreathingOrb
+          testID="breathing-orb"
+          size={320}
+          tint="cool"
+          pulsing={!reducedMotion}
+        />
+      </View>
+
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
-          testID="back-button"
-          style={styles.backButton}
-          onPress={onBack}
+          testID="close-button"
+          style={[
+            styles.iconButton,
+            {
+              backgroundColor: palette.midnight[800],
+              borderColor: palette.midnight[600],
+            },
+          ]}
+          onPress={closeHandler}
           accessibilityRole="button"
-          accessibilityLabel="Go back"
+          accessibilityLabel="Close daily check-in"
         >
-          <Text style={styles.backButtonIcon}>←</Text>
+          <AppIcon name="x" size={16} color={palette.warm[400]} />
         </TouchableOpacity>
+
+        <BracketLabel variant="muted">Daily check-in</BracketLabel>
+
+        {/* Spacer to centre the label */}
+        <View style={styles.headerSpacer} />
       </View>
 
-      {/* Content */}
-      <View style={styles.content}>
-        {/* Question Prompt */}
-        <Text style={styles.promptText}>How are you feeling this day?</Text>
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Headline */}
+        <BracketLabel variant="aurora" style={styles.supertitle}>
+          Right now
+        </BracketLabel>
 
-        {/* Large Emoji Display */}
-        <View testID="mood-emoji-display" style={styles.emojiContainer}>
-          <Text style={styles.largeEmoji}>{selectedMood.emoji}</Text>
-        </View>
-
-        {/* Mood Label */}
-        <Text style={styles.moodLabel}>
-          I'm Feeling {selectedMood.label}
+        <Text
+          accessibilityRole="header"
+          style={[
+            styles.headline,
+            {
+              color: palette.warm[50],
+              fontFamily: typography.fontFamily.displayRegular,
+            },
+          ]}
+        >
+          {"How are you\n"}
+          <Text
+            style={[
+              styles.headlineItalic,
+              { fontFamily: typography.fontFamily.displayItalic },
+            ]}
+          >
+            right now?
+          </Text>
         </Text>
-      </View>
 
-      {/* Curved Mood Slider */}
-      <View testID="mood-slider" style={styles.sliderContainer}>
-        <View style={styles.sliderTrack}>
-          {moodOptions.map((option) => (
-            <TouchableOpacity
-              key={option.index}
-              testID={`slider-point-${option.index}`}
-              style={[
-                styles.sliderPoint,
-                option.index === selectedMoodIndex && styles.sliderPointActive,
-              ]}
-              onPress={() => { haptic.light(); onMoodChange(option.index); }}
-              activeOpacity={0.7}
-              accessibilityRole="button"
-              accessibilityLabel={`Select ${option.label}`}
-            >
-              <View
-                style={[
-                  styles.sliderDot,
-                  option.index === selectedMoodIndex && styles.sliderDotActive,
-                ]}
-              />
-            </TouchableOpacity>
-          ))}
+        {/* Hero face + orb halo */}
+        <View style={styles.heroArea}>
+          <BreathingOrb
+            size={200}
+            tint="cool"
+            pulsing={!reducedMotion}
+            style={styles.heroOrb}
+          />
+          <View testID="hero-mood-face" style={styles.heroFace}>
+            <MoodFace
+              level={moodLevel}
+              size={130}
+              accessibilityLabel={`Current mood: ${moodDisplayLabel}`}
+            />
+          </View>
         </View>
-      </View>
 
-      {/* Set Mood Button */}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          testID="set-mood-button"
-          style={styles.setMoodButton}
-          onPress={onSetMood}
-          activeOpacity={0.7}
-          accessibilityRole="button"
-          accessibilityLabel="Set mood"
+        <Text
+          testID="mood-display-label"
+          accessibilityRole="text"
+          style={[
+            styles.moodLabel,
+            {
+              color: palette.warm[50],
+              fontFamily: typography.fontFamily.displayItalic,
+            },
+          ]}
         >
-          <Icon name="checkmark-outline" size={18} color={palette.white} style={{ marginRight: 8 }} />
-          <Text style={styles.setMoodText}>Set Mood</Text>
-        </TouchableOpacity>
+          {moodDisplayLabel}
+        </Text>
+
+        {/* 5-level radio strip */}
+        <View
+          testID="mood-intensity-radiogroup"
+          style={styles.radioStrip}
+          accessibilityRole="radiogroup"
+          accessible
+          accessibilityLabel="Mood intensity"
+        >
+          {MOOD_LEVELS.map((level) => {
+            const idx = level - 1; // 1-based → 0-based
+            const isSelected = level === moodLevel;
+            return (
+              <TouchableOpacity
+                key={level}
+                testID={`mood-radio-${level}`}
+                onPress={() => onMoodChange(idx)}
+                accessibilityRole="radio"
+                accessibilityLabel={MOOD_LABELS[level]}
+                accessibilityState={{ checked: isSelected }}
+                style={[
+                  styles.radioButton,
+                  { borderColor: isSelected ? palette.aurora[300] : "rgba(0,0,0,0)" },
+                ]}
+              >
+                <MoodFace
+                  level={level}
+                  size={56}
+                  selected={isSelected}
+                  interactive
+                  accessibilityLabel={MOOD_LABELS[level]}
+                />
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        {/* Influence chips */}
+        <View style={styles.influencesSection}>
+          <BracketLabel variant="muted" style={styles.influencesLabel}>
+            Influences
+          </BracketLabel>
+          <View
+            testID="influence-chips-grid"
+            style={styles.chipsGrid}
+            accessible
+            accessibilityLabel="What's influencing you? Select all that apply."
+          >
+            {INFLUENCES.map((item) => {
+              const isSelected = selectedInfluences.includes(item.id);
+              return (
+                <HashtagChip
+                  key={item.id}
+                  testID={`influence-chip-${item.id}`}
+                  label={item.label}
+                  selected={isSelected}
+                  onPress={() => handleInfluenceToggle(item.id)}
+                />
+              );
+            })}
+          </View>
+        </View>
+
+        {/* Optional note */}
+        <GlassInput
+          testID="mood-note-input"
+          value={note}
+          onChangeText={onNoteChange ?? (() => undefined)}
+          placeholder="What's on your mind?"
+          accessibilityLabel="Add a note about how you're feeling"
+        />
+
+        {/* Bottom padding for sticky CTA */}
+        <View style={styles.scrollBottomPad} />
+      </ScrollView>
+
+      {/* Sticky CTA */}
+      <View
+        style={[
+          styles.stickyFooter,
+          { backgroundColor: palette.midnight[950] },
+        ]}
+      >
+        <Button
+          testID="log-mood-button"
+          label="Log this mood"
+          variant="primary"
+          size="lg"
+          fullWidth
+          onPress={onSetMood}
+          accessibilityLabel="Log this mood"
+        />
       </View>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  backButton: {
-    alignItems: "center",
-    borderColor: `${palette.white}${palette.alpha[30]}`,
-    borderRadius: 20,
-    borderWidth: 1,
-    height: 40,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    width: 40,
-  },
-  backButtonIcon: {
-    color: palette.white,
-    fontSize: 20,
-    fontWeight: "600",
-  },
-  buttonContainer: {
-    paddingBottom: 40,
-    paddingHorizontal: 24,
-  },
-  checkmarkIcon: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "700",
-    marginRight: 8,
+  chipsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
   },
   container: {
     flex: 1,
   },
-  content: {
-    alignItems: "center",
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 24,
-  },
-  emojiContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 24,
-  },
   header: {
-    flexDirection: "row",
-    paddingHorizontal: 24,
-  },
-  largeEmoji: {
-    fontSize: 80,
-  },
-  moodLabel: {
-    color: palette.white,
-    fontSize: 24,
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  promptText: {
-    color: `${palette.white}${palette.alpha[80]}`,
-    fontSize: 18,
-    textAlign: "center",
-  },
-  setMoodButton: {
-    alignItems: "center",
-    backgroundColor: `${palette.black}${palette.alpha[20]}`,
-    borderRadius: 28,
-    flexDirection: "row",
-    justifyContent: "center",
-    minHeight: 44,
-    paddingHorizontal: 32,
-    paddingVertical: 14,
-  },
-  setMoodText: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "700",
-  },
-  sliderContainer: {
-    paddingBottom: 32,
-    paddingHorizontal: 40,
-  },
-  sliderDot: {
-    backgroundColor: `${palette.white}${palette.alpha[50]}`,
-    borderRadius: 6,
-    height: 12,
-    width: 12,
-  },
-  sliderDotActive: {
-    backgroundColor: palette.white,
-    borderRadius: 10,
-    height: 20,
-    width: 20,
-  },
-  sliderPoint: {
-    alignItems: "center",
-    height: 24,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    width: 24,
-  },
-  sliderPointActive: {
-    height: 32,
-    width: 32,
-  },
-  sliderTrack: {
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
+    paddingHorizontal: 24,
+    paddingTop: 12,
+  },
+  headerSpacer: {
+    height: 44,
+    width: 44,
+  },
+  headline: {
+    fontSize: 30,
+    lineHeight: 34,
+    marginBottom: 4,
+    paddingHorizontal: 24,
+    textAlign: "center",
+  },
+  headlineItalic: {
+    fontStyle: "italic",
+  },
+  heroArea: {
+    alignItems: "center",
+    height: 220,
+    justifyContent: "center",
+    marginBottom: 8,
+    marginTop: 8,
+  },
+  heroFace: {
+    alignItems: "center",
+    bottom: 0,
+    justifyContent: "center",
+    left: 0,
+    position: "absolute",
+    right: 0,
+    top: 0,
+  },
+  heroOrb: {
+    position: "absolute",
+  },
+  iconButton: {
+    alignItems: "center",
+    borderRadius: 22,
+    borderWidth: 1,
+    height: 44,
+    justifyContent: "center",
+    minHeight: 44,
+    minWidth: 44,
+    width: 44,
+  },
+  influencesLabel: {
+    marginBottom: 10,
+  },
+  influencesSection: {
+    marginBottom: 16,
+    paddingHorizontal: 24,
+  },
+  moodLabel: {
+    fontSize: 24,
+    fontStyle: "italic",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  orbWrapper: {
+    alignItems: "center",
+    left: 0,
+    opacity: 0.4,
+    position: "absolute",
+    right: 0,
+    top: 80,
+  },
+  radioButton: {
+    alignItems: "center",
+    borderColor: "rgba(0,0,0,0)",
+    borderRadius: 32,
+    borderWidth: 2,
+    justifyContent: "center",
+    minHeight: 44,
+    minWidth: 44,
+    padding: 2,
+  },
+  radioStrip: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 28,
+    paddingHorizontal: 24,
+  },
+  scroll: {
+    paddingBottom: 8,
+    paddingTop: 8,
+  },
+  scrollBottomPad: {
+    height: 100,
+  },
+  stickyFooter: {
+    bottom: 0,
+    left: 0,
+    paddingBottom: 32,
+    paddingHorizontal: 24,
+    paddingTop: 12,
+    position: "absolute",
+    right: 0,
+  },
+  supertitle: {
+    marginBottom: 8,
+    marginTop: 16,
+    textAlign: "center",
   },
 });
 

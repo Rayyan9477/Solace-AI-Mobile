@@ -1,559 +1,439 @@
 /**
- * ActiveChatScreen Component
- * @description Main AI chat conversation interface with messages and emotion detection
- * @task Task 3.6.6: Active Chat Screen (Screen 52)
- * @phase Phase 3D: Integrated CrisisModal for AI-detected crisis content
+ * ActiveChatScreen — prototype v4.2 #07 AI Chat reskin (Sprint 6).
+ *
+ * Full local-state chat surface using Sprint 5 organisms:
+ * ChatHeader, ChatBubble, ChatBubbleAction, ReactionChip, TypingIndicator,
+ * MessageInput. Defaults to 6 seed messages with one action card and two
+ * reaction chips to match the visual ground truth.
  */
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  StyleSheet,
   FlatList,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { CrisisModal } from "../../../shared/components/organisms/crisis";
-import { palette, colors } from "../../../shared/theme";
-import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
-type MessageType = "user" | "ai" | "emotion" | "date";
-type Sentiment = "positive" | "negative" | "neutral";
+import { useTheme } from "@/shared/theme/useTheme";
+import { useReducedMotion } from "@/shared/hooks/useReducedMotion";
+import { ScreenContainer } from "@/shared/components/atoms/layout";
+import {
+  ChatBubble,
+  ChatBubbleAction,
+  ChatHeader,
+  MessageInput,
+  ReactionChip,
+  TypingIndicator,
+} from "@/shared/components/organisms/chat";
+import { sendMessage } from "@/features/chat/services/mockChatService";
 
-interface BaseMessage {
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+export interface ChatMessage {
   id: string;
-  type: MessageType;
+  role: "user" | "ai";
+  text: string;
+  timestamp: number;
+  /** Optional embedded action card */
+  action?: {
+    iconName?: string;
+    title: string;
+    subtitle?: string;
+    ctaLabel?: string;
+    onPress: () => void;
+  };
+  /** Optional reaction chips after this message */
+  reactions?: {
+    id: string;
+    label: string;
+    iconName?: string;
+    selected?: boolean;
+    onPress: () => void;
+  }[];
 }
 
-interface UserMessage extends BaseMessage {
-  type: "user";
-  content: string;
-  timestamp: Date;
+export interface ActiveChatScreenProps {
+  conversationId?: string;
+  /** Optional pre-populated messages */
+  initialMessages?: ChatMessage[];
+  onClose?: () => void;
+  onPhonePress?: () => void;
+  onMorePress?: () => void;
+  /** Override the mock send. Defaults to mockChatService.sendMessage. */
+  onSendMessage?: (
+    text: string,
+  ) => Promise<{ reply: string; action?: ChatMessage["action"] }>;
+  testID?: string;
 }
 
-interface AIMessage extends BaseMessage {
-  type: "ai";
-  content: string;
-  timestamp: Date;
-}
+// ---------------------------------------------------------------------------
+// Default seed messages
+// ---------------------------------------------------------------------------
 
-interface EmotionBadge extends BaseMessage {
-  type: "emotion";
-  emotions: string[];
-  sentiment: Sentiment;
-}
-
-interface DateDivider extends BaseMessage {
-  type: "date";
-  date: string;
-}
-
-type ChatMessage = UserMessage | AIMessage | EmotionBadge | DateDivider;
-
-interface ActiveChatScreenProps {
-  chatsRemaining?: number;
-  modelName?: string;
-  messages?: ChatMessage[];
-  isAITyping?: boolean;
-  inputText?: string;
-  crisisDetected?: boolean;
-  onBack?: () => void;
-  onSearch?: () => void;
-  onSendMessage?: (message: string) => void;
-  onAttachment?: () => void;
-  onInputChange?: (text: string) => void;
-}
-
-const SENTIMENT_COLORS: Record<Sentiment, string> = {
-  positive: palette.olive[500],
-  negative: palette.accent.orange,
-  neutral: palette.gray[400],
+const noop = (): void => {
+  // placeholder
 };
 
-export function ActiveChatScreen({
-  chatsRemaining = 0,
-  modelName = "Solace AI",
-  messages = [],
-  isAITyping = false,
-  inputText = "",
-  crisisDetected = false,
-  onBack,
-  onSearch,
-  onSendMessage,
-  onAttachment,
-  onInputChange,
-}: ActiveChatScreenProps = {}): React.ReactElement {
-  const [showCrisisModal, setShowCrisisModal] = useState(false);
-  const flatListRef = useRef<FlatList>(null);
+export const DEFAULT_INITIAL_MESSAGES: ChatMessage[] = [
+  {
+    id: "seed-1",
+    role: "ai",
+    text: "Hey there. How are you feeling about things today?",
+    timestamp: Date.now() - 10 * 60_000,
+  },
+  {
+    id: "seed-2",
+    role: "user",
+    text: "Honestly, pretty anxious. I keep replaying a meeting in my head.",
+    timestamp: Date.now() - 9 * 60_000,
+  },
+  {
+    id: "seed-3",
+    role: "ai",
+    text: "That's a really common pattern called rumination. Let's try a quick grounding exercise to interrupt it.",
+    timestamp: Date.now() - 8 * 60_000,
+    reactions: [
+      {
+        id: "r-helped",
+        label: "This helped",
+        iconName: "thumbs-up",
+        selected: false,
+        onPress: noop,
+      },
+      {
+        id: "r-not-quite",
+        label: "Not quite",
+        iconName: "thumbs-down",
+        selected: false,
+        onPress: noop,
+      },
+    ],
+    action: {
+      iconName: "wind",
+      title: "Try: 4-7-8 Breathing",
+      subtitle: "2 minutes · in-app",
+      ctaLabel: "Try now",
+      onPress: noop,
+    },
+  },
+  {
+    id: "seed-4",
+    role: "user",
+    text: "Okay, I'll try it. What do I do first?",
+    timestamp: Date.now() - 7 * 60_000,
+  },
+  {
+    id: "seed-5",
+    role: "ai",
+    text: "Inhale slowly through your nose for 4 counts, hold for 7, then exhale through your mouth for 8. Ready to go?",
+    timestamp: Date.now() - 6 * 60_000,
+  },
+  {
+    id: "seed-6",
+    role: "user",
+    text: "Yes, starting now.",
+    timestamp: Date.now() - 5 * 60_000,
+  },
+];
 
-  // After messages update, scroll to bottom
-  useEffect(() => {
-    if (messages.length > 0 && flatListRef.current) {
-      setTimeout(() => {
-        flatListRef.current?.scrollToEnd({ animated: true });
-      }, 100);
-    }
-  }, [messages.length]);
+// ---------------------------------------------------------------------------
+// Empty state
+// ---------------------------------------------------------------------------
 
-  const handleSend = () => {
-    if (inputText.trim()) {
-      onSendMessage?.(inputText.trim());
-    }
-  };
+function EmptyState(): React.ReactElement {
+  const { palette } = useTheme();
+  return (
+    <View style={styles.emptyState}>
+      <Text style={[styles.emptyText, { color: palette.warm[400] }]}>
+        Say something. Solace is listening.
+      </Text>
+    </View>
+  );
+}
 
-  const handleAccessCrisisSupport = (): void => {
-    setShowCrisisModal(true);
-  };
+// ---------------------------------------------------------------------------
+// Message row — renders ChatBubble + optional action + optional reaction chips
+// ---------------------------------------------------------------------------
 
-  const renderMessage = useCallback(({ item }: { item: ChatMessage }) => {
-    if (item.type === "user") {
-      return (
-        <View
-          testID={`message-${item.id}`}
-          style={[styles.messageBubble, styles.userMessage]}
-        >
-          <View style={styles.messageContent}>
-            <Text style={styles.messageText}>{item.content}</Text>
-          </View>
-          <View testID={`user-avatar-${item.id}`} style={styles.userAvatar}>
-            <Icon name="person-circle-outline" size={24} color={palette.white} />
-          </View>
-        </View>
-      );
-    }
+interface MessageRowProps {
+  item: ChatMessage;
+  onReactionToggle: (msgId: string, reactionId: string) => void;
+}
 
-    if (item.type === "ai") {
-      return (
-        <View
-          testID={`message-${item.id}`}
-          style={[styles.messageBubble, styles.aiMessage]}
-        >
-          <View testID={`ai-avatar-${item.id}`} style={styles.aiAvatar}>
-            <Icon name="hardware-chip-outline" size={24} color={palette.white} />
-          </View>
-          <View style={[styles.messageContent, styles.aiMessageContent]}>
-            <Text style={styles.messageText}>{item.content}</Text>
-          </View>
-        </View>
-      );
-    }
-
-    if (item.type === "emotion") {
-      return (
-        <View
-          testID={`emotion-badge-${item.id}`}
-          style={[
-            styles.emotionBadge,
-            { backgroundColor: SENTIMENT_COLORS[item.sentiment] },
-          ]}
-        >
-          <Text style={styles.emotionText}>
-            Emotion detected: {item.emotions.join(", ")}
-          </Text>
-        </View>
-      );
-    }
-
-    if (item.type === "date") {
-      return (
-        <View
-          testID={`date-divider-${item.id}`}
-          style={styles.dateDivider}
-        >
-          <View style={styles.dateLine} />
-          <Text style={styles.dateText}>{item.date}</Text>
-          <View style={styles.dateLine} />
-        </View>
-      );
-    }
-
-    return null;
-  }, []);
+function MessageRow({
+  item,
+  onReactionToggle,
+}: MessageRowProps): React.ReactElement {
+  const isUser = item.role === "user";
 
   return (
-    <ScreenContainer testID="active-chat-screen" style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          testID="back-button"
-          style={styles.backButton}
-          onPress={onBack}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-        >
-          <Text style={styles.backButtonIcon}>{"<"}</Text>
-        </TouchableOpacity>
-        <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>Solace AI</Text>
-          <Text style={styles.headerSubtitle}>
-            {chatsRemaining} Chats Left • {modelName}
-          </Text>
+    <View testID={`message-row-${item.id}`}>
+      <ChatBubble
+        testID={isUser ? `user-bubble-${item.id}` : `ai-bubble-${item.id}`}
+        message={item.text}
+        sender={item.role === "user" ? "user" : "ai"}
+        timestamp={new Date(item.timestamp)}
+        showTimestamp
+        accessibilityLabel={`${isUser ? "You" : "Solace"}: ${item.text}`}
+      />
+
+      {/* Embedded action card — only below AI messages */}
+      {!isUser && item.action ? (
+        <View style={styles.actionWrapper}>
+          <ChatBubbleAction
+            testID={`action-card-${item.id}`}
+            iconName={item.action.iconName ?? "wind"}
+            title={item.action.title}
+            subtitle={item.action.subtitle}
+            ctaLabel={item.action.ctaLabel ?? "Try now"}
+            onPress={item.action.onPress}
+          />
         </View>
-        <TouchableOpacity
-          testID="search-button"
-          style={styles.searchButton}
-          onPress={onSearch}
-          accessibilityRole="button"
-          accessibilityLabel="Search messages"
+      ) : null}
+
+      {/* Reaction chips row */}
+      {!isUser && item.reactions && item.reactions.length > 0 ? (
+        <View
+          testID={`reactions-row-${item.id}`}
+          style={styles.reactionsRow}
+          accessibilityLabel="Rate this response"
         >
-          <Icon name="search-outline" size={22} color={palette.white} />
-        </TouchableOpacity>
-      </View>
+          {item.reactions.map((chip) => (
+            <ReactionChip
+              key={chip.id}
+              testID={`reaction-chip-${chip.id}`}
+              label={chip.label}
+              iconName={chip.iconName}
+              selected={chip.selected ?? false}
+              onPress={() => onReactionToggle(item.id, chip.id)}
+            />
+          ))}
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Screen
+// ---------------------------------------------------------------------------
+
+export function ActiveChatScreen({
+  conversationId: _conversationId,
+  initialMessages = DEFAULT_INITIAL_MESSAGES,
+  onClose,
+  onPhonePress,
+  onMorePress,
+  onSendMessage,
+  testID = "active-chat-screen",
+}: ActiveChatScreenProps): React.ReactElement {
+  const { palette } = useTheme();
+  useReducedMotion();
+
+  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [isTyping, setIsTyping] = useState<boolean>(false);
+  const flatListRef = useRef<FlatList<ChatMessage>>(null);
+
+  // Toggle a reaction chip's selected state locally
+  const handleReactionToggle = useCallback(
+    (msgId: string, reactionId: string): void => {
+      setMessages((prev) =>
+        prev.map((msg) => {
+          if (msg.id !== msgId || !msg.reactions) return msg;
+          return {
+            ...msg,
+            reactions: msg.reactions.map((chip) =>
+              chip.id === reactionId
+                ? { ...chip, selected: !chip.selected }
+                : chip,
+            ),
+          };
+        }),
+      );
+    },
+    [],
+  );
+
+  const handleSend = useCallback(async (): Promise<void> => {
+    const trimmed = inputValue.trim();
+    if (!trimmed) return;
+
+    const userMsg: ChatMessage = {
+      id: `user-${Date.now()}`,
+      role: "user",
+      text: trimmed,
+      timestamp: Date.now(),
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
+    setInputValue("");
+    setIsTyping(true);
+
+    // Scroll after user message appends
+    setTimeout(() => {
+      flatListRef.current?.scrollToEnd({ animated: true });
+    }, 50);
+
+    try {
+      let reply: string;
+      let action: ChatMessage["action"] | undefined;
+
+      if (onSendMessage) {
+        const result = await onSendMessage(trimmed);
+        reply = result.reply;
+        action = result.action;
+      } else {
+        const result = await sendMessage({ input: trimmed, mode: "cbt" });
+        reply = result.text;
+      }
+
+      // 600ms typing pause minimum (mockChatService already delays, but
+      // onSendMessage override may not — keep the indicator visible briefly)
+      await new Promise<void>((resolve) => setTimeout(resolve, 600));
+
+      const aiMsg: ChatMessage = {
+        id: `ai-${Date.now()}`,
+        role: "ai",
+        text: reply,
+        timestamp: Date.now(),
+        action,
+      };
+
+      setIsTyping(false);
+      setMessages((prev) => [...prev, aiMsg]);
+
+      setTimeout(() => {
+        flatListRef.current?.scrollToEnd({ animated: true });
+      }, 50);
+    } catch {
+      setIsTyping(false);
+    }
+  }, [inputValue, onSendMessage]);
+
+  const renderItem = useCallback(
+    ({ item }: { item: ChatMessage }) => (
+      <MessageRow item={item} onReactionToggle={handleReactionToggle} />
+    ),
+    [handleReactionToggle],
+  );
+
+  const keyExtractor = useCallback((item: ChatMessage): string => item.id, []);
+
+  return (
+    <ScreenContainer
+      testID={testID}
+      backgroundColor={palette.midnight[950]}
+      style={styles.container}
+    >
+      <ChatHeader
+        testID={`${testID}-header`}
+        title="Solace"
+        status="CBT mode · Online"
+        onBack={onClose ?? noop}
+        onPhonePress={onPhonePress}
+        onMorePress={onMorePress}
+      />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoid}
       >
-      {/* Crisis Alert Banner - Shows when AI detects crisis content */}
-      {crisisDetected && (
-        <View testID="crisis-alert-banner" style={styles.crisisAlertBanner} accessibilityRole="alert" accessibilityLiveRegion="assertive">
-          <View style={styles.crisisAlertContent}>
-            <Icon name="heart-outline" size={24} color={palette.red[300]} style={styles.crisisAlertIcon} />
-            <View style={styles.crisisAlertText}>
-              <Text style={styles.crisisAlertTitle}>Support Available</Text>
-              <Text style={styles.crisisAlertDescription}>
-                We noticed you might need immediate support
-              </Text>
-            </View>
-          </View>
-          <TouchableOpacity
-            testID="crisis-support-banner-button"
-            style={styles.crisisAlertButton}
-            onPress={handleAccessCrisisSupport}
-            accessibilityRole="button"
-            accessibilityLabel="Access crisis support resources"
-          >
-            <Text style={styles.crisisAlertButtonText}>Get Help Now</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {/* Message List */}
-      <FlatList
-        ref={flatListRef}
-        testID="message-list"
-        data={messages}
-        renderItem={renderMessage}
-        keyExtractor={(item) => item.id}
-        style={styles.messageList}
-        contentContainerStyle={styles.messageListContent}
-        showsVerticalScrollIndicator={false}
-        windowSize={10}
-        maxToRenderPerBatch={10}
-        initialNumToRender={15}
-        removeClippedSubviews={true}
-        ListEmptyComponent={
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 100 }}>
-            <Text style={{ color: palette.gray[400], fontSize: 16 }}>
-              Start a conversation with Solace AI
-            </Text>
-          </View>
-        }
-      />
-
-      {/* Typing Indicator */}
-      {isAITyping && (
-        <View testID="typing-indicator" style={styles.typingIndicator}>
-          <View style={styles.aiAvatar}>
-            <Icon name="hardware-chip-outline" size={24} color={palette.white} />
-          </View>
-          <View style={styles.typingBubble}>
-            <Text style={styles.typingText}>Solace AI is thinking...</Text>
-            <View style={styles.typingDots}>
-              <View style={styles.typingDot} />
-              <View style={styles.typingDot} />
-              <View style={styles.typingDot} />
-            </View>
-          </View>
-        </View>
-      )}
-
-      {/* Chat Input Area */}
-      <View testID="chat-input-area" style={styles.chatInputArea}>
-        <TouchableOpacity
-          testID="attachment-button"
-          style={styles.attachmentButton}
-          onPress={onAttachment}
-          accessibilityRole="button"
-          accessibilityLabel="Add attachment"
-        >
-          <Icon name="attach-outline" size={22} color={palette.white} />
-        </TouchableOpacity>
-        <TextInput
-          testID="message-input"
-          style={styles.messageInput}
-          value={inputText}
-          onChangeText={onInputChange}
-          placeholder="Type to start chatting..."
-          placeholderTextColor={palette.gray[400]}
-          accessibilityLabel="Message input"
-          multiline
+        <FlatList
+          ref={flatListRef}
+          testID="message-list"
+          data={messages}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          style={styles.messageList}
+          contentContainerStyle={[
+            styles.messageListContent,
+            messages.length === 0 && styles.messageListEmpty,
+          ]}
+          showsVerticalScrollIndicator={false}
+          windowSize={10}
+          maxToRenderPerBatch={10}
+          initialNumToRender={15}
+          removeClippedSubviews
+          accessibilityRole="list"
+          accessibilityLabel="Chat messages"
+          ListEmptyComponent={<EmptyState />}
         />
-        <TouchableOpacity
-          testID="send-button"
-          style={styles.sendButton}
-          onPress={handleSend}
-          accessibilityRole="button"
-          accessibilityLabel="Send message"
-        >
-          <Text style={styles.sendIcon}>→</Text>
-        </TouchableOpacity>
-      </View>
-      </KeyboardAvoidingView>
 
-      {/* Crisis Modal */}
-      <CrisisModal
-        visible={showCrisisModal}
-        onDismiss={() => setShowCrisisModal(false)}
-        triggerSource="chat"
-        requireAcknowledge={true}
-      />
+        {isTyping ? (
+          <TypingIndicator
+            testID="typing-indicator"
+            isTyping
+            variant="combined"
+            size="md"
+            showAvatar={false}
+          />
+        ) : null}
+
+        <MessageInput
+          testID="message-input"
+          value={inputValue}
+          onChangeText={setInputValue}
+          onSend={handleSend}
+          placeholder="Type how you feel…"
+          showAttachment={false}
+          showVoice={false}
+        />
+      </KeyboardAvoidingView>
     </ScreenContainer>
   );
 }
 
+// ---------------------------------------------------------------------------
+// Styles — properties alphabetically sorted per coding rules
+// ---------------------------------------------------------------------------
+
 const styles = StyleSheet.create({
-  aiAvatar: {
-    alignItems: "center",
-    backgroundColor: palette.olive[500],
-    borderRadius: 20,
-    height: 40,
-    justifyContent: "center",
-    marginRight: 8,
-    width: 40,
-  },
-  aiMessage: {
-    alignSelf: "flex-start",
-    flexDirection: "row",
-  },
-  aiMessageContent: {
-    backgroundColor: palette.brown[800],
-  },
-  attachmentButton: {
-    alignItems: "center",
-    height: 44,
-    justifyContent: "center",
-    width: 44,
-  },
-  backButton: {
-    alignItems: "center",
-    borderColor: palette.brown[700],
-    borderRadius: 20,
-    borderWidth: 1,
-    height: 40,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    width: 40,
-  },
-  backButtonIcon: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  chatInputArea: {
-    alignItems: "center",
-    backgroundColor: palette.brown[800],
-    borderRadius: 28,
-    flexDirection: "row",
-    marginBottom: 32,
-    marginHorizontal: 24,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+  actionWrapper: {
+    marginBottom: 4,
+    marginHorizontal: 16,
+    marginTop: 2,
   },
   container: {
     flex: 1,
   },
+  emptyState: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+    paddingTop: 80,
+  },
+  emptyText: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
+  },
   keyboardAvoid: {
     flex: 1,
-  },
-  crisisAlertBanner: {
-    backgroundColor: colors.crisis.background,
-    borderColor: colors.crisis.border,
-    borderRadius: 12,
-    borderWidth: 1,
-    marginBottom: 12,
-    marginHorizontal: 24,
-    padding: 16,
-  },
-  crisisAlertButton: {
-    alignItems: "center",
-    backgroundColor: palette.red[500],
-    borderRadius: 8,
-    justifyContent: "center",
-    marginTop: 12,
-    minHeight: 44,
-    paddingVertical: 10,
-  },
-  crisisAlertButtonText: {
-    color: palette.white,
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  crisisAlertContent: {
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  crisisAlertDescription: {
-    color: palette.red[300],
-    fontSize: 13,
-    lineHeight: 18,
-    marginTop: 2,
-  },
-  crisisAlertIcon: {
-    marginRight: 12,
-  },
-  crisisAlertText: {
-    flex: 1,
-  },
-  crisisAlertTitle: {
-    color: palette.red[300],
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  dateDivider: {
-    alignItems: "center",
-    flexDirection: "row",
-    marginVertical: 16,
-    paddingHorizontal: 24,
-  },
-  dateLine: {
-    backgroundColor: palette.brown[700],
-    flex: 1,
-    height: 1,
-  },
-  dateText: {
-    color: palette.gray[400],
-    fontSize: 12,
-    marginHorizontal: 12,
-  },
-  emotionBadge: {
-    alignSelf: "center",
-    borderRadius: 16,
-    marginVertical: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
-  emotionText: {
-    color: palette.white,
-    fontSize: 12,
-    fontWeight: "600",
-  },
-  header: {
-    alignItems: "center",
-    flexDirection: "row",
-    paddingHorizontal: 24,
-    paddingBottom: 16,
-  },
-  headerContent: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  headerSubtitle: {
-    color: palette.gray[400],
-    fontSize: 12,
-    marginTop: 2,
-  },
-  headerTitle: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  messageBubble: {
-    alignItems: "flex-end",
-    flexDirection: "row",
-    marginBottom: 12,
-    paddingHorizontal: 24,
-  },
-  messageContent: {
-    backgroundColor: palette.tan[500],
-    borderRadius: 16,
-    maxWidth: "70%",
-    padding: 12,
-  },
-  messageInput: {
-    color: palette.white,
-    flex: 1,
-    fontSize: 14,
-    maxHeight: 100,
-    paddingVertical: 12,
   },
   messageList: {
     flex: 1,
   },
   messageListContent: {
-    paddingVertical: 16,
+    paddingBottom: 16,
+    paddingTop: 16,
   },
-  messageText: {
-    color: palette.white,
-    fontSize: 14,
-    lineHeight: 20,
+  messageListEmpty: {
+    flex: 1,
   },
-  searchButton: {
-    alignItems: "center",
-    height: 44,
-    justifyContent: "center",
-    width: 44,
-  },
-  sendButton: {
-    alignItems: "center",
-    backgroundColor: palette.olive[500],
-    borderRadius: 22,
-    height: 44,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    width: 44,
-  },
-  sendIcon: {
-    color: palette.white,
-    fontSize: 20,
-    fontWeight: "600",
-  },
-  typingBubble: {
-    backgroundColor: palette.brown[800],
-    borderRadius: 16,
+  reactionsRow: {
     flexDirection: "row",
-    padding: 12,
-  },
-  typingDot: {
-    backgroundColor: palette.gray[400],
-    borderRadius: 3,
-    height: 6,
-    marginLeft: 4,
-    width: 6,
-  },
-  typingDots: {
-    alignItems: "center",
-    flexDirection: "row",
-    marginLeft: 8,
-  },
-  typingIndicator: {
-    alignItems: "center",
-    flexDirection: "row",
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-  },
-  typingText: {
-    color: palette.gray[400],
-    fontSize: 14,
-  },
-  userAvatar: {
-    alignItems: "center",
-    backgroundColor: palette.tan[500],
-    borderRadius: 20,
-    height: 40,
-    justifyContent: "center",
-    marginLeft: 8,
-    width: 40,
-  },
-  userMessage: {
-    alignSelf: "flex-end",
-    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginBottom: 4,
+    marginHorizontal: 16,
+    marginTop: 4,
   },
 });
 
