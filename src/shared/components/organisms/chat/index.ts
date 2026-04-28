@@ -54,3 +54,19 @@ export {
   resampleWaveform,
   formatWaveformDuration,
 } from "./VoiceWaveform.types";
+
+// Sprint 5: Chat organisms
+export { ChatHeader } from "./ChatHeader";
+export type { ChatHeaderProps } from "./ChatHeader";
+
+export { ChatBubbleAction } from "./ChatBubbleAction";
+export type { ChatBubbleActionProps } from "./ChatBubbleAction";
+
+export { ReactionChip } from "./ReactionChip";
+export type { ReactionChipProps } from "./ReactionChip";
+
+export { TopicSummaryCard } from "./TopicSummaryCard";
+export type { TopicSummaryCardProps, TopicSummaryItem } from "./TopicSummaryCard";
+
+export { CbtStepper } from "./CbtStepper";
+export type { CbtStepperProps, CbtStep } from "./CbtStepper";
