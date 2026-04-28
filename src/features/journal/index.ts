@@ -5,12 +5,8 @@
 
 export {
   JournalDashboardScreen,
-  JournalStatsScreen,
-  NewJournalTypeSelectorScreen,
-  VoiceJournalReadyScreen,
-  VoiceJournalRecordingScreen,
-  TextJournalComposerScreen,
-  JournalTimelineScreen,
   JournalEntryEditorScreen,
+  JournalEntryDetailScreen,
+  TextJournalComposerScreen,
   CrisisSupportAlertScreen,
 } from "./screens";

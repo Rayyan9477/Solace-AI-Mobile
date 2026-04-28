@@ -1,633 +1,590 @@
 /**
- * HomeDashboardScreen Component
- * @description Main home dashboard screen with mental health metrics
- * @task Task 3.5.1: Home Dashboard Screen (Screen 40)
- * @phase Phase 3C: Refactored to use theme tokens
+ * HomeDashboardScreen — prototype v4.2 #20 Home v2 reskin (Sprint 6).
+ *
+ * Emotional check-in–first layout: bracket date, greeting headline,
+ * 5-face mood selector, 2-up stats tiles, ContinueCard, and a
+ * horizontal practice carousel. Maps to `prototypes/screens/20-home-v2.js`.
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 import {
-  View,
+  ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Image,
+  View,
+  type StyleProp,
+  type ViewStyle,
 } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { palette } from "../../../shared/theme";
-import { ScreenContainer } from "../../../shared/components/atoms/layout";
-import { EmptyState } from "../../../shared/components/molecules/feedback/EmptyState";
-import { Skeleton } from "../../../shared/components/atoms/display";
 
-type MoodType = "happy" | "sad" | "neutral" | "angry" | "anxious";
-type SolaceStatus = "Mentally Stable" | "Needs Attention" | "Critical";
+import { AppIcon } from "@/shared/components/atoms/display/AppIcon";
+import { ScreenContainer } from "@/shared/components/atoms/layout";
+import {
+  ArticleCardV2,
+  ContinueCard,
+} from "@/shared/components/organisms/dashboard";
+import {
+  BracketLabel,
+  GlassCard,
+  MoodFace,
+  MOOD_LEVELS,
+  type MoodLevel,
+} from "@/shared/components/primitives";
+import { useTheme } from "@/shared/theme/useTheme";
 
-interface Article {
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/** Returns "Good morning", "Good afternoon", or "Good evening". */
+export const computeGreeting = (date = new Date()): string => {
+  const h = date.getHours();
+  if (h < 12) return "Good morning";
+  if (h < 18) return "Good afternoon";
+  return "Good evening";
+};
+
+const DAY_NAMES = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+] as const;
+
+const MONTH_NAMES = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+] as const;
+
+const computeDateLabel = (date = new Date()): string => {
+  const day = DAY_NAMES[date.getDay()];
+  const month = MONTH_NAMES[date.getMonth()];
+  const d = date.getDate();
+  return `${day} · ${month} ${d}`;
+};
+
+// ---------------------------------------------------------------------------
+// Public types
+// ---------------------------------------------------------------------------
+
+export interface HomeArticle {
   id: string;
   title: string;
-  thumbnail: string;
+  category: string;
+  readMinutes: number;
+  thumbnailGradient?: "sage" | "aurora" | "peach" | "lavender";
 }
 
-interface HomeDashboardScreenProps {
-  userName?: string;
-  userAvatar?: string;
-  currentDate?: Date;
-  solaceScore?: number;
-  solaceStatus?: SolaceStatus;
-  currentMood?: MoodType;
-  mindfulHours?: number;
-  sleepQuality?: number;
-  journalPages?: number;
-  stressLevel?: number;
-  weeklyMoods?: readonly MoodType[];
-  conversationCount?: number;
-  articles?: Article[];
-  notificationCount?: number;
-  onSolaceScorePress?: () => void;
-  onMoodPress?: () => void;
-  onMindfulHoursPress?: () => void;
-  onSleepQualityPress?: () => void;
-  onJournalPress?: () => void;
-  onStressLevelPress?: () => void;
-  onChatbotPress?: () => void;
-  onArticlePress?: (articleId: string) => void;
-  onSearchPress?: () => void;
-  onNotificationPress?: () => void;
+export interface HomeDashboardScreenProps {
+  /** User's first name for the greeting */
+  userName: string;
+  /** Today's check-in mood (1–5 or null) */
+  todayMood: MoodLevel | null;
+  onMoodChange: (_m: MoodLevel | null) => void;
+  /** Solace score (0-100) */
+  solaceScore: number;
+  /** Score delta from last week (e.g., +5) */
+  solaceDelta?: number;
+  /** Streak days */
+  streakDays: number;
+  /** Current Continue card (if any practice in-progress) */
+  continueCard?: {
+    title: string;
+    subtitle: string;
+    onPress: () => void;
+  } | null;
+  /** Today's practice list */
+  articles: HomeArticle[];
+  onArticlePress: (_id: string) => void;
+  onAllPracticesPress: () => void;
+  onNotificationsPress: () => void;
+  /** Date label override; defaults to computed today */
+  dateLabel?: string;
+  /**
+   * Time-of-day greeting override; defaults to computeGreeting() based on
+   * system time.
+   */
+  greeting?: string;
+  testID?: string;
+  style?: StyleProp<ViewStyle>;
 }
 
-const MOOD_EMOJI: Record<MoodType, string> = {
-  happy: "happy-outline",
-  sad: "sad-outline",
-  neutral: "remove-circle-outline",
-  angry: "alert-circle-outline",
-  anxious: "alert-outline",
-};
+// ---------------------------------------------------------------------------
+// Default articles export
+// ---------------------------------------------------------------------------
 
-const formatDate = (date: Date): string => {
-  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-  ];
-  const dayName = days[date.getDay()];
-  const day = date.getDate();
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
-  return `${dayName}, ${day} ${month} ${year}`;
-};
+export const DEFAULT_ARTICLES: HomeArticle[] = [
+  {
+    id: "breathing-4-7-8",
+    title: "4-7-8 calming breath",
+    category: "Breathing",
+    readMinutes: 4,
+    thumbnailGradient: "sage",
+  },
+  {
+    id: "movement-body-scan",
+    title: "Full body scan release",
+    category: "Movement",
+    readMinutes: 10,
+    thumbnailGradient: "peach",
+  },
+  {
+    id: "meditation-loving-kindness",
+    title: "Loving-kindness meditation",
+    category: "Meditation",
+    readMinutes: 8,
+    thumbnailGradient: "lavender",
+  },
+];
 
-const formatNumber = (num: number): string => {
-  return num.toLocaleString();
-};
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 export function HomeDashboardScreen({
-  userName = "User",
-  userAvatar,
-  currentDate = new Date(),
-  solaceScore = 0,
-  solaceStatus = "Mentally Stable",
-  currentMood = "neutral",
-  mindfulHours = 0,
-  sleepQuality = 0,
-  journalPages = 0,
-  stressLevel = 0,
-  weeklyMoods = [],
-  conversationCount = 0,
-  articles = [],
-  notificationCount = 0,
-  onSolaceScorePress,
-  onMoodPress,
-  onMindfulHoursPress,
-  onSleepQualityPress,
-  onJournalPress,
-  onStressLevelPress,
-  onChatbotPress,
+  userName,
+  todayMood,
+  onMoodChange,
+  solaceScore,
+  solaceDelta,
+  streakDays,
+  continueCard,
+  articles,
   onArticlePress,
-  onSearchPress,
-  onNotificationPress,
-}: HomeDashboardScreenProps = {}): React.ReactElement {
-  const showSkeletons = solaceScore === 0 && mindfulHours === 0 && sleepQuality === 0 && journalPages === 0;
+  onAllPracticesPress,
+  onNotificationsPress,
+  dateLabel,
+  greeting,
+  testID = "home-dashboard-screen",
+  style,
+}: HomeDashboardScreenProps): React.ReactElement {
+  const { palette, typography } = useTheme();
+
+  const resolvedGreeting = greeting ?? computeGreeting();
+  const resolvedDateLabel = dateLabel ?? computeDateLabel();
+
+  const deltaLabel = useMemo(() => {
+    if (solaceDelta === undefined) return null;
+    return solaceDelta >= 0 ? `+${solaceDelta} this week` : `${solaceDelta} this week`;
+  }, [solaceDelta]);
 
   return (
-    <ScreenContainer testID="home-dashboard-screen" style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header */}
+    <ScreenContainer
+      testID={testID}
+      backgroundColor={palette.midnight[950]}
+      style={style as ViewStyle | undefined}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ---------------------------------------------------------------- */}
+        {/* Header: date bracket + notification bell                          */}
+        {/* ---------------------------------------------------------------- */}
         <View style={styles.header}>
-          <Text style={styles.dateLabel}>{formatDate(currentDate)}</Text>
-          <View style={styles.greetingRow}>
-            <View testID="user-avatar" style={styles.avatarContainer}>
-              {userAvatar ? (
-                <Image source={{ uri: userAvatar }} style={styles.avatar} />
-              ) : (
-                <View style={styles.avatarPlaceholder}>
-                  <Text style={styles.avatarInitial}>{userName.charAt(0)}</Text>
-                </View>
-              )}
-            </View>
-            <Text style={styles.greetingText}>Hi, {userName}!</Text>
-            <TouchableOpacity
-              testID="notification-bell"
-              style={styles.notificationButton}
-              onPress={onNotificationPress}
-              accessibilityRole="button"
-              accessibilityLabel="Notifications"
-            >
-              <Icon name="notifications-outline" size={24} color={palette.tan[400]} />
-              {notificationCount > 0 && (
-                <View testID="notification-badge" style={styles.notificationBadge}>
-                  <Text style={styles.badgeText}>{notificationCount}</Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          </View>
-        </View>
+          <BracketLabel variant="muted">
+            {resolvedDateLabel}
+          </BracketLabel>
 
-        {/* Search Bar */}
-        <TouchableOpacity
-          testID="search-bar"
-          style={styles.searchBar}
-          onPress={onSearchPress}
-          accessibilityRole="button"
-          accessibilityLabel="Search"
-        >
-          <Icon name="search-outline" size={20} color={palette.tan[400]} style={styles.searchIcon} />
-          <Text style={styles.searchPlaceholder}>Search anything</Text>
-        </TouchableOpacity>
-
-        {/* Mental Health Metrics Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle} accessibilityRole="header">Mental Health Metrics</Text>
-
-          {showSkeletons ? (
-            <>
-              {/* Skeleton: Solace Score ring */}
-              <View testID="skeleton-score-card" style={styles.skeletonScoreCard}>
-                <Skeleton shape="circle" width={120} height={120} />
-                <View style={styles.skeletonScoreLabels}>
-                  <Skeleton shape="text" width={100} height={14} />
-                  <Skeleton shape="text" width={80} height={12} style={styles.skeletonGap} />
-                </View>
-              </View>
-
-              {/* Skeleton: Metric cards grid */}
-              <View style={styles.metricsGrid}>
-                <View style={styles.metricCard}>
-                  <Skeleton shape="rect" width="100%" height={80} borderRadius={12} />
-                </View>
-                <View style={styles.metricCard}>
-                  <Skeleton shape="rect" width="100%" height={80} borderRadius={12} />
-                </View>
-                <View style={styles.metricCard}>
-                  <Skeleton shape="rect" width="100%" height={80} borderRadius={12} />
-                </View>
-                <View style={styles.metricCard}>
-                  <Skeleton shape="rect" width="100%" height={80} borderRadius={12} />
-                </View>
-              </View>
-
-              {/* Skeleton: Secondary metrics */}
-              <View style={styles.secondaryMetrics}>
-                <View style={styles.secondaryCard}>
-                  <Skeleton shape="rect" width="100%" height={60} borderRadius={12} />
-                </View>
-                <View style={styles.secondaryCard}>
-                  <Skeleton shape="rect" width="100%" height={60} borderRadius={12} />
-                </View>
-              </View>
-            </>
-          ) : (
-            <>
-              {/* Solace Score Card - Large */}
-              <TouchableOpacity
-                testID="solace-score-card"
-                style={styles.solaceScoreCard}
-                onPress={onSolaceScorePress}
-                accessibilityRole="button"
-                accessibilityLabel={`Solace Score ${solaceScore}, ${solaceStatus}`}
-              >
-                <View style={styles.scoreGaugeContainer}>
-                  <View style={styles.scoreGauge}>
-                    <Text style={styles.scoreValue}>{solaceScore}</Text>
-                  </View>
-                </View>
-                <Text style={styles.scoreLabel}>Solace Score</Text>
-                <Text style={styles.scoreStatus}>{solaceStatus}</Text>
-              </TouchableOpacity>
-
-              {/* Metrics Grid */}
-              <View style={styles.metricsGrid}>
-                {/* Mood Card */}
-                <TouchableOpacity
-                  testID="mood-card"
-                  style={styles.metricCard}
-                  onPress={onMoodPress}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Mood: ${currentMood}`}
-                >
-                  <Text style={styles.metricLabel}>Mood</Text>
-                  <Icon name={MOOD_EMOJI[currentMood]} size={28} color={palette.tan[400]} />
-                </TouchableOpacity>
-
-                {/* Mindful Hours Card */}
-                <TouchableOpacity
-                  testID="mindful-hours-card"
-                  style={styles.metricCard}
-                  onPress={onMindfulHoursPress}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Mindful Hours: ${mindfulHours} hours`}
-                >
-                  <Text style={styles.metricLabel}>Mindful Hours</Text>
-                  <Text style={styles.metricValue}>{mindfulHours} Hrs</Text>
-                </TouchableOpacity>
-
-                {/* Sleep Quality Card */}
-                <TouchableOpacity
-                  testID="sleep-quality-card"
-                  style={styles.metricCard}
-                  onPress={onSleepQualityPress}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Sleep Quality: ${sleepQuality}%`}
-                >
-                  <Text style={styles.metricLabel}>Sleep Quality</Text>
-                  <View style={styles.sleepBar}>
-                    <View
-                      style={[styles.sleepBarFill, { width: `${sleepQuality}%` }]}
-                    />
-                  </View>
-                </TouchableOpacity>
-
-                {/* Journal Card */}
-                <TouchableOpacity
-                  testID="journal-card"
-                  style={styles.metricCard}
-                  onPress={onJournalPress}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Mental Journal: ${journalPages} pages`}
-                >
-                  <Text style={styles.metricLabel}>Mental Journal</Text>
-                  <Text style={styles.metricValue}>{journalPages} Pages</Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* Secondary Metrics Row */}
-              <View style={styles.secondaryMetrics}>
-                {/* Stress Level */}
-                <TouchableOpacity
-                  testID="stress-level-card"
-                  style={styles.secondaryCard}
-                  onPress={onStressLevelPress}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Stress Level: ${stressLevel} out of 5`}
-                >
-                  <Text style={styles.metricLabel}>Stress Level</Text>
-                  <Text style={styles.metricValue}>{stressLevel}/5</Text>
-                </TouchableOpacity>
-
-                {/* Mood Tracker */}
-                <TouchableOpacity
-                  testID="mood-tracker-card"
-                  style={styles.secondaryCard}
-                  onPress={onMoodPress}
-                  accessibilityRole="button"
-                  accessibilityLabel="Weekly Mood Tracker"
-                >
-                  <Text style={styles.metricLabel}>Mood Tracker</Text>
-                  <View style={styles.weeklyMoods}>
-                    {weeklyMoods.map((mood, index) => (
-                      <Icon key={index} name={MOOD_EMOJI[mood]} size={16} color={palette.tan[400]} />
-                    ))}
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </>
-          )}
-        </View>
-
-        {/* AI Therapy Chatbot Section */}
-        {showSkeletons ? (
-          <View testID="skeleton-chatbot-section" style={[styles.chatbotSection, styles.skeletonChatbot]}>
-            <Skeleton shape="text" width={160} height={18} />
-            <Skeleton shape="text" width={80} height={36} style={styles.skeletonGap} />
-            <Skeleton shape="text" width={120} height={14} style={styles.skeletonGap} />
-            <Skeleton shape="rect" width="100%" height={44} borderRadius={8} style={styles.skeletonGap} />
-          </View>
-        ) : (
           <TouchableOpacity
-            testID="chatbot-section"
-            style={styles.chatbotSection}
-            onPress={onChatbotPress}
+            testID="notifications-button"
+            style={[
+              styles.bellButton,
+              {
+                backgroundColor: palette.midnight[800],
+                borderColor: palette.midnight[600],
+              },
+            ]}
+            onPress={onNotificationsPress}
             accessibilityRole="button"
-            accessibilityLabel="AI Therapy Chatbot"
+            accessibilityLabel="Notifications"
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <Text style={styles.sectionTitle}>AI Therapy Chatbot</Text>
-            <Text style={styles.conversationCount}>
-              {formatNumber(conversationCount)}
-            </Text>
-            <Text style={styles.conversationLabel}>Conversations</Text>
-            <View style={styles.recommendationButton}>
-              <Text style={styles.recommendationText}>
-                Get recommendation for the day's needs
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
-
-        {/* Mindful Articles Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Mindful Articles</Text>
-          {articles.length === 0 ? (
-            <EmptyState
-              testID="articles-empty-state"
-              variant="compact"
-              icon={<Icon name="book-outline" size={40} color={palette.gray[500]} />}
-              title="No articles yet"
-              description="Mindful content coming soon"
+            <AppIcon name="bell" size={18} color={palette.warm[100]} />
+            <View
+              testID="notification-dot"
+              style={[styles.notifDot, { backgroundColor: palette.peach[300] }]}
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
             />
-          ) : (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={styles.articlesScroll}
-            >
-              {articles.map((article) => (
-                <TouchableOpacity
-                  key={article.id}
-                  testID={`article-card-${article.id}`}
-                  style={styles.articleCard}
-                  onPress={() => onArticlePress?.(article.id)}
-                  accessibilityRole="button"
-                  accessibilityLabel={article.title}
-                >
-                  <Image
-                    source={{ uri: article.thumbnail }}
-                    style={styles.articleThumbnail}
-                  />
-                  <Text style={styles.articleTitle} numberOfLines={2}>
-                    {article.title}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          )}
+          </TouchableOpacity>
         </View>
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Greeting headline                                                 */}
+        {/* ---------------------------------------------------------------- */}
+        <Text
+          testID="greeting-text"
+          accessibilityRole="header"
+          style={[styles.greeting, { color: palette.warm[50] }]}
+        >
+          {`${resolvedGreeting},\n`}
+          <Text
+            style={[
+              styles.greetingName,
+              { color: palette.warm[50], fontFamily: typography.fontFamily.displayItalic },
+            ]}
+          >
+            {`${userName}.`}
+          </Text>
+        </Text>
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Check-in card                                                     */}
+        {/* ---------------------------------------------------------------- */}
+        <GlassCard
+          testID="checkin-card"
+          style={styles.checkinCard}
+        >
+          <Text
+            style={[
+              styles.checkinQuestion,
+              {
+                color: palette.warm[50],
+                fontFamily: typography.fontFamily.display,
+              },
+            ]}
+          >
+            How are you right now?
+          </Text>
+
+          <View
+            testID="mood-selector"
+            accessibilityRole="radiogroup"
+            accessibilityLabel="Current mood"
+            style={styles.moodRow}
+          >
+            {MOOD_LEVELS.map((level) => {
+              const isSelected = todayMood === level;
+              return (
+                <TouchableOpacity
+                  key={level}
+                  testID={`mood-face-${level}`}
+                  onPress={() => onMoodChange(level)}
+                  accessibilityRole="radio"
+                  accessibilityLabel={`Mood level ${level}`}
+                  accessibilityState={{ selected: isSelected }}
+                  style={[
+                    styles.moodTouchable,
+                    { borderColor: isSelected ? palette.aurora[300] : palette.midnight[950] },
+                  ]}
+                >
+                  <MoodFace
+                    level={level}
+                    size={56}
+                    selected={isSelected}
+                    interactive
+                  />
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </GlassCard>
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Stats row: Solace score + streak                                  */}
+        {/* ---------------------------------------------------------------- */}
+        <View style={styles.statsRow}>
+          {/* Solace tile */}
+          <GlassCard
+            testID="solace-tile"
+            style={styles.statsTile}
+            accessibilityRole="text"
+            accessibilityLabel={`Solace score ${solaceScore} out of 100${deltaLabel ? `, ${deltaLabel}` : ""}`}
+          >
+            <View style={styles.statsTileHeader}>
+              <BracketLabel variant="muted">Solace</BracketLabel>
+              <AppIcon
+                name="trending-up"
+                size={14}
+                color={palette.sage[300]}
+                accessibilityLabel="Trending up"
+              />
+            </View>
+
+            <Text
+              testID="solace-score-value"
+              style={[
+                styles.statsNumber,
+                {
+                  color: palette.warm[50],
+                  fontFamily: typography.fontFamily.display,
+                },
+              ]}
+            >
+              {String(solaceScore)}
+              <Text
+                style={[
+                  styles.statsUnit,
+                  {
+                    color: palette.warm[400],
+                    fontFamily: typography.fontFamily.mono,
+                  },
+                ]}
+              >
+                /100
+              </Text>
+            </Text>
+
+            {deltaLabel ? (
+              <Text
+                testID="solace-delta"
+                style={[styles.statsDelta, { color: palette.sage[300] }]}
+              >
+                {deltaLabel}
+              </Text>
+            ) : null}
+          </GlassCard>
+
+          {/* Streak tile */}
+          <GlassCard
+            testID="streak-tile"
+            style={styles.statsTile}
+            accessibilityRole="text"
+            accessibilityLabel={`${streakDays} day streak`}
+          >
+            <View style={styles.statsTileHeader}>
+              <BracketLabel variant="muted">Streak</BracketLabel>
+              <AppIcon
+                name="flame"
+                size={14}
+                color={palette.peach[300]}
+                accessibilityLabel="Flame"
+              />
+            </View>
+
+            <Text
+              testID="streak-value"
+              style={[
+                styles.statsNumber,
+                {
+                  color: palette.warm[50],
+                  fontFamily: typography.fontFamily.display,
+                },
+              ]}
+            >
+              {String(streakDays)}
+              <Text
+                style={[
+                  styles.statsUnit,
+                  {
+                    color: palette.warm[400],
+                    fontFamily: typography.fontFamily.mono,
+                  },
+                ]}
+              >
+                d
+              </Text>
+            </Text>
+          </GlassCard>
+        </View>
+
+        {/* ---------------------------------------------------------------- */}
+        {/* ContinueCard (optional)                                           */}
+        {/* ---------------------------------------------------------------- */}
+        {continueCard ? (
+          <ContinueCard
+            testID="continue-card"
+            practiceTitle={continueCard.title}
+            practiceSubtitle={continueCard.subtitle}
+            ctaLabel="Pick up where you left off"
+            onPress={continueCard.onPress}
+            style={styles.continueCard}
+          />
+        ) : null}
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Today's practice section                                          */}
+        {/* ---------------------------------------------------------------- */}
+        <View style={styles.practiceHeader}>
+          <Text
+            testID="practice-heading"
+            accessibilityRole="header"
+            style={[
+              styles.practiceTitle,
+              {
+                color: palette.warm[50],
+                fontFamily: typography.fontFamily.display,
+              },
+            ]}
+          >
+            Today&apos;s practice
+          </Text>
+
+          <TouchableOpacity
+            testID="all-practices-link"
+            onPress={onAllPracticesPress}
+            accessibilityRole="link"
+            accessibilityLabel="All practices"
+            style={styles.allPracticesButton}
+          >
+            <Text
+              style={[
+                styles.allPracticesText,
+                { color: palette.aurora[300] },
+              ]}
+            >
+              All practices →
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.practiceScroll}
+          testID="practice-scroll"
+          accessibilityRole="list"
+        >
+          {articles.map((article) => (
+            <ArticleCardV2
+              key={article.id}
+              testID={`article-card-${article.id}`}
+              title={article.title}
+              category={article.category}
+              readMinutes={article.readMinutes}
+              thumbnailGradient={article.thumbnailGradient ?? "sage"}
+              onPress={() => onArticlePress(article.id)}
+            />
+          ))}
+        </ScrollView>
       </ScrollView>
     </ScreenContainer>
   );
 }
 
+// ---------------------------------------------------------------------------
+// Styles (properties alphabetically sorted)
+// ---------------------------------------------------------------------------
+
 const styles = StyleSheet.create({
-  articleCard: {
-    marginRight: 16,
-    width: 160,
-  },
-  articleThumbnail: {
-    backgroundColor: palette.brown[800],
-    borderRadius: 12,
-    height: 100,
-    marginBottom: 8,
-    width: 160,
-  },
-  articleTitle: {
-    color: palette.white,
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  articlesScroll: {
-    marginTop: 12,
-  },
-  avatar: {
-    borderRadius: 20,
-    height: 40,
-    width: 40,
-  },
-  avatarContainer: {
-    marginRight: 12,
-  },
-  avatarInitial: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  avatarPlaceholder: {
-    alignItems: "center",
-    backgroundColor: palette.tan[500],
-    borderRadius: 20,
-    height: 40,
-    justifyContent: "center",
-    width: 40,
-  },
-  badgeText: {
-    color: palette.white,
-    fontSize: 10,
-    fontWeight: "600",
-  },
-  bellIcon: {},
-  chatbotSection: {
-    backgroundColor: palette.brown[800],
-    borderRadius: 16,
-    marginHorizontal: 24,
-    marginVertical: 16,
-    padding: 20,
-  },
-  container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
-  },
-  conversationCount: {
-    color: palette.white,
-    fontSize: 36,
-    fontWeight: "700",
-    marginTop: 8,
-  },
-  conversationLabel: {
-    color: palette.gray[400],
-    fontSize: 14,
-    marginBottom: 16,
-  },
-  dateLabel: {
-    color: palette.gray[400],
-    fontSize: 12,
-    marginBottom: 8,
-  },
-  greetingRow: {
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  greetingText: {
-    color: palette.white,
-    flex: 1,
-    fontSize: 20,
-    fontWeight: "600",
-  },
-  header: {
-    paddingHorizontal: 24,
-  },
-  metricCard: {
-    backgroundColor: palette.brown[800],
-    borderRadius: 12,
-    flex: 1,
-    marginHorizontal: 4,
-    minHeight: 80,
-    padding: 12,
-  },
-  metricLabel: {
-    color: palette.gray[400],
-    fontSize: 12,
-    marginBottom: 8,
-  },
-  metricValue: {
-    color: palette.white,
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  metricsGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginHorizontal: -4,
-    marginTop: 12,
-  },
-  moodEmoji: {},
-  notificationBadge: {
-    alignItems: "center",
-    backgroundColor: palette.onboarding.step2,
-    borderRadius: 8,
-    height: 16,
-    justifyContent: "center",
-    minWidth: 16,
-    position: "absolute",
-    right: -4,
-    top: -4,
-  },
-  notificationButton: {
+  allPracticesButton: {
     minHeight: 44,
-    minWidth: 44,
-    padding: 8,
-  },
-  recommendationButton: {
-    backgroundColor: palette.brown[700],
-    borderRadius: 8,
-    padding: 12,
-  },
-  recommendationText: {
-    color: palette.white,
-    fontSize: 14,
-    textAlign: "center",
-  },
-  scoreGauge: {
-    alignItems: "center",
-    backgroundColor: palette.brown[900],
-    borderRadius: 40,
-    height: 80,
-    justifyContent: "center",
-    width: 80,
-  },
-  scoreGaugeContainer: {
-    alignItems: "center",
-    backgroundColor: palette.olive[500],
-    borderRadius: 50,
-    height: 100,
-    justifyContent: "center",
-    marginBottom: 12,
-    width: 100,
-  },
-  scoreLabel: {
-    color: palette.white,
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  scoreStatus: {
-    color: palette.olive[500],
-    fontSize: 12,
-    marginTop: 4,
-  },
-  scoreValue: {
-    color: palette.white,
-    fontSize: 28,
-    fontWeight: "700",
-  },
-  searchBar: {
-    alignItems: "center",
-    backgroundColor: palette.brown[800],
-    borderRadius: 12,
-    flexDirection: "row",
-    marginHorizontal: 24,
-    marginVertical: 16,
-    minHeight: 44,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchPlaceholder: {
-    color: palette.gray[500],
-    fontSize: 14,
-  },
-  secondaryCard: {
-    backgroundColor: palette.brown[800],
-    borderRadius: 12,
-    flex: 1,
-    marginHorizontal: 4,
-    padding: 12,
-  },
-  secondaryMetrics: {
-    flexDirection: "row",
-    marginHorizontal: -4,
-    marginTop: 8,
-  },
-  section: {
-    paddingHorizontal: 24,
     paddingVertical: 8,
   },
-  sectionTitle: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 4,
+  allPracticesText: {
+    fontFamily: "Inter_500Medium",
+    fontSize: 12,
   },
-  sleepBar: {
-    backgroundColor: palette.brown[700],
-    borderRadius: 4,
-    height: 8,
-    marginTop: 8,
-    overflow: "hidden",
-  },
-  sleepBarFill: {
-    backgroundColor: palette.olive[500],
-    height: "100%",
-  },
-  solaceScoreCard: {
+  bellButton: {
     alignItems: "center",
-    backgroundColor: palette.brown[800],
-    borderRadius: 16,
-    marginTop: 12,
+    borderRadius: 22,
+    borderWidth: 1,
+    height: 44,
+    justifyContent: "center",
+    width: 44,
+  },
+  checkinCard: {
+    marginTop: 20,
     padding: 20,
   },
-  skeletonChatbot: {
-    gap: 0,
-  },
-  skeletonGap: {
-    marginTop: 8,
-  },
-  skeletonScoreCard: {
-    alignItems: "center",
-    backgroundColor: palette.brown[800],
-    borderRadius: 16,
-    marginTop: 12,
-    padding: 20,
-  },
-  skeletonScoreLabels: {
-    alignItems: "center",
-    marginTop: 12,
-  },
-  weeklyMoodEmoji: {
+  checkinQuestion: {
     fontSize: 16,
+    lineHeight: 22,
+    marginBottom: 16,
   },
-  weeklyMoods: {
+  continueCard: {
+    marginTop: 16,
+  },
+  greeting: {
+    fontFamily: "Fraunces_300Light",
+    fontSize: 30,
+    lineHeight: 34,
+    marginTop: 8,
+  },
+  greetingName: {
+    fontFamily: "Fraunces_400Regular_Italic",
+    fontSize: 30,
+    fontStyle: "italic",
+    lineHeight: 34,
+  },
+  header: {
+    alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 4,
+    marginBottom: 4,
+  },
+  moodRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 8,
+    justifyContent: "space-between",
+  },
+  moodTouchable: {
+    alignItems: "center",
+    borderRadius: 32,
+    borderWidth: 2,
+    justifyContent: "center",
+    minHeight: 44,
+    minWidth: 44,
+    padding: 2,
+  },
+  notifDot: {
+    borderRadius: 5,
+    height: 8,
+    position: "absolute",
+    right: 9,
+    top: 9,
+    width: 8,
+  },
+  practiceHeader: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 12,
+    marginTop: 24,
+  },
+  practiceScroll: {
+    paddingRight: 8,
+  },
+  practiceTitle: {
+    fontSize: 18,
+    lineHeight: 22,
+  },
+  scroll: {
+    paddingBottom: 40,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+  },
+  statsDelta: {
+    fontFamily: "FiraCode_400Regular",
+    fontSize: 10,
+    marginTop: 6,
+  },
+  statsNumber: {
+    fontSize: 28,
+    lineHeight: 32,
+    marginTop: 6,
+  },
+  statsRow: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 16,
+  },
+  statsTile: {
+    flex: 1,
+    padding: 16,
+  },
+  statsTileHeader: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  statsUnit: {
+    fontSize: 14,
   },
 });
 

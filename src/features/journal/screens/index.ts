@@ -1,14 +1,11 @@
 /**
- * Journal Screens Barrel Export
- * Sprint 3.9: Journal (Screens 78–86)
+ * Journal Screens — Sprint 4 (prototype v4.2) survivor barrel.
+ * JournalDashboard · JournalEntryEditor · JournalEntryDetail · TextJournalComposer.
+ * CrisisSupportAlert deferred (S9 move to crisis/).
  */
 
 export { JournalDashboardScreen } from "./JournalDashboardScreen";
-export { JournalStatsScreen } from "./JournalStatsScreen";
-export { NewJournalTypeSelectorScreen } from "./NewJournalTypeSelectorScreen";
-export { VoiceJournalReadyScreen } from "./VoiceJournalReadyScreen";
-export { VoiceJournalRecordingScreen } from "./VoiceJournalRecordingScreen";
-export { TextJournalComposerScreen } from "./TextJournalComposerScreen";
-export { JournalTimelineScreen } from "./JournalTimelineScreen";
 export { JournalEntryEditorScreen } from "./JournalEntryEditorScreen";
+export { JournalEntryDetailScreen } from "./JournalEntryDetailScreen";
+export { TextJournalComposerScreen } from "./TextJournalComposerScreen";
 export { CrisisSupportAlertScreen } from "./CrisisSupportAlertScreen";
