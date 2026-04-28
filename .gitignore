@@ -83,6 +83,8 @@ ios/
 NUL
 .husky
 
+
+*.snap
 # Examine main navigation and routing logic for issues
 # Check error boundaries and loading states implementation
 # Use Playwright to test app screens for blank screen issues

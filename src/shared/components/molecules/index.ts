@@ -14,7 +14,7 @@ export type {
 } from "./header";
 
 // Navigation
-export { BottomNavigation, TabBar } from "./navigation";
+export { BottomNavigation, TabBar, FilterPills } from "./navigation";
 export type {
   BottomNavigationProps,
   NavTab,
@@ -22,6 +22,8 @@ export type {
   Tab,
   TabBarVariant,
   TabBarSize,
+  FilterPillsProps,
+  FilterPill,
 } from "./navigation";
 
 // Search
@@ -32,30 +34,43 @@ export type {
   SearchBarSize,
 } from "./search";
 
+// Auth
+export { SocialButton } from "./auth";
+export type { SocialButtonProps } from "./auth";
+
 // Cards
-export { Card } from "./cards";
+export { Card, SuggestionCard } from "./cards";
 export type {
   CardProps,
   CardVariant,
   CardSize,
+  SuggestionCardProps,
 } from "./cards";
 
+// Chips
+export { HashtagChip } from "./chips";
+export type { HashtagChipProps } from "./chips";
+
 // Lists
-export { ListItem } from "./lists";
+export { ListItem, SettingsSection, SettingsRow } from "./lists";
 export type {
   ListItemProps,
   ListItemVariant,
+  SettingsSectionProps,
+  SettingsRowProps,
 } from "./lists";
 
 // Forms
-export { FormField } from "./forms";
+export { FormField, GlassInput, ToggleRow } from "./forms";
 export type {
   FormFieldProps,
   FormFieldStatus,
+  GlassInputProps,
+  ToggleRowProps,
 } from "./forms";
 
 // Feedback
-export { EmptyState, Toast } from "./feedback";
+export { EmptyState, Toast, StackedNotificationCards } from "./feedback";
 export type {
   EmptyStateProps,
   EmptyStateVariant,
@@ -63,7 +78,13 @@ export type {
   ToastVariant,
   ToastPosition,
   ToastAction,
+  StackedNotificationCardsProps,
+  StackedNotification,
 } from "./feedback";
+
+// Controls
+export { TransportControls } from "./controls";
+export type { TransportControlsProps } from "./controls";
 
 // Overlays
 export { Modal, BottomSheet, Tooltip } from "./overlays";
