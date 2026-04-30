@@ -8,3 +8,6 @@ export type {
   CardVariant,
   CardSize,
 } from "./Card.types";
+
+export { SuggestionCard } from "./SuggestionCard";
+export type { SuggestionCardProps } from "./SuggestionCard";
