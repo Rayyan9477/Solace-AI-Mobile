@@ -15,3 +15,9 @@ export type {
   ToastPosition,
   ToastAction,
 } from "./Toast.types";
+
+export { StackedNotificationCards } from "./StackedNotificationCards";
+export type {
+  StackedNotificationCardsProps,
+  StackedNotification,
+} from "./StackedNotificationCards";
