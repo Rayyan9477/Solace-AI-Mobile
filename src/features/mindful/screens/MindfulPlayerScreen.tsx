@@ -1,243 +1,447 @@
 /**
- * MindfulPlayerScreen Component
- * @description Breathing exercise player with concentric circles, instruction text,
- *   progress bar, and playback controls on full green background
- * @task Task 3.12.6: Mindful Player Screen (Screen 109)
- * @phase Phase 3C: Refactored to use theme tokens
+ * MindfulPlayerScreen — prototype v4.2 #31 Meditation Player reskin.
+ *
+ * Cosmic gradient artwork tile, scrub bar, 5-button TransportControls,
+ * and 4 bottom action buttons. Maps to `prototypes/screens/31-mindful-player.js`.
+ *
+ * Backwards-compatible: the legacy API (soundName / instruction / elapsedTime /
+ * totalTime / progress) has been replaced by the richer v4.2 prop surface;
+ * consumers should migrate to the new MindfulPlayerScreenProps interface.
+ *
+ * @task Task 31: Mindful Player Screen v4.2 reskin
  */
 
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { palette } from "../../../shared/theme";
+import React, { useMemo } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
-interface MindfulPlayerScreenProps {
-  soundName: string;
-  instruction: string;
-  elapsedTime: string;
-  totalTime: string;
-  progress: number;
+import { useReducedMotion } from "@/shared/hooks/useReducedMotion";
+import { useTheme } from "@/shared/theme/useTheme";
+import { AppIcon } from "@/shared/components/atoms/display/AppIcon";
+import { ScreenContainer } from "@/shared/components/atoms/layout";
+import { TransportControls } from "@/shared/components/molecules/controls/TransportControls";
+import { BracketLabel, BreathingOrb } from "@/shared/components/primitives";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+export type ArtworkVariant = "sage-aurora" | "aurora-lavender" | "peach-aurora";
+
+export interface MindfulPlayerScreenProps {
+  /** Session title — e.g., "Morning calm" */
+  title: string;
+  /** Total duration in seconds */
+  durationSeconds: number;
+  /** Current playback position in seconds */
+  positionSeconds: number;
+  /** Whether playback is active */
   isPlaying: boolean;
-  onRewind: () => void;
+  /** Optional category bracket (e.g., "MEDITATION") */
+  category?: string;
+  /** Optional narrator/author bracket (e.g., "MAYA WONG") */
+  narrator?: string;
+  /** Optional cover artwork variant */
+  artworkVariant?: ArtworkVariant;
+  onClose: () => void;
   onPlayPause: () => void;
-  onForward: () => void;
+  onNext?: () => void;
+  onPrev?: () => void;
+  /** Skip back 15 seconds */
+  onRewind?: () => void;
+  /** Skip forward 15 seconds */
+  onForward?: () => void;
+  onSpeedToggle?: () => void;
+  onLikeToggle?: () => void;
+  liked?: boolean;
+  onLoopToggle?: () => void;
+  looping?: boolean;
+  onDownload?: () => void;
+  testID?: string;
+  style?: StyleProp<ViewStyle>;
 }
 
-const colors = {
-  background: palette.accent.green,
-  white: palette.text.primary,
-  circleRing1: palette.opacity.white08,
-  circleRing2: palette.opacity.white12,
-  circleRing3: palette.opacity.white18,
-  progressTrack: palette.opacity.white30,
-  progressFill: palette.text.primary,
-  controlIcon: palette.text.primary,
-  playPauseBg: palette.text.primary,
-  playPauseIcon: palette.accent.green,
-  badgeBorder: palette.opacity.white40,
-} as const;
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+const formatMMSS = (seconds: number): string => {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${String(s).padStart(2, "0")}`;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, no-unused-vars
+type ArtworkGradientMap = Record<ArtworkVariant, (p: any) => [string, string, string]>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ARTWORK_GRADIENTS: ArtworkGradientMap = {
+  "sage-aurora": (p) => [p.sage[300], p.aurora[300], p.lavender[300]],
+  "aurora-lavender": (p) => [p.aurora[300], p.lavender[300], p.aurora[500]],
+  "peach-aurora": (p) => [p.peach[300], p.aurora[300], p.lavender[300]],
+};
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 export function MindfulPlayerScreen({
-  soundName,
-  instruction,
-  elapsedTime,
-  totalTime,
-  progress,
+  title,
+  durationSeconds,
+  positionSeconds,
   isPlaying,
-  onRewind,
+  category = "MEDITATION",
+  narrator,
+  artworkVariant = "sage-aurora",
+  onClose,
   onPlayPause,
+  onNext,
+  onPrev,
+  onRewind,
   onForward,
+  onSpeedToggle,
+  onLikeToggle,
+  liked = false,
+  onLoopToggle,
+  looping = false,
+  onDownload,
+  testID = "mindful-player-screen",
+  style: _style,
 }: MindfulPlayerScreenProps): React.ReactElement {
+  const { palette } = useTheme();
+  const reducedMotion = useReducedMotion();
+
+  const progressRatio = useMemo(
+    () =>
+      durationSeconds > 0
+        ? Math.min(positionSeconds / durationSeconds, 1)
+        : 0,
+    [positionSeconds, durationSeconds],
+  );
+
+  const currentTimeLabel = formatMMSS(positionSeconds);
+  const totalTimeLabel = formatMMSS(durationSeconds);
+
+  const durationMinutes = Math.round(durationSeconds / 60);
+  const categoryBracket = `${category} · ${durationMinutes} MIN`;
+  const artworkColors = ARTWORK_GRADIENTS[artworkVariant](palette);
+
   return (
-    <View testID="mindful-player-screen" style={styles.container}>
-      {/* Sound Badge */}
-      <View style={styles.badgeContainer}>
-        <View testID="sound-badge" style={styles.soundBadge}>
-          <Text style={styles.soundIcon}>{"\uD83D\uDD0A"}</Text>
-          <Text style={styles.soundName}>SOUND: {soundName}</Text>
-        </View>
-      </View>
-
-      {/* Breathing Circle */}
-      <View testID="breathing-circle" style={styles.breathingCircle}>
-        {/* Concentric rings */}
-        <View style={[styles.ring, styles.ringOuter]} />
-        <View style={[styles.ring, styles.ringMiddle]} />
-        <View style={[styles.ring, styles.ringInner]} />
-
-        {/* Instruction Text */}
-        <Text testID="instruction-text" style={styles.instructionText}>
-          {instruction}
-        </Text>
-      </View>
-
-      {/* Progress Section */}
-      <View style={styles.progressSection}>
-        <View style={styles.timeRow}>
-          <Text style={styles.timeText}>{elapsedTime}</Text>
-          <Text style={styles.timeText}>{totalTime}</Text>
-        </View>
-        <View testID="progress-bar" style={styles.progressTrack}>
-          <View
+    <ScreenContainer
+      testID={testID}
+      backgroundColor={palette.midnight[950]}
+      style={styles.container}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ── Header ──────────────────────────────────────────────── */}
+        <View style={styles.header}>
+          <BracketLabel variant="aurora" style={styles.headerLabel}>
+            NOW PLAYING
+          </BracketLabel>
+          <TouchableOpacity
+            testID="close-button"
             style={[
-              styles.progressFill,
-              { width: `${Math.min(progress * 100, 100)}%` },
+              styles.iconButton,
+              { backgroundColor: palette.midnight[800], borderColor: palette.midnight[600] },
             ]}
-          />
+            onPress={onClose}
+            accessibilityRole="button"
+            accessibilityLabel="Close player"
+          >
+            <AppIcon name="x" size={16} color={palette.warm[400]} />
+          </TouchableOpacity>
         </View>
-      </View>
 
-      {/* Playback Controls */}
-      <View style={styles.controlsRow}>
-        <TouchableOpacity
-          testID="rewind-button"
-          style={styles.controlButton}
-          onPress={onRewind}
-          accessibilityRole="button"
-          accessibilityLabel="Rewind"
-        >
-          <Text style={styles.controlIcon}>{"\u21BA"}</Text>
-        </TouchableOpacity>
+        {/* ── Artwork tile ─────────────────────────────────────────── */}
+        <View style={styles.artworkWrapper}>
+          <LinearGradient
+            testID="artwork-tile"
+            colors={artworkColors}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.artworkTile}
+            accessibilityRole="image"
+            accessibilityLabel={`${title} cover art`}
+          >
+            <BreathingOrb
+              size={160}
+              tint="cool"
+              pulsing={!reducedMotion}
+              accessibilityLabel={undefined}
+            />
+          </LinearGradient>
+        </View>
 
-        <TouchableOpacity
-          testID="play-pause-button"
-          style={styles.playPauseButton}
-          onPress={onPlayPause}
-          accessibilityRole="button"
-          accessibilityLabel={isPlaying ? "Pause" : "Play"}
-        >
-          <Text style={styles.playPauseIcon}>
-            {isPlaying ? "\u23F8" : "\u25B6"}
+        {/* ── Session info ─────────────────────────────────────────── */}
+        <View style={styles.infoSection}>
+          <BracketLabel variant="aurora" style={styles.categoryLabel}>
+            {categoryBracket}
+          </BracketLabel>
+          <Text
+            testID="session-title"
+            accessibilityRole="header"
+            style={[styles.sessionTitle, { color: palette.warm[50] }]}
+          >
+            {title}
           </Text>
-        </TouchableOpacity>
+          {narrator ? (
+            <BracketLabel variant="muted" style={styles.narratorLabel}>
+              {`NARRATED BY · ${narrator}`}
+            </BracketLabel>
+          ) : null}
+        </View>
 
-        <TouchableOpacity
-          testID="forward-button"
-          style={styles.controlButton}
-          onPress={onForward}
-          accessibilityRole="button"
-          accessibilityLabel="Forward"
+        {/* ── Progress bar ─────────────────────────────────────────── */}
+        <View
+          testID="progress-section"
+          style={styles.progressSection}
+          accessibilityRole="none"
         >
-          <Text style={styles.controlIcon}>{"\u21BB"}</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+          <View
+            testID="progress-track"
+            style={[styles.progressTrack, { backgroundColor: palette.midnight[700] }]}
+            accessibilityRole="progressbar"
+            accessibilityLabel="Playback progress"
+            accessibilityValue={{ min: 0, max: 100, now: Math.round(progressRatio * 100) }}
+          >
+            <LinearGradient
+              testID="progress-fill"
+              colors={[palette.sage[300], palette.aurora[300]]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={[styles.progressFill, { width: `${progressRatio * 100}%` as `${number}%` }]}
+            />
+          </View>
+          <View style={styles.timeRow}>
+            <Text
+              testID="current-time"
+              style={[styles.timeText, { color: palette.warm[200] }]}
+            >
+              {currentTimeLabel}
+            </Text>
+            <Text
+              testID="total-time"
+              style={[styles.timeText, { color: palette.warm[500] }]}
+            >
+              {totalTimeLabel}
+            </Text>
+          </View>
+        </View>
+
+        {/* ── Transport controls ───────────────────────────────────── */}
+        <TransportControls
+          testID="transport-controls"
+          isPlaying={isPlaying}
+          onPlayPause={onPlayPause}
+          onPrev={onPrev}
+          onNext={onNext}
+          onRewind={onRewind}
+          onForward={onForward}
+          style={styles.transport}
+        />
+
+        {/* ── Bottom action buttons ────────────────────────────────── */}
+        <View style={styles.actionsRow}>
+          {/* Speed */}
+          <TouchableOpacity
+            testID="speed-button"
+            style={styles.actionButton}
+            onPress={onSpeedToggle}
+            disabled={!onSpeedToggle}
+            accessibilityRole="button"
+            accessibilityLabel="Playback speed"
+          >
+            <View style={[styles.actionIcon, { backgroundColor: palette.midnight[800] }]}>
+              <AppIcon name="gauge" size={20} color={palette.warm[400]} />
+            </View>
+            <BracketLabel variant="muted" style={styles.actionLabel}>
+              1.0×
+            </BracketLabel>
+          </TouchableOpacity>
+
+          {/* Like */}
+          <TouchableOpacity
+            testID="like-button"
+            style={styles.actionButton}
+            onPress={onLikeToggle}
+            disabled={!onLikeToggle}
+            accessibilityRole="button"
+            accessibilityLabel={liked ? "Unlike session" : "Like session"}
+            accessibilityState={{ selected: liked }}
+          >
+            <View style={[styles.actionIcon, { backgroundColor: palette.midnight[800] }]}>
+              <AppIcon
+                name="heart"
+                size={20}
+                color={liked ? palette.peach[300] : palette.warm[400]}
+              />
+            </View>
+            <BracketLabel variant={liked ? "peach" : "muted"} style={styles.actionLabel}>
+              LIKE
+            </BracketLabel>
+          </TouchableOpacity>
+
+          {/* Loop */}
+          <TouchableOpacity
+            testID="loop-button"
+            style={styles.actionButton}
+            onPress={onLoopToggle}
+            disabled={!onLoopToggle}
+            accessibilityRole="button"
+            accessibilityLabel={looping ? "Disable loop" : "Enable loop"}
+            accessibilityState={{ selected: looping }}
+          >
+            <View style={[styles.actionIcon, { backgroundColor: palette.midnight[800] }]}>
+              <AppIcon
+                name="repeat"
+                size={20}
+                color={looping ? palette.aurora[300] : palette.warm[400]}
+              />
+            </View>
+            <BracketLabel variant={looping ? "aurora" : "muted"} style={styles.actionLabel}>
+              LOOP
+            </BracketLabel>
+          </TouchableOpacity>
+
+          {/* Download */}
+          <TouchableOpacity
+            testID="download-button"
+            style={styles.actionButton}
+            onPress={onDownload}
+            disabled={!onDownload}
+            accessibilityRole="button"
+            accessibilityLabel="Download session"
+          >
+            <View style={[styles.actionIcon, { backgroundColor: palette.midnight[800] }]}>
+              <AppIcon name="download" size={20} color={palette.warm[400]} />
+            </View>
+            <BracketLabel variant="muted" style={styles.actionLabel}>
+              SAVE
+            </BracketLabel>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  badgeContainer: {
+  actionButton: {
     alignItems: "center",
-    paddingTop: 24,
+    minHeight: 56,
+    minWidth: 56,
   },
-  breathingCircle: {
+  actionIcon: {
     alignItems: "center",
-    flex: 1,
+    borderRadius: 16,
+    height: 56,
     justifyContent: "center",
+    width: 56,
   },
-  container: {
-    backgroundColor: colors.background,
-    flex: 1,
-  },
-  controlButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-  },
-  controlIcon: {
-    color: colors.controlIcon,
-    fontSize: 32,
-  },
-  controlsRow: {
-    alignItems: "center",
-    flexDirection: "row",
-    gap: 40,
-    justifyContent: "center",
-    paddingBottom: 48,
-    paddingHorizontal: 24,
-  },
-  instructionText: {
-    color: colors.white,
-    fontSize: 28,
-    fontWeight: "700",
+  actionLabel: {
+    marginTop: 6,
     textAlign: "center",
   },
-  playPauseButton: {
-    alignItems: "center",
-    backgroundColor: colors.playPauseBg,
-    borderRadius: 32,
-    height: 64,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    width: 64,
+  actionsRow: {
+    alignItems: "flex-start",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingBottom: 32,
+    paddingHorizontal: 16,
+    paddingTop: 8,
   },
-  playPauseIcon: {
-    color: colors.playPauseIcon,
-    fontSize: 24,
+  artworkTile: {
+    alignItems: "center",
+    borderRadius: 24,
+    height: 320,
+    justifyContent: "center",
+    overflow: "hidden",
+    width: 320,
+  },
+  artworkWrapper: {
+    alignItems: "center",
+    marginBottom: 24,
+    marginTop: 8,
+  },
+  categoryLabel: {
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  container: {
+    flex: 1,
+  },
+  header: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 24,
+    paddingTop: 8,
+  },
+  headerLabel: {
+    flex: 1,
+  },
+  iconButton: {
+    alignItems: "center",
+    borderRadius: 18,
+    borderWidth: 1,
+    height: 36,
+    justifyContent: "center",
+    width: 36,
+  },
+  infoSection: {
+    alignItems: "center",
+    marginBottom: 24,
+    paddingHorizontal: 24,
+  },
+  narratorLabel: {
+    marginTop: 4,
+    textAlign: "center",
   },
   progressFill: {
-    backgroundColor: colors.progressFill,
     borderRadius: 2,
     height: 4,
   },
   progressSection: {
+    marginBottom: 28,
     paddingHorizontal: 24,
-    paddingVertical: 16,
   },
   progressTrack: {
-    backgroundColor: colors.progressTrack,
     borderRadius: 2,
     height: 4,
-    marginTop: 8,
+    marginBottom: 8,
     overflow: "hidden",
   },
-  ring: {
-    borderRadius: 999,
-    position: "absolute",
+  scroll: {
+    paddingBottom: 16,
   },
-  ringInner: {
-    backgroundColor: colors.circleRing3,
-    height: 160,
-    width: 160,
-  },
-  ringMiddle: {
-    backgroundColor: colors.circleRing2,
-    height: 220,
-    width: 220,
-  },
-  ringOuter: {
-    backgroundColor: colors.circleRing1,
-    height: 280,
-    width: 280,
-  },
-  soundBadge: {
-    alignItems: "center",
-    borderColor: colors.badgeBorder,
-    borderRadius: 24,
-    borderWidth: 1,
-    flexDirection: "row",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-  },
-  soundIcon: {
-    fontSize: 16,
-    marginRight: 8,
-  },
-  soundName: {
-    color: colors.white,
-    fontSize: 13,
-    fontWeight: "700",
-    letterSpacing: 1,
+  sessionTitle: {
+    fontFamily: "Fraunces_400Regular",
+    fontSize: 28,
+    lineHeight: 32,
+    marginBottom: 4,
+    textAlign: "center",
   },
   timeRow: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
   timeText: {
-    color: colors.white,
-    fontSize: 14,
-    fontWeight: "600",
+    fontFamily: "FiraCode_400Regular",
+    fontSize: 12,
+  },
+  transport: {
+    marginBottom: 20,
   },
 });
 
