@@ -1,153 +1,136 @@
 /**
- * SignInScreen Tests
- * @description Tests for user authentication screen
- * @task Task 3.2.1: Sign In Screen
+ * SignInScreen Tests — prototype v4.2 #02 (Sprint 7).
+ * 12 tests covering render, inputs, interactions, loading, and error states.
  */
 
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+
 import { SignInScreen } from "./SignInScreen";
 
-describe("SignInScreen", () => {
-  const mockOnSignIn = jest.fn();
-  const mockOnSignUp = jest.fn();
-  const mockOnForgotPassword = jest.fn();
-  const mockOnSocialLogin = jest.fn();
+// Helpers ─────────────────────────────────────────────────────────────────────
 
-  const defaultProps = {
-    onSignIn: mockOnSignIn,
-    onSignUp: mockOnSignUp,
-    onForgotPassword: mockOnForgotPassword,
-    onSocialLogin: mockOnSocialLogin,
-  };
+const mockOnBack = jest.fn();
+const mockOnSignIn = jest.fn();
+const mockOnForgotPassword = jest.fn();
+const mockOnSignUp = jest.fn();
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+const defaultProps = {
+  onBack: mockOnBack,
+  onSignIn: mockOnSignIn,
+  onForgotPassword: mockOnForgotPassword,
+  onSignUp: mockOnSignUp,
+};
 
-  it("renders the sign in screen", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    expect(getByTestId("sign-in-screen")).toBeTruthy();
-  });
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
-  it("displays the app logo", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    expect(getByTestId("sign-in-logo")).toBeTruthy();
-  });
+// 1 ── render + snapshot ───────────────────────────────────────────────────────
 
-  it("displays the title", () => {
-    const { getByText } = render(<SignInScreen {...defaultProps} />);
-    expect(getByText(/Sign In To Solace AI/)).toBeTruthy();
-  });
+it("renders and matches snapshot", () => {
+  const { getByTestId, toJSON } = render(<SignInScreen {...defaultProps} />);
+  expect(getByTestId("sign-in-screen")).toBeTruthy();
+  expect(toJSON()).toMatchSnapshot();
+});
 
-  it("displays email input field", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    expect(getByTestId("email-input")).toBeTruthy();
-  });
+// 2 ── headline ────────────────────────────────────────────────────────────────
 
-  it("displays password input field", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    expect(getByTestId("password-input")).toBeTruthy();
-  });
+it("shows 'Welcome back' headline", () => {
+  const { getByText } = render(<SignInScreen {...defaultProps} />);
+  expect(getByText(/Welcome back/i)).toBeTruthy();
+});
 
-  it("displays sign in button", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    expect(getByTestId("sign-in-button")).toBeTruthy();
-  });
+// 3 ── email + password inputs ─────────────────────────────────────────────────
 
-  it("allows entering email", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    const emailInput = getByTestId("email-input");
-    fireEvent.changeText(emailInput, "test@example.com");
-    expect(emailInput.props.value).toBe("test@example.com");
-  });
+it("renders email and password GlassInputs", () => {
+  const { getByTestId } = render(<SignInScreen {...defaultProps} />);
+  // GlassInput exposes wrapper testID + ${testID}-input on the inner TextInput
+  expect(getByTestId("email")).toBeTruthy();
+  expect(getByTestId("password")).toBeTruthy();
+  expect(getByTestId("email-input")).toBeTruthy();
+  expect(getByTestId("password-input")).toBeTruthy();
+});
 
-  it("allows entering password", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    const passwordInput = getByTestId("password-input");
-    fireEvent.changeText(passwordInput, "password123");
-    expect(passwordInput.props.value).toBe("password123");
-  });
+// 4 ── email onChangeText ──────────────────────────────────────────────────────
 
-  it("calls onSignIn with credentials when sign in button is pressed", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
+it("fires onChangeText for email input", () => {
+  const { getByTestId } = render(<SignInScreen {...defaultProps} />);
+  // GlassInput wraps TextInput at testID="${testID}-input"
+  const emailField = getByTestId("email-input");
+  fireEvent.changeText(emailField, "user@test.com");
+  expect(emailField.props.value).toBe("user@test.com");
+});
 
-    fireEvent.changeText(getByTestId("email-input"), "test@example.com");
-    fireEvent.changeText(getByTestId("password-input"), "password123");
-    fireEvent.press(getByTestId("sign-in-button"));
+// 5 ── password onChangeText ───────────────────────────────────────────────────
 
-    expect(mockOnSignIn).toHaveBeenCalledWith({
-      email: "test@example.com",
-      password: "password123",
-    });
-  });
+it("fires onChangeText for password input", () => {
+  const { getByTestId } = render(<SignInScreen {...defaultProps} />);
+  const passField = getByTestId("password-input");
+  fireEvent.changeText(passField, "s3cr3t!");
+  expect(passField.props.value).toBe("s3cr3t!");
+});
 
-  it("displays social login buttons", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    expect(getByTestId("facebook-login")).toBeTruthy();
-    expect(getByTestId("google-login")).toBeTruthy();
-    expect(getByTestId("instagram-login")).toBeTruthy();
-  });
+// 6 ── Sign In button calls onSignIn(email, password) ─────────────────────────
 
-  it("calls onSocialLogin when social button is pressed", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("google-login"));
-    expect(mockOnSocialLogin).toHaveBeenCalledWith("google");
-  });
+it("calls onSignIn with current email and password on press", () => {
+  const { getByTestId } = render(<SignInScreen {...defaultProps} />);
+  fireEvent.changeText(getByTestId("email-input"), "a@b.com");
+  fireEvent.changeText(getByTestId("password-input"), "pass123");
+  fireEvent.press(getByTestId("sign-in-button"));
+  expect(mockOnSignIn).toHaveBeenCalledWith("a@b.com", "pass123");
+});
 
-  it("displays sign up link", () => {
-    const { getByText } = render(<SignInScreen {...defaultProps} />);
-    expect(getByText(/Sign Up/)).toBeTruthy();
-  });
+// 7 ── forgot password ─────────────────────────────────────────────────────────
 
-  it("calls onSignUp when sign up link is pressed", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("sign-up-link"));
-    expect(mockOnSignUp).toHaveBeenCalledTimes(1);
-  });
+it("calls onForgotPassword when forgot-password link is pressed", () => {
+  const { getByTestId } = render(<SignInScreen {...defaultProps} />);
+  fireEvent.press(getByTestId("forgot-password-link"));
+  expect(mockOnForgotPassword).toHaveBeenCalledTimes(1);
+});
 
-  it("displays forgot password link", () => {
-    const { getByText } = render(<SignInScreen {...defaultProps} />);
-    expect(getByText(/Forgot Password/)).toBeTruthy();
-  });
+// 8 ── sign up ─────────────────────────────────────────────────────────────────
 
-  it("calls onForgotPassword when forgot password link is pressed", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("forgot-password-link"));
-    expect(mockOnForgotPassword).toHaveBeenCalledTimes(1);
-  });
+it("calls onSignUp when Sign Up link is pressed", () => {
+  const { getByTestId } = render(<SignInScreen {...defaultProps} />);
+  fireEvent.press(getByTestId("sign-up-link"));
+  expect(mockOnSignUp).toHaveBeenCalledTimes(1);
+});
 
-  it("has correct dark background color", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    const container = getByTestId("sign-in-screen");
-    const styles = Array.isArray(container.props.style) ? container.props.style : [container.props.style];
-    const hasBackgroundColor = styles.some((s) => s?.backgroundColor === "#1C1410");
-    expect(hasBackgroundColor).toBe(true);
-  });
+// 9 ── back button ─────────────────────────────────────────────────────────────
 
-  it("password input is secure by default", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    const passwordInput = getByTestId("password-input");
-    expect(passwordInput.props.secureTextEntry).toBe(true);
-  });
+it("calls onBack when back button is pressed", () => {
+  const { getByTestId } = render(<SignInScreen {...defaultProps} />);
+  fireEvent.press(getByTestId("back-button"));
+  expect(mockOnBack).toHaveBeenCalledTimes(1);
+});
 
-  it("can toggle password visibility", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    const toggleButton = getByTestId("password-toggle");
-    fireEvent.press(toggleButton);
-    const passwordInput = getByTestId("password-input");
-    expect(passwordInput.props.secureTextEntry).toBe(false);
-  });
+// 10 ── social buttons ─────────────────────────────────────────────────────────
 
-  it("sign in button has proper accessibility", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    const button = getByTestId("sign-in-button");
-    expect(button.props.accessibilityRole).toBe("button");
-  });
+it("renders google, apple, and github SocialButtons", () => {
+  const { getByTestId } = render(<SignInScreen {...defaultProps} />);
+  expect(getByTestId("social-google")).toBeTruthy();
+  expect(getByTestId("social-apple")).toBeTruthy();
+  expect(getByTestId("social-github")).toBeTruthy();
+});
 
-  it("email input has proper accessibility label", () => {
-    const { getByTestId } = render(<SignInScreen {...defaultProps} />);
-    const input = getByTestId("email-input");
-    expect(input.props.accessibilityLabel).toBe("Email Address");
-  });
+// 11 ── loading state ─────────────────────────────────────────────────────────
+
+it("marks sign-in button as disabled in accessibilityState when loading=true", () => {
+  const { getByTestId } = render(
+    <SignInScreen {...defaultProps} loading={true} />,
+  );
+  const btn = getByTestId("sign-in-button");
+  // Button passes accessibilityState={{ disabled: true, busy: true }} to Pressable
+  expect(btn.props.accessibilityState?.disabled).toBe(true);
+});
+
+// 12 ── error message ─────────────────────────────────────────────────────────
+
+it("renders errorMessage when provided", () => {
+  const { getByTestId, getByText } = render(
+    <SignInScreen {...defaultProps} errorMessage="Invalid credentials" />,
+  );
+  expect(getByTestId("error-message")).toBeTruthy();
+  expect(getByText("Invalid credentials")).toBeTruthy();
 });

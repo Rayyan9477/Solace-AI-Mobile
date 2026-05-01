@@ -1,128 +1,157 @@
 /**
- * SplashScreen Component
- * @description App launch splash screen with logo and brand
- * @task Task 3.1.1: Splash Screen
- * @phase Phase 3C: Refactored to use theme tokens
+ * SplashScreen — prototype v4.2 #13 reskin (Sprint 7).
+ *
+ * Brand moment: midnight[950] full-screen, ConcentricRings (5 rings, sage→aurora→lavender)
+ * with BreathingOrb inside, "[ SOLACE ]" peach kicker, Fraunces wordmark, aurora kicker.
+ * Auto-advances after `delay` ms.
+ *
+ * Maps to `prototypes/screens/13-splash.js`.
  */
 
 import React, { useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Animated } from "react-native";
-import { colors, palette } from "../../../shared/theme";
+import { StyleSheet, Text, View } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
-interface SplashScreenProps {
-  onComplete: () => void;
+import { useReducedMotion } from "@/shared/hooks/useReducedMotion";
+import { useTheme } from "@/shared/theme/useTheme";
+import { ScreenContainer } from "@/shared/components/atoms/layout";
+import {
+  BracketLabel,
+  BreathingOrb,
+  ConcentricRings,
+} from "@/shared/components/primitives";
+
+// ─── Public API ──────────────────────────────────────────────────────────────
+
+export interface SplashScreenProps {
+  /** Auto-complete delay in ms. Defaults to 2000. */
   delay?: number;
+  /** Called when delay elapses */
+  onComplete: () => void;
+  testID?: string;
 }
 
-export function SplashScreen({ onComplete, delay = 2000 }: SplashScreenProps): React.ReactElement {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+// ─── Component ───────────────────────────────────────────────────────────────
+
+export function SplashScreen({
+  delay = 2000,
+  onComplete,
+  testID = "splash-screen",
+}: SplashScreenProps): React.ReactElement {
+  const { palette } = useTheme();
+  const reduced = useReducedMotion();
+
+  // Fade-up entrance for the wordmark cluster
+  const translateY = useSharedValue(reduced ? 0 : 18);
+  const opacity = useSharedValue(reduced ? 1 : 0);
 
   useEffect(() => {
-    // Fade-in and scale animation
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-      Animated.sequence([
-        Animated.timing(scaleAnim, {
-          toValue: 1.05,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleAnim, {
-          toValue: 1,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-      ]),
-    ]).start();
+    if (!reduced) {
+      opacity.value = withTiming(1, { duration: 700 });
+      translateY.value = withTiming(0, { duration: 700 });
+    }
+  }, [reduced, opacity, translateY]);
 
-    // Auto-transition after delay
-    const timer = setTimeout(() => {
-      onComplete();
+  // Guard: onComplete called exactly once
+  const called = useRef(false);
+  useEffect(() => {
+    const id = setTimeout(() => {
+      if (!called.current) {
+        called.current = true;
+        onComplete();
+      }
     }, delay);
+    return () => clearTimeout(id);
+  }, [delay, onComplete]);
 
-    return () => clearTimeout(timer);
-  }, [onComplete, delay, fadeAnim, scaleAnim]);
+  const wordmarkStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
 
   return (
-    <View testID="splash-screen" style={styles.container}>
-      <Animated.View
-        style={[
-          styles.content,
-          {
-            opacity: fadeAnim,
-            transform: [{ scale: scaleAnim }],
-          },
-        ]}
-      >
-        {/* App Logo - 4 circles in clover arrangement */}
-        <View testID="app-logo" accessibilityLabel="Solace AI logo" style={styles.logoContainer}>
-          <View style={styles.logoRow}>
-            <View style={[styles.circle, styles.circleTop]} />
-          </View>
-          <View style={styles.logoRow}>
-            <View style={[styles.circle, styles.circleLeft]} />
-            <View style={[styles.circle, styles.circleRight]} />
-          </View>
-          <View style={styles.logoRow}>
-            <View style={[styles.circle, styles.circleBottom]} />
-          </View>
+    <ScreenContainer
+      testID={testID}
+      backgroundColor={palette.midnight[950]}
+      style={styles.container}
+    >
+      {/* Rings + orb hero */}
+      <View style={styles.ringsWrapper} testID="concentric-rings-wrapper">
+        <ConcentricRings
+          size={260}
+          rings={5}
+          tint="aurora"
+        >
+          <BreathingOrb
+            testID="breathing-orb"
+            size={100}
+            tint="cool"
+            pulsing={!reduced}
+          />
+        </ConcentricRings>
+      </View>
+
+      {/* Floating wordmark cluster */}
+      <Animated.View style={[styles.wordmarkCluster, wordmarkStyle]}>
+        <View testID="bracket-solace-wrapper">
+          <BracketLabel variant="peach" style={styles.topKicker}>
+            SOLACE
+          </BracketLabel>
         </View>
 
-        {/* Brand Text */}
-        <Text style={styles.brandText}>Solace AI</Text>
+        <Text
+          testID="wordmark-text"
+          accessibilityRole="header"
+          accessibilityLabel="Solace AI"
+          style={[styles.wordmark, { color: palette.warm[50] }]}
+        >
+          Solace AI
+        </Text>
+
+        <View testID="bracket-companion-wrapper">
+          <BracketLabel variant="aurora" style={styles.bottomKicker}>
+            MENTAL HEALTH COMPANION
+          </BracketLabel>
+        </View>
       </Animated.View>
-    </View>
+    </ScreenContainer>
   );
 }
 
+// ─── Styles ──────────────────────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
-  brandText: {
-    color: colors.text.primary,
-    fontSize: 32,
-    fontWeight: "400",
-    letterSpacing: 1,
-    marginTop: 16,
-  },
-  circle: {
-    backgroundColor: palette.tan[500],
-    borderRadius: 20,
-    height: 40,
-    width: 40,
-  },
-  circleBottom: {
-    backgroundColor: palette.brown[600],
-  },
-  circleLeft: {
-    backgroundColor: palette.brown[600],
-    marginRight: 4,
-  },
-  circleRight: {
-    backgroundColor: palette.tan[500],
-    marginLeft: 4,
-  },
-  circleTop: {
-    backgroundColor: palette.tan[400],
+  bottomKicker: {
+    marginTop: 8,
+    textAlign: "center",
   },
   container: {
     alignItems: "center",
-    backgroundColor: colors.background.primary,
     flex: 1,
     justifyContent: "center",
   },
-  content: {
+  ringsWrapper: {
     alignItems: "center",
+    justifyContent: "center",
   },
-  logoContainer: {
+  topKicker: {
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  wordmark: {
+    fontFamily: "Fraunces_400Regular",
+    fontSize: 48,
+    letterSpacing: -1,
+    lineHeight: 52,
+    textAlign: "center",
+  },
+  wordmarkCluster: {
     alignItems: "center",
-  },
-  logoRow: {
-    flexDirection: "row",
-    marginVertical: 2,
+    marginTop: 32,
   },
 });
 

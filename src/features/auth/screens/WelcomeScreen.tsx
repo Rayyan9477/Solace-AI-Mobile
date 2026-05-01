@@ -1,212 +1,266 @@
 /**
- * WelcomeScreen Component
- * @description Welcome screen entry point with Get Started and Sign In options
- * @task Task 3.1.5: Welcome Screen
- * @phase Phase 3C: Refactored to use theme tokens
+ * WelcomeScreen — prototype v4.2 #01 reskin (Sprint 7).
+ *
+ * midnight[950] bg with layered BreathingOrb + SmokeBlob ambiance.
+ * Editorial Fraunces headline, trust-row bracket chips, primary CTA
+ * and Sign In link.
+ *
+ * Maps to `prototypes/screens/01-welcome.js`.
  */
 
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { colors, palette } from "../../../shared/theme";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-interface WelcomeScreenProps {
-  onGetStarted?: () => void;
-  onSignIn?: () => void;
+import { ScreenContainer } from "@/shared/components/atoms/layout";
+import { Button } from "@/shared/components/atoms/buttons/Button";
+import {
+  BracketLabel,
+  BreathingOrb,
+  SmokeBlob,
+} from "@/shared/components/primitives";
+import { useReducedMotion } from "@/shared/hooks/useReducedMotion";
+import { useTheme } from "@/shared/theme/useTheme";
+
+export interface WelcomeScreenProps {
+  onGetStarted: () => void;
+  onSignIn: () => void;
+  testID?: string;
 }
+
+const TRUST_CHIPS: readonly string[] = [
+  "AAA accessible",
+  "Privacy first",
+  "Therapeutic",
+] as const;
 
 export function WelcomeScreen({
   onGetStarted,
   onSignIn,
+  testID = "welcome-screen",
 }: WelcomeScreenProps): React.ReactElement {
-  const navigation = useNavigation<any>();
+  const { palette } = useTheme();
+  const reducedMotion = useReducedMotion();
 
-  const handleGetStarted = () => {
-    if (onGetStarted) onGetStarted();
-    else navigation.navigate("OnboardingStep1");
-  };
-
-  const handleSignIn = () => {
-    if (onSignIn) onSignIn();
-    else navigation.navigate("SignIn");
-  };
   return (
-    <View testID="welcome-screen" style={styles.container}>
-      {/* Logo */}
-      <View testID="welcome-logo" style={styles.logoContainer}>
-        <View style={styles.logoRow}>
-          <View style={[styles.circle, styles.circleTop]} />
-        </View>
-        <View style={styles.logoRow}>
-          <View style={[styles.circle, styles.circleLeft]} />
-          <View style={[styles.circle, styles.circleRight]} />
-        </View>
-        <View style={styles.logoRow}>
-          <View style={[styles.circle, styles.circleBottom]} />
-        </View>
+    <ScreenContainer
+      testID={testID}
+      backgroundColor={palette.midnight[950]}
+      style={styles.screen}
+    >
+      {/* Ambient depth layer */}
+      <SmokeBlob
+        tint="aurora"
+        size={320}
+        opacity={0.18}
+        style={styles.smokeBlob}
+      />
+
+      {/* Breathing orb — centered hero background */}
+      <View style={styles.orbContainer} pointerEvents="none">
+        <BreathingOrb
+          testID="breathing-orb"
+          size={280}
+          tint="cool"
+          pulsing={!reducedMotion}
+        />
       </View>
 
-      {/* Title */}
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Welcome to</Text>
-        <Text style={styles.titleBrand}>
-          <Text style={styles.brandUnderline}>Solace AI</Text>
-        </Text>
-      </View>
-
-      {/* Subtitle */}
-      <Text style={styles.subtitle}>
-        Your mindful mental health AI companion{"\n"}for everyone, anywhere
-      </Text>
-
-      {/* Illustration */}
-      <View testID="illustration-container" style={styles.illustrationContainer}>
-        <View style={styles.illustrationCircle}>
-          {/* Placeholder for mascot illustration */}
-          <Icon name="hardware-chip-outline" size={64} color={palette.tan[500]} />
-        </View>
-      </View>
-
-      {/* Get Started Button */}
-      <TouchableOpacity
-        testID="get-started-button"
-        style={styles.getStartedButton}
-        onPress={handleGetStarted}
-        accessibilityRole="button"
-        accessibilityLabel="Get Started"
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.getStartedText}>Get Started</Text>
-        <Text style={styles.arrowIcon}>→</Text>
-      </TouchableOpacity>
+        {/* Wordmark */}
+        <BracketLabel
+          variant="peach"
+          style={styles.wordmark}
+          announceAsLabel
+        >
+          SOLACE AI
+        </BracketLabel>
 
-      {/* Sign In Link */}
-      <TouchableOpacity
-        testID="sign-in-link"
-        style={styles.signInContainer}
-        onPress={handleSignIn}
-        accessibilityRole="link"
-        accessibilityLabel="Sign In to existing account"
-      >
-        <Text style={styles.signInText}>
-          Already have an account? <Text style={styles.signInLink}>Sign In.</Text>
+        {/* Hero headline */}
+        <Text
+          accessibilityRole="header"
+          style={[styles.headline, { color: palette.warm[50] }]}
+        >
+          {"Welcome to "}
+          <Text
+            style={[
+              styles.headlineItalic,
+              { color: palette.warm[50] },
+            ]}
+          >
+            Solace
+          </Text>
         </Text>
-      </TouchableOpacity>
-    </View>
+
+        {/* Subtitle */}
+        <Text
+          style={[styles.subtitle, { color: palette.warm[400] }]}
+          accessibilityRole="text"
+        >
+          Your mindful companion for daily mental wellness
+        </Text>
+
+        {/* Trust row */}
+        <View style={styles.trustRow} accessibilityLabel="Trust signals">
+          {TRUST_CHIPS.map((chip) => (
+            <View
+              key={chip}
+              style={[
+                styles.trustChip,
+                { backgroundColor: palette.midnight[800], borderColor: palette.midnight[600] },
+              ]}
+            >
+              <View
+                style={[styles.trustDot, { backgroundColor: palette.sage[300] }]}
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+              />
+              <BracketLabel variant="sage" announceAsLabel={false}>
+                {chip}
+              </BracketLabel>
+            </View>
+          ))}
+        </View>
+
+        {/* Spacer */}
+        <View style={styles.spacer} />
+
+        {/* Primary CTA */}
+        <Button
+          testID="get-started-button"
+          label="Get Started →"
+          variant="primary"
+          fullWidth
+          onPress={onGetStarted}
+          accessibilityLabel="Get Started"
+          style={{
+            ...styles.ctaButton,
+            backgroundColor: palette.peach[300],
+          }}
+          labelStyle={{ color: palette.midnight[950] }}
+        />
+
+        {/* Sign In link */}
+        <TouchableOpacity
+          testID="sign-in-link"
+          style={styles.signInLink}
+          onPress={onSignIn}
+          accessibilityRole="link"
+          accessibilityLabel="Already have an account? Sign In"
+          hitSlop={{ top: 8, bottom: 8, left: 16, right: 16 }}
+        >
+          <Text style={[styles.signInText, { color: palette.warm[400] }]}>
+            {"Already have an account? "}
+            <Text style={[styles.signInHighlight, { color: palette.peach[300] }]}>
+              Sign In.
+            </Text>
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  arrowIcon: {
-    color: colors.text.inverse,
-    fontSize: 18,
-    fontWeight: "600",
-    marginLeft: 8,
+  ctaButton: {
+    borderRadius: 28,
+    marginBottom: 4,
   },
-  brandUnderline: {
-    textDecorationLine: "underline",
+  headline: {
+    fontFamily: "Fraunces_400Regular",
+    fontSize: 32,
+    lineHeight: 38,
+    marginBottom: 12,
+    marginTop: 16,
+    textAlign: "center",
   },
-  circle: {
-    backgroundColor: palette.tan[500],
-    borderRadius: 10,
-    height: 20,
-    width: 20,
+  headlineItalic: {
+    fontFamily: "Fraunces_400Regular_Italic",
+    fontStyle: "italic",
   },
-  circleBottom: {
-    backgroundColor: palette.brown[600],
-  },
-  circleLeft: {
-    backgroundColor: palette.brown[600],
-    marginRight: 2,
-  },
-  circleRight: {
-    backgroundColor: palette.tan[500],
-    marginLeft: 2,
-  },
-  circleTop: {
-    backgroundColor: palette.tan[400],
-  },
-  container: {
+  orbContainer: {
     alignItems: "center",
-    backgroundColor: colors.background.primary,
+    bottom: 0,
+    left: 0,
+    position: "absolute",
+    right: 0,
+    top: 60,
+  },
+  screen: {
     flex: 1,
+  },
+  scroll: {
+    alignItems: "center",
+    flexGrow: 1,
+    justifyContent: "flex-end",
+    paddingBottom: 40,
     paddingHorizontal: 24,
     paddingTop: 60,
   },
-  getStartedButton: {
-    alignItems: "center",
-    backgroundColor: palette.onboarding.step2,
-    borderRadius: 28,
-    flexDirection: "row",
-    justifyContent: "center",
-    minHeight: 56,
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    width: "100%",
-  },
-  getStartedText: {
-    color: colors.text.inverse,
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  illustrationCircle: {
-    alignItems: "center",
-    backgroundColor: colors.background.tertiary,
-    borderRadius: 120,
-    height: 240,
-    justifyContent: "center",
-    width: 240,
-  },
-  illustrationContainer: {
-    alignItems: "center",
-    flex: 1,
-    justifyContent: "center",
-    marginVertical: 24,
-  },
-  logoContainer: {
-    alignItems: "center",
-    marginBottom: 24,
-  },
-  logoRow: {
-    flexDirection: "row",
-    marginVertical: 1,
-  },
-  mascotPlaceholder: {},
-  signInContainer: {
-    marginBottom: 32,
-    marginTop: 16,
-    minHeight: 44,
-    paddingVertical: 12,
+  signInHighlight: {
+    fontFamily: "Inter_500Medium",
+    textDecorationLine: "underline",
   },
   signInLink: {
-    color: palette.onboarding.step2,
-    fontWeight: "600",
+    alignItems: "center",
+    marginTop: 16,
+    minHeight: 44,
+    paddingVertical: 10,
   },
   signInText: {
-    color: colors.text.secondary,
+    fontFamily: "Inter_400Regular",
     fontSize: 14,
+    textAlign: "center",
+  },
+  smokeBlob: {
+    left: -60,
+    position: "absolute",
+    top: -40,
+  },
+  spacer: {
+    flex: 1,
+    minHeight: 40,
   },
   subtitle: {
-    color: colors.text.secondary,
-    fontSize: 16,
-    lineHeight: 24,
-    marginTop: 12,
+    fontFamily: "Inter_400Regular",
+    fontSize: 14,
+    lineHeight: 22,
+    marginBottom: 28,
+    maxWidth: 280,
     textAlign: "center",
   },
-  title: {
-    color: colors.text.primary,
-    fontSize: 28,
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  titleBrand: {
-    color: colors.text.primary,
-    fontSize: 28,
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  titleContainer: {
+  trustChip: {
     alignItems: "center",
+    borderRadius: 20,
+    borderWidth: 1,
+    flexDirection: "row",
+    gap: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  trustDot: {
+    borderRadius: 3,
+    height: 6,
+    width: 6,
+  },
+  trustRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    justifyContent: "center",
+    marginBottom: 32,
+  },
+  wordmark: {
+    marginBottom: 4,
+    textAlign: "center",
   },
 });
 
