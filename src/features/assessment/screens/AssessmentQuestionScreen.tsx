@@ -1,334 +1,395 @@
 /**
- * AssessmentQuestionScreen Component
- * @description Reusable assessment question screen with single-select options
- * @task Task 3.4.2: Assessment Question Screen (Screens 26-35)
- * @phase Phase 3C: Refactored to use theme tokens
+ * AssessmentQuestionScreen — prototype v4.2 #04 AssessmentQuestion (Sprint 7 reskin).
+ *
+ * Single-question radio card screen used in the GAD-7 / PHQ-9 / PSS check-in
+ * flow. midnight[950] bg. Header: back + RingProgress + skip. Sticky sage CTA.
+ *
+ * Maps to `prototypes/screens/04-assessment.js`.
  */
 
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { palette } from "../../../shared/theme";
-import { ScreenContainer } from "../../../shared/components/atoms/layout";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-interface QuestionOption {
+import { useReducedMotion } from "@/shared/hooks/useReducedMotion";
+import { useTheme } from "@/shared/theme/useTheme";
+import { ScreenContainer } from "@/shared/components/atoms/layout";
+import { Button } from "@/shared/components/atoms/buttons/Button";
+import { AppIcon } from "@/shared/components/atoms/display/AppIcon";
+import {
+  BracketLabel,
+  GlassCard,
+  RingProgress,
+} from "@/shared/components/primitives";
+
+// ─── Public API ──────────────────────────────────────────────────────────────
+
+export interface AssessmentQuestionOption {
   id: string;
-  icon: string;
   label: string;
+  /** Lucide icon name for left-side icon (legacy) — optional */
+  icon?: string;
 }
 
-interface AssessmentQuestionScreenProps {
+export interface AssessmentQuestionScreenProps {
   currentStep: number;
   totalSteps: number;
   question: string;
-  options: QuestionOption[];
-  onContinue: (selectedId: string) => void;
-  onBack?: () => void;
+  options: AssessmentQuestionOption[];
+  onBack: () => void;
+  onContinue: (answerId?: string) => void;
+  onSkip?: () => void;
+  /** Pre-selected option id (controlled) */
+  selectedId?: string;
+  /** Optional sublabel under each option's label */
+  optionsSublabels?: Record<string, string>;
+  testID?: string;
 }
+
+// ─── Default options ──────────────────────────────────────────────────────────
+
+export const DEFAULT_OPTIONS: AssessmentQuestionOption[] = [
+  { id: "never", label: "Never" },
+  { id: "sometimes", label: "Sometimes" },
+  { id: "often", label: "Often" },
+  { id: "almost-always", label: "Almost always" },
+];
+
+// ─── Component ───────────────────────────────────────────────────────────────
 
 export function AssessmentQuestionScreen({
   currentStep,
   totalSteps,
   question,
   options,
-  onContinue,
   onBack,
+  onContinue,
+  onSkip,
+  selectedId,
+  optionsSublabels,
+  testID = "assessment-question-screen",
 }: AssessmentQuestionScreenProps): React.ReactElement {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const { palette } = useTheme();
+  // Acknowledge reduced motion — passed to RingProgress internally
+  useReducedMotion();
 
-  const handleContinue = () => {
-    if (selectedOption) {
-      onContinue(selectedOption);
-    }
+  const [internalSelected, setInternalSelected] = useState<string | undefined>(
+    selectedId,
+  );
+
+  // Keep internal state in sync when controlled value changes
+  React.useEffect(() => {
+    setInternalSelected(selectedId);
+  }, [selectedId]);
+
+  const activeId = internalSelected;
+  const isContinueEnabled = activeId !== undefined;
+
+  const ringValue = totalSteps > 0 ? Math.round((currentStep / totalSteps) * 100) : 0;
+
+  const handleContinue = (): void => {
+    onContinue(activeId);
   };
 
-  const progress = currentStep / totalSteps;
+  const handleSelect = (id: string): void => {
+    setInternalSelected(id);
+  };
 
   return (
-    <ScreenContainer testID="assessment-question-screen" style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          {onBack && (
-            <TouchableOpacity
-              testID="back-button"
-              style={styles.backButton}
-              onPress={onBack}
-              accessibilityRole="button"
-              accessibilityLabel="Go back"
-            >
-              <Text style={styles.backButtonIcon}>{"<"}</Text>
-            </TouchableOpacity>
-          )}
-          {!onBack && <View style={styles.backButtonPlaceholder} />}
+    <ScreenContainer
+      testID={testID}
+      backgroundColor={palette.midnight[950]}
+      style={styles.screen}
+    >
+      {/* Header row */}
+      <View style={styles.headerRow}>
+        {/* Back button */}
+        <TouchableOpacity
+          testID="back-button"
+          style={[
+            styles.backButton,
+            {
+              backgroundColor: palette.midnight[800],
+              borderColor: palette.midnight[600],
+            },
+          ]}
+          onPress={onBack}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        >
+          <AppIcon name="arrow-left" size={18} color={palette.warm[400]} />
+        </TouchableOpacity>
+
+        {/* RingProgress step indicator */}
+        <View
+          testID="progress-indicator"
+          style={styles.progressWrapper}
+        >
+          <RingProgress
+            value={ringValue}
+            size={36}
+            strokeWidth={4}
+            variant="sage"
+            accessibilityLabel={`Step ${currentStep} of ${totalSteps}`}
+          />
         </View>
 
-        {/* Progress Indicator */}
-        <View testID="progress-indicator" style={styles.progressContainer}>
-          <View style={styles.progressCircle}>
-            <View
-              style={[
-                styles.progressFill,
-                { transform: [{ rotate: `${progress * 360}deg` }] },
-              ]}
-            />
-            <View style={styles.progressInner}>
-              <Text style={styles.progressText}>{Math.round(progress * 100)}%</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.headerRight}>
-          <Text style={styles.headerTitle}>Assessment</Text>
-          <Text style={styles.stepCounter}>
-            {currentStep} of {totalSteps}
-          </Text>
-        </View>
+        {/* Skip link */}
+        {onSkip ? (
+          <TouchableOpacity
+            testID="skip-link"
+            style={styles.skipLink}
+            onPress={onSkip}
+            accessibilityRole="button"
+            accessibilityLabel="Skip this question"
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <Text style={[styles.skipText, { color: palette.warm[400] }]}>
+              Skip
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.headerSpacer} />
+        )}
       </View>
 
-      {/* Question */}
-      <View style={styles.questionSection}>
-        <Text style={styles.questionText}>{question}</Text>
-      </View>
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Bracket step label */}
+        <BracketLabel variant="muted" style={styles.stepBracket}>
+          {`STEP ${currentStep} OF ${totalSteps}`}
+        </BracketLabel>
 
-      {/* Options */}
-      <ScrollView style={styles.optionsContainer} showsVerticalScrollIndicator={false}>
-        {options.map((option) => {
-          const isSelected = selectedOption === option.id;
-          return (
-            <TouchableOpacity
-              key={option.id}
-              testID={`option-${option.id}`}
-              style={[
-                styles.optionCard,
-                isSelected && styles.optionCardSelected,
-              ]}
-              onPress={() => setSelectedOption(option.id)}
-              accessibilityRole="radio"
-              accessibilityState={{ selected: isSelected }}
-              accessibilityLabel={option.label}
-            >
-              <Icon name={option.icon} size={24} color={isSelected ? palette.brown[900] : palette.white} style={styles.optionIcon} />
-              <Text
-                style={[
-                  styles.optionLabel,
-                  isSelected && styles.optionLabelSelected,
-                ]}
+        {/* Question */}
+        <Text
+          testID="question-text"
+          accessibilityRole="header"
+          style={[styles.question, { color: palette.warm[50] }]}
+        >
+          {question}
+        </Text>
+
+        {/* Options */}
+        <View
+          testID="options-list"
+          accessibilityRole="radiogroup"
+          style={styles.optionsList}
+        >
+          {options.map((option) => {
+            const isSelected = activeId === option.id;
+            const sublabel = optionsSublabels?.[option.id];
+
+            return (
+              <TouchableOpacity
+                key={option.id}
+                testID={`option-${option.id}`}
+                style={styles.optionTouchable}
+                onPress={() => handleSelect(option.id)}
+                accessibilityRole="radio"
+                accessibilityLabel={option.label}
+                accessibilityState={{ selected: isSelected }}
+                activeOpacity={0.8}
+                hitSlop={{ top: 4, bottom: 4, left: 0, right: 0 }}
               >
-                {option.label}
-              </Text>
-              <View
-                testID={`radio-${option.id}`}
-                style={[
-                  styles.radioButton,
-                  isSelected && styles.radioButtonSelected,
-                ]}
-              />
-            </TouchableOpacity>
-          );
-        })}
+                <GlassCard
+                  style={[
+                    styles.optionCard,
+                    isSelected && {
+                      borderColor: palette.sage[300],
+                      borderWidth: 1.5,
+                      backgroundColor: `${palette.sage[300]}0F`,
+                    },
+                  ]}
+                  radius={14}
+                >
+                  <View style={styles.optionInner}>
+                    {/* Radio circle */}
+                    <View
+                      testID={`radio-circle-${option.id}`}
+                      style={[
+                        styles.radioCircle,
+                        isSelected
+                          ? {
+                              backgroundColor: palette.sage[300],
+                              borderColor: palette.sage[300],
+                            }
+                          : {
+                              backgroundColor: "transparent",
+                              borderColor: palette.warm[500],
+                            },
+                      ]}
+                    >
+                      {isSelected && (
+                        <AppIcon
+                          name="check"
+                          size={12}
+                          color={palette.midnight[950]}
+                        />
+                      )}
+                    </View>
+
+                    {/* Labels */}
+                    <View style={styles.optionLabels}>
+                      <Text
+                        style={[styles.optionLabel, { color: palette.warm[50] }]}
+                      >
+                        {option.label}
+                      </Text>
+                      {sublabel ? (
+                        <Text
+                          testID={`sublabel-${option.id}`}
+                          style={[
+                            styles.optionSublabel,
+                            { color: palette.warm[400] },
+                          ]}
+                        >
+                          {sublabel}
+                        </Text>
+                      ) : null}
+                    </View>
+                  </View>
+                </GlassCard>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       </ScrollView>
 
-      {/* Continue Button */}
-      <View style={styles.buttonSection}>
-        <TouchableOpacity
+      {/* Sticky bottom CTA */}
+      <View style={styles.bottomArea}>
+        <Button
           testID="continue-button"
-          style={[
-            styles.continueButton,
-            !selectedOption && styles.continueButtonDisabled,
-          ]}
+          label="Continue"
+          variant="primary"
+          fullWidth
+          disabled={!isContinueEnabled}
           onPress={handleContinue}
-          disabled={!selectedOption}
-          accessibilityRole="button"
-          accessibilityState={{ disabled: !selectedOption }}
           accessibilityLabel="Continue to next question"
-        >
-          <Text
-            style={[
-              styles.continueButtonText,
-              !selectedOption && styles.continueButtonTextDisabled,
-            ]}
-          >
-            Continue
-          </Text>
-          <Text
-            style={[
-              styles.continueButtonIcon,
-              !selectedOption && styles.continueButtonTextDisabled,
-            ]}
-          >
-            →
-          </Text>
-        </TouchableOpacity>
+          accessibilityState={{ disabled: !isContinueEnabled }}
+          style={{
+            ...styles.continueButton,
+            backgroundColor: isContinueEnabled
+              ? palette.sage[500]
+              : palette.midnight[700],
+          }}
+          labelStyle={{ color: palette.midnight[950] }}
+        />
       </View>
     </ScreenContainer>
   );
 }
 
+// ─── Styles ──────────────────────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: palette.brown[700],
-    borderRadius: 20,
+    borderRadius: 22,
     borderWidth: 1,
-    height: 40,
+    height: 44,
     justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    width: 40,
+    width: 44,
   },
-  backButtonIcon: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  backButtonPlaceholder: {
-    width: 40,
-  },
-  buttonSection: {
+  bottomArea: {
     paddingBottom: 32,
     paddingHorizontal: 24,
-  },
-  container: {
+    paddingTop: 8,
   },
   continueButton: {
-    alignItems: "center",
-    backgroundColor: palette.tan[500],
     borderRadius: 28,
-    flexDirection: "row",
-    justifyContent: "center",
     minHeight: 56,
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    width: "100%",
   },
-  continueButtonDisabled: {
-    backgroundColor: palette.brown[700],
-  },
-  continueButtonIcon: {
-    color: palette.brown[900],
-    fontSize: 18,
-    fontWeight: "600",
-    marginLeft: 8,
-  },
-  continueButtonText: {
-    color: palette.brown[900],
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  continueButtonTextDisabled: {
-    color: palette.gray[500],
-  },
-  header: {
+  headerRow: {
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 32,
     paddingHorizontal: 24,
+    paddingTop: 12,
   },
-  headerLeft: {
-    width: 60,
-  },
-  headerRight: {
-    alignItems: "flex-end",
-    width: 80,
-  },
-  headerTitle: {
-    color: palette.white,
-    fontSize: 16,
-    fontWeight: "600",
+  headerSpacer: {
+    height: 44,
+    width: 44,
   },
   optionCard: {
-    alignItems: "center",
-    backgroundColor: palette.brown[800],
-    borderColor: palette.brown[700],
-    borderRadius: 16,
-    borderWidth: 1,
-    flexDirection: "row",
-    marginBottom: 12,
-    minHeight: 64,
+    minHeight: 56,
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingVertical: 14,
   },
-  optionCardSelected: {
-    backgroundColor: palette.olive[500],
-    borderColor: palette.olive[500],
-  },
-  optionIcon: {
-    marginRight: 12,
+  optionInner: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 12,
   },
   optionLabel: {
-    color: palette.white,
+    fontFamily: "Inter_400Regular",
+    fontSize: 15,
+    lineHeight: 20,
+  },
+  optionLabels: {
     flex: 1,
-    fontSize: 16,
-    fontWeight: "500",
   },
-  optionLabelSelected: {
-    color: palette.brown[900],
-  },
-  optionsContainer: {
-    flex: 1,
-    paddingHorizontal: 24,
-  },
-  progressCircle: {
-    alignItems: "center",
-    backgroundColor: palette.brown[800],
-    borderRadius: 30,
-    height: 60,
-    justifyContent: "center",
-    overflow: "hidden",
-    width: 60,
-  },
-  progressContainer: {
-    alignItems: "center",
-  },
-  progressFill: {
-    backgroundColor: palette.olive[500],
-    borderRadius: 30,
-    height: 60,
-    position: "absolute",
-    right: 0,
-    top: 0,
-    width: 30,
-  },
-  progressInner: {
-    alignItems: "center",
-    backgroundColor: palette.brown[900],
-    borderRadius: 24,
-    height: 48,
-    justifyContent: "center",
-    width: 48,
-  },
-  progressText: {
-    color: palette.white,
+  optionSublabel: {
+    fontFamily: "Inter_400Regular",
     fontSize: 12,
-    fontWeight: "600",
+    lineHeight: 16,
+    marginTop: 2,
   },
-  questionSection: {
-    marginBottom: 24,
-    paddingHorizontal: 24,
+  optionTouchable: {
+    marginBottom: 10,
+    minHeight: 56,
   },
-  questionText: {
-    color: palette.white,
+  optionsList: {
+    paddingTop: 8,
+  },
+  progressWrapper: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  question: {
+    fontFamily: "Fraunces_400Regular",
     fontSize: 24,
-    fontWeight: "700",
     lineHeight: 32,
+    marginBottom: 16,
+    marginTop: 20,
   },
-  radioButton: {
-    borderColor: palette.gray[500],
+  radioCircle: {
+    alignItems: "center",
     borderRadius: 12,
-    borderWidth: 2,
+    borderWidth: 1.5,
+    flexShrink: 0,
     height: 24,
+    justifyContent: "center",
     width: 24,
   },
-  radioButtonSelected: {
-    backgroundColor: palette.white,
-    borderColor: palette.white,
+  screen: {
+    flex: 1,
   },
-  stepCounter: {
-    color: palette.gray[400],
-    fontSize: 12,
-    marginTop: 2,
+  scroll: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+  },
+  skipLink: {
+    alignItems: "flex-end",
+    height: 44,
+    justifyContent: "center",
+    minWidth: 44,
+    paddingHorizontal: 4,
+  },
+  skipText: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 14,
+  },
+  stepBracket: {
+    marginBottom: 4,
   },
 });
 

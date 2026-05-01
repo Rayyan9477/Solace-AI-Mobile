@@ -1,9 +1,12 @@
 /**
- * Chat Screens — Sprint 4 (prototype v4.2) survivor barrel.
- * ChatsList · ActiveChat. CrisisDetection deferred (S9 move to crisis/).
- * S8 adds VoiceSession, SessionSummary, CbtThoughtRecord builds.
+ * Chat Screens — Sprint 8 (prototype v4.2) barrel.
+ * S4 survivors: ChatsList · ActiveChat · CrisisDetection (deferred S9 move).
+ * S8 additions: VoiceSession · SessionSummary · CbtThoughtRecord.
  */
 
-export { ChatsListScreen } from "./ChatsListScreen";
+export { ChatsListScreen, ConversationsListScreen } from "./ChatsListScreen";
 export { ActiveChatScreen } from "./ActiveChatScreen";
 export { CrisisDetectionScreen } from "./CrisisDetectionScreen";
+export { VoiceSessionScreen } from "./VoiceSessionScreen";
+export { SessionSummaryScreen } from "./SessionSummaryScreen";
+export { CbtThoughtRecordScreen } from "./CbtThoughtRecordScreen";

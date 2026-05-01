@@ -1,243 +1,184 @@
 /**
- * JournalDashboardScreen Tests
- * @description Tests for the main journal dashboard with hero stats and weekly calendar
- * @screen Screen 78: Health Journal Dashboard
- * @audit batch-16-mood-tracker-final-journal-start.md
+ * JournalDashboardScreen Tests — prototype v4.2 #08 reskin (Sprint 8).
+ * ≥15 behavior-style tests for header, chart, entries, FAB, a11y.
  */
 
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import { JournalDashboardScreen } from "./JournalDashboardScreen";
+import React from "react";
+
+import {
+  JournalDashboardScreen,
+  type JournalEntry,
+} from "./JournalDashboardScreen";
+
+const makeProps = (overrides = {}) => ({
+  onSearch: jest.fn(),
+  onCompose: jest.fn(),
+  onViewAll: jest.fn(),
+  onEntryPress: jest.fn(),
+  ...overrides,
+});
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 describe("JournalDashboardScreen", () => {
-  const mockOnBack = jest.fn();
-  const mockOnAddJournal = jest.fn();
-  const mockOnSeeAllStats = jest.fn();
-  const mockOnDayPress = jest.fn();
-
-  const mockCalendarData = [
-    { day: "M", status: "positive" as const },
-    { day: "T", status: "positive" as const },
-    { day: "W", status: "positive" as const },
-    { day: "T", status: "negative" as const },
-    { day: "F", status: "positive" as const },
-    { day: "S", status: "skipped" as const },
-    { day: "S", status: "skipped" as const },
-  ];
-
-  const defaultProps = {
-    journalCount: 34,
-    periodLabel: "this year",
-    calendarData: mockCalendarData,
-    onAddJournal: mockOnAddJournal,
-    onSeeAllStats: mockOnSeeAllStats,
-    onDayPress: mockOnDayPress,
-  };
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  // --- Rendering ---
+  // 1. Render
   it("renders the screen container", () => {
-    const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
+    const { getByTestId } = render(<JournalDashboardScreen {...makeProps()} />);
     expect(getByTestId("journal-dashboard-screen")).toBeTruthy();
   });
 
-  it("uses dark background color", () => {
-    const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    const screen = getByTestId("journal-dashboard-screen");
-    const { StyleSheet } = require("react-native");
-    const flatStyle = StyleSheet.flatten(screen.props.style);
-    expect(flatStyle).toEqual(
-      expect.objectContaining({ backgroundColor: "#1C1410" })
-    );
+  // 2. Header heading
+  it("renders Fraunces heading with default count", () => {
+    const { getByText } = render(<JournalDashboardScreen {...makeProps()} />);
+    expect(getByText("3 entries")).toBeTruthy();
   });
 
-  // --- Hero Section ---
-  it("displays the hero section", () => {
-    const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    expect(getByTestId("hero-section")).toBeTruthy();
-  });
-
-  it("displays the journal count prominently", () => {
+  // 3. Custom entry count overrides default
+  it("uses entryCount prop when provided", () => {
     const { getByText } = render(
-      <JournalDashboardScreen {...defaultProps} />
+      <JournalDashboardScreen {...makeProps()} entryCount={12} />,
     );
-    expect(getByText("34")).toBeTruthy();
+    expect(getByText("12 entries")).toBeTruthy();
   });
 
-  it("displays the period label", () => {
-    const { getByText } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    expect(getByText(/Journals this year/)).toBeTruthy();
-  });
-
-  it("displays the screen title", () => {
-    const { getByText } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    expect(getByText("Health Journal")).toBeTruthy();
-  });
-
-  it("displays decorative elements in hero", () => {
+  // 4. Search button calls handler
+  it("calls onSearch when search button is pressed", () => {
+    const onSearch = jest.fn();
     const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
+      <JournalDashboardScreen {...makeProps({ onSearch })} />,
     );
-    expect(getByTestId("decorative-elements")).toBeTruthy();
+    fireEvent.press(getByTestId("search-button"));
+    expect(onSearch).toHaveBeenCalledTimes(1);
   });
 
-  // --- FAB (Add Journal) ---
-  it("displays the add journal FAB", () => {
+  // 5. Streak subline
+  it("renders the streak subline with month and day count", () => {
     const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
+      <JournalDashboardScreen
+        {...makeProps()}
+        monthLabel="March"
+        streakDays={9}
+      />,
     );
-    expect(getByTestId("add-journal-fab")).toBeTruthy();
+    const sub = getByTestId("streak-subline");
+    expect(sub.props.accessibilityLabel).toBe("March, 9 day streak");
   });
 
-  it("calls onAddJournal when FAB is pressed", () => {
+  // 6. Chart renders
+  it("renders the mood trend chart", () => {
+    const { getByTestId } = render(<JournalDashboardScreen {...makeProps()} />);
+    expect(getByTestId("mood-trend-chart")).toBeTruthy();
+  });
+
+  // 7. AI chip
+  it("renders the AI insight chip", () => {
+    const { getByTestId } = render(<JournalDashboardScreen {...makeProps()} />);
+    expect(getByTestId("ai-chip")).toBeTruthy();
+  });
+
+  // 8. Entries list
+  it("renders 3 default entries", () => {
+    const { getByTestId } = render(<JournalDashboardScreen {...makeProps()} />);
+    expect(getByTestId("entry-today")).toBeTruthy();
+    expect(getByTestId("entry-yesterday")).toBeTruthy();
+    expect(getByTestId("entry-apr-4")).toBeTruthy();
+  });
+
+  // 9. Entry titles surface
+  it("displays entry titles", () => {
+    const { getByText } = render(<JournalDashboardScreen {...makeProps()} />);
+    expect(getByText("A quiet morning")).toBeTruthy();
+    expect(getByText("Letting go")).toBeTruthy();
+    expect(getByText("Deadline week")).toBeTruthy();
+  });
+
+  // 10. Entry tap fires callback with id
+  it("calls onEntryPress with id when entry pressed", () => {
+    const onEntryPress = jest.fn();
     const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
+      <JournalDashboardScreen {...makeProps({ onEntryPress })} />,
     );
-    fireEvent.press(getByTestId("add-journal-fab"));
-    expect(mockOnAddJournal).toHaveBeenCalledTimes(1);
+    fireEvent.press(getByTestId("entry-today"));
+    expect(onEntryPress).toHaveBeenCalledWith("today");
   });
 
-  // --- Journal Statistics Section ---
-  it("displays 'Journal Statistics' section header", () => {
-    const { getByText } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    expect(getByText("Journal Statistics")).toBeTruthy();
-  });
-
-  it("displays 'See All' link", () => {
-    const { getByText } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    expect(getByText("See All")).toBeTruthy();
-  });
-
-  it("calls onSeeAllStats when 'See All' is pressed", () => {
+  // 11. View all link
+  it("calls onViewAll when view-all link is pressed", () => {
+    const onViewAll = jest.fn();
     const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
+      <JournalDashboardScreen {...makeProps({ onViewAll })} />,
     );
-    fireEvent.press(getByTestId("see-all-button"));
-    expect(mockOnSeeAllStats).toHaveBeenCalledTimes(1);
+    fireEvent.press(getByTestId("view-all-link"));
+    expect(onViewAll).toHaveBeenCalledTimes(1);
   });
 
-  // --- Weekly Calendar Grid ---
-  it("displays the weekly calendar grid", () => {
+  // 12. FAB renders & fires
+  it("calls onCompose when FAB pressed", () => {
+    const onCompose = jest.fn();
     const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
+      <JournalDashboardScreen {...makeProps({ onCompose })} />,
     );
-    expect(getByTestId("calendar-grid")).toBeTruthy();
+    fireEvent.press(getByTestId("compose-fab"));
+    expect(onCompose).toHaveBeenCalledTimes(1);
   });
 
-  it("renders 7 day columns in the calendar", () => {
-    const { getAllByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
+  // 13. Custom entries
+  it("renders custom entries when provided", () => {
+    const entries: JournalEntry[] = [
+      {
+        id: "custom-1",
+        date: "Mar 12",
+        mood: "Hopeful",
+        moodHue: "aurora",
+        title: "Spring is coming",
+        preview: "Saw the first daffodils today.",
+      },
+    ];
+    const { getByTestId, getByText } = render(
+      <JournalDashboardScreen {...makeProps()} entries={entries} />,
     );
-    const dayColumns = getAllByTestId(/calendar-day-/);
-    expect(dayColumns.length).toBe(7);
+    expect(getByTestId("entry-custom-1")).toBeTruthy();
+    expect(getByText("Spring is coming")).toBeTruthy();
   });
 
-  it("renders day labels (M T W T F S S)", () => {
-    const { getAllByText } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    // M appears once, T appears twice, etc.
-    const mLabels = getAllByText("M");
-    expect(mLabels.length).toBeGreaterThanOrEqual(1);
-  });
-
-  it("renders mood dots with correct colors", () => {
-    const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    const positiveDot = getByTestId("calendar-day-0");
-    expect(positiveDot).toBeTruthy();
-  });
-
-  // --- Legend ---
-  it("displays the legend section", () => {
-    const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    expect(getByTestId("legend")).toBeTruthy();
-  });
-
-  it("displays Skipped legend item", () => {
-    const { getByText } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    expect(getByText("Skipped")).toBeTruthy();
-  });
-
-  it("displays Positive legend item", () => {
-    const { getByText } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    expect(getByText("Positive")).toBeTruthy();
-  });
-
-  it("displays Negative legend item", () => {
-    const { getByText } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    expect(getByText("Negative")).toBeTruthy();
-  });
-
-  // --- Accessibility ---
-  it("FAB has proper accessibility", () => {
-    const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    const fab = getByTestId("add-journal-fab");
-    expect(fab.props.accessibilityRole).toBe("button");
-    expect(fab.props.accessibilityLabel).toBe("Add new journal entry");
-  });
-
-  it("FAB meets minimum touch target (44pt)", () => {
-    const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    const fab = getByTestId("add-journal-fab");
-    // The shared FAB component applies style as an array via Pressable's
-    // style function. Flatten it before asserting the minimum touch target.
-    const { StyleSheet } = require("react-native");
-    const flatStyle = StyleSheet.flatten(fab.props.style);
-    expect(flatStyle.minHeight).toBeGreaterThanOrEqual(44);
-  });
-
-  it("See All button has proper accessibility", () => {
-    const { getByTestId } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    const btn = getByTestId("see-all-button");
+  // 14. a11y — search button has role + label
+  it("search button has accessibility role and label", () => {
+    const { getByTestId } = render(<JournalDashboardScreen {...makeProps()} />);
+    const btn = getByTestId("search-button");
     expect(btn.props.accessibilityRole).toBe("button");
+    expect(btn.props.accessibilityLabel).toBe("Search journal");
   });
 
-  // --- Branding ---
-  it("does not use Freud in any visible text", () => {
-    const { queryByText } = render(
-      <JournalDashboardScreen {...defaultProps} />
-    );
-    expect(queryByText(/Freud/)).toBeNull();
+  // 15. a11y — heading is announced as header
+  it("heading is announced as a header", () => {
+    const { getByTestId } = render(<JournalDashboardScreen {...makeProps()} />);
+    const heading = getByTestId("entry-count-heading");
+    expect(heading.props.accessibilityRole).toBe("header");
   });
 
-  // --- Audit fix: data consistency ---
-  it("renders journal count from props (not hardcoded)", () => {
-    const { getByText } = render(
-      <JournalDashboardScreen {...defaultProps} journalCount={157} />
+  // 16. a11y — FAB is accessible
+  it("FAB has button role and label", () => {
+    const { getByTestId } = render(<JournalDashboardScreen {...makeProps()} />);
+    const fab = getByTestId("compose-fab");
+    expect(fab.props.accessibilityRole).toBe("button");
+    expect(fab.props.accessibilityLabel).toBe("Write a new entry");
+  });
+
+  // 17. a11y — entry has descriptive label
+  it("entry button announces title, mood, and date", () => {
+    const { getByTestId } = render(<JournalDashboardScreen {...makeProps()} />);
+    const entry = getByTestId("entry-today");
+    expect(entry.props.accessibilityLabel).toBe(
+      "A quiet morning, Content, Today",
     );
-    expect(getByText("157")).toBeTruthy();
+  });
+
+  // 18. Branding — no Freud
+  it("does not contain any Freud branding", () => {
+    const { queryByText } = render(<JournalDashboardScreen {...makeProps()} />);
+    expect(queryByText(/freud/i)).toBeNull();
   });
 });

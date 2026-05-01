@@ -1,230 +1,296 @@
 /**
- * AssessmentIntroScreen Component
- * @description Intro/welcome screen before starting mental health assessment
- * @task Task 3.4.1: Assessment Intro Screen (Screen 36)
- * @phase Phase 3C: Refactored to use theme tokens
+ * AssessmentIntroScreen — prototype v4.2 #18 AssessmentIntro (Sprint 7 reskin).
+ *
+ * Pre-assessment trust moment. Explains the flow before the user begins.
+ * midnight[950] bg with centered hero. Preserves existing public API.
+ *
+ * Maps to `prototypes/screens/18-assessment-intro.js`.
  */
 
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { palette } from "../../../shared/theme";
-import { ScreenContainer } from "../../../shared/components/atoms/layout";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-interface AssessmentIntroScreenProps {
-  onStart: () => void;
+import { useTheme } from "@/shared/theme/useTheme";
+import { ScreenContainer } from "@/shared/components/atoms/layout";
+import { Button } from "@/shared/components/atoms/buttons/Button";
+import { AppIcon } from "@/shared/components/atoms/display/AppIcon";
+import { BracketLabel, IconTile } from "@/shared/components/primitives";
+
+// ─── Public API ──────────────────────────────────────────────────────────────
+
+export interface AssessmentIntroScreenProps {
   onBack: () => void;
+  onStart: () => void;
+  onSkip?: () => void;
+  testID?: string;
 }
 
+// ─── Metadata chips ───────────────────────────────────────────────────────────
+
+interface MetaChip {
+  id: string;
+  iconName: string;
+  label: string;
+}
+
+const META_CHIPS: MetaChip[] = [
+  { id: "duration", iconName: "clock", label: "5 minutes" },
+  { id: "privacy", iconName: "lock", label: "Confidential" },
+  { id: "optional", iconName: "check-circle", label: "Optional questions" },
+];
+
+// ─── Component ───────────────────────────────────────────────────────────────
+
 export function AssessmentIntroScreen({
-  onStart,
   onBack,
+  onStart,
+  onSkip,
+  testID = "assessment-intro-screen",
 }: AssessmentIntroScreenProps): React.ReactElement {
+  const { palette } = useTheme();
+
   return (
-    <ScreenContainer testID="assessment-intro-screen" style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
+    <ScreenContainer
+      testID={testID}
+      backgroundColor={palette.midnight[950]}
+      style={styles.screen}
+    >
+      {/* Header row: back · bracket · spacer */}
+      <View style={styles.headerRow}>
         <TouchableOpacity
           testID="back-button"
-          style={styles.backButton}
+          style={[
+            styles.backButton,
+            {
+              backgroundColor: palette.midnight[800],
+              borderColor: palette.midnight[600],
+            },
+          ]}
           onPress={onBack}
           accessibilityRole="button"
           accessibilityLabel="Go back"
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
-          <Text style={styles.backButtonIcon}>{"<"}</Text>
+          <AppIcon name="arrow-left" size={18} color={palette.warm[400]} />
         </TouchableOpacity>
+
+        <BracketLabel variant="peach" style={styles.headerLabel}>
+          ASSESSMENT
+        </BracketLabel>
+
+        <View style={styles.headerSpacer} />
       </View>
 
-      {/* Illustration */}
-      <View testID="assessment-illustration" style={styles.illustration}>
-        <View style={styles.illustrationCircle}>
-          <View style={styles.brainIcon}>
-            <View style={styles.brainHalf} />
-            <View style={[styles.brainHalf, styles.brainHalfRight]} />
-          </View>
-          <View style={styles.heartIcon}>
-            <Icon name="heart-outline" size={24} color={palette.onboarding.step2} />
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Centered hero */}
+        <View style={styles.hero}>
+          {/* 80×80 shield-check icon tile */}
+          <IconTile
+            testID="hero-icon"
+            iconName="shield-check"
+            size={80}
+            hue="sage"
+            variant="soft"
+            shape="circle"
+            accessibilityLabel="Assessment shield"
+          />
+
+          {/* Metadata kicker */}
+          <BracketLabel variant="muted" style={styles.metaKicker}>
+            5 MIN · CONFIDENTIAL · OPTIONAL
+          </BracketLabel>
+
+          {/* Headline */}
+          <Text
+            testID="headline"
+            accessibilityRole="header"
+            style={[styles.headline, { color: palette.warm[50] }]}
+          >
+            {"Let's understand "}
+            <Text style={styles.headlineItalic}>where you are.</Text>
+          </Text>
+
+          {/* Subtitle */}
+          <Text
+            style={[styles.subtitle, { color: palette.warm[400] }]}
+            accessibilityRole="text"
+          >
+            A short check-in to help Solace personalize your experience. There are no wrong answers.
+          </Text>
+
+          {/* Metadata chips row */}
+          <View testID="meta-chips" style={styles.chipsRow}>
+            {META_CHIPS.map((chip) => (
+              <View
+                key={chip.id}
+                testID={`meta-chip-${chip.id}`}
+                style={[
+                  styles.chip,
+                  {
+                    backgroundColor: palette.midnight[800],
+                    borderColor: palette.midnight[600],
+                  },
+                ]}
+              >
+                <IconTile
+                  iconName={chip.iconName}
+                  size={32}
+                  hue="sage"
+                  variant="soft"
+                />
+                <Text
+                  style={[styles.chipLabel, { color: palette.warm[400] }]}
+                  numberOfLines={2}
+                >
+                  {chip.label}
+                </Text>
+              </View>
+            ))}
           </View>
         </View>
-      </View>
+      </ScrollView>
 
-      {/* Content */}
-      <View style={styles.content}>
-        <Text style={styles.title}>Mental Health Assessment</Text>
-        <Text style={styles.description}>
-          This assessment will help us understand your mental health better and
-          personalize your experience.
-        </Text>
-
-        {/* Info Cards */}
-        <View testID="info-cards" style={styles.infoCards}>
-          <View style={styles.infoCard}>
-            <Icon name="clipboard-outline" size={20} color={palette.white} style={styles.infoIcon} />
-            <Text style={styles.infoText}>14 questions</Text>
-          </View>
-          <View style={styles.infoCard}>
-            <Text style={styles.infoIcon}>⏱️</Text>
-            <Text style={styles.infoText}>5-7 minutes</Text>
-          </View>
-        </View>
-
-        {/* Privacy Notice */}
-        <Text style={styles.privacyNotice}>
-          Your responses are private and confidential
-        </Text>
-      </View>
-
-      {/* Start Button */}
-      <View style={styles.buttonSection}>
-        <TouchableOpacity
-          testID="start-button"
-          style={styles.startButton}
+      {/* Sticky bottom CTAs */}
+      <View style={styles.bottomActions}>
+        <Button
+          testID="begin-button"
+          label="Begin assessment"
+          variant="primary"
+          fullWidth
           onPress={onStart}
-          accessibilityRole="button"
-          accessibilityLabel="Start the mental health assessment"
-        >
-          <Text style={styles.startButtonText}>Start Assessment</Text>
-          <Text style={styles.startButtonIcon}>→</Text>
-        </TouchableOpacity>
+          accessibilityLabel="Begin mental health assessment"
+          style={{ ...styles.beginButton, backgroundColor: palette.sage[500] }}
+          labelStyle={{ color: palette.midnight[950] }}
+        />
+
+        {onSkip && (
+          <TouchableOpacity
+            testID="skip-link"
+            style={styles.skipLink}
+            onPress={onSkip}
+            accessibilityRole="button"
+            accessibilityLabel="Skip assessment for now"
+            hitSlop={{ top: 8, bottom: 8, left: 16, right: 16 }}
+          >
+            <Text style={[styles.skipText, { color: palette.warm[400] }]}>
+              Skip for now
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScreenContainer>
   );
 }
 
+// ─── Styles ──────────────────────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: palette.brown[700],
-    borderRadius: 20,
+    borderRadius: 22,
     borderWidth: 1,
-    height: 40,
+    height: 44,
     justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    width: 40,
+    width: 44,
   },
-  backButtonIcon: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "600",
+  beginButton: {
+    borderRadius: 28,
+    marginBottom: 4,
   },
-  brainHalf: {
-    backgroundColor: palette.olive[500],
-    borderBottomLeftRadius: 20,
-    borderTopLeftRadius: 20,
-    height: 50,
-    width: 25,
+  bottomActions: {
+    paddingBottom: 28,
+    paddingHorizontal: 24,
+    paddingTop: 8,
   },
-  brainHalfRight: {
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 20,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 20,
-    marginLeft: 4,
+  chip: {
+    alignItems: "center",
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    width: "30%",
   },
-  brainIcon: {
+  chipLabel: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 11,
+    lineHeight: 14,
+    textAlign: "center",
+  },
+  chipsRow: {
+    flexDirection: "row",
+    gap: 8,
+    justifyContent: "center",
+    marginTop: 24,
+    width: "100%",
+  },
+  headerLabel: {
+    textAlign: "center",
+  },
+  headerRow: {
     alignItems: "center",
     flexDirection: "row",
-    justifyContent: "center",
-  },
-  buttonSection: {
-    paddingBottom: 32,
+    justifyContent: "space-between",
     paddingHorizontal: 24,
+    paddingTop: 12,
   },
-  container: {
+  headerSpacer: {
+    height: 44,
+    width: 44,
   },
-  content: {
-    alignItems: "center",
-    flex: 1,
-    paddingHorizontal: 24,
-  },
-  description: {
-    color: palette.gray[400],
-    fontSize: 16,
-    lineHeight: 24,
+  headline: {
+    fontFamily: "Fraunces_400Regular",
+    fontSize: 30,
+    lineHeight: 36,
+    marginBottom: 12,
     marginTop: 16,
     textAlign: "center",
   },
-  header: {
+  headlineItalic: {
+    fontFamily: "Fraunces_400Regular_Italic",
+    fontStyle: "italic",
+  },
+  hero: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
     paddingHorizontal: 24,
-    marginBottom: 24,
+    paddingVertical: 32,
   },
-  heartEmoji: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  heartIcon: {
-    bottom: -10,
-    position: "absolute",
-    right: 20,
-  },
-  illustration: {
-    alignItems: "center",
-    marginBottom: 32,
-  },
-  illustrationCircle: {
-    alignItems: "center",
-    backgroundColor: palette.brown[800],
-    borderRadius: 75,
-    height: 150,
-    justifyContent: "center",
-    position: "relative",
-    width: 150,
-  },
-  infoCard: {
-    alignItems: "center",
-    backgroundColor: palette.brown[800],
-    borderRadius: 12,
-    flexDirection: "row",
-    marginHorizontal: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  infoCards: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 32,
-  },
-  infoIcon: {
-    marginRight: 8,
-  },
-  infoText: {
-    color: palette.white,
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  privacyNotice: {
-    color: palette.gray[500],
-    fontSize: 12,
-    marginTop: 24,
+  metaKicker: {
+    marginTop: 20,
     textAlign: "center",
   },
-  startButton: {
+  screen: {
+    flex: 1,
+  },
+  scroll: {
+    flexGrow: 1,
+  },
+  skipLink: {
     alignItems: "center",
-    backgroundColor: palette.tan[500],
-    borderRadius: 28,
-    flexDirection: "row",
-    justifyContent: "center",
-    minHeight: 56,
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    width: "100%",
+    minHeight: 44,
+    paddingVertical: 10,
   },
-  startButtonIcon: {
-    color: palette.brown[900],
-    fontSize: 18,
-    fontWeight: "600",
-    marginLeft: 8,
+  skipText: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 14,
+    textAlign: "center",
   },
-  startButtonText: {
-    color: palette.brown[900],
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  title: {
-    color: palette.white,
-    fontSize: 28,
-    fontWeight: "700",
+  subtitle: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 14,
+    lineHeight: 20,
+    maxWidth: 300,
     textAlign: "center",
   },
 });

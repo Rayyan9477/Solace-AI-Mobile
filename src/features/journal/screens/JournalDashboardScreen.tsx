@@ -1,345 +1,563 @@
 /**
- * JournalDashboardScreen Component
- * @description Main journal dashboard with hero stats, weekly calendar grid, and legend
- * @screen Screen 78: Health Journal Dashboard
- * @audit batch-16-mood-tracker-final-journal-start.md
- * @phase Phase 3C: Refactored to use theme tokens
+ * JournalDashboardScreen — prototype v4.2 #08 reskin (Sprint 8).
  *
- * Visual reference: Mental_Health_Journal_Screen_01.png
- * - Brown/tan gradient hero with large journal count
- * - Crescent moon back button
- * - FAB "+" button (brown)
- * - Weekly calendar grid with colored mood dots
- * - Legend: Skipped (brown), Positive (green), Negative (orange)
+ * Visual ref: prototypes/screens/08-journal.js
+ * - Editorial header with `[Journal]` bracket + Fraunces "12 entries" h1
+ * - April · 23-day streak subline (peach flame)
+ * - Mood-from-writing trend HeroCard (LineChart, sage→aurora)
+ * - Recent entries — 3 fixture rows with mood accent bar
+ * - "View all →" link
+ * - Floating peach FAB (pen-line) bottom-right
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
   ScrollView,
   StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import Icon from "react-native-vector-icons/Ionicons";
-import { palette } from "../../../shared/theme";
-import { FAB } from "../../../shared/components/atoms/buttons";
-import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
-import { EmptyState } from "../../../shared/components/molecules/feedback/EmptyState";
-import { Skeleton } from "../../../shared/components/atoms/display";
 
-/* ---------- types ---------- */
-type JournalStatus = "positive" | "negative" | "skipped";
+import { AppIcon } from "@/shared/components/atoms/display/AppIcon";
+import { ScreenContainer } from "@/shared/components/atoms/layout";
+import {
+  BracketLabel,
+  GlassCard,
+  HeroCard,
+  LineChart,
+} from "@/shared/components/primitives";
+import { useReducedMotion } from "@/shared/hooks/useReducedMotion";
+import { useTheme } from "@/shared/theme/useTheme";
 
-interface CalendarDay {
-  day: string;
-  status: JournalStatus;
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+export type JournalMoodHue = "sage" | "lavender" | "peach" | "aurora";
+
+export interface JournalEntry {
+  id: string;
+  date: string;
+  mood: string;
+  moodHue: JournalMoodHue;
+  title: string;
+  preview: string;
 }
 
-interface JournalDashboardScreenProps {
-  journalCount?: number;
-  periodLabel?: string;
-  calendarData?: CalendarDay[];
-  isLoading?: boolean;
-  onAddJournal?: () => void;
-  onSeeAllStats?: () => void;
-  onDayPress?: (index: number) => void;
+export interface JournalDashboardScreenProps {
+  entries?: JournalEntry[];
+  entryCount?: number;
+  streakDays?: number;
+  monthLabel?: string;
+  onSearch: () => void;
+  onCompose: () => void;
+  onViewAll: () => void;
+  onEntryPress: (id: string) => void;
+  testID?: string;
 }
 
-/* ---------- helpers ---------- */
-const statusDotColor: Record<JournalStatus, string> = {
-  positive: palette.olive[500],
-  negative: palette.onboarding.step2,
-  skipped: palette.brown[700],
-};
+// ---------------------------------------------------------------------------
+// Defaults
+// ---------------------------------------------------------------------------
 
-/* ---------- component ---------- */
-export function JournalDashboardScreen({
-  journalCount = 0,
-  periodLabel = "This Week",
-  calendarData = [],
-  isLoading = false,
-  onAddJournal,
-  onSeeAllStats,
-  onDayPress,
-}: JournalDashboardScreenProps = {}): React.ReactElement {
+const DEFAULT_ENTRIES: JournalEntry[] = [
+  {
+    id: "today",
+    date: "Today",
+    mood: "Content",
+    moodHue: "sage",
+    title: "A quiet morning",
+    preview:
+      "Started the day with coffee and that book I keep meaning to finish. Still anxious about the meeting but…",
+  },
+  {
+    id: "yesterday",
+    date: "Yesterday",
+    mood: "Reflective",
+    moodHue: "lavender",
+    title: "Letting go",
+    preview:
+      "Talked to mom for an hour. It helped more than I expected. Sometimes just being heard…",
+  },
+  {
+    id: "apr-4",
+    date: "Apr 4",
+    mood: "Stressed",
+    moodHue: "peach",
+    title: "Deadline week",
+    preview:
+      "Three projects due this week. Trying to take it one task at a time…",
+  },
+];
+
+const TREND_POINTS = [
+  { x: 0, y: 0.28 },
+  { x: 0.18, y: 0.35 },
+  { x: 0.38, y: 0.55 },
+  { x: 0.55, y: 0.45 },
+  { x: 0.72, y: 0.7 },
+  { x: 0.86, y: 0.68 },
+  { x: 1, y: 0.86 },
+];
+
+const TREND_DATE_LABELS = ["Apr 1", "Apr 8", "Apr 15", "Apr 22", "Apr 29"];
+
+// ---------------------------------------------------------------------------
+// Sub-components
+// ---------------------------------------------------------------------------
+
+function TrendChartCard(): React.ReactElement {
+  const { palette } = useTheme();
   return (
-    <ScreenContainer testID="journal-dashboard-screen" style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Hero Section */}
-        <LinearGradient
-          testID="hero-section"
-          colors={["#C4A574", "#8B6F47"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={styles.heroSection}
-        >
-          {/* Decorative Background Shapes */}
-          <View testID="decorative-elements" style={styles.decorativeContainer}>
-            <View style={[styles.decorativeCircle, styles.circleOne]} />
-            <View style={[styles.decorativeCircle, styles.circleTwo]} />
-            <View style={[styles.decorativeCircle, styles.circleThree]} />
+    <HeroCard radius={24} style={styles.trendHero} testID="trend-hero">
+      <GlassCard radius={24} style={styles.trendCard}>
+        <View style={styles.trendHeader}>
+          <View style={styles.trendHeaderText}>
+            <Text style={[styles.trendTitle, { color: palette.warm[50] }]}>
+              Mood from your writing
+            </Text>
+            <Text style={[styles.trendSubtitle, { color: palette.warm[500] }]}>
+              Trending up over the last week
+            </Text>
           </View>
-
-          {/* Header Row */}
-          <View style={styles.heroHeader}>
-            <View style={styles.headerSpacer} />
-            <Text style={styles.heroTitle} accessibilityRole="header">Health Journal</Text>
-            <View style={styles.headerSpacer} />
-          </View>
-
-          {/* Large Count */}
-          <Text style={styles.journalCount}>{journalCount}</Text>
-          <Text style={styles.journalSubtitle}>
-            Journals {periodLabel}.
-          </Text>
-
-          {/* FAB */}
-          <FAB
-            testID="add-journal-fab"
-            onPress={onAddJournal}
-            color={palette.brown[700]}
-            accessibilityLabel="Add new journal entry"
-            style={styles.fab}
-          />
-        </LinearGradient>
-
-        {/* Statistics Section */}
-        <View style={styles.statsSection}>
-          <View style={styles.statsSectionHeader}>
-            <Text style={styles.statsSectionTitle}>Journal Statistics</Text>
-            <TouchableOpacity
-              testID="see-all-button"
-              onPress={onSeeAllStats}
-              accessibilityRole="button"
-              accessibilityLabel="See all journal statistics"
-              style={styles.seeAllTouchable}
-            >
-              <Text style={styles.seeAllText}>See All</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Weekly Calendar Grid */}
-          {isLoading ? (
-            <View testID="skeleton-journal-stats" style={styles.skeletonStats}>
-              <Skeleton shape="rect" width="100%" height={100} borderRadius={12} />
-            </View>
-          ) : calendarData.length === 0 ? (
-            <EmptyState
-              testID="journal-stats-empty-state"
-              variant="compact"
-              icon={<Icon name="journal-outline" size={40} color={palette.gray[500]} />}
-              title="No journal entries yet"
-              description="Start journaling to see your trends"
-            />
-          ) : (
-            <View testID="calendar-grid" style={styles.calendarGrid}>
-              {calendarData.map((entry, index) => (
-                <TouchableOpacity
-                  key={`${entry.day}-${index}`}
-                  testID={`calendar-day-${index}`}
-                  style={styles.calendarColumn}
-                  onPress={() => onDayPress?.(index)}
-                  accessibilityRole="button"
-                  accessibilityLabel={`${entry.day}: ${entry.status}`}
-                >
-                  <Text style={styles.calendarDayLabel}>{entry.day}</Text>
-                  <View
-                    style={[
-                      styles.calendarDot,
-                      { backgroundColor: statusDotColor[entry.status] },
-                    ]}
-                  />
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-
-          {/* Legend */}
-          <View testID="legend" style={styles.legend}>
-            <View style={styles.legendItem}>
-              <View
-                style={[
-                  styles.legendDot,
-                  { backgroundColor: palette.brown[700] },
-                ]}
-              />
-              <Text style={styles.legendLabel}>Skipped</Text>
-            </View>
-            <View style={styles.legendItem}>
-              <View
-                style={[
-                  styles.legendDot,
-                  { backgroundColor: palette.olive[500] },
-                ]}
-              />
-              <Text style={styles.legendLabel}>Positive</Text>
-            </View>
-            <View style={styles.legendItem}>
-              <View
-                style={[
-                  styles.legendDot,
-                  { backgroundColor: palette.onboarding.step2 },
-                ]}
-              />
-              <Text style={styles.legendLabel}>Negative</Text>
-            </View>
+          <View
+            testID="ai-chip"
+            style={{
+              ...styles.aiChip,
+              backgroundColor: palette.midnight[700],
+              borderColor: palette.midnight[600],
+            }}
+            accessibilityRole="text"
+            accessibilityLabel="AI insight"
+          >
+            <AppIcon name="sparkles" size={10} color={palette.aurora[300]} />
+            <Text style={[styles.aiChipLabel, { color: palette.warm[200] }]}>
+              AI
+            </Text>
           </View>
         </View>
+
+        <View style={styles.chartWrap}>
+          <LineChart
+            testID="mood-trend-chart"
+            data={TREND_POINTS}
+            width={260}
+            height={96}
+            variant="sage-aurora"
+            accessibilityLabel="Mood from writing over the past month, trending upward"
+          />
+        </View>
+
+        <View
+          style={styles.trendDateRow}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        >
+          {TREND_DATE_LABELS.map((d) => (
+            <Text
+              key={d}
+              style={[styles.trendDateLabel, { color: palette.warm[500] }]}
+            >
+              {d}
+            </Text>
+          ))}
+        </View>
+      </GlassCard>
+    </HeroCard>
+  );
+}
+
+interface EntryRowProps {
+  entry: JournalEntry;
+  accentColor: string;
+  onPress: (id: string) => void;
+}
+
+function EntryRow({
+  entry,
+  accentColor,
+  onPress,
+}: EntryRowProps): React.ReactElement {
+  const { palette } = useTheme();
+  return (
+    <TouchableOpacity
+      testID={`entry-${entry.id}`}
+      onPress={() => onPress(entry.id)}
+      accessibilityRole="button"
+      accessibilityLabel={`${entry.title}, ${entry.mood}, ${entry.date}`}
+      activeOpacity={0.85}
+      style={styles.entryButton}
+    >
+      <GlassCard radius={20} style={styles.entryCard}>
+        <View
+          style={{ ...styles.entryAccent, backgroundColor: accentColor }}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        />
+        <View style={styles.entryBody}>
+          <View style={styles.entryMetaRow}>
+            <BracketLabel variant="muted">{entry.date}</BracketLabel>
+            <View
+              style={{
+                ...styles.dotSeparator,
+                backgroundColor: palette.warm[500],
+              }}
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
+            />
+            <Text style={[styles.entryMood, { color: accentColor }]}>
+              {entry.mood}
+            </Text>
+          </View>
+          <Text
+            style={[styles.entryTitle, { color: palette.warm[50] }]}
+            numberOfLines={1}
+          >
+            {entry.title}
+          </Text>
+          <Text
+            style={[styles.entryPreview, { color: palette.warm[400] }]}
+            numberOfLines={2}
+          >
+            {entry.preview}
+          </Text>
+        </View>
+      </GlassCard>
+    </TouchableOpacity>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
+export function JournalDashboardScreen({
+  entries = DEFAULT_ENTRIES,
+  entryCount,
+  streakDays = 23,
+  monthLabel = "April",
+  onSearch,
+  onCompose,
+  onViewAll,
+  onEntryPress,
+  testID = "journal-dashboard-screen",
+}: JournalDashboardScreenProps): React.ReactElement {
+  const { palette } = useTheme();
+  useReducedMotion();
+
+  const totalEntries = entryCount ?? entries.length;
+
+  const moodAccent = useMemo(
+    () => ({
+      sage: palette.sage[300],
+      lavender: palette.lavender[300],
+      peach: palette.peach[300],
+      aurora: palette.aurora[300],
+    }),
+    [palette],
+  );
+
+  return (
+    <ScreenContainer
+      testID={testID}
+      backgroundColor={palette.midnight[950]}
+      style={styles.container}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <BracketLabel variant="muted">Journal</BracketLabel>
+            <Text
+              testID="entry-count-heading"
+              accessibilityRole="header"
+              style={[styles.heading, { color: palette.warm[50] }]}
+            >
+              {`${totalEntries} entries`}
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            testID="search-button"
+            onPress={onSearch}
+            accessibilityRole="button"
+            accessibilityLabel="Search journal"
+            hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
+            style={{
+              ...styles.iconButton,
+              backgroundColor: palette.midnight[800],
+              borderColor: palette.midnight[600],
+            }}
+          >
+            <AppIcon name="search" size={18} color={palette.warm[100]} />
+          </TouchableOpacity>
+        </View>
+
+        {/* Streak subline */}
+        <View
+          testID="streak-subline"
+          style={styles.subline}
+          accessibilityRole="text"
+          accessibilityLabel={`${monthLabel}, ${streakDays} day streak`}
+        >
+          <Text style={[styles.sublineText, { color: palette.warm[400] }]}>
+            {monthLabel}
+          </Text>
+          <View
+            style={{
+              ...styles.dotSeparator,
+              backgroundColor: palette.warm[500],
+            }}
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+          />
+          <AppIcon name="flame" size={12} color={palette.peach[300]} />
+          <Text style={[styles.sublineText, { color: palette.warm[400] }]}>
+            {`${streakDays}-day streak`}
+          </Text>
+        </View>
+
+        {/* Mood trend hero chart */}
+        <TrendChartCard />
+
+        {/* Recent entries */}
+        <View style={styles.recentHeader}>
+          <Text
+            testID="recent-heading"
+            accessibilityRole="header"
+            style={[styles.recentTitle, { color: palette.warm[50] }]}
+          >
+            Recent
+          </Text>
+          <TouchableOpacity
+            testID="view-all-link"
+            onPress={onViewAll}
+            accessibilityRole="link"
+            accessibilityLabel="View all entries"
+            hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
+            style={styles.viewAllButton}
+          >
+            <Text style={[styles.viewAllText, { color: palette.aurora[300] }]}>
+              View all →
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.entryList} testID="entry-list">
+          {entries.map((entry) => (
+            <EntryRow
+              key={entry.id}
+              entry={entry}
+              accentColor={moodAccent[entry.moodHue]}
+              onPress={onEntryPress}
+            />
+          ))}
+        </View>
       </ScrollView>
+
+      {/* FAB — compose new entry */}
+      <TouchableOpacity
+        testID="compose-fab"
+        onPress={onCompose}
+        accessibilityRole="button"
+        accessibilityLabel="Write a new entry"
+        style={{
+          ...styles.fab,
+          backgroundColor: palette.peach[300],
+          shadowColor: palette.midnight[950],
+        }}
+      >
+        <AppIcon name="pen-line" size={22} color={palette.midnight[950]} />
+      </TouchableOpacity>
     </ScreenContainer>
   );
 }
 
-/* ---------- styles ---------- */
+// ---------------------------------------------------------------------------
+// Styles (alphabetically sorted)
+// ---------------------------------------------------------------------------
+
 const styles = StyleSheet.create({
-  calendarColumn: {
+  aiChip: {
     alignItems: "center",
-    flex: 1,
-    minHeight: 44,
-    paddingVertical: 8,
-  },
-  calendarDayLabel: {
-    color: palette.gray[400],
-    fontSize: 13,
-    fontWeight: "500",
-    marginBottom: 8,
-  },
-  calendarDot: {
-    borderRadius: 14,
-    height: 28,
-    width: 28,
-  },
-  calendarGrid: {
-    backgroundColor: palette.brown[800],
-    borderRadius: 16,
+    borderRadius: 999,
+    borderWidth: 1,
     flexDirection: "row",
-    marginTop: 16,
+    gap: 4,
     paddingHorizontal: 8,
-    paddingVertical: 12,
+    paddingVertical: 4,
   },
-  circleOne: {
-    backgroundColor: `${palette.tan[600]}${palette.alpha[40]}`,
-    height: 180,
-    left: -30,
-    top: 20,
-    width: 180,
+  aiChipLabel: {
+    fontFamily: "Inter_500Medium",
+    fontSize: 9,
   },
-  circleThree: {
-    backgroundColor: `${palette.tan[500]}${palette.alpha[30]}`,
-    height: 120,
-    left: "30%",
-    top: 80,
-    width: 120,
-  },
-  circleTwo: {
-    backgroundColor: `${palette.tan[500]}${palette.alpha[30]}`,
-    height: 140,
-    right: -20,
-    top: -10,
-    width: 140,
+  chartWrap: {
+    alignItems: "center",
+    marginTop: 12,
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
   },
-  decorativeCircle: {
-    borderRadius: 200,
-    position: "absolute",
+  dotSeparator: {
+    borderRadius: 2,
+    height: 3,
+    opacity: 0.6,
+    width: 3,
   },
-  decorativeContainer: {
-    bottom: 0,
+  entryAccent: {
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 999,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 999,
+    bottom: 8,
     left: 0,
-    overflow: "hidden",
+    opacity: 0.7,
     position: "absolute",
-    right: 0,
-    top: 0,
+    top: 8,
+    width: 4,
   },
-  fab: {
-    alignSelf: "center",
-    marginTop: 24,
+  entryBody: {
+    paddingLeft: 14,
   },
-  headerSpacer: {
-    width: 44,
+  entryButton: {
+    minHeight: 44,
   },
-  heroHeader: {
+  entryCard: {
+    padding: 16,
+  },
+  entryList: {
+    gap: 12,
+    marginTop: 16,
+  },
+  entryMetaRow: {
     alignItems: "center",
     flexDirection: "row",
+    gap: 8,
+    marginBottom: 6,
+  },
+  entryMood: {
+    fontFamily: "Inter_500Medium",
+    fontSize: 10,
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+  },
+  entryPreview: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 12,
+    lineHeight: 18,
+  },
+  entryTitle: {
+    fontFamily: "Fraunces_400Regular",
+    fontSize: 17,
+    lineHeight: 22,
+    marginBottom: 6,
+  },
+  fab: {
+    alignItems: "center",
+    borderRadius: 28,
+    bottom: 32,
+    elevation: 8,
+    height: 56,
+    justifyContent: "center",
+    position: "absolute",
+    right: 24,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    width: 56,
+  },
+  header: {
+    alignItems: "flex-start",
+    flexDirection: "row",
     justifyContent: "space-between",
+  },
+  headerLeft: {
+    flex: 1,
+    gap: 6,
+  },
+  heading: {
+    fontFamily: "Fraunces_400Regular",
+    fontSize: 32,
+    lineHeight: 36,
+  },
+  iconButton: {
+    alignItems: "center",
+    borderRadius: 22,
+    borderWidth: 1,
+    height: 44,
+    justifyContent: "center",
+    width: 44,
+  },
+  recentHeader: {
+    alignItems: "baseline",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 28,
+  },
+  recentTitle: {
+    fontFamily: "Fraunces_400Regular",
+    fontSize: 18,
+    lineHeight: 22,
+  },
+  scroll: {
+    paddingBottom: 120,
     paddingHorizontal: 24,
     paddingTop: 16,
   },
-  heroSection: {
-    borderBottomLeftRadius: 28,
-    borderBottomRightRadius: 28,
+  subline: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 6,
+  },
+  sublineText: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 11,
+  },
+  trendCard: {
     overflow: "hidden",
-    paddingBottom: 32,
+    padding: 20,
   },
-  heroTitle: {
-    color: palette.white,
-    fontSize: 16,
-    fontWeight: "600",
+  trendDateLabel: {
+    fontFamily: "FiraCode_400Regular",
+    fontSize: 9,
   },
-  journalCount: {
-    color: palette.white,
-    fontSize: 72,
-    fontWeight: "700",
-    marginTop: 24,
-    textAlign: "center",
-  },
-  journalSubtitle: {
-    color: `${palette.white}${palette.alpha[90]}`,
-    fontSize: 18,
-    marginTop: 4,
-    textAlign: "center",
-  },
-  legend: {
+  trendDateRow: {
     flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 20,
-    paddingBottom: 24,
+    justifyContent: "space-between",
+    marginTop: 8,
   },
-  legendDot: {
-    borderRadius: 5,
-    height: 10,
-    marginRight: 6,
-    width: 10,
-  },
-  legendItem: {
-    alignItems: "center",
-    flexDirection: "row",
-    marginHorizontal: 12,
-  },
-  legendLabel: {
-    color: palette.white,
-    fontSize: 13,
-  },
-  seeAllText: {
-    color: palette.tan[500],
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  skeletonStats: {
-    marginTop: 16,
-  },
-  seeAllTouchable: {
-    minHeight: 44,
-    justifyContent: "center",
-  },
-  statsSection: {
-    paddingHorizontal: 24,
-    paddingTop: 24,
-  },
-  statsSectionHeader: {
-    alignItems: "center",
+  trendHeader: {
+    alignItems: "flex-start",
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  statsSectionTitle: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "700",
+  trendHeaderText: {
+    flex: 1,
+  },
+  trendHero: {
+    marginTop: 20,
+  },
+  trendSubtitle: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 10,
+    marginTop: 2,
+  },
+  trendTitle: {
+    fontFamily: "Inter_500Medium",
+    fontSize: 14,
+  },
+  viewAllButton: {
+    minHeight: 44,
+    paddingVertical: 8,
+  },
+  viewAllText: {
+    fontFamily: "Inter_500Medium",
+    fontSize: 11,
   },
 });
 

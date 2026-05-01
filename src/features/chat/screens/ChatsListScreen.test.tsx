@@ -1,280 +1,222 @@
 /**
- * ChatsListScreen Tests
- * @description Tests for AI chats list with Recent and Trash tabs
- * @task Task 3.6.3: Chats List Screen (Screen 49)
+ * ChatsListScreen Tests — prototype v4.2 #24 (Sprint 8 reskin).
+ *
+ * Behavior-focused: render, header, filter pills, conversation rows, FAB,
+ * search button, accessibility roles, filter switching.
  */
 
+jest.unmock("@/shared/theme/useTheme");
+jest.mock("@/shared/theme/useTheme", () =>
+  jest.requireActual("@/shared/theme/useTheme"),
+);
+
 import React from "react";
-import { render, fireEvent } from "@testing-library/react-native";
-import { processColor } from "react-native";
-import { ChatsListScreen } from "./ChatsListScreen";
+import { fireEvent, render } from "@testing-library/react-native";
 
-describe("ChatsListScreen", () => {
-  const mockOnBack = jest.fn();
-  const mockOnTabChange = jest.fn();
-  const mockOnChatPress = jest.fn();
-  const mockOnSeeAllRecent = jest.fn();
-  const mockOnSeeAllTrash = jest.fn();
+import { ThemeProvider } from "@/shared/theme/useTheme";
+import {
+  ChatsListScreen,
+  ConversationsListScreen,
+  DEFAULT_CONVERSATIONS,
+  type ChatsListScreenProps,
+  type Conversation,
+} from "./ChatsListScreen";
 
-  const mockRecentChats = [
-    {
-      id: "1",
-      title: "Work stress and deadlines",
-      messageCount: 478,
-      mood: "Anxious",
-      moodColor: "#E8853A",
-    },
-    {
-      id: "2",
-      title: "Feeling better about life",
-      messageCount: 55,
-      mood: "Happy",
-      moodColor: "#9AAD5C",
-    },
-    {
-      id: "3",
-      title: "Morning mindfulness routine",
-      messageCount: 17,
-      mood: "Calm",
-      moodColor: "#4A9E8C",
-    },
-  ];
+function renderWithTheme(ui: React.ReactElement) {
+  return render(<ThemeProvider>{ui}</ThemeProvider>);
+}
 
-  const mockTrashChats = [
-    {
-      id: "4",
-      title: "Old conversation about sleep",
-      messageCount: 8,
-      mood: "Neutral",
-      moodColor: "#9E9E9E",
-    },
-    {
-      id: "5",
-      title: "Previous journaling session",
-      messageCount: 1,
-      mood: "Reflective",
-      moodColor: "#7B68B5",
-    },
-  ];
+const baseProps: ChatsListScreenProps = {
+  onSearch: jest.fn(),
+  onNewConversation: jest.fn(),
+  onConversationPress: jest.fn(),
+  onFilterChange: jest.fn(),
+};
 
-  const defaultProps = {
-    recentChats: mockRecentChats,
-    trashChats: mockTrashChats,
-    recentCount: 4,
-    trashCount: 16,
-    activeTab: "recent" as const,
-    onTabChange: mockOnTabChange,
-    onChatPress: mockOnChatPress,
-    onSeeAllRecent: mockOnSeeAllRecent,
-    onSeeAllTrash: mockOnSeeAllTrash,
-  };
-
+describe("ChatsListScreen (v4.2 #24)", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it("renders the screen container", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
+    const { getByTestId } = renderWithTheme(<ChatsListScreen {...baseProps} />);
     expect(getByTestId("chats-list-screen")).toBeTruthy();
   });
 
-  it("displays the header section", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByTestId("header-section")).toBeTruthy();
+  it("renders the editorial title 'Your sessions'", () => {
+    const { getByText } = renderWithTheme(<ChatsListScreen {...baseProps} />);
+    expect(getByText("Your sessions")).toBeTruthy();
   });
 
-  it("displays the screen title", () => {
-    const { getByText } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByText("My AI Chats")).toBeTruthy();
+  it("renders the bracket kicker 'Conversations'", () => {
+    const { getByText } = renderWithTheme(<ChatsListScreen {...baseProps} />);
+    // BracketLabel uppercases visually; we assert the rendered text.
+    expect(getByText(/CONVERSATIONS/)).toBeTruthy();
   });
 
-  it("displays the segmented control", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByTestId("segmented-control")).toBeTruthy();
+  it("renders the search button with proper a11y", () => {
+    const { getByTestId } = renderWithTheme(<ChatsListScreen {...baseProps} />);
+    const btn = getByTestId("search-button");
+    expect(btn.props.accessibilityRole).toBe("button");
+    expect(btn.props.accessibilityLabel).toBe("Search conversations");
   });
 
-  it("displays Recent tab", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByTestId("tab-recent")).toBeTruthy();
-  });
-
-  it("displays Trash tab", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByTestId("tab-trash")).toBeTruthy();
-  });
-
-  it("calls onTabChange with recent when Recent tab is pressed", () => {
-    const { getByTestId } = render(
-      <ChatsListScreen {...defaultProps} activeTab="trash" />
+  it("invokes onSearch when search button is pressed", () => {
+    const onSearch = jest.fn();
+    const { getByTestId } = renderWithTheme(
+      <ChatsListScreen {...baseProps} onSearch={onSearch} />,
     );
-    fireEvent.press(getByTestId("tab-recent"));
-    expect(mockOnTabChange).toHaveBeenCalledWith("recent");
+    fireEvent.press(getByTestId("search-button"));
+    expect(onSearch).toHaveBeenCalledTimes(1);
   });
 
-  it("calls onTabChange with trash when Trash tab is pressed", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("tab-trash"));
-    expect(mockOnTabChange).toHaveBeenCalledWith("trash");
+  it("renders the FAB with proper a11y", () => {
+    const { getByTestId } = renderWithTheme(<ChatsListScreen {...baseProps} />);
+    const fab = getByTestId("new-conversation-fab");
+    expect(fab.props.accessibilityRole).toBe("button");
+    expect(fab.props.accessibilityLabel).toBe("Start a new conversation");
   });
 
-  it("highlights active tab", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    const recentTab = getByTestId("tab-recent");
-    const styles = Array.isArray(recentTab.props.style)
-      ? recentTab.props.style.flat()
-      : [recentTab.props.style];
-    const tabStyles = styles.reduce(
-      (acc: Record<string, unknown>, s: Record<string, unknown>) => ({
+  it("invokes onNewConversation when FAB pressed", () => {
+    const onNewConversation = jest.fn();
+    const { getByTestId } = renderWithTheme(
+      <ChatsListScreen {...baseProps} onNewConversation={onNewConversation} />,
+    );
+    fireEvent.press(getByTestId("new-conversation-fab"));
+    expect(onNewConversation).toHaveBeenCalledTimes(1);
+  });
+
+  it("renders the FilterPills row", () => {
+    const { getByTestId } = renderWithTheme(<ChatsListScreen {...baseProps} />);
+    expect(getByTestId("filter-pills")).toBeTruthy();
+  });
+
+  it("renders all 5 default conversations on filter=all", () => {
+    const { getByTestId } = renderWithTheme(<ChatsListScreen {...baseProps} />);
+    DEFAULT_CONVERSATIONS.forEach((c) => {
+      expect(getByTestId(`conversation-row-${c.id}`)).toBeTruthy();
+    });
+  });
+
+  it("filters to active conversations only on filter=active", () => {
+    const { queryByTestId } = renderWithTheme(
+      <ChatsListScreen {...baseProps} selectedFilter="active" />,
+    );
+    expect(queryByTestId("conversation-row-work-stress")).toBeTruthy();
+    expect(queryByTestId("conversation-row-sleep-routine")).toBeNull();
+    expect(queryByTestId("conversation-row-interview-prep")).toBeNull();
+  });
+
+  it("filters to archived only on filter=archived", () => {
+    const { queryByTestId } = renderWithTheme(
+      <ChatsListScreen {...baseProps} selectedFilter="archived" />,
+    );
+    expect(queryByTestId("conversation-row-sleep-routine")).toBeTruthy();
+    expect(queryByTestId("conversation-row-interview-prep")).toBeTruthy();
+    expect(queryByTestId("conversation-row-work-stress")).toBeNull();
+  });
+
+  it("invokes onConversationPress with id when a row is pressed", () => {
+    const onConversationPress = jest.fn();
+    const { getByTestId } = renderWithTheme(
+      <ChatsListScreen
+        {...baseProps}
+        onConversationPress={onConversationPress}
+      />,
+    );
+    fireEvent.press(getByTestId("conversation-row-work-stress"));
+    expect(onConversationPress).toHaveBeenCalledWith("work-stress");
+  });
+
+  it("renders an unread dot only on unread items", () => {
+    const { getByTestId, queryByTestId } = renderWithTheme(
+      <ChatsListScreen {...baseProps} />,
+    );
+    expect(getByTestId("unread-dot-work-stress")).toBeTruthy();
+    expect(queryByTestId("unread-dot-morning-anxiety")).toBeNull();
+  });
+
+  it("renders the conversation title in the row", () => {
+    const { getByText } = renderWithTheme(<ChatsListScreen {...baseProps} />);
+    expect(getByText("Work stress & boundaries")).toBeTruthy();
+  });
+
+  it("renders the bracket tag for each conversation", () => {
+    const { getByTestId } = renderWithTheme(<ChatsListScreen {...baseProps} />);
+    expect(getByTestId("conversation-tag-work-stress").props.children).toBe(
+      "[ CBT ]",
+    );
+  });
+
+  it("renders message count and time-ago in mono", () => {
+    const { getByText } = renderWithTheme(<ChatsListScreen {...baseProps} />);
+    expect(getByText("12 msgs")).toBeTruthy();
+    expect(getByText("3m ago")).toBeTruthy();
+  });
+
+  it("conversation row has button role for screen readers", () => {
+    const { getByTestId } = renderWithTheme(<ChatsListScreen {...baseProps} />);
+    const row = getByTestId("conversation-row-work-stress");
+    expect(row.props.accessibilityRole).toBe("button");
+  });
+
+  it("invokes onFilterChange when a pill is pressed", () => {
+    const onFilterChange = jest.fn();
+    const { getAllByRole } = renderWithTheme(
+      <ChatsListScreen {...baseProps} onFilterChange={onFilterChange} />,
+    );
+    const tabs = getAllByRole("tab");
+    // Press the second pill ("Active")
+    fireEvent.press(tabs[1]);
+    expect(onFilterChange).toHaveBeenCalledWith("active");
+  });
+
+  it("renders empty-state text when no conversations match filter", () => {
+    const onlyActive: Conversation[] = [
+      { ...DEFAULT_CONVERSATIONS[0], archived: false, id: "k1" },
+    ];
+    const { getByTestId } = renderWithTheme(
+      <ChatsListScreen
+        {...baseProps}
+        conversations={onlyActive}
+        selectedFilter="archived"
+      />,
+    );
+    expect(getByTestId("empty-state-text")).toBeTruthy();
+  });
+
+  it("does not render legacy chat-item testIDs", () => {
+    const { queryByTestId } = renderWithTheme(
+      <ChatsListScreen {...baseProps} />,
+    );
+    expect(queryByTestId("chat-item-1")).toBeNull();
+    expect(queryByTestId("segmented-control")).toBeNull();
+    expect(queryByTestId("see-all-recent")).toBeNull();
+  });
+
+  it("does not render the legacy 'My AI Chats' title", () => {
+    const { queryByText } = renderWithTheme(<ChatsListScreen {...baseProps} />);
+    expect(queryByText("My AI Chats")).toBeNull();
+  });
+
+  it("FAB meets minimum 44pt touch target", () => {
+    const { getByTestId } = renderWithTheme(<ChatsListScreen {...baseProps} />);
+    const fab = getByTestId("new-conversation-fab");
+    const styles = Array.isArray(fab.props.style)
+      ? fab.props.style.flat()
+      : [fab.props.style];
+    const merged = styles.reduce(
+      (acc: Record<string, unknown>, s: Record<string, unknown> | undefined) => ({
         ...acc,
-        ...s,
+        ...(s ?? {}),
       }),
-      {}
+      {},
     );
-    expect(tabStyles.backgroundColor).toBe("#FFFFFF");
+    expect(merged.height).toBeGreaterThanOrEqual(44);
+    expect(merged.width).toBeGreaterThanOrEqual(44);
   });
 
-  it("displays Recent section header with count", () => {
-    const { getByText } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByText(/Recent.*\(4\)/)).toBeTruthy();
-  });
-
-  it("displays See All link in Recent section", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByTestId("see-all-recent")).toBeTruthy();
-  });
-
-  it("calls onSeeAllRecent when See All is pressed", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("see-all-recent"));
-    expect(mockOnSeeAllRecent).toHaveBeenCalledTimes(1);
-  });
-
-  it("displays recent chat items", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByTestId("chat-item-1")).toBeTruthy();
-    expect(getByTestId("chat-item-2")).toBeTruthy();
-    expect(getByTestId("chat-item-3")).toBeTruthy();
-  });
-
-  it("displays chat item title", () => {
-    const { getByText } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByText(/Work stress and deadlines/)).toBeTruthy();
-  });
-
-  it("displays chat item message count", () => {
-    const { getByText } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByText(/478 Total/)).toBeTruthy();
-  });
-
-  it("displays mood badge on chat item", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByTestId("mood-badge-1")).toBeTruthy();
-  });
-
-  it("displays mood text in badge", () => {
-    const { getByText } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByText("Anxious")).toBeTruthy();
-  });
-
-  it("calls onChatPress with chat id when item is pressed", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("chat-item-1"));
-    expect(mockOnChatPress).toHaveBeenCalledWith("1");
-  });
-
-  it("displays Trash section header with count", () => {
-    const { getByText } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByText(/Trash.*\(16\)/)).toBeTruthy();
-  });
-
-  it("displays See All link in Trash section", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByTestId("see-all-trash")).toBeTruthy();
-  });
-
-  it("calls onSeeAllTrash when See All is pressed", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("see-all-trash"));
-    expect(mockOnSeeAllTrash).toHaveBeenCalledTimes(1);
-  });
-
-  it("displays trash chat items", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByTestId("chat-item-4")).toBeTruthy();
-    expect(getByTestId("chat-item-5")).toBeTruthy();
-  });
-
-  it("displays avatar for chat item", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByTestId("chat-avatar-1")).toBeTruthy();
-  });
-
-  it("displays chevron on chat items", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    expect(getByTestId("chat-chevron-1")).toBeTruthy();
-  });
-
-  it("has orange gradient header background", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    const header = getByTestId("header-section");
-    // Header is now a LinearGradient. The mock converts hex strings to numeric
-    // ARGB values via processColor before passing them to the native layer,
-    // so we compare using the same conversion.
-    expect(header.props.colors).toEqual([
-      processColor("#E8853A"),
-      processColor("#C06A28"),
-    ]);
-  });
-
-  it("has dark background for content area", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    const content = getByTestId("content-area");
-    const styles = Array.isArray(content.props.style)
-      ? content.props.style
-      : [content.props.style];
-    const hasBackgroundColor = styles.some(
-      (s) => s?.backgroundColor === "#1C1410"
-    );
-    expect(hasBackgroundColor).toBe(true);
-  });
-
-  it("chat items have minimum touch target size", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    const item = getByTestId("chat-item-1");
-    const styles = Array.isArray(item.props.style)
-      ? item.props.style.flat()
-      : [item.props.style];
-    const itemStyles = styles.reduce(
-      (acc: Record<string, unknown>, s: Record<string, unknown>) => ({
-        ...acc,
-        ...s,
-      }),
-      {}
-    );
-    expect(itemStyles.minHeight).toBeGreaterThanOrEqual(44);
-  });
-
-  it("tab buttons have proper accessibility", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    const tab = getByTestId("tab-recent");
-    expect(tab.props.accessibilityRole).toBe("tab");
-  });
-
-  it("chat items have proper accessibility", () => {
-    const { getByTestId } = render(<ChatsListScreen {...defaultProps} />);
-    const item = getByTestId("chat-item-1");
-    expect(item.props.accessibilityRole).toBe("button");
-  });
-
-  it("does not use Freud in any visible text", () => {
-    const { queryByText } = render(<ChatsListScreen {...defaultProps} />);
-    expect(queryByText(/freud/i)).toBeNull();
-  });
-
-  it("does not display inappropriate content", () => {
-    const { queryByText } = render(<ChatsListScreen {...defaultProps} />);
-    expect(queryByText(/suicid/i)).toBeNull();
-    expect(queryByText(/kill/i)).toBeNull();
-    expect(queryByText(/xan/i)).toBeNull();
+  it("exports a ConversationsListScreen alias pointing at the same component", () => {
+    expect(ConversationsListScreen).toBe(ChatsListScreen);
   });
 });

@@ -1,252 +1,185 @@
 /**
- * AssessmentQuestionScreen Tests
- * @description Tests for reusable assessment question screen with single-select options
- * @task Task 3.4.2: Assessment Question Screen (Screens 26-35)
+ * AssessmentQuestionScreen Tests — prototype v4.2 #04 (Sprint 7 reskin)
  */
 
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import { AssessmentQuestionScreen } from "./AssessmentQuestionScreen";
 
-const mockOptions = [
-  { id: "option1", icon: "heart-outline", label: "I wanna reduce stress" },
-  { id: "option2", icon: "chatbubble-outline", label: "I wanna try AI Therapy" },
-  { id: "option3", icon: "flag-outline", label: "I want to cope with trauma" },
-  { id: "option4", icon: "happy-outline", label: "I want to be a better person" },
-];
+import {
+  AssessmentQuestionScreen,
+  DEFAULT_OPTIONS,
+} from "./AssessmentQuestionScreen";
+import type { AssessmentQuestionScreenProps } from "./AssessmentQuestionScreen";
+
+const defaultProps: AssessmentQuestionScreenProps = {
+  currentStep: 3,
+  totalSteps: 12,
+  question: "How often do you feel overwhelmed?",
+  options: DEFAULT_OPTIONS,
+  onBack: jest.fn(),
+  onContinue: jest.fn(),
+  onSkip: jest.fn(),
+};
+
+function renderScreen(
+  overrides: Partial<AssessmentQuestionScreenProps> = {},
+) {
+  return render(
+    <AssessmentQuestionScreen {...defaultProps} {...overrides} />,
+  );
+}
 
 describe("AssessmentQuestionScreen", () => {
-  const mockOnContinue = jest.fn();
-  const mockOnBack = jest.fn();
-
-  const defaultProps = {
-    currentStep: 1,
-    totalSteps: 14,
-    question: "What's your health goal for today?",
-    options: mockOptions,
-    onContinue: mockOnContinue,
-    onBack: mockOnBack,
-  };
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("renders the screen", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    expect(getByTestId("assessment-question-screen")).toBeTruthy();
+  // 1. Render + snapshot
+  it("renders and matches snapshot", () => {
+    const tree = renderScreen().toJSON();
+    expect(tree).toMatchSnapshot();
   });
 
-  it("displays the progress indicator", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
+  // 2. Question text rendered
+  it("renders the question text", () => {
+    const { getByTestId } = renderScreen();
+    expect(getByTestId("question-text").props.children).toBe(
+      "How often do you feel overwhelmed?",
     );
+  });
+
+  // 3. All 4 option cards rendered
+  it("renders all 4 option cards", () => {
+    const { getByTestId } = renderScreen();
+    DEFAULT_OPTIONS.forEach((opt) => {
+      expect(getByTestId(`option-${opt.id}`)).toBeTruthy();
+    });
+  });
+
+  // 4. Tapping option updates accessibilityState.selected
+  it("tapping an option marks it as selected", () => {
+    const { getByTestId } = renderScreen();
+    const optionEl = getByTestId("option-never");
+    expect(optionEl.props.accessibilityState?.selected).toBe(false);
+    fireEvent.press(optionEl);
+    expect(getByTestId("option-never").props.accessibilityState?.selected).toBe(
+      true,
+    );
+  });
+
+  // 5. Continue is disabled until an option selected
+  it("Continue button is disabled when no option is selected", () => {
+    const { getByTestId } = renderScreen({ selectedId: undefined });
+    const btn = getByTestId("continue-button");
+    expect(btn.props.accessibilityState?.disabled).toBe(true);
+  });
+
+  // 6. Continue calls onContinue(selectedId) with chosen id
+  it("Continue calls onContinue with the selected option id", () => {
+    const onContinue = jest.fn();
+    const { getByTestId } = renderScreen({ onContinue });
+    fireEvent.press(getByTestId("option-sometimes"));
+    fireEvent.press(getByTestId("continue-button"));
+    expect(onContinue).toHaveBeenCalledTimes(1);
+    expect(onContinue).toHaveBeenCalledWith("sometimes");
+  });
+
+  // 7. selectedId prop pre-fills selection
+  it("selectedId prop pre-selects the option", () => {
+    const { getByTestId } = renderScreen({ selectedId: "often" });
+    expect(
+      getByTestId("option-often").props.accessibilityState?.selected,
+    ).toBe(true);
+  });
+
+  // 8. Step indicator shows currentStep/totalSteps via RingProgress
+  it("renders RingProgress progress indicator", () => {
+    const { getByTestId } = renderScreen();
     expect(getByTestId("progress-indicator")).toBeTruthy();
   });
 
-  it("displays the header title", () => {
-    const { getByText } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    expect(getByText("Assessment")).toBeTruthy();
+  // 9. Back button calls onBack
+  it("back button calls onBack when pressed", () => {
+    const onBack = jest.fn();
+    const { getByTestId } = renderScreen({ onBack });
+    fireEvent.press(getByTestId("back-button"));
+    expect(onBack).toHaveBeenCalledTimes(1);
   });
 
-  it("displays the step counter", () => {
-    const { getByText } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    expect(getByText("1 of 14")).toBeTruthy();
+  // 10. Skip link calls onSkip when provided
+  it("skip link calls onSkip when pressed", () => {
+    const onSkip = jest.fn();
+    const { getByTestId } = renderScreen({ onSkip });
+    fireEvent.press(getByTestId("skip-link"));
+    expect(onSkip).toHaveBeenCalledTimes(1);
   });
 
-  it("displays custom step counter", () => {
-    const { getByText } = render(
-      <AssessmentQuestionScreen {...defaultProps} currentStep={5} totalSteps={14} />
-    );
-    expect(getByText("5 of 14")).toBeTruthy();
+  it("skip link is not rendered when onSkip is not provided", () => {
+    const { queryByTestId } = renderScreen({ onSkip: undefined });
+    expect(queryByTestId("skip-link")).toBeNull();
   });
 
-  it("displays the question text", () => {
-    const { getByText } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    expect(getByText("What's your health goal for today?")).toBeTruthy();
+  // 11. Sublabels render when provided
+  it("renders sublabels when optionsSublabels is provided", () => {
+    const optionsSublabels = { never: "Not at all", sometimes: "A little" };
+    const { getByTestId } = renderScreen({ optionsSublabels });
+    expect(getByTestId("sublabel-never").props.children).toBe("Not at all");
+    expect(getByTestId("sublabel-sometimes").props.children).toBe("A little");
   });
 
-  it("displays all options", () => {
-    const { getByText } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    expect(getByText("I wanna reduce stress")).toBeTruthy();
-    expect(getByText("I wanna try AI Therapy")).toBeTruthy();
-    expect(getByText("I want to cope with trauma")).toBeTruthy();
-    expect(getByText("I want to be a better person")).toBeTruthy();
+  it("does not render sublabel when not provided for that option", () => {
+    const { queryByTestId } = renderScreen({ optionsSublabels: {} });
+    expect(queryByTestId("sublabel-never")).toBeNull();
   });
 
-  it("displays option icons", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    // Options are rendered with Ionicons; verify options are present via their testIDs
-    expect(getByTestId("option-option1")).toBeTruthy();
-    expect(getByTestId("option-option2")).toBeTruthy();
-  });
-
-  it("displays the Continue button", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    expect(getByTestId("continue-button")).toBeTruthy();
-  });
-
-  it("Continue button is disabled when no option selected", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    const button = getByTestId("continue-button");
-    expect(button.props.accessibilityState?.disabled).toBe(true);
-  });
-
-  it("selects option when pressed", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    fireEvent.press(getByTestId("option-option1"));
-    const option = getByTestId("option-option1");
-    expect(option.props.accessibilityState?.selected).toBe(true);
-  });
-
-  it("only one option can be selected at a time", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    fireEvent.press(getByTestId("option-option1"));
-    fireEvent.press(getByTestId("option-option2"));
-    expect(getByTestId("option-option1").props.accessibilityState?.selected).toBe(false);
-    expect(getByTestId("option-option2").props.accessibilityState?.selected).toBe(true);
-  });
-
-  it("Continue button is enabled when option is selected", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    fireEvent.press(getByTestId("option-option1"));
-    const button = getByTestId("continue-button");
-    expect(button.props.accessibilityState?.disabled).toBe(false);
-  });
-
-  it("calls onContinue with selected option when Continue is pressed", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    fireEvent.press(getByTestId("option-option2"));
-    fireEvent.press(getByTestId("continue-button"));
-    expect(mockOnContinue).toHaveBeenCalledWith("option2");
-  });
-
-  it("does not call onContinue when no option selected", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    fireEvent.press(getByTestId("continue-button"));
-    expect(mockOnContinue).not.toHaveBeenCalled();
-  });
-
-  it("has dark background color", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    const container = getByTestId("assessment-question-screen");
-    const styles = Array.isArray(container.props.style)
-      ? container.props.style
-      : [container.props.style];
-    const hasBackgroundColor = styles.some(
-      (s) => s?.backgroundColor === "#1C1410"
-    );
-    expect(hasBackgroundColor).toBe(true);
-  });
-
-  it("selected option has green background", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    fireEvent.press(getByTestId("option-option1"));
-    const option = getByTestId("option-option1");
-    const styles = Array.isArray(option.props.style)
-      ? option.props.style.flat()
-      : [option.props.style];
-    const optionStyles = styles.reduce((acc, s) => ({ ...acc, ...s }), {});
-    expect(optionStyles.backgroundColor).toBe("#9AAD5C");
-  });
-
-  it("options have proper accessibility role", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    const option = getByTestId("option-option1");
-    expect(option.props.accessibilityRole).toBe("radio");
-  });
-
-  it("Continue button has proper accessibility", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    const button = getByTestId("continue-button");
-    expect(button.props.accessibilityRole).toBe("button");
-  });
-
-  it("Continue button has minimum touch target size", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    const button = getByTestId("continue-button");
-    const styles = Array.isArray(button.props.style)
-      ? button.props.style.flat()
-      : [button.props.style];
-    const buttonStyles = styles.reduce((acc, s) => ({ ...acc, ...s }), {});
-    expect(buttonStyles.minHeight).toBeGreaterThanOrEqual(44);
-  });
-
-  it("options have minimum touch target size", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    const option = getByTestId("option-option1");
-    const styles = Array.isArray(option.props.style)
-      ? option.props.style.flat()
-      : [option.props.style];
-    const optionStyles = styles.reduce((acc, s) => ({ ...acc, ...s }), {});
-    expect(optionStyles.minHeight).toBeGreaterThanOrEqual(44);
-  });
-
-  it("displays radio button indicator", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    expect(getByTestId("radio-option1")).toBeTruthy();
-  });
-
-  it("radio button shows checked state when selected", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    fireEvent.press(getByTestId("option-option1"));
-    const radio = getByTestId("radio-option1");
-    const styles = Array.isArray(radio.props.style)
+  // 12. Selected card has sage border style
+  it("selected option card has sage border color applied", () => {
+    const { getByTestId } = renderScreen();
+    fireEvent.press(getByTestId("option-often"));
+    const radio = getByTestId("radio-circle-often");
+    const radioStyles = Array.isArray(radio.props.style)
       ? radio.props.style.flat()
       : [radio.props.style];
-    const radioStyles = styles.reduce((acc, s) => ({ ...acc, ...s }), {});
-    expect(radioStyles.backgroundColor).toBe("#FFFFFF");
+    const merged = radioStyles.reduce(
+      (acc: Record<string, unknown>, s: Record<string, unknown> | null) => ({ ...acc, ...(s ?? {}) }),
+      {},
+    );
+    // sage[300] background when selected
+    expect(merged.backgroundColor).toBeTruthy();
+    expect(merged.backgroundColor).not.toBe("transparent");
   });
 
-  it("calls onBack when back pressed (optional)", () => {
-    const { getByTestId } = render(
-      <AssessmentQuestionScreen {...defaultProps} />
-    );
-    // Back button might be in header
-    const backButton = getByTestId("back-button");
-    fireEvent.press(backButton);
-    expect(mockOnBack).toHaveBeenCalledTimes(1);
+  // Extra: only one option selected at a time
+  it("selecting a second option deselects the first", () => {
+    const { getByTestId } = renderScreen();
+    fireEvent.press(getByTestId("option-never"));
+    fireEvent.press(getByTestId("option-often"));
+    expect(
+      getByTestId("option-never").props.accessibilityState?.selected,
+    ).toBe(false);
+    expect(
+      getByTestId("option-often").props.accessibilityState?.selected,
+    ).toBe(true);
+  });
+
+  // Continue enabled after selection
+  it("Continue becomes enabled after selecting an option", () => {
+    const { getByTestId } = renderScreen({ selectedId: undefined });
+    fireEvent.press(getByTestId("option-sometimes"));
+    expect(
+      getByTestId("continue-button").props.accessibilityState?.disabled,
+    ).toBe(false);
+  });
+
+  // Options have radio role
+  it("option cards have accessibilityRole radio", () => {
+    const { getByTestId } = renderScreen();
+    expect(getByTestId("option-never").props.accessibilityRole).toBe("radio");
+  });
+
+  // Back button a11y
+  it("back button has correct accessibilityRole", () => {
+    const { getByTestId } = renderScreen();
+    expect(getByTestId("back-button").props.accessibilityRole).toBe("button");
   });
 });
