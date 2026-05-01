@@ -47,8 +47,12 @@ describe("VoiceSessionScreen (v4.2 #25)", () => {
     const { getByTestId } = renderWithTheme(
       <VoiceSessionScreen {...baseProps} />,
     );
-    expect(getByTestId("bg-smoke")).toBeTruthy();
-    expect(getByTestId("bg-orb")).toBeTruthy();
+    expect(
+      getByTestId("bg-smoke", { includeHiddenElements: true }),
+    ).toBeTruthy();
+    expect(
+      getByTestId("bg-orb", { includeHiddenElements: true }),
+    ).toBeTruthy();
   });
 
   it("renders the close button with correct a11y", () => {
@@ -118,8 +122,12 @@ describe("VoiceSessionScreen (v4.2 #25)", () => {
     const { getByTestId } = renderWithTheme(
       <VoiceSessionScreen {...baseProps} />,
     );
-    expect(getByTestId("avatar-rings")).toBeTruthy();
-    expect(getByTestId("voice-avatar")).toBeTruthy();
+    expect(
+      getByTestId("avatar-rings", { includeHiddenElements: true }),
+    ).toBeTruthy();
+    expect(
+      getByTestId("voice-avatar", { includeHiddenElements: true }),
+    ).toBeTruthy();
   });
 
   it("renders the waveform with 34 bars", () => {

@@ -154,13 +154,8 @@ export function VoiceSessionScreen({
       backgroundColor={palette.midnight[950]}
       style={style as ViewStyle | undefined}
     >
-      {/* Decorative background layers */}
-      <View
-        style={styles.bgLayer}
-        pointerEvents="none"
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
-      >
+      {/* Decorative background layers — primitives are individually hidden from a11y. */}
+      <View style={styles.bgLayer} pointerEvents="none">
         <SmokeBlob
           testID="bg-smoke"
           tint="sage"

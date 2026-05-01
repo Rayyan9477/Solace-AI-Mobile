@@ -357,9 +357,6 @@ export function SessionSummaryScreen({
               borderColor: peachBorder,
             },
           ]}
-          accessible
-          accessibilityRole="text"
-          accessibilityLabel={`${smallAction.title}. ${smallAction.body}`}
         >
           <View style={styles.smallActionHeader}>
             <IconTile

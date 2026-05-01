@@ -214,11 +214,10 @@ describe("CbtThoughtRecordScreen (v4.2 #27)", () => {
   });
 
   it("renders the headline 'Let's examine that thought.'", () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <CbtThoughtRecordScreen {...baseProps} />,
     );
-    const text = JSON.stringify(getByTestId("headline").props.children);
-    expect(text).toContain("examine");
-    expect(text).toContain("that thought");
+    expect(getByText("that thought.")).toBeTruthy();
+    expect(getByText(/Let’s examine/)).toBeTruthy();
   });
 });

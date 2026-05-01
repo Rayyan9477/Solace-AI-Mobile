@@ -89,24 +89,17 @@ describe("SessionSummaryScreen (v4.2 #26)", () => {
   });
 
   it("renders the well-done headline with first name", () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <SessionSummaryScreen {...baseProps} firstName="Alex" />,
     );
-    const headline = getByTestId("well-done-headline");
-    expect(headline).toBeTruthy();
-    // Accept Alex. anywhere in nested children
-    const text = JSON.stringify(headline.props.children);
-    expect(text).toContain("Alex.");
+    expect(getByText("Alex.")).toBeTruthy();
   });
 
   it("uses default first name 'Rayyan' when prop omitted", () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <SessionSummaryScreen {...baseProps} />,
     );
-    const text = JSON.stringify(
-      getByTestId("well-done-headline").props.children,
-    );
-    expect(text).toContain("Rayyan.");
+    expect(getByText("Rayyan.")).toBeTruthy();
   });
 
   it("renders the topic card summary", () => {
