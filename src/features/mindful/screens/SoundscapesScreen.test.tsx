@@ -1,33 +1,20 @@
 /**
- * SoundscapesScreen Tests
- * @description Tests for TDD implementation of Screen 108
+ * SoundscapesScreen Tests — prototype v4.2 #34
  */
 
-import { render, fireEvent } from "@testing-library/react-native";
 import React from "react";
+import { render, fireEvent } from "@testing-library/react-native";
 
 import { SoundscapesScreen } from "./SoundscapesScreen";
 
-const defaultSoundscapes = [
-  { id: "birds", name: "Birds" },
-  { id: "zen", name: "Zen Garden" },
-  { id: "stream", name: "Mountain Stream" },
-  { id: "hiking", name: "Hiking Trail" },
-];
-
-const defaultProps = {
-  soundscapes: defaultSoundscapes,
-  selectedSoundscapeId: "zen",
-  stepLabel: "3 of 3",
-  searchQuery: "",
+const baseProps = {
   onBack: jest.fn(),
-  onSoundscapeSelect: jest.fn(),
-  onSearchChange: jest.fn(),
-  onContinue: jest.fn(),
+  onSelectSound: jest.fn(),
+  onTogglePlayback: jest.fn(),
 };
 
-function renderScreen(overrides = {}) {
-  return render(<SoundscapesScreen {...defaultProps} {...overrides} />);
+function renderScreen(overrides: Record<string, unknown> = {}) {
+  return render(<SoundscapesScreen {...baseProps} {...overrides} />);
 }
 
 describe("SoundscapesScreen", () => {
@@ -35,220 +22,138 @@ describe("SoundscapesScreen", () => {
     jest.clearAllMocks();
   });
 
-  // Rendering
   it("renders the screen container", () => {
     const { getByTestId } = renderScreen();
     expect(getByTestId("soundscapes-screen")).toBeTruthy();
   });
 
-  it("renders as a full-screen flex container", () => {
+  it("renders the night sky gradient backdrop", () => {
     const { getByTestId } = renderScreen();
-    const container = getByTestId("soundscapes-screen");
-    expect(container.props.style).toEqual(expect.objectContaining({ flex: 1 }));
+    expect(getByTestId("night-sky-gradient")).toBeTruthy();
   });
 
-  it("has dark background color", () => {
+  it("renders the back button with a11y", () => {
     const { getByTestId } = renderScreen();
-    const container = getByTestId("soundscapes-screen");
-    expect(container.props.style).toEqual(
-      expect.objectContaining({ backgroundColor: "#1C1410" }),
-    );
+    const back = getByTestId("back-button");
+    expect(back.props.accessibilityRole).toBe("button");
+    expect(back.props.accessibilityLabel).toBe("Go back");
   });
 
-  // Header
-  it("renders the back button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button")).toBeTruthy();
-  });
-
-  it("calls onBack when back button is pressed", () => {
+  it("invokes onBack when back pressed", () => {
     const onBack = jest.fn();
     const { getByTestId } = renderScreen({ onBack });
     fireEvent.press(getByTestId("back-button"));
     expect(onBack).toHaveBeenCalledTimes(1);
   });
 
-  it("back button has accessibilityRole button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button").props.accessibilityRole).toBe("button");
-  });
-
-  it("back button has accessibilityLabel", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button").props.accessibilityLabel).toBe("Go back");
-  });
-
-  it("back button meets minimum touch target size", () => {
-    const { getByTestId } = renderScreen();
-    const btn = getByTestId("back-button");
-    const flatStyle = Object.assign({}, ...[].concat(btn.props.style));
-    expect(flatStyle.minHeight).toBeGreaterThanOrEqual(44);
-    expect(flatStyle.minWidth).toBeGreaterThanOrEqual(44);
-  });
-
-  it("displays 'New Exercise' header title", () => {
+  it("renders the headline 'Drift off gently'", () => {
     const { getByText } = renderScreen();
-    expect(getByText("New Exercise")).toBeTruthy();
+    expect(getByText("Drift off gently")).toBeTruthy();
   });
 
-  // Step Indicator
-  it("displays the step indicator", () => {
+  it("renders the now playing card by default", () => {
     const { getByTestId } = renderScreen();
-    expect(getByTestId("step-indicator")).toBeTruthy();
+    expect(getByTestId("now-playing-card")).toBeTruthy();
+    expect(getByTestId("now-playing-title").props.children).toBe("Gentle rain");
   });
 
-  it("step indicator shows correct step label", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("3 of 3")).toBeTruthy();
-  });
-
-  // Section Title
-  it("displays 'Select Soundscapes' title", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("Select Soundscapes")).toBeTruthy();
-  });
-
-  it("section title is white and large", () => {
+  it("renders the playing meta text", () => {
     const { getByTestId } = renderScreen();
-    const title = getByTestId("section-title");
-    const flatStyle = Object.assign({}, ...[].concat(title.props.style));
-    expect(flatStyle.color).toBe("#FFFFFF");
-    expect(flatStyle.fontSize).toBeGreaterThanOrEqual(24);
+    expect(getByTestId("now-playing-meta").props.children).toBe(
+      "Playing · 24 min",
+    );
   });
 
-  // Audio Waveform
-  it("renders the audio waveform", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("audio-waveform")).toBeTruthy();
+  it("invokes onTogglePlayback when toggle pressed", () => {
+    const onTogglePlayback = jest.fn();
+    const { getByTestId } = renderScreen({ onTogglePlayback });
+    fireEvent.press(getByTestId("now-playing-toggle"));
+    expect(onTogglePlayback).toHaveBeenCalledTimes(1);
   });
 
-  // Soundscape Chips
-  it("renders a chip for each soundscape", () => {
+  it("hides the now playing card when nowPlaying is null", () => {
+    const { queryByTestId } = renderScreen({ nowPlaying: null });
+    expect(queryByTestId("now-playing-card")).toBeNull();
+  });
+
+  it("renders all 6 default sounds", () => {
     const { getByTestId } = renderScreen();
-    defaultSoundscapes.forEach((s) => {
-      expect(getByTestId(`soundscape-chip-${s.id}`)).toBeTruthy();
+    const ids = ["rain", "ocean", "forest", "white-noise", "fire", "bowl"];
+    for (const id of ids) {
+      expect(getByTestId(`sound-${id}`)).toBeTruthy();
+    }
+  });
+
+  it("marks the active sound with selected state", () => {
+    const { getByTestId } = renderScreen();
+    expect(getByTestId("sound-rain").props.accessibilityState).toEqual(
+      expect.objectContaining({ selected: true }),
+    );
+    expect(getByTestId("sound-ocean").props.accessibilityState).toEqual(
+      expect.objectContaining({ selected: false }),
+    );
+  });
+
+  it("renders the volume indicator on the active sound", () => {
+    const { UNSAFE_root } = renderScreen();
+    const found = UNSAFE_root.findAll(
+      (n: { props: { testID?: string } }) => n.props.testID === "sound-active-indicator-rain",
+    );
+    expect(found.length).toBeGreaterThan(0);
+  });
+
+  it("invokes onSelectSound when a tile pressed", () => {
+    const onSelectSound = jest.fn();
+    const { getByTestId } = renderScreen({ onSelectSound });
+    fireEvent.press(getByTestId("sound-ocean"));
+    expect(onSelectSound).toHaveBeenCalledWith("ocean");
+  });
+
+  it("uses custom sounds list", () => {
+    const custom = [
+      {
+        id: "thunder",
+        title: "Thunder",
+        duration: "30m",
+        iconName: "cloud-rain",
+        gradient: "lavender" as const,
+      },
+    ];
+    const { getByTestId, queryByTestId } = renderScreen({ sounds: custom });
+    expect(getByTestId("sound-thunder")).toBeTruthy();
+    expect(queryByTestId("sound-rain")).toBeNull();
+  });
+
+  it("renders a custom now playing entry", () => {
+    const { getByTestId } = renderScreen({
+      nowPlaying: { id: "ocean", title: "Ocean waves", minutes: 12 },
     });
-  });
-
-  it("displays soundscape names on chips", () => {
-    const { getByText } = renderScreen();
-    defaultSoundscapes.forEach((s) => {
-      expect(getByText(s.name)).toBeTruthy();
-    });
-  });
-
-  it("selected chip has orange background", () => {
-    const { getByTestId } = renderScreen();
-    const chip = getByTestId("soundscape-chip-zen");
-    const flatStyle = Object.assign({}, ...[].concat(chip.props.style));
-    expect(flatStyle.backgroundColor).toBe("#E8853A");
-  });
-
-  it("unselected chip has dark background", () => {
-    const { getByTestId } = renderScreen();
-    const chip = getByTestId("soundscape-chip-birds");
-    const flatStyle = Object.assign({}, ...[].concat(chip.props.style));
-    expect(flatStyle.backgroundColor).toBe("#2A1F1A");
-  });
-
-  it("calls onSoundscapeSelect when chip is pressed", () => {
-    const onSoundscapeSelect = jest.fn();
-    const { getByTestId } = renderScreen({ onSoundscapeSelect });
-    fireEvent.press(getByTestId("soundscape-chip-birds"));
-    expect(onSoundscapeSelect).toHaveBeenCalledWith("birds");
-  });
-
-  it("chips have accessibilityRole button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("soundscape-chip-birds").props.accessibilityRole).toBe(
-      "button",
+    expect(getByTestId("now-playing-title").props.children).toBe("Ocean waves");
+    expect(getByTestId("now-playing-meta").props.children).toBe(
+      "Playing · 12 min",
     );
   });
 
-  it("chips meet minimum touch target size", () => {
+  it("touch targets meet 44pt", () => {
     const { getByTestId } = renderScreen();
-    const chip = getByTestId("soundscape-chip-birds");
-    const flatStyle = Object.assign({}, ...[].concat(chip.props.style));
-    expect(flatStyle.minHeight).toBeGreaterThanOrEqual(44);
+    for (const id of ["back-button", "now-playing-toggle"]) {
+      const flat = Object.assign({}, ...[].concat(getByTestId(id).props.style));
+      expect(flat.minHeight).toBeGreaterThanOrEqual(44);
+      expect(flat.minWidth).toBeGreaterThanOrEqual(44);
+    }
   });
 
-  // Search Input
-  it("renders the search input", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("search-input")).toBeTruthy();
-  });
-
-  it("search input has placeholder text", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("search-input").props.placeholder).toBe(
-      "Search Soundscapes",
-    );
-  });
-
-  it("calls onSearchChange when text is entered", () => {
-    const onSearchChange = jest.fn();
-    const { getByTestId } = renderScreen({ onSearchChange });
-    fireEvent.changeText(getByTestId("search-input"), "Birds");
-    expect(onSearchChange).toHaveBeenCalledWith("Birds");
-  });
-
-  // Continue Button
-  it("renders the continue button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("continue-button")).toBeTruthy();
-  });
-
-  it("continue button displays correct text", () => {
-    const { getByText } = renderScreen();
-    expect(getByText(/Continue/)).toBeTruthy();
-  });
-
-  it("calls onContinue when continue button is pressed", () => {
-    const onContinue = jest.fn();
-    const { getByTestId } = renderScreen({ onContinue });
-    fireEvent.press(getByTestId("continue-button"));
-    expect(onContinue).toHaveBeenCalledTimes(1);
-  });
-
-  it("continue button has accessibilityRole button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("continue-button").props.accessibilityRole).toBe(
-      "button",
-    );
-  });
-
-  it("continue button has accessibilityLabel", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("continue-button").props.accessibilityLabel).toBe(
-      "Continue to start exercise",
-    );
-  });
-
-  it("continue button has tan background", () => {
-    const { getByTestId } = renderScreen();
-    const btn = getByTestId("continue-button");
-    const flatStyle = Object.assign({}, ...[].concat(btn.props.style));
-    expect(flatStyle.backgroundColor).toBe("#C4A574");
-  });
-
-  it("continue button meets minimum touch target size", () => {
-    const { getByTestId } = renderScreen();
-    const btn = getByTestId("continue-button");
-    const flatStyle = Object.assign({}, ...[].concat(btn.props.style));
-    expect(flatStyle.minHeight).toBeGreaterThanOrEqual(44);
-  });
-
-  // Dynamic Props
-  it("highlights different selected soundscape", () => {
-    const { getByTestId } = renderScreen({ selectedSoundscapeId: "stream" });
-    const chip = getByTestId("soundscape-chip-stream");
-    const flatStyle = Object.assign({}, ...[].concat(chip.props.style));
-    expect(flatStyle.backgroundColor).toBe("#E8853A");
-  });
-
-  // Branding
-  it("does not contain any Freud branding", () => {
+  it("does not contain Freud branding", () => {
     const { queryByText } = renderScreen();
     expect(queryByText(/freud/i)).toBeNull();
+  });
+
+  it("toggle pause button announces the active sound", () => {
+    const { getByTestId } = renderScreen({
+      nowPlaying: { id: "fire", title: "Crackling fire", minutes: 5 },
+    });
+    expect(getByTestId("now-playing-toggle").props.accessibilityLabel).toBe(
+      "Pause Crackling fire",
+    );
   });
 });

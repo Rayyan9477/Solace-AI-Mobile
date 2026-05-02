@@ -1,297 +1,473 @@
 /**
- * SoundscapesScreen Component
- * @description Third step of new exercise wizard with audio waveform visualization,
- *   horizontal soundscape chips, search input, and continue button
- * @task Task 3.12.5: Soundscapes Screen (Screen 108)
- * @phase Phase 3C: Refactored to use theme tokens
+ * SoundscapesScreen — prototype v4.2 #34 reskin (Sprint 8 Batch C).
+ *
+ * Night-sky LinearGradient backdrop with lavender SmokeBlob, mini "[ Sounds ]"
+ * header, "[ Ambient ]" + Fraunces "Drift off gently" headline, a glass
+ * now-playing mini-row with a 5-bar waveform thumbnail, and a 2-column grid
+ * of 6 gradient sound tiles (active tile gets a lavender ring outline).
+ *
+ * Maps to `prototypes/screens/34-soundscapes.js`.
  */
 
 import React from "react";
 import {
-  View,
+  ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  ScrollView,
-  TextInput,
-  StyleSheet,
+  View,
+  type StyleProp,
+  type ViewStyle,
 } from "react-native";
-import { palette } from "../../../shared/theme";
+import { LinearGradient } from "expo-linear-gradient";
 
-interface SoundscapeOption {
+import { useTheme } from "@/shared/theme/useTheme";
+import { AppIcon } from "@/shared/components/atoms/display/AppIcon";
+import { ScreenContainer } from "@/shared/components/atoms/layout";
+import {
+  BracketLabel,
+  GlassCard,
+  SmokeBlob,
+} from "@/shared/components/primitives";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+export type SoundscapeGradientKey =
+  | "lavender"
+  | "sage"
+  | "forest"
+  | "warm"
+  | "peach"
+  | "lavenderSoft";
+
+export interface Soundscape {
   id: string;
-  name: string;
+  title: string;
+  /** Display duration string (e.g., "60m", "∞"). */
+  duration: string;
+  iconName: string;
+  gradient: SoundscapeGradientKey;
 }
 
-interface SoundscapesScreenProps {
-  soundscapes: SoundscapeOption[];
-  selectedSoundscapeId: string | null;
-  stepLabel: string;
-  searchQuery: string;
-  onBack: () => void;
-  onSoundscapeSelect: (id: string) => void;
-  onSearchChange: (query: string) => void;
-  onContinue: () => void;
+export interface NowPlayingState {
+  id: string;
+  title: string;
+  /** Total minutes played for the current session. */
+  minutes: number;
 }
 
-const colors = {
-  background: palette.background.primary,
-  white: palette.text.primary,
-  chipBg: palette.background.secondary,
-  chipSelected: palette.accent.orange,
-  continueBg: palette.primary.gold,
-  searchBg: palette.background.secondary,
-  textSecondary: palette.text.secondary,
-  stepIndicator: palette.accent.green,
-  waveformBar: palette.opacity.white30,
-  waveformBarActive: palette.primary.gold,
-} as const;
+export interface SoundscapesScreenProps {
+  nowPlaying?: NowPlayingState | null;
+  sounds?: Soundscape[];
+  onBack?: () => void;
+  onSelectSound: (_id: string) => void;
+  onTogglePlayback: () => void;
+  testID?: string;
+  style?: StyleProp<ViewStyle>;
+}
 
-// Waveform bar heights (decorative placeholder)
-const WAVEFORM_BARS = [
-  0.3, 0.5, 0.4, 0.7, 0.6, 0.9, 1.0, 0.8, 0.95, 0.7, 0.5, 0.8, 0.6, 0.4, 0.9,
-  1.0, 0.85, 0.7, 0.5, 0.3, 0.6, 0.8, 0.4, 0.5, 0.3,
+// ---------------------------------------------------------------------------
+// Defaults
+// ---------------------------------------------------------------------------
+
+const DEFAULT_NOW_PLAYING: NowPlayingState = {
+  id: "rain",
+  title: "Gentle rain",
+  minutes: 24,
+};
+
+const DEFAULT_SOUNDS: Soundscape[] = [
+  { id: "rain", title: "Gentle rain", duration: "∞", iconName: "cloud-rain", gradient: "lavender" },
+  { id: "ocean", title: "Ocean waves", duration: "∞", iconName: "waves", gradient: "sage" },
+  { id: "forest", title: "Forest night", duration: "60m", iconName: "trees", gradient: "forest" },
+  { id: "white-noise", title: "White noise", duration: "∞", iconName: "radio", gradient: "warm" },
+  { id: "fire", title: "Crackling fire", duration: "45m", iconName: "flame", gradient: "peach" },
+  { id: "bowl", title: "Tibetan bowl", duration: "20m", iconName: "circle-dot", gradient: "lavenderSoft" },
 ];
 
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
 export function SoundscapesScreen({
-  soundscapes,
-  selectedSoundscapeId,
-  stepLabel,
-  searchQuery,
+  nowPlaying = DEFAULT_NOW_PLAYING,
+  sounds = DEFAULT_SOUNDS,
   onBack,
-  onSoundscapeSelect,
-  onSearchChange,
-  onContinue,
+  onSelectSound,
+  onTogglePlayback,
+  testID = "soundscapes-screen",
+  style,
 }: SoundscapesScreenProps): React.ReactElement {
+  const { palette, typography } = useTheme();
+
+  const gradientFor = (key: SoundscapeGradientKey): [string, string] => {
+    switch (key) {
+      case "lavender":
+        return [palette.lavender[300], palette.lavender[500]];
+      case "lavenderSoft":
+        return [palette.lavender[300], palette.lavender[500]];
+      case "sage":
+        return [palette.sage[300], palette.sage[700]];
+      case "forest":
+        return [palette.sage[700], palette.midnight[800]];
+      case "warm":
+        return [palette.warm[200], palette.warm[500]];
+      case "peach":
+        return [palette.peach[300], palette.peach[500]];
+      default:
+        return [palette.sage[300], palette.sage[700]];
+    }
+  };
+
   return (
-    <View testID="soundscapes-screen" style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          testID="back-button"
-          style={styles.backButton}
-          onPress={onBack}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-        >
-          <Text style={styles.backIcon}>{"\u263E"}</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>New Exercise</Text>
-        <View style={styles.headerSpacer} />
-        <Text testID="step-indicator" style={styles.stepIndicator}>
-          {stepLabel}
-        </Text>
-      </View>
+    <ScreenContainer
+      testID={testID}
+      backgroundColor={palette.midnight[950]}
+      style={[styles.container, style]}
+    >
+      {/* Night sky gradient */}
+      <LinearGradient
+        testID="night-sky-gradient"
+        colors={[palette.midnight[700], palette.midnight[950]]}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={StyleSheet.absoluteFill}
+        pointerEvents="none"
+      />
 
-      {/* Section Title */}
-      <Text testID="section-title" style={styles.sectionTitle}>
-        Select Soundscapes
-      </Text>
-
-      {/* Audio Waveform */}
-      <View testID="audio-waveform" style={styles.waveformContainer}>
-        {WAVEFORM_BARS.map((height, index) => (
-          <View
-            key={index}
-            style={[
-              styles.waveformBar,
-              {
-                height: height * 120,
-                backgroundColor:
-                  index >= 8 && index <= 14
-                    ? colors.waveformBarActive
-                    : colors.waveformBar,
-              },
-            ]}
-          />
-        ))}
-      </View>
-
-      {/* Soundscape Chips */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.chipsScroll}
-        contentContainerStyle={styles.chipsContent}
+      {/* Lavender smoke */}
+      <View
+        style={styles.smokeWrap}
+        pointerEvents="none"
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
       >
-        {soundscapes.map((soundscape) => {
-          const isSelected = soundscape.id === selectedSoundscapeId;
-          return (
-            <TouchableOpacity
-              key={soundscape.id}
-              testID={`soundscape-chip-${soundscape.id}`}
-              style={[
-                styles.chip,
-                isSelected ? styles.chipSelected : styles.chipUnselected,
-              ]}
-              onPress={() => onSoundscapeSelect(soundscape.id)}
-              accessibilityRole="button"
-              accessibilityLabel={`Select ${soundscape.name} soundscape`}
-            >
-              <Text
-                style={[styles.chipText, isSelected && styles.chipTextSelected]}
-              >
-                {soundscape.name}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
+        <SmokeBlob size={180} tint="lavender" opacity={0.5} />
+      </View>
 
-      {/* Search Input */}
-      <View style={styles.searchSection}>
-        <View style={styles.searchContainer}>
-          <Text style={styles.searchIcon}>{"\uD83D\uDD0D"}</Text>
-          <TextInput
-            accessibilityLabel="Text input field"
-            testID="search-input"
-            style={styles.searchInput}
-            placeholder="Search Soundscapes"
-            placeholderTextColor={colors.textSecondary}
-            value={searchQuery}
-            onChangeText={onSearchChange}
-          />
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Mini header */}
+        <View style={styles.header}>
+          <TouchableOpacity
+            testID="back-button"
+            style={[
+              styles.iconBtn,
+              { backgroundColor: palette.midnight[800], borderColor: palette.midnight[600] },
+            ]}
+            onPress={onBack}
+            disabled={!onBack}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <AppIcon name="arrow-left" size={18} color={palette.warm[100]} />
+          </TouchableOpacity>
+          <BracketLabel variant="muted">Sounds</BracketLabel>
+          <View style={styles.headerSpacer} />
         </View>
-      </View>
 
-      {/* Continue Button */}
-      <View style={styles.footer}>
-        <TouchableOpacity
-          testID="continue-button"
-          style={styles.continueButton}
-          onPress={onContinue}
-          accessibilityRole="button"
-          accessibilityLabel="Continue to start exercise"
-          activeOpacity={0.8}
+        <BracketLabel variant="default" style={styles.kicker}>
+          Ambient
+        </BracketLabel>
+        <Text
+          accessibilityRole="header"
+          style={[
+            styles.headline,
+            {
+              color: palette.warm[50],
+              fontFamily: typography.fontFamily.displayRegular,
+            },
+          ]}
         >
-          <Text style={styles.continueText}>Continue {"\u2192"}</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+          Drift off gently
+        </Text>
+
+        {/* Now playing mini */}
+        {nowPlaying ? (
+          <GlassCard
+            variant="strong"
+            radius={20}
+            style={styles.nowCard}
+            testID="now-playing-card"
+          >
+            <View style={styles.nowRow}>
+              <View
+                style={styles.nowArt}
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+              >
+                <LinearGradient
+                  colors={[palette.lavender[300], palette.lavender[500]]}
+                  start={{ x: 0.2, y: 0.2 }}
+                  end={{ x: 1, y: 1 }}
+                  style={StyleSheet.absoluteFill}
+                />
+                <View style={styles.nowArtBars}>
+                  {[8, 14, 10, 16, 12].map((h, i) => (
+                    <View
+                      key={i}
+                      style={[
+                        styles.nowArtBar,
+                        { backgroundColor: palette.warm[50], height: h },
+                      ]}
+                    />
+                  ))}
+                </View>
+              </View>
+
+              <View style={styles.nowText}>
+                <Text
+                  testID="now-playing-title"
+                  style={[
+                    styles.nowTitle,
+                    { color: palette.warm[50], fontFamily: typography.fontFamily.sansMedium },
+                  ]}
+                >
+                  {nowPlaying.title}
+                </Text>
+                <Text
+                  testID="now-playing-meta"
+                  style={[
+                    styles.nowMeta,
+                    { color: palette.warm[500], fontFamily: typography.fontFamily.mono },
+                  ]}
+                >
+                  {`Playing · ${nowPlaying.minutes} min`}
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                testID="now-playing-toggle"
+                style={[styles.nowPlayBtn, { backgroundColor: palette.warm[50] }]}
+                onPress={onTogglePlayback}
+                accessibilityRole="button"
+                accessibilityLabel={`Pause ${nowPlaying.title}`}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              >
+                <AppIcon name="pause" size={16} color={palette.midnight[950]} />
+              </TouchableOpacity>
+            </View>
+          </GlassCard>
+        ) : null}
+
+        {/* Sound grid */}
+        <View testID="soundscapes-grid" style={styles.grid} accessibilityRole="list">
+          {sounds.map((sound) => {
+            const isActive = nowPlaying?.id === sound.id;
+            const colors = gradientFor(sound.gradient);
+            return (
+              <TouchableOpacity
+                key={sound.id}
+                testID={`sound-${sound.id}`}
+                onPress={() => onSelectSound(sound.id)}
+                accessibilityRole="button"
+                accessibilityLabel={`${sound.title}, ${sound.duration}`}
+                accessibilityState={{ selected: isActive }}
+                activeOpacity={0.85}
+                style={[
+                  styles.tile,
+                  isActive && {
+                    borderColor: palette.lavender[300],
+                    borderWidth: 2,
+                  },
+                ]}
+              >
+                <LinearGradient
+                  colors={colors}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={StyleSheet.absoluteFill}
+                />
+                <View
+                  style={[
+                    styles.tileGloss,
+                    { backgroundColor: `${palette.warm[50]}${palette.alpha[10]}` },
+                  ]}
+                  pointerEvents="none"
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
+                />
+
+                <AppIcon
+                  name={sound.iconName}
+                  size={22}
+                  color={palette.warm[50]}
+                />
+
+                <View style={styles.tileFooter}>
+                  <Text
+                    style={[
+                      styles.tileTitle,
+                      { color: palette.warm[50], fontFamily: typography.fontFamily.sansMedium },
+                    ]}
+                  >
+                    {sound.title}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.tileDuration,
+                      { color: palette.warm[100], fontFamily: typography.fontFamily.mono },
+                    ]}
+                  >
+                    {sound.duration}
+                  </Text>
+                </View>
+
+                {isActive ? (
+                  <View
+                    testID={`sound-active-indicator-${sound.id}`}
+                    style={styles.activeIcon}
+                    accessibilityElementsHidden
+                    importantForAccessibility="no-hide-descendants"
+                  >
+                    <AppIcon name="volume-2" size={14} color={palette.warm[50]} />
+                  </View>
+                ) : null}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </ScrollView>
+    </ScreenContainer>
   );
 }
 
+// ---------------------------------------------------------------------------
+// Styles
+// ---------------------------------------------------------------------------
+
 const styles = StyleSheet.create({
-  backButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-  },
-  backIcon: {
-    color: colors.white,
-    fontSize: 24,
-  },
-  chip: {
-    borderRadius: 24,
-    minHeight: 44,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  chipSelected: {
-    backgroundColor: colors.chipSelected,
-  },
-  chipText: {
-    color: colors.white,
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  chipTextSelected: {
-    color: colors.white,
-  },
-  chipUnselected: {
-    backgroundColor: colors.chipBg,
-  },
-  chipsContent: {
-    gap: 8,
-    paddingHorizontal: 24,
-  },
-  chipsScroll: {
-    flexGrow: 0,
-    marginTop: 16,
+  activeIcon: {
+    position: "absolute",
+    right: 12,
+    top: 12,
   },
   container: {
-    backgroundColor: colors.background,
     flex: 1,
   },
-  continueButton: {
-    alignItems: "center",
-    backgroundColor: colors.continueBg,
-    borderRadius: 28,
-    justifyContent: "center",
-    minHeight: 44,
-    paddingVertical: 16,
-    width: "100%",
-  },
-  continueText: {
-    color: colors.background,
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  footer: {
-    paddingBottom: 48,
-    paddingHorizontal: 24,
-    paddingTop: 16,
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+    rowGap: 12,
   },
   header: {
     alignItems: "center",
     flexDirection: "row",
-    paddingHorizontal: 20,
-    paddingTop: 16,
+    justifyContent: "space-between",
+    marginBottom: 18,
   },
   headerSpacer: {
-    flex: 1,
+    height: 44,
+    width: 44,
   },
-  headerTitle: {
-    color: colors.white,
-    fontSize: 16,
-    fontWeight: "600",
-    marginLeft: 8,
+  headline: {
+    fontSize: 30,
+    lineHeight: 34,
+    marginBottom: 24,
+    marginTop: 4,
   },
-  searchContainer: {
+  iconBtn: {
     alignItems: "center",
-    backgroundColor: colors.searchBg,
-    borderRadius: 24,
-    flexDirection: "row",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  searchIcon: {
-    fontSize: 16,
-    marginRight: 8,
-  },
-  searchInput: {
-    color: colors.white,
-    flex: 1,
-    fontSize: 14,
-    padding: 0,
-  },
-  searchSection: {
-    paddingHorizontal: 24,
-    paddingTop: 24,
-  },
-  sectionTitle: {
-    color: colors.white,
-    fontSize: 28,
-    fontWeight: "800",
-    marginTop: 24,
-    paddingHorizontal: 24,
-  },
-  stepIndicator: {
-    color: colors.stepIndicator,
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  waveformBar: {
-    borderRadius: 3,
-    width: 6,
-  },
-  waveformContainer: {
-    alignItems: "center",
-    flex: 1,
-    flexDirection: "row",
-    gap: 4,
+    borderRadius: 22,
+    borderWidth: 1,
+    height: 44,
     justifyContent: "center",
+    minHeight: 44,
+    minWidth: 44,
+    width: 44,
+  },
+  kicker: {
+    marginBottom: 4,
+  },
+  nowArt: {
+    borderRadius: 12,
+    height: 48,
+    overflow: "hidden",
+    width: 48,
+  },
+  nowArtBar: {
+    borderRadius: 1,
+    width: 2,
+  },
+  nowArtBars: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 2,
+    height: "100%",
+    justifyContent: "center",
+  },
+  nowCard: {
+    marginBottom: 24,
+    padding: 14,
+  },
+  nowMeta: {
+    fontSize: 10,
+    marginTop: 2,
+  },
+  nowPlayBtn: {
+    alignItems: "center",
+    borderRadius: 22,
+    height: 44,
+    justifyContent: "center",
+    minHeight: 44,
+    minWidth: 44,
+    width: 44,
+  },
+  nowRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 12,
+  },
+  nowText: {
+    flex: 1,
+    minWidth: 0,
+  },
+  nowTitle: {
+    fontSize: 13,
+  },
+  scroll: {
+    paddingBottom: 40,
     paddingHorizontal: 24,
+    paddingTop: 12,
+  },
+  smokeWrap: {
+    left: 10,
+    position: "absolute",
+    top: 30,
+  },
+  tile: {
+    borderRadius: 18,
+    height: 132,
+    overflow: "hidden",
+    padding: 14,
+    position: "relative",
+    width: "48%",
+  },
+  tileDuration: {
+    fontSize: 10,
+    marginTop: 2,
+  },
+  tileFooter: {
+    bottom: 14,
+    left: 14,
+    position: "absolute",
+    right: 14,
+  },
+  tileGloss: {
+    bottom: 0,
+    left: 0,
+    position: "absolute",
+    right: 0,
+    top: 0,
+  },
+  tileTitle: {
+    fontSize: 13,
   },
 });
 
