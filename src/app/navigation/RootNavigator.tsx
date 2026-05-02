@@ -29,6 +29,9 @@ import { MainTabNavigator } from "./MainTabNavigator";
 // Feature Modal Stacks
 import { SleepStack } from "./stacks/SleepStack";
 import { NotificationsStack } from "./stacks/NotificationsStack";
+import { MindfulStack } from "./stacks/MindfulStack";
+import { SearchStack } from "./stacks/SearchStack";
+import { CrisisStack } from "./stacks/CrisisStack";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -129,6 +132,31 @@ export function RootNavigator({
         options={{
           presentation: "modal",
           animation: "slide_from_bottom",
+        }}
+      />
+      <Stack.Screen
+        name="MindfulModal"
+        component={MindfulStack}
+        options={{
+          presentation: "modal",
+          animation: "slide_from_bottom",
+        }}
+      />
+      <Stack.Screen
+        name="SearchModal"
+        component={SearchStack}
+        options={{
+          presentation: "modal",
+          animation: "slide_from_bottom",
+        }}
+      />
+      <Stack.Screen
+        name="CrisisModal"
+        component={CrisisStack}
+        options={{
+          presentation: "modal",
+          animation: "slide_from_bottom",
+          gestureEnabled: true,
         }}
       />
     </Stack.Navigator>

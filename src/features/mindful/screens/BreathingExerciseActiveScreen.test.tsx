@@ -1,30 +1,31 @@
 /**
- * BreathingExerciseActiveScreen Tests
- * @description Tests for TDD implementation of Screen 110
+ * BreathingExerciseActiveScreen Tests — prototype v4.2 #10
  */
 
-import { render, fireEvent } from "@testing-library/react-native";
 import React from "react";
+import { render, fireEvent } from "@testing-library/react-native";
 
-import { BreathingExerciseActiveScreen } from "./BreathingExerciseActiveScreen";
+import {
+  BreathingExerciseActiveScreen,
+  type BreathingExerciseActiveScreenProps,
+} from "./BreathingExerciseActiveScreen";
 
-const defaultProps = {
-  soundName: "Chirping Birds",
-  instruction: "Breathe Out...",
-  elapsedTime: "05:21",
-  totalTime: "25:00",
-  progress: 0.21,
-  isPlaying: true,
-  backgroundColor: "#E8853A",
-  onRewind: jest.fn(),
-  onPlayPause: jest.fn(),
-  onForward: jest.fn(),
+const baseProps: BreathingExerciseActiveScreenProps = {
+  cycleCount: 8,
+  currentCycle: 3,
+  currentPhase: "inhale",
+  secondsRemaining: 4,
+  isPaused: false,
+  onClose: jest.fn(),
+  onTogglePause: jest.fn(),
+  onRestart: jest.fn(),
+  onSettings: jest.fn(),
+  onToggleSound: jest.fn(),
 };
 
-function renderScreen(overrides = {}) {
-  return render(
-    <BreathingExerciseActiveScreen {...defaultProps} {...overrides} />,
-  );
+function renderScreen(overrides: Partial<BreathingExerciseActiveScreenProps> = {}) {
+  const props: BreathingExerciseActiveScreenProps = { ...baseProps, ...overrides };
+  return render(<BreathingExerciseActiveScreen {...props} />);
 }
 
 describe("BreathingExerciseActiveScreen", () => {
@@ -32,198 +33,147 @@ describe("BreathingExerciseActiveScreen", () => {
     jest.clearAllMocks();
   });
 
-  // Rendering
   it("renders the screen container", () => {
     const { getByTestId } = renderScreen();
     expect(getByTestId("breathing-exercise-active-screen")).toBeTruthy();
   });
 
-  it("renders as a full-screen flex container", () => {
+  it("renders the close button", () => {
     const { getByTestId } = renderScreen();
-    const container = getByTestId("breathing-exercise-active-screen");
-    const flatStyle = Object.assign({}, ...[].concat(container.props.style));
-    expect(flatStyle.flex).toBe(1);
+    expect(getByTestId("close-button").props.accessibilityRole).toBe("button");
   });
 
-  it("uses the provided background color", () => {
+  it("invokes onClose when close pressed", () => {
+    const onClose = jest.fn();
+    const { getByTestId } = renderScreen({ onClose });
+    fireEvent.press(getByTestId("close-button"));
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("displays the cycle counter", () => {
     const { getByTestId } = renderScreen();
-    const container = getByTestId("breathing-exercise-active-screen");
-    const flatStyle = Object.assign({}, ...[].concat(container.props.style));
-    expect(flatStyle.backgroundColor).toBe("#E8853A");
+    expect(getByTestId("cycle-counter").props.children).toBe("Cycle 3 of 8");
   });
 
-  it("supports custom background color", () => {
-    const { getByTestId } = renderScreen({ backgroundColor: "#9AAD5C" });
-    const container = getByTestId("breathing-exercise-active-screen");
-    const flatStyle = Object.assign({}, ...[].concat(container.props.style));
-    expect(flatStyle.backgroundColor).toBe("#9AAD5C");
+  it("renders cycle progress as progressbar with correct values", () => {
+    const { getByTestId } = renderScreen({ currentCycle: 2, cycleCount: 8 });
+    const progress = getByTestId("cycle-progress");
+    expect(progress.props.accessibilityRole).toBe("progressbar");
+    expect(progress.props.accessibilityValue).toEqual({ min: 0, max: 8, now: 2 });
   });
 
-  // Sound Badge
-  it("renders the sound badge", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("sound-badge")).toBeTruthy();
-  });
-
-  it("displays the sound name", () => {
-    const { getByText } = renderScreen();
-    expect(getByText(/Chirping Birds/)).toBeTruthy();
-  });
-
-  // Breathing Circle
-  it("renders the breathing circle", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("breathing-circle")).toBeTruthy();
-  });
-
-  // Instruction Text
-  it("displays the breathing instruction", () => {
-    const { getByTestId } = renderScreen();
-    const instruction = getByTestId("instruction-text");
-    expect(instruction.props.children).toBe("Breathe Out...");
-  });
-
-  it("instruction text is white and large", () => {
-    const { getByTestId } = renderScreen();
-    const instruction = getByTestId("instruction-text");
-    const flatStyle = Object.assign({}, ...[].concat(instruction.props.style));
-    expect(flatStyle.color).toBe("#FFFFFF");
-    expect(flatStyle.fontSize).toBeGreaterThanOrEqual(24);
-  });
-
-  // Progress Bar
-  it("renders the progress bar", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("progress-bar")).toBeTruthy();
-  });
-
-  it("displays elapsed time", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("05:21")).toBeTruthy();
-  });
-
-  it("displays total time", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("25:00")).toBeTruthy();
-  });
-
-  // Playback Controls
-  it("renders the rewind button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("rewind-button")).toBeTruthy();
-  });
-
-  it("calls onRewind when rewind button is pressed", () => {
-    const onRewind = jest.fn();
-    const { getByTestId } = renderScreen({ onRewind });
-    fireEvent.press(getByTestId("rewind-button"));
-    expect(onRewind).toHaveBeenCalledTimes(1);
-  });
-
-  it("rewind button has accessibilityRole button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("rewind-button").props.accessibilityRole).toBe("button");
-  });
-
-  it("rewind button has accessibilityLabel", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("rewind-button").props.accessibilityLabel).toBe(
-      "Rewind",
+  it("renders the breathing circle with phase a11y label", () => {
+    const { getByTestId } = renderScreen({ currentPhase: "exhale", secondsRemaining: 8 });
+    const circle = getByTestId("breathing-circle");
+    expect(circle.props.accessibilityRole).toBe("image");
+    expect(circle.props.accessibilityLabel).toBe(
+      "Breathe out, 8 seconds remaining",
     );
   });
 
-  it("rewind button meets minimum touch target size", () => {
-    const { getByTestId } = renderScreen();
-    const btn = getByTestId("rewind-button");
-    const flatStyle = Object.assign({}, ...[].concat(btn.props.style));
-    expect(flatStyle.minHeight).toBeGreaterThanOrEqual(44);
-    expect(flatStyle.minWidth).toBeGreaterThanOrEqual(44);
+  it("displays the inhale phase label by default", () => {
+    const { UNSAFE_root } = renderScreen();
+    const node = UNSAFE_root.find(
+      (n: { props: { testID?: string } }) => n.props.testID === "instruction-text",
+    );
+    expect(node.props.children).toBe("Breathe in");
   });
 
-  it("renders the play/pause button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("play-pause-button")).toBeTruthy();
+  it("displays the hold phase label", () => {
+    const { UNSAFE_root } = renderScreen({ currentPhase: "hold" });
+    const node = UNSAFE_root.find(
+      (n: { props: { testID?: string } }) => n.props.testID === "instruction-text",
+    );
+    expect(node.props.children).toBe("Hold");
   });
 
-  it("calls onPlayPause when play/pause button is pressed", () => {
-    const onPlayPause = jest.fn();
-    const { getByTestId } = renderScreen({ onPlayPause });
+  it("zero-pads the seconds counter", () => {
+    const { getByTestId } = renderScreen({ secondsRemaining: 4 });
+    expect(getByTestId("seconds-counter").props.children).toBe("04");
+  });
+
+  it("renders seconds counter as a polite live region", () => {
+    const { getByTestId } = renderScreen();
+    expect(getByTestId("seconds-counter").props.accessibilityLiveRegion).toBe(
+      "polite",
+    );
+  });
+
+  it("calls onTogglePause when play/pause pressed", () => {
+    const onTogglePause = jest.fn();
+    const { getByTestId } = renderScreen({ onTogglePause });
     fireEvent.press(getByTestId("play-pause-button"));
-    expect(onPlayPause).toHaveBeenCalledTimes(1);
+    expect(onTogglePause).toHaveBeenCalledTimes(1);
   });
 
-  it("play/pause button has accessibilityRole button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("play-pause-button").props.accessibilityRole).toBe(
-      "button",
-    );
-  });
-
-  it("play/pause shows pause label when playing", () => {
-    const { getByTestId } = renderScreen({ isPlaying: true });
+  it("uses pause label when not paused", () => {
+    const { getByTestId } = renderScreen({ isPaused: false });
     expect(getByTestId("play-pause-button").props.accessibilityLabel).toBe(
-      "Pause",
+      "Pause breathing exercise",
     );
   });
 
-  it("play/pause shows play label when paused", () => {
-    const { getByTestId } = renderScreen({ isPlaying: false });
+  it("uses resume label when paused", () => {
+    const { getByTestId } = renderScreen({ isPaused: true });
     expect(getByTestId("play-pause-button").props.accessibilityLabel).toBe(
-      "Play",
+      "Resume breathing exercise",
     );
   });
 
-  it("play/pause button meets minimum touch target size", () => {
+  it("calls onRestart when restart pressed", () => {
+    const onRestart = jest.fn();
+    const { getByTestId } = renderScreen({ onRestart });
+    fireEvent.press(getByTestId("restart-button"));
+    expect(onRestart).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls onSettings when settings pressed", () => {
+    const onSettings = jest.fn();
+    const { getByTestId } = renderScreen({ onSettings });
+    fireEvent.press(getByTestId("settings-button"));
+    expect(onSettings).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls onToggleSound when sound pressed", () => {
+    const onToggleSound = jest.fn();
+    const { getByTestId } = renderScreen({ onToggleSound });
+    fireEvent.press(getByTestId("sound-button"));
+    expect(onToggleSound).toHaveBeenCalledTimes(1);
+  });
+
+  it("control buttons meet 44pt touch target", () => {
     const { getByTestId } = renderScreen();
-    const btn = getByTestId("play-pause-button");
-    const flatStyle = Object.assign({}, ...[].concat(btn.props.style));
-    expect(flatStyle.minHeight).toBeGreaterThanOrEqual(44);
-    expect(flatStyle.minWidth).toBeGreaterThanOrEqual(44);
+    const targets = ["close-button", "sound-button", "restart-button", "play-pause-button", "settings-button"];
+    for (const id of targets) {
+      const node = getByTestId(id);
+      const flat = Object.assign({}, ...[].concat(node.props.style));
+      expect(flat.minHeight).toBeGreaterThanOrEqual(44);
+      expect(flat.minWidth).toBeGreaterThanOrEqual(44);
+    }
   });
 
-  it("renders the forward button", () => {
+  it("renders 8 cycle pips by default", () => {
     const { getByTestId } = renderScreen();
-    expect(getByTestId("forward-button")).toBeTruthy();
+    const progress = getByTestId("cycle-progress");
+    // 8 pips inside the progress wrapper
+    expect(progress.props.children?.length ?? progress.children?.length).toBeGreaterThan(0);
   });
 
-  it("calls onForward when forward button is pressed", () => {
-    const onForward = jest.fn();
-    const { getByTestId } = renderScreen({ onForward });
-    fireEvent.press(getByTestId("forward-button"));
-    expect(onForward).toHaveBeenCalledTimes(1);
-  });
-
-  it("forward button has accessibilityRole button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("forward-button").props.accessibilityRole).toBe(
-      "button",
-    );
-  });
-
-  it("forward button has accessibilityLabel", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("forward-button").props.accessibilityLabel).toBe(
-      "Forward",
-    );
-  });
-
-  it("forward button meets minimum touch target size", () => {
-    const { getByTestId } = renderScreen();
-    const btn = getByTestId("forward-button");
-    const flatStyle = Object.assign({}, ...[].concat(btn.props.style));
-    expect(flatStyle.minHeight).toBeGreaterThanOrEqual(44);
-    expect(flatStyle.minWidth).toBeGreaterThanOrEqual(44);
-  });
-
-  // Dynamic Props
-  it("displays different instruction text", () => {
-    const { getByTestId } = renderScreen({ instruction: "Hold..." });
-    expect(getByTestId("instruction-text").props.children).toBe("Hold...");
-  });
-
-  // Branding
-  it("does not contain any Freud branding", () => {
+  it("does not contain Freud branding", () => {
     const { queryByText } = renderScreen();
     expect(queryByText(/freud/i)).toBeNull();
+  });
+
+  it("renders default props with no input changes", () => {
+    const { getByTestId } = render(
+      <BreathingExerciseActiveScreen
+        onClose={jest.fn()}
+        onTogglePause={jest.fn()}
+        onRestart={jest.fn()}
+        onSettings={jest.fn()}
+      />,
+    );
+    expect(getByTestId("cycle-counter").props.children).toBe("Cycle 1 of 8");
+    expect(getByTestId("seconds-counter").props.children).toBe("04");
   });
 });

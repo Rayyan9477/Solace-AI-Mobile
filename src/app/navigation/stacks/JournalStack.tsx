@@ -47,6 +47,40 @@ function TextJournalComposerScreenAdapter({
   );
 }
 
+/** Adapter — wires JournalDashboard navigation to in-stack routes. */
+function JournalDashboardScreenAdapter({
+  navigation,
+}: NativeStackScreenProps<
+  JournalStackParamList,
+  "JournalList"
+>): React.ReactElement {
+  return (
+    <JournalDashboardScreen
+      onSearch={() => undefined}
+      onCompose={() => navigation.navigate("CreateJournalEntry")}
+      onViewAll={() => undefined}
+      onEntryPress={(id) => navigation.navigate("JournalEntryDetail", { entryId: id })}
+    />
+  );
+}
+
+/** Adapter — wires JournalEntryDetail back/edit affordances to navigation. */
+function JournalEntryDetailScreenAdapter({
+  navigation,
+  route,
+}: NativeStackScreenProps<
+  JournalStackParamList,
+  "JournalEntryDetail"
+>): React.ReactElement {
+  const entryId = route.params?.entryId ?? "default-quiet-morning";
+  return (
+    <JournalEntryDetailScreen
+      onBack={() => navigation.goBack()}
+      onEdit={() => navigation.navigate("EditJournalEntry", { entryId })}
+    />
+  );
+}
+
 export function JournalStack(): React.ReactElement {
   return (
     <Stack.Navigator
@@ -56,10 +90,10 @@ export function JournalStack(): React.ReactElement {
         animation: "slide_from_right",
       }}
     >
-      <Stack.Screen name="JournalList" component={JournalDashboardScreen} />
+      <Stack.Screen name="JournalList" component={JournalDashboardScreenAdapter} />
       <Stack.Screen name="CreateJournalEntry" component={TextJournalComposerScreenAdapter} />
       <Stack.Screen name="EditJournalEntry" component={TextJournalComposerScreenAdapter} />
-      <Stack.Screen name="JournalEntryDetail" component={JournalEntryDetailScreen} />
+      <Stack.Screen name="JournalEntryDetail" component={JournalEntryDetailScreenAdapter} />
       <Stack.Screen name="TextJournalComposer" component={TextJournalComposerScreenAdapter} />
     </Stack.Navigator>
   );
