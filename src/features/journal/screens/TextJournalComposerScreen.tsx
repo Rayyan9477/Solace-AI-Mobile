@@ -1,531 +1,537 @@
 /**
- * TextJournalComposerScreen Component
- * @screen Screen 83: Text Journal Composer
- * @audit batch-17-journal-continued.md
- * @phase Phase 3D: Integrated CrisisModal for crisis keyword detection
+ * TextJournalComposerScreen — prototype v4.2 #28 Journal Composer reskin (Sprint 7).
  *
- * Visual ref: Mental_Health_Journal_Screen_06.png
- * - "Add New Journal" title, Text/Voice tabs
- * - Journal title input, entry textarea with undo/redo
- * - Stress level slider (1-5), emotion selector, stressor chips
- * - "Create Journal +" CTA
+ * Visual ref: prototypes/screens/28-journal-composer.js
+ * - Mood strip (5 MoodFace circles, aurora ring on selected)
+ * - BracketLabel date+weather row
+ * - Borderless Fraunces title input
+ * - AuroraHairline divider
+ * - SuggestionCard writing prompt (dismissible)
+ * - Multiline body TextInput
+ * - Scrollable HashtagChip row
+ * - Sticky bottom toolbar (bold/italic/list/image/mic + word count)
+ * - Floating peach FAB save button
  */
 
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
   ScrollView,
   StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { CrisisModal } from "../../../shared/components/organisms/crisis";
-import { palette, colors as themeColors } from "../../../shared/theme";
-import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
 
-const localColors = {
-  screenBg: palette.brown[900],
-  white: palette.white,
-  subtitle: palette.gray[400],
-  cardBg: palette.brown[800],
-  cardBorder: palette.brown[700],
-  tabActiveBg: palette.brown[700],
-  tabInactiveBg: "transparent",
-  tabActiveText: palette.white,
-  tabInactiveText: palette.gray[400],
-  sliderTrack: palette.brown[700],
-  sliderFill: palette.olive[500],
-  emotionSelectedBorder: palette.olive[500],
-  stressorSelectedBg: palette.olive[500],
-  stressorDefaultBg: "transparent",
-  stressorBorder: palette.brown[700],
-  ctaBg: palette.tan[600],
-  undoBg: palette.brown[700],
-  redoBg: palette.brown[700],
-  highlightBg: palette.accent.orange,
-  backBtnBorder: palette.opacity.white30,
-} as const;
+import { useTheme } from "@/shared/theme/useTheme";
+import { useReducedMotion } from "@/shared/hooks/useReducedMotion";
+import { ScreenContainer } from "@/shared/components/atoms/layout";
+import { AppIcon } from "@/shared/components/atoms/display/AppIcon";
+import {
+  AuroraHairline,
+  BracketLabel,
+  MoodFace,
+  MOOD_LEVELS,
+  type MoodLevel,
+} from "@/shared/components/primitives";
+import { HashtagChip } from "@/shared/components/molecules/chips/HashtagChip";
+import { SuggestionCard } from "@/shared/components/molecules/cards/SuggestionCard";
 
-interface Emotion {
-  id: string;
-  emoji: string;
-  selected: boolean;
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+export interface TextJournalComposerScreenProps {
+  /** Initial title */
+  title: string;
+  onTitleChange: (text: string) => void;
+  /** Initial body */
+  body: string;
+  onBodyChange: (text: string) => void;
+  /** Selected mood level (1-5 or null) */
+  moodLevel: MoodLevel | null;
+  onMoodLevelChange: (level: MoodLevel | null) => void;
+  /** Selected hashtag labels */
+  hashtags: string[];
+  onHashtagsChange: (ids: string[]) => void;
+  /** Available hashtag options */
+  hashtagOptions?: string[];
+  /** Optional date label, defaults to "Today" */
+  dateLabel?: string;
+  /** Optional weather suffix, e.g., "64°F ☀️" */
+  weatherLabel?: string;
+  /** Suggestion to show — null hides the suggestion card */
+  suggestion?: { title: string; body: string } | null;
+  onSuggestionDismiss?: () => void;
+  onClose: () => void;
+  onSave: () => void;
+  /** Toolbar handlers (optional — buttons render disabled if not provided) */
+  onBoldPress?: () => void;
+  onItalicPress?: () => void;
+  onListPress?: () => void;
+  onImagePress?: () => void;
+  onMicPress?: () => void;
+  testID?: string;
 }
 
-interface Stressor {
-  id: string;
-  label: string;
-  selected: boolean;
-}
+const DEFAULT_HASHTAG_OPTIONS = [
+  "anxious",
+  "hopeful",
+  "tired",
+  "grateful",
+  "calm",
+  "overwhelmed",
+];
 
-interface TextJournalComposerScreenProps {
-  activeTab?: "text" | "voice";
-  title?: string;
-  content?: string;
-  stressLevel?: number;
-  emotions?: Emotion[];
-  stressors?: Stressor[];
-  crisisDetected?: boolean;
-  onBack?: () => void;
-  onTitleChange?: (text: string) => void;
-  onContentChange?: (text: string) => void;
-  onStressLevelChange?: (value: number) => void;
-  onEmotionSelect?: (id: string) => void;
-  onStressorSelect?: (id: string) => void;
-  onCreate?: () => void;
-  onTabChange?: (tab: "text" | "voice") => void;
-  onUndo?: () => void;
-  onRedo?: () => void;
-}
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 export function TextJournalComposerScreen({
-  activeTab = "text",
-  title = "",
-  content = "",
-  stressLevel = 3,
-  emotions = [],
-  stressors = [],
-  crisisDetected = false,
-  onBack,
-  onEmotionSelect,
-  onStressorSelect,
-  onCreate,
-  onTabChange,
-  onUndo,
-  onRedo,
-}: TextJournalComposerScreenProps = {}): React.ReactElement {
-  const [showCrisisModal, setShowCrisisModal] = useState(false);
+  title,
+  onTitleChange,
+  body,
+  onBodyChange,
+  moodLevel,
+  onMoodLevelChange,
+  hashtags,
+  onHashtagsChange,
+  hashtagOptions = DEFAULT_HASHTAG_OPTIONS,
+  dateLabel = "Today",
+  weatherLabel,
+  suggestion,
+  onSuggestionDismiss,
+  onClose,
+  onSave,
+  onBoldPress,
+  onItalicPress,
+  onListPress,
+  onImagePress,
+  onMicPress,
+  testID = "text-journal-composer-screen",
+}: TextJournalComposerScreenProps): React.ReactElement {
+  const { palette } = useTheme();
+  // Honor reduce-motion: ring opacity could be animated but we keep it static when requested
+  const reducedMotion = useReducedMotion();
 
-  const handleAccessCrisisSupport = (): void => {
-    setShowCrisisModal(true);
-  };
+  const wordCount = useMemo(() => {
+    const trimmed = body.trim();
+    if (!trimmed) return 0;
+    return trimmed.split(/\s+/).length;
+  }, [body]);
+
+  const dateWeatherLabel = weatherLabel
+    ? `${dateLabel} · ${weatherLabel}`
+    : dateLabel;
+
+  function handleMoodPress(level: MoodLevel): void {
+    onMoodLevelChange(moodLevel === level ? null : level);
+  }
+
+  function handleHashtagPress(tag: string): void {
+    if (hashtags.includes(tag)) {
+      onHashtagsChange(hashtags.filter((t) => t !== tag));
+    } else {
+      onHashtagsChange([...hashtags, tag]);
+    }
+  }
 
   return (
-    <ScreenContainer testID="text-journal-composer-screen" style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Back Button */}
+    <ScreenContainer
+      testID={testID}
+      backgroundColor={palette.midnight[950]}
+      style={styles.container}
+    >
+      {/* ------------------------------------------------------------------ */}
+      {/* Header                                                               */}
+      {/* ------------------------------------------------------------------ */}
+      <View style={[styles.header, { borderBottomColor: palette.midnight[800] }]}>
         <TouchableOpacity
-          testID="back-button"
-          style={styles.backButton}
-          onPress={onBack}
+          testID="close-button"
+          onPress={onClose}
           accessibilityRole="button"
-          accessibilityLabel="Go back"
+          accessibilityLabel="Close journal composer"
+          style={styles.headerSideButton}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
-          <Icon name="chevron-back-outline" size={20} color={localColors.white} />
+          <AppIcon name="x" size={20} color={palette.warm[400]} />
         </TouchableOpacity>
 
-        {/* Title */}
-        <Text style={styles.screenTitle}>Add New Journal</Text>
+        <BracketLabel variant="muted">New Entry</BracketLabel>
 
-        {/* Tab Selector */}
-        <View testID="tab-selector" style={styles.tabSelector}>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === "text" && styles.tabActive]}
-            onPress={() => onTabChange?.("text")}
-            accessibilityRole="button"
-          >
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === "text" && styles.tabTextActive,
-              ]}
-            >
-              Text
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === "voice" && styles.tabActive]}
-            onPress={() => onTabChange?.("voice")}
-            accessibilityRole="button"
-          >
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === "voice" && styles.tabTextActive,
-              ]}
-            >
-              Voice
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          testID="header-save-button"
+          onPress={onSave}
+          accessibilityRole="button"
+          accessibilityLabel="Save entry"
+          style={styles.headerSideButton}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        >
+          <Text style={[styles.headerSaveText, { color: palette.sage[300] }]}>
+            Save
+          </Text>
+        </TouchableOpacity>
+      </View>
 
-        {/* Crisis Alert Banner - Shows when crisis keywords detected */}
-        {crisisDetected && (
-          <View
-            testID="crisis-alert-banner"
-            style={styles.crisisAlertBanner}
-            accessibilityRole="alert"
-            accessibilityLiveRegion="assertive"
-          >
-            <View style={styles.crisisAlertContent}>
-              <Icon name="heart-outline" size={24} color={palette.red[300]} style={styles.crisisAlertIcon} />
-              <View style={styles.crisisAlertText}>
-                <Text style={styles.crisisAlertTitle}>Support Available</Text>
-                <Text style={styles.crisisAlertDescription}>
-                  We noticed you might need immediate support
-                </Text>
-              </View>
-            </View>
-            <TouchableOpacity
-              testID="crisis-support-banner-button"
-              style={styles.crisisAlertButton}
-              onPress={handleAccessCrisisSupport}
-              accessibilityRole="button"
-              accessibilityLabel="Access crisis support resources"
-            >
-              <Text style={styles.crisisAlertButtonText}>Get Help Now</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {/* Journal Title */}
-        <Text style={styles.fieldLabel}>Journal Title</Text>
-        <View style={styles.titleInput}>
-          <Icon name="document-text-outline" size={18} color={localColors.white} style={styles.titleIcon} />
-          <Text style={styles.titleValue}>{title}</Text>
-        </View>
-
-        {/* Write Your Entry */}
-        <Text style={styles.fieldLabel}>Write Your Entry</Text>
-        <View style={styles.entryBox}>
-          <Text style={styles.entryContent}>{content}</Text>
-
-          {/* Undo / Redo */}
-          <View style={styles.editActions}>
-            <TouchableOpacity
-              testID="undo-button"
-              style={styles.editButton}
-              onPress={onUndo}
-              accessibilityRole="button"
-              accessibilityLabel="Undo"
-            >
-              <Text style={styles.editIcon}>↶</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              testID="redo-button"
-              style={[styles.editButton, { backgroundColor: localColors.redoBg }]}
-              onPress={onRedo}
-              accessibilityRole="button"
-              accessibilityLabel="Redo"
-            >
-              <Text style={styles.editIcon}>↷</Text>
-            </TouchableOpacity>
+      {/* ------------------------------------------------------------------ */}
+      {/* Scrollable content                                                   */}
+      {/* ------------------------------------------------------------------ */}
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Mood strip */}
+        <View
+          testID="mood-strip"
+          style={[styles.moodStrip, { backgroundColor: `${palette.midnight[800]}CC` }]}
+          accessibilityRole="radiogroup"
+          accessibilityLabel="Current mood"
+        >
+          <BracketLabel variant="muted" style={styles.moodStripLabel}>
+            How are you right now?
+          </BracketLabel>
+          <View style={styles.moodRow}>
+            {MOOD_LEVELS.map((level) => {
+              const isSelected = moodLevel === level;
+              return (
+                <TouchableOpacity
+                  key={level}
+                  testID={`mood-level-${level}`}
+                  onPress={() => handleMoodPress(level)}
+                  accessibilityRole="radio"
+                  accessibilityLabel={`Mood level ${level}`}
+                  accessibilityState={{ selected: isSelected }}
+                  style={[
+                    styles.moodButton,
+                    isSelected && styles.moodButtonSelected,
+                    isSelected && { borderColor: palette.aurora[300] },
+                  ]}
+                >
+                  <MoodFace level={level} size={44} selected={isSelected} interactive />
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
 
-        {/* Stress Level */}
-        <Text style={styles.fieldLabel}>Stress Level</Text>
-        <View style={styles.sliderContainer}>
-          <View style={styles.sliderTrack}>
-            <View
-              style={[
-                styles.sliderFill,
-                { width: `${((stressLevel - 1) / 4) * 100}%` },
-              ]}
+        {/* Date + weather row */}
+        <BracketLabel variant="muted" style={styles.dateLabel}>
+          {dateWeatherLabel}
+        </BracketLabel>
+
+        {/* Title input */}
+        <TextInput
+          testID="title-input"
+          value={title}
+          onChangeText={onTitleChange}
+          placeholder="Title"
+          placeholderTextColor={palette.warm[500]}
+          style={[styles.titleInput, { color: palette.warm[50] }]}
+          accessibilityLabel="Entry title"
+          accessibilityRole="text"
+          returnKeyType="next"
+          blurOnSubmit={false}
+        />
+
+        {/* Divider */}
+        <AuroraHairline style={styles.hairline} />
+
+        {/* Suggestion card */}
+        {suggestion != null ? (
+          <View style={styles.suggestionCard}>
+            <SuggestionCard
+              testID="suggestion-card"
+              iconName="lightbulb"
+              iconHue="peach"
+              title={suggestion.title}
+              body={suggestion.body}
+              variant="peach-border"
+              onDismiss={onSuggestionDismiss}
             />
           </View>
-          <View style={styles.scaleLabels}>
-            <Text style={styles.scaleLabel}>1</Text>
-            <Text style={styles.scaleLabel}>3</Text>
-            <Text style={styles.scaleLabel}>5</Text>
-          </View>
-        </View>
+        ) : null}
 
-        {/* Select Your Emotion */}
-        <Text style={styles.fieldLabel}>Select Your Emotion</Text>
-        <View style={styles.emotionRow}>
-          {emotions.map((emotion) => (
-            <TouchableOpacity
-              key={emotion.id}
-              testID={`emotion-${emotion.id}`}
-              style={[
-                styles.emotionCircle,
-                emotion.selected && styles.emotionSelected,
-              ]}
-              onPress={() => onEmotionSelect?.(emotion.id)}
-              accessibilityRole="button"
-              accessibilityLabel={`Select ${emotion.id} emotion`}
-            >
-              <Text style={styles.emotionEmoji}>{emotion.emoji}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        {/* Body input */}
+        <TextInput
+          testID="body-input"
+          value={body}
+          onChangeText={onBodyChange}
+          placeholder="What's on your mind?"
+          placeholderTextColor={palette.warm[500]}
+          multiline
+          textAlignVertical="top"
+          style={[styles.bodyInput, { color: palette.warm[100] }]}
+          accessibilityLabel="Journal entry body"
+          accessibilityRole="text"
+        />
 
-        {/* Select Stressor */}
-        <Text style={styles.fieldLabel}>Select Stressor</Text>
-        <View style={styles.stressorRow}>
-          {stressors.map((stressor) => (
-            <TouchableOpacity
-              key={stressor.id}
-              testID={`stressor-${stressor.id}`}
-              style={[
-                styles.stressorChip,
-                stressor.selected && styles.stressorChipSelected,
-              ]}
-              onPress={() => onStressorSelect?.(stressor.id)}
-              accessibilityRole="button"
-              accessibilityLabel={`Select ${stressor.label} stressor`}
-            >
-              <Text
-                style={[
-                  styles.stressorText,
-                  stressor.selected && styles.stressorTextSelected,
-                ]}
-              >
-                {stressor.label}
-              </Text>
-              <View
-                style={[
-                  styles.radioOuter,
-                  stressor.selected && styles.radioOuterSelected,
-                ]}
-              >
-                {stressor.selected && <View style={styles.radioInner} />}
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        {/* Create Journal Button */}
-        <TouchableOpacity
-          testID="create-journal-button"
-          style={styles.ctaButton}
-          onPress={onCreate}
-          accessibilityRole="button"
-          accessibilityLabel="Create journal"
+        {/* Hashtag chips */}
+        <ScrollView
+          testID="hashtag-scroll"
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.hashtagRow}
+          accessibilityLabel="Entry tags"
         >
-          <Text style={styles.ctaText}>Create Journal  +</Text>
-        </TouchableOpacity>
+          {hashtagOptions.map((tag) => (
+            <HashtagChip
+              key={tag}
+              testID={`hashtag-chip-${tag}`}
+              label={tag}
+              selected={hashtags.includes(tag)}
+              onPress={() => handleHashtagPress(tag)}
+            />
+          ))}
+        </ScrollView>
+
+        {/* Bottom padding so content clears the sticky toolbar */}
+        <View style={styles.scrollBottomPad} />
       </ScrollView>
 
-      {/* Crisis Modal */}
-      <CrisisModal
-        visible={showCrisisModal}
-        onDismiss={() => setShowCrisisModal(false)}
-        triggerSource="journal"
-        requireAcknowledge={true}
-      />
+      {/* ------------------------------------------------------------------ */}
+      {/* Sticky bottom toolbar                                                */}
+      {/* ------------------------------------------------------------------ */}
+      <View
+        testID="toolbar"
+        style={[
+          styles.toolbar,
+          {
+            backgroundColor: `${palette.midnight[900]}F5`,
+            borderTopColor: palette.midnight[700],
+          },
+        ]}
+        accessibilityRole="none"
+        accessibilityLabel="Formatting toolbar"
+      >
+        <TouchableOpacity
+          testID="toolbar-bold"
+          onPress={onBoldPress}
+          disabled={!onBoldPress}
+          accessibilityRole="button"
+          accessibilityLabel="Bold"
+          style={styles.toolbarButton}
+        >
+          <AppIcon name="bold" size={18} color={palette.warm[400]} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          testID="toolbar-italic"
+          onPress={onItalicPress}
+          disabled={!onItalicPress}
+          accessibilityRole="button"
+          accessibilityLabel="Italic"
+          style={styles.toolbarButton}
+        >
+          <AppIcon name="italic" size={18} color={palette.warm[400]} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          testID="toolbar-list"
+          onPress={onListPress}
+          disabled={!onListPress}
+          accessibilityRole="button"
+          accessibilityLabel="List"
+          style={styles.toolbarButton}
+        >
+          <AppIcon name="list" size={18} color={palette.warm[400]} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          testID="toolbar-image"
+          onPress={onImagePress}
+          disabled={!onImagePress}
+          accessibilityRole="button"
+          accessibilityLabel="Insert image"
+          style={styles.toolbarButton}
+        >
+          <AppIcon name="image" size={18} color={palette.warm[400]} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          testID="toolbar-mic"
+          onPress={onMicPress}
+          disabled={!onMicPress}
+          accessibilityRole="button"
+          accessibilityLabel="Voice to text"
+          style={styles.toolbarButton}
+        >
+          <AppIcon name="mic" size={18} color={palette.warm[400]} />
+        </TouchableOpacity>
+
+        <View style={styles.toolbarSpacer} />
+
+        <Text
+          testID="word-count"
+          accessibilityLiveRegion="polite"
+          style={[styles.wordCount, { color: palette.warm[500] }]}
+        >
+          {`${wordCount} word${wordCount === 1 ? "" : "s"}`}
+        </Text>
+      </View>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* FAB save button                                                      */}
+      {/* ------------------------------------------------------------------ */}
+      <TouchableOpacity
+        testID="save-button"
+        onPress={onSave}
+        accessibilityRole="button"
+        accessibilityLabel="Save journal entry"
+        style={[
+          styles.fab,
+          {
+            backgroundColor: palette.peach[300],
+            shadowColor: palette.midnight[950],
+            shadowOpacity: reducedMotion ? 0 : 0.3,
+          },
+        ]}
+      >
+        <AppIcon
+          name="check"
+          size={24}
+          color={palette.midnight[950]}
+          accessibilityLabel="Save"
+        />
+      </TouchableOpacity>
     </ScreenContainer>
   );
 }
 
+// ---------------------------------------------------------------------------
+// Styles — properties alphabetically sorted
+// ---------------------------------------------------------------------------
+
 const styles = StyleSheet.create({
-  backButton: {
-    alignItems: "center",
-    borderColor: localColors.backBtnBorder,
-    borderRadius: 22,
-    borderWidth: 1,
-    height: 44,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    width: 44,
+  bodyInput: {
+    flex: 1,
+    fontFamily: "Inter_400Regular",
+    fontSize: 15,
+    lineHeight: 24,
+    minHeight: 200,
+    paddingBottom: 16,
+    paddingTop: 8,
   },
-  backIcon: { color: localColors.white, fontSize: 22 },
   container: {
-    backgroundColor: localColors.screenBg,
     flex: 1,
-    paddingHorizontal: 24,
   },
-  crisisAlertBanner: {
-    backgroundColor: themeColors.crisis.background,
-    borderColor: themeColors.crisis.border,
-    borderRadius: 12,
-    borderWidth: 1,
-    marginTop: 16,
-    padding: 16,
-  },
-  crisisAlertButton: {
-    alignItems: "center",
-    backgroundColor: palette.red[500],
-    borderRadius: 8,
-    justifyContent: "center",
+  dateLabel: {
+    marginBottom: 16,
     marginTop: 12,
-    minHeight: 44,
-    paddingVertical: 10,
+    textAlign: "center",
   },
-  crisisAlertButtonText: {
-    color: palette.white,
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  crisisAlertContent: {
+  fab: {
     alignItems: "center",
-    flexDirection: "row",
-  },
-  crisisAlertDescription: {
-    color: palette.red[300],
-    fontSize: 13,
-    lineHeight: 18,
-    marginTop: 2,
-  },
-  crisisAlertIcon: {
-    fontSize: 24,
-    marginRight: 12,
-  },
-  crisisAlertText: {
-    flex: 1,
-  },
-  crisisAlertTitle: {
-    color: palette.red[300],
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  ctaButton: {
-    alignItems: "center",
-    backgroundColor: localColors.ctaBg,
-    borderRadius: 16,
-    marginBottom: 40,
-    marginTop: 24,
-    minHeight: 44,
-    paddingVertical: 16,
-  },
-  ctaText: { color: localColors.white, fontSize: 16, fontWeight: "700" },
-  editActions: { flexDirection: "row", gap: 12, marginTop: 12 },
-  editButton: {
-    alignItems: "center",
-    backgroundColor: localColors.undoBg,
-    borderRadius: 20,
-    height: 40,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    width: 40,
-  },
-  editIcon: { color: localColors.white, fontSize: 18 },
-  emotionCircle: {
-    alignItems: "center",
-    borderColor: "transparent",
     borderRadius: 28,
-    borderWidth: 2,
+    bottom: 80,
+    elevation: 6,
     height: 56,
     justifyContent: "center",
+    position: "absolute",
+    right: 24,
+    shadowOffset: { height: 3, width: 0 },
+    shadowRadius: 6,
     width: 56,
   },
-  emotionEmoji: { fontSize: 28 },
-  emotionRow: {
-    flexDirection: "row",
-    gap: 8,
-    marginTop: 8,
-  },
-  emotionSelected: { borderColor: localColors.emotionSelectedBorder },
-  entryBox: {
-    backgroundColor: localColors.cardBg,
-    borderColor: localColors.cardBorder,
-    borderRadius: 12,
-    borderWidth: 1,
-    marginTop: 8,
-    padding: 16,
-  },
-  entryContent: {
-    color: localColors.white,
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  fieldLabel: {
-    color: localColors.subtitle,
-    fontSize: 13,
-    fontWeight: "500",
-    marginTop: 20,
-  },
-  radioInner: {
-    backgroundColor: localColors.white,
-    borderRadius: 4,
-    height: 8,
-    width: 8,
-  },
-  radioOuter: {
-    alignItems: "center",
-    borderColor: localColors.stressorBorder,
-    borderRadius: 10,
-    borderWidth: 2,
-    height: 20,
-    justifyContent: "center",
-    marginLeft: 8,
-    width: 20,
-  },
-  radioOuterSelected: { borderColor: localColors.white },
-  scaleLabel: { color: localColors.subtitle, fontSize: 12 },
-  scaleLabels: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  hairline: {
+    marginBottom: 16,
     marginTop: 4,
   },
-  screenTitle: {
-    color: localColors.white,
-    fontSize: 26,
-    fontWeight: "700",
-    marginTop: 20,
-  },
-  sliderContainer: { marginTop: 12 },
-  sliderFill: {
-    backgroundColor: localColors.sliderFill,
-    borderRadius: 3,
-    height: 6,
-    left: 0,
-    position: "absolute",
-    top: 0,
-  },
-  sliderTrack: {
-    backgroundColor: localColors.sliderTrack,
-    borderRadius: 3,
-    height: 6,
-    position: "relative",
-  },
-  stressorChip: {
-    alignItems: "center",
-    borderColor: localColors.stressorBorder,
-    borderRadius: 20,
-    borderWidth: 1,
+  hashtagRow: {
+    columnGap: 8,
     flexDirection: "row",
-    marginRight: 8,
-    minHeight: 44,
-    paddingHorizontal: 14,
+    paddingHorizontal: 0,
     paddingVertical: 8,
   },
-  stressorChipSelected: {
-    backgroundColor: localColors.stressorSelectedBg,
-    borderColor: localColors.stressorSelectedBg,
-  },
-  stressorRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 8,
-  },
-  stressorText: { color: localColors.subtitle, fontSize: 14 },
-  stressorTextSelected: { color: localColors.white, fontWeight: "600" },
-  tab: {
+  header: {
     alignItems: "center",
-    backgroundColor: localColors.tabInactiveBg,
-    borderRadius: 20,
-    flex: 1,
-    paddingVertical: 10,
-  },
-  tabActive: { backgroundColor: localColors.tabActiveBg },
-  tabSelector: {
-    backgroundColor: localColors.cardBg,
-    borderRadius: 24,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     flexDirection: "row",
-    marginTop: 16,
-    padding: 4,
-  },
-  tabText: { color: localColors.tabInactiveText, fontSize: 14, fontWeight: "600" },
-  tabTextActive: { color: localColors.tabActiveText },
-  titleIcon: { fontSize: 18, marginRight: 8 },
-  titleInput: {
-    alignItems: "center",
-    backgroundColor: localColors.cardBg,
-    borderColor: localColors.cardBorder,
-    borderRadius: 12,
-    borderWidth: 1,
-    flexDirection: "row",
-    marginTop: 8,
-    minHeight: 44,
+    justifyContent: "space-between",
+    minHeight: 48,
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 8,
   },
-  titleValue: { color: localColors.white, flex: 1, fontSize: 16 },
+  headerSaveText: {
+    fontFamily: "Inter_500Medium",
+    fontSize: 14,
+  },
+  headerSideButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 44,
+    minWidth: 44,
+  },
+  moodButton: {
+    alignItems: "center",
+    borderColor: "transparent",
+    borderRadius: 26,
+    borderWidth: 2,
+    justifyContent: "center",
+    minHeight: 44,
+    minWidth: 44,
+    padding: 2,
+  },
+  moodButtonSelected: {
+    borderWidth: 2,
+  },
+  moodRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  moodStrip: {
+    borderRadius: 16,
+    marginBottom: 4,
+    padding: 12,
+  },
+  moodStripLabel: {
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  scroll: {
+    paddingBottom: 16,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+  },
+  scrollBottomPad: {
+    height: 100,
+  },
+  suggestionCard: {
+    marginBottom: 16,
+  },
+  titleInput: {
+    fontFamily: "Fraunces_500Medium",
+    fontSize: 24,
+    marginBottom: 8,
+    paddingVertical: 4,
+  },
+  toolbar: {
+    alignItems: "center",
+    borderTopWidth: StyleSheet.hairlineWidth,
+    bottom: 0,
+    flexDirection: "row",
+    left: 0,
+    minHeight: 52,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    position: "absolute",
+    right: 0,
+  },
+  toolbarButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 44,
+    minWidth: 44,
+  },
+  toolbarSpacer: {
+    flex: 1,
+  },
+  wordCount: {
+    fontFamily: "FiraCode_400Regular",
+    fontSize: 10,
+    paddingRight: 4,
+  },
 });
 
 export default TextJournalComposerScreen;

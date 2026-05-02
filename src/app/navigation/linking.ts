@@ -42,9 +42,14 @@ export const linking: LinkingOptions<RootStackParamList> = {
         screens: {
           ProfileDetails: "profile",
           ProfileEmergencyContact: "emergency-contact",
-          ProfileBiometricSetup: "biometric",
           AssessmentIntro: "assessment",
+          AssessmentQuestion: "assessment/q/:currentStep",
           AssessmentResults: "assessment/results",
+          GoalsPicker: "goals",
+          ThemePicker: "theme",
+          NotificationPrimer: "notifications",
+          ProfileBiometricSetup: "biometric",
+          OnboardingCarousel: "tour",
         },
       },
 
@@ -64,7 +69,7 @@ export const linking: LinkingOptions<RootStackParamList> = {
               MoodDashboard: "",
               MoodSelector: "log",
               MoodCalendar: "calendar",
-              MoodAnalytics: "analytics",
+              MoodInsights: "insights",
             },
           },
 
@@ -73,6 +78,9 @@ export const linking: LinkingOptions<RootStackParamList> = {
             screens: {
               ChatsList: "",
               ActiveChat: ":conversationId",
+              VoiceSession: "voice",
+              SessionSummary: "summary",
+              CbtThoughtRecord: "cbt",
             },
           },
 
@@ -95,6 +103,50 @@ export const linking: LinkingOptions<RootStackParamList> = {
               ProfileNotificationSettings: "notifications",
             },
           },
+        },
+      },
+
+      SleepModal: {
+        path: "sleep",
+        screens: {
+          SleepDashboard: "",
+          SleepInsights: "insights",
+        },
+      },
+
+      NotificationsModal: {
+        path: "notifications",
+        screens: {
+          NotificationsInbox: "",
+          NotificationSettings: "settings",
+          NotificationDetail: ":notificationId",
+        },
+      },
+
+      MindfulModal: {
+        path: "mindful",
+        screens: {
+          MindfulnessLibrary: "",
+          MindfulPlayer: "play/:sessionId",
+          BreathingExerciseActive: "breathing",
+          SessionComplete: "complete",
+          Soundscapes: "soundscapes",
+        },
+      },
+
+      SearchModal: {
+        path: "search",
+        screens: {
+          SearchResults: ":query",
+        },
+      },
+
+      CrisisModal: {
+        path: "crisis",
+        screens: {
+          CrisisSupport: "",
+          CrisisSupportAlert: "alert",
+          EmergencyContact: "contact",
         },
       },
     },
@@ -126,9 +178,14 @@ const screenPaths: Record<string, string> = {
   // Onboarding screens
   ProfileDetails: "onboarding/profile",
   ProfileEmergencyContact: "onboarding/emergency-contact",
-  ProfileBiometricSetup: "onboarding/biometric",
   AssessmentIntro: "onboarding/assessment",
+  AssessmentQuestion: "onboarding/assessment/q/:currentStep",
   AssessmentResults: "onboarding/assessment/results",
+  GoalsPicker: "onboarding/goals",
+  ThemePicker: "onboarding/theme",
+  NotificationPrimer: "onboarding/notifications",
+  ProfileBiometricSetup: "onboarding/biometric",
+  OnboardingCarousel: "onboarding/tour",
 
   // Dashboard
   HomeDashboard: "home",
@@ -137,7 +194,7 @@ const screenPaths: Record<string, string> = {
   MoodDashboard: "mood",
   MoodSelector: "mood/log",
   MoodCalendar: "mood/calendar",
-  MoodAnalytics: "mood/analytics",
+  MoodInsights: "mood/insights",
 
   // Chat
   ChatsList: "chat",

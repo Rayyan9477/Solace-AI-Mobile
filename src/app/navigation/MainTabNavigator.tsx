@@ -12,8 +12,7 @@
  * - Profile (Settings)
  */
 
-import React, { Suspense } from "react";
-import { View, ActivityIndicator, StyleSheet } from "react-native";
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -21,28 +20,11 @@ import Icon from "react-native-vector-icons/Ionicons";
 import type { MainTabParamList } from "../../shared/types/navigation";
 import { colors, palette } from "../../shared/theme";
 
-// Lazy Load Stack Navigators for Performance
-const DashboardStack = React.lazy(() =>
-  import("./stacks/DashboardStack").then((module) => ({
-    default: module.DashboardStack,
-  })),
-);
-const MoodStack = React.lazy(() =>
-  import("./stacks/MoodStack").then((module) => ({ default: module.MoodStack })),
-);
-const ChatStack = React.lazy(() =>
-  import("./stacks/ChatStack").then((module) => ({ default: module.ChatStack })),
-);
-const JournalStack = React.lazy(() =>
-  import("./stacks/JournalStack").then((module) => ({
-    default: module.JournalStack,
-  })),
-);
-const ProfileStack = React.lazy(() =>
-  import("./stacks/ProfileStack").then((module) => ({
-    default: module.ProfileStack,
-  })),
-);
+import { DashboardStack } from "./stacks/DashboardStack";
+import { MoodStack } from "./stacks/MoodStack";
+import { ChatStack } from "./stacks/ChatStack";
+import { JournalStack } from "./stacks/JournalStack";
+import { ProfileStack } from "./stacks/ProfileStack";
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
@@ -62,7 +44,7 @@ const FULLSCREEN_ROUTES = new Set([
   // Mood stack
   "MoodSelector",
   "MoodCalendar",
-  "MoodAnalytics",
+  "MoodInsights",
 ]);
 
 /**
@@ -77,48 +59,15 @@ function getTabBarVisibility(route: Parameters<typeof getFocusedRouteNameFromRou
   return undefined;
 }
 
-/**
- * Loading Fallback Component
- * @description Displays while lazy-loaded stacks are loading
- */
-function StackLoadingFallback(): React.ReactElement {
-  return (
-    <View style={styles.loadingContainer}>
-      <ActivityIndicator size="large" color={palette.aurora[300]} />
-    </View>
-  );
-}
-
-// Stable tab wrapper components (outside MainTabNavigator to avoid re-mounting)
-const DashboardTab = () => (
-  <Suspense fallback={<StackLoadingFallback />}>
-    <DashboardStack />
-  </Suspense>
-);
-
-const MoodTab = () => (
-  <Suspense fallback={<StackLoadingFallback />}>
-    <MoodStack />
-  </Suspense>
-);
-
-const ChatTab = () => (
-  <Suspense fallback={<StackLoadingFallback />}>
-    <ChatStack />
-  </Suspense>
-);
-
-const JournalTab = () => (
-  <Suspense fallback={<StackLoadingFallback />}>
-    <JournalStack />
-  </Suspense>
-);
-
-const ProfileTab = () => (
-  <Suspense fallback={<StackLoadingFallback />}>
-    <ProfileStack />
-  </Suspense>
-);
+// Direct stack imports — switched from React.lazy in S8 verification because
+// Metro web bundler emitted lazy chunks that weren't reachable on direct deep-
+// links. Native iOS/Android keeps performance: stacks code-split at the
+// bundle level via Hermes proguard rather than React.lazy.
+const DashboardTab = (): React.ReactElement => <DashboardStack />;
+const MoodTab = (): React.ReactElement => <MoodStack />;
+const ChatTab = (): React.ReactElement => <ChatStack />;
+const JournalTab = (): React.ReactElement => <JournalStack />;
+const ProfileTab = (): React.ReactElement => <ProfileStack />;
 
 /**
  * MainTabNavigator Component
@@ -257,12 +206,3 @@ export function MainTabNavigator(): React.ReactElement {
     </Tab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.background.primary,
-  },
-});

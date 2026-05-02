@@ -12,6 +12,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { AuthScreenProps, AuthStackParamList } from "../../shared/types/navigation";
 import { colors } from "../../shared/theme";
+import { useAuth } from "../AuthContext";
 
 import { SplashScreen } from "../../features/auth/screens/SplashScreen";
 import { LoadingProgressScreen } from "../../features/auth/screens/LoadingProgressScreen";
@@ -79,6 +80,24 @@ function ForgotPasswordRoute({
   );
 }
 
+function SignInRoute({
+  navigation,
+}: AuthScreenProps<"SignIn">): React.ReactElement {
+  const { signIn } = useAuth();
+  return (
+    <SignInScreen
+      onBack={() => navigation.goBack()}
+      onSignIn={() => {
+        // Sprint 10 wires real Supabase magic-link auth.
+        // For S7, we mock the sign-in by flipping the auth state.
+        signIn();
+      }}
+      onForgotPassword={() => navigation.navigate("ForgotPassword")}
+      onSignUp={() => navigation.navigate("ForgotPassword")}
+    />
+  );
+}
+
 /**
  * AuthStack Navigator Component
  */
@@ -117,7 +136,7 @@ export function AuthStack(): React.ReactElement {
       />
       <Stack.Screen
         name="SignIn"
-        component={SignInScreen}
+        component={SignInRoute}
         options={{ animation: "slide_from_bottom" }}
       />
       <Stack.Screen
