@@ -1,130 +1,183 @@
 /**
- * NotFound404Screen Tests
- * @description Tests for 404 not found error screen
- * @task Task 3.18.1: NotFound404 Screen (Screen 154)
+ * NotFound404Screen Tests — prototype v4.2 #42 reskin (Sprint 9 Batch B).
  */
+
+jest.mock("expo-linear-gradient", () => {
+  const { View } = require("react-native");
+  return { LinearGradient: View };
+});
 
 import { render, fireEvent } from "@testing-library/react-native";
 import React from "react";
 
 import { NotFound404Screen } from "./NotFound404Screen";
 
+const mockUseReducedMotion = jest.fn(() => false);
+jest.mock("@/shared/hooks/useReducedMotion", () => ({
+  useReducedMotion: () => mockUseReducedMotion(),
+}));
+
 const defaultProps = {
   onBack: jest.fn(),
-  onGoHome: jest.fn(),
+  onBackHome: jest.fn(),
 };
 
 function renderScreen(overrides = {}) {
   return render(<NotFound404Screen {...defaultProps} {...overrides} />);
 }
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockUseReducedMotion.mockReturnValue(false);
+});
 
 describe("NotFound404Screen", () => {
-  // ── Rendering ──────────────────────────────────────────
+  // 1
+  it("renders + matches snapshot", () => {
+    expect(renderScreen().toJSON()).toMatchSnapshot();
+  });
+
+  // 2
   it("renders the screen container", () => {
     const { getByTestId } = renderScreen();
     expect(getByTestId("not-found-404-screen")).toBeTruthy();
   });
 
+  // 3
   it("renders the back button", () => {
     const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button")).toBeTruthy();
+    expect(getByTestId("not-found-back-button")).toBeTruthy();
   });
 
-  it("renders the lost illustration", () => {
+  // 4
+  it("renders ghost '404' wordmark", () => {
     const { getByTestId } = renderScreen();
-    expect(getByTestId("lost-illustration")).toBeTruthy();
+    const ghost = getByTestId("not-found-ghost-404", {
+      includeHiddenElements: true,
+    });
+    expect(ghost).toBeTruthy();
+    expect(ghost.props.children).toBe("404");
   });
 
-  it("renders 'Not Found' title", () => {
+  // 5
+  it("renders aurora 'This page doesn't exist' bracket", () => {
     const { getByText } = renderScreen();
-    expect(getByText("Not Found")).toBeTruthy();
+    expect(getByText(/THIS PAGE DOESN'T EXIST/i)).toBeTruthy();
   });
 
-  it("renders the error subtitle", () => {
+  // 6
+  it("renders editorial 'Let's get you / back to calm.' headline", () => {
     const { getByText } = renderScreen();
-    expect(getByText(/can't find this page/)).toBeTruthy();
+    expect(getByText(/Let's get you/)).toBeTruthy();
+    expect(getByText(/back to calm/)).toBeTruthy();
   });
 
-  it("renders the status badge with 404", () => {
+  // 7
+  it("renders supporting copy", () => {
     const { getByText } = renderScreen();
-    expect(getByText(/Status Code: 404/)).toBeTruthy();
+    expect(getByText(/has moved, or perhaps/)).toBeTruthy();
   });
 
-  it("renders 'Take Me Home' button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("go-home-button")).toBeTruthy();
+  // 8
+  it("renders Back home button", () => {
+    const { getByTestId, getByText } = renderScreen();
+    expect(getByTestId("not-found-home-button")).toBeTruthy();
+    expect(getByText("Back home")).toBeTruthy();
   });
 
-  it("renders 'Take Me Home' button text", () => {
-    const { getByText } = renderScreen();
-    expect(getByText(/Take Me Home/)).toBeTruthy();
-  });
-
-  // ── Callbacks ──────────────────────────────────────────
+  // 9
   it("calls onBack when back button is pressed", () => {
     const onBack = jest.fn();
     const { getByTestId } = renderScreen({ onBack });
-    fireEvent.press(getByTestId("back-button"));
+    fireEvent.press(getByTestId("not-found-back-button"));
     expect(onBack).toHaveBeenCalledTimes(1);
   });
 
-  it("calls onGoHome when home button is pressed", () => {
-    const onGoHome = jest.fn();
-    const { getByTestId } = renderScreen({ onGoHome });
-    fireEvent.press(getByTestId("go-home-button"));
-    expect(onGoHome).toHaveBeenCalledTimes(1);
+  // 10
+  it("calls onBackHome when Back home is pressed", () => {
+    const onBackHome = jest.fn();
+    const { getByTestId } = renderScreen({ onBackHome });
+    fireEvent.press(getByTestId("not-found-home-button"));
+    expect(onBackHome).toHaveBeenCalledTimes(1);
   });
 
-  // ── Accessibility ──────────────────────────────────────
-  it("back button has accessibilityLabel 'Go back'", () => {
+  // 11
+  it("back button has accessibilityRole=button + label='Go back'", () => {
     const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button").props.accessibilityLabel).toBe("Go back");
+    const btn = getByTestId("not-found-back-button");
+    expect(btn.props.accessibilityRole).toBe("button");
+    expect(btn.props.accessibilityLabel).toBe("Go back");
   });
 
+  // 12
   it("back button meets 44×44 minimum touch target", () => {
     const { getByTestId } = renderScreen();
-    const style = Object.assign(
+    const flat = Object.assign(
       {},
-      ...[].concat(getByTestId("back-button").props.style),
-    );
-    expect(style.minHeight).toBeGreaterThanOrEqual(44);
-    expect(style.minWidth).toBeGreaterThanOrEqual(44);
+      ...[]
+        .concat(getByTestId("not-found-back-button").props.style as never[])
+        .filter(Boolean),
+    ) as { width?: number; height?: number };
+    expect((flat.width ?? 0)).toBeGreaterThanOrEqual(44);
+    expect((flat.height ?? 0)).toBeGreaterThanOrEqual(44);
   });
 
-  it("home button meets 44px minimum touch height", () => {
+  // 13
+  it("home button meets ≥44pt minimum touch height", () => {
     const { getByTestId } = renderScreen();
-    const style = Object.assign(
+    const flat = Object.assign(
       {},
-      ...[].concat(getByTestId("go-home-button").props.style),
-    );
-    expect(style.minHeight).toBeGreaterThanOrEqual(44);
+      ...[]
+        .concat(getByTestId("not-found-home-button").props.style as never[])
+        .filter(Boolean),
+    ) as { minHeight?: number };
+    expect((flat.minHeight ?? 0)).toBeGreaterThanOrEqual(44);
   });
 
-  // ── Styling ────────────────────────────────────────────
-  it("applies dark background to the container", () => {
+  // 14
+  it("uses cosmic midnight-950 background, not legacy hex", () => {
     const { getByTestId } = renderScreen();
-    const style = Object.assign(
+    const flat = Object.assign(
       {},
-      ...[].concat(getByTestId("not-found-404-screen").props.style),
-    );
-    expect(style.backgroundColor).toBe("#1C1410");
+      ...[]
+        .concat(getByTestId("not-found-404-screen").props.style as never[])
+        .filter(Boolean),
+    ) as { backgroundColor?: string };
+    expect(flat.backgroundColor).toBe("#040818");
   });
 
-  // ── Branding ───────────────────────────────────────────
-  it("uses 'Solace' not 'Dr. F' in subtitle", () => {
-    const { getByText } = renderScreen();
-    expect(getByText(/Solace/)).toBeTruthy();
+  // 15
+  it("renders the BreathingOrb compass overlay", () => {
+    const { getByTestId } = renderScreen();
+    expect(
+      getByTestId("not-found-compass", { includeHiddenElements: true }),
+    ).toBeTruthy();
   });
 
-  it("does not contain 'Dr. F' branding", () => {
+  // 16
+  it("renders the ambient BreathingOrb", () => {
+    const { getByTestId } = renderScreen();
+    expect(
+      getByTestId("not-found-ambient-orb", { includeHiddenElements: true }),
+    ).toBeTruthy();
+  });
+
+  // 17
+  it("respects reduced motion (orbs still mount)", () => {
+    mockUseReducedMotion.mockReturnValue(true);
+    const { getByTestId } = renderScreen();
+    expect(
+      getByTestId("not-found-compass", { includeHiddenElements: true }),
+    ).toBeTruthy();
+    expect(
+      getByTestId("not-found-ambient-orb", { includeHiddenElements: true }),
+    ).toBeTruthy();
+  });
+
+  // 18
+  it("does not contain any 'Dr. F' or Freud branding", () => {
     const { queryByText } = renderScreen();
     expect(queryByText(/Dr\. F/)).toBeNull();
-  });
-
-  it("does not contain any Freud branding", () => {
-    const { queryByText } = renderScreen();
     expect(queryByText(/freud/i)).toBeNull();
   });
 });

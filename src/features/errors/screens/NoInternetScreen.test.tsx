@@ -1,8 +1,11 @@
 /**
- * NoInternetScreen Tests
- * @description Tests for no internet connectivity error screen
- * @task Task 3.18.2: NoInternet Screen (Screen 155)
+ * NoInternetScreen Tests — prototype v4.2 #41 reskin (Sprint 9 Batch B).
  */
+
+jest.mock("expo-linear-gradient", () => {
+  const { View } = require("react-native");
+  return { LinearGradient: View };
+});
 
 import { render, fireEvent } from "@testing-library/react-native";
 import React from "react";
@@ -10,9 +13,8 @@ import React from "react";
 import { NoInternetScreen } from "./NoInternetScreen";
 
 const defaultProps = {
-  onBack: jest.fn(),
-  onRefresh: jest.fn(),
-  onGoHome: jest.fn(),
+  onRetry: jest.fn(),
+  onContinueOffline: jest.fn(),
 };
 
 function renderScreen(overrides = {}) {
@@ -22,119 +24,143 @@ function renderScreen(overrides = {}) {
 beforeEach(() => jest.clearAllMocks());
 
 describe("NoInternetScreen", () => {
-  // ── Rendering ──────────────────────────────────────────
+  // 1
+  it("renders + matches snapshot", () => {
+    expect(renderScreen().toJSON()).toMatchSnapshot();
+  });
+
+  // 2
   it("renders the screen container", () => {
     const { getByTestId } = renderScreen();
     expect(getByTestId("no-internet-screen")).toBeTruthy();
   });
 
-  it("renders the back button", () => {
+  // 3
+  it("renders the [ CONNECTION ] header bracket", () => {
     const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button")).toBeTruthy();
+    expect(getByTestId("offline-header-bracket")).toBeTruthy();
   });
 
-  it("renders the offline illustration", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("offline-illustration")).toBeTruthy();
-  });
-
-  it("renders 'No Internet!' title", () => {
+  // 4
+  it("renders the [ NO CONNECTION ] bracket", () => {
     const { getByText } = renderScreen();
-    expect(getByText("No Internet!")).toBeTruthy();
+    expect(getByText(/^\[ NO CONNECTION \]/)).toBeTruthy();
   });
 
-  it("renders the connectivity message", () => {
+  // 5
+  it("renders the editorial 'You're offline.' headline", () => {
+    const { getByTestId } = renderScreen();
+    const headline = getByTestId("offline-headline");
+    expect(headline).toBeTruthy();
+  });
+
+  // 6
+  it("renders the supporting subtitle copy about local sync", () => {
     const { getByText } = renderScreen();
-    expect(getByText(/don't have active internet/)).toBeTruthy();
+    expect(getByText(/saved locally/)).toBeTruthy();
   });
 
-  it("renders the refresh button", () => {
+  // 7
+  it("renders the dashed wifi-off ring as decorative", () => {
     const { getByTestId } = renderScreen();
-    expect(getByTestId("refresh-button")).toBeTruthy();
+    const ring = getByTestId("offline-dashed-ring", {
+      includeHiddenElements: true,
+    });
+    expect(ring.props.accessibilityElementsHidden).toBe(true);
   });
 
-  it("renders refresh button text", () => {
+  // 8
+  it("renders the Try again button", () => {
+    const { getByTestId, getByText } = renderScreen();
+    expect(getByTestId("offline-retry-button")).toBeTruthy();
+    expect(getByText("Try again")).toBeTruthy();
+  });
+
+  // 9
+  it("renders the Continue offline link", () => {
+    const { getByTestId, getByText } = renderScreen();
+    expect(getByTestId("offline-continue-link")).toBeTruthy();
+    expect(getByText("Continue offline")).toBeTruthy();
+  });
+
+  // 10
+  it("calls onRetry when Try again pressed", () => {
+    const onRetry = jest.fn();
+    const { getByTestId } = renderScreen({ onRetry });
+    fireEvent.press(getByTestId("offline-retry-button"));
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
+
+  // 11
+  it("calls onContinueOffline when Continue offline pressed", () => {
+    const onContinueOffline = jest.fn();
+    const { getByTestId } = renderScreen({ onContinueOffline });
+    fireEvent.press(getByTestId("offline-continue-link"));
+    expect(onContinueOffline).toHaveBeenCalledTimes(1);
+  });
+
+  // 12
+  it("renders all three offline-available chips", () => {
+    const { getByTestId, getByText } = renderScreen();
+    expect(getByTestId("offline-chip-journal")).toBeTruthy();
+    expect(getByTestId("offline-chip-breathing")).toBeTruthy();
+    expect(getByTestId("offline-chip-sounds")).toBeTruthy();
+    expect(getByText("Journal")).toBeTruthy();
+    expect(getByText("Breathing")).toBeTruthy();
+    expect(getByText("Sounds")).toBeTruthy();
+  });
+
+  // 13
+  it("renders the Still available offline glass card header", () => {
     const { getByText } = renderScreen();
-    expect(getByText(/Refresh or Try Again/)).toBeTruthy();
+    expect(getByText(/STILL AVAILABLE OFFLINE/i)).toBeTruthy();
   });
 
-  it("renders the home button", () => {
+  // 14
+  it("retry button meets ≥44pt minimum touch height", () => {
     const { getByTestId } = renderScreen();
-    expect(getByTestId("go-home-button")).toBeTruthy();
-  });
-
-  it("renders home button text", () => {
-    const { getByText } = renderScreen();
-    expect(getByText(/Take Me Home/)).toBeTruthy();
-  });
-
-  // ── Callbacks ──────────────────────────────────────────
-  it("calls onBack when back button is pressed", () => {
-    const onBack = jest.fn();
-    const { getByTestId } = renderScreen({ onBack });
-    fireEvent.press(getByTestId("back-button"));
-    expect(onBack).toHaveBeenCalledTimes(1);
-  });
-
-  it("calls onRefresh when refresh button is pressed", () => {
-    const onRefresh = jest.fn();
-    const { getByTestId } = renderScreen({ onRefresh });
-    fireEvent.press(getByTestId("refresh-button"));
-    expect(onRefresh).toHaveBeenCalledTimes(1);
-  });
-
-  it("calls onGoHome when home button is pressed", () => {
-    const onGoHome = jest.fn();
-    const { getByTestId } = renderScreen({ onGoHome });
-    fireEvent.press(getByTestId("go-home-button"));
-    expect(onGoHome).toHaveBeenCalledTimes(1);
-  });
-
-  // ── Accessibility ──────────────────────────────────────
-  it("back button has accessibilityLabel 'Go back'", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button").props.accessibilityLabel).toBe("Go back");
-  });
-
-  it("back button meets 44×44 minimum touch target", () => {
-    const { getByTestId } = renderScreen();
-    const style = Object.assign(
+    const flat = Object.assign(
       {},
-      ...[].concat(getByTestId("back-button").props.style),
-    );
-    expect(style.minHeight).toBeGreaterThanOrEqual(44);
-    expect(style.minWidth).toBeGreaterThanOrEqual(44);
+      ...[]
+        .concat(getByTestId("offline-retry-button").props.style as never[])
+        .filter(Boolean),
+    ) as { minHeight?: number };
+    expect((flat.minHeight ?? 0)).toBeGreaterThanOrEqual(44);
   });
 
-  it("refresh button meets 44px minimum touch height", () => {
+  // 15
+  it("continue link meets ≥44pt minimum touch height", () => {
     const { getByTestId } = renderScreen();
-    const style = Object.assign(
+    const flat = Object.assign(
       {},
-      ...[].concat(getByTestId("refresh-button").props.style),
-    );
-    expect(style.minHeight).toBeGreaterThanOrEqual(44);
+      ...[]
+        .concat(getByTestId("offline-continue-link").props.style as never[])
+        .filter(Boolean),
+    ) as { minHeight?: number };
+    expect((flat.minHeight ?? 0)).toBeGreaterThanOrEqual(44);
   });
 
-  it("home button meets 44px minimum touch height", () => {
+  // 16
+  it("uses cosmic midnight-950 background, not legacy hex", () => {
     const { getByTestId } = renderScreen();
-    const style = Object.assign(
+    const flat = Object.assign(
       {},
-      ...[].concat(getByTestId("go-home-button").props.style),
-    );
-    expect(style.minHeight).toBeGreaterThanOrEqual(44);
+      ...[]
+        .concat(getByTestId("no-internet-screen").props.style as never[])
+        .filter(Boolean),
+    ) as { backgroundColor?: string };
+    expect(flat.backgroundColor).toBe("#040818");
   });
 
-  // ── Styling ────────────────────────────────────────────
-  it("applies dark background to the container", () => {
+  // 17
+  it("retry button has accessibilityRole=button + label", () => {
     const { getByTestId } = renderScreen();
-    const style = Object.assign(
-      {},
-      ...[].concat(getByTestId("no-internet-screen").props.style),
-    );
-    expect(style.backgroundColor).toBe("#1C1410");
+    const btn = getByTestId("offline-retry-button");
+    expect(btn.props.accessibilityRole).toBe("button");
+    expect(btn.props.accessibilityLabel).toBe("Try again");
   });
 
-  // ── Branding ───────────────────────────────────────────
+  // 18
   it("does not contain any Freud branding", () => {
     const { queryByText } = renderScreen();
     expect(queryByText(/freud/i)).toBeNull();

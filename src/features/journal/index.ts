@@ -8,5 +8,4 @@ export {
   JournalEntryEditorScreen,
   JournalEntryDetailScreen,
   TextJournalComposerScreen,
-  CrisisSupportAlertScreen,
 } from "./screens";

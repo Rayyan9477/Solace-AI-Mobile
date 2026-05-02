@@ -1490,7 +1490,7 @@ exports[`AssessmentResultsScreen (prototype v4.2) matches snapshot 1`] = `
                   ]
                 }
               >
-                ?
+                
               </Text>
             </View>
             <Text

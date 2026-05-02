@@ -20,16 +20,9 @@ const Stack = createNativeStackNavigator<SleepStackParamList>();
 function SleepDashboardRoute({ navigation }: any): React.ReactElement {
   return (
     <SleepDashboardScreen
-      sleepScore={72}
-      sleepQuality="Good"
-      remHours={1.5}
-      coreHours={5.5}
-      remProgress={0.6}
-      coreProgress={0.8}
       onBack={() => navigation.goBack()}
-      onSeeAll={() => navigation.navigate("SleepInsights")}
-      onAddSleep={() => {}}
-      onMetricPress={() => {}}
+      onLogSleep={() => {}}
+      onMore={() => navigation.navigate("SleepInsights")}
     />
   );
 }

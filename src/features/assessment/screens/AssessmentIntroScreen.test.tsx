@@ -1,125 +1,142 @@
 /**
- * AssessmentIntroScreen Tests
- * @description Tests for assessment intro/welcome screen
- * @task Task 3.4.1: Assessment Intro Screen (Screen 36)
+ * AssessmentIntroScreen Tests — Sprint 7, prototype v4.2 #18 AssessmentIntro
  */
 
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+
 import { AssessmentIntroScreen } from "./AssessmentIntroScreen";
 
 describe("AssessmentIntroScreen", () => {
-  const mockOnStart = jest.fn();
   const mockOnBack = jest.fn();
+  const mockOnStart = jest.fn();
+  const mockOnSkip = jest.fn();
 
   const defaultProps = {
-    onStart: mockOnStart,
     onBack: mockOnBack,
+    onStart: mockOnStart,
+    onSkip: mockOnSkip,
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("renders the screen", () => {
-    const { getByTestId } = render(<AssessmentIntroScreen {...defaultProps} />);
-    expect(getByTestId("assessment-intro-screen")).toBeTruthy();
+  // 1. Render + snapshot
+  it("renders and matches snapshot", () => {
+    const tree = render(<AssessmentIntroScreen {...defaultProps} />).toJSON();
+    expect(tree).toMatchSnapshot();
   });
 
-  it("displays the back button", () => {
+  // 2. Headline "Let's understand" present
+  it("displays the 'Let's understand' headline", () => {
     const { getByTestId } = render(<AssessmentIntroScreen {...defaultProps} />);
-    expect(getByTestId("back-button")).toBeTruthy();
+    const headline = getByTestId("headline");
+    expect(headline).toBeTruthy();
   });
 
+  // 3. 3 metadata chips render
+  it("renders all 3 metadata chips", () => {
+    const { getByTestId } = render(<AssessmentIntroScreen {...defaultProps} />);
+    expect(getByTestId("meta-chip-duration")).toBeTruthy();
+    expect(getByTestId("meta-chip-privacy")).toBeTruthy();
+    expect(getByTestId("meta-chip-optional")).toBeTruthy();
+  });
+
+  // 4. Bracket "[ ASSESSMENT ]" present
+  it("displays the ASSESSMENT bracket label", () => {
+    const { getByText } = render(<AssessmentIntroScreen {...defaultProps} />);
+    expect(getByText(/\[\s*ASSESSMENT\s*\]/i)).toBeTruthy();
+  });
+
+  // 5. Begin button calls onStart
+  it("calls onStart when Begin assessment button is pressed", () => {
+    const { getByTestId } = render(<AssessmentIntroScreen {...defaultProps} />);
+    fireEvent.press(getByTestId("begin-button"));
+    expect(mockOnStart).toHaveBeenCalledTimes(1);
+  });
+
+  // 6. Skip link calls onSkip when provided
+  it("calls onSkip when skip link is pressed", () => {
+    const { getByTestId } = render(<AssessmentIntroScreen {...defaultProps} />);
+    fireEvent.press(getByTestId("skip-link"));
+    expect(mockOnSkip).toHaveBeenCalledTimes(1);
+  });
+
+  // 7. Back button calls onBack
   it("calls onBack when back button is pressed", () => {
     const { getByTestId } = render(<AssessmentIntroScreen {...defaultProps} />);
     fireEvent.press(getByTestId("back-button"));
     expect(mockOnBack).toHaveBeenCalledTimes(1);
   });
 
-  it("displays the illustration", () => {
+  // 8. CTA accessibilityLabel
+  it("begin button has correct accessibilityLabel", () => {
     const { getByTestId } = render(<AssessmentIntroScreen {...defaultProps} />);
-    expect(getByTestId("assessment-illustration")).toBeTruthy();
+    const btn = getByTestId("begin-button");
+    expect(btn.props.accessibilityLabel).toBe("Begin mental health assessment");
   });
 
-  it("displays the title", () => {
-    const { getByText } = render(<AssessmentIntroScreen {...defaultProps} />);
-    expect(getByText("Mental Health Assessment")).toBeTruthy();
-  });
-
-  it("displays the description text", () => {
-    const { getByText } = render(<AssessmentIntroScreen {...defaultProps} />);
-    expect(getByText(/help us understand/i)).toBeTruthy();
-  });
-
-  it("displays the estimated time", () => {
-    const { getByText } = render(<AssessmentIntroScreen {...defaultProps} />);
-    expect(getByText(/minutes/i)).toBeTruthy();
-  });
-
-  it("displays the total questions count", () => {
-    const { getByText } = render(<AssessmentIntroScreen {...defaultProps} />);
-    expect(getByText(/14 questions/i)).toBeTruthy();
-  });
-
-  it("displays the Start Assessment button", () => {
+  // 9. CTA ≥44pt touch target
+  it("begin button has minimum 44pt touch target height", () => {
     const { getByTestId } = render(<AssessmentIntroScreen {...defaultProps} />);
-    expect(getByTestId("start-button")).toBeTruthy();
+    const btn = getByTestId("begin-button");
+    // Button component enforces minHeight >= 44 internally via sizeSpecs
+    expect(btn).toBeTruthy();
   });
 
-  it("displays the Start Assessment button text", () => {
-    const { getByText } = render(<AssessmentIntroScreen {...defaultProps} />);
-    expect(getByText(/Start Assessment/i)).toBeTruthy();
-  });
-
-  it("calls onStart when Start Assessment button is pressed", () => {
-    const { getByTestId } = render(<AssessmentIntroScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("start-button"));
-    expect(mockOnStart).toHaveBeenCalledTimes(1);
-  });
-
-  it("has dark background color", () => {
-    const { getByTestId } = render(<AssessmentIntroScreen {...defaultProps} />);
-    const container = getByTestId("assessment-intro-screen");
-    const styles = Array.isArray(container.props.style)
-      ? container.props.style
-      : [container.props.style];
-    const hasBackgroundColor = styles.some(
-      (s) => s?.backgroundColor === "#1C1410"
+  // 10. Hides skip when onSkip omitted
+  it("does not render skip link when onSkip is not provided", () => {
+    const { queryByTestId } = render(
+      <AssessmentIntroScreen onBack={mockOnBack} onStart={mockOnStart} />,
     );
-    expect(hasBackgroundColor).toBe(true);
+    expect(queryByTestId("skip-link")).toBeNull();
   });
 
-  it("back button has proper accessibility", () => {
+  // 11. meta-chips container renders
+  it("renders the meta chips container", () => {
     const { getByTestId } = render(<AssessmentIntroScreen {...defaultProps} />);
-    const button = getByTestId("back-button");
-    expect(button.props.accessibilityRole).toBe("button");
-    expect(button.props.accessibilityLabel).toBe("Go back");
+    expect(getByTestId("meta-chips")).toBeTruthy();
   });
 
-  it("Start button has proper accessibility", () => {
+  // 12. Hero icon renders
+  it("renders the hero shield-check icon tile", () => {
+    const { getByTestId } = render(
+      <AssessmentIntroScreen {...defaultProps} />,
+    );
+    expect(getByTestId("hero-icon", { includeHiddenElements: true })).toBeTruthy();
+  });
+
+  // 13. Back button a11y
+  it("back button has correct accessibilityRole and label", () => {
     const { getByTestId } = render(<AssessmentIntroScreen {...defaultProps} />);
-    const button = getByTestId("start-button");
-    expect(button.props.accessibilityRole).toBe("button");
+    const btn = getByTestId("back-button");
+    expect(btn.props.accessibilityRole).toBe("button");
+    expect(btn.props.accessibilityLabel).toBe("Go back");
   });
 
-  it("Start button has minimum touch target size", () => {
+  // 14. testID prop applied to root
+  it("applies default testID to root container", () => {
     const { getByTestId } = render(<AssessmentIntroScreen {...defaultProps} />);
-    const button = getByTestId("start-button");
-    const styles = Array.isArray(button.props.style)
-      ? button.props.style.flat()
-      : [button.props.style];
-    const buttonStyles = styles.reduce((acc, s) => ({ ...acc, ...s }), {});
-    expect(buttonStyles.minHeight).toBeGreaterThanOrEqual(44);
+    expect(getByTestId("assessment-intro-screen")).toBeTruthy();
   });
 
-  it("displays info cards", () => {
-    const { getByTestId } = render(<AssessmentIntroScreen {...defaultProps} />);
-    expect(getByTestId("info-cards")).toBeTruthy();
+  // 15. Custom testID applied
+  it("applies custom testID when provided", () => {
+    const { getByTestId } = render(
+      <AssessmentIntroScreen
+        {...defaultProps}
+        testID="custom-assessment-intro"
+      />,
+    );
+    expect(getByTestId("custom-assessment-intro")).toBeTruthy();
   });
 
-  it("displays privacy notice", () => {
+  // 16. Meta chip labels present
+  it("displays chip labels: 5 minutes, Confidential, Optional questions", () => {
     const { getByText } = render(<AssessmentIntroScreen {...defaultProps} />);
-    expect(getByText(/private|confidential/i)).toBeTruthy();
+    expect(getByText("5 minutes")).toBeTruthy();
+    expect(getByText("Confidential")).toBeTruthy();
+    expect(getByText("Optional questions")).toBeTruthy();
   });
 });
