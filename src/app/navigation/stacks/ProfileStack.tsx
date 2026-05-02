@@ -11,6 +11,7 @@
 
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { ProfileStackParamList } from "../../../shared/types/navigation";
 
 import { ProfileDashboardScreen } from "../../../features/profile/screens/ProfileDashboardScreen";
@@ -23,6 +24,26 @@ const DEFAULT_NOTIFICATION_TOGGLES = [
   { id: "daily-checkin", label: "Daily check-ins", enabled: true },
   { id: "session-reminders", label: "Session reminders", enabled: true },
 ];
+
+function ProfileDashboardRoute({
+  navigation,
+}: NativeStackScreenProps<
+  ProfileStackParamList,
+  "ProfileDashboard"
+>): React.ReactElement {
+  return (
+    <ProfileDashboardScreen
+      onChangePhoto={() => undefined}
+      onPersonalInfo={() => navigation.navigate("AccountSettings")}
+      onNotifications={() => navigation.navigate("ProfileNotificationSettings")}
+      onPrivacy={() => navigation.navigate("AccountSettings")}
+      onLanguage={() => navigation.navigate("AccountSettings")}
+      onHelp={() => undefined}
+      onFeedback={() => undefined}
+      onInvite={() => undefined}
+    />
+  );
+}
 
 function AccountSettingsRoute({ navigation }: any): React.ReactElement {
   return (
@@ -62,7 +83,7 @@ export function ProfileStack(): React.ReactElement {
         animation: "slide_from_right",
       }}
     >
-      <Stack.Screen name="ProfileDashboard" component={ProfileDashboardScreen} />
+      <Stack.Screen name="ProfileDashboard" component={ProfileDashboardRoute} />
       <Stack.Screen name="AccountSettings" component={AccountSettingsRoute} />
       <Stack.Screen
         name="ProfileNotificationSettings"

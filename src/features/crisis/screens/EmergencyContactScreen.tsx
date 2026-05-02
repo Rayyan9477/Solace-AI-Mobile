@@ -2,11 +2,12 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { palette } from "../../../shared/theme";
+import { ScreenContainer } from "../../../shared/components/atoms/layout";
 
-export function JournalInsightsScreen(): React.ReactElement {
+export function EmergencyContactScreen(): React.ReactElement {
   const navigation = useNavigation();
   return (
-    <View testID="journal-insights-screen" style={styles.container}>
+    <ScreenContainer testID="profile-emergency-contact-screen" style={styles.container}>
       <TouchableOpacity
         testID="back-button"
         style={styles.backButton}
@@ -16,9 +17,9 @@ export function JournalInsightsScreen(): React.ReactElement {
       >
         <Text style={styles.backIcon}>←</Text>
       </TouchableOpacity>
-      <Text style={styles.title}>Journal Insights</Text>
+      <Text style={styles.title}>Emergency Contact</Text>
       <Text style={styles.subtitle}>Coming Soon</Text>
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -36,13 +37,10 @@ const styles = StyleSheet.create({
   },
   backIcon: { color: palette.white, fontSize: 20 },
   container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
   },
   subtitle: { color: palette.gray[400], fontSize: 16, marginTop: 8 },
   title: { color: palette.white, fontSize: 24, fontWeight: "700", marginTop: 20 },
 });
 
-export default JournalInsightsScreen;
+export default EmergencyContactScreen;

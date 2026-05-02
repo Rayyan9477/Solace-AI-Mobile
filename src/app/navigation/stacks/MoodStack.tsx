@@ -4,7 +4,8 @@
  *
  * Sprint 4 (prototype v4.2): slimmed to four survivors —
  * MoodDashboard, MoodSelector (S6 reskin → DailyCheckIn), MoodCalendar,
- * MoodAnalytics. AISuggestions and MoodHistory were deleted.
+ * MoodInsights (S8 reskin — replaces MoodAnalytics). AISuggestions and
+ * MoodHistory were deleted.
  */
 
 import React from "react";
@@ -15,7 +16,7 @@ import { palette } from "../../../shared/theme";
 import { MoodDashboardScreen } from "../../../features/mood/screens/MoodDashboardScreen";
 import { MoodSelectorScreen } from "../../../features/mood/screens/MoodSelectorScreen";
 import { MoodCalendarScreen } from "../../../features/mood/screens/MoodCalendarScreen";
-import { MoodAnalyticsScreen } from "../../../features/mood/screens/MoodAnalyticsScreen";
+import { MoodInsightsScreen } from "../../../features/mood/screens/MoodInsightsScreen";
 
 const Stack = createNativeStackNavigator<MoodStackParamList>();
 
@@ -41,6 +42,28 @@ function MoodSelectorRoute({ navigation }: any): React.ReactElement {
   );
 }
 
+function MoodDashboardRoute({ navigation }: any): React.ReactElement {
+  return (
+    <MoodDashboardScreen
+      onCalendarPress={() => navigation.navigate("MoodCalendar")}
+      onLogMood={() => navigation.navigate("MoodSelector", {})}
+    />
+  );
+}
+
+function MoodCalendarRoute({ navigation }: any): React.ReactElement {
+  return (
+    <MoodCalendarScreen
+      onBack={() => navigation.goBack()}
+      onChangeView={() => navigation.navigate("MoodInsights")}
+    />
+  );
+}
+
+function MoodInsightsRoute({ navigation }: any): React.ReactElement {
+  return <MoodInsightsScreen onBack={() => navigation.goBack()} />;
+}
+
 export function MoodStack(): React.ReactElement {
   return (
     <Stack.Navigator
@@ -50,10 +73,10 @@ export function MoodStack(): React.ReactElement {
         animation: "slide_from_right",
       }}
     >
-      <Stack.Screen name="MoodDashboard" component={MoodDashboardScreen} />
+      <Stack.Screen name="MoodDashboard" component={MoodDashboardRoute} />
       <Stack.Screen name="MoodSelector" component={MoodSelectorRoute} />
-      <Stack.Screen name="MoodCalendar" component={MoodCalendarScreen} />
-      <Stack.Screen name="MoodAnalytics" component={MoodAnalyticsScreen} />
+      <Stack.Screen name="MoodCalendar" component={MoodCalendarRoute} />
+      <Stack.Screen name="MoodInsights" component={MoodInsightsRoute} />
     </Stack.Navigator>
   );
 }
