@@ -1235,7 +1235,94 @@ Wave 2 ran centrally (no subagent dispatch — too many cross-file constraints).
 
 ---
 
-### Sprint 10 — Persistence · _stub_
+### Sprint 10 — Persistence · 2026-05-01
+
+**Outcome:** ✅ Shipped the full SQLite + repository foundation as **sync-ready scaffolding** — SQLite singleton + migration runner + 6-table schema + 5 repositories + SyncQueue scaffolding + Supabase stub + RepositoryProvider, all wired into App.tsx without disturbing the 36 v4.2 screens. **tsc remained at 22**, 173/173 suites passing (3 332 tests, +181 new), 84/84 snapshots, zero hex literals, zero lint errors in any of the new modules.
+
+**Decision: ship scaffolding, defer real Supabase.** The user's "proceed without planning" plus the absence of EXPO_PUBLIC_SUPABASE_URL/ANON_KEY env vars made this the obvious cut: every interface/contract/table the future sync loop needs exists, but no live Supabase connection is opened. Sprint 11 swaps in the real `@supabase/supabase-js` once credentials land.
+
+**Deliverables**
+
+| Module | Files | LoC | tests |
+|---|---|---|---|
+| **SQLite layer** (`src/shared/data/`) | `db.ts`, `types.ts`, `ids.ts`, `serialize.ts`, `index.ts`, `migrations/001_init.ts`, `migrations/index.ts` | 135 / 198 / 41 / 64 / 53 / 96 / 38 | 13 + 9 + 4 + 16 = **42** |
+| **Repositories** (`src/shared/data/repositories/`) | MoodRepository · JournalRepository · SleepRepository · ChatRepository · SettingsRepository | 264 / 218 / 219 / 206 / 94 | 22 + 19 + 18 + 17 + 13 = **89** |
+| **Sync layer** (`src/shared/services/sync/`) | SyncQueue.ts · SyncTypes.ts · index.ts | 171 / 34 / 19 | **12** |
+| **Supabase stub** (`src/shared/services/supabase/`) | client.ts · auth.ts · index.ts | 136 / 81 / 21 | 11 + 10 = **21** |
+| **App wiring** (`src/app/providers/`) | RepositoryProvider.tsx | 211 | **17** |
+
+**Schema (6 domain tables + 1 sync queue)**
+
+```
+mood_entries     (id, level 1..5, note, influences[], created_at, sync_status, remote_id, updated_at)
+journal_entries  (id, title, body, mood_level, hashtags[], created_at, sync_status, remote_id, updated_at)
+sleep_entries    (id, bedtime, woke_up, quality 1..5, feelings[], date YYYY-MM-DD, sync_status, remote_id, updated_at)
+chat_conversations (id, title, mode 'general'|'cbt'|'mindfulness'|'sleep', last_message_at, sync_status, remote_id, updated_at)
+chat_messages    (id, conversation_id FK, role, content, created_at, sync_status, remote_id, updated_at)
+settings         (key, value, updated_at)            -- last-writer-wins, no sync columns by design
+sync_queue       (id, table, row_id, op, queued_at)  -- durable queue for the future Supabase loop
+```
+
+Every domain table carries `sync_status` (`'pending' | 'synced' | 'conflict'`), `remote_id` (Supabase row UUID — null until first sync), and `updated_at` (ms epoch Lamport-ish clock). Indexes on `created_at DESC`, `sync_status`, and a composite `chat_messages(conversation_id, created_at)` for the per-conversation timeline.
+
+**Aggregates**
+
+- **+13 new test suites** (160 → 173)
+- **+181 new tests** (3 151 → 3 332)
+- **0** new tsc errors (22 baseline preserved)
+- **0** lint errors in any new module
+- **0** hex literals in `src/shared/data` and `src/shared/services`
+- All 6 tables migrate cleanly on a fresh DB
+- All 5 repositories pass full CRUD test coverage (list, byId, create, update, delete) plus per-repo specialized methods (`getStreak`, `getCalendar`, `byDate`, `averageDurationMs`, `appendMessage`, `upsert`)
+- RepositoryProvider integrates with App.tsx without breaking existing app boot
+
+**Files changed outside `src/shared/data/`, `src/shared/services/`, `src/app/providers/`**
+
+- `App.tsx` — added `<RepositoryProvider>` wrapper between `<AuthProvider>` and `<ThemeProvider>`. Exact insertion order: `AuthProvider > RepositoryProvider > ThemeProvider`.
+- `jest.setup.js` — extended the existing `expo-sqlite` mock with a Map-backed in-memory implementation supporting CREATE TABLE / INSERT (with `?` placeholders + `ON CONFLICT … DO UPDATE`) / SELECT (with WHERE chains, LOWER/IFNULL, ORDER BY incl. COALESCE, LIMIT, COUNT(*)) / UPDATE / DELETE / `PRAGMA user_version`. This mock fidelity is what allowed repository tests to validate real SQL logic (streak computation, calendar averaging, per-conversation message threading) instead of just shape.
+
+**S9 carry-forwards from § Sprint 9 retro — status**
+
+- [ ] **L-5: Reskin 2 legacy preserved files** (`CrisisSupportAlertScreen`, `EmergencyContactScreen`) — **DEFERRED to S11.** S10 scope was strictly the persistence foundation; reskinning UI mid-data-layer-sprint would have blurred the diff. Captured in S11 carry-forward list below.
+- [ ] **Replace stack-adapter hardcoded fixtures with repo-sourced defaults** — **DEFERRED to S11.** The repos exist now; the actual screen/stack migration is the S11 sweep ("data path migration") and is best done holistically once Supabase auth lands.
+- [ ] **Playwright e2e smoke** — **DEFERRED to S11.**
+- [ ] **Crisis classifier integration tests** — **DEFERRED to S11.** Classifier exists (Sprint 2), CrisisModal stack exists (S9 Wave 2), but wiring the trigger from inside ActiveChat / TextJournalComposer is screen-level work that S11 owns alongside the screen→repo migration sweep.
+
+**What worked**
+
+- **Single-agent dispatch over pair-batching** for tightly-coupled foundation work. The repo/db/migration layer has heavy cross-file invariants (every repo imports from db.ts + types.ts + ids.ts + serialize.ts); parallel agents would have produced 5 inconsistent versions of the same SQL helper functions. One agent owning the whole foundation was the right call.
+- **Mock-fidelity-first testing strategy.** The brief explicitly called out the mock-fidelity decision as critical, and the agent extended `jest.setup.js` with a real-ish SQL parser. This pays back across the whole repo lifecycle — Sprint 11's screen migration will lean on these tests to verify each consumer's contract.
+- **Sync-ready columns on day 1** (`sync_status`/`remote_id`/`updated_at`). Adding them retroactively after S11's sync loop lands would have required a destructive migration. They're free to carry now and necessary later.
+- **Stub-with-real-interface pattern** for Supabase. The `SupabaseClientStub` and `SupabaseAuthApi` interfaces are exactly what the real `@supabase/supabase-js`-backed client will satisfy. S11 swaps the impl behind the same interface — zero callsite churn.
+
+**What surfaced — corrections for S11**
+
+- **L-6 (new):** `RepositoryProvider` flips `isReady` to `true` after `runMigrations()` resolves. Before that, the no-op fallback returns empty arrays / null. Consumers in S11 must handle the `isReady === false` boot window — most likely with a SkeletonShimmer placeholder. Document this in DESIGN.md before S11 dispatch.
+- **L-7 (new):** Settings table intentionally omits sync columns (last-writer-wins per key). This is a clinical bet: theme prefs and notification toggles are short, idempotent, and conflict-free. If S11 user-feedback shows otherwise (e.g. multi-device theme drift), reverse this decision and add the columns to a v3 migration.
+- **L-8 (new):** No screens were migrated to use repos in S10. Every consumer in `src/features/*/screens/` still uses in-memory mocks. This is a deliberate scope cut to keep S10 ≤500 LoC per file and ≤7 hours of subagent time. **S11 is the screen migration sweep** — recommend it as its own bounded sub-sprint, not a footnote inside the broader RC polish.
+
+**Plan-doc edits applied this retro**
+
+- § 12 (Quality gates): Sprint 10 actual end-state recorded (tsc=22 / 173 suites / 3 332 tests / 84 snapshots).
+- § 11 (Risk register): new lessons L-6, L-7, L-8 logged.
+- § 14 (Sprint lifecycle): "single-agent dispatch for tightly-coupled foundation work" added as the third dispatch pattern (alongside pair-batch for screens + central for nav).
+
+**Carry-forward improvements (binding for Sprint 11+)**
+
+- [ ] **S11 sub-sprint A — Screen → Repo migration:** sweep 36 v4.2 screens to source data from `useRepositories()` instead of in-memory mocks. Stack adapters use real lists. SkeletonShimmer fallback while `isReady === false`.
+- [ ] **S11 sub-sprint B — Real Supabase wire-up:** install `@supabase/supabase-js@^2`, swap stub auth client for the real one, update `AuthContext` to delegate, add `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` to `.env.example`, document local `supabase start` for dev.
+- [ ] **S11 sub-sprint C — Sync loop:** swap `SyncQueue.processQueue()` no-op for the real push/pull/conflict-resolve loop. NetInfo subscription wiring lives here.
+- [ ] **S11 cleanup — L-5 carry-forward:** reskin `CrisisSupportAlertScreen` + `EmergencyContactScreen` to cosmic palette, drop legacy `palette.brown`/`gray`/`white` aliases.
+- [ ] **S11 cleanup — Crisis classifier integration tests** (deferred from S9 8.4 exit gate).
+- [ ] **S11 cleanup — Playwright e2e smoke** walking auth → onboarding → home → all 5 tabs → modals (deferred from S6/S7/S9).
+
+**Open questions for user**
+- Sprint 10 ships clean. Diff now stacks **Sprints 4 + 5 + 6 + 7 + 8 (+ 2 S11 fixes) + 9 + 10**. The data-layer diff is more than 5 000 LoC of new files; it deserves its own commit. **Recommend committing in batches** for clean history (per-sprint or even per-feature inside S10). Want me to walk through commit batching?
+- Sprint 11 has 6 distinct sub-tracks (screen migration, Supabase wire-up, sync loop, classifier wiring, legacy reskin, Playwright). It is the largest remaining unit of work. **Recommend a planning conversation before execution** to align on Supabase provisioning timing (do we need credentials now or stay stubbed?) and which sub-tracks ship in S11 vs deferred to a v5.1 patch.
+
+---
+
+### Sprint 10 — Persistence · _shipped 2026-05-01_
 
 ---
 

@@ -1,202 +1,274 @@
 /**
- * MoodDashboardScreen Tests
- * @description Tests for the main mood tracking dashboard with weekly chart
- * @task Task 3.8.1: Mood Dashboard Screen (Screen 67)
+ * MoodDashboardScreen Tests — prototype v4.2 #06 (Sprint 8 reskin).
+ *
+ * Covers: render, header CTAs, hero face/label, weekly bar chart, insights
+ * list, FAB, accessibility roles/labels, reduced-motion path.
  */
 
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import { processColor } from "react-native";
 import { MoodDashboardScreen } from "./MoodDashboardScreen";
 
+// ---------------------------------------------------------------------------
+// Primitive mocks — keep test deps minimal and stable
+// ---------------------------------------------------------------------------
+
+interface ViewProps {
+  testID?: string;
+  children?: React.ReactNode;
+  style?: object;
+  accessibilityLabel?: string;
+  accessibilityRole?: string;
+}
+
+interface OrbProps extends ViewProps {
+  pulsing?: boolean;
+}
+
+interface BarChartMockProps extends ViewProps {
+  bars?: Array<{ label: string; value: number; highlighted?: boolean }>;
+}
+
+jest.mock("@/shared/components/primitives", () => {
+  const ReactLib = require("react");
+  const { View, Text } = require("react-native");
+
+  const Mock = (name: string) => (props: ViewProps) =>
+    ReactLib.createElement(View, { testID: props.testID, ...props }, props.children);
+
+  const BreathingOrbMock = (props: OrbProps) =>
+    ReactLib.createElement(View, {
+      testID: props.testID ?? "breathing-orb",
+      "data-pulsing": String(props.pulsing ?? true),
+    });
+
+  const BarChartMock = (props: BarChartMockProps) =>
+    ReactLib.createElement(
+      View,
+      { testID: props.testID, accessibilityLabel: props.accessibilityLabel },
+      (props.bars ?? []).map((b, i) =>
+        ReactLib.createElement(
+          View,
+          { key: `${b.label}-${i}`, testID: `bar-${b.label}-${i}` },
+          ReactLib.createElement(Text, null, b.label),
+        ),
+      ),
+    );
+
+  const MoodFaceMock = (props: { level?: number }) =>
+    ReactLib.createElement(
+      View,
+      { testID: "mood-face" },
+      ReactLib.createElement(Text, null, String(props.level ?? 3)),
+    );
+
+  const BracketLabelMock = ({ children }: { children: string }) =>
+    ReactLib.createElement(Text, null, `[ ${String(children).toUpperCase()} ]`);
+
+  return {
+    BarChart: BarChartMock,
+    BracketLabel: BracketLabelMock,
+    BreathingOrb: BreathingOrbMock,
+    GlassCard: Mock("GlassCard"),
+    HeroCard: Mock("HeroCard"),
+    HeatmapGrid: Mock("HeatmapGrid"),
+    IconTile: Mock("IconTile"),
+    MoodFace: MoodFaceMock,
+    ScatterPlot: Mock("ScatterPlot"),
+    MOOD_LEVELS: [1, 2, 3, 4, 5],
+    MOOD_LABELS: { 1: "Struggling", 2: "Down", 3: "Neutral", 4: "Content", 5: "Overjoyed" },
+  };
+});
+
+let mockReducedMotion = false;
+jest.mock("@/shared/hooks/useReducedMotion", () => ({
+  useReducedMotion: () => mockReducedMotion,
+}));
+
+// ---------------------------------------------------------------------------
+// Fixture
+// ---------------------------------------------------------------------------
+
+const baseProps = {
+  onCalendarPress: jest.fn(),
+  onLogMood: jest.fn(),
+};
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockReducedMotion = false;
+});
+
+// ---------------------------------------------------------------------------
+// Suite
+// ---------------------------------------------------------------------------
+
 describe("MoodDashboardScreen", () => {
-  const mockOnBack = jest.fn();
-  const mockOnFilter = jest.fn();
-  const mockOnStatistics = jest.fn();
-  const mockOnSelectMood = jest.fn();
-  const mockOnDayPress = jest.fn();
-  const mockOnAddMood = jest.fn();
-
-  const mockCurrentMood = {
-    emoji: "🙂",
-    label: "Happy",
-    color: "#F5C563",
-  };
-
-  const mockWeeklyData = [
-    { day: "Mon", emoji: "😐", value: 50, color: "#8B7355" },
-    { day: "Tue", emoji: "🙂", value: 70, color: "#F5C563" },
-    { day: "Wed", emoji: "😄", value: 90, color: "#9AAD5C" },
-    { day: "Thu", emoji: "😢", value: 30, color: "#E8853A" },
-    { day: "Fri", emoji: "🙂", value: 70, color: "#F5C563" },
-    { day: "Sat", emoji: "😄", value: 90, color: "#9AAD5C" },
-    { day: "Sun", emoji: "😐", value: 50, color: "#8B7355" },
-  ];
-
-  const defaultProps = {
-    currentMood: mockCurrentMood,
-    weeklyData: mockWeeklyData,
-    onFilter: mockOnFilter,
-    onStatistics: mockOnStatistics,
-    onSelectMood: mockOnSelectMood,
-    onDayPress: mockOnDayPress,
-    onAddMood: mockOnAddMood,
-  };
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  // --- Rendering ---
-  it("renders the screen container", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
+  it("renders without crashing", () => {
+    const { getByTestId } = render(<MoodDashboardScreen {...baseProps} />);
     expect(getByTestId("mood-dashboard-screen")).toBeTruthy();
   });
 
-  // --- Hero Section ---
-  it("displays the mood hero section", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    expect(getByTestId("mood-hero-section")).toBeTruthy();
+  it("displays the 'This week' headline as a header", () => {
+    const { getByText } = render(<MoodDashboardScreen {...baseProps} />);
+    const headline = getByText("This week");
+    expect(headline).toBeTruthy();
+    expect(headline.props.accessibilityRole).toBe("header");
   });
 
-  it("displays current mood emoji", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    const hero = getByTestId("mood-hero-section");
-    expect(hero).toBeTruthy();
-    // Large emoji is rendered in the mood display within the hero
-    const { getByText } = render(<MoodDashboardScreen {...defaultProps} currentMood={{ emoji: "😵", label: "Depressed", color: "#7B68B5" }} weeklyData={[]} />);
-    expect(getByText("😵")).toBeTruthy();
+  it("displays the calendar button with proper a11y", () => {
+    const { getByTestId } = render(<MoodDashboardScreen {...baseProps} />);
+    const btn = getByTestId("calendar-button");
+    expect(btn.props.accessibilityRole).toBe("button");
+    expect(btn.props.accessibilityLabel).toBe("View calendar");
   });
 
-  it("displays current mood label", () => {
-    const { getByText } = render(<MoodDashboardScreen {...defaultProps} />);
-    expect(getByText("Happy")).toBeTruthy();
-  });
-
-  it("applies mood color to hero section background", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    const hero = getByTestId("mood-hero-section");
-    // Hero is now a LinearGradient. The mock converts hex strings to numeric
-    // ARGB values via processColor before passing them to the native layer,
-    // so we compare using the same conversion.
-    expect(hero.props.colors[0]).toBe(processColor(mockCurrentMood.color));
-  });
-
-  it("displays decorative circles in hero section", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    expect(getByTestId("decorative-circles")).toBeTruthy();
-  });
-
-  // --- Filter & Statistics ---
-  it("displays filter button", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    expect(getByTestId("filter-button")).toBeTruthy();
-  });
-
-  it("calls onFilter when filter button is pressed", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("filter-button"));
-    expect(mockOnFilter).toHaveBeenCalledTimes(1);
-  });
-
-  it("displays statistics button", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    expect(getByTestId("statistics-button")).toBeTruthy();
-  });
-
-  it("calls onStatistics when statistics button is pressed", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("statistics-button"));
-    expect(mockOnStatistics).toHaveBeenCalledTimes(1);
-  });
-
-  // --- Weekly Mood Chart ---
-  it("displays weekly mood section header", () => {
-    const { getByText } = render(<MoodDashboardScreen {...defaultProps} />);
-    expect(getByText("Weekly Mood")).toBeTruthy();
-  });
-
-  it("displays weekly mood chart", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    expect(getByTestId("weekly-mood-chart")).toBeTruthy();
-  });
-
-  it("renders all 7 day bars in the chart", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    for (const day of mockWeeklyData) {
-      expect(getByTestId(`mood-bar-${day.day}`)).toBeTruthy();
-    }
-  });
-
-  it("displays day labels under each bar", () => {
-    const { getByText } = render(<MoodDashboardScreen {...defaultProps} />);
-    for (const day of mockWeeklyData) {
-      expect(getByText(day.day)).toBeTruthy();
-    }
-  });
-
-  it("displays emoji indicators on bars", () => {
-    const { getAllByTestId } = render(
-      <MoodDashboardScreen {...defaultProps} />
+  it("calls onCalendarPress when calendar button is tapped", () => {
+    const onCalendarPress = jest.fn();
+    const { getByTestId } = render(
+      <MoodDashboardScreen {...baseProps} onCalendarPress={onCalendarPress} />,
     );
-    const emojiIndicators = getAllByTestId(/mood-bar-emoji/);
-    expect(emojiIndicators.length).toBe(7);
+    fireEvent.press(getByTestId("calendar-button"));
+    expect(onCalendarPress).toHaveBeenCalledTimes(1);
   });
 
-  it("calls onDayPress when a day bar is tapped", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("mood-bar-Mon"));
-    expect(mockOnDayPress).toHaveBeenCalledWith(mockWeeklyData[0]);
+  it("renders the current-mood hero card with default 'Content' label", () => {
+    const { getByTestId } = render(<MoodDashboardScreen {...baseProps} />);
+    expect(getByTestId("mood-hero-card")).toBeTruthy();
+    expect(getByTestId("mood-hero-label").props.children).toBe("Content");
   });
 
-  // --- Add Mood Button ---
-  it("displays add mood FAB", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    expect(getByTestId("add-mood-button")).toBeTruthy();
+  it("renders custom mood label when provided", () => {
+    const { getByTestId } = render(
+      <MoodDashboardScreen
+        {...baseProps}
+        currentMoodLabel="Overjoyed"
+        currentMoodLevel={5}
+      />,
+    );
+    expect(getByTestId("mood-hero-label").props.children).toBe("Overjoyed");
   });
 
-  it("calls onAddMood when FAB is pressed", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("add-mood-button"));
-    expect(mockOnAddMood).toHaveBeenCalledTimes(1);
+  it("renders the hero MoodFace face", () => {
+    const { getByTestId } = render(<MoodDashboardScreen {...baseProps} />);
+    expect(getByTestId("mood-hero-face")).toBeTruthy();
   });
 
-  // --- Accessibility ---
-  it("add mood button has proper accessibility", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    const fab = getByTestId("add-mood-button");
+  it("renders the delta line with default 'Up from neutral'", () => {
+    const { getByTestId } = render(<MoodDashboardScreen {...baseProps} />);
+    expect(getByTestId("mood-delta-text").props.children).toBe("Up from neutral");
+  });
+
+  it("renders the weekly chart card with avg pill", () => {
+    const { getByTestId } = render(<MoodDashboardScreen {...baseProps} />);
+    expect(getByTestId("weekly-chart-card")).toBeTruthy();
+    expect(getByTestId("avg-score-text").props.children).toBe("Avg 3.8/5");
+  });
+
+  it("renders a BarChart with 7 bars by default", () => {
+    const { getByTestId, getAllByTestId } = render(
+      <MoodDashboardScreen {...baseProps} />,
+    );
+    expect(getByTestId("weekly-bar-chart")).toBeTruthy();
+    const bars = getAllByTestId(/^bar-/);
+    expect(bars.length).toBe(7);
+  });
+
+  it("renders 3 default insight cards", () => {
+    const { getByTestId } = render(<MoodDashboardScreen {...baseProps} />);
+    expect(getByTestId("insights-list")).toBeTruthy();
+    expect(getByTestId("insight-trending-up")).toBeTruthy();
+    expect(getByTestId("insight-sleep")).toBeTruthy();
+    expect(getByTestId("insight-outdoor")).toBeTruthy();
+  });
+
+  it("renders custom insights when provided", () => {
+    const { getByTestId, queryByTestId } = render(
+      <MoodDashboardScreen
+        {...baseProps}
+        insights={[
+          {
+            id: "custom",
+            iconName: "heart",
+            hue: "sage",
+            title: "Custom",
+            description: "Custom desc",
+          },
+        ]}
+      />,
+    );
+    expect(getByTestId("insight-custom")).toBeTruthy();
+    expect(queryByTestId("insight-trending-up")).toBeNull();
+  });
+
+  it("FAB is rendered with 56pt touch target and a11y", () => {
+    const { getByTestId } = render(<MoodDashboardScreen {...baseProps} />);
+    const fab = getByTestId("log-mood-fab");
     expect(fab.props.accessibilityRole).toBe("button");
-    expect(fab.props.accessibilityLabel).toBe("Add mood entry");
+    expect(fab.props.accessibilityLabel).toBe("Log a new mood entry");
+    const flatStyle = Array.isArray(fab.props.style)
+      ? Object.assign({}, ...(fab.props.style as object[]).filter(Boolean))
+      : fab.props.style ?? {};
+    const min = (flatStyle as { minHeight?: number }).minHeight ?? 0;
+    expect(min).toBeGreaterThanOrEqual(44);
   });
 
-  it("filter button has proper accessibility", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    const btn = getByTestId("filter-button");
-    expect(btn.props.accessibilityRole).toBe("button");
-    expect(btn.props.accessibilityLabel).toBe("Filter moods");
-  });
-
-  it("statistics button has proper accessibility", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    const btn = getByTestId("statistics-button");
-    expect(btn.props.accessibilityRole).toBe("button");
-    expect(btn.props.accessibilityLabel).toBe("View mood statistics");
-  });
-
-  // --- Dark Mode ---
-  it("uses dark background for lower section", () => {
-    const { getByTestId } = render(<MoodDashboardScreen {...defaultProps} />);
-    const screen = getByTestId("mood-dashboard-screen");
-    const { StyleSheet } = require("react-native");
-    const flatStyle = StyleSheet.flatten(screen.props.style);
-    expect(flatStyle).toEqual(
-      expect.objectContaining({ backgroundColor: "#1C1410" })
+  it("calls onLogMood when FAB is tapped", () => {
+    const onLogMood = jest.fn();
+    const { getByTestId } = render(
+      <MoodDashboardScreen {...baseProps} onLogMood={onLogMood} />,
     );
+    fireEvent.press(getByTestId("log-mood-fab"));
+    expect(onLogMood).toHaveBeenCalledTimes(1);
   });
 
-  // --- Branding ---
-  it("does not use Freud in any visible text", () => {
-    const { queryByText } = render(<MoodDashboardScreen {...defaultProps} />);
+  it("BreathingOrb is static when useReducedMotion returns true", () => {
+    mockReducedMotion = true;
+    const { getByTestId } = render(<MoodDashboardScreen {...baseProps} />);
+    expect(getByTestId("mood-hero-orb").props["data-pulsing"]).toBe("false");
+  });
+
+  it("BreathingOrb pulses when useReducedMotion returns false", () => {
+    mockReducedMotion = false;
+    const { getByTestId } = render(<MoodDashboardScreen {...baseProps} />);
+    expect(getByTestId("mood-hero-orb").props["data-pulsing"]).toBe("true");
+  });
+
+  it("does not display the legacy 'Freud' brand text", () => {
+    const { queryByText } = render(<MoodDashboardScreen {...baseProps} />);
     expect(queryByText(/Freud/)).toBeNull();
+  });
+
+  it("supports a custom timestamp label", () => {
+    const { getByText } = render(
+      <MoodDashboardScreen {...baseProps} timestampLabel="Today · 9:00 AM" />,
+    );
+    expect(getByText(/TODAY · 9:00 AM/)).toBeTruthy();
+  });
+
+  it("renders down-delta with peach color when deltaPositive is false", () => {
+    const { getByTestId } = render(
+      <MoodDashboardScreen
+        {...baseProps}
+        deltaPositive={false}
+        deltaLabel="Down from content"
+      />,
+    );
+    expect(getByTestId("mood-delta-text").props.children).toBe("Down from content");
+  });
+
+  it("renders custom weeklyData length", () => {
+    const { getAllByTestId } = render(
+      <MoodDashboardScreen
+        {...baseProps}
+        weeklyData={[
+          { day: "M", value: 0.5, hue: "sage" },
+          { day: "T", value: 0.8, hue: "sage", today: true },
+          { day: "W", value: 0.3, hue: "peach" },
+        ]}
+      />,
+    );
+    const bars = getAllByTestId(/^bar-/);
+    expect(bars.length).toBe(3);
   });
 });

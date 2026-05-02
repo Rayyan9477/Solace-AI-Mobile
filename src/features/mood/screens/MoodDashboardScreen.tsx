@@ -1,342 +1,440 @@
 /**
- * MoodDashboardScreen Component
- * @description Main mood tracking dashboard with current mood hero and weekly chart
- * @task Task 3.8.1: Mood Dashboard Screen (Screen 67)
- * @phase Phase 3C: Refactored to use theme tokens
+ * MoodDashboardScreen — prototype v4.2 #06 Mood tracker reskin (Sprint 8).
+ *
+ * Cosmic editorial layout: bracket "Mood" + "This week" headline, calendar
+ * icon button, current-mood hero with BreathingOrb + MoodFace, 7-day BarChart,
+ * AI-analyzed insights list with IconTiles, and a sage/peach FAB to log a new
+ * mood entry. Maps to `prototypes/screens/06-mood.js`.
  */
 
 import React from "react";
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import Icon from "react-native-vector-icons/Ionicons";
-import { palette } from "../../../shared/theme";
-import { FAB } from "../../../shared/components/atoms/buttons";
-import { ScreenContainer } from "../../../shared/components/atoms/layout";
-import { EmptyState } from "../../../shared/components/molecules/feedback/EmptyState";
-import { Skeleton } from "../../../shared/components/atoms/display";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from "react-native";
 
-interface MoodData {
-  emoji: string;
-  label: string;
-  color: string;
-}
+import { AppIcon } from "@/shared/components/atoms/display/AppIcon";
+import { ScreenContainer } from "@/shared/components/atoms/layout";
+import {
+  BarChart,
+  type BarChartBar,
+  BracketLabel,
+  BreathingOrb,
+  GlassCard,
+  IconTile,
+  MoodFace,
+  type IconTileHue,
+  type MoodLevel,
+} from "@/shared/components/primitives";
+import { useReducedMotion } from "@/shared/hooks/useReducedMotion";
+import { useTheme } from "@/shared/theme/useTheme";
 
-interface WeeklyMoodEntry {
+// ---------------------------------------------------------------------------
+// Public types
+// ---------------------------------------------------------------------------
+
+export type MoodDayHue = "sage" | "lavender" | "peach";
+
+export interface WeeklyMoodEntry {
   day: string;
-  emoji: string;
   value: number;
-  color: string;
+  hue: MoodDayHue;
+  today?: boolean;
 }
 
-const DEFAULT_MOOD: MoodData = { emoji: "\u{1F610}", label: "Neutral", color: palette.brown[700] };
+export interface MoodInsight {
+  id: string;
+  iconName: string;
+  hue: IconTileHue;
+  title: string;
+  description: string;
+}
 
-const MAX_BAR_HEIGHT = 100;
-
-interface MoodDashboardScreenProps {
-  currentMood?: MoodData;
+export interface MoodDashboardScreenProps {
+  currentMoodLevel?: MoodLevel;
+  currentMoodLabel?: string;
+  timestampLabel?: string;
+  deltaLabel?: string;
+  deltaPositive?: boolean;
   weeklyData?: WeeklyMoodEntry[];
-  onFilter?: () => void;
-  onStatistics?: () => void;
-  onSelectMood?: () => void;
-  onDayPress?: (entry: WeeklyMoodEntry) => void;
-  onAddMood?: () => void;
+  averageScore?: string;
+  insights?: MoodInsight[];
+  onCalendarPress: () => void;
+  onLogMood: () => void;
+  testID?: string;
+  style?: StyleProp<ViewStyle>;
 }
+
+// ---------------------------------------------------------------------------
+// Default fixtures
+// ---------------------------------------------------------------------------
+
+export const DEFAULT_WEEKLY_DATA: WeeklyMoodEntry[] = [
+  { day: "M", value: 0.5, hue: "sage" },
+  { day: "T", value: 0.7, hue: "sage" },
+  { day: "W", value: 0.3, hue: "peach" },
+  { day: "T", value: 0.6, hue: "sage" },
+  { day: "F", value: 0.9, hue: "sage" },
+  { day: "S", value: 0.8, hue: "lavender" },
+  { day: "S", value: 0.75, hue: "sage", today: true },
+];
+
+export const DEFAULT_INSIGHTS: MoodInsight[] = [
+  {
+    id: "trending-up",
+    iconName: "trending-up",
+    hue: "sage",
+    title: "Mood improved 18% this week",
+    description: "Your mindfulness sessions seem to help.",
+  },
+  {
+    id: "sleep",
+    iconName: "moon",
+    hue: "lavender",
+    title: "You feel best after 7+ hours sleep",
+    description: "Consistent on weekends — try weeknights too.",
+  },
+  {
+    id: "outdoor",
+    iconName: "sun",
+    hue: "peach",
+    title: "Outdoor days lift your mood",
+    description: "21% boost on days with sunlight.",
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Private subcomponent — InsightCard
+// ---------------------------------------------------------------------------
+
+interface InsightCardProps {
+  insight: MoodInsight;
+}
+
+function InsightCard({ insight }: InsightCardProps): React.ReactElement {
+  const { palette, typography } = useTheme();
+  return (
+    <GlassCard
+      testID={`insight-${insight.id}`}
+      radius={16}
+      style={styles.insightRow}
+    >
+      <View style={styles.insightInner}>
+        <IconTile iconName={insight.iconName} hue={insight.hue} size={36} iconSize={18} />
+        <View style={styles.insightTextCol}>
+          <Text
+            style={[
+              styles.insightTitle,
+              { color: palette.warm[50], fontFamily: typography.fontFamily.sansMedium },
+            ]}
+          >
+            {insight.title}
+          </Text>
+          <Text
+            style={[
+              styles.insightDesc,
+              { color: palette.warm[500], fontFamily: typography.fontFamily.sans },
+            ]}
+          >
+            {insight.description}
+          </Text>
+        </View>
+      </View>
+    </GlassCard>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 export function MoodDashboardScreen({
-  currentMood = DEFAULT_MOOD,
-  weeklyData = [],
-  onFilter,
-  onStatistics,
-  onDayPress,
-  onAddMood,
-}: MoodDashboardScreenProps = {}): React.ReactElement {
+  currentMoodLevel = 4,
+  currentMoodLabel = "Content",
+  timestampLabel = "Today · 2:45 PM",
+  deltaLabel = "Up from neutral",
+  deltaPositive = true,
+  weeklyData = DEFAULT_WEEKLY_DATA,
+  averageScore = "3.8/5",
+  insights = DEFAULT_INSIGHTS,
+  onCalendarPress,
+  onLogMood,
+  testID = "mood-dashboard-screen",
+  style,
+}: MoodDashboardScreenProps): React.ReactElement {
+  const { palette, typography } = useTheme();
+  const reducedMotion = useReducedMotion();
+
+  const bars: BarChartBar[] = weeklyData.map((entry) => ({
+    label: entry.day,
+    value: entry.value,
+    highlighted: entry.today === true,
+  }));
+
+  const deltaColor = deltaPositive ? palette.sage[300] : palette.peach[300];
+
   return (
     <ScreenContainer
-      testID="mood-dashboard-screen"
-      style={styles.container}
+      testID={testID}
+      backgroundColor={palette.midnight[950]}
+      style={style}
     >
-      {/* Hero Section */}
-      <LinearGradient
-        testID="mood-hero-section"
-        colors={[currentMood.color, "#1C1410"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
-        style={styles.heroSection}
-      >
-        {/* Decorative Circles */}
-        <View testID="decorative-circles" style={styles.decorativeCircles}>
-          <View style={[styles.circle, styles.circleOne]} />
-          <View style={[styles.circle, styles.circleTwo]} />
-          <View style={[styles.circle, styles.circleThree]} />
-        </View>
-
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
-          <View style={styles.headerSpacer} />
-          <Text style={styles.headerTitle} accessibilityRole="header">Mood Tracker</Text>
-          <TouchableOpacity
-            testID="statistics-button"
-            style={styles.statisticsButton}
-            onPress={onStatistics}
-            accessibilityRole="button"
-            accessibilityLabel="View mood statistics"
-          >
-            <Icon name="bar-chart-outline" size={18} color={palette.white} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Large Mood Display */}
-        <View style={styles.moodDisplay}>
-          <Text style={styles.moodEmoji}>{currentMood.emoji}</Text>
-          <Text style={styles.moodLabel}>{currentMood.label}</Text>
-        </View>
-      </LinearGradient>
-
-      {/* Content Section */}
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Actions Row */}
-        <View style={styles.actionsRow}>
-          <Text style={styles.sectionHeader}>Weekly Mood</Text>
-          <TouchableOpacity
-            testID="filter-button"
-            style={styles.filterButton}
-            onPress={onFilter}
-            accessibilityRole="button"
-            accessibilityLabel="Filter moods"
-          >
-            <Icon name="search-outline" size={14} color={palette.white} style={{ marginRight: 6 }} />
-            <Text style={styles.filterText}>Filter</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Weekly Mood Chart */}
-        {weeklyData.length === 0 && currentMood === DEFAULT_MOOD ? (
-          <View testID="skeleton-weekly-chart" style={styles.skeletonChartContainer}>
-            <Skeleton shape="rect" width="100%" height={120} borderRadius={12} />
+          <View>
+            <BracketLabel variant="muted">Mood</BracketLabel>
+            <Text
+              accessibilityRole="header"
+              style={[
+                styles.headline,
+                { color: palette.warm[50], fontFamily: typography.fontFamily.displayRegular },
+              ]}
+            >
+              This week
+            </Text>
           </View>
-        ) : weeklyData.length === 0 ? (
-          <EmptyState
-            testID="weekly-mood-empty-state"
-            variant="compact"
-            icon={<Icon name="happy-outline" size={40} color={palette.gray[500]} />}
-            title="No mood data this week"
-            description="Log your mood to see weekly trends"
-            style={styles.emptyStateContainer}
-          />
-        ) : (
-          <View testID="weekly-mood-chart" style={styles.chartContainer}>
-            {weeklyData.map((entry) => (
-              <TouchableOpacity
-                key={entry.day}
-                testID={`mood-bar-${entry.day}`}
-                style={styles.barColumn}
-                onPress={() => onDayPress?.(entry)}
-                accessibilityRole="button"
-                accessibilityLabel={`${entry.day}: ${entry.emoji}`}
+
+          <TouchableOpacity
+            testID="calendar-button"
+            onPress={onCalendarPress}
+            accessibilityRole="button"
+            accessibilityLabel="View calendar"
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            style={[
+              styles.iconButton,
+              { backgroundColor: palette.midnight[800], borderColor: palette.midnight[600] },
+            ]}
+          >
+            <AppIcon name="calendar-days" size={18} color={palette.warm[100]} />
+          </TouchableOpacity>
+        </View>
+
+        {/* Current-mood hero */}
+        <GlassCard
+          testID="mood-hero-card"
+          variant="strong"
+          radius={24}
+          style={styles.heroCard}
+        >
+          <View style={styles.heroOrbWrapper} pointerEvents="none">
+            <BreathingOrb
+              testID="mood-hero-orb"
+              size={180}
+              tint="cool"
+              pulsing={!reducedMotion}
+            />
+          </View>
+
+          <View style={styles.heroRow}>
+            <View style={styles.heroTextCol}>
+              <BracketLabel variant="sage">{timestampLabel}</BracketLabel>
+              <Text
+                testID="mood-hero-label"
+                accessibilityRole="header"
+                style={[
+                  styles.heroLabel,
+                  { color: palette.warm[50], fontFamily: typography.fontFamily.displayItalic },
+                ]}
               >
+                {currentMoodLabel}
+              </Text>
+              <View style={styles.deltaRow}>
+                <AppIcon
+                  name={deltaPositive ? "arrow-up" : "arrow-down"}
+                  size={12}
+                  color={deltaColor}
+                />
                 <Text
-                  testID={`mood-bar-emoji-${entry.day}`}
-                  style={styles.barEmoji}
+                  testID="mood-delta-text"
+                  style={[
+                    styles.deltaText,
+                    { color: deltaColor, fontFamily: typography.fontFamily.sansMedium },
+                  ]}
                 >
-                  {entry.emoji}
+                  {deltaLabel}
                 </Text>
-                <View style={styles.barTrack}>
-                  <View
-                    style={[
-                      styles.barFill,
-                      {
-                        height: (Math.max(0, Math.min(100, entry.value)) / 100) * MAX_BAR_HEIGHT,
-                        backgroundColor: entry.color,
-                      },
-                    ]}
-                  />
-                </View>
-                <Text style={styles.barDayLabel}>{entry.day}</Text>
-              </TouchableOpacity>
-            ))}
+              </View>
+            </View>
+
+            <View
+              testID="mood-hero-face"
+              style={[styles.heroFaceCircle, { backgroundColor: palette.sage[700] }]}
+            >
+              <MoodFace
+                level={currentMoodLevel}
+                size={62}
+                accessibilityLabel={`${currentMoodLabel} mood illustration`}
+              />
+            </View>
           </View>
-        )}
+        </GlassCard>
+
+        {/* 7-day trend */}
+        <GlassCard testID="weekly-chart-card" radius={24} style={styles.trendCard}>
+          <View style={styles.trendHeaderRow}>
+            <Text
+              style={[
+                styles.trendTitle,
+                { color: palette.warm[50], fontFamily: typography.fontFamily.sansMedium },
+              ]}
+            >
+              7-day trend
+            </Text>
+            <View
+              style={[
+                styles.avgPill,
+                { backgroundColor: palette.midnight[800], borderColor: palette.midnight[600] },
+              ]}
+            >
+              <View
+                style={[styles.avgDot, { backgroundColor: palette.sage[300] }]}
+                pointerEvents="none"
+              />
+              <Text
+                testID="avg-score-text"
+                style={[
+                  styles.avgText,
+                  { color: palette.warm[50], fontFamily: typography.fontFamily.mono },
+                ]}
+              >
+                {`Avg ${averageScore}`}
+              </Text>
+            </View>
+          </View>
+
+          <BarChart
+            testID="weekly-bar-chart"
+            bars={bars}
+            width={300}
+            height={140}
+            variant="sage"
+            accessibilityLabel="7-day mood trend"
+          />
+        </GlassCard>
+
+        {/* Insights */}
+        <View style={styles.insightsHeader}>
+          <Text
+            accessibilityRole="header"
+            style={[
+              styles.insightsTitle,
+              { color: palette.warm[50], fontFamily: typography.fontFamily.display },
+            ]}
+          >
+            Insights
+          </Text>
+          <BracketLabel variant="muted">AI-analyzed</BracketLabel>
+        </View>
+
+        <View testID="insights-list" style={styles.insightsList}>
+          {insights.map((insight) => (
+            <InsightCard key={insight.id} insight={insight} />
+          ))}
+        </View>
       </ScrollView>
 
-      {/* Floating Action Button */}
-      <FAB
-        testID="add-mood-button"
-        onPress={onAddMood}
-        accessibilityLabel="Add mood entry"
-        style={styles.fab}
-      />
+      {/* FAB — log mood */}
+      <TouchableOpacity
+        testID="log-mood-fab"
+        onPress={onLogMood}
+        accessibilityRole="button"
+        accessibilityLabel="Log a new mood entry"
+        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        style={[styles.fab, { backgroundColor: palette.peach[300] }]}
+      >
+        <AppIcon name="plus" size={24} color={palette.midnight[950]} />
+      </TouchableOpacity>
     </ScreenContainer>
   );
 }
 
+// ---------------------------------------------------------------------------
+// Styles (alphabetical within each rule)
+// ---------------------------------------------------------------------------
+
 const styles = StyleSheet.create({
-  actionsRow: {
+  avgDot: { borderRadius: 3, height: 6, width: 6 },
+  avgPill: {
+    alignItems: "center",
+    borderRadius: 12,
+    borderWidth: 1,
+    flexDirection: "row",
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  avgText: { fontSize: 10 },
+  deltaRow: { alignItems: "center", flexDirection: "row", gap: 6, marginTop: 8 },
+  deltaText: { fontSize: 11 },
+  fab: {
+    alignItems: "center",
+    borderRadius: 28,
+    bottom: 32,
+    elevation: 6,
+    height: 56,
+    justifyContent: "center",
+    minHeight: 56,
+    minWidth: 56,
+    position: "absolute",
+    right: 24,
+    width: 56,
+  },
+  header: {
+    alignItems: "flex-start",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 4,
+  },
+  headline: { fontSize: 32, lineHeight: 36, marginTop: 4 },
+  heroCard: { marginTop: 24, overflow: "hidden", padding: 20 },
+  heroFaceCircle: {
+    alignItems: "center",
+    borderRadius: 40,
+    height: 80,
+    justifyContent: "center",
+    width: 80,
+  },
+  heroLabel: { fontSize: 44, fontStyle: "italic", lineHeight: 48, marginTop: 6 },
+  heroOrbWrapper: { left: -48, opacity: 0.55, position: "absolute", top: -48 },
+  heroRow: { alignItems: "flex-end", flexDirection: "row", justifyContent: "space-between" },
+  heroTextCol: { flex: 1 },
+  iconButton: {
+    alignItems: "center",
+    borderRadius: 22,
+    borderWidth: 1,
+    height: 44,
+    justifyContent: "center",
+    width: 44,
+  },
+  insightDesc: { fontSize: 11, lineHeight: 16, marginTop: 2 },
+  insightInner: { alignItems: "flex-start", flexDirection: "row", gap: 12 },
+  insightRow: { padding: 14 },
+  insightTextCol: { flex: 1 },
+  insightTitle: { fontSize: 13, lineHeight: 18 },
+  insightsHeader: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 12,
+    marginTop: 24,
+  },
+  insightsList: { gap: 10 },
+  insightsTitle: { fontSize: 18, lineHeight: 22 },
+  scroll: { paddingBottom: 140, paddingHorizontal: 24, paddingTop: 12 },
+  trendCard: { marginTop: 16, padding: 20 },
+  trendHeaderRow: {
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 16,
-    paddingHorizontal: 24,
   },
-  barColumn: {
-    alignItems: "center",
-    flex: 1,
-  },
-  barDayLabel: {
-    color: palette.gray[400],
-    fontSize: 12,
-    marginTop: 6,
-  },
-  barEmoji: {
-    fontSize: 16,
-    marginBottom: 6,
-  },
-  barFill: {
-    borderRadius: 4,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
-    right: 0,
-  },
-  barTrack: {
-    backgroundColor: palette.brown[800],
-    borderRadius: 4,
-    height: 100,
-    overflow: "hidden",
-    position: "relative",
-    width: 24,
-  },
-  chartContainer: {
-    backgroundColor: palette.brown[800],
-    borderRadius: 16,
-    flexDirection: "row",
-    marginHorizontal: 24,
-    paddingHorizontal: 12,
-    paddingVertical: 20,
-  },
-  emptyStateContainer: {
-    backgroundColor: palette.brown[800],
-    borderRadius: 16,
-    marginHorizontal: 24,
-  },
-  skeletonChartContainer: {
-    marginHorizontal: 24,
-  },
-  circle: {
-    borderColor: `${palette.white}${palette.alpha[15]}`,
-    borderRadius: 100,
-    borderWidth: 1,
-    position: "absolute",
-  },
-  circleOne: {
-    height: 200,
-    right: -50,
-    top: -30,
-    width: 200,
-  },
-  circleThree: {
-    bottom: -40,
-    height: 120,
-    left: 40,
-    width: 120,
-  },
-  circleTwo: {
-    height: 150,
-    left: -40,
-    top: 40,
-    width: 150,
-  },
-  container: {
-    backgroundColor: palette.brown[900],
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    paddingTop: 20,
-  },
-  decorativeCircles: {
-    bottom: 0,
-    left: 0,
-    position: "absolute",
-    right: 0,
-    top: 0,
-  },
-  fab: {
-    bottom: 32,
-    position: "absolute",
-    right: 24,
-  },
-  filterButton: {
-    alignItems: "center",
-    backgroundColor: palette.brown[800],
-    borderColor: palette.brown[700],
-    borderRadius: 20,
-    borderWidth: 1,
-    flexDirection: "row",
-    minHeight: 44,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-  },
-  filterIcon: {
-    fontSize: 14,
-    marginRight: 6,
-  },
-  filterText: {
-    color: palette.white,
-    fontSize: 14,
-  },
-  header: {
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 24,
-  },
-  headerSpacer: {
-    width: 40,
-    height: 40,
-  },
-  headerTitle: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "700",
-  },
-  heroSection: {
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-    overflow: "hidden",
-    paddingBottom: 32,
-  },
-  moodDisplay: {
-    alignItems: "center",
-    marginTop: 20,
-  },
-  moodEmoji: {
-    fontSize: 64,
-  },
-  moodLabel: {
-    color: palette.white,
-    fontSize: 22,
-    fontWeight: "700",
-    marginTop: 8,
-  },
-  sectionHeader: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "700",
-  },
-  statisticsButton: {
-    alignItems: "center",
-    borderColor: `${palette.white}${palette.alpha[30]}`,
-    borderRadius: 20,
-    borderWidth: 1,
-    height: 40,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    width: 40,
-  },
-  statisticsIcon: {
-    fontSize: 18,
-  },
+  trendTitle: { fontSize: 14 },
 });
 
 export default MoodDashboardScreen;
