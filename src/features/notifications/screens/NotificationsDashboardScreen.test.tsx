@@ -1,265 +1,255 @@
 /**
- * NotificationsDashboardScreen Tests
- * @description Tests for the central notifications hub with grouped notifications
- * @task Task 3.16.1: Notifications Dashboard Screen (Screen 134)
+ * NotificationsDashboardScreen Tests — prototype v4.2 #35 reskin (Sprint 9).
+ * ≥15 behavior-style tests covering header, headline, filters, groups, and rows.
  */
 
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import { NotificationsDashboardScreen } from "./NotificationsDashboardScreen";
+import React from "react";
 
-const mockSections = [
-  {
-    id: "today",
-    title: "Earlier This Day",
-    notifications: [
-      {
-        id: "n1",
-        title: "Message from Dr Solace AI!",
-        subtitle: "52 Total Unread Messages",
-        avatarColor: "#F4D03F",
-        avatarIcon: "\uD83D\uDCAC",
-      },
-      {
-        id: "n2",
-        title: "Journal Incomplete!",
-        subtitle: "It's Reflection Time!",
-        avatarColor: "#E8853A",
-        avatarIcon: "\uD83D\uDCD6",
-        badge: "8/22",
-      },
-      {
-        id: "n3",
-        title: "Exercise Complete!",
-        subtitle: "22m Breathing Done.",
-        avatarColor: "#9AAD5C",
-        avatarIcon: "\uD83E\uDDD8",
-        isComplete: true,
-      },
-      {
-        id: "n4",
-        title: "Mental Health Data is Here.",
-        subtitle: "Your Monthly Mental Analysis is here.",
-        avatarColor: "#4A9E8C",
-        avatarIcon: "\uD83D\uDCC8",
-        attachment: "Monthly_Health_Report.pdf",
-      },
-      {
-        id: "n5",
-        title: "Mood Improved.",
-        subtitle: "Neutral \u2192 Happy",
-        avatarColor: "#7B68B5",
-        avatarIcon: "\uD83D\uDE0A",
-      },
-    ],
-  },
-  {
-    id: "lastweek",
-    title: "Last Week",
-    notifications: [
-      {
-        id: "n6",
-        title: "Stress Decreased.",
-        subtitle: "Stress Level is now 3.",
-        avatarColor: "#E91E63",
-        avatarIcon: "\u2764\uFE0F",
-      },
-      {
-        id: "n7",
-        title: "Dr Solace Recommendations.",
-        subtitle: "48 Health Recommendations",
-        avatarColor: "#3498DB",
-        avatarIcon: "\uD83E\uDD16",
-      },
-    ],
-  },
-];
+import {
+  NotificationsDashboardScreen,
+  DEFAULT_NOTIFICATIONS,
+} from "./NotificationsDashboardScreen";
 
-const defaultProps = {
-  unreadCount: 11,
-  sections: mockSections,
+const makeProps = (overrides = {}) => ({
   onBack: jest.fn(),
-  onSettings: jest.fn(),
+  onMarkAllRead: jest.fn(),
+  onFilterChange: jest.fn(),
   onNotificationPress: jest.fn(),
-  onOptionsPress: jest.fn(),
-};
+  ...overrides,
+});
 
-function renderScreen(overrides = {}) {
-  return render(
-    <NotificationsDashboardScreen {...defaultProps} {...overrides} />,
-  );
-}
-
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 describe("NotificationsDashboardScreen", () => {
-  // ── Rendering ──────────────────────────────────────────
+  // 1. Root container
   it("renders the screen container", () => {
-    const { getByTestId } = renderScreen();
+    const { getByTestId } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
     expect(getByTestId("notifications-dashboard-screen")).toBeTruthy();
   });
 
-  it("renders the header with title 'Notifications'", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("Notifications")).toBeTruthy();
+  // 2. Headline
+  it("renders the Inbox headline", () => {
+    const { getByText } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
+    expect(getByText("Inbox")).toBeTruthy();
   });
 
+  // 3. Default unread count
+  it("renders the default unread count subtitle (3 new)", () => {
+    const { getByText } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
+    expect(getByText("3 new")).toBeTruthy();
+    expect(getByText(/this week/)).toBeTruthy();
+  });
+
+  // 4. Unread count override
+  it("respects unreadCount prop", () => {
+    const { getByText } = render(
+      <NotificationsDashboardScreen {...makeProps()} unreadCount={7} />,
+    );
+    expect(getByText("7 new")).toBeTruthy();
+  });
+
+  // 5. Back button renders
   it("renders the back button", () => {
-    const { getByTestId } = renderScreen();
+    const { getByTestId } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
     expect(getByTestId("back-button")).toBeTruthy();
   });
 
-  it("renders the unread count badge", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("+11")).toBeTruthy();
-  });
-
-  it("renders the settings button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("settings-button")).toBeTruthy();
-  });
-
-  // ── Sections ───────────────────────────────────────────
-  it("renders section headers", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("Earlier This Day")).toBeTruthy();
-    expect(getByText("Last Week")).toBeTruthy();
-  });
-
-  it("renders section options buttons", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("section-options-today")).toBeTruthy();
-    expect(getByTestId("section-options-lastweek")).toBeTruthy();
-  });
-
-  // ── Notification Rows ──────────────────────────────────
-  it("renders all notification rows", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("notification-n1")).toBeTruthy();
-    expect(getByTestId("notification-n2")).toBeTruthy();
-    expect(getByTestId("notification-n3")).toBeTruthy();
-    expect(getByTestId("notification-n4")).toBeTruthy();
-    expect(getByTestId("notification-n5")).toBeTruthy();
-    expect(getByTestId("notification-n6")).toBeTruthy();
-    expect(getByTestId("notification-n7")).toBeTruthy();
-  });
-
-  it("renders notification titles", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("Message from Dr Solace AI!")).toBeTruthy();
-    expect(getByText("Journal Incomplete!")).toBeTruthy();
-    expect(getByText("Exercise Complete!")).toBeTruthy();
-  });
-
-  it("renders notification subtitles", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("52 Total Unread Messages")).toBeTruthy();
-    expect(getByText(/Reflection Time/)).toBeTruthy();
-  });
-
-  it("renders colored notification avatars", () => {
-    const { getByTestId } = renderScreen();
-    const avatar = getByTestId("notification-avatar-n1");
-    const style = Object.assign({}, ...[].concat(avatar.props.style));
-    expect(style.backgroundColor).toBe("#F4D03F");
-  });
-
-  it("renders badge on notification with badge prop", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("8/22")).toBeTruthy();
-  });
-
-  it("renders attachment on notification with attachment prop", () => {
-    const { getByText } = renderScreen();
-    expect(getByText(/Monthly_Health_Report\.pdf/)).toBeTruthy();
-  });
-
-  it("renders mood transition text", () => {
-    const { getByText } = renderScreen();
-    expect(getByText(/Neutral/)).toBeTruthy();
-  });
-
-  // ── Callbacks ──────────────────────────────────────────
-  it("calls onBack when back button is pressed", () => {
+  // 6. Back press
+  it("calls onBack when back button pressed", () => {
     const onBack = jest.fn();
-    const { getByTestId } = renderScreen({ onBack });
+    const { getByTestId } = render(
+      <NotificationsDashboardScreen {...makeProps({ onBack })} />,
+    );
     fireEvent.press(getByTestId("back-button"));
     expect(onBack).toHaveBeenCalledTimes(1);
   });
 
-  it("calls onSettings when settings button is pressed", () => {
-    const onSettings = jest.fn();
-    const { getByTestId } = renderScreen({ onSettings });
-    fireEvent.press(getByTestId("settings-button"));
-    expect(onSettings).toHaveBeenCalledTimes(1);
+  // 7. Mark all read button renders
+  it("renders the Mark all read action", () => {
+    const { getByText } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
+    expect(getByText("Mark all read")).toBeTruthy();
   });
 
-  it("calls onNotificationPress with notification when row pressed", () => {
+  // 8. Mark all read press
+  it("calls onMarkAllRead when pressed", () => {
+    const onMarkAllRead = jest.fn();
+    const { getByTestId } = render(
+      <NotificationsDashboardScreen {...makeProps({ onMarkAllRead })} />,
+    );
+    fireEvent.press(getByTestId("mark-all-read-button"));
+    expect(onMarkAllRead).toHaveBeenCalledTimes(1);
+  });
+
+  // 9. Filter pills present
+  it("renders the filter pills tablist", () => {
+    const { getByTestId } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
+    expect(getByTestId("filter-pills")).toBeTruthy();
+  });
+
+  // 10. Filter change fires callback
+  it("calls onFilterChange when a pill is pressed", () => {
+    const onFilterChange = jest.fn();
+    const { getByText } = render(
+      <NotificationsDashboardScreen {...makeProps({ onFilterChange })} />,
+    );
+    fireEvent.press(getByText(/Insights/));
+    expect(onFilterChange).toHaveBeenCalledWith("insights");
+  });
+
+  // 11. All filter pill labels render
+  it("renders every filter pill label", () => {
+    const { getByText } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
+    expect(getByText("All")).toBeTruthy();
+    expect(getByText("Insights")).toBeTruthy();
+    expect(getByText("Reminders")).toBeTruthy();
+    expect(getByText("Achievements")).toBeTruthy();
+  });
+
+  // 12. Three groups render
+  it("renders Today, Yesterday, and Earlier this week groups", () => {
+    const { getByTestId } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
+    expect(getByTestId("notification-group-today")).toBeTruthy();
+    expect(getByTestId("notification-group-yesterday")).toBeTruthy();
+    expect(getByTestId("notification-group-earlier")).toBeTruthy();
+  });
+
+  // 13. Today notifications render
+  it("renders Today notification rows", () => {
+    const { getByTestId } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
+    expect(getByTestId("notification-row-score-up")).toBeTruthy();
+    expect(getByTestId("notification-row-streak-23")).toBeTruthy();
+  });
+
+  // 14. Yesterday + earlier rows render
+  it("renders all default notification rows", () => {
+    const { getByTestId } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
+    expect(getByTestId("notification-row-evening-checkin")).toBeTruthy();
+    expect(getByTestId("notification-row-weekly-summary")).toBeTruthy();
+    expect(getByTestId("notification-row-soundscape-unlocked")).toBeTruthy();
+  });
+
+  // 15. Notification row content
+  it("renders notification titles and descriptions", () => {
+    const { getByText } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
+    expect(getByText("Your Solace Score went up")).toBeTruthy();
+    expect(getByText("+5 points since last week. Keep going!")).toBeTruthy();
+    expect(getByText("Streak milestone: 23 days")).toBeTruthy();
+  });
+
+  // 16. Today timestamps include "ago" suffix
+  it("renders today timestamps with 'ago' suffix", () => {
+    const { getByTestId } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
+    expect(getByTestId("notification-time-score-up").props.children).toBe(
+      "3m ago",
+    );
+  });
+
+  // 17. Notification row press
+  it("calls onNotificationPress with id when row pressed", () => {
     const onNotificationPress = jest.fn();
-    const { getByTestId } = renderScreen({ onNotificationPress });
-    fireEvent.press(getByTestId("notification-n1"));
-    expect(onNotificationPress).toHaveBeenCalledWith(
-      mockSections[0].notifications[0],
+    const { getByTestId } = render(
+      <NotificationsDashboardScreen {...makeProps({ onNotificationPress })} />,
+    );
+    fireEvent.press(getByTestId("notification-row-score-up"));
+    expect(onNotificationPress).toHaveBeenCalledWith("score-up");
+  });
+
+  // 18. Unread state shows in row a11y label
+  it("marks unread rows as unread in their accessibility label", () => {
+    const { getByTestId } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
+    expect(
+      getByTestId("notification-row-score-up").props.accessibilityLabel,
+    ).toMatch(/unread/);
+    expect(
+      getByTestId("notification-row-evening-checkin").props.accessibilityLabel,
+    ).not.toMatch(/unread/);
+  });
+
+  // 19. Custom notifications array
+  it("respects a custom notifications array", () => {
+    const custom = [
+      {
+        id: "custom-group",
+        label: "Just now",
+        items: [
+          {
+            id: "custom-item",
+            iconName: "bell",
+            hue: "aurora" as const,
+            title: "Custom title",
+            description: "Custom desc",
+            time: "now",
+          },
+        ],
+      },
+    ];
+    const { getByTestId, queryByTestId } = render(
+      <NotificationsDashboardScreen {...makeProps()} notifications={custom} />,
+    );
+    expect(getByTestId("notification-row-custom-item")).toBeTruthy();
+    expect(queryByTestId("notification-row-score-up")).toBeNull();
+  });
+
+  // 20. Headline accessibility
+  it("inbox headline is announced as a header", () => {
+    const { getByTestId } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
+    expect(getByTestId("inbox-headline").props.accessibilityRole).toBe(
+      "header",
     );
   });
 
-  it("calls onOptionsPress with section id when section options pressed", () => {
-    const onOptionsPress = jest.fn();
-    const { getByTestId } = renderScreen({ onOptionsPress });
-    fireEvent.press(getByTestId("section-options-today"));
-    expect(onOptionsPress).toHaveBeenCalledWith("today");
-  });
-
-  // ── Accessibility ──────────────────────────────────────
-  it("back button has accessibilityLabel 'Go back'", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button").props.accessibilityLabel).toBe("Go back");
-  });
-
-  it("back button has accessibilityRole 'button'", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button").props.accessibilityRole).toBe("button");
-  });
-
-  it("settings button has accessibilityLabel 'Settings'", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("settings-button").props.accessibilityLabel).toBe(
-      "Settings",
+  // 21. Touch target — back
+  it("back button meets 44pt minimum touch target", () => {
+    const { getByTestId } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
     );
+    const { StyleSheet } = require("react-native");
+    const flat = StyleSheet.flatten(getByTestId("back-button").props.style);
+    expect(flat.height).toBeGreaterThanOrEqual(44);
+    expect(flat.width).toBeGreaterThanOrEqual(44);
   });
 
-  it("notification rows have accessibilityRole 'button'", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("notification-n1").props.accessibilityRole).toBe(
-      "button",
-    );
+  // 22. Default export is identical
+  it("DEFAULT_NOTIFICATIONS contains 3 groups", () => {
+    expect(DEFAULT_NOTIFICATIONS.length).toBe(3);
   });
 
-  it("back button meets 44×44 minimum touch target", () => {
-    const { getByTestId } = renderScreen();
-    const style = Object.assign(
-      {},
-      ...[].concat(getByTestId("back-button").props.style),
-    );
-    expect(style.minHeight).toBeGreaterThanOrEqual(44);
-    expect(style.minWidth).toBeGreaterThanOrEqual(44);
-  });
-
-  // ── Styling ────────────────────────────────────────────
-  it("applies dark background to the container", () => {
-    const { getByTestId } = renderScreen();
-    const style = Object.assign(
-      {},
-      ...[].concat(
-        getByTestId("notifications-dashboard-screen").props.style,
-      ),
-    );
-    expect(style.backgroundColor).toBe("#1C1410");
-  });
-
-  // ── Branding ───────────────────────────────────────────
+  // 23. Branding — no Freud
   it("does not contain any Freud branding", () => {
-    const { queryByText } = renderScreen();
+    const { queryByText } = render(
+      <NotificationsDashboardScreen {...makeProps()} />,
+    );
     expect(queryByText(/freud/i)).toBeNull();
   });
 });
