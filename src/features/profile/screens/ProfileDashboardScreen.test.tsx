@@ -1,8 +1,6 @@
 /**
- * ProfileDashboardScreen Tests
- * @description Tests for the user profile dashboard overview
- * @task Task 3.17.2: Profile Dashboard Screen (Screen 141)
- * @audit-fix "Shinomiya Kaguya" → appropriate name, age 17→24, "Freud Score" → "Solace Score"
+ * ProfileDashboardScreen Tests — prototype v4.2 #09 reskin (Sprint 8).
+ * ≥15 behavior-style tests for header, stats, settings, sign-out.
  */
 
 import { render, fireEvent } from "@testing-library/react-native";
@@ -10,186 +8,191 @@ import React from "react";
 
 import { ProfileDashboardScreen } from "./ProfileDashboardScreen";
 
-const defaultProps = {
-  username: "Jordan Rivera",
-  membershipTier: "Basic Member",
-  age: "24y",
-  weight: "65kg",
-  height: "172cm",
-  solaceScore: 80,
-  scoreStatus: "Healthy",
-  currentMood: "Calm",
-  moodData: [3, 5, 4, 6, 5, 4, 7],
-  onSettings: jest.fn(),
-  onScorePress: jest.fn(),
-  onMoodPress: jest.fn(),
-};
+const makeProps = (overrides = {}) => ({
+  onChangePhoto: jest.fn(),
+  onPersonalInfo: jest.fn(),
+  onNotifications: jest.fn(),
+  onPrivacy: jest.fn(),
+  onLanguage: jest.fn(),
+  onHelp: jest.fn(),
+  onFeedback: jest.fn(),
+  onInvite: jest.fn(),
+  ...overrides,
+});
 
-function renderScreen(overrides = {}) {
-  return render(<ProfileDashboardScreen {...defaultProps} {...overrides} />);
-}
-
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 describe("ProfileDashboardScreen", () => {
-  // ── Rendering ──────────────────────────────────────────
+  // 1. Render
   it("renders the screen container", () => {
-    const { getByTestId } = renderScreen();
+    const { getByTestId } = render(<ProfileDashboardScreen {...makeProps()} />);
     expect(getByTestId("profile-dashboard-screen")).toBeTruthy();
   });
 
-  it("renders the profile avatar", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("profile-avatar")).toBeTruthy();
+  // 2. Default user name
+  it("renders default user name", () => {
+    const { getByText } = render(<ProfileDashboardScreen {...makeProps()} />);
+    expect(getByText("Rayyan Ahmed")).toBeTruthy();
   });
 
-  it("renders the settings button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("settings-button")).toBeTruthy();
-  });
-
-  it("renders the username", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("Jordan Rivera")).toBeTruthy();
-  });
-
-  it("renders the membership badge", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("Basic Member")).toBeTruthy();
-  });
-
-  it("renders the age stat", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("24y")).toBeTruthy();
-  });
-
-  it("renders the weight stat", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("65kg")).toBeTruthy();
-  });
-
-  it("renders the height stat", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("172cm")).toBeTruthy();
-  });
-
-  it("renders the Solace Score card", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("solace-score-card")).toBeTruthy();
-  });
-
-  it("renders the score value", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("80")).toBeTruthy();
-  });
-
-  it("renders the score status", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("Healthy")).toBeTruthy();
-  });
-
-  it("renders the mood card", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("mood-card")).toBeTruthy();
-  });
-
-  it("renders the current mood", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("Calm")).toBeTruthy();
-  });
-
-  it("renders mood bar chart", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("mood-bar-chart")).toBeTruthy();
-  });
-
-  it("renders correct number of mood bars", () => {
-    const { getByTestId } = renderScreen();
-    const chart = getByTestId("mood-bar-chart");
-    expect(chart.children.length).toBe(7);
-  });
-
-  // ── Dynamic Props ──────────────────────────────────────
-  it("displays the provided username", () => {
-    const { getByText } = renderScreen({ username: "Alex Smith" });
+  // 3. Custom user name
+  it("renders provided user name", () => {
+    const { getByText } = render(
+      <ProfileDashboardScreen {...makeProps()} userName="Alex Smith" />,
+    );
     expect(getByText("Alex Smith")).toBeTruthy();
   });
 
-  it("displays the provided membership tier", () => {
-    const { getByText } = renderScreen({ membershipTier: "Premium Member" });
-    expect(getByText("Premium Member")).toBeTruthy();
+  // 4. Avatar initial defaults from name
+  it("uses first character of name as avatar initial", () => {
+    const { getByTestId } = render(
+      <ProfileDashboardScreen {...makeProps()} userName="Maya Lin" />,
+    );
+    expect(getByTestId("avatar-initial").props.children).toBe("M");
   });
 
-  it("displays the provided score", () => {
-    const { getByText } = renderScreen({ solaceScore: 95 });
-    expect(getByText("95")).toBeTruthy();
+  // 5. Custom initial
+  it("respects userInitial override", () => {
+    const { getByTestId } = render(
+      <ProfileDashboardScreen
+        {...makeProps()}
+        userName="Rayyan"
+        userInitial="X"
+      />,
+    );
+    expect(getByTestId("avatar-initial").props.children).toBe("X");
   });
 
-  // ── Callbacks ──────────────────────────────────────────
-  it("calls onSettings when settings button is pressed", () => {
-    const onSettings = jest.fn();
-    const { getByTestId } = renderScreen({ onSettings });
-    fireEvent.press(getByTestId("settings-button"));
-    expect(onSettings).toHaveBeenCalledTimes(1);
+  // 6. Premium chip renders by default
+  it("renders premium chip when isPremium is true (default)", () => {
+    const { getByTestId } = render(<ProfileDashboardScreen {...makeProps()} />);
+    expect(getByTestId("premium-chip")).toBeTruthy();
   });
 
-  it("calls onScorePress when score card is pressed", () => {
-    const onScorePress = jest.fn();
-    const { getByTestId } = renderScreen({ onScorePress });
-    fireEvent.press(getByTestId("solace-score-card"));
-    expect(onScorePress).toHaveBeenCalledTimes(1);
+  // 7. Premium chip hides when not premium
+  it("does not render premium chip when isPremium is false", () => {
+    const { queryByTestId } = render(
+      <ProfileDashboardScreen {...makeProps()} isPremium={false} />,
+    );
+    expect(queryByTestId("premium-chip")).toBeNull();
   });
 
-  it("calls onMoodPress when mood card is pressed", () => {
-    const onMoodPress = jest.fn();
-    const { getByTestId } = renderScreen({ onMoodPress });
-    fireEvent.press(getByTestId("mood-card"));
-    expect(onMoodPress).toHaveBeenCalledTimes(1);
+  // 8. Camera badge fires onChangePhoto
+  it("calls onChangePhoto when camera badge pressed", () => {
+    const onChangePhoto = jest.fn();
+    const { getByTestId } = render(
+      <ProfileDashboardScreen {...makeProps({ onChangePhoto })} />,
+    );
+    fireEvent.press(getByTestId("change-photo-button"));
+    expect(onChangePhoto).toHaveBeenCalledTimes(1);
   });
 
-  // ── Accessibility ──────────────────────────────────────
-  it("settings button has accessibilityLabel 'Settings'", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("settings-button").props.accessibilityLabel).toBe(
-      "Settings",
+  // 9. Stats grid — three tiles
+  it("renders three stat tiles", () => {
+    const { getByTestId } = render(<ProfileDashboardScreen {...makeProps()} />);
+    expect(getByTestId("stat-streak")).toBeTruthy();
+    expect(getByTestId("stat-sessions")).toBeTruthy();
+    expect(getByTestId("stat-mindful")).toBeTruthy();
+  });
+
+  // 10. Streak value shows
+  it("displays default streak value", () => {
+    const { getByTestId } = render(<ProfileDashboardScreen {...makeProps()} />);
+    expect(getByTestId("stat-streak").props.accessibilityLabel).toBe(
+      "Streak: 23d",
     );
   });
 
-  it("settings button has accessibilityRole 'button'", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("settings-button").props.accessibilityRole).toBe(
-      "button",
+  // 11. Sessions value shows
+  it("displays default sessions value", () => {
+    const { getByTestId } = render(<ProfileDashboardScreen {...makeProps()} />);
+    expect(getByTestId("stat-sessions").props.accessibilityLabel).toBe(
+      "Sessions: 142",
     );
   });
 
-  it("settings button meets 44×44 minimum touch target", () => {
-    const { getByTestId } = renderScreen();
-    const style = Object.assign(
-      {},
-      ...[].concat(getByTestId("settings-button").props.style),
+  // 12. Mindful value shows
+  it("displays default mindful hours value", () => {
+    const { getByTestId } = render(<ProfileDashboardScreen {...makeProps()} />);
+    expect(getByTestId("stat-mindful").props.accessibilityLabel).toBe(
+      "Mindful: 12h",
     );
-    expect(style.minHeight).toBeGreaterThanOrEqual(44);
-    expect(style.minWidth).toBeGreaterThanOrEqual(44);
   });
 
-  // ── Styling ────────────────────────────────────────────
-  it("applies dark background to the container", () => {
-    const { getByTestId } = renderScreen();
-    const style = Object.assign(
-      {},
-      ...[].concat(getByTestId("profile-dashboard-screen").props.style),
-    );
-    expect(style.backgroundColor).toBe("#1C1410");
+  // 13. Settings rows — account
+  it("renders all account section rows", () => {
+    const { getByTestId } = render(<ProfileDashboardScreen {...makeProps()} />);
+    expect(getByTestId("row-personal-info")).toBeTruthy();
+    expect(getByTestId("row-notifications")).toBeTruthy();
+    expect(getByTestId("row-privacy")).toBeTruthy();
+    expect(getByTestId("row-language")).toBeTruthy();
   });
 
-  // ── Branding ───────────────────────────────────────────
+  // 14. Settings rows — support
+  it("renders all support section rows", () => {
+    const { getByTestId } = render(<ProfileDashboardScreen {...makeProps()} />);
+    expect(getByTestId("row-help")).toBeTruthy();
+    expect(getByTestId("row-feedback")).toBeTruthy();
+    expect(getByTestId("row-invite")).toBeTruthy();
+  });
+
+  // 15. Personal info row press
+  it("calls onPersonalInfo when row pressed", () => {
+    const onPersonalInfo = jest.fn();
+    const { getByTestId } = render(
+      <ProfileDashboardScreen {...makeProps({ onPersonalInfo })} />,
+    );
+    fireEvent.press(getByTestId("row-personal-info"));
+    expect(onPersonalInfo).toHaveBeenCalledTimes(1);
+  });
+
+  // 16. Notifications row press
+  it("calls onNotifications when row pressed", () => {
+    const onNotifications = jest.fn();
+    const { getByTestId } = render(
+      <ProfileDashboardScreen {...makeProps({ onNotifications })} />,
+    );
+    fireEvent.press(getByTestId("row-notifications"));
+    expect(onNotifications).toHaveBeenCalledTimes(1);
+  });
+
+  // 17. Sign out — explicit prop wins
+  it("calls onSignOut prop when provided", () => {
+    const onSignOut = jest.fn();
+    const { getByTestId } = render(
+      <ProfileDashboardScreen {...makeProps({ onSignOut })} />,
+    );
+    fireEvent.press(getByTestId("sign-out-button"));
+    expect(onSignOut).toHaveBeenCalledTimes(1);
+  });
+
+  // 18. Footer
+  it("renders the version footer", () => {
+    const { getByText } = render(<ProfileDashboardScreen {...makeProps()} />);
+    expect(getByText(/Solace v4\.2\.0/)).toBeTruthy();
+  });
+
+  // 19. a11y — name is announced as header
+  it("name is announced as a header", () => {
+    const { getByTestId } = render(<ProfileDashboardScreen {...makeProps()} />);
+    expect(getByTestId("profile-name").props.accessibilityRole).toBe("header");
+  });
+
+  // 20. a11y — camera badge meets touch target
+  it("camera badge button meets 44pt minimum touch target", () => {
+    const { getByTestId } = render(<ProfileDashboardScreen {...makeProps()} />);
+    const btn = getByTestId("change-photo-button");
+    const { StyleSheet } = require("react-native");
+    const flat = StyleSheet.flatten(btn.props.style);
+    expect(flat.minHeight).toBeGreaterThanOrEqual(44);
+    expect(flat.minWidth).toBeGreaterThanOrEqual(44);
+  });
+
+  // 21. Branding — no Freud
   it("does not contain any Freud branding", () => {
-    const { queryByText } = renderScreen();
+    const { queryByText } = render(<ProfileDashboardScreen {...makeProps()} />);
     expect(queryByText(/freud/i)).toBeNull();
-  });
-
-  it("uses 'Solace Score' not 'Freud Score'", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("Solace Score")).toBeTruthy();
   });
 });

@@ -1,481 +1,463 @@
 /**
- * ProfileDashboardScreen Component
- * @description Profile overview with avatar, stats, Solace Score card, mood card, and settings menu
- * @task Task 3.17.2: Profile Dashboard Screen (Screen 141)
- * @phase Phase 3C: Refactored to use theme tokens
- * @audit-fix "Shinomiya Kaguya" → appropriate placeholder name
- * @audit-fix Age 17y → adult age (24y)
- * @audit-fix "Freud Score" → "Solace Score"
+ * ProfileDashboardScreen — prototype v4.2 #09 reskin (Sprint 8).
+ *
+ * Visual ref: prototypes/screens/09-profile.js
+ * - Centered avatar with sage→aurora→peach gradient ring + camera badge
+ * - Fraunces light name, Premium chip
+ * - 3 stats GlassCard tiles (streak / sessions / mindful)
+ * - Account + Support SettingsSection groups
+ * - Sign-out card + monospace v4.2.0 footer
  */
 
 import React from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
   ScrollView,
   StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { palette } from "../../../shared/theme";
 
-interface ProfileDashboardScreenProps {
-  username?: string;
-  membershipTier?: string;
-  age?: string;
-  weight?: string;
-  height?: string;
-  solaceScore?: number;
-  scoreStatus?: string;
-  currentMood?: string;
-  moodData?: number[];
-  onSettings?: () => void;
-  onScorePress?: () => void;
-  onMoodPress?: () => void;
-  onNavigateAccountSettings?: () => void;
-  onNavigatePersonalInfo?: () => void;
-  onNavigateNotifications?: () => void;
-  onNavigateSecurityPrivacy?: () => void;
-  onNavigateLinkedDevices?: () => void;
-  onNavigateLanguage?: () => void;
-  onNavigateHelpCenter?: () => void;
-  onNavigateSendFeedback?: () => void;
-  onNavigateInviteFriends?: () => void;
-  onNavigateAboutSolace?: () => void;
+import { useAuth } from "@/app/AuthContext";
+import { AppIcon } from "@/shared/components/atoms/display/AppIcon";
+import { ScreenContainer } from "@/shared/components/atoms/layout";
+import { SettingsRow } from "@/shared/components/molecules/lists/SettingsRow";
+import { SettingsSection } from "@/shared/components/molecules/lists/SettingsSection";
+import {
+  AvatarRing,
+  BracketLabel,
+  GlassCard,
+} from "@/shared/components/primitives";
+import { useTheme } from "@/shared/theme/useTheme";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+export interface ProfileDashboardScreenProps {
+  userName?: string;
+  userInitial?: string;
+  isPremium?: boolean;
+  streakDays?: number;
+  sessionCount?: number;
+  mindfulHours?: number;
+  unreadNotifications?: number;
+  language?: string;
+  onChangePhoto: () => void;
+  onPersonalInfo: () => void;
+  onNotifications: () => void;
+  onPrivacy: () => void;
+  onLanguage: () => void;
+  onHelp: () => void;
+  onFeedback: () => void;
+  onInvite: () => void;
   onSignOut?: () => void;
+  testID?: string;
 }
 
-const localColors = {
-  background: palette.brown[900],
-  white: palette.white,
-  textSecondary: `${palette.white}${palette.alpha[60]}`,
-  cardBg: palette.brown[800],
-  headerBg: palette.brown[700],
-  badgeBg: palette.olive[500],
-  badgeText: palette.brown[900],
-  scoreColor: palette.tan[500],
-  moodBarBg: `${palette.white}${palette.alpha[20]}`,
-  moodBarActive: palette.olive[500],
-  menuBg: palette.brown[800],
-  menuItemBorder: `${palette.white}${palette.alpha[10]}`,
-  menuIcon: palette.tan[400],
-  menuChevron: palette.gray[400],
-  signOutText: palette.red[500],
-  signOutBg: `${palette.red[500]}${palette.alpha[10]}`,
-  signOutBorder: `${palette.red[500]}${palette.alpha[30]}`,
-} as const;
-
-interface MenuItem {
-  key: string;
-  label: string;
-  icon: string;
-  onPress?: () => void;
-}
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 export function ProfileDashboardScreen({
-  username = "User",
-  membershipTier = "Free",
-  age = "--",
-  weight = "--",
-  height = "--",
-  solaceScore = 0,
-  scoreStatus = "Stable",
-  currentMood = "Neutral",
-  moodData = [],
-  onSettings,
-  onScorePress,
-  onMoodPress,
-  onNavigateAccountSettings,
-  onNavigatePersonalInfo,
-  onNavigateNotifications,
-  onNavigateSecurityPrivacy,
-  onNavigateLinkedDevices,
-  onNavigateLanguage,
-  onNavigateHelpCenter,
-  onNavigateSendFeedback,
-  onNavigateInviteFriends,
-  onNavigateAboutSolace,
+  userName = "Rayyan Ahmed",
+  userInitial,
+  isPremium = true,
+  streakDays = 23,
+  sessionCount = 142,
+  mindfulHours = 12,
+  unreadNotifications = 3,
+  language = "English",
+  onChangePhoto,
+  onPersonalInfo,
+  onNotifications,
+  onPrivacy,
+  onLanguage,
+  onHelp,
+  onFeedback,
+  onInvite,
   onSignOut,
-}: ProfileDashboardScreenProps = {}): React.ReactElement {
-  const menuItems: MenuItem[] = [
-    {
-      key: "account-settings",
-      label: "Account Settings",
-      icon: "person-outline",
-      onPress: onNavigateAccountSettings,
-    },
-    {
-      key: "personal-info",
-      label: "Personal Information",
-      icon: "information-circle-outline",
-      onPress: onNavigatePersonalInfo,
-    },
-    {
-      key: "notifications",
-      label: "Notifications",
-      icon: "notifications-outline",
-      onPress: onNavigateNotifications,
-    },
-    {
-      key: "security-privacy",
-      label: "Security & Privacy",
-      icon: "shield-checkmark-outline",
-      onPress: onNavigateSecurityPrivacy,
-    },
-    {
-      key: "linked-devices",
-      label: "Linked Devices",
-      icon: "phone-portrait-outline",
-      onPress: onNavigateLinkedDevices,
-    },
-    {
-      key: "language",
-      label: "Language",
-      icon: "globe-outline",
-      onPress: onNavigateLanguage,
-    },
-    {
-      key: "help-center",
-      label: "Help Center",
-      icon: "help-circle-outline",
-      onPress: onNavigateHelpCenter,
-    },
-    {
-      key: "send-feedback",
-      label: "Send Feedback",
-      icon: "chatbox-outline",
-      onPress: onNavigateSendFeedback,
-    },
-    {
-      key: "invite-friends",
-      label: "Invite Friends",
-      icon: "people-outline",
-      onPress: onNavigateInviteFriends,
-    },
-    {
-      key: "about-solace",
-      label: "About Solace",
-      icon: "information-outline",
-      onPress: onNavigateAboutSolace,
-    },
-  ];
+  testID = "profile-dashboard-screen",
+}: ProfileDashboardScreenProps): React.ReactElement {
+  const { palette } = useTheme();
+  const { signOut } = useAuth();
+
+  const initial = userInitial ?? userName.charAt(0).toUpperCase();
+
+  const handleSignOut = (): void => {
+    if (onSignOut) {
+      onSignOut();
+      return;
+    }
+    signOut();
+  };
 
   return (
-    <View testID="profile-dashboard-screen" style={styles.container}>
+    <ScreenContainer
+      testID={testID}
+      backgroundColor={palette.midnight[950]}
+      style={styles.container}
+    >
       <ScrollView
+        contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
       >
-        {/* Header Background */}
-        <View style={styles.headerBg} />
+        {/* ---------------------------------------------------------------- */}
+        {/* Profile header                                                    */}
+        {/* ---------------------------------------------------------------- */}
+        <View style={styles.profileHeader}>
+          <View style={styles.avatarWrap} testID="profile-avatar">
+            <AvatarRing size={96} ringWidth={3} variant="sage-aurora-peach">
+              <View
+                style={[
+                  styles.avatarInner,
+                  { backgroundColor: palette.midnight[800] },
+                ]}
+              >
+                <Text
+                  testID="avatar-initial"
+                  style={[styles.avatarInitial, { color: palette.warm[50] }]}
+                  accessibilityRole="text"
+                >
+                  {initial}
+                </Text>
+              </View>
+            </AvatarRing>
 
-        {/* Profile Section */}
-        <View style={styles.profileSection}>
-          <View style={styles.avatarContainer}>
-            <View testID="profile-avatar" style={styles.avatar} />
             <TouchableOpacity
-              testID="settings-button"
-              style={styles.settingsButton}
-              onPress={onSettings}
+              testID="change-photo-button"
+              onPress={onChangePhoto}
               accessibilityRole="button"
-              accessibilityLabel="Settings"
+              accessibilityLabel="Change photo"
+              hitSlop={{ bottom: 6, left: 6, right: 6, top: 6 }}
+              style={[
+                styles.cameraBadge,
+                {
+                  backgroundColor: palette.peach[300],
+                  borderColor: palette.midnight[950],
+                },
+              ]}
             >
-              <Text style={styles.settingsIcon}>{"\u2699\uFE0F"}</Text>
+              <AppIcon name="camera" size={16} color={palette.midnight[950]} />
             </TouchableOpacity>
           </View>
-          <Text style={styles.username} accessibilityRole="header">{username}</Text>
-          <View style={styles.membershipBadge}>
-            <Text style={styles.membershipText}>{membershipTier}</Text>
-          </View>
-        </View>
 
-        {/* Stats Row */}
-        <View style={styles.statsRow}>
-          <View style={styles.statItem}>
-            <Text style={styles.statLabel}>Age</Text>
-            <Text style={styles.statValue}>{age}</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statLabel}>Weight</Text>
-            <Text style={styles.statValue}>{weight}</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statLabel}>Height</Text>
-            <Text style={styles.statValue}>{height}</Text>
-          </View>
-        </View>
-
-        {/* Metrics Cards */}
-        <View style={styles.cardsRow}>
-          <TouchableOpacity
-            testID="solace-score-card"
-            style={styles.scoreCard}
-            onPress={onScorePress}
-            accessibilityRole="button"
-            accessibilityLabel="View Solace Score"
+          <Text
+            testID="profile-name"
+            accessibilityRole="header"
+            style={[styles.name, { color: palette.warm[50] }]}
           >
-            <Text style={styles.cardTitle}>Solace Score</Text>
-            <Text style={styles.scoreValue}>{solaceScore}</Text>
-            <Text style={styles.scoreStatusText}>{scoreStatus}</Text>
-          </TouchableOpacity>
+            {userName}
+          </Text>
 
-          <TouchableOpacity
-            testID="mood-card"
-            style={styles.moodCard}
-            onPress={onMoodPress}
-            accessibilityRole="button"
-            accessibilityLabel="View Mood"
-          >
-            <Text style={styles.cardTitle}>Mood</Text>
-            <Text style={styles.moodLabel}>{currentMood}</Text>
-            <View testID="mood-bar-chart" style={styles.moodBarChart}>
-              {moodData.map((value, index) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.moodBar,
-                    { height: Math.max(8, (value / 10) * 40) },
-                  ]}
-                />
-              ))}
+          {isPremium ? (
+            <View
+              testID="premium-chip"
+              style={[
+                styles.premiumChip,
+                {
+                  backgroundColor: palette.midnight[800],
+                  borderColor: palette.midnight[600],
+                },
+              ]}
+              accessibilityRole="text"
+              accessibilityLabel="Premium member"
+            >
+              <AppIcon name="sparkles" size={11} color={palette.peach[300]} />
+              <BracketLabel variant="peach" announceAsLabel={false}>
+                Premium member
+              </BracketLabel>
             </View>
-          </TouchableOpacity>
+          ) : null}
         </View>
 
-        {/* Settings Menu Section */}
-        <View testID="settings-menu" style={styles.menuSection}>
-          <Text style={styles.menuSectionTitle}>Settings</Text>
-          <View style={styles.menuContainer}>
-            {menuItems.map((item, index) => (
-              <TouchableOpacity
-                key={item.key}
-                testID={`menu-item-${item.key}`}
-                style={[
-                  styles.menuItem,
-                  index < menuItems.length - 1 && styles.menuItemBorder,
-                ]}
-                onPress={item.onPress}
-                accessibilityRole="button"
-                accessibilityLabel={item.label}
-              >
-                <View style={styles.menuItemIcon}>
-                  <Icon
-                    name={item.icon}
-                    size={20}
-                    color={localColors.menuIcon}
-                  />
-                </View>
-                <Text style={styles.menuItemLabel}>{item.label}</Text>
-                <Icon
-                  name="chevron-forward-outline"
-                  size={18}
-                  color={localColors.menuChevron}
-                />
-              </TouchableOpacity>
-            ))}
-          </View>
+        {/* ---------------------------------------------------------------- */}
+        {/* Stats grid                                                         */}
+        {/* ---------------------------------------------------------------- */}
+        <View
+          style={styles.statsRow}
+          accessibilityRole="none"
+          accessibilityLabel="Your stats"
+          testID="stats-grid"
+        >
+          <StatTile
+            testID="stat-streak"
+            iconName="flame"
+            iconColor={palette.peach[300]}
+            value={String(streakDays)}
+            unit="d"
+            label="Streak"
+          />
+          <StatTile
+            testID="stat-sessions"
+            iconName="message-circle"
+            iconColor={palette.sage[300]}
+            value={String(sessionCount)}
+            unit=""
+            label="Sessions"
+          />
+          <StatTile
+            testID="stat-mindful"
+            iconName="wind"
+            iconColor={palette.aurora[300]}
+            value={String(mindfulHours)}
+            unit="h"
+            label="Mindful"
+          />
         </View>
 
-        {/* Sign Out Button */}
+        {/* ---------------------------------------------------------------- */}
+        {/* Account section                                                    */}
+        {/* ---------------------------------------------------------------- */}
+        <SettingsSection title="Account" testID="account-section">
+          <SettingsRow
+            testID="row-personal-info"
+            iconName="user"
+            iconHue="sage"
+            label="Personal information"
+            onPress={onPersonalInfo}
+          />
+          <SettingsRow
+            testID="row-notifications"
+            iconName="bell"
+            iconHue="sage"
+            label="Notifications"
+            badgeCount={unreadNotifications}
+            onPress={onNotifications}
+          />
+          <SettingsRow
+            testID="row-privacy"
+            iconName="shield"
+            iconHue="sage"
+            label="Privacy & security"
+            onPress={onPrivacy}
+          />
+          <SettingsRow
+            testID="row-language"
+            iconName="globe"
+            iconHue="sage"
+            label="Language"
+            value={language}
+            onPress={onLanguage}
+          />
+        </SettingsSection>
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Support section                                                    */}
+        {/* ---------------------------------------------------------------- */}
+        <View style={styles.supportSpacer} />
+        <SettingsSection title="Support" testID="support-section">
+          <SettingsRow
+            testID="row-help"
+            iconName="life-buoy"
+            iconHue="aurora"
+            label="Help center"
+            onPress={onHelp}
+          />
+          <SettingsRow
+            testID="row-feedback"
+            iconName="message-square"
+            iconHue="aurora"
+            label="Send feedback"
+            onPress={onFeedback}
+          />
+          <SettingsRow
+            testID="row-invite"
+            iconName="gift"
+            iconHue="aurora"
+            label="Invite friends"
+            onPress={onInvite}
+          />
+        </SettingsSection>
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Sign out + footer                                                  */}
+        {/* ---------------------------------------------------------------- */}
         <TouchableOpacity
           testID="sign-out-button"
-          style={styles.signOutButton}
-          onPress={onSignOut}
+          onPress={handleSignOut}
           accessibilityRole="button"
           accessibilityLabel="Sign out"
+          activeOpacity={0.85}
+          style={styles.signOutTouch}
         >
-          <Icon name="log-out-outline" size={20} color={localColors.signOutText} />
-          <Text style={styles.signOutText}>Sign Out</Text>
+          <GlassCard radius={20} style={styles.signOutCard}>
+            <View style={styles.signOutInner}>
+              <AppIcon name="log-out" size={16} color={palette.peach[300]} />
+              <Text
+                style={[styles.signOutLabel, { color: palette.peach[300] }]}
+              >
+                Sign out
+              </Text>
+            </View>
+          </GlassCard>
         </TouchableOpacity>
+
+        <Text
+          testID="version-footer"
+          style={[styles.footer, { color: palette.warm[500] }]}
+          accessibilityRole="text"
+        >
+          Solace v4.2.0 · Made with care
+        </Text>
       </ScrollView>
-    </View>
+    </ScreenContainer>
   );
 }
 
+// ---------------------------------------------------------------------------
+// Sub-component — StatTile
+// ---------------------------------------------------------------------------
+
+interface StatTileProps {
+  testID?: string;
+  iconName: string;
+  iconColor: string;
+  value: string;
+  unit: string;
+  label: string;
+}
+
+function StatTile({
+  testID,
+  iconName,
+  iconColor,
+  value,
+  unit,
+  label,
+}: StatTileProps): React.ReactElement {
+  const { palette } = useTheme();
+
+  return (
+    <GlassCard
+      testID={testID}
+      radius={20}
+      style={styles.statTile}
+      accessibilityRole="text"
+      accessibilityLabel={`${label}: ${value}${unit}`}
+    >
+      <AppIcon name={iconName} size={14} color={iconColor} />
+      <Text style={[styles.statValue, { color: palette.warm[50] }]}>
+        {value}
+        {unit ? (
+          <Text style={[styles.statUnit, { color: palette.warm[400] }]}>
+            {unit}
+          </Text>
+        ) : null}
+      </Text>
+      <BracketLabel variant="muted">{label}</BracketLabel>
+    </GlassCard>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Styles (alphabetically sorted)
+// ---------------------------------------------------------------------------
+
 const styles = StyleSheet.create({
-  avatar: {
-    backgroundColor: `${palette.white}${palette.alpha[10]}`,
-    borderColor: localColors.white,
-    borderRadius: 48,
-    borderWidth: 3,
-    height: 96,
-    width: 96,
+  avatarInitial: {
+    fontFamily: "Fraunces_400Regular",
+    fontSize: 30,
+    lineHeight: 34,
   },
-  avatarContainer: {
+  avatarInner: {
     alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+    width: "100%",
+  },
+  avatarWrap: {
     position: "relative",
   },
-  cardTitle: {
-    color: localColors.textSecondary,
-    fontSize: 13,
-    fontWeight: "600",
-  },
-  cardsRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginTop: 24,
-    paddingHorizontal: 24,
-  },
-  container: { backgroundColor: localColors.background, flex: 1 },
-  headerBg: {
-    backgroundColor: localColors.headerBg,
-    height: 140,
-    left: 0,
-    position: "absolute",
-    right: 0,
-    top: 0,
-  },
-  membershipBadge: {
-    backgroundColor: localColors.badgeBg,
-    borderRadius: 12,
-    marginTop: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 4,
-  },
-  membershipText: {
-    color: localColors.badgeText,
-    fontSize: 12,
-    fontWeight: "600",
-  },
-  menuContainer: {
-    backgroundColor: localColors.menuBg,
-    borderRadius: 16,
-    overflow: "hidden",
-  },
-  menuItem: {
+  cameraBadge: {
     alignItems: "center",
-    flexDirection: "row",
-    minHeight: 56,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  menuItemBorder: {
-    borderBottomColor: localColors.menuItemBorder,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  menuItemIcon: {
-    alignItems: "center",
-    height: 32,
-    justifyContent: "center",
-    marginRight: 12,
-    width: 32,
-  },
-  menuItemLabel: {
-    color: palette.white,
-    flex: 1,
-    fontSize: 15,
-    fontWeight: "500",
-  },
-  menuSection: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  menuSectionTitle: {
-    color: localColors.textSecondary,
-    fontSize: 12,
-    fontWeight: "700",
-    letterSpacing: 0.8,
-    marginBottom: 8,
-    textTransform: "uppercase",
-  },
-  moodBar: {
-    backgroundColor: localColors.moodBarActive,
-    borderRadius: 3,
-    flex: 1,
-  },
-  moodBarChart: {
-    alignItems: "flex-end",
-    flexDirection: "row",
-    gap: 4,
-    marginTop: 8,
-  },
-  moodCard: {
-    backgroundColor: localColors.cardBg,
-    borderRadius: 16,
-    flex: 1,
-    padding: 16,
-  },
-  moodLabel: {
-    color: localColors.white,
-    fontSize: 18,
-    fontWeight: "700",
-    marginTop: 8,
-  },
-  profileSection: {
-    alignItems: "center",
-    marginTop: 80,
-  },
-  scoreCard: {
-    backgroundColor: localColors.cardBg,
-    borderRadius: 16,
-    flex: 1,
-    padding: 16,
-  },
-  scoreStatusText: {
-    color: localColors.moodBarActive,
-    fontSize: 13,
-    fontWeight: "600",
-    marginTop: 4,
-  },
-  scoreValue: {
-    color: localColors.scoreColor,
-    fontSize: 36,
-    fontWeight: "800",
-    marginTop: 8,
-  },
-  scrollContent: { paddingBottom: 48 },
-  settingsButton: {
-    alignItems: "center",
-    bottom: 0,
+    borderRadius: 22,
+    borderWidth: 2,
+    bottom: -4,
+    height: 36,
     justifyContent: "center",
     minHeight: 44,
     minWidth: 44,
     position: "absolute",
-    right: -16,
+    right: -8,
+    width: 36,
   },
-  settingsIcon: { fontSize: 20 },
-  signOutButton: {
+  container: {
+    flex: 1,
+  },
+  footer: {
+    fontFamily: "FiraCode_400Regular",
+    fontSize: 9,
+    marginTop: 12,
+    textAlign: "center",
+  },
+  name: {
+    fontFamily: "Fraunces_400Regular",
+    fontSize: 26,
+    lineHeight: 30,
+    marginTop: 16,
+    textAlign: "center",
+  },
+  premiumChip: {
     alignItems: "center",
-    backgroundColor: localColors.signOutBg,
-    borderColor: localColors.signOutBorder,
-    borderRadius: 16,
+    alignSelf: "center",
+    borderRadius: 999,
     borderWidth: 1,
+    flexDirection: "row",
+    gap: 5,
+    marginTop: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  profileHeader: {
+    alignItems: "center",
+    paddingTop: 8,
+  },
+  scroll: {
+    paddingBottom: 40,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+  },
+  signOutCard: {
+    minHeight: 52,
+  },
+  signOutInner: {
+    alignItems: "center",
     flexDirection: "row",
     gap: 10,
     justifyContent: "center",
-    marginHorizontal: 24,
+    minHeight: 52,
+    paddingHorizontal: 16,
+  },
+  signOutLabel: {
+    fontFamily: "Inter_500Medium",
+    fontSize: 14,
+  },
+  signOutTouch: {
     marginTop: 16,
-    minHeight: 56,
-    paddingVertical: 16,
   },
-  signOutText: {
-    color: localColors.signOutText,
-    fontSize: 16,
-    fontWeight: "600",
+  statTile: {
+    alignItems: "center",
+    flex: 1,
+    gap: 6,
+    padding: 14,
   },
-  statItem: { alignItems: "center" },
-  statLabel: {
-    color: localColors.textSecondary,
-    fontSize: 12,
-    fontWeight: "600",
+  statUnit: {
+    fontFamily: "FiraCode_400Regular",
+    fontSize: 10,
   },
   statValue: {
-    color: localColors.white,
-    fontSize: 16,
-    fontWeight: "700",
-    marginTop: 4,
+    fontFamily: "Fraunces_400Regular",
+    fontSize: 22,
+    lineHeight: 24,
   },
   statsRow: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    gap: 10,
     marginTop: 24,
-    paddingHorizontal: 24,
   },
-  username: {
-    color: localColors.white,
-    fontSize: 22,
-    fontWeight: "800",
-    marginTop: 12,
+  supportSpacer: {
+    height: 16,
   },
 });
 
