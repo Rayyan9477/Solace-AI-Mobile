@@ -74,7 +74,7 @@ export interface FABProps {
  * // Inline centered FAB (journal dashboard style)
  * <FAB
  *   onPress={onAddJournal}
- *   color={palette.brown[700]}
+ *   color={palette.midnight[700]}
  *   testID="add-journal-fab"
  *   accessibilityLabel="Add new journal entry"
  *   style={{ alignSelf: 'center', marginTop: 24 }}
@@ -85,7 +85,7 @@ export function FAB({
   icon = "add",
   size = 56,
   color = palette.onboarding.step2,
-  iconColor = palette.white,
+  iconColor = palette.warm[50],
   style,
   testID,
   accessibilityLabel,

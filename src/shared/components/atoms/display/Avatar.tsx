@@ -20,12 +20,12 @@ import { palette } from "../../../theme";
  * Color tokens from theme
  */
 const colors = {
-  background: palette.gray[700],
-  initials: palette.gray[200],
-  border: palette.gray[900],
+  background: palette.midnight[700],
+  initials: palette.warm[200],
+  border: palette.midnight[950],
   // Status colors
   online: palette.green[500],
-  offline: palette.gray[500],
+  offline: palette.warm[500],
   away: palette.amber[500],
   busy: palette.red[500],
 };
@@ -182,28 +182,28 @@ export function Avatar({
 }
 
 const styles = StyleSheet.create({
+  background: {
+    alignItems: "center",
+    backgroundColor: colors.background,
+    justifyContent: "center",
+  },
   container: {
     position: "relative",
   },
-  background: {
-    backgroundColor: colors.background,
-    alignItems: "center",
-    justifyContent: "center",
+  image: {
+    left: 0,
+    position: "absolute",
+    top: 0,
   },
   initials: {
     color: colors.initials,
     fontWeight: "600",
   },
-  image: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-  },
   status: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
     borderColor: colors.border,
+    bottom: 0,
+    position: "absolute",
+    right: 0,
   },
 });
 

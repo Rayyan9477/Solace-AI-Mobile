@@ -17,7 +17,7 @@ interface BackButtonProps {
 
 export function BackButton({
   onPress,
-  color = palette.white,
+  color = palette.warm[50],
   size = 22,
   style,
   testID = "back-button",
@@ -38,10 +38,10 @@ export function BackButton({
 
 const styles = StyleSheet.create({
   container: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
     alignItems: "center",
+    borderRadius: 22,
+    height: 44,
     justifyContent: "center",
+    width: 44,
   },
 });

@@ -1,363 +1,585 @@
 /**
- * SleepDashboardScreen Component
- * @description Main sleep tracking dashboard with score hero, quality status, and overview metrics
- * @task Task 3.10.1: Sleep Dashboard Screen (Screen 87)
- * @phase Phase 3C: Refactored to use theme tokens
+ * SleepDashboardScreen — prototype v4.2 #11 reskin (Sprint 8 Batch C).
+ *
+ * Night-sky LinearGradient backdrop with StarField + lavender SmokeBlob,
+ * mini-header (back / "[ Sleep ]" / more), HeroCard "Last night" duration,
+ * GlassCard with SleepStagesBar + 4-col stage grid, GlassAuroraCard insight,
+ * GlassCard 7-day HistoryBars, and a primary "Log tonight's sleep" CTA.
+ *
+ * Maps to `prototypes/screens/11-sleep.js`.
  */
 
-import React from "react";
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { palette, applyShadow } from "../../../shared/theme";
-import { ScreenContainer } from "../../../shared/components/atoms/layout/ScreenContainer";
+import React, { useMemo } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
-type SleepQuality = "Excellent" | "Good" | "Fair" | "Poor" | "Insomniac";
+import { useTheme } from "@/shared/theme/useTheme";
+import { Button } from "@/shared/components/atoms/buttons/Button";
+import { AppIcon } from "@/shared/components/atoms/display/AppIcon";
+import { ScreenContainer } from "@/shared/components/atoms/layout";
+import {
+  BracketLabel,
+  GlassAuroraCard,
+  GlassCard,
+  HeroCard,
+  SmokeBlob,
+  StarField,
+} from "@/shared/components/primitives";
+import {
+  HistoryBars,
+  SleepStagesBar,
+  type SleepHistoryDay,
+} from "@/shared/components/organisms/sleep";
 
-interface SleepDashboardScreenProps {
-  sleepScore: number;
-  sleepQuality: SleepQuality;
-  remHours: number;
-  coreHours: number;
-  remProgress: number;
-  coreProgress: number;
-  onBack: () => void;
-  onSeeAll: () => void;
-  onAddSleep: () => void;
-  onMetricPress: (type: "rem" | "core") => void;
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+export interface SleepEntry {
+  /** Total sleep duration in minutes */
+  durationMinutes: number;
+  /** Quality percentage 0-100 */
+  qualityPercent: number;
+  /** Bedtime display string e.g. "11:14 PM" */
+  bedtime: string;
+  /** Wake time display string e.g. "7:02 AM" */
+  wakeTime: string;
+  /** Stage breakdown in minutes */
+  stages: {
+    deep: number;
+    core: number;
+    rem: number;
+    awake: number;
+  };
 }
 
+export interface SleepDashboardScreenProps {
+  /** Last night's sleep entry — defaults provided for empty/test render. */
+  lastNight?: SleepEntry;
+  /** Weekly history (must be 7 days when provided). */
+  weekHistory?: SleepHistoryDay[];
+  onBack: () => void;
+  onLogSleep: () => void;
+  onMore?: () => void;
+  testID?: string;
+  style?: StyleProp<ViewStyle>;
+}
+
+// ---------------------------------------------------------------------------
+// Defaults / fixtures
+// ---------------------------------------------------------------------------
+
+const DEFAULT_ENTRY: SleepEntry = {
+  durationMinutes: 7 * 60 + 48,
+  qualityPercent: 86,
+  bedtime: "11:14 PM",
+  wakeTime: "7:02 AM",
+  stages: { deep: 112, core: 225, rem: 66, awake: 65 },
+};
+
+const DEFAULT_HISTORY: SleepHistoryDay[] = [
+  { label: "M", hours: 5.2 },
+  { label: "T", hours: 6.8 },
+  { label: "W", hours: 7.4 },
+  { label: "T", hours: 6.5 },
+  { label: "F", hours: 7.8 },
+  { label: "S", hours: 8.1 },
+  { label: "S", hours: 7.8, isToday: true },
+];
+
+const formatHM = (mins: number): { h: number; m: number } => ({
+  h: Math.floor(mins / 60),
+  m: mins % 60,
+});
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
 export function SleepDashboardScreen({
-  sleepScore,
-  sleepQuality,
-  remHours,
-  coreHours,
-  remProgress,
-  coreProgress,
+  lastNight = DEFAULT_ENTRY,
+  weekHistory = DEFAULT_HISTORY,
   onBack,
-  onSeeAll,
-  onAddSleep,
-  onMetricPress,
+  onLogSleep,
+  onMore,
+  testID = "sleep-dashboard-screen",
+  style,
 }: SleepDashboardScreenProps): React.ReactElement {
+  const { palette, typography } = useTheme();
+
+  const { h, m } = formatHM(lastNight.durationMinutes);
+  const stageRows = useMemo(
+    () => [
+      { id: "deep", label: "Deep", value: lastNight.stages.deep, color: palette.lavender[300] },
+      { id: "core", label: "Core", value: lastNight.stages.core, color: palette.sage[300] },
+      { id: "rem", label: "REM", value: lastNight.stages.rem, color: palette.peach[300] },
+      { id: "awake", label: "Awake", value: lastNight.stages.awake, color: palette.warm[200] },
+    ],
+    [
+      lastNight.stages.deep,
+      lastNight.stages.core,
+      lastNight.stages.rem,
+      lastNight.stages.awake,
+      palette.lavender,
+      palette.sage,
+      palette.peach,
+      palette.warm,
+    ],
+  );
+
+  const formatStageLabel = (mins: number): string => {
+    const mh = Math.floor(mins / 60);
+    const mm = mins % 60;
+    return mh > 0 ? `${mh}h ${String(mm).padStart(2, "0")}m` : `${mm}m`;
+  };
+
   return (
-    <ScreenContainer testID="sleep-dashboard-screen" style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Hero Section */}
-        <View testID="sleep-hero-section" style={[styles.heroSection, { backgroundColor: palette.onboarding.step5 }]}>
-          {/* Decorative Clouds */}
-          <View testID="decorative-clouds" style={styles.decorativeClouds}>
-            <View style={[styles.cloud, styles.cloudOne]} />
-            <View style={[styles.cloud, styles.cloudTwo]} />
-            <View style={[styles.cloud, styles.cloudThree]} />
-            <View style={[styles.cloud, styles.cloudFour]} />
-          </View>
+    <ScreenContainer
+      testID={testID}
+      backgroundColor={palette.midnight[950]}
+      style={[styles.container, style]}
+    >
+      {/* Night sky gradient backdrop */}
+      <LinearGradient
+        testID="night-sky-gradient"
+        colors={[palette.midnight[700], palette.midnight[800], palette.midnight[950]]}
+        locations={[0, 0.35, 1]}
+        style={StyleSheet.absoluteFill}
+        pointerEvents="none"
+      />
 
-          {/* Header */}
-          <View style={styles.header}>
-            <TouchableOpacity
-              testID="back-button"
-              style={styles.backButton}
-              onPress={onBack}
-              accessibilityRole="button"
-              accessibilityLabel="Go back"
-            >
-              <Icon name="chevron-back-outline" size={20} color={palette.white} />
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Sleep Quality</Text>
-            <View style={styles.headerSpacer} />
-          </View>
+      {/* Stars + lavender smoke */}
+      <View
+        testID="star-field"
+        style={styles.starField}
+        pointerEvents="none"
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+      >
+        <StarField count={24} width={380} height={320} seed={11} />
+      </View>
+      <View
+        style={styles.smokeWrap}
+        pointerEvents="none"
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+      >
+        <SmokeBlob size={200} tint="lavender" opacity={0.5} />
+      </View>
 
-          {/* Score Display */}
-          <View testID="sleep-score-display" style={styles.scoreDisplay}>
-            <Text style={styles.scoreValue}>{sleepScore}</Text>
-            <Text style={styles.qualityLabel}>{`You are ${sleepQuality}.`}</Text>
-          </View>
-        </View>
-
-        {/* FAB overlaps hero/content boundary */}
-        <View style={styles.fabContainer}>
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Mini-header */}
+        <View style={styles.header}>
           <TouchableOpacity
-            testID="add-sleep-button"
-            style={styles.fab}
-            onPress={onAddSleep}
+            testID="back-button"
+            style={[
+              styles.iconBtn,
+              { backgroundColor: palette.midnight[800], borderColor: palette.midnight[600] },
+            ]}
+            onPress={onBack}
             accessibilityRole="button"
-            accessibilityLabel="Add sleep entry"
+            accessibilityLabel="Go back"
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <Text style={styles.fabIcon}>+</Text>
+            <AppIcon name="arrow-left" size={18} color={palette.warm[100]} />
+          </TouchableOpacity>
+
+          <BracketLabel variant="muted">Sleep</BracketLabel>
+
+          <TouchableOpacity
+            testID="more-button"
+            style={[
+              styles.iconBtn,
+              { backgroundColor: palette.midnight[800], borderColor: palette.midnight[600] },
+            ]}
+            onPress={onMore}
+            disabled={!onMore}
+            accessibilityRole="button"
+            accessibilityLabel="Sleep options"
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <AppIcon name="more-horizontal" size={18} color={palette.warm[100]} />
           </TouchableOpacity>
         </View>
 
-        {/* Sleep Overview Section */}
-        <View style={styles.overviewSection}>
-          <View style={styles.sectionHeaderRow}>
-            <Text style={styles.sectionHeaderText}>Sleep Overview</Text>
-            <TouchableOpacity
-              testID="see-all-button"
-              onPress={onSeeAll}
-              accessibilityRole="button"
-              accessibilityLabel="See all sleep overview"
+        {/* Hero last-night card */}
+        <HeroCard radius={24} style={styles.heroCard}>
+          <GlassCard variant="strong" radius={23} style={styles.heroInner}>
+            <View
+              style={styles.heroBlobWrap}
+              pointerEvents="none"
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
             >
-              <Text style={styles.seeAllText}>See All</Text>
-            </TouchableOpacity>
+              <SmokeBlob size={180} tint="lavender" opacity={0.45} />
+            </View>
+
+            <View style={styles.heroBracketRow}>
+              <AppIcon name="moon" size={14} color={palette.lavender[300]} />
+              <BracketLabel variant="default" style={styles.heroBracket}>
+                Last night
+              </BracketLabel>
+            </View>
+
+            <Text
+              testID="duration-display"
+              accessibilityRole="text"
+              accessibilityLabel={`${h} hours ${m} minutes`}
+              style={[
+                styles.heroDuration,
+                { color: palette.warm[50], fontFamily: typography.fontFamily.displayRegular },
+              ]}
+            >
+              <Text>{`${h}`}</Text>
+              <Text
+                style={[
+                  styles.heroUnit,
+                  { color: palette.warm[400], fontFamily: typography.fontFamily.mono },
+                ]}
+              >
+                h
+              </Text>
+              <Text>{` ${String(m).padStart(2, "0")}`}</Text>
+              <Text
+                style={[
+                  styles.heroUnit,
+                  { color: palette.warm[400], fontFamily: typography.fontFamily.mono },
+                ]}
+              >
+                m
+              </Text>
+            </Text>
+
+            <View style={styles.heroMetaRow}>
+              <View
+                style={[
+                  styles.qualityChip,
+                  { backgroundColor: `${palette.sage[300]}${palette.alpha[15]}` },
+                ]}
+              >
+                <Text
+                  testID="quality-text"
+                  style={[
+                    styles.qualityChipText,
+                    { color: palette.sage[300], fontFamily: typography.fontFamily.sansMedium },
+                  ]}
+                >
+                  Quality
+                  <Text style={{ fontFamily: typography.fontFamily.mono }}>{` ${lastNight.qualityPercent}%`}</Text>
+                </Text>
+              </View>
+              <Text
+                style={[
+                  styles.heroSchedule,
+                  { color: palette.warm[500], fontFamily: typography.fontFamily.mono },
+                ]}
+              >
+                {`${lastNight.bedtime} — ${lastNight.wakeTime}`}
+              </Text>
+            </View>
+          </GlassCard>
+        </HeroCard>
+
+        {/* Sleep stages */}
+        <GlassCard radius={20} style={styles.stagesCard} testID="sleep-stages-card">
+          <View style={styles.stagesHeader}>
+            <Text
+              style={[
+                styles.cardTitle,
+                { color: palette.warm[50], fontFamily: typography.fontFamily.sansMedium },
+              ]}
+            >
+              Sleep stages
+            </Text>
+            <BracketLabel variant="muted">Per hypnogram</BracketLabel>
           </View>
 
-          {/* Metric Cards */}
-          <View style={styles.metricsRow}>
-            {/* REM Card */}
-            <TouchableOpacity
-              testID="rem-metric-card"
-              style={styles.metricCard}
-              onPress={() => onMetricPress("rem")}
-              accessibilityRole="button"
-              accessibilityLabel={`REM sleep: ${remHours} hours`}
-            >
-              <View style={styles.metricHeader}>
-                <Text style={styles.metricLabel}>Rem</Text>
-                <Icon name="bed-outline" size={18} color={palette.white} />
-              </View>
-              <View testID="rem-progress-ring" style={styles.progressRingContainer}>
-                <View style={[styles.progressRingTrack, styles.remRingSize]}>
-                  <View
-                    style={[
-                      styles.progressRingFill,
-                      styles.remRingSize,
-                      {
-                        borderColor: palette.olive[500],
-                        borderTopColor: "transparent",
-                        transform: [{ rotate: `${remProgress * 360}deg` }],
-                      },
-                    ]}
-                  />
-                </View>
-                <Text style={styles.metricValue}>{`${remHours}h`}</Text>
-              </View>
-            </TouchableOpacity>
+          <SleepStagesBar
+            testID="sleep-stages-bar"
+            stages={[
+              { type: "deep", durationMinutes: lastNight.stages.deep },
+              { type: "light", durationMinutes: lastNight.stages.core, label: "Core" },
+              { type: "rem", durationMinutes: lastNight.stages.rem },
+              { type: "awake", durationMinutes: lastNight.stages.awake },
+            ]}
+            showLabels={false}
+          />
 
-            {/* Core Card */}
-            <TouchableOpacity
-              testID="core-metric-card"
-              style={styles.metricCard}
-              onPress={() => onMetricPress("core")}
-              accessibilityRole="button"
-              accessibilityLabel={`Core sleep: ${coreHours} hours`}
-            >
-              <View style={styles.metricHeader}>
-                <Text style={styles.metricLabel}>Core</Text>
-                <Icon name="moon-outline" size={18} color={palette.white} />
-              </View>
-              <View testID="core-progress-ring" style={styles.progressRingContainer}>
-                <View style={[styles.progressRingTrack, styles.coreRingSize]}>
-                  <View
-                    style={[
-                      styles.progressRingFill,
-                      styles.coreRingSize,
-                      {
-                        borderColor: palette.onboarding.step2,
-                        borderTopColor: "transparent",
-                        transform: [{ rotate: `${coreProgress * 360}deg` }],
-                      },
-                    ]}
-                  />
+          <View style={styles.stagesGrid}>
+            {stageRows.map((row) => (
+              <View key={row.id} style={styles.stageCell}>
+                <View style={styles.stageDotRow}>
+                  <View style={[styles.stageDot, { backgroundColor: row.color }]} />
+                  <BracketLabel variant="muted" style={styles.stageDotLabel}>
+                    {row.label}
+                  </BracketLabel>
                 </View>
-                <Text style={styles.metricValue}>{`${coreHours}h`}</Text>
+                <Text
+                  style={[
+                    styles.stageValue,
+                    { color: palette.warm[50], fontFamily: typography.fontFamily.mono },
+                  ]}
+                >
+                  {formatStageLabel(row.value)}
+                </Text>
               </View>
-            </TouchableOpacity>
+            ))}
           </View>
-        </View>
+        </GlassCard>
+
+        {/* Insight */}
+        <GlassAuroraCard radius={20} style={styles.insightCard}>
+          <View style={styles.insightRow}>
+            <View
+              style={[
+                styles.insightIconWrap,
+                {
+                  backgroundColor: `${palette.sage[300]}${palette.alpha[15]}`,
+                  borderColor: `${palette.sage[300]}${palette.alpha[30]}`,
+                },
+              ]}
+            >
+              <AppIcon name="sparkles" size={16} color={palette.sage[300]} />
+            </View>
+            <View style={styles.insightTextWrap}>
+              <Text
+                style={[
+                  styles.insightTitle,
+                  { color: palette.warm[50], fontFamily: typography.fontFamily.sansMedium },
+                ]}
+              >
+                Your best sleep this week
+              </Text>
+              <Text
+                style={[
+                  styles.insightSubtitle,
+                  { color: palette.warm[500], fontFamily: typography.fontFamily.sans },
+                ]}
+              >
+                You went to bed 30 min earlier — keep it up.
+              </Text>
+            </View>
+          </View>
+        </GlassAuroraCard>
+
+        {/* Weekly history */}
+        <GlassCard radius={20} style={styles.historyCard} testID="weekly-history-card">
+          <View style={styles.stagesHeader}>
+            <Text
+              style={[
+                styles.cardTitle,
+                { color: palette.warm[50], fontFamily: typography.fontFamily.sansMedium },
+              ]}
+            >
+              7-day history
+            </Text>
+            <Text
+              style={[
+                styles.historyAvg,
+                { color: palette.warm[500], fontFamily: typography.fontFamily.sans },
+              ]}
+            >
+              Avg
+              <Text style={{ color: palette.warm[200], fontFamily: typography.fontFamily.mono }}>
+                {" 7.2h"}
+              </Text>
+            </Text>
+          </View>
+          <View style={styles.historyBarsWrap}>
+            <HistoryBars days={weekHistory} goalHours={8} height={120} />
+          </View>
+        </GlassCard>
+
+        {/* CTA */}
+        <Button
+          testID="log-sleep-button"
+          label="Log tonight's sleep"
+          variant="primary"
+          fullWidth
+          onPress={onLogSleep}
+          accessibilityLabel="Log tonight's sleep"
+          leftIcon={<AppIcon name="moon" size={16} color={palette.warm[50]} />}
+          style={styles.cta}
+        />
       </ScrollView>
     </ScreenContainer>
   );
 }
 
+// ---------------------------------------------------------------------------
+// Styles
+// ---------------------------------------------------------------------------
+
 const styles = StyleSheet.create({
-  backButton: {
-    alignItems: "center",
-    borderColor: `${palette.white}${palette.alpha[30]}`,
-    borderRadius: 20,
-    borderWidth: 1,
-    height: 40,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    width: 40,
-  },
-  backIcon: {
-    color: palette.white,
-    fontSize: 20,
-  },
-  cloud: {
-    backgroundColor: `${palette.white}${palette.alpha[10]}`,
-    borderRadius: 50,
-    position: "absolute",
-  },
-  cloudFour: {
-    borderRadius: 40,
-    height: 80,
-    left: 20,
-    top: 60,
-    width: 80,
-  },
-  cloudOne: {
-    height: 100,
-    right: -20,
-    top: -10,
-    width: 100,
-  },
-  cloudThree: {
-    bottom: 20,
-    height: 60,
-    left: -10,
-    width: 60,
-  },
-  cloudTwo: {
-    height: 120,
-    right: 40,
-    top: 80,
-    width: 120,
+  cardTitle: {
+    fontSize: 14,
   },
   container: {
-    backgroundColor: palette.brown[900],
     flex: 1,
   },
-  coreRingSize: {
-    borderRadius: 40,
-    height: 80,
-    width: 80,
-  },
-  decorativeClouds: {
-    bottom: 0,
-    left: 0,
-    position: "absolute",
-    right: 0,
-    top: 0,
-  },
-  fab: {
-    alignItems: "center",
-    backgroundColor: palette.brown[700],
-    borderRadius: 28,
-    height: 56,
-    justifyContent: "center",
-    minHeight: 44,
-    minWidth: 44,
-    ...applyShadow("md"),
-    width: 56,
-  },
-  fabContainer: {
-    alignItems: "center",
-    marginTop: -28,
-    zIndex: 10,
-  },
-  fabIcon: {
-    color: palette.white,
-    fontSize: 28,
-    fontWeight: "600",
+  cta: {
+    marginTop: 24,
   },
   header: {
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 24,
-    paddingTop: 16,
+    marginBottom: 20,
   },
-  headerSpacer: {
-    width: 44,
+  heroBlobWrap: {
+    position: "absolute",
+    right: -40,
+    top: -40,
   },
-  headerTitle: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "600",
+  heroBracket: {
+    marginLeft: 6,
   },
-  heroSection: {
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-    overflow: "hidden",
-    paddingBottom: 48,
-  },
-  metricCard: {
-    backgroundColor: palette.brown[800],
-    borderColor: palette.brown[700],
-    borderRadius: 16,
-    borderWidth: 1,
-    flex: 1,
-    marginHorizontal: 6,
-    padding: 16,
-  },
-  metricHeader: {
+  heroBracketRow: {
     alignItems: "center",
     flexDirection: "row",
-    justifyContent: "space-between",
+    marginBottom: 12,
+  },
+  heroCard: {
     marginBottom: 16,
   },
-  metricIcon: {
-    fontSize: 18,
+  heroDuration: {
+    fontSize: 60,
+    letterSpacing: -1.2,
+    lineHeight: 64,
   },
-  metricLabel: {
-    color: palette.white,
-    fontSize: 16,
-    fontWeight: "700",
+  heroInner: {
+    overflow: "hidden",
+    padding: 24,
   },
-  metricValue: {
-    color: palette.white,
-    fontSize: 20,
-    fontWeight: "700",
-    position: "absolute",
-  },
-  metricsRow: {
+  heroMetaRow: {
+    alignItems: "center",
     flexDirection: "row",
+    gap: 10,
     marginTop: 16,
-    paddingHorizontal: 18,
   },
-  overviewSection: {
-    paddingTop: 20,
+  heroSchedule: {
+    fontSize: 10,
   },
-  progressRingContainer: {
+  heroUnit: {
+    fontSize: 28,
+  },
+  historyAvg: {
+    fontSize: 10,
+  },
+  historyBarsWrap: {
     alignItems: "center",
-    height: 80,
+    marginTop: 12,
+  },
+  historyCard: {
+    marginTop: 16,
+    padding: 20,
+  },
+  iconBtn: {
+    alignItems: "center",
+    borderRadius: 22,
+    borderWidth: 1,
+    height: 44,
     justifyContent: "center",
+    minHeight: 44,
+    minWidth: 44,
+    width: 44,
   },
-  progressRingFill: {
-    borderWidth: 6,
-    position: "absolute",
+  insightCard: {
+    marginTop: 16,
+    padding: 16,
   },
-  progressRingTrack: {
-    borderColor: `${palette.white}${palette.alpha[15]}`,
-    borderWidth: 6,
-  },
-  qualityLabel: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "500",
-    marginTop: 8,
-  },
-  remRingSize: {
-    borderRadius: 40,
-    height: 80,
-    width: 80,
-  },
-  scoreDisplay: {
+  insightIconWrap: {
     alignItems: "center",
-    marginTop: 32,
-    paddingBottom: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    height: 36,
+    justifyContent: "center",
+    width: 36,
   },
-  scoreValue: {
-    color: palette.white,
-    fontSize: 72,
-    fontWeight: "800",
+  insightRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 12,
   },
-  sectionHeaderRow: {
+  insightSubtitle: {
+    fontSize: 11,
+    marginTop: 2,
+  },
+  insightTextWrap: {
+    flex: 1,
+  },
+  insightTitle: {
+    fontSize: 13,
+  },
+  qualityChip: {
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  qualityChipText: {
+    fontSize: 11,
+  },
+  scroll: {
+    paddingBottom: 40,
+    paddingHorizontal: 24,
+    paddingTop: 12,
+  },
+  smokeWrap: {
+    position: "absolute",
+    right: -20,
+    top: 40,
+  },
+  stageCell: {
+    flex: 1,
+  },
+  stageDot: {
+    borderRadius: 4,
+    height: 6,
+    marginRight: 6,
+    width: 6,
+  },
+  stageDotLabel: {
+    fontSize: 9,
+  },
+  stageDotRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    marginBottom: 4,
+  },
+  stageValue: {
+    fontSize: 11,
+  },
+  stagesCard: {
+    padding: 20,
+  },
+  stagesGrid: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 16,
+  },
+  stagesHeader: {
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 24,
+    marginBottom: 12,
   },
-  sectionHeaderText: {
-    color: palette.white,
-    fontSize: 18,
-    fontWeight: "700",
-  },
-  seeAllText: {
-    color: palette.tan[500],
-    fontSize: 14,
-    fontWeight: "600",
+  starField: {
+    height: 320,
+    left: 0,
+    position: "absolute",
+    right: 0,
+    top: 0,
   },
 });
 

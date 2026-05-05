@@ -36,9 +36,9 @@ const TIME_RANGES = ["1 Day", "1 Week", "1 Month", "1 Year", "All Time"];
 const TIME_LABELS = ["11:00", "12:00", "13:00", "14:00", "15:00"];
 
 const LEGEND_ITEMS = [
-  { label: "Core", color: palette.olive[500] },
+  { label: "Core", color: palette.sage[300] },
   { label: "REM", color: palette.accent.orange },
-  { label: "Post-REM", color: palette.gold[500] },
+  { label: "Post-REM", color: palette.aurora[500] },
 ];
 
 export function SleepInsightsScreen({
@@ -112,7 +112,7 @@ export function SleepInsightsScreen({
             <View
               style={[
                 styles.chartBar,
-                { backgroundColor: palette.olive[500], width: "60%" },
+                { backgroundColor: palette.sage[300], width: "60%" },
               ]}
             />
             <View
@@ -129,7 +129,7 @@ export function SleepInsightsScreen({
               style={[
                 styles.chartBar,
                 {
-                  backgroundColor: palette.gold[500],
+                  backgroundColor: palette.aurora[500],
                   width: "20%",
                   marginLeft: "70%",
                 },

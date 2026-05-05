@@ -48,28 +48,28 @@ const variantColors: Record<
   }
 > = {
   filled: {
-    background: palette.stone[500],
-    iconColor: palette.white,
+    background: palette.warm[500],
+    iconColor: palette.warm[50],
     border: "transparent",
-    pressedBackground: palette.stone[600],
+    pressedBackground: palette.midnight[600],
   },
   tinted: {
-    background: `${palette.stone[500]}${palette.alpha[20]}`,
-    iconColor: palette.stone[500],
+    background: `${palette.warm[500]}${palette.alpha[20]}`,
+    iconColor: palette.warm[500],
     border: "transparent",
-    pressedBackground: `${palette.stone[500]}${palette.alpha[30]}`,
+    pressedBackground: `${palette.warm[500]}${palette.alpha[30]}`,
   },
   outlined: {
     background: "transparent",
-    iconColor: palette.stone[500],
-    border: palette.stone[500],
-    pressedBackground: `${palette.stone[500]}${palette.alpha[10]}`,
+    iconColor: palette.warm[500],
+    border: palette.warm[500],
+    pressedBackground: `${palette.warm[500]}${palette.alpha[10]}`,
   },
   ghost: {
     background: "transparent",
-    iconColor: palette.stone[500],
+    iconColor: palette.warm[500],
     border: "transparent",
-    pressedBackground: `${palette.stone[500]}${palette.alpha[10]}`,
+    pressedBackground: `${palette.warm[500]}${palette.alpha[10]}`,
   },
 };
 
@@ -127,7 +127,7 @@ export function IconButton({
       justifyContent: "center",
       borderRadius: circular ? sizeValue / 2 : 8,
       backgroundColor: disabled
-        ? `${palette.stone[500]}${palette.alpha[30]}`
+        ? `${palette.warm[500]}${palette.alpha[30]}`
         : colors.background,
       borderWidth: colors.border !== "transparent" ? 1 : 0,
       borderColor: colors.border,

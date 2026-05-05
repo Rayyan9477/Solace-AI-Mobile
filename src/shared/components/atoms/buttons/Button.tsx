@@ -53,44 +53,44 @@ const sizeSpecs: Record<ButtonSize, SizeSpec> = {
  */
 const variantColors: Record<ButtonVariant, VariantColors> = {
   primary: {
-    background: palette.stone[500],
-    text: palette.white,
+    background: palette.warm[500],
+    text: palette.warm[50],
     border: "transparent",
-    pressedBackground: palette.stone[600],
-    disabledBackground: palette.brown[700],
-    disabledText: palette.gray[500],
+    pressedBackground: palette.midnight[600],
+    disabledBackground: palette.midnight[700],
+    disabledText: palette.warm[500],
   },
   secondary: {
-    background: palette.stone[200],
-    text: palette.stone[900],
+    background: palette.warm[100],
+    text: palette.midnight[950],
     border: "transparent",
-    pressedBackground: palette.stone[300],
-    disabledBackground: palette.brown[700],
-    disabledText: palette.gray[500],
+    pressedBackground: palette.warm[200],
+    disabledBackground: palette.midnight[700],
+    disabledText: palette.warm[500],
   },
   outline: {
     background: "transparent",
-    text: palette.stone[500],
-    border: palette.stone[500],
-    pressedBackground: `${palette.stone[500]}${palette.alpha[10]}`,
+    text: palette.warm[500],
+    border: palette.warm[500],
+    pressedBackground: `${palette.warm[500]}${palette.alpha[10]}`,
     disabledBackground: "transparent",
-    disabledText: palette.gray[500],
+    disabledText: palette.warm[500],
   },
   ghost: {
     background: "transparent",
-    text: palette.stone[500],
+    text: palette.warm[500],
     border: "transparent",
-    pressedBackground: `${palette.stone[500]}${palette.alpha[10]}`,
+    pressedBackground: `${palette.warm[500]}${palette.alpha[10]}`,
     disabledBackground: "transparent",
-    disabledText: palette.gray[500],
+    disabledText: palette.warm[500],
   },
   crisis: {
     background: palette.red[500],
-    text: palette.white,
+    text: palette.warm[50],
     border: palette.red[600],
     pressedBackground: palette.red[600],
-    disabledBackground: palette.brown[700],
-    disabledText: palette.gray[500],
+    disabledBackground: palette.midnight[700],
+    disabledText: palette.warm[500],
   },
   link: {
     background: "transparent",
@@ -98,7 +98,7 @@ const variantColors: Record<ButtonVariant, VariantColors> = {
     border: "transparent",
     pressedBackground: "transparent",
     disabledBackground: "transparent",
-    disabledText: palette.gray[500],
+    disabledText: palette.warm[500],
   },
 };
 
@@ -281,8 +281,8 @@ export function Button({
 
 const styles = StyleSheet.create({
   animatedContent: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
     justifyContent: "center",
   },
   iconLeft: {

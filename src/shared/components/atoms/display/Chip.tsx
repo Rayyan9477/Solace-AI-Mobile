@@ -24,20 +24,20 @@ import { palette } from "../../../theme";
  */
 const colors = {
   // Filled variant
-  filledBg: palette.gray[700],
+  filledBg: palette.midnight[700],
   filledBgSelected: palette.indigo[400],
-  filledText: palette.gray[200],
-  filledTextSelected: palette.white,
+  filledText: palette.warm[200],
+  filledTextSelected: palette.warm[50],
   // Outlined variant
-  outlinedBorder: palette.gray[600],
+  outlinedBorder: palette.midnight[600],
   outlinedBorderSelected: palette.indigo[400],
-  outlinedText: palette.gray[200],
+  outlinedText: palette.warm[200],
   outlinedTextSelected: palette.indigo[400],
   // Disabled
-  disabled: palette.gray[800],
-  disabledText: palette.gray[500],
+  disabled: palette.midnight[800],
+  disabledText: palette.warm[500],
   // Dismiss button
-  dismiss: palette.gray[400],
+  dismiss: palette.warm[400],
 };
 
 /**
@@ -203,7 +203,7 @@ export function Chip({
 
       {/* Dismiss Button */}
       {onDismiss && (
-        <Pressable
+        <Pressable accessibilityRole="button"
           testID={testID ? `${testID}-dismiss` : "chip-dismiss"}
           onPress={handleDismiss}
           disabled={disabled}
@@ -239,15 +239,9 @@ export function Chip({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
     alignItems: "center",
     alignSelf: "flex-start",
-  },
-  leftIcon: {
-    marginRight: 6,
-  },
-  label: {
-    fontWeight: "500",
+    flexDirection: "row",
   },
   dismissButton: {
     marginLeft: 4,
@@ -260,6 +254,12 @@ const styles = StyleSheet.create({
   dismissX: {
     fontWeight: "600",
     lineHeight: 16,
+  },
+  label: {
+    fontWeight: "500",
+  },
+  leftIcon: {
+    marginRight: 6,
   },
 });
 
