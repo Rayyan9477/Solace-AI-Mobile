@@ -32,31 +32,31 @@ export function PlaceholderIllustration({
 
 const styles = StyleSheet.create({
   container: {
-    width: 200,
-    height: 200,
-    borderWidth: 2,
-    borderRadius: 100,
-    borderStyle: "dashed",
-    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.1)",
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: palette.white,
-    marginBottom: 8,
-  },
-  stepText: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: palette.white,
-    marginBottom: 8,
+    borderRadius: 100,
+    borderStyle: "dashed",
+    borderWidth: 2,
+    height: 200,
+    justifyContent: "center",
+    width: 200,
   },
   helpText: {
-    fontSize: 12,
     color: "rgba(255, 255, 255, 0.6)",
+    fontSize: 12,
     textAlign: "center",
+  },
+  stepText: {
+    color: palette.warm[50],
+    fontSize: 24,
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  text: {
+    color: palette.warm[50],
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 8,
   },
 });
 

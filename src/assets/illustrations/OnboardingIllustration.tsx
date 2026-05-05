@@ -157,20 +157,20 @@ export function OnboardingIllustration({
 // ---------------------------------------------------------------------------
 
 const styles = StyleSheet.create({
-  root: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  circle: {
-    position: "absolute",
-  },
   centred: {
     // Centred inside the root View via absolute positioning + auto-margin.
     // Works because alignItems/justifyContent on the parent centres the
     // absolute children relative to the root bounds.
     alignSelf: "center",
   },
+  circle: {
+    position: "absolute",
+  },
   innerDisc: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  root: {
     alignItems: "center",
     justifyContent: "center",
   },

@@ -28,6 +28,7 @@ import { useTheme } from "../../shared/theme/useTheme";
 import type { ThemeId } from "../../shared/theme/presets";
 import { useAuth } from "../AuthContext";
 import { calculateSolaceScore } from "../../features/assessment/utils/scoreCalculator";
+import { useRepositories } from "../providers/RepositoryProvider";
 
 import { ProfileSetupDetailsScreen } from "../../features/onboarding/screens/ProfileSetupDetailsScreen";
 import { EmergencyContactScreen } from "../../features/crisis/screens/EmergencyContactScreen";
@@ -159,9 +160,20 @@ function AssessmentResultsRoute({
   navigation,
   route,
 }: OnboardingScreenProps<"AssessmentResults">): React.ReactElement {
+  const { settings, isReady } = useRepositories();
   const score = route.params?.freudScore ?? 50;
   const category = score >= 70 ? "healthy" : score >= 40 ? "unstable" : "critical";
   const result = calculateSolaceScore({});
+
+  // Sprint 11: persist the score the moment we render the results so the
+  // value survives an app restart. We fire-and-forget — failure must not
+  // block the onboarding flow.
+  React.useEffect(() => {
+    if (!isReady) return;
+    void settings
+      .set({ key: "solaceScore", value: String(score) })
+      .catch(() => undefined);
+  }, [isReady, score, settings]);
 
   return (
     <AssessmentResultsScreen
@@ -195,19 +207,40 @@ function ThemePickerRoute({
   navigation,
 }: OnboardingScreenProps<"ThemePicker">): React.ReactElement {
   const { id: currentThemeId, setTheme } = useTheme();
+  const { settings, isReady } = useRepositories();
+
   const handleChange = useCallback(
     (id: ThemeId) => {
       void setTheme(id);
     },
     [setTheme],
   );
+
+  // Sprint 11: persist the picked theme on continue/skip so the next launch
+  // can restore it from disk.
+  const persist = useCallback(
+    (id: ThemeId): void => {
+      if (!isReady) return;
+      void settings
+        .set({ key: "preferredTheme", value: id })
+        .catch(() => undefined);
+    },
+    [isReady, settings],
+  );
+
   return (
     <ThemePickerScreen
       selectedThemeId={currentThemeId}
       onThemeChange={handleChange}
       onBack={() => navigation.goBack()}
-      onSkip={() => navigation.navigate("NotificationPrimer")}
-      onContinue={() => navigation.navigate("NotificationPrimer")}
+      onSkip={() => {
+        persist(currentThemeId);
+        navigation.navigate("NotificationPrimer");
+      }}
+      onContinue={() => {
+        persist(currentThemeId);
+        navigation.navigate("NotificationPrimer");
+      }}
       onSystemDefault={() => {
         void setTheme("cosmic");
       }}
