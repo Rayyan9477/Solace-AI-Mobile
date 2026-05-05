@@ -58,14 +58,14 @@ const weightMap: Record<TextWeight, TextStyle["fontWeight"]> = {
 const colorTokens: Record<TextColor, string> = {
   primary: palette.indigo[400],
   secondary: palette.indigo[300],
-  tertiary: palette.gray[400],
+  tertiary: palette.warm[400],
   success: palette.green[400],
   warning: palette.amber[400],
   error: palette.red[400],
   info: palette.blue[400],
-  onPrimary: palette.white,
-  onSurface: palette.gray[100],
-  onBackground: palette.gray[200],
+  onPrimary: palette.warm[50],
+  onSurface: palette.warm[100],
+  onBackground: palette.warm[200],
 };
 
 /**

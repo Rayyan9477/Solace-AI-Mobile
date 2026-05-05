@@ -31,22 +31,22 @@ import { colors, palette } from "../../../theme";
  */
 const inputColors = {
   // Text colors
-  label: palette.gray[200],
-  placeholder: palette.gray[500],
-  text: palette.gray[100],
-  helperText: palette.gray[400],
+  label: palette.warm[200],
+  placeholder: palette.warm[500],
+  text: palette.warm[100],
+  helperText: palette.warm[400],
   error: palette.red[500],
-  disabled: palette.gray[500],
+  disabled: palette.warm[500],
 
   // Border colors
-  borderDefault: palette.gray[600],
+  borderDefault: palette.midnight[600],
   borderFocused: palette.indigo[400],
   borderError: palette.red[500],
-  borderDisabled: palette.gray[700],
+  borderDisabled: palette.midnight[700],
 
   // Background
-  background: palette.gray[800],
-  backgroundDisabled: palette.gray[900],
+  background: palette.midnight[800],
+  backgroundDisabled: palette.midnight[950],
 };
 
 /**
@@ -225,11 +225,15 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
   },
-  label: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: inputColors.label,
-    marginBottom: 6,
+  errorText: {
+    color: inputColors.error,
+    fontSize: 12,
+    marginTop: 4,
+  },
+  helperText: {
+    color: inputColors.helperText,
+    fontSize: 12,
+    marginTop: 4,
   },
   iconLeft: {
     marginRight: 8,
@@ -237,15 +241,11 @@ const styles = StyleSheet.create({
   iconRight: {
     marginLeft: 8,
   },
-  errorText: {
-    fontSize: 12,
-    color: inputColors.error,
-    marginTop: 4,
-  },
-  helperText: {
-    fontSize: 12,
-    color: inputColors.helperText,
-    marginTop: 4,
+  label: {
+    color: inputColors.label,
+    fontSize: 14,
+    fontWeight: "500",
+    marginBottom: 6,
   },
 });
 

@@ -116,14 +116,14 @@ export function HashtagChip({
 
 const styles = StyleSheet.create({
   inner: {
-    flexDirection: "row",
     alignItems: "center",
-    height: 28,
+    alignSelf: "flex-start",
     borderRadius: 999,
+    flexDirection: "row",
+    gap: 8,
+    height: 28,
     paddingHorizontal: 12,
     paddingVertical: 6,
-    gap: 8,
-    alignSelf: "flex-start",
   },
   label: {
     fontFamily: "FiraCode_400Regular",

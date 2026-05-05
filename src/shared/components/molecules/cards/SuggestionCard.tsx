@@ -10,21 +10,16 @@
  *   - "sage-border"  — custom border with sage gradient highlight
  */
 
-import React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-import { useTheme } from "@/shared/theme/useTheme";
-import { useHaptic } from "@/shared/hooks/useHaptic";
+import { AppIcon } from "@/shared/components/atoms/display/AppIcon";
 import { GlassCard } from "@/shared/components/primitives/GlassCard";
 import { IconTile } from "@/shared/components/primitives/IconTile";
-import { AppIcon } from "@/shared/components/atoms/display/AppIcon";
 import type { IconTileHue } from "@/shared/components/primitives/IconTile";
+import { useHaptic } from "@/shared/hooks/useHaptic";
+import { useTheme } from "@/shared/theme/useTheme";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -83,9 +78,8 @@ export function SuggestionCard({
     onDismiss?.();
   };
 
-  const a11yLabel =
-    accessibilityLabel ?? `${title}. ${body}`;
-  const a11yRole = onCtaPress ? "button" : "alert" as const;
+  const a11yLabel = accessibilityLabel ?? `${title}. ${body}`;
+  const a11yRole = onCtaPress ? "button" : ("alert" as const);
 
   const cardContent = (
     <View style={styles.inner}>
@@ -129,14 +123,9 @@ export function SuggestionCard({
             onPress={handleCta}
             accessibilityRole="button"
             accessibilityLabel={ctaLabel}
-            style={[
-              styles.ctaPill,
-              { backgroundColor: palette.peach[300] },
-            ]}
+            style={[styles.ctaPill, { backgroundColor: palette.peach[300] }]}
           >
-            <Text
-              style={[styles.ctaLabel, { color: palette.midnight[950] }]}
-            >
+            <Text style={[styles.ctaLabel, { color: palette.midnight[950] }]}>
               {ctaLabel}
             </Text>
           </TouchableOpacity>
@@ -192,15 +181,51 @@ export function SuggestionCard({
 }
 
 const styles = StyleSheet.create({
+  body: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  borderInner: {
+    borderRadius: 19,
+    overflow: "hidden",
+  },
+  borderWrapper: {
+    borderRadius: 20,
+    overflow: "hidden",
+    padding: 1, // 1px border
+  },
+  ctaLabel: {
+    fontFamily: "Inter_600SemiBold",
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  ctaPill: {
+    alignItems: "center",
+    borderRadius: 999,
+    height: 32,
+    justifyContent: "center",
+    minWidth: 44,
+    paddingHorizontal: 16,
+  },
+  ctaRow: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginTop: 12,
+  },
+  dismissButton: {
+    alignItems: "center",
+    height: 32,
+    justifyContent: "center",
+    position: "absolute",
+    right: 12,
+    top: 12,
+    width: 32,
+    zIndex: 1,
+  },
   inner: {
     padding: 16,
     position: "relative",
-  },
-  topRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 12,
-    paddingRight: 32, // space for dismiss button
   },
   textBlock: {
     flex: 1,
@@ -211,47 +236,10 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     marginBottom: 4,
   },
-  body: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  dismissButton: {
-    position: "absolute",
-    top: 12,
-    right: 12,
-    width: 32,
-    height: 32,
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1,
-  },
-  ctaRow: {
+  topRow: {
+    alignItems: "flex-start",
     flexDirection: "row",
-    justifyContent: "flex-end",
-    marginTop: 12,
-  },
-  ctaPill: {
-    height: 32,
-    borderRadius: 999,
-    paddingHorizontal: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    minWidth: 44,
-  },
-  ctaLabel: {
-    fontFamily: "Inter_600SemiBold",
-    fontSize: 13,
-    lineHeight: 18,
-  },
-  // Gradient border wrapper
-  borderWrapper: {
-    borderRadius: 20,
-    padding: 1, // 1px border
-    overflow: "hidden",
-  },
-  borderInner: {
-    borderRadius: 19,
-    overflow: "hidden",
+    gap: 12,
+    paddingRight: 32, // space for dismiss button
   },
 });

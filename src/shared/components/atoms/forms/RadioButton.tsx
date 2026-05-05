@@ -22,11 +22,11 @@ import { palette } from "../../../theme";
  */
 const colors = {
   selected: palette.indigo[400],
-  unselected: palette.gray[600],
-  inner: palette.white,
-  label: palette.gray[200],
-  labelDisabled: palette.gray[500],
-  disabled: palette.gray[700],
+  unselected: palette.midnight[600],
+  inner: palette.warm[50],
+  label: palette.warm[200],
+  labelDisabled: palette.warm[500],
+  disabled: palette.midnight[700],
 };
 
 /**
@@ -111,42 +111,42 @@ export function RadioButton({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
     minHeight: 44,
   },
-  radio: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: colors.unselected,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  radioSelected: {
-    borderColor: colors.selected,
-  },
-  radioDisabled: {
-    borderColor: colors.disabled,
-  },
   innerCircle: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
     backgroundColor: colors.selected,
+    borderRadius: 5,
+    height: 10,
+    width: 10,
   },
   innerCircleDisabled: {
     backgroundColor: colors.disabled,
   },
   label: {
-    fontSize: 16,
     color: colors.label,
-    marginLeft: 12,
     flex: 1,
+    fontSize: 16,
+    marginLeft: 12,
   },
   labelDisabled: {
     color: colors.labelDisabled,
+  },
+  radio: {
+    alignItems: "center",
+    borderColor: colors.unselected,
+    borderRadius: 10,
+    borderWidth: 2,
+    height: 20,
+    justifyContent: "center",
+    width: 20,
+  },
+  radioDisabled: {
+    borderColor: colors.disabled,
+  },
+  radioSelected: {
+    borderColor: colors.selected,
   },
 });
 

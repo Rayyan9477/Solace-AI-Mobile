@@ -21,11 +21,11 @@ import { palette } from "../../../theme";
  */
 const colors = {
   trackOn: palette.indigo[400],
-  trackOff: palette.gray[600],
-  thumbOn: palette.white,
-  thumbOff: palette.gray[400],
-  label: palette.gray[200],
-  labelDisabled: palette.gray[500],
+  trackOff: palette.midnight[600],
+  thumbOn: palette.warm[50],
+  thumbOff: palette.warm[400],
+  label: palette.warm[200],
+  labelDisabled: palette.warm[500],
 };
 
 /**
@@ -93,15 +93,15 @@ export function Toggle({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
     justifyContent: "space-between",
   },
   label: {
-    fontSize: 16,
     color: colors.label,
-    marginRight: 12,
     flex: 1,
+    fontSize: 16,
+    marginRight: 12,
   },
   labelDisabled: {
     color: colors.labelDisabled,

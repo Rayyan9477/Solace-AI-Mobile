@@ -5,13 +5,14 @@
  */
 
 import React from "react";
-import { View, StyleSheet, ViewStyle } from "react-native";
+import { View, StyleSheet, type StyleProp, type ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { palette } from "../../../theme";
 
 interface ScreenContainerProps {
   children: React.ReactNode;
-  style?: ViewStyle;
+  /** Accepts a single style or array (Sprint 6 retro carry-forward). */
+  style?: StyleProp<ViewStyle>;
   backgroundColor?: string;
   testID?: string;
 }
@@ -19,7 +20,7 @@ interface ScreenContainerProps {
 export const ScreenContainer: React.FC<ScreenContainerProps> = ({
   children,
   style,
-  backgroundColor = palette.brown[900],
+  backgroundColor = palette.midnight[950],
   testID,
 }) => {
   const insets = useSafeAreaInsets();

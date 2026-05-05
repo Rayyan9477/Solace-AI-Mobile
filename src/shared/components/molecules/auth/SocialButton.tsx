@@ -74,9 +74,9 @@ export function SocialButton({
 
 const styles = StyleSheet.create({
   button: {
-    borderWidth: 1,
-    borderRadius: 16,
     alignItems: "center",
+    borderRadius: 16,
+    borderWidth: 1,
     justifyContent: "center",
   },
 });

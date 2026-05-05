@@ -38,16 +38,16 @@ import { palette, applyShadow } from "../../../theme";
  */
 const colors = {
   // Background
-  backgroundElevated: palette.brown[900],
-  backgroundFilled: palette.gray[900],
+  backgroundElevated: palette.midnight[950],
+  backgroundFilled: palette.midnight[950],
   backgroundOutlined: "transparent",
 
   // Border
-  borderOutlined: palette.gray[600],
+  borderOutlined: palette.midnight[600],
   borderSelected: palette.indigo[400],
 
   // States
-  pressedOverlay: `${palette.white}${palette.alpha[5]}`,
+  pressedOverlay: `${palette.warm[50]}${palette.alpha[5]}`,
 };
 
 /**
@@ -249,13 +249,13 @@ export function Card({
 }
 
 const styles = StyleSheet.create({
-  header: {
-    borderBottomWidth: 1,
-    borderBottomColor: `${palette.white}${palette.alpha[10]}`,
-  },
   footer: {
+    borderTopColor: `${palette.warm[50]}${palette.alpha[10]}`,
     borderTopWidth: 1,
-    borderTopColor: `${palette.white}${palette.alpha[10]}`,
+  },
+  header: {
+    borderBottomColor: `${palette.warm[50]}${palette.alpha[10]}`,
+    borderBottomWidth: 1,
   },
   pressed: {
     backgroundColor: colors.pressedOverlay,

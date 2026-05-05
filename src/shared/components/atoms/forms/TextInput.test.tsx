@@ -37,14 +37,14 @@ describe("TextInput Component", () => {
   describe("Rendering", () => {
     it("should render with value", () => {
       const { getByDisplayValue } = render(
-        <TextInput value="Hello" onChangeText={mockOnChangeText} />
+        <TextInput accessibilityLabel="Text input field" value="Hello" onChangeText={mockOnChangeText} />
       );
       expect(getByDisplayValue("Hello")).toBeTruthy();
     });
 
     it("should render with placeholder", () => {
       const { getByPlaceholderText } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           placeholder="Enter text"
@@ -55,7 +55,7 @@ describe("TextInput Component", () => {
 
     it("should apply testID prop", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           testID="test-input"
@@ -66,7 +66,7 @@ describe("TextInput Component", () => {
 
     it("should render label when provided", () => {
       const { getByText } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           label="Email"
@@ -77,7 +77,7 @@ describe("TextInput Component", () => {
 
     it("should render helper text when provided", () => {
       const { getByText } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           helperText="Enter your email address"
@@ -90,7 +90,7 @@ describe("TextInput Component", () => {
   describe("Input Handling", () => {
     it("should call onChangeText when text changes", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           testID="input"
@@ -102,7 +102,7 @@ describe("TextInput Component", () => {
 
     it("should not call onChangeText when disabled", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           disabled
@@ -118,7 +118,7 @@ describe("TextInput Component", () => {
   describe("Secure Text Entry", () => {
     it("should enable secure text entry for passwords", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           secureTextEntry
@@ -133,7 +133,7 @@ describe("TextInput Component", () => {
   describe("Multiline", () => {
     it("should enable multiline when prop is true", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           multiline
@@ -148,7 +148,7 @@ describe("TextInput Component", () => {
   describe("Error State", () => {
     it("should display error message", () => {
       const { getByText } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           error="This field is required"
@@ -159,7 +159,7 @@ describe("TextInput Component", () => {
 
     it("should apply error styling to input container", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           error="Error"
@@ -179,7 +179,7 @@ describe("TextInput Component", () => {
 
     it("error message should have error color", () => {
       const { getByText } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           error="Error message"
@@ -194,7 +194,7 @@ describe("TextInput Component", () => {
   describe("Disabled State", () => {
     it("should apply disabled styling", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           disabled
@@ -208,7 +208,7 @@ describe("TextInput Component", () => {
 
     it("should set editable to false", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           disabled
@@ -223,7 +223,7 @@ describe("TextInput Component", () => {
   describe("Icons", () => {
     it("should render left icon", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           leftIcon={<View testID="left-icon" />}
@@ -234,7 +234,7 @@ describe("TextInput Component", () => {
 
     it("should render right icon", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           rightIcon={<View testID="right-icon" />}
@@ -245,7 +245,7 @@ describe("TextInput Component", () => {
 
     it("should render both icons", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           leftIcon={<View testID="left-icon" />}
@@ -260,7 +260,7 @@ describe("TextInput Component", () => {
   describe("Input Mode", () => {
     it("should apply email inputMode", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           inputMode="email"
@@ -273,7 +273,7 @@ describe("TextInput Component", () => {
 
     it("should apply numeric inputMode", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           inputMode="numeric"
@@ -299,7 +299,7 @@ describe("TextInput Component", () => {
 
     it("should have accessible textbox role", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           testID="input"
@@ -312,7 +312,7 @@ describe("TextInput Component", () => {
 
     it("should indicate disabled state for accessibility", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           disabled
@@ -332,7 +332,7 @@ describe("TextInput Component", () => {
     it("should handle focus event", () => {
       const mockOnFocus = jest.fn();
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           onFocus={mockOnFocus}
@@ -346,7 +346,7 @@ describe("TextInput Component", () => {
     it("should handle blur event", () => {
       const mockOnBlur = jest.fn();
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           onBlur={mockOnBlur}
@@ -361,7 +361,7 @@ describe("TextInput Component", () => {
   describe("Style Overrides", () => {
     it("should merge container styles", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           containerStyle={{ marginTop: 10 }}
@@ -380,7 +380,7 @@ describe("TextInput Component", () => {
 
     it("should merge input styles", () => {
       const { getByTestId } = render(
-        <TextInput
+        <TextInput accessibilityLabel="Text input field"
           value=""
           onChangeText={mockOnChangeText}
           inputStyle={{ fontSize: 20 }}
