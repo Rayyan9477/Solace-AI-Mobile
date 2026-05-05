@@ -85,7 +85,7 @@ export function ProfileSetupDetailsScreen({
         {/* Profile Photo Section */}
         <View style={styles.photoSection}>
           <View testID="profile-photo" style={styles.profilePhoto}>
-            <Icon name="person-circle-outline" size={40} color={palette.gray[450]} />
+            <Icon name="person-circle-outline" size={40} color={palette.warm[400]} />
           </View>
           <TouchableOpacity
             testID="edit-photo-button"
@@ -94,7 +94,7 @@ export function ProfileSetupDetailsScreen({
             accessibilityRole="button"
             accessibilityLabel="Edit profile photo"
           >
-            <Icon name="camera-outline" size={14} color={palette.brown[900]} />
+            <Icon name="camera-outline" size={14} color={palette.midnight[950]} />
           </TouchableOpacity>
         </View>
 
@@ -104,14 +104,14 @@ export function ProfileSetupDetailsScreen({
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Full Name</Text>
             <View style={styles.inputContainer}>
-              <Icon name="person-outline" size={20} color={palette.gray[450]} style={styles.inputIcon} />
+              <Icon name="person-outline" size={20} color={palette.warm[400]} style={styles.inputIcon} />
               <TextInput
                 testID="full-name-input"
                 style={styles.textInput}
                 value={fullName}
                 onChangeText={setFullName}
                 placeholder="Enter your full name"
-                placeholderTextColor={palette.gray[450]}
+                placeholderTextColor={palette.warm[400]}
                 accessibilityLabel="Full name input"
               />
             </View>
@@ -128,7 +128,7 @@ export function ProfileSetupDetailsScreen({
                 value={email}
                 onChangeText={setEmail}
                 placeholder="Enter your email"
-                placeholderTextColor={palette.gray[450]}
+                placeholderTextColor={palette.warm[400]}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 accessibilityLabel="Email address input"
@@ -140,14 +140,14 @@ export function ProfileSetupDetailsScreen({
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Password</Text>
             <View style={styles.inputContainer}>
-              <Icon name="lock-closed-outline" size={20} color={palette.gray[450]} style={styles.inputIcon} />
+              <Icon name="lock-closed-outline" size={20} color={palette.warm[400]} style={styles.inputIcon} />
               <TextInput
                 testID="password-input"
                 style={styles.textInput}
                 value={password}
                 onChangeText={setPassword}
                 placeholder="Enter your password"
-                placeholderTextColor={palette.gray[450]}
+                placeholderTextColor={palette.warm[400]}
                 secureTextEntry={!showPassword}
                 accessibilityLabel="Password input"
               />
@@ -158,7 +158,7 @@ export function ProfileSetupDetailsScreen({
                 accessibilityRole="button"
                 accessibilityLabel={showPassword ? "Hide password" : "Show password"}
               >
-                <Icon name={showPassword ? "eye-outline" : "eye-off-outline"} size={18} color={palette.white} />
+                <Icon name={showPassword ? "eye-outline" : "eye-off-outline"} size={18} color={palette.warm[50]} />
               </TouchableOpacity>
             </View>
           </View>
@@ -225,7 +225,7 @@ export function ProfileSetupDetailsScreen({
               accessibilityRole="button"
               accessibilityLabel="Select gender"
             >
-              <Icon name="people-outline" size={20} color={palette.gray[450]} style={styles.dropdownIcon} />
+              <Icon name="people-outline" size={20} color={palette.warm[400]} style={styles.dropdownIcon} />
               <Text style={[styles.dropdownText, !gender && styles.dropdownPlaceholder]}>{gender || "Select gender"}</Text>
               <Text style={styles.dropdownChevron}>▼</Text>
             </TouchableOpacity>
@@ -241,7 +241,7 @@ export function ProfileSetupDetailsScreen({
               accessibilityRole="button"
               accessibilityLabel="Select location"
             >
-              <Icon name="location-outline" size={20} color={palette.gray[450]} style={styles.dropdownIcon} />
+              <Icon name="location-outline" size={20} color={palette.warm[400]} style={styles.dropdownIcon} />
               <Text style={[styles.dropdownText, !location && styles.dropdownPlaceholder]}>{location || "Select location"}</Text>
               <Text style={styles.dropdownChevron}>▼</Text>
             </TouchableOpacity>
@@ -274,7 +274,7 @@ export function ProfileSetupDetailsScreen({
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: palette.white,
+    borderColor: palette.warm[50],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -284,17 +284,17 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 18,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: palette.brown[900],
+    backgroundColor: palette.midnight[950],
     flex: 1,
   },
   continueButton: {
     alignItems: "center",
-    backgroundColor: palette.tan[500],
+    backgroundColor: palette.sage[300],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",
@@ -305,18 +305,18 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   continueButtonIcon: {
-    color: palette.brown[900],
+    color: palette.midnight[950],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 8,
   },
   continueButtonText: {
-    color: palette.brown[900],
+    color: palette.midnight[950],
     fontSize: 16,
     fontWeight: "600",
   },
   curvedHeader: {
-    backgroundColor: palette.olive[500],
+    backgroundColor: palette.sage[300],
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
     height: 140,
@@ -327,30 +327,30 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     alignItems: "center",
-    backgroundColor: palette.brown[800],
+    backgroundColor: palette.midnight[800],
     borderRadius: 12,
     flexDirection: "row",
     height: 56,
     paddingHorizontal: 16,
   },
   dropdownChevron: {
-    color: palette.gray[450],
+    color: palette.warm[400],
     fontSize: 12,
   },
   dropdownIcon: {
     marginRight: 12,
   },
   dropdownPlaceholder: {
-    color: palette.gray[450],
+    color: palette.warm[400],
   },
   dropdownText: {
-    color: palette.white,
+    color: palette.warm[50],
     flex: 1,
     fontSize: 16,
   },
   editPhotoButton: {
     alignItems: "center",
-    backgroundColor: palette.tan[500],
+    backgroundColor: palette.sage[300],
     borderRadius: 16,
     bottom: 0,
     height: 32,
@@ -375,14 +375,14 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   headerTitle: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 16,
   },
   inputContainer: {
     alignItems: "center",
-    backgroundColor: palette.brown[800],
+    backgroundColor: palette.midnight[800],
     borderRadius: 12,
     flexDirection: "row",
     height: 56,
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   label: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 12,
     fontWeight: "500",
     letterSpacing: 0.5,
@@ -411,30 +411,30 @@ const styles = StyleSheet.create({
     marginTop: -50,
   },
   pill: {
-    backgroundColor: palette.brown[800],
+    backgroundColor: palette.midnight[800],
     borderRadius: 20,
     marginRight: 8,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
   pillSelected: {
-    backgroundColor: palette.olive[500],
+    backgroundColor: palette.sage[300],
   },
   pillSelector: {
     flexDirection: "row",
   },
   pillText: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 14,
     fontWeight: "500",
   },
   pillTextSelected: {
-    color: palette.brown[900],
+    color: palette.midnight[950],
   },
   profilePhoto: {
     alignItems: "center",
-    backgroundColor: palette.brown[800],
-    borderColor: palette.tan[600],
+    backgroundColor: palette.midnight[800],
+    borderColor: palette.sage[500],
     borderRadius: 50,
     borderWidth: 4,
     height: 100,
@@ -453,19 +453,19 @@ const styles = StyleSheet.create({
     height: 40,
   },
   sliderFill: {
-    backgroundColor: palette.olive[500],
+    backgroundColor: palette.sage[300],
     borderRadius: 4,
     height: 8,
     left: 0,
     position: "absolute",
   },
   sliderLabel: {
-    color: palette.gray[450],
+    color: palette.warm[400],
     fontSize: 12,
     width: 40,
   },
   sliderThumb: {
-    backgroundColor: palette.white,
+    backgroundColor: palette.warm[50],
     borderRadius: 12,
     height: 24,
     marginLeft: -12,
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
     width: 24,
   },
   sliderTrack: {
-    backgroundColor: palette.brown[700],
+    backgroundColor: palette.midnight[700],
     borderRadius: 4,
     flex: 1,
     height: 8,
@@ -482,14 +482,14 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   sliderValue: {
-    color: palette.olive[500],
+    color: palette.sage[300],
     fontSize: 14,
     fontWeight: "600",
     marginLeft: 8,
     width: 50,
   },
   squiggle1: {
-    backgroundColor: palette.olive[550],
+    backgroundColor: palette.sage[500],
     borderRadius: 20,
     height: 40,
     opacity: 0.3,
@@ -500,7 +500,7 @@ const styles = StyleSheet.create({
     width: 60,
   },
   squiggle2: {
-    backgroundColor: palette.olive[450],
+    backgroundColor: palette.sage[300],
     borderRadius: 15,
     height: 30,
     opacity: 0.3,
@@ -511,7 +511,7 @@ const styles = StyleSheet.create({
     width: 45,
   },
   textInput: {
-    color: palette.white,
+    color: palette.warm[50],
     flex: 1,
     fontSize: 16,
   },

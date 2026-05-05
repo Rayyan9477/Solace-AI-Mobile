@@ -290,7 +290,7 @@ describe("JournalEntryEditorScreen", () => {
       ? Object.assign({}, ...btn.props.style)
       : btn.props.style;
     expect(flatStyle).toEqual(
-      expect.objectContaining({ backgroundColor: "#E8853A" })
+      expect.objectContaining({ backgroundColor: "#F4A77E" })
     );
   });
 

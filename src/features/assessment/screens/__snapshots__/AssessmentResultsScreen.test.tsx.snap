@@ -1686,7 +1686,7 @@ exports[`AssessmentResultsScreen (prototype v4.2) matches snapshot 1`] = `
         [
           {
             "alignItems": "center",
-            "backgroundColor": "#78716C",
+            "backgroundColor": "#5A6478",
             "borderColor": "transparent",
             "borderRadius": 8,
             "borderWidth": 0,
@@ -1725,7 +1725,7 @@ exports[`AssessmentResultsScreen (prototype v4.2) matches snapshot 1`] = `
           style={
             [
               {
-                "color": "#FFFFFF",
+                "color": "#F5F1EA",
                 "fontSize": 16,
                 "fontWeight": "600",
                 "textAlign": "center",

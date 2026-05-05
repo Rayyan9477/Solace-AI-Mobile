@@ -255,7 +255,7 @@ describe("ProfileSetupDetailsScreen", () => {
       ? container.props.style
       : [container.props.style];
     const hasBackgroundColor = styles.some(
-      (s) => s?.backgroundColor === "#1C1410"
+      (s) => s?.backgroundColor === "#040818"
     );
     expect(hasBackgroundColor).toBe(true);
   });

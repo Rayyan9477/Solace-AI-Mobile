@@ -1,274 +1,210 @@
 /**
- * SearchResultsScreen Tests
- * @description Tests for search results with category filters, sort, and result rows
- * @task Task 3.15.4: Search Results Screen (Screen 132)
+ * SearchResultsScreen Tests — prototype v4.2 #36 reskin (Sprint 9).
+ * ≥15 behavior-style tests covering search bar, count, filters, and section
+ * rows.
  */
 
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import { SearchResultsScreen } from "./SearchResultsScreen";
+import React from "react";
 
-const mockCategories = [
-  { id: "sleep", label: "Sleep", icon: "\uD83D\uDECF" },
-  { id: "mood", label: "Mood", icon: "\uD83D\uDE0A" },
-  { id: "meditation", label: "Meditation", icon: "\uD83E\uDDD8" },
-  { id: "health", label: "Health", icon: "\u2764\uFE0F" },
-];
+import {
+  SearchResultsScreen,
+  DEFAULT_SEARCH_RESULTS,
+} from "./SearchResultsScreen";
 
-const mockResults = [
-  {
-    id: "r1",
-    title: "My Mood History",
-    categoryLabel: "In Mood & Emotions",
-    iconColor: "#F4D03F",
-  },
-  {
-    id: "r2",
-    title: "Mood Improvements",
-    categoryLabel: "In Resources & Videos",
-    iconColor: "#E8853A",
-  },
-  {
-    id: "r3",
-    title: "Mood Journals",
-    categoryLabel: "In Mental Health Journal",
-    iconColor: "#8B4513",
-  },
-  {
-    id: "r4",
-    title: "AI Chatbot Mood Suggestions",
-    categoryLabel: "In AI Therapy Chatbot",
-    iconColor: "#7B68B5",
-  },
-  {
-    id: "r5",
-    title: "My Current Mood",
-    categoryLabel: "In Mood & Emotions",
-    iconColor: "#4A9E8C",
-  },
-];
-
-const defaultProps = {
-  query: "mood st",
-  resultCount: 871,
-  sortLabel: "Newest",
-  categories: mockCategories,
-  selectedCategoryId: "mood",
-  results: mockResults,
+const makeProps = (overrides = {}) => ({
   onBack: jest.fn(),
-  onFilterPress: jest.fn(),
+  onClear: jest.fn(),
   onQueryChange: jest.fn(),
-  onSortPress: jest.fn(),
-  onCategorySelect: jest.fn(),
+  onCategoryChange: jest.fn(),
   onResultPress: jest.fn(),
-};
+  ...overrides,
+});
 
-function renderScreen(overrides = {}) {
-  return render(<SearchResultsScreen {...defaultProps} {...overrides} />);
-}
-
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 describe("SearchResultsScreen", () => {
-  // ── Rendering ──────────────────────────────────────────
+  // 1. Root container
   it("renders the screen container", () => {
-    const { getByTestId } = renderScreen();
+    const { getByTestId } = render(<SearchResultsScreen {...makeProps()} />);
     expect(getByTestId("search-results-screen")).toBeTruthy();
   });
 
-  it("renders the header with title 'Search'", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("Search")).toBeTruthy();
+  // 2. Default query in input
+  it("renders default query 'anxiety' in the input", () => {
+    const { getByTestId } = render(<SearchResultsScreen {...makeProps()} />);
+    expect(getByTestId("search-input").props.value).toBe("anxiety");
   });
 
-  it("renders the back button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button")).toBeTruthy();
+  // 3. Custom query
+  it("respects a custom query prop", () => {
+    const { getByTestId } = render(
+      <SearchResultsScreen {...makeProps()} query="sleep" />,
+    );
+    expect(getByTestId("search-input").props.value).toBe("sleep");
   });
 
-  it("renders the search input with current query", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("search-input").props.value).toBe("mood st");
-  });
-
-  it("renders the filter button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("filter-button")).toBeTruthy();
-  });
-
-  // ── Results Header ─────────────────────────────────────
-  it("renders the result count", () => {
-    const { getByText } = renderScreen();
-    expect(getByText(/871 Results Found/)).toBeTruthy();
-  });
-
-  it("renders the sort dropdown button", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("sort-button")).toBeTruthy();
-  });
-
-  it("displays the current sort label", () => {
-    const { getByText } = renderScreen();
-    expect(getByText(/Newest/)).toBeTruthy();
-  });
-
-  // ── Category Filters ──────────────────────────────────
-  it("renders all category filter chips", () => {
-    const { getByTestId } = renderScreen();
-    mockCategories.forEach((cat) => {
-      expect(getByTestId(`category-chip-${cat.id}`)).toBeTruthy();
-    });
-  });
-
-  it("renders category labels", () => {
-    const { getAllByText } = renderScreen();
-    expect(getAllByText(/Sleep/).length).toBeGreaterThanOrEqual(1);
-    expect(getAllByText(/Mood/).length).toBeGreaterThanOrEqual(1);
-    expect(getAllByText(/Meditation/).length).toBeGreaterThanOrEqual(1);
-    expect(getAllByText(/Health/).length).toBeGreaterThanOrEqual(1);
-  });
-
-  it("highlights the selected category", () => {
-    const { getByTestId } = renderScreen({ selectedCategoryId: "mood" });
-    const chip = getByTestId("category-chip-mood");
-    const style = Object.assign({}, ...[].concat(chip.props.style));
-    expect(style.backgroundColor).toBeDefined();
-  });
-
-  // ── Results List ───────────────────────────────────────
-  it("renders all result rows", () => {
-    const { getByTestId } = renderScreen();
-    mockResults.forEach((r) => {
-      expect(getByTestId(`result-row-${r.id}`)).toBeTruthy();
-    });
-  });
-
-  it("renders result titles", () => {
-    const { getByText } = renderScreen();
-    expect(getByText("My Mood History")).toBeTruthy();
-    expect(getByText("Mood Improvements")).toBeTruthy();
-    expect(getByText("Mood Journals")).toBeTruthy();
-    expect(getByText("AI Chatbot Mood Suggestions")).toBeTruthy();
-    expect(getByText("My Current Mood")).toBeTruthy();
-  });
-
-  it("renders result category labels", () => {
-    const { getAllByText, getByText } = renderScreen();
-    expect(getAllByText("In Mood & Emotions").length).toBe(2);
-    expect(getByText("In Resources & Videos")).toBeTruthy();
-    expect(getByText("In Mental Health Journal")).toBeTruthy();
-  });
-
-  it("renders colored category icons for each result", () => {
-    const { getByTestId } = renderScreen();
-    const icon = getByTestId("result-icon-r1");
-    const style = Object.assign({}, ...[].concat(icon.props.style));
-    expect(style.backgroundColor).toBe("#F4D03F");
-  });
-
-  it("renders chevron for each result row", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("result-chevron-r1")).toBeTruthy();
-  });
-
-  // ── Callbacks ──────────────────────────────────────────
-  it("calls onBack when back button is pressed", () => {
+  // 4. Back press
+  it("calls onBack when back pressed", () => {
     const onBack = jest.fn();
-    const { getByTestId } = renderScreen({ onBack });
+    const { getByTestId } = render(
+      <SearchResultsScreen {...makeProps({ onBack })} />,
+    );
     fireEvent.press(getByTestId("back-button"));
     expect(onBack).toHaveBeenCalledTimes(1);
   });
 
-  it("calls onFilterPress when filter button is pressed", () => {
-    const onFilterPress = jest.fn();
-    const { getByTestId } = renderScreen({ onFilterPress });
-    fireEvent.press(getByTestId("filter-button"));
-    expect(onFilterPress).toHaveBeenCalledTimes(1);
+  // 5. Clear press
+  it("calls onClear when clear pressed", () => {
+    const onClear = jest.fn();
+    const { getByTestId } = render(
+      <SearchResultsScreen {...makeProps({ onClear })} />,
+    );
+    fireEvent.press(getByTestId("clear-button"));
+    expect(onClear).toHaveBeenCalledTimes(1);
   });
 
-  it("calls onQueryChange when text is entered", () => {
+  // 6. onQueryChange fires
+  it("calls onQueryChange when typing in input", () => {
     const onQueryChange = jest.fn();
-    const { getByTestId } = renderScreen({ onQueryChange });
-    fireEvent.changeText(getByTestId("search-input"), "sleep");
-    expect(onQueryChange).toHaveBeenCalledWith("sleep");
+    const { getByTestId } = render(
+      <SearchResultsScreen {...makeProps({ onQueryChange })} />,
+    );
+    fireEvent.changeText(getByTestId("search-input"), "stress");
+    expect(onQueryChange).toHaveBeenCalledWith("stress");
   });
 
-  it("calls onSortPress when sort button is pressed", () => {
-    const onSortPress = jest.fn();
-    const { getByTestId } = renderScreen({ onSortPress });
-    fireEvent.press(getByTestId("sort-button"));
-    expect(onSortPress).toHaveBeenCalledTimes(1);
+  // 7. Result count line
+  it("renders the bracket result-count line", () => {
+    const { getByText } = render(<SearchResultsScreen {...makeProps()} />);
+    expect(getByText(/24 RESULTS FOR "ANXIETY"/)).toBeTruthy();
   });
 
-  it("calls onCategorySelect with category id when chip pressed", () => {
-    const onCategorySelect = jest.fn();
-    const { getByTestId } = renderScreen({ onCategorySelect });
-    fireEvent.press(getByTestId("category-chip-sleep"));
-    expect(onCategorySelect).toHaveBeenCalledWith("sleep");
+  // 8. Result count is announced live
+  it("result count line is a polite live region", () => {
+    const { getByTestId } = render(<SearchResultsScreen {...makeProps()} />);
+    expect(getByTestId("results-count").props.accessibilityLiveRegion).toBe(
+      "polite",
+    );
   });
 
-  it("calls onResultPress with result when row pressed", () => {
+  // 9. Category pills render
+  it("renders the category pills tablist", () => {
+    const { getByTestId } = render(<SearchResultsScreen {...makeProps()} />);
+    expect(getByTestId("category-pills")).toBeTruthy();
+  });
+
+  // 10. Each category pill renders
+  it("renders all 5 category labels", () => {
+    const { getAllByText } = render(<SearchResultsScreen {...makeProps()} />);
+    expect(getAllByText(/All/).length).toBeGreaterThan(0);
+    expect(getAllByText(/Chats/).length).toBeGreaterThan(0);
+    expect(getAllByText(/Journal/).length).toBeGreaterThan(0);
+    expect(getAllByText(/Practices/).length).toBeGreaterThan(0);
+    expect(getAllByText(/Articles/).length).toBeGreaterThan(0);
+  });
+
+  // 11. Category change fires callback
+  it("calls onCategoryChange when a pill pressed", () => {
+    const onCategoryChange = jest.fn();
+    const { getAllByText } = render(
+      <SearchResultsScreen {...makeProps({ onCategoryChange })} />,
+    );
+    // First "Practices" is the pill, second is the section heading. Press pill.
+    fireEvent.press(getAllByText(/Practices/)[0]);
+    expect(onCategoryChange).toHaveBeenCalledWith("practices");
+  });
+
+  // 12. Three sections render
+  it("renders Practices, Journal, and Articles sections", () => {
+    const { getByTestId } = render(<SearchResultsScreen {...makeProps()} />);
+    expect(getByTestId("practices-section")).toBeTruthy();
+    expect(getByTestId("journal-section")).toBeTruthy();
+    expect(getByTestId("articles-section")).toBeTruthy();
+  });
+
+  // 13. Practice rows render
+  it("renders both default practice result rows", () => {
+    const { getByTestId } = render(<SearchResultsScreen {...makeProps()} />);
+    expect(getByTestId("result-row-practice-478")).toBeTruthy();
+    expect(getByTestId("result-row-practice-body-scan")).toBeTruthy();
+  });
+
+  // 14. Practice result press
+  it("calls onResultPress with id and 'practice' when a practice row pressed", () => {
     const onResultPress = jest.fn();
-    const { getByTestId } = renderScreen({ onResultPress });
-    fireEvent.press(getByTestId("result-row-r1"));
-    expect(onResultPress).toHaveBeenCalledWith(mockResults[0]);
-  });
-
-  // ── Accessibility ──────────────────────────────────────
-  it("back button has accessibilityLabel 'Go back'", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button").props.accessibilityLabel).toBe("Go back");
-  });
-
-  it("back button has accessibilityRole 'button'", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("back-button").props.accessibilityRole).toBe("button");
-  });
-
-  it("category chips have accessibilityRole 'button'", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("category-chip-mood").props.accessibilityRole).toBe(
-      "button",
+    const { getByTestId } = render(
+      <SearchResultsScreen {...makeProps({ onResultPress })} />,
     );
+    fireEvent.press(getByTestId("result-row-practice-478"));
+    expect(onResultPress).toHaveBeenCalledWith("practice-478", "practice");
   });
 
-  it("result rows have accessibilityRole 'button'", () => {
-    const { getByTestId } = renderScreen();
-    expect(getByTestId("result-row-r1").props.accessibilityRole).toBe("button");
-  });
-
-  it("back button meets 44×44 minimum touch target", () => {
-    const { getByTestId } = renderScreen();
-    const style = Object.assign(
-      {},
-      ...[].concat(getByTestId("back-button").props.style),
+  // 15. Journal row press
+  it("calls onResultPress with 'journal' type when journal row pressed", () => {
+    const onResultPress = jest.fn();
+    const { getByTestId } = render(
+      <SearchResultsScreen {...makeProps({ onResultPress })} />,
     );
-    expect(style.minHeight).toBeGreaterThanOrEqual(44);
-    expect(style.minWidth).toBeGreaterThanOrEqual(44);
+    fireEvent.press(getByTestId("result-row-journal-apr-3"));
+    expect(onResultPress).toHaveBeenCalledWith("journal-apr-3", "journal");
   });
 
-  it("result rows meet 44px minimum touch height", () => {
-    const { getByTestId } = renderScreen();
-    const style = Object.assign(
-      {},
-      ...[].concat(getByTestId("result-row-r1").props.style),
+  // 16. Article row press
+  it("calls onResultPress with 'article' type when article row pressed", () => {
+    const onResultPress = jest.fn();
+    const { getByTestId } = render(
+      <SearchResultsScreen {...makeProps({ onResultPress })} />,
     );
-    expect(style.minHeight).toBeGreaterThanOrEqual(44);
+    fireEvent.press(getByTestId("result-row-article-triggers"));
+    expect(onResultPress).toHaveBeenCalledWith("article-triggers", "article");
   });
 
-  // ── Styling ────────────────────────────────────────────
-  it("applies dark background to the container", () => {
-    const { getByTestId } = renderScreen();
-    const style = Object.assign(
-      {},
-      ...[].concat(getByTestId("search-results-screen").props.style),
+  // 17. All-N section links render
+  it("renders the All-N link buttons for each section", () => {
+    const { getByTestId } = render(<SearchResultsScreen {...makeProps()} />);
+    expect(getByTestId("practices-all-link")).toBeTruthy();
+    expect(getByTestId("journal-all-link")).toBeTruthy();
+    expect(getByTestId("articles-all-link")).toBeTruthy();
+  });
+
+  // 18. All-N link redirects to category
+  it("All-N link routes to its category via onCategoryChange", () => {
+    const onCategoryChange = jest.fn();
+    const { getByTestId } = render(
+      <SearchResultsScreen {...makeProps({ onCategoryChange })} />,
     );
-    expect(style.backgroundColor).toBe("#1C1410");
+    fireEvent.press(getByTestId("practices-all-link"));
+    expect(onCategoryChange).toHaveBeenCalledWith("practices");
   });
 
-  // ── Branding ───────────────────────────────────────────
+  // 19. Journal mood + article read-time render
+  it("renders journal mood and article read-time", () => {
+    const { getByText } = render(<SearchResultsScreen {...makeProps()} />);
+    expect(getByText("Stressed")).toBeTruthy();
+    expect(getByText(/6 min read/)).toBeTruthy();
+  });
+
+  // 20. Touch target — back
+  it("back button meets 44pt minimum touch target", () => {
+    const { getByTestId } = render(<SearchResultsScreen {...makeProps()} />);
+    const { StyleSheet } = require("react-native");
+    const flat = StyleSheet.flatten(getByTestId("back-button").props.style);
+    expect(flat.height).toBeGreaterThanOrEqual(44);
+    expect(flat.width).toBeGreaterThanOrEqual(44);
+  });
+
+  // 21. Default search results sanity
+  it("DEFAULT_SEARCH_RESULTS exposes 24 total results", () => {
+    expect(DEFAULT_SEARCH_RESULTS.totalCount).toBe(24);
+    expect(DEFAULT_SEARCH_RESULTS.categoryCounts.practices).toBe(7);
+  });
+
+  // 22. Branding — no Freud
   it("does not contain any Freud branding", () => {
-    const { queryByText } = renderScreen();
+    const { queryByText } = render(<SearchResultsScreen {...makeProps()} />);
     expect(queryByText(/freud/i)).toBeNull();
   });
 });

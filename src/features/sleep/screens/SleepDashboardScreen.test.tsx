@@ -1,292 +1,162 @@
 /**
- * SleepDashboardScreen Tests
- * @description Tests for the main sleep tracking dashboard with score hero and overview metrics
- * @task Task 3.10.1: Sleep Dashboard Screen (Screen 87)
+ * SleepDashboardScreen Tests — prototype v4.2 #11
  */
 
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+
 import { SleepDashboardScreen } from "./SleepDashboardScreen";
 
+const baseProps = {
+  onBack: jest.fn(),
+  onLogSleep: jest.fn(),
+  onMore: jest.fn(),
+};
+
+function renderScreen(overrides: Record<string, unknown> = {}) {
+  return render(<SleepDashboardScreen {...baseProps} {...overrides} />);
+}
+
 describe("SleepDashboardScreen", () => {
-  const mockOnBack = jest.fn();
-  const mockOnSeeAll = jest.fn();
-  const mockOnAddSleep = jest.fn();
-  const mockOnMetricPress = jest.fn();
-
-  const defaultProps = {
-    sleepScore: 20,
-    sleepQuality: "Insomniac" as const,
-    remHours: 8.5,
-    coreHours: 7.8,
-    remProgress: 0.7,
-    coreProgress: 0.65,
-    onBack: mockOnBack,
-    onSeeAll: mockOnSeeAll,
-    onAddSleep: mockOnAddSleep,
-    onMetricPress: mockOnMetricPress,
-  };
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  // --- Rendering ---
   it("renders the screen container", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
+    const { getByTestId } = renderScreen();
     expect(getByTestId("sleep-dashboard-screen")).toBeTruthy();
   });
 
-  it("uses dark background color", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    const screen = getByTestId("sleep-dashboard-screen");
-    const { StyleSheet } = require("react-native");
-    const flatStyle = StyleSheet.flatten(screen.props.style);
-    expect(flatStyle).toEqual(
-      expect.objectContaining({ backgroundColor: "#1C1410" })
+  it("renders the night-sky gradient backdrop", () => {
+    const { getByTestId } = renderScreen();
+    expect(getByTestId("night-sky-gradient")).toBeTruthy();
+  });
+
+  it("renders the decorative star field", () => {
+    const { UNSAFE_root } = renderScreen();
+    const found = UNSAFE_root.findAll(
+      (n: { props: { testID?: string } }) => n.props.testID === "star-field",
     );
+    expect(found.length).toBeGreaterThan(0);
   });
 
-  // --- Hero Section ---
-  it("renders the hero section with purple background", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    const hero = getByTestId("sleep-hero-section");
-    const flatStyle = Array.isArray(hero.props.style)
-      ? Object.assign({}, ...hero.props.style)
-      : hero.props.style;
-    expect(flatStyle).toEqual(
-      expect.objectContaining({ backgroundColor: "#7B68B5" })
-    );
+  it("renders the back button with a11y", () => {
+    const { getByTestId } = renderScreen();
+    const back = getByTestId("back-button");
+    expect(back.props.accessibilityRole).toBe("button");
+    expect(back.props.accessibilityLabel).toBe("Go back");
   });
 
-  it("renders decorative cloud elements in hero", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("decorative-clouds")).toBeTruthy();
-  });
-
-  // --- Header ---
-  it("displays the back button", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("back-button")).toBeTruthy();
-  });
-
-  it("calls onBack when back button is pressed", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
+  it("invokes onBack when back pressed", () => {
+    const onBack = jest.fn();
+    const { getByTestId } = renderScreen({ onBack });
     fireEvent.press(getByTestId("back-button"));
-    expect(mockOnBack).toHaveBeenCalledTimes(1);
+    expect(onBack).toHaveBeenCalledTimes(1);
   });
 
-  it("displays 'Sleep Quality' header title", () => {
-    const { getByText } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByText("Sleep Quality")).toBeTruthy();
+  it("renders the more options button", () => {
+    const { getByTestId } = renderScreen();
+    expect(getByTestId("more-button").props.accessibilityRole).toBe("button");
   });
 
-  // --- Sleep Score Display ---
-  it("displays the sleep score", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    const scoreDisplay = getByTestId("sleep-score-display");
-    expect(scoreDisplay).toBeTruthy();
+  it("invokes onMore when more pressed", () => {
+    const onMore = jest.fn();
+    const { getByTestId } = renderScreen({ onMore });
+    fireEvent.press(getByTestId("more-button"));
+    expect(onMore).toHaveBeenCalledTimes(1);
   });
 
-  it("renders score value of 20", () => {
-    const { getByText } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByText("20")).toBeTruthy();
-  });
-
-  it("renders different score values", () => {
-    const { getByText } = render(
-      <SleepDashboardScreen {...defaultProps} sleepScore={85} sleepQuality="Excellent" />
-    );
-    expect(getByText("85")).toBeTruthy();
-  });
-
-  // --- Sleep Quality Label ---
-  it("displays sleep quality status text", () => {
-    const { getByText } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByText("You are Insomniac.")).toBeTruthy();
-  });
-
-  it("displays different quality labels", () => {
-    const { getByText } = render(
-      <SleepDashboardScreen {...defaultProps} sleepScore={85} sleepQuality="Excellent" />
-    );
-    expect(getByText("You are Excellent.")).toBeTruthy();
-  });
-
-  it("displays Good quality label", () => {
-    const { getByText } = render(
-      <SleepDashboardScreen {...defaultProps} sleepScore={65} sleepQuality="Good" />
-    );
-    expect(getByText("You are Good.")).toBeTruthy();
-  });
-
-  // --- FAB Button ---
-  it("renders the floating action button", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("add-sleep-button")).toBeTruthy();
-  });
-
-  it("displays + icon on FAB", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    const fab = getByTestId("add-sleep-button");
-    expect(fab).toBeTruthy();
-  });
-
-  it("calls onAddSleep when FAB is pressed", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("add-sleep-button"));
-    expect(mockOnAddSleep).toHaveBeenCalledTimes(1);
-  });
-
-  // --- Sleep Overview Section ---
-  it("displays 'Sleep Overview' section header", () => {
-    const { getByText } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByText("Sleep Overview")).toBeTruthy();
-  });
-
-  it("displays 'See All' link", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("see-all-button")).toBeTruthy();
-  });
-
-  it("calls onSeeAll when See All is pressed", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("see-all-button"));
-    expect(mockOnSeeAll).toHaveBeenCalledTimes(1);
-  });
-
-  // --- REM Metric Card ---
-  it("renders the REM sleep metric card", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("rem-metric-card")).toBeTruthy();
-  });
-
-  it("displays 'Rem' label", () => {
-    const { getByText } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByText("Rem")).toBeTruthy();
-  });
-
-  it("displays REM hours value", () => {
-    const { getByText } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByText("8.5h")).toBeTruthy();
-  });
-
-  it("renders REM circular progress ring", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("rem-progress-ring")).toBeTruthy();
-  });
-
-  it("calls onMetricPress with rem type when REM card is pressed", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("rem-metric-card"));
-    expect(mockOnMetricPress).toHaveBeenCalledWith("rem");
-  });
-
-  // --- Core Metric Card ---
-  it("renders the Core sleep metric card", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("core-metric-card")).toBeTruthy();
-  });
-
-  it("displays 'Core' label", () => {
-    const { getByText } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByText("Core")).toBeTruthy();
-  });
-
-  it("displays Core hours value", () => {
-    const { getByText } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByText("7.8h")).toBeTruthy();
-  });
-
-  it("renders Core circular progress ring", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("core-progress-ring")).toBeTruthy();
-  });
-
-  it("calls onMetricPress with core type when Core card is pressed", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    fireEvent.press(getByTestId("core-metric-card"));
-    expect(mockOnMetricPress).toHaveBeenCalledWith("core");
-  });
-
-  // --- Accessibility ---
-  it("back button has accessibilityRole button", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("back-button").props.accessibilityRole).toBe("button");
-  });
-
-  it("back button has accessibilityLabel", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("back-button").props.accessibilityLabel).toBe("Go back");
-  });
-
-  it("back button meets minimum touch target size", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    const backButton = getByTestId("back-button");
-    expect(backButton.props.style).toEqual(
-      expect.objectContaining({ minHeight: 44, minWidth: 44 })
+  it("renders default duration display", () => {
+    const { getByTestId } = renderScreen();
+    expect(getByTestId("duration-display").props.accessibilityLabel).toBe(
+      "7 hours 48 minutes",
     );
   });
 
-  it("FAB has accessibilityRole button", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("add-sleep-button").props.accessibilityRole).toBe("button");
-  });
-
-  it("FAB has accessibilityLabel", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("add-sleep-button").props.accessibilityLabel).toBe(
-      "Add sleep entry"
+  it("renders custom duration", () => {
+    const { getByTestId } = renderScreen({
+      lastNight: {
+        durationMinutes: 6 * 60 + 12,
+        qualityPercent: 70,
+        bedtime: "12:00 AM",
+        wakeTime: "6:12 AM",
+        stages: { deep: 60, core: 200, rem: 50, awake: 62 },
+      },
+    });
+    expect(getByTestId("duration-display").props.accessibilityLabel).toBe(
+      "6 hours 12 minutes",
     );
   });
 
-  it("FAB meets minimum touch target", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    const fab = getByTestId("add-sleep-button");
-    expect(fab.props.style).toEqual(
-      expect.objectContaining({ minHeight: 44, minWidth: 44 })
-    );
+  it("renders the quality text", () => {
+    const { getByTestId } = renderScreen();
+    expect(getByTestId("quality-text")).toBeTruthy();
   });
 
-  it("See All has accessibilityLabel", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("see-all-button").props.accessibilityLabel).toBe(
-      "See all sleep overview"
-    );
+  it("renders the Sleep stages card", () => {
+    const { getByTestId } = renderScreen();
+    expect(getByTestId("sleep-stages-card")).toBeTruthy();
+    expect(getByTestId("sleep-stages-bar")).toBeTruthy();
   });
 
-  it("REM card has accessibilityLabel", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("rem-metric-card").props.accessibilityLabel).toBe(
-      "REM sleep: 8.5 hours"
-    );
+  it("renders the weekly history card", () => {
+    const { getByTestId } = renderScreen();
+    expect(getByTestId("weekly-history-card")).toBeTruthy();
   });
 
-  it("Core card has accessibilityLabel", () => {
-    const { getByTestId } = render(<SleepDashboardScreen {...defaultProps} />);
-    expect(getByTestId("core-metric-card").props.accessibilityLabel).toBe(
-      "Core sleep: 7.8 hours"
-    );
+  it("renders the log sleep CTA", () => {
+    const { getByTestId } = renderScreen();
+    expect(getByTestId("log-sleep-button")).toBeTruthy();
   });
 
-  // --- Branding ---
-  it("does not contain any Freud branding", () => {
-    const { queryByText } = render(<SleepDashboardScreen {...defaultProps} />);
+  it("invokes onLogSleep when CTA pressed", () => {
+    const onLogSleep = jest.fn();
+    const { getByTestId } = renderScreen({ onLogSleep });
+    fireEvent.press(getByTestId("log-sleep-button"));
+    expect(onLogSleep).toHaveBeenCalledTimes(1);
+  });
+
+  it("displays the section title 'Sleep stages'", () => {
+    const { getByText } = renderScreen();
+    expect(getByText("Sleep stages")).toBeTruthy();
+  });
+
+  it("displays the section title '7-day history'", () => {
+    const { getByText } = renderScreen();
+    expect(getByText("7-day history")).toBeTruthy();
+  });
+
+  it("displays the insight title", () => {
+    const { getByText } = renderScreen();
+    expect(getByText("Your best sleep this week")).toBeTruthy();
+  });
+
+  it("renders the bedtime / wake schedule mono caption", () => {
+    const { getByText } = renderScreen();
+    expect(getByText("11:14 PM — 7:02 AM")).toBeTruthy();
+  });
+
+  it("touch targets meet 44pt", () => {
+    const { getByTestId } = renderScreen();
+    for (const id of ["back-button", "more-button"]) {
+      const node = getByTestId(id);
+      const flat = Object.assign({}, ...[].concat(node.props.style));
+      expect(flat.minHeight).toBeGreaterThanOrEqual(44);
+      expect(flat.minWidth).toBeGreaterThanOrEqual(44);
+    }
+  });
+
+  it("does not contain Freud branding", () => {
+    const { queryByText } = renderScreen();
     expect(queryByText(/freud/i)).toBeNull();
   });
 
-  // --- Edge Cases ---
-  it("handles zero sleep score", () => {
-    const { getByText } = render(
-      <SleepDashboardScreen {...defaultProps} sleepScore={0} sleepQuality="Insomniac" />
+  it("disables more button when onMore is undefined", () => {
+    const { getByTestId } = render(
+      <SleepDashboardScreen onBack={jest.fn()} onLogSleep={jest.fn()} />,
     );
-    expect(getByText("0")).toBeTruthy();
-  });
-
-  it("handles maximum sleep score", () => {
-    const { getByText } = render(
-      <SleepDashboardScreen {...defaultProps} sleepScore={100} sleepQuality="Excellent" />
+    expect(getByTestId("more-button").props.accessibilityState?.disabled).toBe(
+      true,
     );
-    expect(getByText("100")).toBeTruthy();
   });
 });

@@ -45,13 +45,13 @@ interface NotificationSettingsScreenProps {
 }
 
 const localColors = {
-  background: palette.brown[900],
-  white: palette.white,
-  cardBg: palette.brown[800],
-  textSecondary: `${palette.white}${palette.alpha[60]}`,
-  toggleOn: palette.olive[500],
-  toggleOff: palette.brown[700],
-  chevron: `${palette.white}${palette.alpha[30]}`,
+  background: palette.midnight[950],
+  white: palette.warm[50],
+  cardBg: palette.midnight[800],
+  textSecondary: `${palette.warm[50]}${palette.alpha[60]}`,
+  toggleOn: palette.sage[300],
+  toggleOff: palette.midnight[700],
+  chevron: `${palette.warm[50]}${palette.alpha[30]}`,
 } as const;
 
 export function NotificationSettingsScreen({
