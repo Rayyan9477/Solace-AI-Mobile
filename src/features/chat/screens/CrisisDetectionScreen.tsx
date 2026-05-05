@@ -112,7 +112,7 @@ export function CrisisDetectionScreen({
       accessibilityLabel={`Contact ${professional.name}`}
     >
       <View style={styles.professionalAvatar}>
-        <Icon name="medkit-outline" size={24} color={palette.white} />
+        <Icon name="medkit-outline" size={24} color={palette.warm[50]} />
       </View>
       <View style={styles.professionalInfo}>
         <View style={styles.professionalHeader}>
@@ -122,13 +122,13 @@ export function CrisisDetectionScreen({
               testID={`verified-badge-${professional.id}`}
               style={styles.verifiedBadge}
             >
-              <Icon name="checkmark-circle-outline" size={12} color={palette.white} />
+              <Icon name="checkmark-circle-outline" size={12} color={palette.warm[50]} />
             </View>
           )}
         </View>
         <Text style={styles.professionalRole}>{professional.role}</Text>
         <View style={styles.professionalMeta}>
-          <Icon name="star-outline" size={12} color={palette.tan[500]} /><Text style={styles.ratingText}> {professional.rating}</Text>
+          <Icon name="star-outline" size={12} color={palette.sage[300]} /><Text style={styles.ratingText}> {professional.rating}</Text>
           {professional.freeSession && (
             <View style={styles.freeSessionBadge}>
               <Text style={styles.freeSessionText}>Free Session</Text>
@@ -150,7 +150,7 @@ export function CrisisDetectionScreen({
             <Text style={styles.messageText}>{item.content}</Text>
           </View>
           <View testID={`user-avatar-${item.id}`} style={styles.userAvatar}>
-            <Icon name="person-circle-outline" size={24} color={palette.white} />
+            <Icon name="person-circle-outline" size={24} color={palette.warm[50]} />
           </View>
         </View>
       );
@@ -163,7 +163,7 @@ export function CrisisDetectionScreen({
           style={[styles.messageBubble, styles.aiMessage]}
         >
           <View testID={`ai-avatar-${item.id}`} style={styles.aiAvatar}>
-            <Icon name="hardware-chip-outline" size={24} color={palette.white} />
+            <Icon name="hardware-chip-outline" size={24} color={palette.warm[50]} />
           </View>
           <View style={styles.aiMessageContainer}>
             <View style={[styles.messageContent, styles.aiMessageContent]}>
@@ -188,7 +188,7 @@ export function CrisisDetectionScreen({
           accessibilityLiveRegion="assertive"
         >
           <View style={styles.crisisIcon}>
-            <Icon name="warning-outline" size={20} color={palette.white} />
+            <Icon name="warning-outline" size={20} color={palette.warm[50]} />
           </View>
           <View style={styles.crisisContent}>
             <Text style={styles.crisisEmotions}>
@@ -229,7 +229,7 @@ export function CrisisDetectionScreen({
           accessibilityRole="button"
           accessibilityLabel="Search messages"
         >
-          <Icon name="search-outline" size={22} color={palette.white} />
+          <Icon name="search-outline" size={22} color={palette.warm[50]} />
         </TouchableOpacity>
       </View>
 
@@ -276,7 +276,7 @@ export function CrisisDetectionScreen({
         {isAITyping && (
           <View testID="typing-indicator" style={styles.typingIndicator}>
             <View style={styles.aiAvatar}>
-              <Icon name="hardware-chip-outline" size={24} color={palette.white} />
+              <Icon name="hardware-chip-outline" size={24} color={palette.warm[50]} />
             </View>
             <View style={styles.typingBubble}>
               <Text style={styles.typingText}>Solace AI is thinking...</Text>
@@ -298,7 +298,7 @@ export function CrisisDetectionScreen({
             accessibilityRole="button"
             accessibilityLabel="Add attachment"
           >
-            <Icon name="attach-outline" size={22} color={palette.white} />
+            <Icon name="attach-outline" size={22} color={palette.warm[50]} />
           </TouchableOpacity>
           <TextInput
             testID="message-input"
@@ -306,7 +306,7 @@ export function CrisisDetectionScreen({
             value={inputText}
             onChangeText={onInputChange}
             placeholder="Type to start chatting..."
-            placeholderTextColor={palette.gray[400]}
+            placeholderTextColor={palette.warm[400]}
             accessibilityLabel="Message input"
             multiline
           />
@@ -336,7 +336,7 @@ export function CrisisDetectionScreen({
 const styles = StyleSheet.create({
   aiAvatar: {
     alignItems: "center",
-    backgroundColor: palette.olive[500],
+    backgroundColor: palette.sage[300],
     borderRadius: 20,
     height: 40,
     justifyContent: "center",
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     maxWidth: "85%",
   },
   aiMessageContent: {
-    backgroundColor: palette.brown[800],
+    backgroundColor: palette.midnight[800],
   },
   attachmentButton: {
     alignItems: "center",
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: "center",
-    borderColor: palette.brown[700],
+    borderColor: palette.midnight[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 40,
@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   backButtonIcon: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 18,
     fontWeight: "600",
   },
@@ -383,13 +383,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   callButtonText: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 14,
     fontWeight: "600",
   },
   chatInputArea: {
     alignItems: "center",
-    backgroundColor: palette.brown[800],
+    backgroundColor: palette.midnight[800],
     borderRadius: 28,
     flexDirection: "row",
     marginBottom: 32,
@@ -414,7 +414,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   crisisEmotions: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 13,
     fontWeight: "600",
   },
@@ -423,20 +423,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   crisisStatus: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 11,
     marginTop: 2,
     opacity: 0.9,
   },
   freeSessionBadge: {
-    backgroundColor: palette.olive[500],
+    backgroundColor: palette.sage[300],
     borderRadius: 8,
     marginLeft: 8,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
   freeSessionText: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 10,
     fontWeight: "600",
   },
@@ -451,18 +451,18 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   headerSubtitle: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 12,
     marginTop: 2,
   },
   headerTitle: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 18,
     fontWeight: "600",
   },
   hotlineBanner: {
     alignItems: "center",
-    backgroundColor: palette.brown[800],
+    backgroundColor: palette.midnight[800],
     borderColor: palette.accent.orange,
     borderRadius: 12,
     borderWidth: 1,
@@ -481,12 +481,12 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   hotlineSubtext: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 11,
     marginTop: 2,
   },
   hotlineTitle: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 14,
     fontWeight: "600",
   },
@@ -497,13 +497,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   messageContent: {
-    backgroundColor: palette.tan[500],
+    backgroundColor: palette.sage[300],
     borderRadius: 16,
     maxWidth: "70%",
     padding: 12,
   },
   messageInput: {
-    color: palette.white,
+    color: palette.warm[50],
     flex: 1,
     fontSize: 14,
     maxHeight: 100,
@@ -516,13 +516,13 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   messageText: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 14,
     lineHeight: 20,
   },
   professionalAvatar: {
     alignItems: "center",
-    backgroundColor: palette.brown[700],
+    backgroundColor: palette.midnight[700],
     borderRadius: 20,
     height: 40,
     justifyContent: "center",
@@ -530,7 +530,7 @@ const styles = StyleSheet.create({
   },
   professionalCard: {
     alignItems: "center",
-    backgroundColor: palette.brown[700],
+    backgroundColor: palette.midnight[700],
     borderRadius: 12,
     flexDirection: "row",
     marginTop: 8,
@@ -551,12 +551,12 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   professionalName: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 14,
     fontWeight: "600",
   },
   professionalRole: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 12,
     marginTop: 2,
   },
@@ -564,7 +564,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   ratingText: {
-    color: palette.tan[500],
+    color: palette.sage[300],
     fontSize: 12,
     fontWeight: "500",
   },
@@ -576,7 +576,7 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     alignItems: "center",
-    backgroundColor: palette.olive[500],
+    backgroundColor: palette.sage[300],
     borderRadius: 22,
     height: 44,
     justifyContent: "center",
@@ -585,18 +585,18 @@ const styles = StyleSheet.create({
     width: 44,
   },
   sendIcon: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 20,
     fontWeight: "600",
   },
   typingBubble: {
-    backgroundColor: palette.brown[800],
+    backgroundColor: palette.midnight[800],
     borderRadius: 16,
     flexDirection: "row",
     padding: 12,
   },
   typingDot: {
-    backgroundColor: palette.gray[400],
+    backgroundColor: palette.warm[400],
     borderRadius: 3,
     height: 6,
     marginLeft: 4,
@@ -614,12 +614,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   typingText: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 14,
   },
   userAvatar: {
     alignItems: "center",
-    backgroundColor: palette.tan[500],
+    backgroundColor: palette.sage[300],
     borderRadius: 20,
     height: 40,
     justifyContent: "center",
@@ -632,7 +632,7 @@ const styles = StyleSheet.create({
   },
   verifiedBadge: {
     alignItems: "center",
-    backgroundColor: palette.olive[500],
+    backgroundColor: palette.sage[300],
     borderRadius: 8,
     height: 16,
     justifyContent: "center",

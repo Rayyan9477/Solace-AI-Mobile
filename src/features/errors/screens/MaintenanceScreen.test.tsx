@@ -120,7 +120,7 @@ describe("MaintenanceScreen", () => {
       {},
       ...[].concat(getByTestId("maintenance-screen").props.style),
     );
-    expect(style.backgroundColor).toBe("#1C1410");
+    expect(style.backgroundColor).toBe("#040818");
   });
 
   // ── Branding ───────────────────────────────────────────

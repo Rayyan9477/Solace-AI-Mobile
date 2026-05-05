@@ -16,13 +16,13 @@ interface InternalError500ScreenProps {
 }
 
 const colors = {
-  background: palette.brown[900],
-  white: palette.white,
-  textSecondary: `${palette.white}${palette.alpha[60]}`,
+  background: palette.midnight[950],
+  white: palette.warm[50],
+  textSecondary: palette.warm[400],
   illustrationBg: palette.onboarding.step2,
-  badgeBg: palette.brown[800],
-  ctaButtonBg: palette.tan[500],
-  ctaButtonText: palette.brown[900],
+  badgeBg: palette.midnight[800],
+  ctaButtonBg: palette.peach[300],
+  ctaButtonText: palette.midnight[950],
 } as const;
 
 export function InternalError500Screen({

@@ -84,7 +84,7 @@ export function CrisisSupportAlertScreen({
           <View style={styles.plantLeft} />
           <View style={styles.plantRight} />
           <View style={styles.personCircle}>
-            <Icon name="alert-circle-outline" size={48} color={palette.white} />
+            <Icon name="alert-circle-outline" size={48} color={palette.warm[50]} />
           </View>
         </View>
 
@@ -107,7 +107,7 @@ export function CrisisSupportAlertScreen({
           accessibilityRole="button"
           accessibilityLabel="Access crisis support"
         >
-          <Icon name="warning-outline" size={16} color={palette.white} style={styles.primaryButtonIcon} />
+          <Icon name="warning-outline" size={16} color={palette.warm[50]} style={styles.primaryButtonIcon} />
           <Text style={styles.primaryButtonText}>
             Crisis Support Now Active.
           </Text>
@@ -122,7 +122,7 @@ export function CrisisSupportAlertScreen({
           accessibilityLabel="Call 988 for help"
         >
           <Text style={styles.secondaryButtonText}>Call For Help!</Text>
-          <Icon name="call-outline" size={16} color={palette.white} style={styles.secondaryButtonIcon} />
+          <Icon name="call-outline" size={16} color={palette.warm[50]} style={styles.secondaryButtonIcon} />
         </TouchableOpacity>
 
         {/* Acknowledge Button */}
@@ -158,7 +158,7 @@ export function CrisisSupportAlertScreen({
             accessibilityRole="button"
             accessibilityLabel="Close alert"
           >
-            <Icon name="close-outline" size={18} color={palette.white} />
+            <Icon name="close-outline" size={18} color={palette.warm[50]} />
           </TouchableOpacity>
         </View>
       </View>
@@ -167,8 +167,26 @@ export function CrisisSupportAlertScreen({
 }
 
 const styles = StyleSheet.create({
+  acknowledgeButton: {
+    alignItems: "center",
+    backgroundColor: `${palette.peach[500]}${palette.alpha[20]}`,
+    borderColor: `${palette.peach[500]}${palette.alpha[30]}`,
+    borderRadius: 16,
+    borderWidth: 1,
+    marginHorizontal: 24,
+    marginTop: 12,
+    minHeight: 44,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    width: "85%",
+  },
+  acknowledgeButtonText: {
+    color: palette.peach[300],
+    fontSize: 15,
+    fontWeight: "700",
+  },
   backdrop: {
-    backgroundColor: `${palette.black}${palette.alpha[70]}`,
+    backgroundColor: `${palette.midnight[950]}${palette.alpha[70]}`,
     bottom: 0,
     left: 0,
     position: "absolute",
@@ -176,7 +194,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   body: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 15,
     lineHeight: 22,
     marginTop: 12,
@@ -193,7 +211,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignItems: "center",
-    backgroundColor: `${palette.white}${palette.alpha[15]}`,
+    backgroundColor: `${palette.warm[50]}${palette.alpha[15]}`,
     borderRadius: 22,
     height: 44,
     justifyContent: "center",
@@ -202,7 +220,7 @@ const styles = StyleSheet.create({
     width: 44,
   },
   closeIcon: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 18,
     fontWeight: "600",
   },
@@ -211,9 +229,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+  disabledButton: {
+    opacity: 0.4,
+  },
   dismissButton: {
     alignItems: "center",
-    backgroundColor: palette.brown[700],
+    backgroundColor: palette.midnight[700],
     borderRadius: 22,
     height: 44,
     justifyContent: "center",
@@ -222,7 +243,7 @@ const styles = StyleSheet.create({
     width: 44,
   },
   dismissDot: {
-    backgroundColor: palette.white,
+    backgroundColor: palette.warm[50],
     borderRadius: 5,
     height: 10,
     opacity: 0.5,
@@ -230,7 +251,7 @@ const styles = StyleSheet.create({
   },
   illustration: {
     alignItems: "center",
-    backgroundColor: palette.stone[100],
+    backgroundColor: palette.midnight[800],
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     height: 200,
@@ -241,7 +262,7 @@ const styles = StyleSheet.create({
   },
   modalCard: {
     alignItems: "center",
-    backgroundColor: palette.brown[900],
+    backgroundColor: palette.midnight[950],
     borderRadius: 24,
     marginHorizontal: 24,
     overflow: "hidden",
@@ -250,7 +271,7 @@ const styles = StyleSheet.create({
   },
   personCircle: {
     alignItems: "center",
-    backgroundColor: "#E8B86D",
+    backgroundColor: palette.peach[300],
     borderRadius: 50,
     height: 100,
     justifyContent: "center",
@@ -260,7 +281,7 @@ const styles = StyleSheet.create({
     fontSize: 48,
   },
   plantLeft: {
-    backgroundColor: palette.olive[700],
+    backgroundColor: palette.sage[700],
     borderRadius: 20,
     height: 60,
     left: 10,
@@ -271,7 +292,7 @@ const styles = StyleSheet.create({
     width: 30,
   },
   plantRight: {
-    backgroundColor: palette.olive[700],
+    backgroundColor: palette.sage[700],
     borderRadius: 20,
     height: 60,
     opacity: 0.6,
@@ -299,7 +320,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   primaryButtonText: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 15,
     fontWeight: "700",
   },
@@ -321,33 +342,12 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   secondaryButtonText: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 15,
     fontWeight: "700",
-  },
-  acknowledgeButton: {
-    alignItems: "center",
-    backgroundColor: `${palette.tan[500]}${palette.alpha[20]}`,
-    borderColor: `${palette.tan[500]}${palette.alpha[30]}`,
-    borderRadius: 16,
-    borderWidth: 1,
-    marginHorizontal: 24,
-    marginTop: 12,
-    minHeight: 44,
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    width: "85%",
-  },
-  acknowledgeButtonText: {
-    color: palette.tan[500],
-    fontSize: 15,
-    fontWeight: "700",
-  },
-  disabledButton: {
-    opacity: 0.4,
   },
   title: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 24,
     fontWeight: "700",
     marginTop: 20,

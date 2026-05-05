@@ -131,7 +131,7 @@ describe("NotAllowed403Screen", () => {
       {},
       ...[].concat(getByTestId("not-allowed-403-screen").props.style),
     );
-    expect(style.backgroundColor).toBe("#1C1410");
+    expect(style.backgroundColor).toBe("#040818");
   });
 
   // ── Branding ───────────────────────────────────────────

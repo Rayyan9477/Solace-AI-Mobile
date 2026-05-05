@@ -85,7 +85,7 @@ export function JournalEntryEditorScreen({
             accessibilityRole="button"
             accessibilityLabel="Go back"
           >
-            <Icon name="chevron-back-outline" size={20} color={palette.white} />
+            <Icon name="chevron-back-outline" size={20} color={palette.warm[50]} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Edit Journal</Text>
           <View style={styles.headerSpacer} />
@@ -103,7 +103,7 @@ export function JournalEntryEditorScreen({
         <View style={styles.editActions}>
           <TouchableOpacity
             testID="undo-button"
-            style={[styles.actionButton, { backgroundColor: palette.olive[500] }]}
+            style={[styles.actionButton, { backgroundColor: palette.sage[300] }]}
             onPress={onUndo}
             accessibilityRole="button"
             accessibilityLabel="Undo"
@@ -112,7 +112,7 @@ export function JournalEntryEditorScreen({
           </TouchableOpacity>
           <TouchableOpacity
             testID="redo-button"
-            style={[styles.actionButton, { backgroundColor: palette.brown[700] }]}
+            style={[styles.actionButton, { backgroundColor: palette.midnight[700] }]}
             onPress={onRedo}
             accessibilityRole="button"
             accessibilityLabel="Redo"
@@ -134,7 +134,7 @@ export function JournalEntryEditorScreen({
           accessibilityRole="button"
           accessibilityLabel="Go to home"
         >
-          <Icon name="home-outline" size={20} color={palette.white} />
+          <Icon name="home-outline" size={20} color={palette.warm[50]} />
         </TouchableOpacity>
         <TouchableOpacity
           testID="toolbar-edit"
@@ -143,7 +143,7 @@ export function JournalEntryEditorScreen({
           accessibilityRole="button"
           accessibilityLabel="Edit entry"
         >
-          <Icon name="pencil-outline" size={20} color={palette.white} />
+          <Icon name="pencil-outline" size={20} color={palette.warm[50]} />
         </TouchableOpacity>
         <TouchableOpacity
           testID="toolbar-share"
@@ -161,7 +161,7 @@ export function JournalEntryEditorScreen({
           accessibilityRole="button"
           accessibilityLabel="Journal settings"
         >
-          <Icon name="settings-outline" size={20} color={palette.white} />
+          <Icon name="settings-outline" size={20} color={palette.warm[50]} />
         </TouchableOpacity>
       </View>
     </ScreenContainer>
@@ -179,12 +179,12 @@ const styles = StyleSheet.create({
     width: 56,
   },
   actionIcon: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 24,
   },
   backButton: {
     alignItems: "center",
-    borderColor: `${palette.white}${palette.alpha[30]}`,
+    borderColor: `${palette.warm[50]}${palette.alpha[30]}`,
     borderRadius: 22,
     borderWidth: 1,
     height: 44,
@@ -193,9 +193,9 @@ const styles = StyleSheet.create({
     minWidth: 44,
     width: 44,
   },
-  backIcon: { color: palette.white, fontSize: 22 },
+  backIcon: { color: palette.warm[50], fontSize: 22 },
   container: {
-    backgroundColor: palette.brown[900],
+    backgroundColor: palette.midnight[950],
     flex: 1,
   },
   contentContainer: {
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   contentText: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 18,
     lineHeight: 28,
   },
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   entryTitle: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 32,
     fontWeight: "700",
     lineHeight: 40,
@@ -230,18 +230,18 @@ const styles = StyleSheet.create({
   },
   headerSpacer: { width: 44 },
   headerTitle: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 16,
     fontWeight: "600",
   },
   highlight: {
-    backgroundColor: palette.olive[500],
+    backgroundColor: palette.sage[300],
     borderRadius: 4,
-    color: palette.white,
+    color: palette.warm[50],
     fontWeight: "600",
   },
   promptText: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 14,
     marginTop: 24,
     paddingHorizontal: 24,
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   toolbar: {
-    backgroundColor: palette.brown[800],
+    backgroundColor: palette.midnight[800],
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     flexDirection: "row",
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     width: 48,
   },
   toolbarIcon: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 20,
   },
 });

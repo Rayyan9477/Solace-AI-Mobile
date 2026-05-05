@@ -59,7 +59,7 @@ describe("JournalEntryEditorScreen", () => {
     const { StyleSheet } = require("react-native");
     const flatStyle = StyleSheet.flatten(getByTestId("journal-entry-editor-screen").props.style);
     expect(flatStyle).toEqual(
-      expect.objectContaining({ backgroundColor: "#1C1410" })
+      expect.objectContaining({ backgroundColor: "#040818" })
     );
   });
 
@@ -144,7 +144,7 @@ describe("JournalEntryEditorScreen", () => {
       ? Object.assign({}, ...highlight.props.style)
       : highlight.props.style;
     expect(flatStyle).toEqual(
-      expect.objectContaining({ backgroundColor: "#9AAD5C" })
+      expect.objectContaining({ backgroundColor: "#9BC4B0" })
     );
   });
 
@@ -188,7 +188,7 @@ describe("JournalEntryEditorScreen", () => {
       ? Object.assign({}, ...btn.props.style)
       : btn.props.style;
     expect(flatStyle).toEqual(
-      expect.objectContaining({ backgroundColor: "#9AAD5C" })
+      expect.objectContaining({ backgroundColor: "#9BC4B0" })
     );
   });
 
@@ -201,7 +201,7 @@ describe("JournalEntryEditorScreen", () => {
       ? Object.assign({}, ...btn.props.style)
       : btn.props.style;
     expect(flatStyle).toEqual(
-      expect.objectContaining({ backgroundColor: "#3D2D24" })
+      expect.objectContaining({ backgroundColor: "#161D3D" })
     );
   });
 

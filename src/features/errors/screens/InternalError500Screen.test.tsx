@@ -109,7 +109,7 @@ describe("InternalError500Screen", () => {
       {},
       ...[].concat(getByTestId("internal-error-500-screen").props.style),
     );
-    expect(style.backgroundColor).toBe("#1C1410");
+    expect(style.backgroundColor).toBe("#040818");
   });
 
   // ── Audit Fix ──────────────────────────────────────────

@@ -26,7 +26,7 @@ export function EmergencyContactScreen(): React.ReactElement {
 const styles = StyleSheet.create({
   backButton: {
     alignItems: "center",
-    borderColor: palette.brown[700],
+    borderColor: palette.midnight[700],
     borderRadius: 20,
     borderWidth: 1,
     height: 44,
@@ -35,12 +35,12 @@ const styles = StyleSheet.create({
     minWidth: 44,
     width: 44,
   },
-  backIcon: { color: palette.white, fontSize: 20 },
+  backIcon: { color: palette.warm[50], fontSize: 20 },
   container: {
     paddingHorizontal: 24,
   },
-  subtitle: { color: palette.gray[400], fontSize: 16, marginTop: 8 },
-  title: { color: palette.white, fontSize: 24, fontWeight: "700", marginTop: 20 },
+  subtitle: { color: palette.warm[400], fontSize: 16, marginTop: 8 },
+  title: { color: palette.warm[50], fontSize: 24, fontWeight: "700", marginTop: 20 },
 });
 
 export default EmergencyContactScreen;

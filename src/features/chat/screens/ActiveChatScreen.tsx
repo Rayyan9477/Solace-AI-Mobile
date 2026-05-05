@@ -29,6 +29,7 @@ import {
   TypingIndicator,
 } from "@/shared/components/organisms/chat";
 import { sendMessage } from "@/features/chat/services/mockChatService";
+import { detectCrisisSignals } from "@/features/chat/services/crisisClassifier";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -68,6 +69,14 @@ export interface ActiveChatScreenProps {
   onSendMessage?: (
     text: string,
   ) => Promise<{ reply: string; action?: ChatMessage["action"] }>;
+  /**
+   * Invoked synchronously when the rule-based crisis classifier detects a
+   * positive match in the user's outgoing message (Sprint 9 8.4 wiring). The
+   * host (RootNavigator) typically handles this by navigating to the
+   * CrisisModal stack. The chat send still proceeds so the AI surface can
+   * follow up with the safety script — the modal is an additional layer.
+   */
+  onCrisisDetected?: (input: string) => void;
   testID?: string;
 }
 
@@ -230,6 +239,7 @@ export function ActiveChatScreen({
   onPhonePress,
   onMorePress,
   onSendMessage,
+  onCrisisDetected,
   testID = "active-chat-screen",
 }: ActiveChatScreenProps): React.ReactElement {
   const { palette } = useTheme();
@@ -263,6 +273,16 @@ export function ActiveChatScreen({
   const handleSend = useCallback(async (): Promise<void> => {
     const trimmed = inputValue.trim();
     if (!trimmed) return;
+
+    // Sprint 9 8.4 — rule-based crisis tripwire. Runs synchronously before
+    // dispatch so the modal can open even if the chat backend is slow/offline.
+    // The send still proceeds; the modal is additive.
+    if (onCrisisDetected) {
+      const detection = detectCrisisSignals(trimmed);
+      if (detection.matched) {
+        onCrisisDetected(trimmed);
+      }
+    }
 
     const userMsg: ChatMessage = {
       id: `user-${Date.now()}`,
@@ -314,7 +334,7 @@ export function ActiveChatScreen({
     } catch {
       setIsTyping(false);
     }
-  }, [inputValue, onSendMessage]);
+  }, [inputValue, onSendMessage, onCrisisDetected]);
 
   const renderItem = useCallback(
     ({ item }: { item: ChatMessage }) => (

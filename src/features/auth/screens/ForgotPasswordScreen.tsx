@@ -90,9 +90,9 @@ export function ForgotPasswordScreen({
 
       {/* Recovery Method Options */}
       <View style={styles.methodsContainer}>
-        {renderMethodOption("2fa", "Use 2FA", <Icon name="shield-checkmark-outline" size={28} color={palette.tan[400]} />)}
-        {renderMethodOption("password", "Password", <Icon name="key-outline" size={28} color={palette.tan[400]} />)}
-        {renderMethodOption("google", "Google Authenticator", <Icon name="lock-closed-outline" size={28} color={palette.tan[400]} />)}
+        {renderMethodOption("2fa", "Use 2FA", <Icon name="shield-checkmark-outline" size={28} color={palette.sage[100]} />)}
+        {renderMethodOption("password", "Password", <Icon name="key-outline" size={28} color={palette.sage[100]} />)}
+        {renderMethodOption("google", "Google Authenticator", <Icon name="lock-closed-outline" size={28} color={palette.sage[100]} />)}
       </View>
 
       {/* Send Password Button */}
@@ -104,7 +104,7 @@ export function ForgotPasswordScreen({
         accessibilityLabel="Send Reset Link"
       >
         <Text style={styles.sendButtonText}>Send Reset Link</Text>
-        <Icon name="lock-closed-outline" size={18} color={palette.tan[500]} style={styles.sendButtonIcon} />
+        <Icon name="lock-closed-outline" size={18} color={palette.sage[300]} style={styles.sendButtonIcon} />
       </TouchableOpacity>
     </ScrollView>
     </ScreenContainer>
@@ -125,9 +125,6 @@ const styles = StyleSheet.create({
   backIcon: {
     color: colors.text.primary,
     fontSize: 20,
-  },
-  scrollView: {
-    flex: 1,
   },
   contentContainer: {
     padding: 24,
@@ -167,9 +164,12 @@ const styles = StyleSheet.create({
   methodsContainer: {
     marginTop: 32,
   },
+  scrollView: {
+    flex: 1,
+  },
   sendButton: {
     alignItems: "center",
-    backgroundColor: palette.tan[500],
+    backgroundColor: palette.sage[300],
     borderRadius: 28,
     flexDirection: "row",
     justifyContent: "center",

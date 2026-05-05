@@ -36,6 +36,7 @@ import {
 } from "@/shared/components/primitives";
 import { HashtagChip } from "@/shared/components/molecules/chips/HashtagChip";
 import { SuggestionCard } from "@/shared/components/molecules/cards/SuggestionCard";
+import { detectCrisisSignals } from "@/features/chat/services/crisisClassifier";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -65,6 +66,12 @@ export interface TextJournalComposerScreenProps {
   onSuggestionDismiss?: () => void;
   onClose: () => void;
   onSave: () => void;
+  /**
+   * Invoked when the rule-based crisis classifier matches the journal body
+   * on save (Sprint 9 8.4 wiring). The host typically navigates to
+   * `CrisisModal`. Save is NOT blocked — both happen.
+   */
+  onCrisisDetected?: (body: string) => void;
   /** Toolbar handlers (optional — buttons render disabled if not provided) */
   onBoldPress?: () => void;
   onItalicPress?: () => void;
@@ -103,6 +110,7 @@ export function TextJournalComposerScreen({
   onSuggestionDismiss,
   onClose,
   onSave,
+  onCrisisDetected,
   onBoldPress,
   onItalicPress,
   onListPress,
@@ -126,6 +134,19 @@ export function TextJournalComposerScreen({
 
   function handleMoodPress(level: MoodLevel): void {
     onMoodLevelChange(moodLevel === level ? null : level);
+  }
+
+  function handleSave(): void {
+    // Sprint 9 8.4 — rule-based crisis tripwire on journal save. Fires the
+    // optional callback BEFORE the host's onSave so a CrisisModal can open
+    // even if save persistence is async.
+    if (onCrisisDetected) {
+      const detection = detectCrisisSignals(body);
+      if (detection.matched) {
+        onCrisisDetected(body);
+      }
+    }
+    onSave();
   }
 
   function handleHashtagPress(tag: string): void {
@@ -161,7 +182,7 @@ export function TextJournalComposerScreen({
 
         <TouchableOpacity
           testID="header-save-button"
-          onPress={onSave}
+          onPress={handleSave}
           accessibilityRole="button"
           accessibilityLabel="Save entry"
           style={styles.headerSideButton}
@@ -375,7 +396,7 @@ export function TextJournalComposerScreen({
       {/* ------------------------------------------------------------------ */}
       <TouchableOpacity
         testID="save-button"
-        onPress={onSave}
+        onPress={handleSave}
         accessibilityRole="button"
         accessibilityLabel="Save journal entry"
         style={[
