@@ -21,8 +21,8 @@ import { useReducedMotion } from "../../../hooks/useReducedMotion";
  * Color tokens from theme
  */
 const colors = {
-  base: palette.gray[700],
-  highlight: palette.gray[600],
+  base: palette.midnight[700],
+  highlight: palette.midnight[600],
 };
 
 /**

@@ -34,6 +34,8 @@ export const LUCIDE_TO_IONICON: Readonly<Record<string, string>> = {
 
   // App chrome + common actions
   bell: "notifications-outline",
+  "credit-card": "card-outline",
+  "trash-2": "trash-outline",
   search: "search-outline",
   "settings-2": "settings-outline",
   "more-horizontal": "ellipsis-horizontal",
@@ -98,16 +100,36 @@ export const LUCIDE_TO_IONICON: Readonly<Record<string, string>> = {
   lightbulb: "bulb-outline",
   brain: "bulb-outline", // approximation
   wind: "leaf-outline", // approximation — Ionicons has no wind glyph
+  feather: "leaf-outline", // approximation — Ionicons has no feather glyph
+  zap: "flash-outline",
+  "circle-dot": "radio-button-on-outline",
 
   // Navigation (home / profile)
   home: "home-outline",
 
+  // Profile / people
+  user: "person-outline",
+  "user-round": "person-outline",
+  users: "people-outline",
+
   // Security
   "shield-check": "shield-checkmark-outline",
   "scan-face": "scan-outline",
+  shield: "shield-outline",
 
   // Input helpers
   keyboard: "keypad-outline",
+
+  // Soundscapes / nature
+  "cloud-rain": "rainy-outline",
+  waves: "water-outline",
+  trees: "leaf-outline", // approximation — Ionicons has no trees glyph
+  radio: "radio-outline",
+
+  // Help / support
+  "life-buoy": "help-buoy-outline",
+  "message-circle": "chatbubble-ellipses-outline",
+  briefcase: "briefcase-outline",
 };
 
 /**

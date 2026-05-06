@@ -32,17 +32,17 @@ import { palette } from "../../../theme";
  */
 const colors = {
   // Text
-  title: palette.gray[100],
-  description: palette.gray[400],
+  title: palette.warm[100],
+  description: palette.warm[400],
 
   // Buttons
   primaryButton: palette.indigo[400],
-  primaryButtonText: palette.white,
+  primaryButtonText: palette.warm[50],
   secondaryButton: "transparent",
   secondaryButtonText: palette.indigo[400],
 
   // Card
-  cardBackground: palette.brown[900],
+  cardBackground: palette.midnight[950],
 };
 
 /**
@@ -225,22 +225,21 @@ export function EmptyState({
 }
 
 const styles = StyleSheet.create({
-  visualContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
   actionsContainer: {
-    marginTop: 16,
     alignItems: "center",
     gap: 8,
+    marginTop: 16,
+  },
+  buttonPressed: {
+    opacity: 0.8,
   },
   primaryButton: {
+    alignItems: "center",
     backgroundColor: colors.primaryButton,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
     borderRadius: 8,
     minWidth: 120,
-    alignItems: "center",
+    paddingHorizontal: 24,
+    paddingVertical: 12,
   },
   primaryButtonText: {
     color: colors.primaryButtonText,
@@ -248,20 +247,21 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   secondaryButton: {
+    alignItems: "center",
     backgroundColor: colors.secondaryButton,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
     borderRadius: 8,
     minWidth: 120,
-    alignItems: "center",
+    paddingHorizontal: 24,
+    paddingVertical: 12,
   },
   secondaryButtonText: {
     color: colors.secondaryButtonText,
     fontSize: 14,
     fontWeight: "500",
   },
-  buttonPressed: {
-    opacity: 0.8,
+  visualContainer: {
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

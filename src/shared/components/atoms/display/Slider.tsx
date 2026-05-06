@@ -22,12 +22,12 @@ import { palette } from "../../../theme";
  * Color tokens from theme
  */
 const colors = {
-  track: palette.gray[600],
+  track: palette.midnight[600],
   trackActive: palette.indigo[400],
-  thumb: palette.white,
-  label: palette.gray[400],
-  value: palette.gray[200],
-  disabled: palette.gray[700],
+  thumb: palette.warm[50],
+  label: palette.warm[400],
+  value: palette.warm[200],
+  disabled: palette.midnight[700],
 };
 
 /**
@@ -112,26 +112,26 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
   },
-  sliderRow: {
-    flexDirection: "row",
-    alignItems: "center",
+  label: {
+    color: colors.label,
+    fontSize: 12,
+    minWidth: 24,
+    textAlign: "center",
   },
   slider: {
     flex: 1,
     height: 40,
   },
-  label: {
-    fontSize: 12,
-    color: colors.label,
-    minWidth: 24,
-    textAlign: "center",
+  sliderRow: {
+    alignItems: "center",
+    flexDirection: "row",
   },
   valueLabel: {
+    color: colors.value,
     fontSize: 16,
     fontWeight: "600",
-    color: colors.value,
-    textAlign: "center",
     marginBottom: 4,
+    textAlign: "center",
   },
 });
 

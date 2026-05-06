@@ -23,12 +23,12 @@ import { useReducedMotion } from "../../../hooks/useReducedMotion";
  * Color tokens from theme
  */
 const colors = {
-  track: palette.gray[700],
+  track: palette.midnight[700],
   default: palette.indigo[400],
   success: palette.green[500],
   warning: palette.amber[500],
   error: palette.red[500],
-  label: palette.gray[400],
+  label: palette.warm[400],
 };
 
 /**
@@ -195,26 +195,26 @@ export function ProgressBar({
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    width: "100%",
-  },
-  track: {
-    width: "100%",
-    backgroundColor: colors.track,
-    overflow: "hidden",
-  },
   fill: {
     height: "100%",
   },
   indeterminateFill: {
-    position: "absolute",
     height: "100%",
+    position: "absolute",
   },
   label: {
-    fontSize: 12,
     color: colors.label,
+    fontSize: 12,
     marginTop: 4,
     textAlign: "right",
+  },
+  track: {
+    backgroundColor: colors.track,
+    overflow: "hidden",
+    width: "100%",
+  },
+  wrapper: {
+    width: "100%",
   },
 });
 

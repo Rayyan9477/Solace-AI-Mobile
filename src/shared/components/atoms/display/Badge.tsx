@@ -21,14 +21,14 @@ import { palette } from "../../../theme";
  */
 const colors = {
   // Variant backgrounds
-  default: palette.gray[600],
+  default: palette.midnight[600],
   success: palette.green[500],
   warning: palette.amber[500],
   error: palette.red[500],
   info: palette.indigo[400],
   // Text colors
-  textDefault: palette.gray[200],
-  textDark: palette.gray[900],
+  textDefault: palette.warm[200],
+  textDark: palette.midnight[950],
 };
 
 /**
@@ -151,8 +151,8 @@ export function Badge({
 
 const styles = StyleSheet.create({
   container: {
-    alignSelf: "flex-start",
     alignItems: "center",
+    alignSelf: "flex-start",
     justifyContent: "center",
   },
   dot: {

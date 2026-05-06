@@ -20,8 +20,8 @@ import { palette } from "../../../theme";
  * Color tokens from theme
  */
 const colors = {
-  line: palette.gray[700],
-  label: palette.gray[400],
+  line: palette.midnight[700],
+  label: palette.warm[400],
 };
 
 /**
@@ -121,31 +121,31 @@ export function Divider({
 
 const styles = StyleSheet.create({
   horizontal: {
+    backgroundColor: colors.line,
     height: 1,
-    backgroundColor: colors.line,
   },
-  vertical: {
-    width: 1,
-    height: "100%",
-    backgroundColor: colors.line,
+  label: {
+    color: colors.label,
+    fontSize: 12,
+    letterSpacing: 1,
+    paddingHorizontal: 12,
+    textTransform: "uppercase",
   },
   labelContainer: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
   },
   labelLine: {
     flex: 1,
   },
   line: {
-    height: 1,
     backgroundColor: colors.line,
+    height: 1,
   },
-  label: {
-    fontSize: 12,
-    color: colors.label,
-    paddingHorizontal: 12,
-    textTransform: "uppercase",
-    letterSpacing: 1,
+  vertical: {
+    backgroundColor: colors.line,
+    height: "100%",
+    width: 1,
   },
 });
 
