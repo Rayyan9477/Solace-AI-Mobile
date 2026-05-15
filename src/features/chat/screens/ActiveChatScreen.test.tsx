@@ -11,8 +11,12 @@ jest.mock("@/shared/theme/useTheme", () =>
   jest.requireActual("@/shared/theme/useTheme"),
 );
 
+// Default mock returns the SAME shape the real `sendMessage` produces:
+// `{ text, crisis, delayMs }` — screen reads `result.text` in the no-prop
+// override fallback path. Tests render the screen directly without
+// `onSendMessage`, so this default must match production.
 jest.mock("@/features/chat/services/mockChatService", () => ({
-  sendMessage: jest.fn().mockResolvedValue({ reply: "I hear you.", crisis: null, delayMs: 0 }),
+  sendMessage: jest.fn().mockResolvedValue({ text: "I hear you.", crisis: null, delayMs: 0 }),
 }));
 
 import React from "react";
@@ -186,10 +190,18 @@ describe("ActiveChatScreen", () => {
     const sendBtn = await findByTestId("message-input-send-button");
     fireEvent.press(sendBtn);
 
-    // Typing indicator should appear shortly after press
-    expect(await findByTestId("typing-indicator")).toBeTruthy();
+    // Typing indicator should appear briefly. The screen pauses 600ms before
+    // flipping isTyping=false, so under heavy parallel-suite load the default
+    // 1s findBy can race the 600ms window — use a generous waitFor with the
+    // same 3s ceiling as the disappear check.
+    await waitFor(
+      () => {
+        expect(queryByTestId("typing-indicator")).toBeTruthy();
+      },
+      { timeout: 3000 },
+    );
 
-    // Wait for it to disappear (screen has 600ms internal pause; give 3s)
+    // Wait for it to disappear (screen has 600ms internal pause; give 3s).
     await waitFor(
       () => {
         expect(queryByTestId("typing-indicator")).toBeNull();

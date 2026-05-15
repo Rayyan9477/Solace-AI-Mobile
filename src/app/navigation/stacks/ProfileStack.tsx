@@ -40,37 +40,43 @@ interface ProfileAggregates {
   readonly mindfulHours: number;
 }
 
+/** Window used when summing mindful-session duration for the dashboard. */
+const MINDFUL_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
+const MS_PER_HOUR = 3_600_000;
+
 function ProfileDashboardRoute({
   navigation,
 }: NativeStackScreenProps<
   ProfileStackParamList,
   "ProfileDashboard"
 >): React.ReactElement {
-  const { mood, journal, chat, isReady } = useRepositories();
+  const { mood, journal, chat, mindful, isReady } = useRepositories();
   const [data, setData] = React.useState<ProfileAggregates | null>(null);
 
   React.useEffect(() => {
     if (!isReady) return;
     let cancelled = false;
     void (async () => {
-      const [moods, journals, conversations, streak] = await Promise.all([
-        mood.list({ limit: 365 }),
-        journal.list({ limit: 365 }),
-        chat.listConversations(),
-        mood.getStreak(),
-      ]);
+      const since = Date.now() - MINDFUL_WINDOW_MS;
+      const [moods, journals, conversations, streak, mindfulMs] =
+        await Promise.all([
+          mood.list({ limit: 365 }),
+          journal.list({ limit: 365 }),
+          chat.listConversations(),
+          mood.getStreak(),
+          mindful.totalDurationMs({ since }),
+        ]);
       if (cancelled) return;
       setData({
         streakDays: streak,
         sessionCount: conversations.length + journals.length + moods.length,
-        // No mindful repo today; surface 0 until the schema lands.
-        mindfulHours: 0,
+        mindfulHours: mindfulMs / MS_PER_HOUR,
       });
     })();
     return () => {
       cancelled = true;
     };
-  }, [chat, isReady, journal, mood]);
+  }, [chat, isReady, journal, mindful, mood]);
 
   if (!isReady || !data) {
     return (

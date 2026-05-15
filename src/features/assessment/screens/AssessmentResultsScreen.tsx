@@ -223,7 +223,7 @@ export function AssessmentResultsScreen({
                 </Text>
               </View>
               <StatBar
-                value={item.score}
+                percent={item.score}
                 variant={pickStatBarVariant(item.color)}
                 accessibilityLabel={`${item.label} ${item.score} out of 100`}
               />
@@ -301,14 +301,13 @@ export function AssessmentResultsScreen({
         ]}
       >
         <Button
+          label="Continue to Solace"
           testID="continue-button"
           variant="primary"
           fullWidth
           onPress={onContinue}
           accessibilityLabel="Continue to Solace"
-        >
-          Continue to Solace
-        </Button>
+        />
       </View>
     </ScreenContainer>
   );

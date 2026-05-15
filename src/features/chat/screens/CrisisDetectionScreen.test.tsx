@@ -278,7 +278,7 @@ describe("CrisisDetectionScreen", () => {
       ? container.props.style
       : [container.props.style];
     const hasBackgroundColor = styles.some(
-      (s) => s?.backgroundColor === "#040818"
+      (s: Record<string, unknown> | null | undefined) => s?.backgroundColor === "#040818"
     );
     expect(hasBackgroundColor).toBe(true);
   });

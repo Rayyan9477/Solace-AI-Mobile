@@ -22,11 +22,11 @@ import { palette } from "../../../theme";
  */
 const colors = {
   checked: palette.indigo[400],
-  unchecked: palette.gray[600],
-  checkmark: palette.white,
-  label: palette.gray[200],
-  labelDisabled: palette.gray[500],
-  disabled: palette.gray[700],
+  unchecked: palette.midnight[600],
+  checkmark: palette.warm[50],
+  label: palette.warm[200],
+  labelDisabled: palette.warm[500],
+  disabled: palette.midnight[700],
 };
 
 /**
@@ -113,52 +113,52 @@ export function Checkbox({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    minHeight: 44,
-  },
   checkbox: {
-    width: 20,
-    height: 20,
+    alignItems: "center",
+    borderColor: colors.unchecked,
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: colors.unchecked,
-    alignItems: "center",
+    height: 20,
     justifyContent: "center",
+    width: 20,
   },
   checkboxChecked: {
     backgroundColor: colors.checked,
     borderColor: colors.checked,
   },
+  checkboxDisabled: {
+    backgroundColor: colors.disabled,
+    borderColor: colors.disabled,
+  },
   checkboxIndeterminate: {
     backgroundColor: colors.checked,
     borderColor: colors.checked,
   },
-  checkboxDisabled: {
-    borderColor: colors.disabled,
-    backgroundColor: colors.disabled,
-  },
   checkmark: {
-    width: 6,
-    height: 10,
     borderColor: colors.checkmark,
-    borderWidth: 2,
-    borderTopWidth: 0,
     borderLeftWidth: 0,
-    transform: [{ rotate: "45deg" }],
+    borderTopWidth: 0,
+    borderWidth: 2,
+    height: 10,
     marginBottom: 2,
+    transform: [{ rotate: "45deg" }],
+    width: 6,
+  },
+  container: {
+    alignItems: "center",
+    flexDirection: "row",
+    minHeight: 44,
   },
   indeterminateMark: {
-    width: 10,
-    height: 2,
     backgroundColor: colors.checkmark,
+    height: 2,
+    width: 10,
   },
   label: {
-    fontSize: 16,
     color: colors.label,
-    marginLeft: 12,
     flex: 1,
+    fontSize: 16,
+    marginLeft: 12,
   },
   labelDisabled: {
     color: colors.labelDisabled,

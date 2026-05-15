@@ -183,7 +183,7 @@ describe("AssessmentResultsScreen (prototype v4.2)", () => {
     const cta = getByTestId("continue-button");
     const flat = (Array.isArray(cta.props.style) ? cta.props.style.flat() : [cta.props.style])
       .filter(Boolean)
-      .reduce((acc, s) => ({ ...acc, ...s }), {} as Record<string, unknown>);
+      .reduce((acc: Record<string, unknown>, s: Record<string, unknown>) => ({ ...acc, ...s }), {} as Record<string, unknown>);
     expect((flat.height as number) ?? (flat.minHeight as number)).toBeGreaterThanOrEqual(44);
   });
 });

@@ -255,7 +255,7 @@ describe("ProfileSetupDetailsScreen", () => {
       ? container.props.style
       : [container.props.style];
     const hasBackgroundColor = styles.some(
-      (s) => s?.backgroundColor === "#040818"
+      (s: Record<string, unknown> | null | undefined) => s?.backgroundColor === "#040818"
     );
     expect(hasBackgroundColor).toBe(true);
   });
@@ -285,7 +285,10 @@ describe("ProfileSetupDetailsScreen", () => {
     const styles = Array.isArray(button.props.style)
       ? button.props.style.flat()
       : [button.props.style];
-    const buttonStyles = styles.reduce((acc, s) => ({ ...acc, ...s }), {});
+    const buttonStyles = styles.reduce(
+      (acc: Record<string, unknown>, s: Record<string, unknown>) => ({ ...acc, ...s }),
+      {} as Record<string, unknown>,
+    );
     expect(buttonStyles.minHeight).toBeGreaterThanOrEqual(44);
   });
 });

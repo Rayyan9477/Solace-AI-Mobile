@@ -31,6 +31,10 @@ import {
   type JournalRepository,
 } from "../../shared/data/repositories/JournalRepository";
 import {
+  createSqliteMindfulRepository,
+  type MindfulRepository,
+} from "../../shared/data/repositories/MindfulRepository";
+import {
   createSqliteMoodRepository,
   type MoodRepository,
 } from "../../shared/data/repositories/MoodRepository";
@@ -55,6 +59,7 @@ export interface Repositories {
   readonly sleep: SleepRepository;
   readonly chat: ChatRepository;
   readonly settings: SettingsRepository;
+  readonly mindful: MindfulRepository;
   readonly syncQueue: SyncQueue;
   /** True once the SQLite migration has finished. */
   readonly isReady: boolean;
@@ -102,6 +107,7 @@ export function RepositoryProvider(
           sleep: createSqliteSleepRepository(db),
           chat: createSqliteChatRepository(db),
           settings: createSqliteSettingsRepository(db),
+          mindful: createSqliteMindfulRepository(db),
           syncQueue,
           isReady: true,
         });
@@ -199,12 +205,22 @@ function buildNoopRepositories(): Repositories {
     delete: async () => undefined,
     getAll: async () => [],
   };
+  const noopMindful: MindfulRepository = {
+    list: async () => [],
+    byId: async () => null,
+    create: async () => {
+      throw new Error("Repositories not ready");
+    },
+    totalDurationMs: async () => 0,
+    count: async () => 0,
+  };
   return {
     mood: noopMood,
     journal: noopJournal,
     sleep: noopSleep,
     chat: noopChat,
     settings: noopSettings,
+    mindful: noopMindful,
     syncQueue: createNoopSyncQueue(),
     isReady: false,
   };

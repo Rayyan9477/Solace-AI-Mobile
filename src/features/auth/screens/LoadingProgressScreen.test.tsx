@@ -44,7 +44,7 @@ describe("LoadingProgressScreen", () => {
     const { getByTestId } = render(<LoadingProgressScreen progress={50} onComplete={mockOnComplete} />);
     const container = getByTestId("loading-progress-screen");
     const styles = Array.isArray(container.props.style) ? container.props.style : [container.props.style];
-    const hasBackgroundColor = styles.some((s) => s?.backgroundColor === "#1C1410");
+    const hasBackgroundColor = styles.some((s: Record<string, unknown> | null | undefined) => s?.backgroundColor === "#1C1410");
     expect(hasBackgroundColor).toBe(true);
   });
 
@@ -65,7 +65,10 @@ describe("LoadingProgressScreen", () => {
     const { getByTestId } = render(<LoadingProgressScreen progress={50} onComplete={mockOnComplete} />);
     const container = getByTestId("loading-progress-screen");
     const styles = Array.isArray(container.props.style) ? container.props.style.flat() : [container.props.style];
-    const alignmentStyles = styles.reduce((acc, s) => ({ ...acc, ...s }), {});
+    const alignmentStyles = styles.reduce(
+      (acc: Record<string, unknown>, s: Record<string, unknown>) => ({ ...acc, ...s }),
+      {} as Record<string, unknown>,
+    );
 
     expect(alignmentStyles.justifyContent).toBe("center");
     expect(alignmentStyles.alignItems).toBe("center");

@@ -498,7 +498,7 @@ exports[`AssessmentResultsScreen (prototype v4.2) matches snapshot 1`] = `
                 {
                   "max": 100,
                   "min": 0,
-                  "now": undefined,
+                  "now": 72,
                 }
               }
               style={
@@ -527,7 +527,7 @@ exports[`AssessmentResultsScreen (prototype v4.2) matches snapshot 1`] = `
                       "borderRadius": 2,
                     },
                     {
-                      "width": "undefined%",
+                      "width": "72%",
                     },
                   ]
                 }
@@ -640,7 +640,7 @@ exports[`AssessmentResultsScreen (prototype v4.2) matches snapshot 1`] = `
                 {
                   "max": 100,
                   "min": 0,
-                  "now": undefined,
+                  "now": 58,
                 }
               }
               style={
@@ -669,7 +669,7 @@ exports[`AssessmentResultsScreen (prototype v4.2) matches snapshot 1`] = `
                       "borderRadius": 2,
                     },
                     {
-                      "width": "undefined%",
+                      "width": "58%",
                     },
                   ]
                 }
@@ -782,7 +782,7 @@ exports[`AssessmentResultsScreen (prototype v4.2) matches snapshot 1`] = `
                 {
                   "max": 100,
                   "min": 0,
-                  "now": undefined,
+                  "now": 81,
                 }
               }
               style={
@@ -811,7 +811,7 @@ exports[`AssessmentResultsScreen (prototype v4.2) matches snapshot 1`] = `
                       "borderRadius": 2,
                     },
                     {
-                      "width": "undefined%",
+                      "width": "81%",
                     },
                   ]
                 }
@@ -924,7 +924,7 @@ exports[`AssessmentResultsScreen (prototype v4.2) matches snapshot 1`] = `
                 {
                   "max": 100,
                   "min": 0,
-                  "now": undefined,
+                  "now": 62,
                 }
               }
               style={
@@ -953,7 +953,7 @@ exports[`AssessmentResultsScreen (prototype v4.2) matches snapshot 1`] = `
                       "borderRadius": 2,
                     },
                     {
-                      "width": "undefined%",
+                      "width": "62%",
                     },
                   ]
                 }
@@ -1733,7 +1733,9 @@ exports[`AssessmentResultsScreen (prototype v4.2) matches snapshot 1`] = `
               undefined,
             ]
           }
-        />
+        >
+          Continue to Solace
+        </Text>
       </View>
     </View>
   </View>

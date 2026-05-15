@@ -131,14 +131,34 @@ function toDashboardEntry(entry: SleepEntry): DashboardSleepEntry {
     qualityPercent: ((entry.quality ?? 3) / 5) * 100,
     bedtime: formatTime(bedDate),
     wakeTime: formatTime(wokeDate),
-    stages: {
-      // The repo doesn't yet store stage breakdown; surface evenly until a
-      // schema upgrade. See decision-points in the wiring report.
-      deep: Math.round(durationMinutes * 0.18),
-      core: Math.round(durationMinutes * 0.55),
-      rem: Math.round(durationMinutes * 0.18),
-      awake: Math.max(0, durationMinutes - Math.round(durationMinutes * 0.91)),
-    },
+    stages: deriveDashboardStages(entry, durationMinutes),
+  };
+}
+
+/**
+ * Map a `SleepEntry.stages` payload (migration 002 onwards) into the dashboard
+ * component's `{deep, core, rem, awake}` minute totals. Falls back to the
+ * legacy even-split heuristic when the entry pre-dates the migration and its
+ * `stages` column is NULL.
+ */
+function deriveDashboardStages(
+  entry: SleepEntry,
+  durationMinutes: number,
+): DashboardSleepEntry["stages"] {
+  if (entry.stages) {
+    return {
+      deep: Math.max(0, Math.round(entry.stages.deepMinutes)),
+      core: Math.max(0, Math.round(entry.stages.coreMinutes)),
+      rem: Math.max(0, Math.round(entry.stages.remMinutes)),
+      awake: Math.max(0, Math.round(entry.stages.awakeMinutes)),
+    };
+  }
+  // Pre-migration entries: surface evenly so the gauge still renders.
+  return {
+    deep: Math.round(durationMinutes * 0.18),
+    core: Math.round(durationMinutes * 0.55),
+    rem: Math.round(durationMinutes * 0.18),
+    awake: Math.max(0, durationMinutes - Math.round(durationMinutes * 0.91)),
   };
 }
 
