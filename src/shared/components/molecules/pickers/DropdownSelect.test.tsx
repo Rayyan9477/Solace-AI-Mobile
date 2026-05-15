@@ -457,16 +457,18 @@ describe("DropdownSelect", () => {
       );
 
       const option = getByTestId("dropdown-option-opt1");
-      expect(option.props.accessibilityRole).toBe("option");
+      // RN-valid: "button" (was "option" — web-only ARIA role)
+      expect(option.props.accessibilityRole).toBe("button");
     });
 
-    it("list has listbox role", () => {
+    it("list has menu role", () => {
       const { getByTestId } = render(
         <DropdownSelect testID="dropdown" options={mockOptions} defaultOpen />,
       );
 
       const list = getByTestId("dropdown-list");
-      expect(list.props.accessibilityRole).toBe("listbox");
+      // RN-valid: "menu" (was "listbox" — web-only ARIA role)
+      expect(list.props.accessibilityRole).toBe("menu");
     });
   });
 

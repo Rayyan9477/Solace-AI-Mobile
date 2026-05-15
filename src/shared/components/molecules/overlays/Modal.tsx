@@ -32,26 +32,26 @@ import { palette } from "../../../theme";
  */
 const colors = {
   // Backdrop
-  backdrop: `${palette.black}${palette.alpha[60]}`,
+  backdrop: `${palette.midnight[950]}${palette.alpha[60]}`,
 
   // Modal
-  background: palette.brown[900],
-  border: palette.brown[800],
+  background: palette.midnight[950],
+  border: palette.midnight[800],
 
   // Text
-  title: palette.gray[100],
-  content: palette.gray[300],
+  title: palette.warm[100],
+  content: palette.warm[200],
 
   // Buttons
   primaryButton: palette.indigo[400],
-  primaryButtonText: palette.white,
+  primaryButtonText: palette.warm[50],
   secondaryButton: "transparent",
   secondaryButtonText: palette.indigo[400],
-  disabledButton: palette.brown[800],
-  disabledButtonText: palette.gray[500],
+  disabledButton: palette.midnight[800],
+  disabledButtonText: palette.warm[500],
 
   // Close button
-  closeButton: palette.gray[400],
+  closeButton: palette.warm[400],
 };
 
 /**
@@ -170,7 +170,7 @@ export function Modal({
     >
       <View style={styles.overlay}>
         {/* Backdrop */}
-        <Pressable
+        <Pressable accessibilityRole="button"
           testID={testID ? `${testID}-backdrop` : "modal-backdrop"}
           style={styles.backdrop}
           onPress={handleBackdropPress}
@@ -265,34 +265,33 @@ export function Modal({
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    justifyContent: "center",
+  actionButton: {
     alignItems: "center",
+    borderRadius: 8,
+    minWidth: 80,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+  },
+  actionButtonPressed: {
+    opacity: 0.8,
+  },
+  actionButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  actions: {
+    flexDirection: "row",
+    gap: 8,
+    justifyContent: "flex-end",
+    marginTop: 8,
   },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: colors.backdrop,
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    marginBottom: 12,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: colors.title,
-    flex: 1,
-    marginRight: 8,
-  },
-  titleSpacer: {
-    flex: 1,
-  },
   closeButton: {
-    padding: 4,
     borderRadius: 4,
+    padding: 4,
   },
   closeButtonPressed: {
     opacity: 0.7,
@@ -303,46 +302,47 @@ const styles = StyleSheet.create({
   content: {
     marginBottom: 16,
   },
-  actions: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    gap: 8,
-    marginTop: 8,
-  },
-  actionButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 8,
-    minWidth: 80,
-    alignItems: "center",
-  },
-  actionButtonPressed: {
-    opacity: 0.8,
-  },
-  primaryButton: {
-    backgroundColor: colors.primaryButton,
-  },
-  secondaryButton: {
-    backgroundColor: colors.secondaryButton,
-    borderWidth: 1,
-    borderColor: colors.primaryButton,
-  },
   disabledButton: {
     backgroundColor: colors.disabledButton,
     borderColor: colors.disabledButton,
   },
-  actionButtonText: {
-    fontSize: 14,
-    fontWeight: "600",
+  disabledButtonText: {
+    color: colors.disabledButtonText,
+  },
+  header: {
+    alignItems: "flex-start",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 12,
+  },
+  overlay: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+  },
+  primaryButton: {
+    backgroundColor: colors.primaryButton,
   },
   primaryButtonText: {
     color: colors.primaryButtonText,
   },
+  secondaryButton: {
+    backgroundColor: colors.secondaryButton,
+    borderColor: colors.primaryButton,
+    borderWidth: 1,
+  },
   secondaryButtonText: {
     color: colors.secondaryButtonText,
   },
-  disabledButtonText: {
-    color: colors.disabledButtonText,
+  title: {
+    color: colors.title,
+    flex: 1,
+    fontSize: 18,
+    fontWeight: "600",
+    marginRight: 8,
+  },
+  titleSpacer: {
+    flex: 1,
   },
 });
 

@@ -36,29 +36,29 @@ import { palette } from "../../../theme";
  */
 const colors = {
   // Background colors
-  background: palette.gray[900],
-  surface: palette.gray[700],
-  surfaceLight: palette.gray[600],
+  background: palette.midnight[950],
+  surface: palette.midnight[700],
+  surfaceLight: palette.midnight[600],
 
   // Text colors
-  text: palette.gray[100],
-  textSecondary: palette.gray[400],
-  textDisabled: palette.gray[500],
+  text: palette.warm[100],
+  textSecondary: palette.warm[400],
+  textDisabled: palette.warm[500],
   error: palette.red[500],
 
   // Selection colors
-  selected: palette.olive[500],
-  selectedText: palette.gray[900],
+  selected: palette.sage[500],
+  selectedText: palette.midnight[950],
 
   // Border colors
-  border: palette.gray[600],
+  border: palette.midnight[600],
   borderError: palette.red[500],
 
   // Button colors
-  buttonPrimary: palette.tan[500],
-  buttonPrimaryText: palette.gray[900],
+  buttonPrimary: palette.sage[300],
+  buttonPrimaryText: palette.midnight[950],
   buttonSecondary: "transparent",
-  buttonSecondaryText: palette.tan[500],
+  buttonSecondaryText: palette.sage[300],
 };
 
 /**

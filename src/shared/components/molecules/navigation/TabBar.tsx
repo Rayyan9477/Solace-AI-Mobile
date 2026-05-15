@@ -35,28 +35,28 @@ import { palette } from "../../../theme";
  */
 const colors = {
   // Container
-  containerPill: palette.gray[700],
-  containerFilled: palette.gray[900],
+  containerPill: palette.midnight[700],
+  containerFilled: palette.midnight[950],
   containerUnderline: "transparent",
 
   // Active tab
-  activePill: palette.white,
+  activePill: palette.warm[50],
   activeFilled: palette.indigo[400],
   activeUnderline: palette.indigo[400],
 
   // Text
-  textActive: palette.gray[900],
-  textActiveFilled: palette.white,
+  textActive: palette.midnight[950],
+  textActiveFilled: palette.warm[50],
   textActiveUnderline: palette.indigo[400],
-  textInactive: palette.gray[400],
-  textDisabled: palette.gray[600],
+  textInactive: palette.warm[400],
+  textDisabled: palette.midnight[600],
 
   // Badge
   badge: palette.red[500],
-  badgeText: palette.white,
+  badgeText: palette.warm[50],
 
   // Underline
-  underlineBorder: palette.gray[700],
+  underlineBorder: palette.midnight[700],
   underlineActive: palette.indigo[400],
 };
 
@@ -289,19 +289,19 @@ export function TabBar({
 
 const styles = StyleSheet.create({
   badge: {
+    alignItems: "center",
+    backgroundColor: colors.badge,
+    borderRadius: 9,
+    height: 18,
+    justifyContent: "center",
     marginLeft: 6,
     minWidth: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: colors.badge,
-    alignItems: "center",
-    justifyContent: "center",
     paddingHorizontal: 4,
   },
   badgeText: {
+    color: colors.badgeText,
     fontSize: 10,
     fontWeight: "700",
-    color: colors.badgeText,
   },
 });
 

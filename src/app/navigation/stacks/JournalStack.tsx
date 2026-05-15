@@ -31,7 +31,7 @@ import type {
   JournalMoodHue,
 } from "../../../features/journal/screens/JournalDashboardScreen";
 import type { JournalEntry as DetailJournalEntry } from "../../../features/journal/screens/JournalEntryDetailScreen";
-import { SkeletonShimmer } from "../../../shared/components/primitives/SkeletonShimmer";
+import { ScreenSkeleton } from "../../../shared/components/primitives/ScreenSkeleton";
 import { useRepositories } from "../../providers/RepositoryProvider";
 import type { JournalEntry } from "../../../shared/data/types";
 
@@ -112,11 +112,7 @@ function TextJournalComposerScreenAdapter({
 
   if (!hydrated) {
     return (
-      <SkeletonShimmer
-        testID="journal-composer-skeleton"
-        width="100%"
-        height={400}
-      />
+      <ScreenSkeleton testID="journal-composer-skeleton" />
     );
   }
 
@@ -170,11 +166,7 @@ function JournalDashboardScreenAdapter({
 
   if (!isReady || !entries) {
     return (
-      <SkeletonShimmer
-        testID="journal-dashboard-skeleton"
-        width="100%"
-        height={400}
-      />
+      <ScreenSkeleton testID="journal-dashboard-skeleton" />
     );
   }
 
@@ -238,11 +230,7 @@ function JournalEntryDetailScreenAdapter({
 
   if (!loaded) {
     return (
-      <SkeletonShimmer
-        testID="journal-detail-skeleton"
-        width="100%"
-        height={400}
-      />
+      <ScreenSkeleton testID="journal-detail-skeleton" />
     );
   }
 

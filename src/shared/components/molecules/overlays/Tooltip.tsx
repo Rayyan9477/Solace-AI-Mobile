@@ -27,8 +27,8 @@ import { palette } from "../../../theme";
  * Color tokens from theme
  */
 const colors = {
-  background: palette.gray[700],
-  text: palette.gray[50],
+  background: palette.midnight[700],
+  text: palette.warm[50],
   overlay: "transparent",
 };
 
@@ -186,7 +186,7 @@ export function Tooltip({
       {visible && (
         <>
           {/* Overlay for dismiss */}
-          <Pressable
+          <Pressable accessibilityRole="button"
             testID={testID ? `${testID}-overlay` : "tooltip-overlay"}
             style={styles.overlay}
             onPress={handleOverlayPress}
@@ -217,38 +217,38 @@ export function Tooltip({
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    position: "relative",
+  content: {
+    backgroundColor: colors.background,
+    borderRadius: 6,
+    elevation: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    shadowColor: palette.midnight[950],
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: colors.overlay,
     zIndex: 999,
   },
-  tooltipContainer: {
-    position: "absolute",
-    zIndex: 1000,
-    alignItems: "center",
-    top: "100%",
-    left: 0,
-    marginTop: 4,
-  },
-  content: {
-    backgroundColor: colors.background,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 6,
-    elevation: 4,
-    shadowColor: palette.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-  },
   text: {
+    color: colors.text,
     fontSize: 13,
     fontWeight: "500",
-    color: colors.text,
     lineHeight: 18,
+  },
+  tooltipContainer: {
+    alignItems: "center",
+    left: 0,
+    marginTop: 4,
+    position: "absolute",
+    top: "100%",
+    zIndex: 1000,
+  },
+  wrapper: {
+    position: "relative",
   },
 });
 

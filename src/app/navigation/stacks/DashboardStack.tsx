@@ -20,7 +20,7 @@ import {
   DEFAULT_ARTICLES,
 } from "../../../features/dashboard/screens/HomeDashboardScreen";
 import type { MoodLevel } from "../../../shared/components/primitives";
-import { SkeletonShimmer } from "../../../shared/components/primitives/SkeletonShimmer";
+import { ScreenSkeleton } from "../../../shared/components/primitives/ScreenSkeleton";
 import { useRepositories } from "../../providers/RepositoryProvider";
 
 const Stack = createNativeStackNavigator<DashboardStackParamList>();
@@ -87,11 +87,7 @@ function HomeDashboardScreenContainer(): React.ReactElement {
 
   if (!isReady || !data) {
     return (
-      <SkeletonShimmer
-        testID="home-dashboard-skeleton"
-        width="100%"
-        height={400}
-      />
+      <ScreenSkeleton testID="home-dashboard-skeleton" />
     );
   }
 

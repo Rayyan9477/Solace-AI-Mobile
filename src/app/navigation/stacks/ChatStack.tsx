@@ -33,7 +33,7 @@ import {
   type CbtField,
   type CbtStepIndex,
 } from "../../../features/chat/screens/CbtThoughtRecordScreen";
-import { SkeletonShimmer } from "../../../shared/components/primitives/SkeletonShimmer";
+import { ScreenSkeleton } from "../../../shared/components/primitives/ScreenSkeleton";
 import { useRepositories } from "../../providers/RepositoryProvider";
 import { sendMessage as mockSendMessage } from "../../../features/chat/services/mockChatService";
 import type {
@@ -101,11 +101,7 @@ function ChatsListScreenContainer({
 
   if (!isReady || !enriched) {
     return (
-      <SkeletonShimmer
-        testID="chats-list-skeleton"
-        width="100%"
-        height={400}
-      />
+      <ScreenSkeleton testID="chats-list-skeleton" />
     );
   }
 
@@ -196,11 +192,7 @@ function ActiveChatScreenContainer({
 
   if (!isReady || !messages) {
     return (
-      <SkeletonShimmer
-        testID="active-chat-skeleton"
-        width="100%"
-        height={400}
-      />
+      <ScreenSkeleton testID="active-chat-skeleton" />
     );
   }
 

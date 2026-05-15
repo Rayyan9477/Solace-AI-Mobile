@@ -38,30 +38,30 @@ import { palette } from "../../../theme";
  */
 const colors = {
   // Background colors
-  background: palette.gray[900],
-  surface: palette.gray[700],
-  surfaceLight: palette.gray[600],
+  background: palette.midnight[950],
+  surface: palette.midnight[700],
+  surfaceLight: palette.midnight[600],
 
   // Text colors
-  text: palette.gray[100],
-  textSecondary: palette.gray[400],
-  textDisabled: palette.gray[500],
+  text: palette.warm[100],
+  textSecondary: palette.warm[400],
+  textDisabled: palette.warm[500],
 
   // Selection colors
-  selected: palette.olive[500],
-  selectedText: palette.gray[900],
-  today: palette.tan[500],
-  todayText: palette.gray[900],
-  inRange: `${palette.olive[500]}${palette.alpha[30]}`,
+  selected: palette.sage[500],
+  selectedText: palette.midnight[950],
+  today: palette.sage[300],
+  todayText: palette.midnight[950],
+  inRange: `${palette.sage[500]}${palette.alpha[30]}`,
 
   // Border colors
-  border: palette.gray[600],
+  border: palette.midnight[600],
 
   // Button colors
-  buttonPrimary: palette.tan[500],
-  buttonPrimaryText: palette.gray[900],
+  buttonPrimary: palette.sage[300],
+  buttonPrimaryText: palette.midnight[950],
   buttonSecondary: "transparent",
-  buttonSecondaryText: palette.tan[500],
+  buttonSecondaryText: palette.sage[300],
 };
 
 /**

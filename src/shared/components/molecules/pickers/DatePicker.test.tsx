@@ -16,7 +16,7 @@ jest.mock("react-native-calendars", () => ({
     const { View, Text, TouchableOpacity } = require("react-native");
 
     return (
-      <View testID={testID} accessibilityRole="grid">
+      <View testID={testID} accessibilityRole="none">
         <TouchableOpacity
           accessibilityRole="button"
           testID={`${testID}-day-2025-01-15`}
@@ -285,11 +285,12 @@ describe("DatePicker", () => {
       expect(datePicker.props.accessibilityLabel).toBe("Select a date");
     });
 
-    it("calendar has grid role", () => {
+    it("calendar has none role (RN-valid)", () => {
       const { getByTestId } = render(<DatePicker testID="date-picker" />);
 
       const calendar = getByTestId("date-picker-calendar");
-      expect(calendar.props.accessibilityRole).toBe("grid");
+      // RN-valid: "none" (was "grid" — web-only ARIA role)
+      expect(calendar.props.accessibilityRole).toBe("none");
     });
   });
 

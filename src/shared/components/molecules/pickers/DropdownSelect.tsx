@@ -42,36 +42,42 @@ import { palette } from "../../../theme";
  */
 const colors = {
   // Background colors
-  background: palette.gray[900],
-  surface: palette.gray[700],
-  surfaceHover: palette.gray[600],
+  background: palette.midnight[950],
+  surface: palette.midnight[700],
+  surfaceHover: palette.midnight[600],
 
   // Text colors
-  text: palette.gray[100],
-  textSecondary: palette.gray[400],
-  textDisabled: palette.gray[500],
-  placeholder: palette.gray[500],
+  text: palette.warm[100],
+  textSecondary: palette.warm[400],
+  textDisabled: palette.warm[500],
+  placeholder: palette.warm[500],
   error: palette.red[500],
 
   // Selection colors
-  selected: palette.olive[500],
-  selectedLight: `${palette.olive[500]}${palette.alpha[20]}`,
-  selectedText: palette.gray[900],
+  selected: palette.sage[500],
+  selectedLight: `${palette.sage[500]}${palette.alpha[20]}`,
+  selectedText: palette.midnight[950],
 
   // Border colors
-  border: palette.gray[600],
-  borderFocused: palette.olive[500],
+  border: palette.midnight[600],
+  borderFocused: palette.sage[500],
   borderError: palette.red[500],
 
   // Icon colors
-  icon: palette.gray[400],
-  chevron: palette.gray[400],
+  icon: palette.warm[400],
+  chevron: palette.warm[400],
 };
 
 /**
  * Checkmark icon component
  */
-function CheckIcon({ size = 16, color = colors.selected }) {
+function CheckIcon({
+  size = 16,
+  color = colors.selected as string,
+}: {
+  size?: number;
+  color?: string;
+}) {
   return (
     <View
       style={{
@@ -89,7 +95,7 @@ function CheckIcon({ size = 16, color = colors.selected }) {
 /**
  * Chevron icon component
  */
-function ChevronIcon({ isOpen, size = 20 }) {
+function ChevronIcon({ isOpen, size = 20 }: { isOpen: boolean; size?: number }) {
   return (
     <Text
       style={{
@@ -163,7 +169,7 @@ function OptionItem({
       ]}
       onPress={handlePress}
       disabled={option.disabled}
-      accessibilityRole="option"
+      accessibilityRole="button"
       accessibilityState={{ selected: isSelected, disabled: option.disabled }}
       accessibilityLabel={option.label}
     >
@@ -390,7 +396,7 @@ export function DropdownSelect({
         <View
           testID={`${testID}-list`}
           style={[styles.dropdown, { maxHeight }]}
-          accessibilityRole="listbox"
+          accessibilityRole="menu"
         >
           {/* Search Input */}
           {searchable && (
