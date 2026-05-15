@@ -34,18 +34,18 @@ import { palette } from "../../../theme";
  */
 const colors = {
   // Label
-  label: palette.gray[100],
-  labelDisabled: palette.gray[500],
+  label: palette.warm[100],
+  labelDisabled: palette.warm[500],
   required: palette.red[500],
 
   // Helper/Error text
-  helper: palette.gray[400],
+  helper: palette.warm[400],
   error: palette.red[500],
   success: palette.green[500],
   warning: palette.amber[500],
 
   // Counter
-  counter: palette.gray[500],
+  counter: palette.warm[500],
 };
 
 /**
@@ -201,9 +201,17 @@ export function FormField({
 }
 
 const styles = StyleSheet.create({
+  counter: {
+    color: colors.counter,
+    fontSize: 12,
+    marginLeft: "auto",
+  },
+  inputContainer: {
+    // Container for the input children
+  },
   labelContainer: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
     marginBottom: 6,
   },
   labelIcon: {
@@ -212,14 +220,6 @@ const styles = StyleSheet.create({
   required: {
     color: colors.required,
     fontSize: 14,
-  },
-  counter: {
-    marginLeft: "auto",
-    fontSize: 12,
-    color: colors.counter,
-  },
-  inputContainer: {
-    // Container for the input children
   },
 });
 

@@ -139,24 +139,29 @@ export function StackedNotificationCards({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    position: "relative",
-  },
-  cardWrapper: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-  },
   card: {
     flex: 1,
   },
   cardInner: {
-    flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    flexDirection: "row",
     gap: 14,
     minHeight: CARD_HEIGHT,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  cardWrapper: {
+    left: 0,
+    position: "absolute",
+    top: 0,
+  },
+  container: {
+    position: "relative",
+  },
+  message: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 14,
+    lineHeight: 20,
   },
   textBlock: {
     flex: 1,
@@ -166,10 +171,5 @@ const styles = StyleSheet.create({
     fontSize: 17,
     lineHeight: 22,
     marginBottom: 4,
-  },
-  message: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 14,
-    lineHeight: 20,
   },
 });

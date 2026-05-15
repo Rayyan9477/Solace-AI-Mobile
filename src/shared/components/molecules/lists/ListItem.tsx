@@ -37,16 +37,16 @@ const colors = {
   // Background
   background: "transparent",
   backgroundSelected: `${palette.indigo[400]}${palette.alpha[10]}`,
-  backgroundPressed: `${palette.white}${palette.alpha[5]}`,
+  backgroundPressed: `${palette.warm[50]}${palette.alpha[5]}`,
 
   // Text
-  title: palette.gray[100],
-  subtitle: palette.gray[400],
-  description: palette.gray[500],
-  titleDisabled: palette.gray[600],
+  title: palette.warm[100],
+  subtitle: palette.warm[400],
+  description: palette.warm[500],
+  titleDisabled: palette.midnight[600],
 
   // Divider
-  divider: `${palette.white}${palette.alpha[10]}`,
+  divider: `${palette.warm[50]}${palette.alpha[10]}`,
 };
 
 /**
@@ -257,28 +257,28 @@ export function ListItem({
 }
 
 const styles = StyleSheet.create({
-  leading: {
-    marginRight: 16,
-    justifyContent: "center",
-    alignItems: "center",
-    minWidth: 24,
-  },
   content: {
     flex: 1,
     justifyContent: "center",
   },
-  trailing: {
-    marginLeft: 16,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   divider: {
-    height: 1,
     backgroundColor: colors.divider,
+    height: 1,
     marginRight: 16,
+  },
+  leading: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 16,
+    minWidth: 24,
   },
   pressed: {
     backgroundColor: colors.backgroundPressed,
+  },
+  trailing: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: 16,
   },
 });
 

@@ -234,34 +234,6 @@ export function Toast({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    left: 16,
-    right: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderRadius: 12,
-    borderWidth: 1,
-    minHeight: 48,
-    elevation: 6,
-    shadowColor: palette.black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-  },
-  icon: {
-    marginRight: 12,
-    width: 20,
-    alignItems: "center",
-  },
-  message: {
-    flex: 1,
-    fontSize: 14,
-    fontWeight: "500",
-    lineHeight: 20,
-  },
   actionButton: {
     marginLeft: 12,
     paddingHorizontal: 8,
@@ -282,6 +254,34 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   closeButtonText: {},
+  container: {
+    alignItems: "center",
+    borderRadius: 12,
+    borderWidth: 1,
+    elevation: 6,
+    flexDirection: "row",
+    left: 16,
+    minHeight: 48,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    position: "absolute",
+    right: 16,
+    shadowColor: palette.midnight[950],
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+  icon: {
+    alignItems: "center",
+    marginRight: 12,
+    width: 20,
+  },
+  message: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: "500",
+    lineHeight: 20,
+  },
 });
 
 export default Toast;

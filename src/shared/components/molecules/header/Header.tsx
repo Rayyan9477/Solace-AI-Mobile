@@ -36,29 +36,29 @@ import { palette } from "../../../theme";
  */
 const colors = {
   // Backgrounds
-  default: palette.gray[900],
+  default: palette.midnight[950],
   transparent: "transparent",
-  gradient: palette.brown[900],
+  gradient: palette.midnight[950],
 
   // Text
-  title: palette.gray[100],
-  subtitle: palette.gray[400],
+  title: palette.warm[100],
+  subtitle: palette.warm[400],
 
   // Interactive
-  backButton: palette.gray[700],
-  backButtonPressed: palette.gray[600],
-  actionButton: palette.gray[700],
-  actionButtonPressed: palette.gray[600],
+  backButton: palette.midnight[700],
+  backButtonPressed: palette.midnight[600],
+  actionButton: palette.midnight[700],
+  actionButtonPressed: palette.midnight[600],
 
   // Badge
   badge: palette.red[500],
-  badgeText: palette.white,
+  badgeText: palette.warm[50],
 
   // Border
-  border: palette.gray[700],
+  border: palette.midnight[700],
 
   // Back arrow
-  arrow: palette.gray[100],
+  arrow: palette.warm[100],
 };
 
 /**
@@ -282,90 +282,90 @@ export function Header({
 }
 
 const styles = StyleSheet.create({
-  leftSection: {
-    minWidth: 44,
-    alignItems: "flex-start",
-    justifyContent: "center",
-  },
-  centerSection: {
-    flex: 1,
+  actionButton: {
     alignItems: "center",
+    backgroundColor: colors.actionButton,
+    borderRadius: 20,
+    height: 40,
     justifyContent: "center",
+    position: "relative",
+    width: 40,
   },
-  rightSection: {
-    minWidth: 44,
-    alignItems: "flex-end",
-    justifyContent: "center",
+  actionButtonDisabled: {
+    opacity: 0.5,
   },
-  placeholder: {
-    width: 44,
-    height: 44,
+  actionButtonPressed: {
+    backgroundColor: colors.actionButtonPressed,
+  },
+  actionsContainer: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 8,
+  },
+  backArrow: {
+    color: colors.arrow,
+    fontSize: 18,
+    fontWeight: "600",
   },
   backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.backButton,
     alignItems: "center",
+    backgroundColor: colors.backButton,
+    borderRadius: 20,
+    height: 40,
     justifyContent: "center",
+    width: 40,
   },
   backButtonPressed: {
     backgroundColor: colors.backButtonPressed,
   },
-  backArrow: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: colors.arrow,
+  badge: {
+    alignItems: "center",
+    backgroundColor: colors.badge,
+    borderRadius: 9,
+    height: 18,
+    justifyContent: "center",
+    minWidth: 18,
+    paddingHorizontal: 4,
+    position: "absolute",
+    right: -2,
+    top: -2,
+  },
+  badgeText: {
+    color: colors.badgeText,
+    fontSize: 10,
+    fontWeight: "700",
   },
   centerContent: {
     alignItems: "center",
   },
-  title: {
-    fontWeight: "600",
-    color: colors.title,
-    textAlign: "center",
+  centerSection: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+  },
+  leftSection: {
+    alignItems: "flex-start",
+    justifyContent: "center",
+    minWidth: 44,
+  },
+  placeholder: {
+    height: 44,
+    width: 44,
+  },
+  rightSection: {
+    alignItems: "flex-end",
+    justifyContent: "center",
+    minWidth: 44,
   },
   subtitle: {
     color: colors.subtitle,
     marginTop: 2,
     textAlign: "center",
   },
-  actionsContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  actionButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.actionButton,
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-  },
-  actionButtonPressed: {
-    backgroundColor: colors.actionButtonPressed,
-  },
-  actionButtonDisabled: {
-    opacity: 0.5,
-  },
-  badge: {
-    position: "absolute",
-    top: -2,
-    right: -2,
-    minWidth: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: colors.badge,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 4,
-  },
-  badgeText: {
-    fontSize: 10,
-    fontWeight: "700",
-    color: colors.badgeText,
+  title: {
+    color: colors.title,
+    fontWeight: "600",
+    textAlign: "center",
   },
 });
 

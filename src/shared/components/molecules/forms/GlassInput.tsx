@@ -127,32 +127,32 @@ export function GlassInput({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1,
     borderRadius: 12,
-    paddingHorizontal: 14,
+    borderWidth: 1,
+    flexDirection: "row",
     minHeight: 52,
-  },
-  prefixIcon: {
-    marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily: "Inter_400Regular",
-    paddingVertical: 14,
-  },
-  toggleButton: {
-    width: 44,
-    height: 44,
-    alignItems: "center",
-    justifyContent: "center",
-    marginLeft: 4,
+    paddingHorizontal: 14,
   },
   errorText: {
     fontSize: 13,
     marginTop: 6,
+  },
+  input: {
+    flex: 1,
+    fontFamily: "Inter_400Regular",
+    fontSize: 16,
+    paddingVertical: 14,
+  },
+  prefixIcon: {
+    marginRight: 10,
+  },
+  toggleButton: {
+    alignItems: "center",
+    height: 44,
+    justifyContent: "center",
+    marginLeft: 4,
+    width: 44,
   },
 });
 

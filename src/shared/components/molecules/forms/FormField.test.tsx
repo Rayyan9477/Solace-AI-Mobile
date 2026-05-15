@@ -11,7 +11,7 @@ import { FormField } from "./FormField";
 
 // Mock input component
 const MockInput = ({ testID }: { testID?: string }) => (
-  <TextInput testID={testID} placeholder="Enter text" />
+  <TextInput accessibilityLabel="Text input field" testID={testID} placeholder="Enter text" />
 );
 
 // Mock icon component
