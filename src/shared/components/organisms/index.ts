@@ -4,6 +4,9 @@
  * @task Sprint 2.7-2.10: Chat, Track, Cards, Notifications & Help Organisms
  */
 
+// Sleep organisms (Sprint 5)
+export * from "./sleep";
+
 // Chat organisms
 export * from "./chat";
 

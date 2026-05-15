@@ -39,27 +39,27 @@ import { palette } from "../../../theme";
  */
 const colors = {
   // Background colors
-  background: palette.brown[900],
-  inputBg: palette.gray[700],
-  buttonBg: palette.olive[500],
+  background: palette.midnight[950],
+  inputBg: palette.midnight[700],
+  buttonBg: palette.sage[300],
 
   // Text colors
-  text: palette.gray[100],
-  textSecondary: palette.gray[400],
-  placeholder: palette.gray[500],
+  text: palette.warm[100],
+  textSecondary: palette.warm[400],
+  placeholder: palette.warm[500],
 
   // Icon colors
-  iconDefault: palette.gray[400],
-  iconActive: palette.olive[500],
+  iconDefault: palette.warm[400],
+  iconActive: palette.sage[300],
 
   // Attachment
-  attachmentBg: palette.gray[600],
+  attachmentBg: palette.midnight[600],
 
   // Recording
   recordingIndicator: palette.red[500],
 
   // Border
-  border: palette.gray[600],
+  border: palette.midnight[600],
 };
 
 /**

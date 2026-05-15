@@ -41,7 +41,7 @@ import { palette } from "../../../theme";
  * Reskin notes (Sprint 2):
  * - User bubble swapped from sage (old "primary accent") to PEACH — the
  *   prototype's chat spec uses peach for warmth on the sender side. Legacy
- *   `palette.tan` would alias to sage and read cold.
+ *   the legacy tan alias would resolve to sage and read cold.
  * - AI bubble uses midnight-700 (via legacy `gray[700]` alias). When the
  *   full chat screen ships in Sprint 5 it will be wrapped in <GlassCard/>.
  * - `palette.orange` didn't exist in the legacy palette (latent undefined
