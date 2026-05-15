@@ -30,11 +30,11 @@ import { palette } from "../../../theme";
  * Default color tokens from theme
  */
 const defaultColors = {
-  primary: palette.olive[500],
-  secondary: palette.gray[600],
-  played: palette.olive[500],
-  unplayed: palette.gray[600],
-  text: palette.gray[400],
+  primary: palette.sage[300],
+  secondary: palette.midnight[600],
+  played: palette.sage[300],
+  unplayed: palette.midnight[600],
+  text: palette.warm[400],
 };
 
 /**

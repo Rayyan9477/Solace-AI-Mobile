@@ -13,11 +13,9 @@ export type {
   ScoreCardSize,
 } from "./ScoreCard.types";
 export {
-  STATUS_COLORS,
   SIZE_SPECS,
   getScoreStatus,
   getDefaultStatusLabel,
-  getStatusColor,
   getTrendIcon,
   getTrendColor,
   calculateGaugeProgress,
@@ -27,3 +25,19 @@ export {
 export { StatCard } from "./StatCard";
 export type { StatCardProps } from "./StatCard.types";
 export { formatStatDate, calculateProgressPercentage } from "./StatCard.types";
+
+// ScoreCardV2
+export { ScoreCardV2 } from "./ScoreCardV2";
+export type { ScoreCardV2Props } from "./ScoreCardV2";
+
+// MetricGrid
+export { MetricGrid } from "./MetricGrid";
+export type { MetricGridProps, MetricTile } from "./MetricGrid";
+
+// ContinueCard
+export { ContinueCard } from "./ContinueCard";
+export type { ContinueCardProps } from "./ContinueCard";
+
+// ArticleCardV2
+export { ArticleCardV2 } from "./ArticleCardV2";
+export type { ArticleCardV2Props, ArticleThumbnailGradient } from "./ArticleCardV2";

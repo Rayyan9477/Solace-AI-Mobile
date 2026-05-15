@@ -34,15 +34,15 @@ import { useReducedMotion } from "../../../hooks/useReducedMotion";
  */
 const colors = {
   // Background colors
-  background: palette.gray[700],
-  dot: palette.olive[500],
+  background: palette.midnight[700],
+  dot: palette.sage[300],
 
   // Text colors
-  text: palette.gray[400],
+  text: palette.warm[400],
 
   // Avatar
-  avatarBg: palette.olive[500],
-  avatarText: palette.brown[900],
+  avatarBg: palette.sage[300],
+  avatarText: palette.midnight[950],
 };
 
 /**

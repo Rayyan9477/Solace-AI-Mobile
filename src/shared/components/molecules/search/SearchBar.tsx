@@ -38,28 +38,28 @@ import { palette } from "../../../theme";
  */
 const colors = {
   // Container
-  backgroundDefault: palette.gray[700],
-  backgroundFilled: palette.gray[900],
+  backgroundDefault: palette.midnight[700],
+  backgroundFilled: palette.midnight[950],
   backgroundOutlined: "transparent",
-  backgroundDisabled: palette.gray[900],
+  backgroundDisabled: palette.midnight[950],
 
   // Border
-  borderOutlined: palette.gray[600],
+  borderOutlined: palette.midnight[600],
   borderFocused: palette.indigo[400],
 
   // Text
-  text: palette.gray[100],
-  placeholder: palette.gray[500],
-  textDisabled: palette.gray[600],
+  text: palette.warm[100],
+  placeholder: palette.warm[500],
+  textDisabled: palette.midnight[600],
 
   // Icon
-  icon: palette.gray[400],
+  icon: palette.warm[400],
   iconFocused: palette.indigo[400],
-  iconDisabled: palette.gray[600],
+  iconDisabled: palette.midnight[600],
 
   // Clear button
-  clearButton: palette.gray[500],
-  clearButtonPressed: palette.gray[400],
+  clearButton: palette.warm[500],
+  clearButtonPressed: palette.warm[400],
 };
 
 /**
@@ -252,23 +252,23 @@ export function SearchBar({
 }
 
 const styles = StyleSheet.create({
-  searchIcon: {
-    opacity: 0.7,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   clearButton: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
     alignItems: "center",
-    justifyContent: "center",
     backgroundColor: colors.clearButton,
+    borderRadius: 12,
+    height: 24,
+    justifyContent: "center",
+    width: 24,
   },
   clearButtonPressed: {
     backgroundColor: colors.clearButtonPressed,
   },
   clearIcon: {},
+  searchIcon: {
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: 0.7,
+  },
 });
 
 export default SearchBar;
