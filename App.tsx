@@ -28,6 +28,7 @@ import {
 
 import RootNavigatorContainer from "./src/app/navigation/RootNavigator";
 import { AuthProvider } from "./src/app/AuthContext";
+import { RepositoryProvider } from "./src/app/providers/RepositoryProvider";
 import { ThemeProvider } from "./src/shared/theme/useTheme";
 import { linking } from "./src/app/navigation/linking";
 import { palette } from "./src/shared/theme";
@@ -80,14 +81,16 @@ function App(): React.ReactElement | null {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <AuthProvider>
-        <ThemeProvider>
-          <SafeAreaView style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor={palette.midnight[950]} />
-            <NavigationContainer linking={linking}>
-              <RootNavigatorContainer />
-            </NavigationContainer>
-          </SafeAreaView>
-        </ThemeProvider>
+        <RepositoryProvider>
+          <ThemeProvider>
+            <SafeAreaView style={styles.container}>
+              <StatusBar barStyle="light-content" backgroundColor={palette.midnight[950]} />
+              <NavigationContainer linking={linking}>
+                <RootNavigatorContainer />
+              </NavigationContainer>
+            </SafeAreaView>
+          </ThemeProvider>
+        </RepositoryProvider>
       </AuthProvider>
     </ErrorBoundary>
   );

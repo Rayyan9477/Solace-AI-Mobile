@@ -9,6 +9,457 @@ jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
 );
 
+// In-memory expo-sqlite mock with enough behaviour to drive repository tests.
+// Supports the SQL surface our Sprint 10 repositories produce: CREATE TABLE,
+// CREATE INDEX, INSERT, SELECT (with WHERE id = ?, WHERE x = ?, ORDER BY,
+// LIMIT, COUNT(*)), UPDATE, DELETE, PRAGMA user_version, transactions, and
+// ON CONFLICT upserts on the settings table.
+jest.mock("expo-sqlite", () => {
+  function createDb() {
+    const tables = new Map(); // name -> { rows: Map(id -> row) }
+    let userVersion = 0;
+    let nextRowId = 0;
+
+    function ensureTable(name) {
+      if (!tables.has(name)) {
+        tables.set(name, { rows: new Map(), columns: new Set() });
+      }
+      const tbl = tables.get(name);
+      // Older mock instances created tables without a columns set — patch in
+      // place so existing fixtures keep working.
+      if (!tbl.columns) tbl.columns = new Set();
+      return tbl;
+    }
+
+    function recordColumns(name, cols) {
+      const tbl = ensureTable(name);
+      for (const c of cols) {
+        if (c) tbl.columns.add(c);
+      }
+    }
+
+    function extractCreateColumns(sql) {
+      // Pull the parenthesised column list out of a `CREATE TABLE` statement
+      // and split it on top-level commas. Quick-and-dirty: the migrations we
+      // own do not use parenthesised constraints inside a column definition.
+      const paren = sql.match(/\(([\s\S]+)\)/);
+      if (!paren) return [];
+      const body = paren[1];
+      const parts = [];
+      let depth = 0;
+      let buf = "";
+      for (const ch of body) {
+        if (ch === "(") depth++;
+        if (ch === ")") depth--;
+        if (ch === "," && depth === 0) {
+          parts.push(buf.trim());
+          buf = "";
+        } else {
+          buf += ch;
+        }
+      }
+      if (buf.trim()) parts.push(buf.trim());
+      const cols = [];
+      for (const part of parts) {
+        if (/^(foreign|primary|unique|check)\b/i.test(part)) continue;
+        const m = part.match(/^([a-z_][a-z0-9_]*)/i);
+        if (m) cols.push(m[1].toLowerCase());
+      }
+      return cols;
+    }
+
+    function evalSelectFilter(sql, params) {
+      // Returns { table, predicate, orderBy, limit, columns, isCount }
+      const lower = sql.toLowerCase();
+      const fromMatch = lower.match(/from\s+([a-z_][a-z0-9_]*)/);
+      const table = fromMatch ? fromMatch[1] : null;
+      const isCount = /count\s*\(\s*\*\s*\)/.test(lower);
+      // ORDER BY can be a bare column (`order by created_at desc`) or a
+      // COALESCE() expression with a fallback (`order by coalesce(a, b) desc`).
+      // For COALESCE we sort by the first non-null of the listed columns.
+      let orderBy = null;
+      const coalesceOrder = lower.match(
+        /order\s+by\s+coalesce\(\s*([a-z_]+)\s*,\s*([a-z_]+)\s*\)\s*(asc|desc)?/,
+      );
+      const plainOrder = lower.match(/order\s+by\s+([a-z_]+)\s*(asc|desc)?/);
+      if (coalesceOrder) {
+        orderBy = {
+          coalesce: [coalesceOrder[1], coalesceOrder[2]],
+          dir: coalesceOrder[3] === "desc" ? "desc" : "asc",
+        };
+      } else if (plainOrder) {
+        orderBy = { col: plainOrder[1], dir: plainOrder[2] === "desc" ? "desc" : "asc" };
+      }
+      const limitMatch = lower.match(/limit\s+(\d+)/);
+      const limit = limitMatch ? parseInt(limitMatch[1], 10) : null;
+      const whereIdx = lower.indexOf("where");
+      const orderIdx = orderBy ? lower.indexOf("order by") : -1;
+      const limitIdx = limitMatch ? lower.indexOf("limit") : -1;
+      let whereClause = "";
+      if (whereIdx !== -1) {
+        const end = [orderIdx, limitIdx]
+          .filter((i) => i !== -1 && i > whereIdx)
+          .reduce((min, i) => (min === -1 ? i : Math.min(min, i)), -1);
+        whereClause = sql
+          .slice(whereIdx + 5, end === -1 ? sql.length : end)
+          .trim();
+      }
+      const predicate = makePredicate(whereClause, params);
+      return { table, predicate, orderBy, limit, isCount };
+    }
+
+    function makePredicate(whereClause, params) {
+      if (!whereClause) return () => true;
+      // Strip outer parens
+      const trimmed = whereClause.replace(/^\s*\(/, "").replace(/\)\s*$/, "");
+      const conditions = trimmed.split(/\s+and\s+/i).map((c) => c.trim());
+      const paramIdx = { i: 0 };
+      const evaluators = conditions.map((cond) => makeCondition(cond, params, paramIdx));
+      return (row) => evaluators.every((fn) => fn(row));
+    }
+
+    function makeCondition(cond, params, idx) {
+      // Handle search OR clause: (LOWER(body) LIKE ? OR LOWER(IFNULL(title,'')) LIKE ?)
+      if (/lower\(/i.test(cond) && /\bor\b/i.test(cond)) {
+        const cols = [...cond.matchAll(/lower\(\s*(?:ifnull\(\s*)?([a-z_]+)/gi)].map((m) => m[1]);
+        const a = params[idx.i++];
+        const b = params[idx.i++];
+        return (row) => {
+          for (let k = 0; k < cols.length; k++) {
+            const v = row[cols[k]];
+            const pattern = k === 0 ? a : b;
+            if (typeof v === "string" && likeMatch(v.toLowerCase(), pattern)) return true;
+          }
+          return false;
+        };
+      }
+      const op = cond.match(/(>=|<=|<>|!=|=|>|<|\bLIKE\b)/i);
+      if (!op) return () => true;
+      const opStr = op[0].toUpperCase();
+      const [colExpr, rhsExpr] = cond.split(op[0]).map((s) => s.trim());
+      let col = colExpr.replace(/^[a-z_]+\./i, "");
+      // Handle LOWER(col) and IFNULL(col,'')
+      const lowerMatch = col.match(/lower\(\s*(?:ifnull\(\s*)?([a-z_]+)/i);
+      if (lowerMatch) col = lowerMatch[1];
+      const isPlaceholder = rhsExpr === "?";
+      let rhs;
+      if (isPlaceholder) rhs = params[idx.i++];
+      else if (/^'.*'$/.test(rhsExpr)) rhs = rhsExpr.slice(1, -1);
+      else if (/^\d+$/.test(rhsExpr)) rhs = parseInt(rhsExpr, 10);
+      else rhs = rhsExpr;
+      return (row) => {
+        let v = row[col];
+        if (lowerMatch && typeof v === "string") v = v.toLowerCase();
+        if (opStr === "=") return v == rhs;
+        if (opStr === "!=" || opStr === "<>") return v != rhs;
+        if (opStr === ">") return v > rhs;
+        if (opStr === ">=") return v >= rhs;
+        if (opStr === "<") return v < rhs;
+        if (opStr === "<=") return v <= rhs;
+        if (opStr === "LIKE") return typeof v === "string" && likeMatch(v, rhs);
+        return false;
+      };
+    }
+
+    function likeMatch(value, pattern) {
+      if (typeof pattern !== "string") return false;
+      const re = new RegExp(
+        "^" +
+          pattern
+            .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+            .replace(/%/g, ".*")
+            .replace(/_/g, ".") +
+          "$",
+        "i",
+      );
+      return re.test(value);
+    }
+
+    function applyOrder(rows, orderBy) {
+      if (!orderBy) return rows;
+      const dir = orderBy.dir;
+      const valueOf = (row) => {
+        if (orderBy.coalesce) {
+          for (const c of orderBy.coalesce) {
+            const v = row[c];
+            if (v !== undefined && v !== null) return v;
+          }
+          return null;
+        }
+        return row[orderBy.col];
+      };
+      const sorted = rows.slice().sort((a, b) => {
+        const av = valueOf(a);
+        const bv = valueOf(b);
+        if (av === bv) return 0;
+        if (av === undefined || av === null) return 1;
+        if (bv === undefined || bv === null) return -1;
+        return av < bv ? -1 : 1;
+      });
+      return dir === "desc" ? sorted.reverse() : sorted;
+    }
+
+    async function execAsync(source) {
+      const statements = source
+        .split(";")
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
+      for (const stmt of statements) {
+        await runStatement(stmt, []);
+      }
+    }
+
+    async function runStatement(sql, params) {
+      const trimmed = sql.trim();
+      const lower = trimmed.toLowerCase();
+      // PRAGMA
+      if (lower.startsWith("pragma user_version")) {
+        const setMatch = trimmed.match(/=\s*(\d+)/);
+        if (setMatch) {
+          userVersion = parseInt(setMatch[1], 10);
+          return { changes: 0, lastInsertRowId: 0 };
+        }
+        return { changes: 0, lastInsertRowId: 0 };
+      }
+      if (lower.startsWith("create table")) {
+        const m = trimmed.match(/create\s+table\s+(?:if\s+not\s+exists\s+)?([a-z_][a-z0-9_]*)/i);
+        if (m) {
+          ensureTable(m[1]);
+          recordColumns(m[1], extractCreateColumns(trimmed));
+        }
+        return { changes: 0, lastInsertRowId: 0 };
+      }
+      if (lower.startsWith("create index")) {
+        return { changes: 0, lastInsertRowId: 0 };
+      }
+      if (lower.startsWith("alter table")) {
+        const m = trimmed.match(
+          /alter\s+table\s+([a-z_][a-z0-9_]*)\s+add\s+(?:column\s+)?([a-z_][a-z0-9_]*)/i,
+        );
+        if (m) {
+          recordColumns(m[1], [m[2].toLowerCase()]);
+        }
+        return { changes: 0, lastInsertRowId: 0 };
+      }
+      if (lower.startsWith("insert into")) {
+        return runInsert(trimmed, params);
+      }
+      if (lower.startsWith("update ")) {
+        return runUpdate(trimmed, params);
+      }
+      if (lower.startsWith("delete from")) {
+        return runDelete(trimmed, params);
+      }
+      throw new Error(`Mock expo-sqlite: unsupported statement: ${trimmed}`);
+    }
+
+    function runInsert(sql, params) {
+      const tableMatch = sql.match(/insert\s+into\s+([a-z_][a-z0-9_]*)/i);
+      const colsMatch = sql.match(/\(([^)]+)\)\s*values/i);
+      const valuesMatch = sql.match(/values\s*\(([^)]+)\)/i);
+      if (!tableMatch || !colsMatch || !valuesMatch) {
+        throw new Error(`Mock expo-sqlite: cannot parse INSERT: ${sql}`);
+      }
+      const tableName = tableMatch[1];
+      const cols = colsMatch[1].split(",").map((c) => c.trim());
+      const valTokens = valuesMatch[1].split(",").map((c) => c.trim());
+      const row = {};
+      let p = 0;
+      for (let i = 0; i < cols.length; i++) {
+        const tok = valTokens[i];
+        if (tok === "?") row[cols[i]] = params[p++];
+        else if (/^null$/i.test(tok)) row[cols[i]] = null;
+        else if (/^'.*'$/.test(tok)) row[cols[i]] = tok.slice(1, -1);
+        else if (/^\d+$/.test(tok)) row[cols[i]] = parseInt(tok, 10);
+        else row[cols[i]] = tok;
+      }
+      const tbl = ensureTable(tableName);
+      const onConflict = /on\s+conflict\s*\(([^)]+)\)\s*do\s+update\s+set\s+(.+)$/i.exec(sql);
+      if (onConflict) {
+        const keyCol = onConflict[1].trim();
+        const setClause = onConflict[2].replace(/\s+where\s+.*$/i, "");
+        const existingKey = row[keyCol];
+        let target = null;
+        for (const r of tbl.rows.values()) {
+          if (r[keyCol] === existingKey) {
+            target = r;
+            break;
+          }
+        }
+        if (target) {
+          applyConflictSet(target, setClause, row);
+          return { changes: 1, lastInsertRowId: nextRowId };
+        }
+      }
+      const id = row.id !== undefined ? row.id : `row_${++nextRowId}`;
+      tbl.rows.set(id, row);
+      return { changes: 1, lastInsertRowId: ++nextRowId };
+    }
+
+    function applyConflictSet(target, setClause, candidate) {
+      const assignments = setClause.split(",").map((s) => s.trim());
+      for (const a of assignments) {
+        const m = a.match(/^([a-z_]+)\s*=\s*(?:excluded\.)?([a-z_]+)$/i);
+        if (m) target[m[1]] = candidate[m[2]];
+      }
+    }
+
+    function runUpdate(sql, params) {
+      const tableMatch = sql.match(/update\s+([a-z_][a-z0-9_]*)\s+set\s+(.+?)\s+where\s+(.+)$/is);
+      if (!tableMatch) {
+        const noWhere = sql.match(/update\s+([a-z_][a-z0-9_]*)\s+set\s+(.+)$/is);
+        if (!noWhere) throw new Error(`Mock expo-sqlite: cannot parse UPDATE: ${sql}`);
+        return runUpdateRows(noWhere[1], noWhere[2], "", params);
+      }
+      return runUpdateRows(tableMatch[1], tableMatch[2], tableMatch[3], params);
+    }
+
+    function runUpdateRows(tableName, setClause, whereClause, params) {
+      const tbl = ensureTable(tableName);
+      const assignments = setClause.split(",").map((s) => s.trim());
+      const placeholderCount = (setClause.match(/\?/g) || []).length;
+      const setParams = params.slice(0, placeholderCount);
+      const whereParams = params.slice(placeholderCount);
+      let pi = 0;
+      const setOps = assignments.map((a) => {
+        const m = a.match(/^([a-z_]+)\s*=\s*(.+)$/i);
+        if (!m) return null;
+        const col = m[1];
+        const rhs = m[2].trim();
+        if (rhs === "?") {
+          const v = setParams[pi++];
+          return { col, value: v };
+        }
+        if (/^'.*'$/.test(rhs)) return { col, value: rhs.slice(1, -1) };
+        if (/^\d+$/.test(rhs)) return { col, value: parseInt(rhs, 10) };
+        return { col, value: rhs };
+      }).filter(Boolean);
+      const predicate = makePredicate(whereClause, whereParams);
+      let changes = 0;
+      for (const row of tbl.rows.values()) {
+        if (predicate(row)) {
+          for (const op of setOps) row[op.col] = op.value;
+          changes++;
+        }
+      }
+      return { changes, lastInsertRowId: 0 };
+    }
+
+    function runDelete(sql, params) {
+      const m = sql.match(/delete\s+from\s+([a-z_][a-z0-9_]*)(?:\s+where\s+(.+))?$/i);
+      if (!m) throw new Error(`Mock expo-sqlite: cannot parse DELETE: ${sql}`);
+      const tbl = ensureTable(m[1]);
+      const predicate = makePredicate(m[2] || "", params);
+      let changes = 0;
+      for (const [id, row] of tbl.rows.entries()) {
+        if (predicate(row)) {
+          tbl.rows.delete(id);
+          changes++;
+        }
+      }
+      return { changes, lastInsertRowId: 0 };
+    }
+
+    async function getAllAsync(source, ...rest) {
+      const params = flattenParams(rest);
+      const lower = source.toLowerCase().trim();
+      if (lower.startsWith("pragma user_version")) {
+        return [{ user_version: userVersion }];
+      }
+      const tableInfo = lower.match(/^pragma\s+table_info\(\s*([a-z_][a-z0-9_]*)\s*\)/);
+      if (tableInfo) {
+        const tbl = ensureTable(tableInfo[1]);
+        return Array.from(tbl.columns).map((name, cid) => ({
+          cid,
+          name,
+          type: "TEXT",
+          notnull: 0,
+          dflt_value: null,
+          pk: 0,
+        }));
+      }
+      if (!lower.startsWith("select")) {
+        throw new Error(`Mock expo-sqlite: getAllAsync expects SELECT: ${source}`);
+      }
+      const { table, predicate, orderBy, limit, isCount } = evalSelectFilter(source, params);
+      const tbl = ensureTable(table);
+      let rows = Array.from(tbl.rows.values()).filter(predicate);
+      rows = applyOrder(rows, orderBy);
+      if (limit !== null) rows = rows.slice(0, limit);
+      if (isCount) {
+        return [{ n: rows.length }];
+      }
+      return rows.map((r) => ({ ...r }));
+    }
+
+    async function getFirstAsync(source, ...rest) {
+      const params = flattenParams(rest);
+      const lower = source.toLowerCase().trim();
+      if (lower.startsWith("pragma user_version")) {
+        return { user_version: userVersion };
+      }
+      const tableInfo = lower.match(/^pragma\s+table_info\(\s*([a-z_][a-z0-9_]*)\s*\)/);
+      if (tableInfo) {
+        const tbl = ensureTable(tableInfo[1]);
+        const first = Array.from(tbl.columns)[0];
+        if (first === undefined) return null;
+        return {
+          cid: 0,
+          name: first,
+          type: "TEXT",
+          notnull: 0,
+          dflt_value: null,
+          pk: 0,
+        };
+      }
+      const { table, predicate, orderBy, limit, isCount } = evalSelectFilter(source, params);
+      const tbl = ensureTable(table);
+      let rows = Array.from(tbl.rows.values()).filter(predicate);
+      rows = applyOrder(rows, orderBy);
+      if (limit !== null) rows = rows.slice(0, limit);
+      if (isCount) {
+        return { n: rows.length };
+      }
+      return rows.length > 0 ? { ...rows[0] } : null;
+    }
+
+    async function runAsync(source, ...rest) {
+      const params = flattenParams(rest);
+      return runStatement(source, params);
+    }
+
+    function flattenParams(rest) {
+      if (rest.length === 1 && Array.isArray(rest[0])) return rest[0];
+      return rest;
+    }
+
+    async function withTransactionAsync(task) {
+      // No real isolation in the mock — just run the task.
+      await task();
+    }
+
+    async function closeAsync() {
+      tables.clear();
+      userVersion = 0;
+    }
+
+    return {
+      execAsync,
+      getAllAsync,
+      getFirstAsync,
+      runAsync,
+      withTransactionAsync,
+      closeAsync,
+      __debug: { tables, getUserVersion: () => userVersion },
+    };
+  }
+
+  return {
+    openDatabaseAsync: jest.fn(async () => createDb()),
+    __createDb: createDb,
+  };
+});
+
 // Mock react-native-worklets (required by Reanimated v4)
 jest.mock("react-native-worklets", () => ({
   createWorklet: jest.fn(),
@@ -253,67 +704,27 @@ jest.mock("react-native/Libraries/EventEmitter/NativeEventEmitter", () => {
   return MockNativeEventEmitter;
 });
 
-// Hybrid theme mock: preserves the LEGACY hex values (~200 existing tests
-// assert against #1C1410, #C4A574, etc.) while ALSO exposing the cosmic
-// families (midnight, aurora, sage, peach, lavender, warm, mist) for new
-// Sprint 2+ components. A future sprint will migrate those tests to use
-// cosmic tokens directly and this mock can collapse to `jest.requireActual`.
+// Sprint 12: collapsed the legacy alias families (brown/tan/olive/gold/stone/
+// gray/white/black/yellow/orange/purple/teal/pink/slate/primary.gold) — every
+// consumer was reskinned in S12-A to import cosmic palette tokens directly.
+// The mock now exposes only the cosmic families + status palettes that the
+// real `colors.ts` exports. Tests assert cosmic hex values (#040818, #9BC4B0,
+// #161D3D, etc.) — same shapes as production rendering.
 jest.mock("./src/shared/theme", () => ({
   palette: {
-    // ---- Legacy families (kept at OLD hex values for existing tests) ----
-    brown: {
-      900: "#1C1410",
-      800: "#2A1F1A",
-      700: "#3D2D24",
-      600: "#57493D",
-      500: "#78716C",
-      400: "#A8A29E",
-    },
-    tan: {
-      600: "#8B6F47",
-      500: "#C4A574",
-      400: "#D4B894",
-      300: "#E0CAA4",
-    },
-    olive: {
-      700: "#6B7B3A",
-      600: "#8A9D52",
-      550: "#8B9D4C",
-      500: "#9AAD5C",
-      450: "#A0B55C",
-      400: "#AAB978",
-      300: "#C4D19B",
-    },
-    gold: { 500: "#C4A535", 400: "#F5C563" },
-    stone: {
-      100: "#F5F5F4", 200: "#E7E5E4", 300: "#D6D3D1", 400: "#A8A29E",
-      500: "#78716C", 600: "#44403C", 700: "#3D3533", 800: "#292524",
-      900: "#1C1917",
-    },
     red: { 500: "#EF4444" },
     green: { 500: "#22C55E", 450: "#4A9E8C" },
     amber: { 500: "#F59E0B", 450: "#FFD93D" },
-    orange: { 500: "#E8853A", 600: "#EA580C", 700: "#C2410C" },
     blue: { 500: "#3B82F6", 600: "#2563EB" },
-    purple: { 500: "#A855F7", 600: "#9333EA" },
-    teal: { 500: "#14B8A6" },
-    pink: { 500: "#EC4899" },
-    yellow: { 500: "#EAB308", 400: "#FACC15", 300: "#FDE047" },
-    slate: {
-      50: "#F8FAFC", 100: "#F1F5F9", 200: "#E2E8F0", 300: "#CBD5E1",
-      400: "#94A3B8", 500: "#64748B", 600: "#475569", 700: "#334155",
-      800: "#1E293B", 900: "#0F172A",
-    },
     background: {
-      primary: "#1C1410", secondary: "#2A1F1A", tertiary: "#3D2E23",
-      quaternary: "#4A3A2F", hero: "#2A1F1A",
+      primary: "#040818", secondary: "#0E1430", tertiary: "#161D3D",
+      quaternary: "#202A55", hero: "#0E1430",
     },
     text: {
-      primary: "#FFFFFF", secondary: "#94A3B8", tertiary: "#64748B",
-      disabled: "#475569", inverse: "#1C1410",
+      primary: "#F5F1EA", secondary: "#8B95A8", tertiary: "#5A6478",
+      disabled: "#202A55", inverse: "#040818",
     },
-    primary: { gold: "#C4A574" },
-    accent: { orange: "#E8853A", green: "#9AAD5C", purple: "#7B68B5" },
+    accent: { orange: "#E88B5A", green: "#9BC4B0", purple: "#8B7CC8" },
     opacity: {
       white04: "rgba(255, 255, 255, 0.04)", white05: "rgba(255, 255, 255, 0.05)",
       white06: "rgba(255, 255, 255, 0.06)", white08: "rgba(255, 255, 255, 0.08)",
@@ -326,21 +737,14 @@ jest.mock("./src/shared/theme", () => ({
       500: "#6366F1", 400: "#818CF8", 300: "#A5B4FC",
       200: "#C7D2FE", 100: "#E0E7FF",
     },
-    white: "#FFFFFF",
-    gray: {
-      50: "#F8FAFC", 100: "#F1F5F9", 200: "#E2E8F0", 300: "#CBD5E1",
-      400: "#94A3B8", 450: "#8A8A8A", 500: "#64748B", 600: "#475569",
-      700: "#334155", 800: "#1E293B", 900: "#0F172A",
-    },
-    black: "#000000",
     alpha: {
       5: "0D", 10: "1A", 15: "26", 20: "33", 30: "4D", 40: "66",
       50: "80", 60: "99", 70: "B3", 80: "CC", 90: "E6",
     },
-    success: "#22C55E", warning: "#F59E0B", error: "#EF4444", info: "#818CF8",
+    success: "#7AAA94", warning: "#E88B5A", error: "#EF4444", info: "#A89AE0",
     onboarding: {
-      step1: "#6B7B3A", step2: "#E8853A", step3: "#6B6B6B",
-      step4: "#C4A535", step5: "#7B68B5",
+      step1: "#9BC4B0", step2: "#F4A77E", step3: "#8B95A8",
+      step4: "#6B8FFF", step5: "#8B7CC8",
     },
     semantic: {
       info: "#818CF8", success: "#22C55E", warning: "#F59E0B", error: "#EF4444",

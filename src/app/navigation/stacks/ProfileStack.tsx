@@ -21,7 +21,7 @@ import type { ProfileStackParamList } from "../../../shared/types/navigation";
 import { ProfileDashboardScreen } from "../../../features/profile/screens/ProfileDashboardScreen";
 import { AccountSettingsScreen } from "../../../features/profile/screens/AccountSettingsScreen";
 import { NotificationSettingsScreen } from "../../../features/profile/screens/NotificationSettingsScreen";
-import { SkeletonShimmer } from "../../../shared/components/primitives/SkeletonShimmer";
+import { ScreenSkeleton } from "../../../shared/components/primitives/ScreenSkeleton";
 import { useRepositories } from "../../providers/RepositoryProvider";
 
 const Stack = createNativeStackNavigator<ProfileStackParamList>();
@@ -80,11 +80,7 @@ function ProfileDashboardRoute({
 
   if (!isReady || !data) {
     return (
-      <SkeletonShimmer
-        testID="profile-dashboard-skeleton"
-        width="100%"
-        height={400}
-      />
+      <ScreenSkeleton testID="profile-dashboard-skeleton" />
     );
   }
 
@@ -211,11 +207,7 @@ function ProfileNotificationSettingsRoute({
 
   if (!isReady || !toggles) {
     return (
-      <SkeletonShimmer
-        testID="notification-settings-skeleton"
-        width="100%"
-        height={400}
-      />
+      <ScreenSkeleton testID="notification-settings-skeleton" />
     );
   }
 

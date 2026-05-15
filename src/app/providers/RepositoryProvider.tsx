@@ -20,6 +20,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { Platform } from "react-native";
 
 import { openDatabase } from "../../shared/data/db";
 import {
@@ -88,6 +89,21 @@ export function RepositoryProvider(
 
   useEffect(() => {
     let cancelled = false;
+
+    // Web bypass: Expo SDK 54 ships `expo-sqlite` with a Web Worker on web,
+    // but our Metro config uses `output: "single"` (app.json) which cannot
+    // bundle the worker URL. The bootstrap would hang forever inside the
+    // Worker constructor. Web is not a production persistence target — we
+    // flip `isReady: true` immediately with the no-op repos so screens
+    // render their empty-state placeholders instead of a permanent skeleton.
+    // Native iOS/Android still go through the real SQLite path below.
+    if (Platform.OS === "web") {
+      setRepos({ ...NOOP_REPOSITORIES, isReady: true });
+      return () => {
+        cancelled = true;
+      };
+    }
+
     (async () => {
       try {
         const db = await openDatabase(databaseName);
@@ -111,9 +127,12 @@ export function RepositoryProvider(
           syncQueue,
           isReady: true,
         });
-      } catch {
+      } catch (err) {
         // Booting the DB failed — keep the no-op repos so the app still
         // renders. Sprint 11+ will surface this via a banner.
+        if (__DEV__) {
+          console.error("[RepositoryProvider] SQLite bootstrap failed:", err);
+        }
       }
     })();
     return () => {

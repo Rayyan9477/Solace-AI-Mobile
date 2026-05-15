@@ -29,17 +29,17 @@ import { palette } from "../../../theme";
  */
 const colors = {
   // Backdrop
-  backdrop: `${palette.black}${palette.alpha[60]}`,
+  backdrop: `${palette.midnight[950]}${palette.alpha[60]}`,
 
   // Sheet
-  background: palette.brown[900],
-  border: palette.brown[800],
+  background: palette.midnight[950],
+  border: palette.midnight[800],
 
   // Drag handle
-  dragHandle: palette.gray[500],
+  dragHandle: palette.warm[500],
 
   // Text
-  title: palette.gray[100],
+  title: palette.warm[100],
 };
 
 /**
@@ -132,7 +132,7 @@ export function BottomSheet({
     >
       <View style={styles.overlay}>
         {/* Backdrop */}
-        <Pressable
+        <Pressable accessibilityRole="button"
           testID={testID ? `${testID}-backdrop` : "sheet-backdrop"}
           style={styles.backdrop}
           onPress={handleBackdropPress}
@@ -183,13 +183,37 @@ export function BottomSheet({
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    justifyContent: "flex-end",
-  },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: colors.backdrop,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  dragHandle: {
+    backgroundColor: colors.dragHandle,
+    borderRadius: 2,
+    height: 4,
+    width: 40,
+  },
+  dragHandleContainer: {
+    alignItems: "center",
+    paddingVertical: 12,
+  },
+  header: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingBottom: 12,
+    paddingHorizontal: 20,
+  },
+  headerRight: {
+    marginLeft: 8,
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "flex-end",
   },
   sheet: {
     backgroundColor: colors.background,
@@ -197,38 +221,14 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 24,
     paddingBottom: 24,
   },
-  dragHandleContainer: {
-    alignItems: "center",
-    paddingVertical: 12,
-  },
-  dragHandle: {
-    width: 40,
-    height: 4,
-    backgroundColor: colors.dragHandle,
-    borderRadius: 2,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingBottom: 12,
-  },
   title: {
-    fontSize: 18,
-    fontWeight: "600",
     color: colors.title,
     flex: 1,
+    fontSize: 18,
+    fontWeight: "600",
     marginRight: 8,
   },
   titleSpacer: {
-    flex: 1,
-  },
-  headerRight: {
-    marginLeft: 8,
-  },
-  content: {
-    paddingHorizontal: 20,
     flex: 1,
   },
 });

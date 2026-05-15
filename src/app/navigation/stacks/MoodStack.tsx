@@ -27,7 +27,7 @@ import type {
   CalendarMoodLevel,
 } from "../../../features/mood/screens/MoodCalendarScreen";
 import type { WeeklyMoodEntry } from "../../../features/mood/screens/MoodDashboardScreen";
-import { SkeletonShimmer } from "../../../shared/components/primitives/SkeletonShimmer";
+import { ScreenSkeleton } from "../../../shared/components/primitives/ScreenSkeleton";
 import { useRepositories } from "../../providers/RepositoryProvider";
 import type {
   MoodCalendarCell,
@@ -138,11 +138,7 @@ function MoodDashboardRoute({ navigation }: any): React.ReactElement {
 
   if (!isReady || !data) {
     return (
-      <SkeletonShimmer
-        testID="mood-dashboard-skeleton"
-        width="100%"
-        height={400}
-      />
+      <ScreenSkeleton testID="mood-dashboard-skeleton" />
     );
   }
 
@@ -201,11 +197,7 @@ function MoodCalendarRoute({ navigation }: any): React.ReactElement {
 
   if (!isReady || !cells) {
     return (
-      <SkeletonShimmer
-        testID="mood-calendar-skeleton"
-        width="100%"
-        height={400}
-      />
+      <ScreenSkeleton testID="mood-calendar-skeleton" />
     );
   }
 
@@ -252,11 +244,7 @@ function MoodInsightsRoute({ navigation }: any): React.ReactElement {
 
   if (!isReady || !entries) {
     return (
-      <SkeletonShimmer
-        testID="mood-insights-skeleton"
-        width="100%"
-        height={400}
-      />
+      <ScreenSkeleton testID="mood-insights-skeleton" />
     );
   }
 

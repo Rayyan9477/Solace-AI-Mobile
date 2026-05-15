@@ -15,3 +15,6 @@ export type {
   TabBarVariant,
   TabBarSize,
 } from "./TabBar.types";
+
+export { FilterPills } from "./FilterPills";
+export type { FilterPillsProps, FilterPill } from "./FilterPills";

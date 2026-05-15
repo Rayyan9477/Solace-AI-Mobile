@@ -6,7 +6,7 @@
     "version": "2.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "primaryColor": "#A67C52",
+    "primaryColor": "#040818",
     "description": "Your Mental Wellness Companion - AI-powered mental health support",
     "platforms": [
       "ios",
@@ -15,7 +15,7 @@
     ],
     "splash": {
       "resizeMode": "contain",
-      "backgroundColor": "#A67C52"
+      "backgroundColor": "#040818"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -55,7 +55,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#A67C52"
+        "backgroundColor": "#040818"
       },
       "package": "com.freudai.mobile",
       "versionCode": 2,

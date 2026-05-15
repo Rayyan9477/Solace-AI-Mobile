@@ -32,19 +32,19 @@ import { palette } from "../../../theme";
  */
 const colors = {
   // Background
-  background: palette.gray[900],
+  background: palette.midnight[950],
 
   // Text
   labelActive: palette.indigo[400],
-  labelInactive: palette.gray[500],
-  labelDisabled: palette.gray[700],
+  labelInactive: palette.warm[500],
+  labelDisabled: palette.midnight[700],
 
   // Badge
   badge: palette.red[500],
-  badgeText: palette.white,
+  badgeText: palette.warm[50],
 
   // Border
-  border: palette.gray[700],
+  border: palette.midnight[700],
 
   // Pressed
   pressed: `${palette.indigo[400]}${palette.alpha[10]}`,
@@ -188,43 +188,33 @@ export function BottomNavigation({
 }
 
 const styles = StyleSheet.create({
-  tab: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 44,
-    paddingVertical: 4,
-  },
-  tabPressed: {
-    backgroundColor: colors.pressed,
-  },
-  iconContainer: {
-    position: "relative",
-    alignItems: "center",
-    justifyContent: "center",
-    width: 28,
-    height: 28,
-  },
   badge: {
-    position: "absolute",
-    top: -4,
-    right: -8,
-    minWidth: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: colors.badge,
     alignItems: "center",
+    backgroundColor: colors.badge,
+    borderRadius: 8,
+    height: 16,
     justifyContent: "center",
+    minWidth: 16,
     paddingHorizontal: 4,
+    position: "absolute",
+    right: -8,
+    top: -4,
   },
   badgeText: {
+    color: colors.badgeText,
     fontSize: 10,
     fontWeight: "700",
-    color: colors.badgeText,
+  },
+  iconContainer: {
+    alignItems: "center",
+    height: 28,
+    justifyContent: "center",
+    position: "relative",
+    width: 28,
   },
   label: {
-    fontSize: 10,
     color: colors.labelInactive,
+    fontSize: 10,
     marginTop: 4,
     textAlign: "center",
   },
@@ -234,6 +224,16 @@ const styles = StyleSheet.create({
   },
   labelDisabled: {
     color: colors.labelDisabled,
+  },
+  tab: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+    minHeight: 44,
+    paddingVertical: 4,
+  },
+  tabPressed: {
+    backgroundColor: colors.pressed,
   },
 });
 

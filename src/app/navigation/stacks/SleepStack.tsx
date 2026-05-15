@@ -25,7 +25,7 @@ import type {
   SleepEntry as DashboardSleepEntry,
 } from "../../../features/sleep/screens/SleepDashboardScreen";
 import type { SleepHistoryDay } from "../../../shared/components/organisms/sleep";
-import { SkeletonShimmer } from "../../../shared/components/primitives/SkeletonShimmer";
+import { ScreenSkeleton } from "../../../shared/components/primitives/ScreenSkeleton";
 import { useRepositories } from "../../providers/RepositoryProvider";
 import type { SleepEntry } from "../../../shared/data/types";
 
@@ -54,11 +54,7 @@ function SleepDashboardRoute({ navigation }: any): React.ReactElement {
 
   if (!isReady || !entries) {
     return (
-      <SkeletonShimmer
-        testID="sleep-dashboard-skeleton"
-        width="100%"
-        height={400}
-      />
+      <ScreenSkeleton testID="sleep-dashboard-skeleton" />
     );
   }
 
@@ -97,11 +93,7 @@ function SleepInsightsRoute({ navigation }: any): React.ReactElement {
 
   if (!isReady || !entries) {
     return (
-      <SkeletonShimmer
-        testID="sleep-insights-skeleton"
-        width="100%"
-        height={400}
-      />
+      <ScreenSkeleton testID="sleep-insights-skeleton" />
     );
   }
 
