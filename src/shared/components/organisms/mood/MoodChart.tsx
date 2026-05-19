@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   barLabel: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 12,
     marginTop: 8,
   },
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   container: {
-    backgroundColor: palette.gray[700],
+    backgroundColor: palette.midnight[700],
     borderRadius: 16,
     padding: 16,
   },
@@ -400,11 +400,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   emptyStateText: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 14,
   },
   gridLine: {
-    backgroundColor: `${palette.gray[400]}${palette.alpha[20]}`,
+    backgroundColor: `${palette.warm[400]}${palette.alpha[20]}`,
     height: 1,
     width: "100%",
   },
@@ -423,15 +423,15 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   periodOptionSelected: {
-    backgroundColor: palette.olive[500],
+    backgroundColor: palette.sage[300],
   },
   periodOptionText: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 12,
     fontWeight: "500",
   },
   periodOptionTextSelected: {
-    color: palette.brown[900],
+    color: palette.midnight[950],
   },
   periodSelector: {
     marginBottom: 8,
@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   skeletonBar: {
-    backgroundColor: palette.gray[600],
+    backgroundColor: palette.midnight[600],
     borderRadius: 8,
     width: 28,
   },
@@ -457,7 +457,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   skeletonLabel: {
-    backgroundColor: palette.gray[600],
+    backgroundColor: palette.midnight[600],
     borderRadius: 4,
     height: 12,
     marginTop: 8,

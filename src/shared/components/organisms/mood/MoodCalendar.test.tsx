@@ -204,7 +204,7 @@ describe("MoodCalendar", () => {
 
       const selectedDay = getByTestId("mood-calendar-day-2025-01-21");
       expect(selectedDay.props.style).toEqual(
-        expect.objectContaining({ borderColor: "#FFFFFF" }),
+        expect.objectContaining({ borderColor: "#F5F1EA" }),
       );
     });
   });

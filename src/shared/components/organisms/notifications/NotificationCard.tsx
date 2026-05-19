@@ -72,15 +72,15 @@ export function NotificationCard({
 
 const styles = StyleSheet.create({
   badge: {
-    backgroundColor: palette.gray[600],
+    backgroundColor: palette.midnight[600],
     borderRadius: 8,
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 10,
     paddingHorizontal: 6,
     paddingVertical: 2,
   },
   container: {
-    backgroundColor: palette.gray[700],
+    backgroundColor: palette.midnight[700],
     borderRadius: 12,
     flexDirection: "row",
     padding: 12,
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   description: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 13,
     lineHeight: 18,
     marginTop: 2,
@@ -103,12 +103,12 @@ const styles = StyleSheet.create({
     width: 48,
   },
   timestamp: {
-    color: palette.gray[500],
+    color: palette.warm[500],
     fontSize: 11,
     marginTop: 4,
   },
   title: {
-    color: palette.white,
+    color: palette.warm[50],
     flex: 1,
     fontSize: 14,
     fontWeight: "600",
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   unreadIndicator: {
-    backgroundColor: palette.olive[500],
+    backgroundColor: palette.sage[300],
     borderRadius: 4,
     height: 8,
     width: 8,

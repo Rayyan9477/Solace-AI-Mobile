@@ -124,8 +124,10 @@ module.exports = defineConfig({
   // Only run .spec.js files (not .test.tsx Jest files)
   testMatch: "**/*.spec.js",
 
-  // Global test timeout
-  timeout: 60000,
+  // Global test timeout (raised to 120s to absorb Metro's serial rebundle queueing
+  // observed in the mobile-verification audit; first cold-load can take 60-90s when
+  // multiple specs request distinct lazy chunks back-to-back).
+  timeout: 120000,
 
   // Expect timeout for assertions
   expect: {
@@ -173,11 +175,14 @@ module.exports = defineConfig({
     // Wait for page load events
     waitForLoadState: "networkidle",
 
-    // Action timeout
-    actionTimeout: 10000,
+    // Action timeout (kept tight — once Metro is warm, individual interactions are fast).
+    actionTimeout: 15000,
 
-    // Navigation timeout
-    navigationTimeout: 30000,
+    // Navigation timeout — raised 30s -> 90s.
+    // Metro is single-threaded and serializes bundle requests; the first navigation per
+    // spec frequently waits behind a queued rebundle. 90s gives headroom without masking
+    // genuine app-side hangs.
+    navigationTimeout: 90000,
   },
 
   // Run core projects by default; set PLAYWRIGHT_FULL_MATRIX=1 for full cross-device matrix.

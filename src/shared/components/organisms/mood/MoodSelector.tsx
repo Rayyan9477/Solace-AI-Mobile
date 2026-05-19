@@ -186,13 +186,13 @@ export function MoodSelector({
         {loading ? (
           <ActivityIndicator
             testID={`${testID}-confirm-loading`}
-            color={palette.brown[900]}
+            color={palette.midnight[950]}
             size="small"
           />
         ) : (
           <>
             <Text style={styles.confirmButtonText}>{confirmButtonText}</Text>
-            <Icon name="checkmark-outline" size={18} color={palette.brown[900]} />
+            <Icon name="checkmark-outline" size={18} color={palette.midnight[950]} />
           </>
         )}
       </TouchableOpacity>
@@ -203,7 +203,7 @@ export function MoodSelector({
 const styles = StyleSheet.create({
   confirmButton: {
     alignItems: "center",
-    backgroundColor: palette.white,
+    backgroundColor: palette.warm[50],
     borderRadius: 12,
     flexDirection: "row",
     gap: 8,
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   },
   confirmButtonIcon: {},
   confirmButtonText: {
-    color: palette.brown[900],
+    color: palette.midnight[950],
     fontSize: 16,
     fontWeight: "600",
   },
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     width: 120,
   },
   moodLabel: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 24,
     fontWeight: "600",
     marginTop: 16,
@@ -252,26 +252,26 @@ const styles = StyleSheet.create({
   },
   sliderPoint: {
     alignItems: "center",
-    backgroundColor: `${palette.white}${palette.alpha[40]}`,
+    backgroundColor: `${palette.warm[50]}${palette.alpha[40]}`,
     borderRadius: 12,
     height: 24,
     justifyContent: "center",
     width: 24,
   },
   sliderPointInner: {
-    backgroundColor: palette.brown[900],
+    backgroundColor: palette.midnight[950],
     borderRadius: 6,
     height: 12,
     width: 12,
   },
   sliderPointSelected: {
-    backgroundColor: palette.white,
+    backgroundColor: palette.warm[50],
     height: 28,
     width: 28,
   },
   sliderTrack: {
     alignItems: "center",
-    backgroundColor: `${palette.white}${palette.alpha[20]}`,
+    backgroundColor: `${palette.warm[50]}${palette.alpha[20]}`,
     borderRadius: 14,
     flexDirection: "row",
     height: 4,
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   title: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 28,
     fontWeight: "700",
     textAlign: "center",

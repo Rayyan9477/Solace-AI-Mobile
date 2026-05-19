@@ -161,7 +161,7 @@ describe("MoodSelector", () => {
       const point = getByTestId("mood-selector-point-3");
       // Happy is at index 3
       expect(point.props.style).toEqual(
-        expect.objectContaining({ backgroundColor: "#FFFFFF" }),
+        expect.objectContaining({ backgroundColor: "#F5F1EA" }),
       );
     });
   });

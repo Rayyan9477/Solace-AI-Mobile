@@ -134,7 +134,7 @@ describe("MoodChart", () => {
 
       const weekOption = getByTestId("mood-chart-period-1week");
       expect(weekOption.props.style).toEqual(
-        expect.objectContaining({ backgroundColor: "#9AAD5C" }),
+        expect.objectContaining({ backgroundColor: "#9BC4B0" }),
       );
     });
 

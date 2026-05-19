@@ -231,7 +231,7 @@ export function MoodCalendar({
     <View
       testID={testID}
       accessibilityLabel={accessibilityLabel || "Mood calendar"}
-      accessibilityRole="grid"
+      accessibilityRole="none"
       style={[styles.container, style]}
     >
       {/* Day Headers */}
@@ -261,7 +261,7 @@ export function MoodCalendar({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: palette.gray[700],
+    backgroundColor: palette.midnight[700],
     borderRadius: 16,
     padding: 16,
   },
@@ -276,15 +276,15 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   dayCellSelected: {
-    borderColor: palette.white,
+    borderColor: palette.warm[50],
     borderWidth: 2,
   },
   dayCellToday: {
-    borderColor: palette.yellow[400],
+    borderColor: palette.peach[300],
     borderWidth: 2,
   },
   dayHeaderText: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     flex: 1,
     fontSize: 12,
     fontWeight: "500",
@@ -316,11 +316,11 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   legendText: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 12,
   },
   skeletonCell: {
-    backgroundColor: palette.gray[600],
+    backgroundColor: palette.midnight[600],
   },
   skeletonContainer: {
     gap: 8,

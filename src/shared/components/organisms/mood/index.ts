@@ -31,11 +31,9 @@ export type {
   LegendItem,
 } from "./MoodCalendar.types";
 export {
-  STATUS_COLORS,
   DEFAULT_LEGEND_ITEMS,
   DAY_ABBREVIATIONS_MON,
   DAY_ABBREVIATIONS_SUN,
-  getStatusColor,
   getStatusFromMood,
   generateCalendarWeeks,
   formatDate,
