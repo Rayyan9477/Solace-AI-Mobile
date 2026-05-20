@@ -72,7 +72,7 @@ export function StatCard({
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: palette.gray[600],
+    backgroundColor: palette.midnight[600],
     borderRadius: 16,
     flexDirection: "row",
     padding: 12,
@@ -83,21 +83,21 @@ const styles = StyleSheet.create({
   },
   dateBadge: {
     alignItems: "center",
-    backgroundColor: palette.gray[700],
+    backgroundColor: palette.midnight[700],
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 8,
     width: 56,
   },
   dateText: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 12,
     fontWeight: "700",
     lineHeight: 16,
     textAlign: "center",
   },
   description: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 12,
     lineHeight: 16,
     marginTop: 2,
@@ -113,12 +113,12 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   scoreText: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 20,
     fontWeight: "700",
   },
   title: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 14,
     fontWeight: "600",
     lineHeight: 18,

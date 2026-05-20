@@ -105,7 +105,7 @@ describe("NotificationCard", () => {
     const { getByTestId } = render(<NotificationCard {...defaultProps} />);
     const iconContainer = getByTestId("icon-container");
     const styles = Array.isArray(iconContainer.props.style) ? iconContainer.props.style : [iconContainer.props.style];
-    const hasBackgroundColor = styles.some((s) => s?.backgroundColor === "#9AAD5C");
+    const hasBackgroundColor = styles.some((s: Record<string, unknown> | null | undefined) => s?.backgroundColor === "#9AAD5C");
     expect(hasBackgroundColor).toBe(true);
   });
 

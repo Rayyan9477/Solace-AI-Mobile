@@ -52,7 +52,7 @@ export function FAQAccordion({
 
 const styles = StyleSheet.create({
   answer: {
-    color: palette.gray[200],
+    color: palette.warm[200],
     fontSize: 14,
     lineHeight: 20,
   },
@@ -60,16 +60,16 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   chevron: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 20,
   },
   container: {
-    backgroundColor: palette.gray[600],
+    backgroundColor: palette.midnight[600],
     borderRadius: 12,
     padding: 16,
   },
   question: {
-    color: palette.white,
+    color: palette.warm[50],
     flex: 1,
     fontSize: 15,
     fontWeight: "600",

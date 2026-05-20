@@ -131,7 +131,7 @@ export function JournalEntryCard({
           {heartRate && (
             <View style={styles.heartRateItem}>
               <Text style={styles.metadataText}>• </Text>
-              <Icon name="heart-outline" size={12} color={palette.gray[400]} />
+              <Icon name="heart-outline" size={12} color={palette.warm[400]} />
               <Text style={styles.metadataText}>{heartRate}</Text>
             </View>
           )}
@@ -163,8 +163,8 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   heartRateItem: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
   },
   metadata: {
     flexDirection: "row",
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   metadataText: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 12,
   },
   moodBadge: {
@@ -183,18 +183,18 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   moodLabel: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 12,
     fontWeight: "600",
   },
   preview: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 14,
     lineHeight: 20,
     marginTop: 8,
   },
   timeLabel: {
-    color: palette.gray[500],
+    color: palette.warm[500],
     fontSize: 12,
     fontWeight: "500",
     width: 50,
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   title: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 16,
     fontWeight: "600",
   },

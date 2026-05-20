@@ -141,12 +141,12 @@ export function SessionCard({
 
 const styles = StyleSheet.create({
   badgeText: {
-    color: palette.white,
+    color: palette.warm[50],
     fontSize: 12,
     fontWeight: "600",
   },
   container: {
-    backgroundColor: palette.gray[700],
+    backgroundColor: palette.midnight[700],
     borderRadius: 12,
     flexDirection: "row",
     padding: 16,
@@ -156,25 +156,25 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   header: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
     gap: 8,
   },
   playButton: {
     alignItems: "center",
-    backgroundColor: palette.white,
+    backgroundColor: palette.warm[50],
     borderRadius: 24,
     height: 48,
     justifyContent: "center",
     width: 48,
   },
   playIcon: {
-    color: palette.gray[800],
+    color: palette.midnight[800],
     fontSize: 16,
     marginLeft: 2,
   },
   progressBar: {
-    backgroundColor: palette.gray[600],
+    backgroundColor: palette.midnight[600],
     borderRadius: 4,
     height: 6,
     overflow: "hidden",
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   progressFill: {
-    backgroundColor: palette.tan[600],
+    backgroundColor: palette.sage[500],
     height: "100%",
   },
   soundscapeBadge: {
@@ -198,14 +198,14 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   timeText: {
-    color: palette.gray[400],
+    color: palette.warm[400],
     fontSize: 12,
   },
   title: {
-    color: palette.white,
+    color: palette.warm[50],
+    flex: 1,
     fontSize: 16,
     fontWeight: "600",
-    flex: 1,
   },
 });
 
