@@ -107,7 +107,7 @@ export function CrisisSupportAlertScreen({
           accessibilityRole="button"
           accessibilityLabel="Access crisis support"
         >
-          <Icon name="warning-outline" size={16} color={palette.warm[50]} style={styles.primaryButtonIcon} />
+          <Icon name="warning-outline" size={16} color={palette.midnight[950]} style={styles.primaryButtonIcon} />
           <Text style={styles.primaryButtonText}>
             Crisis Support Now Active.
           </Text>
@@ -122,7 +122,7 @@ export function CrisisSupportAlertScreen({
           accessibilityLabel="Call 988 for help"
         >
           <Text style={styles.secondaryButtonText}>Call For Help!</Text>
-          <Icon name="call-outline" size={16} color={palette.warm[50]} style={styles.secondaryButtonIcon} />
+          <Icon name="call-outline" size={16} color={palette.peach[300]} style={styles.secondaryButtonIcon} />
         </TouchableOpacity>
 
         {/* Acknowledge Button */}
@@ -169,10 +169,8 @@ export function CrisisSupportAlertScreen({
 const styles = StyleSheet.create({
   acknowledgeButton: {
     alignItems: "center",
-    backgroundColor: `${palette.peach[500]}${palette.alpha[20]}`,
-    borderColor: `${palette.peach[500]}${palette.alpha[30]}`,
+    backgroundColor: palette.sage[300],
     borderRadius: 16,
-    borderWidth: 1,
     marginHorizontal: 24,
     marginTop: 12,
     minHeight: 44,
@@ -181,7 +179,7 @@ const styles = StyleSheet.create({
     width: "85%",
   },
   acknowledgeButtonText: {
-    color: palette.peach[300],
+    color: palette.midnight[950],
     fontSize: 15,
     fontWeight: "700",
   },
@@ -304,7 +302,7 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     alignItems: "center",
-    backgroundColor: palette.onboarding.step5,
+    backgroundColor: palette.peach[500],
     borderRadius: 16,
     flexDirection: "row",
     justifyContent: "center",
@@ -320,14 +318,16 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   primaryButtonText: {
-    color: palette.warm[50],
+    color: palette.midnight[950],
     fontSize: 15,
     fontWeight: "700",
   },
   secondaryButton: {
     alignItems: "center",
-    backgroundColor: palette.onboarding.step5,
+    backgroundColor: palette.midnight[700],
+    borderColor: palette.peach[300],
     borderRadius: 16,
+    borderWidth: 1,
     flexDirection: "row",
     justifyContent: "center",
     marginHorizontal: 24,
@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   secondaryButtonText: {
-    color: palette.warm[50],
+    color: palette.peach[300],
     fontSize: 15,
     fontWeight: "700",
   },

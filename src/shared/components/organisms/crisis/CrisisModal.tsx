@@ -18,6 +18,7 @@ import {
   Modal,
   View,
   Text,
+  Platform,
   StyleSheet,
   Pressable,
   ScrollView,
@@ -27,6 +28,11 @@ import {
 import type { CrisisModalProps, CrisisResource } from "./CrisisModal.types";
 import { palette } from "../../../theme";
 import { useHaptic } from "../../../hooks/useHaptic";
+
+// React-native-web silently drops `accessibilityViewIsModal`; pass the W3C
+// `aria-modal` attribute on web so screen readers honor the trap.
+const WEB_ARIA_MODAL =
+  Platform.OS === "web" ? ({ "aria-modal": true } as const) : {};
 
 /**
  * Crisis support resources
@@ -191,6 +197,7 @@ export function CrisisModal({
         style={[styles.overlay, style]}
         accessibilityRole="alert"
         accessibilityLabel="Crisis support resources available"
+        {...WEB_ARIA_MODAL}
       >
         <View style={styles.modalContainer}>
           <ScrollView

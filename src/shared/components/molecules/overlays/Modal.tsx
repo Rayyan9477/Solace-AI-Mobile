@@ -19,6 +19,7 @@ import {
   Text,
   Pressable,
   Modal as RNModal,
+  Platform,
   StyleSheet,
   type ViewStyle,
   type TextStyle,
@@ -26,6 +27,11 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 import type { ModalProps, ModalSize } from "./Modal.types";
 import { palette } from "../../../theme";
+
+// React-native-web silently drops `accessibilityViewIsModal`; pass the W3C
+// `aria-modal` attribute on web so screen readers honor the trap.
+const WEB_ARIA_MODAL =
+  Platform.OS === "web" ? ({ "aria-modal": true } as const) : {};
 
 /**
  * Color tokens from theme
@@ -184,6 +190,7 @@ export function Modal({
           accessibilityLabel={modalAccessibilityLabel}
           accessibilityViewIsModal
           accessibilityState={{ expanded: true }}
+          {...WEB_ARIA_MODAL}
         >
           {/* Header */}
           {(title || showCloseButton) && (

@@ -18,11 +18,18 @@ import {
   Text,
   Pressable,
   Modal,
+  Platform,
   StyleSheet,
   type ViewStyle,
 } from "react-native";
 import type { BottomSheetProps } from "./BottomSheet.types";
 import { palette } from "../../../theme";
+
+// Spread on the sheet container to give web a real `aria-modal="true"` attr.
+// React-native-web's `accessibilityViewIsModal` is silently dropped on web —
+// passing `aria-modal` directly hits the W3C ARIA path.
+const WEB_ARIA_MODAL =
+  Platform.OS === "web" ? ({ "aria-modal": true } as const) : {};
 
 /**
  * Color tokens from theme
@@ -145,6 +152,7 @@ export function BottomSheet({
           accessible
           accessibilityLabel={sheetAccessibilityLabel}
           accessibilityViewIsModal
+          {...WEB_ARIA_MODAL}
         >
           {/* Drag Handle */}
           {showDragHandle && (

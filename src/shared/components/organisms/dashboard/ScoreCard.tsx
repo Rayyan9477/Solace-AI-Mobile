@@ -314,11 +314,11 @@ export function ScoreCard({
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: palette.gray[700],
+    backgroundColor: palette.midnight[700],
     borderRadius: 16,
   },
   gaugeBackground: {
-    borderColor: `${palette.gray[400]}${palette.alpha[20]}`,
+    borderColor: `${palette.warm[400]}${palette.alpha[20]}`,
     position: "absolute",
   },
   gaugeContainer: {
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   scoreValue: {
-    color: palette.white,
+    color: palette.warm[50],
     fontWeight: "700",
   },
   skeletonContainer: {
@@ -352,11 +352,11 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   skeletonGauge: {
-    backgroundColor: palette.gray[600],
+    backgroundColor: palette.midnight[600],
     borderRadius: 100,
   },
   skeletonText: {
-    backgroundColor: palette.gray[600],
+    backgroundColor: palette.midnight[600],
     borderRadius: 4,
     height: 16,
     width: 100,
@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   title: {
-    color: palette.gray[400],
+    color: palette.warm[400],
   },
   trend: {
     fontSize: 14,
