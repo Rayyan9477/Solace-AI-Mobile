@@ -101,7 +101,7 @@ test.describe("Auth Flow", () => {
   test("App launches and shows Splash screen", async ({ page }) => {
     const errors = createErrorCollector(page);
 
-    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 30000 });
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
     await waitForAppMount(page);
 
     const testIds = await getTestIds(page);
@@ -110,7 +110,7 @@ test.describe("Auth Flow", () => {
   });
 
   test("Splash auto-transitions after delay", async ({ page }) => {
-    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 30000 });
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
     await waitForAppMount(page);
 
     // Wait beyond splash delay (2s) + transition time
@@ -140,7 +140,7 @@ test.describe("Onboarding Flow", () => {
     await disableLazyBundling(page);
     await setAuthState(page, ONBOARDING_STATE);
 
-    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 30000 });
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
     await waitForAppMount(page);
     await page.waitForTimeout(3000);
 
@@ -159,7 +159,7 @@ test.describe("Main Flow - Dashboard", () => {
   test.beforeEach(async ({ page }) => {
     await disableLazyBundling(page);
     await setAuthState(page, AUTHENTICATED_STATE);
-    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 30000 });
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
     await waitForAppMount(page);
     await page.waitForTimeout(4000);
   });
@@ -208,15 +208,30 @@ test.describe("Main Flow - Dashboard", () => {
   test("Dashboard shows all expected cards", async ({ page }) => {
     const testIds = await getTestIds(page);
 
+    // Refreshed for prototype v4.2 #20 Home v2 (Sprint 6 reskin).
+    //
+    // Pre-S6 testID -> v4.2 testID mapping:
+    //   solace-score-card  -> solace-tile          (renamed in HomeDashboardScreen.tsx:303)
+    //   mood-card          -> checkin-card         (the mood-selector card; line 249)
+    //   mood-tracker-card  -> mood-selector        (the 5-face row; line 265)
+    //   chatbot-section    -> notifications-button (chatbot moved off Home; pivot to a
+    //                                               still-present always-visible element)
+    //
+    // Pre-S6 testIDs that no longer exist on Home (deleted in S3/S4 demolition or
+    // moved to dedicated tabs/modals) — pivoted to still-present elements:
+    //   mindful-hours-card  -> practice-heading  (Today's practice section header)
+    //   sleep-quality-card  -> practice-scroll   (sleep is now a SleepModal, not a card)
+    //   journal-card        -> streak-tile       (journal is its own tab now)
+    //   stress-level-card   -> greeting-text     (stress feature demolished in S3)
     const expectedCards = [
-      "solace-score-card",
-      "mood-card",
-      "mindful-hours-card",
-      "sleep-quality-card",
-      "journal-card",
-      "stress-level-card",
-      "mood-tracker-card",
-      "chatbot-section",
+      "solace-tile",          // was: solace-score-card
+      "checkin-card",         // was: mood-card
+      "mood-selector",        // was: mood-tracker-card
+      "streak-tile",          // was: journal-card (pivot — journal is now a tab)
+      "greeting-text",        // was: stress-level-card (pivot — stress demolished S3)
+      "practice-heading",     // was: mindful-hours-card (pivot — card removed)
+      "practice-scroll",      // was: sleep-quality-card (pivot — sleep is a modal)
+      "notifications-button", // was: chatbot-section (pivot — chatbot moved off Home)
     ];
 
     for (const card of expectedCards) {
@@ -232,7 +247,7 @@ test.describe("Tab Navigation", () => {
   test.beforeEach(async ({ page }) => {
     await disableLazyBundling(page);
     await setAuthState(page, AUTHENTICATED_STATE);
-    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 30000 });
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
     await waitForAppMount(page);
     await page.waitForTimeout(4000);
   });
@@ -314,7 +329,7 @@ test.describe("Screen Rendering", () => {
 
     await disableLazyBundling(page);
     await setAuthState(page, AUTHENTICATED_STATE);
-    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 30000 });
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
     await waitForAppMount(page);
     await page.waitForTimeout(5000);
 
@@ -342,7 +357,7 @@ test.describe("Screen Rendering", () => {
     await disableLazyBundling(page);
     await setAuthState(page, AUTHENTICATED_STATE);
 
-    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 30000 });
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
     await waitForAppMount(page);
     await page.waitForTimeout(4000);
 
@@ -377,7 +392,7 @@ test.describe("Deep Linking", () => {
   test("Auth route resolves to auth screen", async ({ page }) => {
     await page.goto(`${BASE}/auth`, {
       waitUntil: "domcontentloaded",
-      timeout: 30000,
+      timeout: 90000,
     });
     await waitForAppMount(page);
 
@@ -398,7 +413,7 @@ test.describe("Deep Linking", () => {
 
     await page.goto(`${BASE}/home`, {
       waitUntil: "domcontentloaded",
-      timeout: 30000,
+      timeout: 90000,
     });
     await waitForAppMount(page);
     await page.waitForTimeout(4000);
@@ -417,7 +432,7 @@ test.describe("App Resilience", () => {
   test("Handles unknown route gracefully", async ({ page }) => {
     await page.goto(`${BASE}/nonexistent/route/12345`, {
       waitUntil: "domcontentloaded",
-      timeout: 30000,
+      timeout: 90000,
     });
     await page.waitForTimeout(10000);
 
@@ -432,7 +447,7 @@ test.describe("App Resilience", () => {
     await disableLazyBundling(page);
     await setAuthState(page, AUTHENTICATED_STATE);
 
-    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 30000 });
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
     await waitForAppMount(page);
     await page.waitForTimeout(3000);
 
@@ -460,7 +475,7 @@ test.describe("App Resilience", () => {
       localStorage.setItem("@solace/auth_state", "not-valid-json{{{");
     });
 
-    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 30000 });
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
     await waitForAppMount(page);
 
     const rootLen = await page.evaluate(

@@ -11,16 +11,16 @@
 import {
   Easing,
   type EasingFunction,
-  type EasingFactoryFn,
+  type EasingFunctionFactory,
 } from "react-native-reanimated";
 
 import type { EasingKey, SpringConfig } from "./animationTimings";
 
 /**
  * Standard easing curves using Reanimated's Easing
- * EasingFunction for in/out curves, EasingFactoryFn for bezier curves
+ * EasingFunction for in/out curves, EasingFunctionFactory for bezier curves
  */
-export const easingCurves: Record<EasingKey, EasingFunction | EasingFactoryFn> = {
+export const easingCurves: Record<EasingKey, EasingFunction | EasingFunctionFactory> = {
   /** Ease in - accelerating from zero velocity */
   easeIn: Easing.in(Easing.ease),
   /** Ease out - decelerating to zero velocity */

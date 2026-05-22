@@ -68,65 +68,16 @@ const warm = {
 const mist = "#BFCFE8"; // breathing-element highlight
 
 // -----------------------------------------------------------------------------
-// Legacy → cosmic aliasing
+// Legacy aliases removed in Sprint 12 (cosmic v4.2 RC)
 // -----------------------------------------------------------------------------
-// The 160 files that imported `palette.brown[900]`, `palette.tan[500]`,
-// `palette.olive[500]` etc. continue to compile. Values now render cosmic.
+// The brown/tan/olive/gold/stone/gray alias families and the palette.white /
+// palette.black shorthands were retained through Sprint 11 to keep the ~160
+// pre-cosmic consumers compiling. Sprint 12-A reskinned every consumer to
+// import the cosmic families directly (midnight/aurora/sage/peach/lavender/
+// warm/mist), and the legacy aliases have now been deleted from the export.
 //
-// Mapping rationale:
-//   brown  → midnight   (both are the "dark page" family)
-//   tan    → sage       (both were the "primary accent" family)
-//   olive  → sage       (olive 500 was widely used; sage is its cosmic heir)
-//   gold   → aurora     (gold 500 was accent CTAs; aurora is the new cosmic accent)
-//   stone  → midnight   (stone was a dark grayscale; midnight is the cosmic grayscale)
-//   accent.orange  → peach-500
-//   accent.green   → sage-300
-//   accent.purple  → lavender-500
-//   onboarding.stepN → themed step colors retuned to cosmic family
+// New code MUST use the cosmic families directly. There is no fallback.
 // -----------------------------------------------------------------------------
-
-const brownAlias = {
-  900: midnight[950], // #040818 — main dark page bg
-  800: midnight[800], // #0E1430 — cards
-  700: midnight[700], // #161D3D — elevated
-  600: midnight[600], // #202A55 — floating
-  500: warm[500],     // #5A6478 — muted text
-  400: warm[400],     // #8B95A8 — secondary text
-} as const;
-
-const tanAlias = {
-  600: sage[500],     // #7AAA94 — pressed/hover
-  500: sage[300],     // #9BC4B0 — primary CTA
-  400: sage[100],     // #D8EADF — light accent
-  300: warm[100],     // #EAE3D5 — muted accent
-} as const;
-
-const oliveAlias = {
-  700: sage[700],     // #5A8A78
-  600: sage[500],     // #7AAA94
-  550: sage[500],
-  500: sage[300],     // #9BC4B0 — 29-use decorative color → primary sage
-  450: sage[300],
-  400: sage[100],     // #D8EADF
-  300: sage[100],
-} as const;
-
-const goldAlias = {
-  500: aurora[500],   // #6B8FFF
-  400: aurora[300],   // #8AA3FF
-} as const;
-
-const stoneAlias = {
-  100: warm[50],      // #F5F1EA
-  200: warm[100],     // #EAE3D5
-  300: warm[200],     // #C7BEA9
-  400: warm[400],     // #8B95A8
-  500: warm[500],     // #5A6478
-  600: midnight[600], // #202A55
-  700: midnight[700], // #161D3D
-  800: midnight[800], // #0E1430
-  900: midnight[950], // #040818
-} as const;
 
 // Status palettes (red / green / amber / blue / indigo) keep their hues because
 // semantic meaning (error, success, warning, info) is universal. They're tuned
@@ -163,20 +114,6 @@ const indigo = {
   300: lavender[300], 200: lavender[100], 100: lavender[100],
 } as const;
 
-const grayAlias = {
-  50:  warm[50],      // #F5F1EA
-  100: warm[100],     // #EAE3D5
-  200: warm[200],     // #C7BEA9
-  300: warm[200],
-  400: warm[400],     // #8B95A8 — placeholders, secondary
-  450: warm[400],
-  500: warm[500],     // #5A6478 — captions
-  600: midnight[600],
-  700: midnight[700],
-  800: midnight[800],
-  900: midnight[950],
-} as const;
-
 // Alpha hex suffixes (0-100 → hex two-digit)
 const alpha = {
   5: "0D", 10: "1A", 15: "26", 20: "33", 30: "4D", 40: "66",
@@ -196,7 +133,7 @@ const onboarding = {
 // Complete palette export
 // -----------------------------------------------------------------------------
 export const palette = {
-  // Cosmic families (new source of truth — prefer these in new code)
+  // Cosmic families (canonical — Sprint 12 removed legacy aliases)
   midnight,
   aurora,
   sage,
@@ -205,13 +142,6 @@ export const palette = {
   warm,
   mist,
 
-  // Legacy aliases (kept for back-compat — values point at cosmic equivalents)
-  brown: brownAlias,
-  tan: tanAlias,
-  olive: oliveAlias,
-  gold: goldAlias,
-  stone: stoneAlias,
-
   // Status scales
   red,
   green,
@@ -219,10 +149,7 @@ export const palette = {
   blue,
   indigo,
 
-  // Grayscale (legacy alias family)
-  gray: grayAlias,
-
-  // Legacy semantic shorthand
+  // Semantic shorthand
   success: sage[500],
   warning: peach[500],
   error: red[500],
@@ -231,14 +158,10 @@ export const palette = {
   // Onboarding
   onboarding,
 
-  // Grayscale extremes
-  white: "#FFFFFF", // present for legacy; new code should never use pure white
-  black: "#000000", // present for legacy; new code should never use pure black
-
   // Alpha suffixes
   alpha,
 
-  // Legacy palette-level shorthand (used by feature screens)
+  // Surface accessors (semantic — preferred over family.rung in screens)
   background: {
     primary: midnight[950],
     secondary: midnight[800],
@@ -252,9 +175,6 @@ export const palette = {
     tertiary: warm[500],
     disabled: midnight[600],
     inverse: midnight[950],
-  },
-  primary: {
-    gold: aurora[500], // legacy name, cosmic value
   },
   accent: {
     orange: peach[500],
@@ -335,20 +255,20 @@ export function buildColors(p: PaletteShape) {
       info:      p.lavender[300],
     },
     border: {
-      default:  `${p.white}${p.alpha[10]}`,
-      light:    `${p.white}${p.alpha[5]}`,
-      medium:   `${p.white}${p.alpha[20]}`,
-      heavy:    `${p.white}${p.alpha[30]}`,
+      default:  `${p.warm[50]}${p.alpha[10]}`,
+      light:    `${p.warm[50]}${p.alpha[5]}`,
+      medium:   `${p.warm[50]}${p.alpha[20]}`,
+      heavy:    `${p.warm[50]}${p.alpha[30]}`,
       accent:   p.sage[300],
       error:    p.red[500],
-      hairline: `${p.white}${p.alpha[5]}`,
+      hairline: `${p.warm[50]}${p.alpha[5]}`,
     },
     interactive: {
       default:  p.sage[300],
       hover:    p.sage[500],
       active:   p.sage[700],
       disabled: `${p.sage[300]}${p.alpha[30]}`,
-      ghost:    `${p.white}${p.alpha[5]}`,
+      ghost:    `${p.warm[50]}${p.alpha[5]}`,
     },
     status: {
       success: {
@@ -373,9 +293,9 @@ export function buildColors(p: PaletteShape) {
       },
     },
     form: {
-      background:      `${p.white}${p.alpha[5]}`,
-      backgroundFocus: `${p.white}${p.alpha[10]}`,
-      border:          `${p.white}${p.alpha[20]}`,
+      background:      `${p.warm[50]}${p.alpha[5]}`,
+      backgroundFocus: `${p.warm[50]}${p.alpha[10]}`,
+      border:          `${p.warm[50]}${p.alpha[20]}`,
       borderFocus:     p.sage[300],
       borderError:     p.red[500],
       placeholder:     p.warm[400],
@@ -389,7 +309,7 @@ export function buildColors(p: PaletteShape) {
       info:    { background: `${p.lavender[300]}${p.alpha[20]}`, text: p.lavender[300] },
     },
     progress: {
-      track:   `${p.white}${p.alpha[10]}`,
+      track:   `${p.warm[50]}${p.alpha[10]}`,
       fill:    p.sage[300],
       success: p.sage[500],
       warning: p.peach[500],
@@ -408,13 +328,13 @@ export function buildColors(p: PaletteShape) {
       tertiary:   p.peach[300],
       quaternary: p.lavender[300],
       quinary:    p.amber[500],
-      grid:       `${p.white}${p.alpha[10]}`,
+      grid:       `${p.warm[50]}${p.alpha[10]}`,
     },
     shadow: {
-      default: p.black,
-      subtle:  `${p.black}${p.alpha[20]}`,
-      medium:  `${p.black}${p.alpha[40]}`,
-      strong:  `${p.black}${p.alpha[60]}`,
+      default: p.midnight[950],
+      subtle:  `${p.midnight[950]}${p.alpha[20]}`,
+      medium:  `${p.midnight[950]}${p.alpha[40]}`,
+      strong:  `${p.midnight[950]}${p.alpha[60]}`,
     },
   } as const;
 }

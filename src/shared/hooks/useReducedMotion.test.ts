@@ -18,10 +18,10 @@ beforeEach(() => {
 
   jest.spyOn(AccessibilityInfo, "isReduceMotionEnabled").mockResolvedValue(false);
   jest.spyOn(AccessibilityInfo, "addEventListener").mockImplementation(
-    (_event: string, handler: (value: boolean) => void) => {
+    ((_event: string, handler: (value: boolean) => void) => {
       capturedListener = handler;
       return mockSubscription as any;
-    }
+    }) as any
   );
 });
 
