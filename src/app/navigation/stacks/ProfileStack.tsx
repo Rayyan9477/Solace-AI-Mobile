@@ -11,6 +11,12 @@
  * Sprint 11: dashboard wired to repository aggregates
  * (`mood.list().length`, `journal.list().length`). Notification settings
  * read/write via the SettingsRepository key-value store.
+ *
+ * Phase 1.6: a rejected notification-toggle write now rolls the switch back
+ * and tells the user. It previously logged to `console.warn` under `__DEV__`
+ * only and left the switch in its new position, so a release build showed
+ * "sound off" while the database still said on — until the next launch
+ * flipped it back with no explanation.
  */
 
 import React from "react";
@@ -22,6 +28,7 @@ import { ProfileDashboardScreen } from "../../../features/profile/screens/Profil
 import { AccountSettingsScreen } from "../../../features/profile/screens/AccountSettingsScreen";
 import { NotificationSettingsScreen } from "../../../features/profile/screens/NotificationSettingsScreen";
 import { ScreenSkeleton } from "../../../shared/components/primitives/ScreenSkeleton";
+import { useWriteFailureToast } from "../../../shared/utils/useWriteFailureToast";
 import { useRepositories } from "../../providers/RepositoryProvider";
 
 const Stack = createNativeStackNavigator<ProfileStackParamList>();
@@ -40,6 +47,55 @@ interface ProfileAggregates {
   readonly mindfulHours: number;
 }
 
+/** Settings keys holding the account profile, once onboarding persists it. */
+const PROFILE_KEYS = {
+  name: "profile.name",
+  email: "profile.email",
+} as const;
+
+/** The account identity, as far as the app actually knows it. */
+interface AccountProfile {
+  readonly name?: string;
+  readonly email?: string;
+}
+
+/**
+ * Read the stored account profile.
+ *
+ * Truthfulness contract (Phase 1): these keys are empty today — nothing
+ * captures a name or email yet (onboarding holds both in local state, which
+ * Phase 2 persists). Reading them anyway means both surfaces show their
+ * "add your name" prompt now and the real value the moment one exists, instead
+ * of the hardcoded "Rayyan Ahmed" they used to show forever.
+ *
+ * Shared by the dashboard and settings routes so the two cannot disagree about
+ * who the user is.
+ *
+ * @returns the profile, or null while the read is still in flight
+ */
+function useAccountProfile(): AccountProfile | null {
+  const { settings, isReady } = useRepositories();
+  const [profile, setProfile] = React.useState<AccountProfile | null>(null);
+
+  React.useEffect(() => {
+    if (!isReady) return;
+    let cancelled = false;
+    void (async () => {
+      const [name, email] = await Promise.all([
+        settings.getValue(PROFILE_KEYS.name),
+        settings.getValue(PROFILE_KEYS.email),
+      ]);
+      if (cancelled) return;
+      setProfile({ name: name ?? undefined, email: email ?? undefined });
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isReady, settings]);
+
+  return profile;
+}
+
 /** Window used when summing mindful-session duration for the dashboard. */
 const MINDFUL_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 const MS_PER_HOUR = 3_600_000;
@@ -52,6 +108,7 @@ function ProfileDashboardRoute({
 >): React.ReactElement {
   const { mood, journal, chat, mindful, isReady } = useRepositories();
   const [data, setData] = React.useState<ProfileAggregates | null>(null);
+  const profile = useAccountProfile();
 
   React.useEffect(() => {
     if (!isReady) return;
@@ -78,7 +135,7 @@ function ProfileDashboardRoute({
     };
   }, [chat, isReady, journal, mindful, mood]);
 
-  if (!isReady || !data) {
+  if (!isReady || !data || !profile) {
     return (
       <ScreenSkeleton testID="profile-dashboard-skeleton" />
     );
@@ -86,6 +143,7 @@ function ProfileDashboardRoute({
 
   return (
     <ProfileDashboardScreen
+      userName={profile.name}
       streakDays={data.streakDays}
       sessionCount={data.sessionCount}
       mindfulHours={data.mindfulHours}
@@ -104,12 +162,36 @@ function ProfileDashboardRoute({
 }
 
 function AccountSettingsRoute({ navigation }: any): React.ReactElement {
+  const { settings, isReady } = useRepositories();
+  const profile = useAccountProfile();
+  const [notificationsEnabled, setNotificationsEnabled] = React.useState<
+    boolean | null
+  >(null);
+
+  React.useEffect(() => {
+    if (!isReady) return;
+    let cancelled = false;
+    void (async () => {
+      const raw = await settings.getValue(NOTIFICATION_KEYS.dailyCheckin);
+      if (cancelled) return;
+      setNotificationsEnabled(parseBool(raw, true));
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isReady, settings]);
+
+  if (!isReady || !profile || notificationsEnabled === null) {
+    return <ScreenSkeleton testID="account-settings-skeleton" />;
+  }
+
   return (
     <AccountSettingsScreen
-      sections={[]}
+      userName={profile.name}
+      userEmail={profile.email}
+      notificationsEnabled={notificationsEnabled}
       onBack={() => navigation.goBack()}
-      onItemPress={() => undefined}
-      onToggle={() => undefined}
+      onNotifications={() => navigation.navigate("ProfileNotificationSettings")}
     />
   );
 }
@@ -134,6 +216,7 @@ function ProfileNotificationSettingsRoute({
   navigation,
 }: any): React.ReactElement {
   const { settings, isReady } = useRepositories();
+  const { reportWriteFailure, failureToast } = useWriteFailureToast();
   const [toggles, setToggles] = React.useState<NotificationToggles | null>(
     null,
   );
@@ -170,39 +253,32 @@ function ProfileNotificationSettingsRoute({
     (id: string, value: boolean) => {
       const key = idToKey(id);
       if (!key) return;
-      // Optimistically flip the local state.
+      // Optimistically flip the local state — a switch that lags behind the
+      // finger reads as broken.
       setToggles((prev) =>
         prev ? { ...prev, [keyToField(key)]: value } : prev,
       );
-      // Persist. If the persistence layer isn't ready yet (theoretical race
-      // — the skeleton fallback above gates against it, but defend anyway),
-      // roll the optimistic flip back rather than dropping the write
-      // silently. Surface the rollback in dev so the regression is visible.
-      if (!isReady) {
-        if (__DEV__) {
-          // eslint-disable-next-line no-console
-          console.warn(
-            `[ProfileNotificationSettings] settings not ready — toggle "${id}" rolled back`,
-          );
-        }
+      const rollback = (): void => {
         setToggles((prev) =>
           prev ? { ...prev, [keyToField(key)]: !value } : prev,
         );
-        return;
-      }
+      };
+      // Not-ready is a rejected write like any other: the no-op bundle's
+      // `set` throws, so let it fall into the same handler instead of
+      // maintaining a second, dev-only path for it.
       void settings
         .set({ key, value: value ? "true" : "false" })
-        .catch((err: unknown) => {
-          if (__DEV__) {
-            // eslint-disable-next-line no-console
-            console.warn(
-              `[ProfileNotificationSettings] failed to persist "${id}":`,
-              err,
-            );
-          }
+        .catch((error: unknown) => {
+          rollback();
+          reportWriteFailure({
+            operation: "settings.set",
+            error,
+            message: "We couldn't save that preference. Please try again.",
+            context: { key },
+          });
         });
     },
-    [isReady, settings],
+    [reportWriteFailure, settings],
   );
 
   if (!isReady || !toggles) {
@@ -212,30 +288,33 @@ function ProfileNotificationSettingsRoute({
   }
 
   return (
-    <NotificationSettingsScreen
-      chatbotToggles={[
-        {
-          id: "daily-checkin",
-          label: "Daily check-ins",
-          enabled: toggles.dailyCheckin,
-        },
-        {
-          id: "session-reminders",
-          label: "Session reminders",
-          enabled: toggles.sessionReminders,
-        },
-      ]}
-      soundEnabled={toggles.sound}
-      soundDescription="Play audible alerts"
-      vibrationEnabled={toggles.vibration}
-      vibrationDescription="Use haptic feedback"
-      miscItems={[]}
-      resourcesEnabled={toggles.resources}
-      resourcesDescription="Suggest wellbeing resources"
-      onBack={() => navigation.goBack()}
-      onToggle={handleToggle}
-      onItemPress={() => undefined}
-    />
+    <>
+      <NotificationSettingsScreen
+        chatbotToggles={[
+          {
+            id: "daily-checkin",
+            label: "Daily check-ins",
+            enabled: toggles.dailyCheckin,
+          },
+          {
+            id: "session-reminders",
+            label: "Session reminders",
+            enabled: toggles.sessionReminders,
+          },
+        ]}
+        soundEnabled={toggles.sound}
+        soundDescription="Play audible alerts"
+        vibrationEnabled={toggles.vibration}
+        vibrationDescription="Use haptic feedback"
+        miscItems={[]}
+        resourcesEnabled={toggles.resources}
+        resourcesDescription="Suggest wellbeing resources"
+        onBack={() => navigation.goBack()}
+        onToggle={handleToggle}
+        onItemPress={() => undefined}
+      />
+      {failureToast}
+    </>
   );
 }
 

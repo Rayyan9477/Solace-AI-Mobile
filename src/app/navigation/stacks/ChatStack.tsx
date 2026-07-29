@@ -9,6 +9,11 @@
  *
  * Sprint 11: ChatsList wired to `chat.listConversations()`. ActiveChat
  * persists each user/assistant turn via `chat.appendMessage()` (write path).
+ *
+ * Phase 1.6: the three swallowed writes here now report. A failed
+ * `createConversation` used to leave the "+" button looking inert (roadmap
+ * B5); a failed `appendMessage` left the turn on screen while the transcript
+ * was never written, so reopening the conversation lost it without warning.
  */
 
 import React, { useCallback, useState } from "react";
@@ -34,6 +39,8 @@ import {
   type CbtStepIndex,
 } from "../../../features/chat/screens/CbtThoughtRecordScreen";
 import { ScreenSkeleton } from "../../../shared/components/primitives/ScreenSkeleton";
+import { logSilentFailure } from "../../../shared/utils/logSilentFailure";
+import { useWriteFailureToast } from "../../../shared/utils/useWriteFailureToast";
 import { useRepositories } from "../../providers/RepositoryProvider";
 import { sendMessage as mockSendMessage } from "../../../features/chat/services/mockChatService";
 import type {
@@ -58,6 +65,7 @@ function ChatsListScreenContainer({
   "ChatsList"
 >): React.ReactElement {
   const { chat, isReady } = useRepositories();
+  const { reportWriteFailure, failureToast } = useWriteFailureToast();
   const [filter, setFilter] = useState<"all" | "active" | "archived">("all");
   const [enriched, setEnriched] = React.useState<
     readonly EnrichedConversation[] | null
@@ -90,14 +98,20 @@ function ChatsListScreenContainer({
   }, [chat, isReady]);
 
   const handleNewConversation = useCallback(async () => {
-    if (!isReady) return;
     try {
       const created = await chat.createConversation({ mode: "general" });
       navigation.navigate("ActiveChat", { conversationId: created.id });
-    } catch {
-      // Failure must not crash the list; future sprints will surface a banner.
+    } catch (error) {
+      // Roadmap B5: this is the "+" that did nothing. Not navigating is
+      // correct — there is no conversation to navigate to — but the user has
+      // to be told that, or the button reads as broken.
+      reportWriteFailure({
+        operation: "chat.createConversation",
+        error,
+        message: "We couldn't start a new conversation. Please try again.",
+      });
     }
-  }, [chat, isReady, navigation]);
+  }, [chat, navigation, reportWriteFailure]);
 
   if (!isReady || !enriched) {
     return (
@@ -108,16 +122,19 @@ function ChatsListScreenContainer({
   const screenConversations = enriched.map(toScreenConversation);
 
   return (
-    <ChatsListScreen
-      conversations={screenConversations}
-      selectedFilter={filter}
-      onSearch={noop}
-      onNewConversation={handleNewConversation}
-      onConversationPress={(id) =>
-        navigation.navigate("ActiveChat", { conversationId: id })
-      }
-      onFilterChange={setFilter}
-    />
+    <>
+      <ChatsListScreen
+        conversations={screenConversations}
+        selectedFilter={filter}
+        onSearch={noop}
+        onNewConversation={handleNewConversation}
+        onConversationPress={(id) =>
+          navigation.navigate("ActiveChat", { conversationId: id })
+        }
+        onFilterChange={setFilter}
+      />
+      {failureToast}
+    </>
   );
 }
 
@@ -129,6 +146,7 @@ function ActiveChatScreenContainer({
   "ActiveChat"
 >): React.ReactElement {
   const { chat, isReady } = useRepositories();
+  const { reportWriteFailure, failureToast } = useWriteFailureToast();
   const conversationId = route.params?.conversationId;
   const [messages, setMessages] = React.useState<
     readonly ChatMessage[] | null
@@ -155,14 +173,30 @@ function ActiveChatScreenContainer({
       if (!isReady || !conversationId) {
         return { reply: "I'm here. Tell me more." };
       }
+      // The turn is already on screen by the time we get here, so a failed
+      // write cannot be rolled back — the honest move is to say the
+      // transcript is not being kept, before the user types anything they
+      // would mind losing.
+      const reportTranscriptLoss = (error: unknown, role: string): void => {
+        reportWriteFailure({
+          operation: "chat.appendMessage",
+          error,
+          message:
+            "This conversation isn't being saved right now. You can keep talking, but it won't be here later.",
+          // Never log `content`: chat bodies are the most sensitive text in
+          // the app after journal entries.
+          context: { conversationId, role },
+        });
+      };
+
       try {
         await chat.appendMessage({
           conversationId,
           role: "user",
           content: text,
         });
-      } catch {
-        // Persistence failure must not block the conversation flow.
+      } catch (error) {
+        reportTranscriptLoss(error, "user");
       }
       // Generate the assistant reply via the real mock service so the user
       // sees varied responses, then persist the SAME reply so reloading the
@@ -171,9 +205,13 @@ function ActiveChatScreenContainer({
       try {
         const response = await mockSendMessage({ input: text, mode: "cbt" });
         reply = response.text;
-      } catch {
+      } catch (error) {
         // Service-level failure — fall back to a brief acknowledgement so the
-        // conversation never strands the user without a response.
+        // conversation never strands the user without a response. No toast:
+        // this one HAS a visible fallback, so the user is not misled.
+        logSilentFailure("mockChatService.sendMessage", error, {
+          conversationId,
+        });
         reply = "I'm here. Tell me more.";
       }
       try {
@@ -182,12 +220,12 @@ function ActiveChatScreenContainer({
           role: "assistant",
           content: reply,
         });
-      } catch {
-        // Persistence failure for the assistant turn — same swallow rule.
+      } catch (error) {
+        reportTranscriptLoss(error, "assistant");
       }
       return { reply };
     },
-    [chat, conversationId, isReady],
+    [chat, conversationId, isReady, reportWriteFailure],
   );
 
   if (!isReady || !messages) {
@@ -197,19 +235,22 @@ function ActiveChatScreenContainer({
   }
 
   return (
-    <ActiveChatScreen
-      conversationId={conversationId}
-      initialMessages={messages.map(toScreenMessage)}
-      onSendMessage={handleSendMessage}
-      onClose={() => navigation.goBack()}
-      onCrisisDetected={() => {
-        // Classifier tripwire — open the root-mounted crisis modal.
-        // Send is not blocked; modal is additive overlay.
-        navigation
-          .getParent<NavigationProp<RootStackParamList>>()
-          ?.navigate("CrisisModal", { screen: "CrisisSupport" });
-      }}
-    />
+    <>
+      <ActiveChatScreen
+        conversationId={conversationId}
+        initialMessages={messages.map(toScreenMessage)}
+        onSendMessage={handleSendMessage}
+        onClose={() => navigation.goBack()}
+        onCrisisDetected={() => {
+          // Classifier tripwire — open the root-mounted crisis modal.
+          // Send is not blocked; modal is additive overlay.
+          navigation
+            .getParent<NavigationProp<RootStackParamList>>()
+            ?.navigate("CrisisModal", { screen: "CrisisSupport" });
+        }}
+      />
+      {failureToast}
+    </>
   );
 }
 

@@ -58,8 +58,12 @@ function SleepDashboardRoute({ navigation }: any): React.ReactElement {
     );
   }
 
+  // Truthfulness contract (Phase 1): `buildWeekHistory` always returns seven
+  // days, filling unlogged ones with `hours: 0`. With an empty repository that
+  // is a fabricated week, not a real one — pass undefined so the screen shows
+  // its empty state instead.
   const lastNight = entries[0] ? toDashboardEntry(entries[0]) : undefined;
-  const weekHistory = buildWeekHistory(entries);
+  const weekHistory = entries.length > 0 ? buildWeekHistory(entries) : undefined;
 
   return (
     <SleepDashboardScreen

@@ -195,7 +195,7 @@ export function AssessmentQuestionScreen({
                 onPress={() => handleSelect(option.id)}
                 accessibilityRole="radio"
                 accessibilityLabel={option.label}
-                accessibilityState={{ selected: isSelected }}
+                accessibilityState={{ checked: isSelected }}
                 activeOpacity={0.8}
                 hitSlop={{ top: 4, bottom: 4, left: 0, right: 0 }}
               >

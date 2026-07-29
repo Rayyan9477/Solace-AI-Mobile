@@ -35,13 +35,15 @@ import {
   type StatBarVariant,
 } from "../../../shared/components/primitives";
 
+import type { ScoreBand } from "../utils/scoreCalculator";
+
 type Category = "healthy" | "unstable" | "critical";
 
 export interface BreakdownItem {
   label: string;
   score: number;
-  /** Visual accent — accepts hex (legacy) or palette token name. */
-  color: string;
+  /** How this sub-score reads. The screen owns the band → gradient mapping. */
+  band: ScoreBand;
   /** Brief contextual note shown under the bar */
   note?: string;
 }
@@ -84,6 +86,22 @@ const CATEGORY_HEADLINES: Record<Category, string> = {
   healthy: "doing great",
   unstable: "doing okay",
   critical: "in a tough spot",
+};
+
+/**
+ * Band → StatBar gradient, resolved from cosmic tokens inside StatBar via
+ * `useTheme()`.
+ *
+ * The bar vocabulary is deliberately alarm-free — DESIGN.md § 6 sanctions no
+ * red gradient, and painting a mental-health user's own score bar red is the
+ * opposite of "would this feel safe at 3 AM?". `warn` therefore takes peach
+ * (cosmic's warm, non-alarming warning) and `bad` takes lavender, the calmest
+ * remaining variant that still reads as distinct from the other two.
+ */
+const STAT_BAR_VARIANT_FOR_BAND: Readonly<Record<ScoreBand, StatBarVariant>> = {
+  bad: "lavender",
+  good: "sage",
+  warn: "peach",
 };
 
 const FALLBACK_REC_ICONS = ["wind", "book-open", "message-circle"] as const;
@@ -223,8 +241,9 @@ export function AssessmentResultsScreen({
                 </Text>
               </View>
               <StatBar
+                testID={`breakdown-bar-${slugify(item.label)}`}
                 percent={item.score}
-                variant={pickStatBarVariant(item.color)}
+                variant={STAT_BAR_VARIANT_FOR_BAND[item.band]}
                 accessibilityLabel={`${item.label} ${item.score} out of 100`}
               />
               {item.note ? (
@@ -248,10 +267,7 @@ export function AssessmentResultsScreen({
           {normalizedRecs.map((rec) => (
             <TouchableOpacity
               key={rec.label}
-              testID={`rec-${rec.label
-                .slice(0, 32)
-                .replace(/\s+/g, "-")
-                .toLowerCase()}`}
+              testID={`rec-${slugify(rec.label)}`}
               style={styles.recRow}
               onPress={rec.onPress ?? noop}
               accessibilityRole="button"
@@ -317,13 +333,9 @@ function noop(): void {
   /* placeholder click handler when consumer omits onPress */
 }
 
-function pickStatBarVariant(color: string): StatBarVariant {
-  const lower = color.toLowerCase();
-  if (lower.includes("155,196,176") || lower.startsWith("#9bc4b0")) return "sage";
-  if (lower.includes("244,167,126") || lower.startsWith("#f4a77e")) return "peach";
-  if (lower.includes("168,154,224") || lower.startsWith("#a89ae0")) return "lavender";
-  if (lower.includes("138,163,255") || lower.startsWith("#8aa3ff")) return "aurora";
-  return "sage";
+/** Stable, human-readable testID fragment for a user-supplied label. */
+function slugify(label: string): string {
+  return label.slice(0, 32).replace(/\s+/g, "-").toLowerCase();
 }
 
 const styles = StyleSheet.create({

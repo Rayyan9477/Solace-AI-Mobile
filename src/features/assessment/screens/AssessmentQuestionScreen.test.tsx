@@ -56,13 +56,13 @@ describe("AssessmentQuestionScreen", () => {
     });
   });
 
-  // 4. Tapping option updates accessibilityState.selected
-  it("tapping an option marks it as selected", () => {
+  // 4. Tapping option updates accessibilityState.checked
+  it("tapping an option marks it as checked", () => {
     const { getByTestId } = renderScreen();
     const optionEl = getByTestId("option-never");
-    expect(optionEl.props.accessibilityState?.selected).toBe(false);
+    expect(optionEl.props.accessibilityState?.checked).toBe(false);
     fireEvent.press(optionEl);
-    expect(getByTestId("option-never").props.accessibilityState?.selected).toBe(
+    expect(getByTestId("option-never").props.accessibilityState?.checked).toBe(
       true,
     );
   });
@@ -88,7 +88,7 @@ describe("AssessmentQuestionScreen", () => {
   it("selectedId prop pre-selects the option", () => {
     const { getByTestId } = renderScreen({ selectedId: "often" });
     expect(
-      getByTestId("option-often").props.accessibilityState?.selected,
+      getByTestId("option-often").props.accessibilityState?.checked,
     ).toBe(true);
   });
 
@@ -155,10 +155,10 @@ describe("AssessmentQuestionScreen", () => {
     fireEvent.press(getByTestId("option-never"));
     fireEvent.press(getByTestId("option-often"));
     expect(
-      getByTestId("option-never").props.accessibilityState?.selected,
+      getByTestId("option-never").props.accessibilityState?.checked,
     ).toBe(false);
     expect(
-      getByTestId("option-often").props.accessibilityState?.selected,
+      getByTestId("option-often").props.accessibilityState?.checked,
     ).toBe(true);
   });
 
@@ -181,5 +181,23 @@ describe("AssessmentQuestionScreen", () => {
   it("back button has correct accessibilityRole", () => {
     const { getByTestId } = renderScreen();
     expect(getByTestId("back-button").props.accessibilityRole).toBe("button");
+  });
+
+  // Radio semantics — VoiceOver/TalkBack read `checked` on a radio; `selected`
+  // is for tabs and list rows and announces nothing about the chosen option.
+  describe("radio semantics", () => {
+    it("announces unchosen options via accessibilityState.checked=false", () => {
+      const { getByTestId } = renderScreen({ selectedId: "often" });
+      expect(
+        getByTestId("option-never").props.accessibilityState?.checked,
+      ).toBe(false);
+    });
+
+    it("does not use the tab-only `selected` state on a radio", () => {
+      const { getByTestId } = renderScreen({ selectedId: "often" });
+      expect(
+        getByTestId("option-often").props.accessibilityState?.selected,
+      ).toBeUndefined();
+    });
   });
 });
