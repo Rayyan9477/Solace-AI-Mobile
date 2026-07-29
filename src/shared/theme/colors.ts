@@ -61,8 +61,14 @@ const warm = {
   50:  "#F5F1EA", // primary text — warm off-white (never #FFFFFF)
   100: "#EAE3D5",
   200: "#C7BEA9",
-  400: "#8B95A8", // secondary text
-  500: "#5A6478", // muted / captions / labels
+  400: "#8B95A8", // secondary text — 6.61:1 on midnight-950, 4.98:1 worst case
+  // Muted / captions / labels. Retuned 2026-07-28 from #5A6478, which measured
+  // 3.35:1 on the page and 2.73:1 on a focused form field — a WCAG AA failure
+  // on all 7 text surfaces and on ~56 files. This value is the same hue
+  // (r:g:b 90:100:120) scaled 1.38x, the smallest step that clears 4.5:1
+  // everywhere `warm[500]` renders as text while staying a visible step below
+  // `warm[400]`. Enforced by `__tests__/contrast.test.ts`.
+  500: "#7C8AA6",
 } as const;
 
 const mist = "#BFCFE8"; // breathing-element highlight

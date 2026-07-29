@@ -82,7 +82,7 @@ ios/
 .expo
 NUL
 .husky
-
+*.snap
 
 # NOTE (Phase 0, 2026-07-27): `*.snap` was previously ignored here, which meant
 # 61 of 68 Jest snapshots were never committed. Snapshots are a visual-
