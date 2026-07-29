@@ -84,7 +84,12 @@ NUL
 .husky
 
 
-*.snap
+# NOTE (Phase 0, 2026-07-27): `*.snap` was previously ignored here, which meant
+# 61 of 68 Jest snapshots were never committed. Snapshots are a visual-
+# regression baseline — unversioned, they cannot detect drift and the
+# "84 snapshots committed" claim in the sprint reports was not true.
+# They are now tracked.
+
 # Examine main navigation and routing logic for issues
 # Check error boundaries and loading states implementation
 # Use Playwright to test app screens for blank screen issues

@@ -639,14 +639,32 @@ function __ensureDateNow() {
 
 __ensureDateNow();
 
-// Global fetch mock for API testing
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve({}),
-    text: () => Promise.resolve(""),
-  }),
-);
+// Network access — fail fast, never permissive.
+//
+// Phase 0 (2026-07-27): this used to resolve EVERY request with
+// `{ok: true, json: () => ({})}`. A blanket-success mock means a test can
+// pass while the code under test fires an unintended request, or fires the
+// wrong one — the exact failure mode `docs/.../migration.md` Task 7.3 flagged
+// when it asked for MSW.
+//
+// MSW is not installed yet, deliberately: there are currently ZERO `fetch`
+// call sites in production code (Supabase is still a stub, chat is local), so
+// an interceptor would have nothing to intercept. Throwing gives the same
+// guarantee — tests must opt in to network behaviour — with no dependency.
+//
+// When Supabase lands (Phase 4), swap this for an MSW server with
+// `onUnhandledRequest: "error"`; any test relying on implicit network will
+// already be failing loudly here rather than passing silently.
+global.fetch = jest.fn((input) => {
+  const url = typeof input === "string" ? input : (input && input.url) || "unknown";
+  return Promise.reject(
+    new Error(
+      `Unexpected network request to "${url}" in a test. ` +
+        "Stub it explicitly in the test (jest.spyOn(global, 'fetch')) " +
+        "rather than relying on a global success mock.",
+    ),
+  );
+});
 
 // Mock TurboModuleRegistry for React Native 0.76+ compatibility
 jest.mock("react-native/Libraries/TurboModule/TurboModuleRegistry", () => ({
@@ -704,133 +722,13 @@ jest.mock("react-native/Libraries/EventEmitter/NativeEventEmitter", () => {
   return MockNativeEventEmitter;
 });
 
-// Sprint 12: collapsed the legacy alias families (brown/tan/olive/gold/stone/
-// gray/white/black/yellow/orange/purple/teal/pink/slate/primary.gold) — every
-// consumer was reskinned in S12-A to import cosmic palette tokens directly.
-// The mock now exposes only the cosmic families + status palettes that the
-// real `colors.ts` exports. Tests assert cosmic hex values (#040818, #9BC4B0,
-// #161D3D, etc.) — same shapes as production rendering.
-jest.mock("./src/shared/theme", () => ({
-  palette: {
-    red: { 500: "#EF4444" },
-    green: { 500: "#22C55E", 450: "#4A9E8C" },
-    amber: { 500: "#F59E0B", 450: "#FFD93D" },
-    blue: { 500: "#3B82F6", 600: "#2563EB" },
-    background: {
-      primary: "#040818", secondary: "#0E1430", tertiary: "#161D3D",
-      quaternary: "#202A55", hero: "#0E1430",
-    },
-    text: {
-      primary: "#F5F1EA", secondary: "#8B95A8", tertiary: "#5A6478",
-      disabled: "#202A55", inverse: "#040818",
-    },
-    accent: { orange: "#E88B5A", green: "#9BC4B0", purple: "#8B7CC8" },
-    opacity: {
-      white04: "rgba(255, 255, 255, 0.04)", white05: "rgba(255, 255, 255, 0.05)",
-      white06: "rgba(255, 255, 255, 0.06)", white08: "rgba(255, 255, 255, 0.08)",
-      white10: "rgba(255, 255, 255, 0.1)",  white12: "rgba(255, 255, 255, 0.12)",
-      white18: "rgba(255, 255, 255, 0.18)", white20: "rgba(255, 255, 255, 0.2)",
-      white30: "rgba(255, 255, 255, 0.3)",  white40: "rgba(255, 255, 255, 0.4)",
-      black50: "rgba(0, 0, 0, 0.5)",
-    },
-    indigo: {
-      500: "#6366F1", 400: "#818CF8", 300: "#A5B4FC",
-      200: "#C7D2FE", 100: "#E0E7FF",
-    },
-    alpha: {
-      5: "0D", 10: "1A", 15: "26", 20: "33", 30: "4D", 40: "66",
-      50: "80", 60: "99", 70: "B3", 80: "CC", 90: "E6",
-    },
-    success: "#7AAA94", warning: "#E88B5A", error: "#EF4444", info: "#A89AE0",
-    onboarding: {
-      step1: "#9BC4B0", step2: "#F4A77E", step3: "#8B95A8",
-      step4: "#6B8FFF", step5: "#8B7CC8",
-    },
-    semantic: {
-      info: "#818CF8", success: "#22C55E", warning: "#F59E0B", error: "#EF4444",
-    },
-
-    // ---- Cosmic families (NEW — values match src/shared/theme/colors.ts) ----
-    midnight: { 950: "#040818", 900: "#070C20", 800: "#0E1430", 700: "#161D3D", 600: "#202A55" },
-    aurora:   { 100: "#D6E0FF", 300: "#8AA3FF", 500: "#6B8FFF", 700: "#4A6FE5" },
-    sage:     { 100: "#D8EADF", 300: "#9BC4B0", 500: "#7AAA94", 700: "#5A8A78" },
-    peach:    { 100: "#FCE3D4", 300: "#F4A77E", 500: "#E88B5A" },
-    lavender: { 100: "#E0DAF3", 300: "#A89AE0", 500: "#8B7CC8" },
-    warm:     { 50: "#F5F1EA", 100: "#EAE3D5", 200: "#C7BEA9", 400: "#8B95A8", 500: "#5A6478" },
-    mist:     "#BFCFE8",
-  },
-  colors: {
-    background: {
-      primary: "#1C1410", secondary: "#2A1F1A", tertiary: "#3D2E23",
-      overlay: "rgba(0, 0, 0, 0.85)", elevated: "#57493D",
-    },
-    text: {
-      primary: "#FFFFFF", secondary: "#94A3B8", tertiary: "#64748B",
-      disabled: "#475569", inverse: "#1C1410", accent: "#C4A574",
-      muted: "#A8A29E", error: "#EF4444", success: "#22C55E",
-      warning: "#F59E0B", info: "#818CF8",
-    },
-    border: {
-      default: "rgba(255, 255, 255, 0.1)", light: "rgba(255, 255, 255, 0.05)",
-      medium: "rgba(255, 255, 255, 0.2)",  heavy: "rgba(255, 255, 255, 0.3)",
-      accent: "#C4A574", error: "#EF4444",
-    },
-    interactive: {
-      default: "#C4A574", hover: "#D4B894", active: "#E0CAA4",
-      disabled: "rgba(196, 165, 116, 0.3)", ghost: "rgba(255, 255, 255, 0.05)",
-    },
-    status: {
-      success: { background: "rgba(34, 197, 94, 0.15)", border: "rgba(34, 197, 94, 0.3)", text: "#22C55E" },
-      warning: { background: "rgba(245, 158, 11, 0.15)", border: "rgba(245, 158, 11, 0.3)", text: "#F59E0B" },
-      error:   { background: "rgba(239, 68, 68, 0.15)", border: "rgba(239, 68, 68, 0.3)", text: "#EF4444" },
-      info:    { background: "rgba(129, 140, 248, 0.15)", border: "rgba(129, 140, 248, 0.3)", text: "#818CF8" },
-    },
-    form: {
-      background: "rgba(255, 255, 255, 0.05)", backgroundFocus: "rgba(255, 255, 255, 0.1)",
-      border: "rgba(255, 255, 255, 0.2)", borderFocus: "#C4A574",
-      borderError: "#EF4444", placeholder: "#64748B", label: "#94A3B8", error: "#EF4444",
-    },
-    badge: {
-      default: { background: "#475569", text: "#E2E8F0" },
-      success: { background: "rgba(34, 197, 94, 0.2)", text: "#22C55E" },
-      warning: { background: "rgba(245, 158, 11, 0.2)", text: "#F59E0B" },
-      error:   { background: "rgba(239, 68, 68, 0.2)", text: "#EF4444" },
-      info:    { background: "rgba(129, 140, 248, 0.2)", text: "#818CF8" },
-    },
-    progress: {
-      track: "#334155", fill: "#C4A574", success: "#22C55E",
-      warning: "#F59E0B", error: "#EF4444",
-    },
-    crisis: {
-      primary: "#EF4444", background: "rgba(239, 68, 68, 0.1)",
-      border: "rgba(239, 68, 68, 0.3)", text: "#FCA5A5",
-    },
-  },
-  shadows: {
-    none: { shadowColor: "transparent", shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0, shadowRadius: 0, elevation: 0 },
-    sm: { shadowColor: "#000000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 2, elevation: 2 },
-    md: { shadowColor: "#000000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.12, shadowRadius: 4, elevation: 4 },
-    lg: { shadowColor: "#000000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.16, shadowRadius: 8, elevation: 8 },
-    xl: { shadowColor: "#000000", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.2, shadowRadius: 16, elevation: 16 },
-  },
-  applyShadow: jest.fn((level = "md") => {
-    const shadows = {
-      none: { shadowColor: "transparent", shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0, shadowRadius: 0, elevation: 0 },
-      sm: { shadowColor: "#000000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 2, elevation: 2 },
-      md: { shadowColor: "#000000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.12, shadowRadius: 4, elevation: 4 },
-      lg: { shadowColor: "#000000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.16, shadowRadius: 8, elevation: 8 },
-      xl: { shadowColor: "#000000", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.2, shadowRadius: 16, elevation: 16 },
-    };
-    return shadows[level] || shadows.md;
-  }),
-  gradients: {},
-  animations: {},
-  zIndex: {},
-  spacing: {
-    xxs: 2, xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24,
-    xxxl: 32, xxxxl: 40, section: 48,
-  },
-}));
+// NOTE (Phase 0, 2026-07-27): the former `jest.mock("./src/shared/theme")`
+// block was DELETED here. It served the pre-cosmic brown palette
+// (background #1C1410, text #FFFFFF, interactive #C4A574) to 41 files /
+// 381 `colors.*` references, so the whole atom/molecule layer was tested
+// against values removed in Sprint 12. Tests now resolve the real cosmic
+// tokens. Standing rule: assert theme TOKENS (palette.midnight[950]),
+// never raw hex — that keeps contrast retunes zero-churn.
 
 // Mock AuthContext (provides auth state to components)
 jest.mock("./src/app/AuthContext", () => ({
@@ -899,18 +797,10 @@ jest.mock("expo-linking", () => ({
 }));
 
 // Mock lazy-loaded navigation stack modules (prevents dynamic import() issues in tests)
-jest.mock("./src/app/navigation/stacks/DashboardStack", () => ({
-  DashboardStack: () => null,
-}));
-jest.mock("./src/app/navigation/stacks/MoodStack", () => ({
-  MoodStack: () => null,
-}));
-jest.mock("./src/app/navigation/stacks/ChatStack", () => ({
-  ChatStack: () => null,
-}));
-jest.mock("./src/app/navigation/stacks/JournalStack", () => ({
-  JournalStack: () => null,
-}));
-jest.mock("./src/app/navigation/stacks/ProfileStack", () => ({
-  ProfileStack: () => null,
-}));
+// NOTE (Phase 0, 2026-07-27): the five global `stacks/*` mocks that used to
+// live here were REMOVED. They stubbed every feature stack to `() => null`
+// app-wide, which made the stack adapters — where all data-flow logic lives
+// (repository reads/writes, entity↔screen mapping, crisis wiring) — invisible
+// to the entire suite. `RootNavigator.test.tsx` mocks `MainTabNavigator`
+// locally, so it never reached the stacks anyway. Any test that genuinely
+// needs a stack stubbed should mock it locally, in that file.

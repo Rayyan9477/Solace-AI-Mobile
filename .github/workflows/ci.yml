@@ -1,0 +1,68 @@
+# CI — Solace AI Mobile
+#
+# Added in Phase 0 (2026-07-27). The repo had no CI at all, despite
+# `docs/superpowers/plans/2026-04-22-prototype-v4.2-migration.md` Task 7.5
+# referencing `.github/workflows/ci.yml` as if it existed. Every quality gate
+# was being run by hand, which is why regressions like the legacy-palette test
+# mock survived multiple sprints.
+#
+# Gate order is cheapest-first so a broken PR fails fast.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# A new push to the same branch cancels the previous run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint · Types · Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          # Expo SDK 54 supports Node 20 LTS. Pinned rather than `lts/*` so a
+          # Node release cannot turn a green branch red without a commit.
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        # `--legacy-peer-deps` matches the repo's own `npm run setup`; the
+        # React 19 overrides in package.json need it.
+        run: npm ci --legacy-peer-deps
+
+      - name: Lint (errors only)
+        # `--quiet` suppresses warnings. Warnings are not zero yet (prettier
+        # line-ending noise is being normalised separately), but errors are,
+        # and that is the gate we hold.
+        run: npx eslint src/ --quiet
+
+      - name: TypeScript
+        run: npx tsc --noEmit
+
+      - name: Unit + integration tests
+        # maxWorkers is capped because the jest-worker pool is prone to
+        # `spawn UNKNOWN` crashes on constrained runners.
+        run: npx jest --ci --coverage --maxWorkers=2
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+          retention-days: 7
+          if-no-files-found: ignore

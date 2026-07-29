@@ -53,7 +53,7 @@ export const cosmic = {
   sage:     { 100: '#D8EADF', 300: '#9BC4B0', 500: '#7AAA94', 700: '#5A8A78' },
   peach:    { 100: '#FCE3D4', 300: '#F4A77E', 500: '#E88B5A' },
   lavender: { 100: '#E0DAF3', 300: '#A89AE0', 500: '#8B7CC8' },
-  warm:     { 50: '#F5F1EA', 100: '#EAE3D5', 200: '#C7BEA9', 400: '#8B95A8', 500: '#5A6478' },
+  warm:     { 50: '#F5F1EA', 100: '#EAE3D5', 200: '#C7BEA9', 400: '#8B95A8', 500: '#7C8AA6' },
   mist:     '#BFCFE8',
 };
 ```
@@ -87,15 +87,53 @@ colors.status.success | warning | danger | info
 
 Selected via theme picker during onboarding (Sprint 7) or in Account Settings. Persisted to AsyncStorage and Supabase `profiles.preferred_theme`. **Never hardcode a theme.**
 
-### Contrast (AAA target)
+### Contrast (WCAG 2.1 **AA** — 4.5:1)
 
-| Text class | Minimum contrast | Example |
+The bar is **AA, not AAA.** This section claimed 7:1 from the cosmic migration
+until 2026-07-28; nothing in the app ever met it, and the gate that was supposed
+to enforce it did not exist. Both are now corrected rather than restated.
+
+| Text class | Minimum contrast | Measured example |
 |---|---|---|
-| Body (14–17px) | **7:1** | `warm-50` on `midnight-950` ≈ **15:1** ✅ |
-| Large text (≥18px bold or ≥24px) | **4.5:1** | `warm-400` on `midnight-800` ≈ **6:1** ✅ |
-| Non-text UI | **3:1** | Border/icon vs surface |
+| Body and caption text | **4.5:1** | `warm-50` on `midnight-950` = **17.71:1** ✅ |
+| Large text (≥24px, or ≥18.66px bold) | **3:1** | claimed by nothing today — see note |
+| Non-text UI (borders, icons) | **3:1** | not yet gated — see scope below |
 
-A script in `src/shared/theme/__tests__/contrast.test.ts` iterates every `{background, foreground}` pair used in the app and fails CI on any violation.
+At 7:1 the palette would also fail on `warm-400` (6.61), `aurora-500` (6.65) and
+`red-500` (5.60) — i.e. AAA would condemn most of the accent set, not just one
+token. At 4.5:1 every token passes except the one fixed below.
+
+**The `warm-500` retune (2026-07-28).** `#5A6478` measured **3.35:1** on the page
+background and **2.72:1** on a focused form field, failing AA on all seven text
+surfaces across ~56 files. It is now **`#7C8AA6`** — the same hue (r:g:b
+90:100:120) scaled 1.38×, the smallest step clearing 4.5:1 everywhere it renders
+as text while remaining a visible step below `warm-400`.
+
+| Surface | before | after |
+|---|---|---|
+| `background.primary` (page) | 3.35 ❌ | **5.74** ✅ |
+| `background.secondary` (card) | 3.04 ❌ | **5.20** ✅ |
+| `background.tertiary` (modal / panel) | 2.76 ❌ | **4.73** ✅ |
+| `background.overlay` over page (GlassCard) | 3.08 ❌ | **5.28** ✅ |
+| `form.background` over page | 3.08 ❌ | **5.27** ✅ |
+| `form.backgroundFocus` over page | 2.72 ❌ | **4.66** ✅ |
+| `opacity.white08` over page | 2.85 ❌ | **4.88** ✅ |
+
+`warm-400` was measured and left alone: **6.61:1** on the page, **5.37:1** worst
+case, **4.57:1** on `midnight-600`. It already passed.
+
+**The large-text 3:1 allowance is applied nowhere.** All 38 muted-text sites that
+resolve to a fontSize render between 9px and 12px and none is bold, so nothing
+reaches the ≥24px / ≥18.66px-bold threshold and no exemption is granted.
+
+`src/shared/theme/__tests__/contrast.test.ts` now exists and enforces this. It
+implements WCAG 2.1 relative luminance directly (no dependency), composites
+`rgba()` surfaces over what sits beneath them, and fails on any pair below
+4.5:1. Its scope is stated in its own header: it gates the **cosmic** preset
+only. The other four presets re-tune `midnight` to much lighter card and panel
+rungs (e.g. Warm Earth `midnight-800` = `#2A1F15`) and every text role fails
+somewhere in them — fixing that means re-tuning four palettes, which is a design
+decision, not a token nudge. Non-text contrast is likewise not yet gated.
 
 ### Usage rules
 
