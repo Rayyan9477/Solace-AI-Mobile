@@ -79,8 +79,8 @@ describe("OnboardingProgressBar", () => {
       const activeSegment = getByTestId("progress-segment-1");
       const inactiveSegment = getByTestId("progress-segment-2");
 
-      expect(activeSegment.props.style).toContainEqual({ backgroundColor: "#C4A574" });
-      expect(inactiveSegment.props.style).toContainEqual({ backgroundColor: "#4A4A4A" });
+      expect(activeSegment.props.style).toContainEqual({ backgroundColor: "#9BC4B0" });
+      expect(inactiveSegment.props.style).toContainEqual({ backgroundColor: "#161D3D" });
     });
   });
 

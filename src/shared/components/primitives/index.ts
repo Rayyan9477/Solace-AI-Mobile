@@ -7,6 +7,8 @@
  * Sprint 1: MoodFace, BracketLabel
  * Sprint 2: BreathingOrb, SmokeBlob, AuroraHairline, StatBar,
  *           GlassCard, GlassAuroraCard, HeroCard, RingProgress
+ * Sprint 5: ConcentricRings, StarField, ScoreRing, AvatarRing,
+ *           WaveformBars, SkeletonShimmer, IconTile
  */
 
 // Mood + editorial
@@ -44,3 +46,39 @@ export type { GlassAuroraCardProps } from "./GlassAuroraCard";
 
 export { HeroCard } from "./HeroCard";
 export type { HeroCardProps } from "./HeroCard";
+
+// Sprint 5 — cosmic scene primitives
+export { ConcentricRings } from "./ConcentricRings";
+export type { ConcentricRingsProps, ConcentricTint } from "./ConcentricRings";
+
+export { StarField } from "./StarField";
+export type { StarFieldProps } from "./StarField";
+
+export { ScoreRing } from "./ScoreRing";
+export type { ScoreRingProps } from "./ScoreRing";
+
+export { AvatarRing } from "./AvatarRing";
+export type { AvatarRingProps, AvatarRingVariant } from "./AvatarRing";
+
+// Sprint 5 — voice, loading, icon utilities
+export { WaveformBars } from "./WaveformBars";
+export type { WaveformBarsProps } from "./WaveformBars";
+
+export { SkeletonShimmer } from "./SkeletonShimmer";
+export type { SkeletonShimmerProps } from "./SkeletonShimmer";
+
+export { IconTile } from "./IconTile";
+export type { IconTileProps, IconTileHue } from "./IconTile";
+
+// Sprint 5 — chart primitives
+export { LineChart } from "./LineChart";
+export type { LineChartProps, LineChartPoint } from "./LineChart";
+
+export { BarChart } from "./BarChart";
+export type { BarChartProps, BarChartBar } from "./BarChart";
+
+export { ScatterPlot } from "./ScatterPlot";
+export type { ScatterPlotProps, ScatterPoint } from "./ScatterPlot";
+
+export { HeatmapGrid } from "./HeatmapGrid";
+export type { HeatmapGridProps, HeatmapCell } from "./HeatmapGrid";

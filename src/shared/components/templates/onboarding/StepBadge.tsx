@@ -51,16 +51,16 @@ export function StepBadge({
 
 const styles = StyleSheet.create({
   container: {
+    alignSelf: "center",
+    backgroundColor: `${palette.warm[50]}${palette.alpha[20]}`,
+    borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    alignSelf: "center",
   },
   label: {
+    color: palette.warm[50],
     fontSize: 14,
     fontWeight: "600",
-    color: palette.white,
     textAlign: "center",
   },
 });

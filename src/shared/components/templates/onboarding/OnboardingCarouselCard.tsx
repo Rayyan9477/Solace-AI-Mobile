@@ -151,61 +151,61 @@ export function OnboardingCarouselCard({
 }
 
 const styles = StyleSheet.create({
+  backButton: {
+    // Additional styling if needed
+  },
+  badgeContainer: {
+    alignItems: "center",
+    left: 0,
+    position: "absolute",
+    right: 0,
+    top: 40,
+  },
+  buttonSpacer: {
+    width: 56,
+  },
   container: {
+    backgroundColor: palette.midnight[950],
     flex: 1,
-    backgroundColor: palette.brown[900],
+  },
+  contentPanel: {
+    backgroundColor: palette.midnight[950],
+    flex: 0.4,
+    justifyContent: "space-between",
+    paddingBottom: 40,
+    paddingHorizontal: 24,
+    paddingTop: 32,
+  },
+  illustration: {
+    height: "70%",
+    marginTop: 60,
+    width: "80%",
+  },
+  illustrationContainer: {
+    alignItems: "center",
+    height: "70%",
+    justifyContent: "center",
+    marginTop: 60,
+    width: "80%",
   },
   illustrationSection: {
-    flex: 0.6,
     alignItems: "center",
+    flex: 0.6,
     justifyContent: "center",
     paddingHorizontal: 24,
     paddingTop: 40,
   },
-  badgeContainer: {
-    position: "absolute",
-    top: 40,
-    left: 0,
-    right: 0,
-    alignItems: "center",
-  },
-  illustration: {
-    width: "80%",
-    height: "70%",
-    marginTop: 60,
-  },
-  illustrationContainer: {
-    width: "80%",
-    height: "70%",
-    marginTop: 60,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  contentPanel: {
-    flex: 0.4,
-    backgroundColor: palette.brown[900],
-    paddingTop: 32,
-    paddingBottom: 40,
-    paddingHorizontal: 24,
-    justifyContent: "space-between",
-  },
-  titleContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 16,
-  },
   navigationContainer: {
+    alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
     paddingHorizontal: 16,
   },
-  backButton: {
-    // Additional styling if needed
-  },
-  buttonSpacer: {
-    width: 56,
+  titleContainer: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 16,
   },
 });
 

@@ -29,8 +29,8 @@ import { palette } from "../../../theme";
 export function OnboardingProgressBar({
   currentStep,
   totalSteps,
-  activeColor = palette.tan[500],
-  inactiveColor = "#4A4A4A",
+  activeColor = palette.sage[300],
+  inactiveColor = palette.midnight[700],
   testID,
   style,
 }: OnboardingProgressBarProps): React.ReactElement {
@@ -69,16 +69,16 @@ export function OnboardingProgressBar({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
     gap: 8,
-    width: "100%",
     paddingHorizontal: 24,
+    width: "100%",
   },
   segment: {
+    borderRadius: 2,
     flex: 1,
     height: 4,
-    borderRadius: 2,
   },
 });
 

@@ -51,7 +51,7 @@ function parseTextWithHighlights(
 export function OnboardingTitle({
   text,
   highlightedWords,
-  highlightColor = palette.tan[500],
+  highlightColor = palette.sage[300],
   testID,
   style,
 }: OnboardingTitleProps): React.ReactElement {
@@ -84,10 +84,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   text: {
+    color: palette.warm[50],
     fontSize: 28,
     fontWeight: "700",
     lineHeight: 36,
-    color: palette.white,
   },
 });
 
