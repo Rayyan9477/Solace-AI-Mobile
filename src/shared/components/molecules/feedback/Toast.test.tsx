@@ -368,6 +368,32 @@ describe("Toast", () => {
       const button = getByTestId("toast-action");
       expect(button.props.accessibilityRole).toBe("button");
     });
+
+    it("announces politely by default", () => {
+      const { getByTestId } = render(
+        <Toast visible={true} message="Saved" testID="toast" />
+      );
+      expect(getByTestId("toast").props.accessibilityLiveRegion).toBe("polite");
+    });
+
+    // DESIGN.md §9 requires errors to interrupt the screen reader rather than
+    // queue behind whatever it is already reading. A toast that says the
+    // user's entry was lost is exactly that case, so the live region has to be
+    // caller-controlled.
+    it("can announce assertively when the caller asks for it", () => {
+      const { getByTestId } = render(
+        <Toast
+          visible={true}
+          message="We couldn't save that"
+          variant="error"
+          accessibilityLiveRegion="assertive"
+          testID="toast"
+        />
+      );
+      expect(getByTestId("toast").props.accessibilityLiveRegion).toBe(
+        "assertive"
+      );
+    });
   });
 
   // ===================

@@ -5,7 +5,7 @@
  */
 
 import type { ReactNode } from "react";
-import type { ViewStyle } from "react-native";
+import type { AccessibilityProps, ViewStyle } from "react-native";
 
 /**
  * Toast variant determines color scheme and icon
@@ -63,6 +63,16 @@ export interface ToastProps {
 
   /** Accessibility label */
   accessibilityLabel?: string;
+
+  /**
+   * How aggressively a screen reader announces the toast.
+   *
+   * Defaults to `"polite"`, which queues the announcement behind whatever is
+   * currently being read — right for confirmations. DESIGN.md §9 requires
+   * errors to interrupt instead, so an error toast the user must not miss
+   * (a save that did not happen) should pass `"assertive"`.
+   */
+  accessibilityLiveRegion?: AccessibilityProps["accessibilityLiveRegion"];
 
   /** Additional container styles */
   style?: ViewStyle;

@@ -8,6 +8,7 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import { View } from "react-native";
 import { TextInput } from "./TextInput";
+import { palette } from "@/shared/theme";
 
 /**
  * Helper to flatten style arrays
@@ -187,7 +188,7 @@ describe("TextInput Component", () => {
       );
       const errorText = getByText("Error message");
       const style = flattenStyle(errorText.props.style);
-      expect(style.color).toBe("#EF4444");
+      expect(style.color).toBe(palette.red[500]);
     });
   });
 

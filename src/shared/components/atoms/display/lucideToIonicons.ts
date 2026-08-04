@@ -5,11 +5,17 @@
  * via `react-native-vector-icons/Ionicons`. This map lets prototype markup port
  * 1:1 without renaming every icon.
  *
- * Keys are the exact Lucide names scraped from `prototypes/screens/*.js` and
- * `prototypes/lib/helpers.js` (70 unique names as of prototype v4.2).
+ * Keys started as the exact Lucide names scraped from `prototypes/screens/*.js`
+ * and `prototypes/lib/helpers.js`, and now also cover the Lucide names the app
+ * itself introduced (93 unique names).
  *
  * Unknown names pass through unchanged via `resolveIconName()` — consumers can
- * still pass native Ionicons names directly.
+ * still pass native Ionicons names directly. That passthrough is why a typo or
+ * an unmapped Lucide name fails silently as a blank "missing glyph" box rather
+ * than throwing, so `lucideToIonicons.test.ts` sweeps every icon name written
+ * under `src/` and fails when one does not resolve. Add the mapping here rather
+ * than renaming the call site, and where Ionicons has no true equivalent pick
+ * the closest glyph and say so in a comment (see `wind`).
  */
 
 export const LUCIDE_TO_IONICON: Readonly<Record<string, string>> = {
@@ -21,6 +27,7 @@ export const LUCIDE_TO_IONICON: Readonly<Record<string, string>> = {
   "arrow-right": "arrow-forward",
   "arrow-up": "arrow-up",
   "chevron-down": "chevron-down",
+  "chevron-left": "chevron-back",
   "chevron-right": "chevron-forward",
 
   // System / status
@@ -39,8 +46,10 @@ export const LUCIDE_TO_IONICON: Readonly<Record<string, string>> = {
   search: "search-outline",
   "settings-2": "settings-outline",
   "more-horizontal": "ellipsis-horizontal",
+  "more-vertical": "ellipsis-vertical",
   x: "close",
   check: "checkmark",
+  "check-circle": "checkmark-circle-outline",
   plus: "add",
   "log-out": "log-out-outline",
   "help-circle": "help-circle-outline",
@@ -48,6 +57,10 @@ export const LUCIDE_TO_IONICON: Readonly<Record<string, string>> = {
   "eye-off": "eye-off-outline",
   "refresh-cw": "refresh",
   "rotate-ccw": "reload",
+  // approximation — Ionicons has no directional "rotate" glyph. Paired with
+  // `rotate-ccw → reload` so the skip-back / skip-forward transport buttons read
+  // as mirrored circular arrows instead of clashing with `skip-forward`.
+  "rotate-cw": "refresh",
   download: "download-outline",
   "share-2": "share-outline",
   gift: "gift-outline",
@@ -62,11 +75,13 @@ export const LUCIDE_TO_IONICON: Readonly<Record<string, string>> = {
   shuffle: "shuffle",
   repeat: "repeat",
   "volume-2": "volume-high-outline",
+  gauge: "speedometer-outline", // playback-speed control
 
   // Communication
   mail: "mail-outline",
   phone: "call-outline",
   "message-square": "chatbubble-outline",
+  message: "chatbubble-outline",
   mic: "mic-outline",
   camera: "camera-outline",
 
@@ -102,6 +117,7 @@ export const LUCIDE_TO_IONICON: Readonly<Record<string, string>> = {
   wind: "leaf-outline", // approximation — Ionicons has no wind glyph
   feather: "leaf-outline", // approximation — Ionicons has no feather glyph
   zap: "flash-outline",
+  lotus: "flower-outline", // approximation — Ionicons has no lotus glyph
   "circle-dot": "radio-button-on-outline",
 
   // Navigation (home / profile)

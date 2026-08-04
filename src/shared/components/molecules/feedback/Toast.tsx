@@ -113,6 +113,7 @@ export function Toast({
   showCloseButton = false,
   testID,
   accessibilityLabel,
+  accessibilityLiveRegion = "polite",
   style,
 }: ToastProps): React.ReactElement | null {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -172,7 +173,7 @@ export function Toast({
       style={[styles.container, positionStyle, containerStyle, style]}
       accessibilityRole="alert"
       accessibilityLabel={toastAccessibilityLabel}
-      accessibilityLiveRegion="polite"
+      accessibilityLiveRegion={accessibilityLiveRegion}
     >
       {/* Icon */}
       {icon ? (
