@@ -1,0 +1,311 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConcentricRings renders a stable snapshot (default props) 1`] = `
+<View
+  accessibilityElementsHidden={true}
+  importantForAccessibility="no-hide-descendants"
+  style={
+    [
+      {
+        "height": 220,
+        "width": 220,
+      },
+      {
+        "alignItems": "center",
+        "justifyContent": "center",
+      },
+      undefined,
+    ]
+  }
+  testID="rings"
+>
+  <RNSVGSvgView
+    bbHeight={220}
+    bbWidth={220}
+    focusable={false}
+    height={220}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "flex": 0,
+          "height": 220,
+          "width": 220,
+        },
+      ]
+    }
+    width={220}
+  >
+    <RNSVGGroup
+      fill={
+        {
+          "payload": 4278190080,
+          "type": 0,
+        }
+      }
+    >
+      <RNSVGCircle
+        cx={110}
+        cy={110}
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeOpacity",
+          ]
+        }
+        r={108.5}
+        stroke={
+          {
+            "payload": 4285239295,
+            "type": 0,
+          }
+        }
+        strokeOpacity={0.18}
+        strokeWidth={3}
+      />
+      <RNSVGCircle
+        cx={110}
+        cy={110}
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeOpacity",
+          ]
+        }
+        r={79.66666666666667}
+        stroke={
+          {
+            "payload": 4287276031,
+            "type": 0,
+          }
+        }
+        strokeOpacity={0.12}
+        strokeWidth={3}
+      />
+      <RNSVGCircle
+        cx={110}
+        cy={110}
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeOpacity",
+          ]
+        }
+        r={50.833333333333336}
+        stroke={
+          {
+            "payload": 4285239295,
+            "type": 0,
+          }
+        }
+        strokeOpacity={0.08}
+        strokeWidth={3}
+      />
+      <RNSVGCircle
+        cx={110}
+        cy={110}
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeOpacity",
+          ]
+        }
+        r={22}
+        stroke={
+          {
+            "payload": 4287276031,
+            "type": 0,
+          }
+        }
+        strokeOpacity={0.05}
+        strokeWidth={3}
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+</View>
+`;
+
+exports[`ConcentricRings renders a stable snapshot with children 1`] = `
+<View
+  accessibilityElementsHidden={true}
+  importantForAccessibility="no-hide-descendants"
+  style={
+    [
+      {
+        "height": 220,
+        "width": 220,
+      },
+      {
+        "alignItems": "center",
+        "justifyContent": "center",
+      },
+      undefined,
+    ]
+  }
+>
+  <RNSVGSvgView
+    bbHeight={220}
+    bbWidth={220}
+    focusable={false}
+    height={220}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "flex": 0,
+          "height": 220,
+          "width": 220,
+        },
+      ]
+    }
+    width={220}
+  >
+    <RNSVGGroup
+      fill={
+        {
+          "payload": 4278190080,
+          "type": 0,
+        }
+      }
+    >
+      <RNSVGCircle
+        cx={110}
+        cy={110}
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeOpacity",
+          ]
+        }
+        r={108.5}
+        stroke={
+          {
+            "payload": 4286229140,
+            "type": 0,
+          }
+        }
+        strokeOpacity={0.18}
+        strokeWidth={3}
+      />
+      <RNSVGCircle
+        cx={110}
+        cy={110}
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeOpacity",
+          ]
+        }
+        r={79.66666666666667}
+        stroke={
+          {
+            "payload": 4288398512,
+            "type": 0,
+          }
+        }
+        strokeOpacity={0.12}
+        strokeWidth={3}
+      />
+      <RNSVGCircle
+        cx={110}
+        cy={110}
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeOpacity",
+          ]
+        }
+        r={50.833333333333336}
+        stroke={
+          {
+            "payload": 4286229140,
+            "type": 0,
+          }
+        }
+        strokeOpacity={0.08}
+        strokeWidth={3}
+      />
+      <RNSVGCircle
+        cx={110}
+        cy={110}
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeOpacity",
+          ]
+        }
+        r={22}
+        stroke={
+          {
+            "payload": 4288398512,
+            "type": 0,
+          }
+        }
+        strokeOpacity={0.05}
+        strokeWidth={3}
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "bottom": 0,
+        "justifyContent": "center",
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  >
+    <Text>
+      inner
+    </Text>
+  </View>
+</View>
+`;
